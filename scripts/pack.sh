@@ -2,7 +2,6 @@
 echo Executing after success scripts on branch $TRAVIS_BRANCH
 echo Triggering NuGet package build
 
-cd src
 dotnet pack -p:NuspecFile=.\Genocs.Core.nuspec --no-restore -o .
 
 echo Uploading Genocs.Core package to NuGet using branch $TRAVIS_BRANCH
