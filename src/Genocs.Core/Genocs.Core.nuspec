@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="5.0.0">
+    <id>Genocs.Core</id>
+    <version>1.0.0</version>
+    <authors>Nocco Giovanni Emanuele</authors>
+    <owners>[Genocs] Nocco Giovanni Emanuele</owners>
+    <projectUrl>https://github.com/Genocs/genocs-core</projectUrl>
+    <repository type="git" url="https://github.com/Genocs/genocs-core.git" branch="master" commit="37bd57f2cdca35cb0c346d214468d7a5ede9057d" />
+    <license type="expression">MIT</license>
+    <icon>genocs-icon.png</icon>    
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <title>The Core Library by Genocs</title>
+    <summary>
+The base library useful to build .NET Core projects.
+    </summary>
+    <description>
+The base library useful to build .NET Core projects.
+    </description>
+    <releaseNotes>
+- .NET Core 3.1
+- Swashbuckle 5
+    </releaseNotes>
+    <tags>
+      aggregate
+      architecture
+      boilerplate
+      ddd
+      ddd-architecture
+      design-patterns
+      docker
+      domain-driven-design
+      dotnet
+      dotnetcore
+      dotnet-core
+      evolutionary-architecture
+      microservice
+      microservices
+      solid
+      solid-principles
+    </tags>
+    <language>en-US</language>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="**" exclude="**\bin\**\*;**\obj\**\*;**\*.user;**\*.log;**\.vscode\**\*;" />
+  </files>
+</package>
