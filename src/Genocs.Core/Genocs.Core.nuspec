@@ -33,7 +33,6 @@ The base library useful to build .NET Core projects.
       dotnet
       dotnetcore
       dotnet-core
-      evolutionary-architecture
       microservice
       microservices
       solid

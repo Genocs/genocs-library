@@ -16,12 +16,16 @@ dotnet build .\src
 
 To pack the project type following command
 ```ps
-dotnet pack .\src
+dotnet pack ./src
+
+cd src/Genocs.Core
+dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
 ```
 
 
 To pack the project type following command
 ```ps
 dotnet nuget push
+dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
 
