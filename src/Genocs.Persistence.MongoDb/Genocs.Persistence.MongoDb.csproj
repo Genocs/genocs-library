@@ -6,9 +6,9 @@
     <Version>1.0.1</Version>
     <MinClientVersion>5.0.0</MinClientVersion>
     <Company>Nocco Giovanni Emanuele</Company>
-    <Authors>Nocco Giovanni Emanuele</Authors>  
-    <Title>The base library useful to build .NET Core projects.</Title>
-    <Description>The base library useful to build .NET Core projects.</Description>
+    <Authors>Nocco Giovanni Emanuele</Authors>
+    <Title>The Persistence MongoDB Library.</Title>
+    <Description>The library containing base repository pattern to build .NET Core projects.</Description>
     <Copyright>Genocs 2020</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
@@ -17,9 +17,10 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="Genocs.Core" Version="1.0.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE">
@@ -31,6 +32,4 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-
 </Project>
-
