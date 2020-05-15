@@ -1,12 +1,7 @@
-# Genocs CORE By Genocs
+# .NET Core libraries by Genocs [![Build Status](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library) [![NuGet](https://img.shields.io/badge/nuget-v1.0.1-blue)](https://www.nuget.org/packages/Genocs.Core)
 
-This is the base project designad by Genocs. The project has been ported to .NET Core 3.1.
-A simple test with Docker container is also provided. The nuget package is hosted on myget. 
 
-The project is build by Travis CI 
-
-[![Build Status](https://travis-ci.org/Genocs/genocs-core.svg?branch=master)](https://travis-ci.org/Genocs/genocs-core)
-
+This repo contains a set of useful libraries designed by Genocs. The libraries are built using .NET standard 2.1 to be used both on project based on .NET Framework or the Core. The package version is hosted on [nuget](https://www.nuget.org/packages).
 
 
 To build the project type following command
@@ -23,7 +18,7 @@ dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
 ```
 
 
-To pack the project type following command
+To push the project type following command
 ```ps
 dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
