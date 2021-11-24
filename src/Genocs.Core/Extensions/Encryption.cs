@@ -1,5 +1,4 @@
-﻿
-namespace Genocs.Core.Extensions
+﻿namespace Genocs.Core.Extensions
 {
     using System;
     using System.IO;

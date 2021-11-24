@@ -1,16 +1,16 @@
 namespace Genocs.Persistence.MongoDb.Repositories
 {
-    using MongoDB.Bson;
-    using MongoDB.Driver;
-    using System;
+    using Genocs.Core.Base;
     using Genocs.Core.Domain.Entities;
     using Genocs.Core.Domain.Repositories;
     using Genocs.Persistence.MongoDb.Repository;
-    using System.Threading.Tasks;
-    using System.Linq.Expressions;
-    using Genocs.Core.Base;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
     using MongoDB.Driver.Linq;
+    using System;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Implements IRepository for MongoDB.
