@@ -6,14 +6,14 @@ dotnet: 5.0.12
 branches:
   only:
     - master
-    - develop
+#    - develop
 before_script:
   - chmod -R a+x scripts
 script:
   - ./scripts/build.sh
   - ./scripts/test.sh
 after_success:
-  #- ./scripts/pack.sh
+  - ./scripts/pack.sh
 notifications:
   email:
     on_success: never
