@@ -7,7 +7,7 @@
     /// This exception is thrown if an entity excepted to be found but not found.
     /// </summary>
     [Serializable]
-    public class EntityNotFoundException : GionatException
+    public class EntityNotFoundException : GenocsException
     {
         /// <summary>
         /// Type of the entity.
