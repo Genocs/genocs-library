@@ -22,7 +22,8 @@ namespace Genocs.ServiceBusAzure.Queues
         private readonly IServiceProvider _serviceProvider;
 
         public AzureServiceBusQueue(IOptions<QueueOptions> options,
-                        IServiceProvider serviceProvider, ILogger<AzureServiceBusQueue> logger)
+                                    IServiceProvider serviceProvider, 
+                                    ILogger<AzureServiceBusQueue> logger)
         {
             if (options == null)
             {
@@ -44,7 +45,8 @@ namespace Genocs.ServiceBusAzure.Queues
         }
 
         public AzureServiceBusQueue(QueueOptions options,
-                       IServiceProvider serviceProvider, ILogger<AzureServiceBusQueue> logger)
+                                       IServiceProvider serviceProvider, 
+                                       ILogger<AzureServiceBusQueue> logger)
         {
             if (options == null)
             {

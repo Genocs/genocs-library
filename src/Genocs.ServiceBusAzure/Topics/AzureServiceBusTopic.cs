@@ -25,7 +25,8 @@ namespace Genocs.ServiceBusAzure.Topics
         private readonly List<Type> _eventTypes;
 
         public AzureServiceBusTopic(IOptions<TopicOptions> options,
-                        IServiceProvider serviceProvider, ILogger<AzureServiceBusTopic> logger)
+                                    IServiceProvider serviceProvider, 
+                                    ILogger<AzureServiceBusTopic> logger)
         {
             if (options == null)
             {
@@ -50,7 +51,8 @@ namespace Genocs.ServiceBusAzure.Topics
 
 
         public AzureServiceBusTopic(TopicOptions options,
-                        IServiceProvider serviceProvider, ILogger<AzureServiceBusTopic> logger)
+                                    IServiceProvider serviceProvider,
+                                    ILogger<AzureServiceBusTopic> logger)
         {
             if (options == null)
             {
@@ -107,8 +109,6 @@ namespace Genocs.ServiceBusAzure.Topics
             {
                 message.UserProperties.Add(filter);
             }
-
-
 
             await _topicClient.SendAsync(message);
         }
@@ -237,6 +237,5 @@ namespace Genocs.ServiceBusAzure.Topics
             }
             return processed;
         }
-
     }
 }

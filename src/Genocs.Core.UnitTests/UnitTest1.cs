@@ -1,4 +1,4 @@
-namespace Genocs.Core.Tests
+namespace Genocs.Core.UnitTests
 {
     using Xunit;
 
