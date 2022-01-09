@@ -2,17 +2,18 @@ language: csharp
 mono: none
 sudo: required
 dist: xenial
-dotnet: 5.0.403
+dotnet: 6.0.101
 branches:
   only:
     - master
-#    - develop
+    #- develop
 before_script:
   - chmod -R a+x scripts
 script:
   - ./scripts/build.sh
-#  - ./scripts/test.sh
+  - ./scripts/test.sh
 after_success:
+  #- ./scripts/dockerize.sh
   - ./scripts/pack.sh
 notifications:
   email:

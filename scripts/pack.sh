@@ -2,8 +2,8 @@
 echo Executing after success scripts on branch $TRAVIS_BRANCH
 echo Triggering NuGet package build
 
-dotnet pack -p:NuspecFile=Genocs.Core.nuspec --no-restore -o .
-dotnet pack -p:NuspecFile=Genocs.Persistence.MongoDb.nuspec --no-restore -o .
+dotnet pack -p:NuspecFile=Genocs.Core.nuspec --no-restore -o . -p:Version=2.0.$TRAVIS_BUILD_NUMBER
+dotnet pack -p:NuspecFile=Genocs.Persistence.MongoDb.nuspec --no-restore -o . -p:Version=2.0.$TRAVIS_BUILD_NUMBER
 
 echo Uploading Genocs.Core package to NuGet using branch $TRAVIS_BRANCH
 

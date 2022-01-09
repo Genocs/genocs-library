@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
+    /// Base exception type for those are thrown by Genocs system for Genocs specific exceptions.
     /// </summary>
     [Serializable]
     public class GenocsException : Exception

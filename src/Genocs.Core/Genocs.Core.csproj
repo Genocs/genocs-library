@@ -1,34 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.2</Version>
-    <MinClientVersion>5.0.0</MinClientVersion>
-    <Company>[Genocs] Nocco Giovanni Emanuele</Company>
-    <Authors>Nocco Giovanni Emanuele</Authors>  
-    <Title>The base library useful to build .NET Core projects.</Title>
-    <Description>The base library useful to build .NET Core projects.</Description>
-    <Copyright>Genocs 2021</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
-    <PackageIcon>genocs-icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="genocs-icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>2.0.2</Version>
+		<MinClientVersion>5.0.0</MinClientVersion>
+		<Company>[Genocs] Nocco Giovanni Emanuele</Company>
+		<Authors>Nocco Giovanni Emanuele</Authors>
+		<Title>The base library useful to build .NET Core projects.</Title>
+		<Description>The base library useful to build .NET Core projects.</Description>
+		<Copyright>Genocs 2021</Copyright>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

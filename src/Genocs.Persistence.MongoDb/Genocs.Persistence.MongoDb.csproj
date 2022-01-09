@@ -1,34 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
-    <MinClientVersion>5.0.0</MinClientVersion>
-    <Company>[Genocs] Nocco Giovanni Emanuele</Company>
-    <Authors>Nocco Giovanni Emanuele</Authors>
-    <Title>The Persistence MongoDB Library.</Title>
-    <Description>The library containing base repository pattern to build .NET Core projects.</Description>
-    <Copyright>Genocs 2021</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
-    <PackageIcon>genocs-icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Genocs.Core" Version="1.0.2" />
-    <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="genocs-icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>2.0.2</Version>
+		<MinClientVersion>5.0.0</MinClientVersion>
+		<Company>[Genocs] Nocco Giovanni Emanuele</Company>
+		<Authors>Nocco Giovanni Emanuele</Authors>
+		<Title>The Persistence MongoDB Library.</Title>
+		<Description>The library containing base repository pattern to build .NET Core projects.</Description>
+		<Copyright>Genocs 2021</Copyright>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Genocs.Core" Version="1.0.2" />
+		<PackageReference Include="MongoDB.Driver" Version="2.14.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

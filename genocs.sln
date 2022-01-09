@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{51AC5A23-37B9-447B-8A18-2AFF171FA253}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb", "src\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj", "{43604E79-FEA7-4A53-B2E9-C1D6FE30F8E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb.Tests", "src\Genocs.Persistence.MongoDb.Tests\Genocs.Persistence.MongoDb.Tests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure", "src\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj", "{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{B432832E-7BB2-4D24-B910-23C65580AC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B432832E-7BB2-4D24-B910-23C65580AC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B432832E-7BB2-4D24-B910-23C65580AC9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
