@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>25b75f57-f39f-4302-8243-5248df02ab1e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.2.0" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1" />
+    <PackageReference Include="MongoDB.Bson" Version="2.14.1" />
+    <PackageReference Include="Polly" Version="7.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+    <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Repository\" />
+  </ItemGroup>
+
+</Project>
