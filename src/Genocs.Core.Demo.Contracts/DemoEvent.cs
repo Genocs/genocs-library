@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.Interfaces;
 
-namespace Genocs.Core.Demo.WebApi.Models
+namespace Genocs.Core.Demo.Contracts
 {
     public class DemoEvent : IEvent
     {

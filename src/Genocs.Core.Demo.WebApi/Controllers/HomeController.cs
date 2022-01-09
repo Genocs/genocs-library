@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Demo.WebApi.Models;
+﻿using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Interfaces;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;

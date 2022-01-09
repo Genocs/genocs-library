@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
     <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
     <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
   </ItemGroup>
