@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="7.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.5" />
   </ItemGroup>
 
   <ItemGroup>
