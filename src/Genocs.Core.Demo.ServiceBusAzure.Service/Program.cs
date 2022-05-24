@@ -1,8 +1,13 @@
+using Genocs.Core.Demo.ServiceBusAzure.Service.Handlers;
+using Genocs.Core.Interfaces;
+using Genocs.ServiceBusAzure.Topics;
+using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -37,22 +42,10 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         _module.Initialize(configuration);
 
-        services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
-        services.AddMassTransit(cfg =>
-        {
-            // Consumer configuration
-            //cfg.AddConsumersFromNamespaceContaining<AllocateInventoryConsumer>();
+        ConfigureMassTransit(hostContext, services);
+        ConfigureAzureServiceBusTopic(hostContext, services);
+        //ConfigureAzureServiceBusQueue(hostContext, services);
 
-            // Routing slip configuration
-
-            //cfg.AddSagaStateMachine<AllocationStateMachine, AllocationState>(typeof(AllocateStateMachineDefinition))
-            //    .RedisRepository();
-
-            cfg.UsingRabbitMq(ConfigureBus);
-        });
-
-        // Not needed with Masstransit 8.x
-        //services.AddHostedService<MassTransitConsoleHostedService>();
     })
     .ConfigureLogging((hostingContext, logging) =>
     {
@@ -65,6 +58,27 @@ await host.RunAsync();
 
 Log.CloseAndFlush();
 
+
+
+static void ConfigureMassTransit(HostBuilderContext hostContext, IServiceCollection services)
+{
+    services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
+    services.AddMassTransit(cfg =>
+    {
+        // Consumer configuration
+        //cfg.AddConsumersFromNamespaceContaining<AllocateInventoryConsumer>();
+
+        // Routing slip configuration
+
+        //cfg.AddSagaStateMachine<AllocationStateMachine, AllocationState>(typeof(AllocateStateMachineDefinition))
+        //    .RedisRepository();
+
+        cfg.UsingRabbitMq(ConfigureBus);
+    });
+
+    // Not needed with Masstransit 8.x
+    //services.AddHostedService<MassTransitConsoleHostedService>();
+}
 
 static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryConfigurator configurator)
 {
@@ -88,6 +102,30 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
 
     // This configuration will configure the Activity Definition
     configurator.ConfigureEndpoints(context);
+}
+
+static void ConfigureAzureServiceBusTopic(HostBuilderContext hostContext, IServiceCollection services)
+{
+    services.AddScoped<IEventHandler<NewRedeemReqEvent>, NewRedeemReqEventHandler>();
+
+    services.Configure<TopicOptions>(hostContext.Configuration.GetSection("TopicSettings"));
+
+    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
+
+    var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
+    topicBus.Subscribe<NewRedeemReqEvent, IEventHandler<NewRedeemReqEvent>>();
+}
+
+static void ConfigureAzureServiceBusQueue(HostBuilderContext hostContext, IServiceCollection services)
+{
+    //services.AddScoped<ICommandHandler<DemoCommand>, DemoCommandHandler>();
+
+    //services.Configure<QueueOptions>(hostContext.Configuration.GetSection("QueueSettings"));
+
+    //services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
+
+    //var queueBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusQueue>();
+    //queueBus.Consume<DemoCommand, ICommandHandler<DemoCommand>>();
 }
 
 /*

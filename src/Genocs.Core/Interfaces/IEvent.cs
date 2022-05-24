@@ -8,6 +8,7 @@ namespace Genocs.Core.Interfaces
     public interface IEvent : IMessage
     {
     }
+
     public interface IEventHandler<T> where T : IEvent
     {
         Task HandleEvent(T @event);

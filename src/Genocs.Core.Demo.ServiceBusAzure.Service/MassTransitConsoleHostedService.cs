@@ -7,7 +7,7 @@ namespace Genocs.Core.Demo.ServiceBusAzure.Service;
 
 public class MassTransitConsoleHostedService : IHostedService
 {
-    readonly IBusControl _bus;
+    private readonly IBusControl _bus;
 
     public MassTransitConsoleHostedService(IBusControl bus)
     {
