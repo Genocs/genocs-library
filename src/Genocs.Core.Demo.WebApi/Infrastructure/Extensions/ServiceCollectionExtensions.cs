@@ -72,8 +72,7 @@ namespace Genocs.Core.Demo.WebApi.Infrastructure.Extensions
                         }
                     );
                 });
-            })
-            .AddMassTransitHostedService();
+            });
 
             return services;
         }
