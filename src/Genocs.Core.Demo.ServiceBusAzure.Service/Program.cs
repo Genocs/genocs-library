@@ -1,10 +1,8 @@
-using Genocs.Core.Demo.ServiceBusAzure.BusWorker;
 using MassTransit;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,7 +23,7 @@ Log.Logger = new LoggerConfiguration()
     //.WriteTo.Console()
     .CreateLogger();
 
-Microsoft.Extensions.Hosting.IHost host = Host.CreateDefaultBuilder(args)
+IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         _module = new DependencyTrackingTelemetryModule();

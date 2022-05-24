@@ -19,13 +19,13 @@ namespace Genocs.ServiceBusAzure.Topics
         private readonly TopicOptions _options;
         private readonly ILogger<AzureServiceBusTopic> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private const string Event_SUFFIX = "Event";
-        private Dictionary<string, List<SubscriptionInfo>> _handlers;
-        private SubscriptionClient _subscriptionClient;
+        private const string EVENT_SUFFIX = "Event";
+        private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
+        private readonly SubscriptionClient _subscriptionClient;
         private readonly List<Type> _eventTypes;
 
         public AzureServiceBusTopic(IOptions<TopicOptions> options,
-                                    IServiceProvider serviceProvider, 
+                                    IServiceProvider serviceProvider,
                                     ILogger<AzureServiceBusTopic> logger)
         {
             if (options == null)
@@ -77,7 +77,7 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task PublishAsync(IEvent @event)
         {
-            var eventName = @event.GetType().Name.Replace(Event_SUFFIX, "");
+            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
             var jsonMessage = JsonConvert.SerializeObject(@event);
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
@@ -94,7 +94,7 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task PublishAsync(IEvent @event, Dictionary<string, object> filters)
         {
-            var eventName = @event.GetType().Name.Replace(Event_SUFFIX, "");
+            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
             var jsonMessage = JsonConvert.SerializeObject(@event);
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
@@ -115,7 +115,7 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset)
         {
-            var eventName = @event.GetType().Name.Replace(Event_SUFFIX, "");
+            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
             var jsonMessage = JsonConvert.SerializeObject(@event);
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
@@ -130,7 +130,7 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters)
         {
-            var eventName = @event.GetType().Name.Replace(Event_SUFFIX, "");
+            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
             var jsonMessage = JsonConvert.SerializeObject(@event);
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
@@ -153,7 +153,7 @@ namespace Genocs.ServiceBusAzure.Topics
             where T : IEvent
             where TH : IEventHandler<T>
         {
-            var eventName = typeof(T).Name.Replace(Event_SUFFIX, "");
+            var eventName = typeof(T).Name.Replace(EVENT_SUFFIX, "");
             var key = typeof(T).Name;
             if (!_handlers.ContainsKey(key))
             {
@@ -170,12 +170,14 @@ namespace Genocs.ServiceBusAzure.Topics
             if (_handlers[key].Any(s => s.HandlerType == handlerType))
             {
                 throw new ArgumentException(
-                    $"Handler Type {typeof(TH).Name} already registered for '{key}'", nameof(handlerType));
+                    $"Handler Type '{typeof(TH).Name}' already registered for '{key}'", nameof(handlerType));
             }
+
             if (!_eventTypes.Contains(typeof(T)))
             {
                 _eventTypes.Add(typeof(T));
             }
+
             _handlers[key].Add(SubscriptionInfo.Typed(handlerType));
 
         }
@@ -185,7 +187,7 @@ namespace Genocs.ServiceBusAzure.Topics
             _subscriptionClient.RegisterMessageHandler(
                 async (message, token) =>
                 {
-                    var eventName = $"{message.Label}{Event_SUFFIX}";
+                    var eventName = $"{message.Label}{EVENT_SUFFIX}";
                     var messageData = Encoding.UTF8.GetString(message.Body);
 
                     // Complete the message so that it is not received again.

@@ -1,8 +1,7 @@
-﻿namespace Genocs.Core.Demo.WebApi.Models
+﻿namespace Genocs.Core.Demo.WebApi.Models;
+
+public interface OrderSubmitted
 {
-    public interface OrderSubmitted
-    {
-        public string OrderId { get; set; }
-        public string UserId { get; set; }
-    }
+    public string OrderId { get; set; }
+    public string UserId { get; set; }
 }

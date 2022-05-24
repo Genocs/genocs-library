@@ -1,17 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<UserSecretsId>dotnet-UTU.Platform.Demo.AzureServiceBus.BusWorker-88A0153C-4C79-4E01-9D98-9B4A9CC9A346</UserSecretsId>
+		<UserSecretsId>88A0153C-4C79-4E01-9D98-9B4A9CC9A346</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MassTransit" Version="8.0.2" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.2" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.20.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.5" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="Serilog" Version="2.11.0" />
 	</ItemGroup>
 
 	<ItemGroup>
