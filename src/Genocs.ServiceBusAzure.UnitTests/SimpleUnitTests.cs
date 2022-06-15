@@ -1,8 +1,8 @@
-namespace Genocs.Core.UnitTests;
+﻿namespace Genocs.ServiceBusAzure.UnitTests;
 
 using Xunit;
 
-public class UnitTest1
+public class SimpleUnitTests
 {
     [Fact]
     public void Test1()
