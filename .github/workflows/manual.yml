@@ -28,3 +28,7 @@ jobs:
     # Runs a single command using the runners shell
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
+    - name: Print Builder
+      run: echo "Hello ${{ GITHUB_RUN_NUMBER }}"      
+      
+      
