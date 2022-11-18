@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure.Unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.WebApi", "src\Genocs.Core.Demo.WebApi\Genocs.Core.Demo.WebApi.csproj", "{A753BE9B-3E49-468E-84E8-A5E603DED02C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.ServiceBusAzure.Service", "src\Genocs.Core.Demo.ServiceBusAzure.Service\Genocs.Core.Demo.ServiceBusAzure.Service.csproj", "{CB5689EF-527A-4765-909E-C3E247B31F83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.ServiceBusAzure.Worker", "src\Genocs.Core.Demo.ServiceBusAzure.Worker\Genocs.Core.Demo.ServiceBusAzure.Worker.csproj", "{CB5689EF-527A-4765-909E-C3E247B31F83}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Contracts", "src\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj", "{B8585557-034E-4028-BFE9-80B6ABA287F3}"
 EndProject

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<UserSecretsId>genocs-core-demo</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.8" />
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
+
+		<PackageReference Include="Serilog" Version="2.12.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
+		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
+	</ItemGroup>
+</Project>

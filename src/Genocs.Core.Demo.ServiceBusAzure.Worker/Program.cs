@@ -1,4 +1,5 @@
 using Genocs.Core.Demo.ServiceBusAzure.Service.Handlers;
+using Genocs.Core.Demo.ServiceBusAzure.Worker;
 using Genocs.Core.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
@@ -24,9 +25,15 @@ TelemetryClient _telemetryClient;
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
     .Enrich.FromLogContext()
-    //.WriteTo.Console()
+    .WriteTo.Console()
     .CreateLogger();
+
+
+var builder = Host.CreateDefaultBuilder(args);
+
+//TelemetryAndLogging.Initialize()
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>

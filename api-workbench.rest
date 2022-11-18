@@ -3,18 +3,36 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###############################################################################
 
-@url = https://localhost:5000
-@payload = Ciao
+@url = https://localhost:5001
 
-### Single check
+
+### Home
+GET {{url}}
+
+### Simple check
 GET {{url}}/ping
 
-### Build a qrcode
-GET {{url}}/BuildQrCode?payload={{payload}}
-
-### Read a qrcode printed into an image
-POST {{url}}/findQrCode
+### Send event with Masstransit
+POST {{url}}/ServiceBus/SendToMasstransitBus
 Content-Type: application/json
+
+{
+
+}
+
+
+### Send command to Azure Service Bus Queue
+POST {{url}}/ServiceBus/SendToQueueAzureServiceBus
+Content-Type: application/json
+
+{
+
+}
+
+### Send event to Azure Service Bus Topic
+POST {{url}}/ServiceBus/SendToTopicAzureServiceBus
+Content-Type: application/json
+
 {
 
   "fullname": "John Doe",
