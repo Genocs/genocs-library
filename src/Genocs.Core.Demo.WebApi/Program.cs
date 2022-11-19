@@ -1,7 +1,6 @@
 using Genocs.Core.Demo.WebApi;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;

@@ -1,4 +1,5 @@
 ﻿using Genocs.Core.Interfaces;
+using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ namespace Genocs.ServiceBusAzure.Topics
     public class AzureServiceBusTopic : IAzureServiceBusTopic
     {
         private readonly TopicClient _topicClient;
-        private readonly TopicOptions _options;
+        private readonly TopicSettings _options;
         private readonly ILogger<AzureServiceBusTopic> _logger;
         private readonly IServiceProvider _serviceProvider;
         private const string EVENT_SUFFIX = "Event";
@@ -24,7 +25,7 @@ namespace Genocs.ServiceBusAzure.Topics
         private readonly SubscriptionClient _subscriptionClient;
         private readonly List<Type> _eventTypes;
 
-        public AzureServiceBusTopic(IOptions<TopicOptions> options,
+        public AzureServiceBusTopic(IOptions<TopicSettings> options,
                                     IServiceProvider serviceProvider,
                                     ILogger<AzureServiceBusTopic> logger)
         {
@@ -50,7 +51,7 @@ namespace Genocs.ServiceBusAzure.Topics
         }
 
 
-        public AzureServiceBusTopic(TopicOptions options,
+        public AzureServiceBusTopic(TopicSettings options,
                                     IServiceProvider serviceProvider,
                                     ILogger<AzureServiceBusTopic> logger)
         {

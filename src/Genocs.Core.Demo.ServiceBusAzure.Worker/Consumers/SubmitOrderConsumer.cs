@@ -1,7 +1,7 @@
 ﻿using Genocs.Core.Demo.Contracts;
+using Genocs.Core.Demo.Domain.Aggregates;
+using Genocs.Core.Domain.Repositories;
 using MassTransit;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Genocs.Core.Demo.ServiceBusAzure.Service.Consumers;
 
@@ -9,13 +9,18 @@ public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {
     private readonly ILogger<SubmitOrderConsumer> _logger;
 
-    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger)
+    private readonly IRepository<Order, string> _orderRepository;
+
+    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IRepository<Order, string> orderRepository)
     {
-        _logger = logger;
+        _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
+        _orderRepository = orderRepository ?? throw new System.ArgumentNullException(nameof(orderRepository));
     }
 
-    public Task Consume(ConsumeContext<SubmitOrder> context)
+    public async Task Consume(ConsumeContext<SubmitOrder> context)
     {
-        throw new System.NotImplementedException();
+        Order order = new Order(context.Message.OrderId, context.Message.UserId, "", 1, "EUR");
+        await _orderRepository.InsertAsync(order);
+        _logger.LogInformation($"Order {context.Message.OrderId} processed!");
     }
 }

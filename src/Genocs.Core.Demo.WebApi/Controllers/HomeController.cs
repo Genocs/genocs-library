@@ -20,19 +20,3 @@ public class HomeController : ControllerBase
         => Ok("pong");
 
 }
-
-public class Product
-{
-    public int Count { get; set; }
-    public decimal Price { get; set; }
-}
-
-public class NewRedeemReqEvent : IEvent
-{
-    public string RequestId { get; set; }
-    public string UserId { get; set; }
-    public DateTime TimeStamp { get; set; }
-    public string CardToken { get; set; }
-    public decimal Amount { get; set; }
-    public string Currency { get; set; }
-}

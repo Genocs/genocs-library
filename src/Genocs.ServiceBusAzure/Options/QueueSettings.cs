@@ -1,9 +1,10 @@
 ﻿using Microsoft.Azure.ServiceBus;
 
-namespace Genocs.ServiceBusAzure.Queues
+namespace Genocs.ServiceBusAzure.Options
 {
-    public class QueueOptions
+    public class QueueSettings
     {
+        public static string Position = "QueueSettings";
         public string ConnectionString { get; set; }
         public string QueueName { get; set; }
         public int MaxConcurrentCalls { get; set; } = 20;

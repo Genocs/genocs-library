@@ -1,23 +1,20 @@
 ﻿using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Demo.ServiceBusAzure.Service.Consumers;
 using Genocs.Core.Interfaces;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
-namespace Genocs.Core.Demo.ServiceBusAzure.Service.Handlers;
+namespace Genocs.Core.Demo.ServiceBusAzure.Worker.Handlers;
 
 public class DemoCommandHandler : ICommandHandler<DemoCommand>
 {
-    private readonly ILogger<SubmitOrderConsumer> _logger;
+    private readonly ILogger<DemoCommandHandler> _logger;
 
-    public DemoCommandHandler(ILogger<SubmitOrderConsumer> logger)
+    public DemoCommandHandler(ILogger<DemoCommandHandler> logger)
     {
         _logger = logger;
     }
 
     public Task HandleCommand(DemoCommand command)
     {
-        _logger.LogInformation(command.Payload);
+        _logger.LogInformation($"DemoCommand '{command.Payload}' processed!");
         // Do something with the message here
         return Task.CompletedTask;
     }

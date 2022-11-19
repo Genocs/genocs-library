@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.Domain", "src\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj", "{3F6C140E-EA64-424D-9214-53A677157E10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.PersistenceMongoDb", "src\Genocs.Core.PersistenceMongoDb\Genocs.Core.PersistenceMongoDb.csproj", "{437AC2DF-2F69-4FD3-B0C6-95B0BD8A4180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.PersistenceMongoDb", "Genocs.Core.PersistenceMongoDb\Genocs.Core.PersistenceMongoDb.csproj", "{437AC2DF-2F69-4FD3-B0C6-95B0BD8A4180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.Infrastructure", "src\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj", "{FA01671E-9778-4581-9CD3-4A0651DBC7D7}"
 EndProject

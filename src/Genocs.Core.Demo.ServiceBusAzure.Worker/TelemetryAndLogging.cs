@@ -11,12 +11,14 @@ namespace Genocs.Core.Demo.ServiceBusAzure.Worker;
 
 internal static class TelemetryAndLogging
 {
-    private static DependencyTrackingTelemetryModule _module;
-    private static TelemetryClient _telemetryClient;
-    private static TelemetryConfiguration _configuration;
+    private static DependencyTrackingTelemetryModule? _module;
+    private static TelemetryClient? _telemetryClient;
+    private static TelemetryConfiguration? _configuration;
 
-    public static void Initialize(string connectionString)
+    public static void Initialize(string? connectionString)
     {
+        if (string.IsNullOrWhiteSpace(connectionString)) return;
+
         _module = new DependencyTrackingTelemetryModule();
         _module.IncludeDiagnosticSourceActivities.Add("MassTransit");
 

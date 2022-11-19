@@ -12,14 +12,23 @@ GET {{url}}
 ### Simple check
 GET {{url}}/ping
 
+
 ### Send event with Masstransit
-POST {{url}}/ServiceBus/SendToMasstransitBus
+POST {{url}}/ServiceBusMassTransit/SubmitOrder
 Content-Type: application/json
 
 {
 
 }
 
+
+### Send event with Masstransit
+POST {{url}}/ServiceBusMassTransit/OrderSubmitted
+Content-Type: application/json
+
+{
+
+}
 
 ### Send command to Azure Service Bus Queue
 POST {{url}}/ServiceBus/SendToQueueAzureServiceBus

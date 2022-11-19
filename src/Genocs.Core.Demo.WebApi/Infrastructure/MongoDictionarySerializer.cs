@@ -2,7 +2,6 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure;
 

@@ -1,9 +1,10 @@
 ﻿using Microsoft.Azure.ServiceBus;
 
-namespace Genocs.ServiceBusAzure.Topics
+namespace Genocs.ServiceBusAzure.Options
 {
-    public class TopicOptions
+    public class TopicSettings
     {
+        public static string Position = "TopicSettings";
         public string ConnectionString { get; set; }
         public string TopicName { get; set; }
         public string SubscriptionName { get; set; }

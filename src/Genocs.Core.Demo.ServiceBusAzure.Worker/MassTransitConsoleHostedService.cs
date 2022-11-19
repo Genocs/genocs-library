@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Genocs.Core.Demo.ServiceBusAzure.Service;
+namespace Genocs.Core.Demo.ServiceBusAzure.Worker;
 
 public class MassTransitConsoleHostedService : IHostedService
 {

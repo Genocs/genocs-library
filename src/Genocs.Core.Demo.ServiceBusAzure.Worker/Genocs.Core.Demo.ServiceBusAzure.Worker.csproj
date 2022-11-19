@@ -2,7 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>genocs-core-demo</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,6 +25,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
+		<ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
+		<ProjectReference Include="..\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj" />
+		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
 		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
 	</ItemGroup>
 </Project>

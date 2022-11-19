@@ -2,21 +2,21 @@ using MassTransit;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
 
 namespace Genocs.Core.Demo.WebApi;
 
 internal static class TelemetryAndLogging
 {
-    private static DependencyTrackingTelemetryModule _module;
-    private static TelemetryClient _telemetryClient;
-    private static TelemetryConfiguration _configuration;
+    private static DependencyTrackingTelemetryModule? _module;
+    private static TelemetryClient? _telemetryClient;
+    private static TelemetryConfiguration? _configuration;
 
     public static void Initialize(string connectionString)
     {
+        if (string.IsNullOrWhiteSpace(connectionString)) return;
+
         _module = new DependencyTrackingTelemetryModule();
         _module.IncludeDiagnosticSourceActivities.Add("MassTransit");
 

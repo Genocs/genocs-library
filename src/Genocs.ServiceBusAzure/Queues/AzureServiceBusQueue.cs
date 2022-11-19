@@ -1,4 +1,5 @@
 ﻿using Genocs.Core.Interfaces;
+using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,13 +16,13 @@ namespace Genocs.ServiceBusAzure.Queues
     public class AzureServiceBusQueue : IAzureServiceBusQueue
     {
         private readonly IQueueClient _queueClient;
-        private readonly QueueOptions _options;
+        private readonly QueueSettings _options;
         private readonly ILogger<AzureServiceBusQueue> _logger;
         private Dictionary<string, KeyValuePair<Type, Type>> handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
         private const string COMMAND_SUFFIX = "Command";
         private readonly IServiceProvider _serviceProvider;
 
-        public AzureServiceBusQueue(IOptions<QueueOptions> options,
+        public AzureServiceBusQueue(IOptions<QueueSettings> options,
                                     IServiceProvider serviceProvider, 
                                     ILogger<AzureServiceBusQueue> logger)
         {
@@ -44,7 +45,7 @@ namespace Genocs.ServiceBusAzure.Queues
             RegisterQueueMessageHandlerAndProcess();
         }
 
-        public AzureServiceBusQueue(QueueOptions options,
+        public AzureServiceBusQueue(QueueSettings options,
                                        IServiceProvider serviceProvider, 
                                        ILogger<AzureServiceBusQueue> logger)
         {

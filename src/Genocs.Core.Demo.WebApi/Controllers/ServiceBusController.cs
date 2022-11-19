@@ -3,13 +3,8 @@ using Genocs.Core.Demo.WebApi.Models;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Net.Mime;
-using System.Threading.Tasks;
 
 namespace Genocs.Core.Demo.WebApi.Controllers
 {
@@ -30,6 +25,22 @@ namespace Genocs.Core.Demo.WebApi.Controllers
             _azureServiceBusQueue = azureServiceBusQueue;
             _azureServiceBusTopic = azureServiceBusTopic;
             _publishEndpoint = publishEndpoint;
+        }
+
+        [HttpPost("SubmitOrderToMasstransitBus")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PostSubmitOrderToMasstransitBus()
+        {
+            // Publish an event with MassTransit
+            await _publishEndpoint.Publish<SubmitOrder>(new
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = Guid.NewGuid().ToString(),
+                UserId = Guid.NewGuid().ToString()
+            });
+
+            return Ok("Sent");
         }
 
         [HttpPost("SendToMasstransitBus")]
@@ -80,17 +91,17 @@ namespace Genocs.Core.Demo.WebApi.Controllers
         {
             Dictionary<string, object> filters = new()
             {
-                { "service", "LateRefund" }
+                { "service", "OrderRequest" }
             };
 
-            var azureServiceBusMessage = new NewRedeemReqEvent
+            var azureServiceBusMessage = new OrderRequest
             {
-                TimeStamp = DateTime.UtcNow,
-                Amount = 10.0M,
-                Currency = "EUR",
+                OrderId = Guid.NewGuid().ToString(),
                 UserId = Guid.NewGuid().ToString(),
                 CardToken = "6500-1254-2548",
-                RequestId = Guid.NewGuid().ToString()
+                Amount = 10.0M,
+                Currency = "EUR",
+                Basket = new List<Product>()
             };
 
             await _azureServiceBusTopic.PublishAsync(azureServiceBusMessage, filters);

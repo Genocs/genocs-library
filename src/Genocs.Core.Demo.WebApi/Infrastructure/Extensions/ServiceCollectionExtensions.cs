@@ -1,11 +1,10 @@
 ﻿using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 
@@ -21,12 +20,12 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddAzureServiceBusTopic(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register IOptions<TopicOptions>
-        services.Configure<TopicOptions>(configuration.GetSection("TopicSettings"));
+        // Register IOptions<TopicSettings>
+        services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
 
-        // HOW to Register TopicOptions instead of IOptions<TopicOptions>
+        // HOW to Register TopicSettings instead of IOptions<TopicSettings>
         ////var topicSetting = new TopicOptions();
-        ////configuration.GetSection("TopicSettings").Bind(topicSetting);
+        ////configuration.GetSection(TopicSettings.Position).Bind(topicSetting);
         ////services.AddSingleton(topicSetting);
 
         services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
@@ -36,12 +35,12 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddAzureServiceBusQueue(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register IOptions<QueueOptions>
-        services.Configure<QueueOptions>(configuration.GetSection("QueueSettings"));
+        // Register IOptions<QueueSettings>
+        services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
 
-        // HOW to Register TopicOptions instead of IOptions<TopicOptions>
-        ////var queueSetting = new QueueOptions();
-        ////configuration.GetSection("QueueSettings").Bind(queueSetting);
+        // HOW to Register QueueSettings instead of IOptions<QueueSettings>
+        ////var queueSetting = new QueueSettings();
+        ////configuration.GetSection(QueueSettings.Position).Bind(queueSetting);
         ////services.AddSingleton(queueSetting);
 
         services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
@@ -51,8 +50,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
     {
-        var massTransitSetting = new MassTransitSetting();
-        configuration.GetSection("MassTransitSetting").Bind(massTransitSetting);
+        var massTransitSetting = new MassTransitSettings();
+        configuration.GetSection(MassTransitSettings.Position).Bind(massTransitSetting);
 
         services.AddSingleton(massTransitSetting);
 
