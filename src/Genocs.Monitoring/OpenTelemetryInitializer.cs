@@ -1,14 +1,32 @@
-namespace Genocs.Core.Demo.WebApi;
-
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 
-internal static class OpenTelemetryInitializer
+namespace Genocs.Monitoring;
+
+/// <summary>
+/// Todo
+/// </summary>
+public static class OpenTelemetryInitializer
 {
+    /// <summary>
+    /// Todo
+    /// </summary>
+    /// <param name="builder"></param>
+    public static void InitializeOpenTelemetry(this WebApplicationBuilder builder)
+    {
+        Initialize(builder);
+    }
+
+    /// <summary>
+    /// Backward compatibility
+    /// </summary>
+    /// <param name="builder">The builder</param>
     public static void Initialize(WebApplicationBuilder builder)
     {
 

@@ -1,10 +1,10 @@
 using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.ServiceBusAzure.Service.Consumers;
-using Genocs.Core.Demo.ServiceBusAzure.Worker;
 using Genocs.Core.Demo.ServiceBusAzure.Worker.Handlers;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Core.Interfaces;
+using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb;
 using Genocs.Persistence.MongoDb.Options;
 using Genocs.Persistence.MongoDb.Repositories;
@@ -33,10 +33,10 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
 
-        ConfigureMongoDb(hostContext, services);
-        ConfigureMassTransit(hostContext, services);
-        //ConfigureAzureServiceBusTopic(hostContext, services);
-        //ConfigureAzureServiceBusQueue(hostContext, services);
+        ConfigureMongoDb(services, hostContext.Configuration);
+        ConfigureMassTransit(services, hostContext.Configuration);
+        ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
+        ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
 
     })
     .ConfigureLogging((hostingContext, logging) =>
@@ -53,9 +53,9 @@ await TelemetryAndLogging.FlushAndCloseAsync();
 Log.CloseAndFlush();
 
 
-static void ConfigureMongoDb(HostBuilderContext hostContext, IServiceCollection services)
+static void ConfigureMongoDb(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<DBSettings>(hostContext.Configuration.GetSection(DBSettings.Position));
+    services.Configure<DBSettings>(configuration.GetSection(DBSettings.Position));
 
     services.TryAddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
     services.TryAddSingleton<IRepository<Order, string>, MongoDbRepositoryBase<Order, string>>();
@@ -63,7 +63,7 @@ static void ConfigureMongoDb(HostBuilderContext hostContext, IServiceCollection 
     // Add Repository here
 }
 
-static void ConfigureMassTransit(HostBuilderContext hostContext, IServiceCollection services)
+static void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
     services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
     services.AddMassTransit(cfg =>
@@ -100,26 +100,27 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
     configurator.ConfigureEndpoints(context);
 }
 
-static void ConfigureAzureServiceBusTopic(HostBuilderContext hostContext, IServiceCollection services)
+static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
 {
-    services.AddScoped<IEventHandler<OrderRequest>, OrderRequestEventHandler>();
-
-    services.Configure<TopicSettings>(hostContext.Configuration.GetSection(TopicSettings.Position));
+    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
 
     services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
 
+    services.AddScoped<IEventHandler<DemoEvent>, DemoEventHandler>();
+
     var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
-    topicBus.Subscribe<OrderRequest, IEventHandler<OrderRequest>>();
+    topicBus.Subscribe<DemoEvent, IEventHandler<DemoEvent>>();
+
 }
 
-static void ConfigureAzureServiceBusQueue(HostBuilderContext hostContext, IServiceCollection services)
+static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<QueueSettings>(hostContext.Configuration.GetSection(QueueSettings.Position));
+    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
 
     services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
 
-    var queueBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusQueue>();
-
     services.AddScoped<ICommandHandler<DemoCommand>, DemoCommandHandler>();
-    //queueBus.Consume<DemoCommand, ICommandHandler<DemoCommand>>();
+
+    var queueBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusQueue>();
+    queueBus.Consume<DemoCommand, ICommandHandler<DemoCommand>>();
 }

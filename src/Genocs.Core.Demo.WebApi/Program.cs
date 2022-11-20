@@ -1,11 +1,16 @@
-using Genocs.Core.Demo.WebApi;
+using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Monitoring;
+using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Queues.Interfaces;
+using Genocs.ServiceBusAzure.Queues;
+using Genocs.ServiceBusAzure.Topics.Interfaces;
+using Genocs.ServiceBusAzure.Topics;
 using MassTransit;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
 using System.Text.Json.Serialization;
-
 
 
 Log.Logger = new LoggerConfiguration()
@@ -22,13 +27,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console());
 
-// Setup Open Telemetry
-OpenTelemetryInitializer.Initialize(builder);
-// ***********************************************
+builder.InitializeOpenTelemetry();
+
 
 // add services to DI container
 var services = builder.Services;
 
+
+ConfigureAzureServiceBusTopic(services, builder.Configuration);
+ConfigureAzureServiceBusQueue(services, builder.Configuration);
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
@@ -36,7 +43,6 @@ services.AddControllers().AddJsonOptions(x =>
     // serialize enums as strings in api responses (e.g. Role)
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -89,3 +95,18 @@ app.MapControllers();
 app.Run();
 
 Log.CloseAndFlush();
+
+
+
+static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
+{
+    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
+    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
+}
+
+
+static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
+{
+    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
+    services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
+}

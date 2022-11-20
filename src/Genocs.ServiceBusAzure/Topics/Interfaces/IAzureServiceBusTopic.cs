@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Genocs.ServiceBusAzure.Topics.Interfaces
 {
+    /// <summary>
+    /// Todo
+    /// </summary>
     public interface IAzureServiceBusTopic
     {
         Task PublishAsync(IEvent @event);

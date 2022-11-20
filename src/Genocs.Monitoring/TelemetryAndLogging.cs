@@ -2,19 +2,28 @@ using MassTransit;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
 
-namespace Genocs.Core.Demo.WebApi;
+namespace Genocs.Monitoring;
 
-internal static class TelemetryAndLogging
+/// <summary>
+/// Todo
+/// </summary>
+public static class TelemetryAndLogging
 {
     private static DependencyTrackingTelemetryModule? _module;
     private static TelemetryClient? _telemetryClient;
     private static TelemetryConfiguration? _configuration;
 
-    public static void Initialize(string connectionString)
+    /// <summary>
+    /// Todo
+    /// </summary>
+    /// <param name="connectionString"></param>
+    public static void Initialize(string? connectionString)
     {
+        // I'm using connection string availability to start the telemetry and tracking 
         if (string.IsNullOrWhiteSpace(connectionString)) return;
 
         _module = new DependencyTrackingTelemetryModule();
@@ -39,6 +48,11 @@ internal static class TelemetryAndLogging
         LogContext.ConfigureCurrentLogContext(factory);
     }
 
+
+    /// <summary>
+    /// Todo
+    /// </summary>
+    /// <returns></returns>
     public static async Task FlushAndCloseAsync()
     {
         _module?.Dispose();

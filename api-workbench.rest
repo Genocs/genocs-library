@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Send command to Azure Service Bus Queue
-POST {{url}}/ServiceBus/SendToQueueAzureServiceBus
+POST {{url}}/ServiceBus/SendToQueueAzureServiceBusQueue
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### Send event to Azure Service Bus Topic
-POST {{url}}/ServiceBus/SendToTopicAzureServiceBus
+POST {{url}}/ServiceBus/SendToTopicAzureServiceBusTopic
 Content-Type: application/json
 
 {

@@ -150,6 +150,12 @@ namespace Genocs.ServiceBusAzure.Topics
             await _topicClient.ScheduleMessageAsync(message, offset);
         }
 
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TH"></typeparam>
+        /// <exception cref="ArgumentException"></exception>
         public void Subscribe<T, TH>()
             where T : IEvent
             where TH : IEventHandler<T>

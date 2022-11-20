@@ -13,15 +13,25 @@ using System.Threading.Tasks;
 
 namespace Genocs.ServiceBusAzure.Queues
 {
+    /// <summary>
+    /// Todo
+    /// </summary>
     public class AzureServiceBusQueue : IAzureServiceBusQueue
     {
         private readonly IQueueClient _queueClient;
         private readonly QueueSettings _options;
         private readonly ILogger<AzureServiceBusQueue> _logger;
-        private Dictionary<string, KeyValuePair<Type, Type>> handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
+        private Dictionary<string, KeyValuePair<Type, Type>> _handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
         private const string COMMAND_SUFFIX = "Command";
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public AzureServiceBusQueue(IOptions<QueueSettings> options,
                                     IServiceProvider serviceProvider, 
                                     ILogger<AzureServiceBusQueue> logger)
@@ -45,6 +55,13 @@ namespace Genocs.ServiceBusAzure.Queues
             RegisterQueueMessageHandlerAndProcess();
         }
 
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public AzureServiceBusQueue(QueueSettings options,
                                        IServiceProvider serviceProvider, 
                                        ILogger<AzureServiceBusQueue> logger)
@@ -68,7 +85,11 @@ namespace Genocs.ServiceBusAzure.Queues
             RegisterQueueMessageHandlerAndProcess();
         }
 
-
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public async Task SendAsync(ICommand command)
         {
             var jsonMessage = JsonConvert.SerializeObject(command);
@@ -84,6 +105,12 @@ namespace Genocs.ServiceBusAzure.Queues
             await _queueClient.SendAsync(message);
         }
 
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
         public async Task ScheduleAsync(ICommand command, DateTimeOffset offset)
         {
             var jsonMessage = JsonConvert.SerializeObject(command);
@@ -98,12 +125,17 @@ namespace Genocs.ServiceBusAzure.Queues
             await _queueClient.ScheduleMessageAsync(message, offset);
         }
 
+        /// <summary>
+        /// Todo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TH"></typeparam>
         public void Consume<T, TH>() where T : ICommand where TH : ICommandHandler<T>
         {
             var eventName = typeof(T).Name;
-            if (!handlers.ContainsKey(eventName))
+            if (!_handlers.ContainsKey(eventName))
             {
-                handlers.Add(eventName, new KeyValuePair<Type, Type>(typeof(T), typeof(TH)));
+                _handlers.Add(eventName, new KeyValuePair<Type, Type>(typeof(T), typeof(TH)));
             }
         }
 
@@ -126,11 +158,11 @@ namespace Genocs.ServiceBusAzure.Queues
         private async Task<bool> ProcessQueueMessages(string eventName, string message)
         {
             var processed = false;
-            if (handlers.ContainsKey(eventName))
+            if (_handlers.ContainsKey(eventName))
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var type = handlers[eventName];
+                    var type = _handlers[eventName];
                     if (type.Key != null && type.Value != null)
                     {
                         var handler = scope.ServiceProvider.GetRequiredService(type.Value);

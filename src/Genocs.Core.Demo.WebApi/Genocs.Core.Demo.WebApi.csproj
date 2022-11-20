@@ -21,7 +21,6 @@
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.5" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.5" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 
@@ -29,6 +28,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
+		<ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
 		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
 	</ItemGroup>
 

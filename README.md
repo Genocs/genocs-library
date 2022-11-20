@@ -50,6 +50,19 @@ The ServiceBusAzure allows to publish/send messages to Azure Service Bus
 - [service-bus-quickstart-cli](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli)
 
 
+``` PS
+# Create the namespace
+az servicebus namespace create --resource-group rg-genocs --name asb-genocs --location "West Europe"
+
+# Create the queue
+az servicebus queue create --resource-group rg-genocs --namespace-name asb-genocs --name queue_1
+
+# get the connection string
+az servicebus namespace authorization-rule keys list --resource-group rg-genocs --namespace-name asb-genocs --name RootManageSharedAccessKey --query primaryConnectionString --output tsv 
+
+```
+
+
 ## Support
 
 api-workbench.rest

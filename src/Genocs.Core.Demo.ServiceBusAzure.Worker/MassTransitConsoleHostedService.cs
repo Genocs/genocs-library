@@ -1,7 +1,4 @@
 ﻿using MassTransit;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Genocs.Core.Demo.ServiceBusAzure.Worker;
 
