@@ -52,13 +52,4 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
-
-	<ItemGroup>
-		<None Update="README_NUGET.md">
-			<PackagePath>\</PackagePath>
-			<Pack>True</Pack>
-		</None>
-	</ItemGroup>
-
 </Project>
