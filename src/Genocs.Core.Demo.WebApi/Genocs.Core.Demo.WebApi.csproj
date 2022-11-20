@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
-		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<UserSecretsId>genocs-core-demo</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
@@ -12,7 +12,7 @@
 	<ItemGroup>
 		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.0.0-beta.3" />
 		<PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.2" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.8" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
@@ -21,13 +21,14 @@
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.5" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.5" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+		
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
 	</ItemGroup>
 

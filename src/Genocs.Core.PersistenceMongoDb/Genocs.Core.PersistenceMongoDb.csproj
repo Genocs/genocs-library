@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Genocs.Core.Demo.WebApi\Genocs.Core.Demo.WebApi.csproj" />
     <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
   </ItemGroup>
 
