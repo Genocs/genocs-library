@@ -12,6 +12,23 @@ namespace Genocs.Persistence.MongoDb.Repositories
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
+
+    /// <summary>
+    /// Implements IRepository for MongoDB.
+    /// </summary>
+    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
+    public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity> where TEntity : class, IMongoDbEntity
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseProvider"></param>
+        public MongoDbRepository(IMongoDatabaseProvider databaseProvider)
+            : base(databaseProvider)
+        {
+        }
+    }
+
     /// <summary>
     /// Implements IRepository for MongoDB.
     /// </summary>
@@ -19,16 +36,31 @@ namespace Genocs.Persistence.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
         where TEntity : class, IEntity<ObjectId>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseProvider"></param>
         public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
             : base(databaseProvider)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IMongoQueryable<TEntity> GetMongoQueryable()
         {
             return Collection.AsQueryable();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TQuery"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
             TQuery query) where TQuery : PagedQueryBase
                 => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
@@ -43,11 +75,17 @@ namespace Genocs.Persistence.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
+        /// <summary>
+        /// Todo
+        /// </summary>
         public virtual IMongoDatabase Database
         {
             get { return _databaseProvider.Database; }
         }
 
+        /// <summary>
+        /// Todo
+        /// </summary>
         public virtual IMongoCollection<TEntity> Collection
         {
             get
