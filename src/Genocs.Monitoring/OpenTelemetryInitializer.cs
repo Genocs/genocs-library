@@ -1,5 +1,4 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -10,37 +9,36 @@ using System.Diagnostics;
 namespace Genocs.Monitoring;
 
 /// <summary>
-/// Todo
+/// The Open Telemetry and Tracing
 /// </summary>
 public static class OpenTelemetryInitializer
 {
     /// <summary>
-    /// Todo
+    /// Custom settings for OpenTelemetry
     /// </summary>
-    /// <param name="builder"></param>
-    public static void InitializeOpenTelemetry(this WebApplicationBuilder builder)
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddCustomOpenTelemetry(this IServiceCollection services, IConfiguration configuration)
     {
-        Initialize(builder);
-    }
+        string? serviceName = configuration.GetSection("AppSettings")?.GetValue(typeof(string), "ServiceName") as string;
 
-    /// <summary>
-    /// Backward compatibility
-    /// </summary>
-    /// <param name="builder">The builder</param>
-    public static void Initialize(WebApplicationBuilder builder)
-    {
+        // No OpenTelemetryTracing in case of missing ServiceName
+        if (string.IsNullOrWhiteSpace(serviceName)) return services;
 
-        builder.Services.AddOpenTelemetryTracing(x =>
+        services.AddOpenTelemetryTracing(x =>
         {
-            string? serviceName = builder.Configuration.GetSection("AppSettings")?.GetValue(typeof(string), "ServiceName") as string;
-
             var providerBuilder = x.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                    .AddService(serviceName)
-                    .AddTelemetrySdk()
-                    .AddEnvironmentVariableDetector())
-                .AddAspNetCoreInstrumentation();
+                                        .AddService(serviceName)
+                                        .AddTelemetrySdk()
+                                        .AddEnvironmentVariableDetector())
+                                    .AddSource("MassTransit")
+                                    .AddAspNetCoreInstrumentation()
+                                    .AddMongoDBInstrumentation();
 
-            string? connectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
+            // Check: In case of ApplicationInsights setup Azure Application Insights
+            string? connectionString = configuration.GetConnectionString("ApplicationInsights");
+
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
                 providerBuilder.AddAzureMonitorTraceExporter(o =>
@@ -49,7 +47,8 @@ public static class OpenTelemetryInitializer
                 });
             }
 
-            string? jaegerHost = builder.Configuration.GetSection("Monitoring")?.GetValue(typeof(string), "Jaeger") as string;
+            // Check: In case of Monitoring->Jaeger setup Enable Jaeger
+            string? jaegerHost = configuration.GetSection("Monitoring")?.GetValue(typeof(string), "Jaeger") as string;
             if (!string.IsNullOrWhiteSpace(jaegerHost))
             {
                 providerBuilder.AddJaegerExporter(o =>
@@ -68,5 +67,7 @@ public static class OpenTelemetryInitializer
                 });
             }
         });
+
+        return services;
     }
 }

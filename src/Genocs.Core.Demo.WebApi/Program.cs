@@ -1,11 +1,10 @@
-using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Monitoring;
 using Genocs.ServiceBusAzure.Options;
-using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Queues;
-using Genocs.ServiceBusAzure.Topics.Interfaces;
+using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
+using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -27,15 +26,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console());
 
-builder.InitializeOpenTelemetry();
-
-
+//builder.InitializeOpenTelemetry();
 // add services to DI container
 var services = builder.Services;
 
+// Set Custom Open telemetry
+services.AddCustomOpenTelemetry(builder.Configuration);
 
-ConfigureAzureServiceBusTopic(services, builder.Configuration);
-ConfigureAzureServiceBusQueue(services, builder.Configuration);
+
+//ConfigureAzureServiceBusTopic(services, builder.Configuration);
+//ConfigureAzureServiceBusQueue(services, builder.Configuration);
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
@@ -44,20 +44,19 @@ services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
-
-
-services.AddMassTransit(builder.Configuration);
-
+services.AddHealthChecks();
 
 services.Configure<HealthCheckPublisherOptions>(options =>
 {
     options.Delay = TimeSpan.FromSeconds(2);
     options.Predicate = check => check.Tags.Contains("ready");
 });
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+
+services.AddMassTransit(builder.Configuration);
 
 services.AddOptions();
 
@@ -91,6 +90,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/healthz");
 
 app.Run();
 

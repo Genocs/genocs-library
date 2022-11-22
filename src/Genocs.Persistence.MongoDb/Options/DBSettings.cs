@@ -6,5 +6,10 @@
 
         public string ConnectionString { get; set; } = default!;
         public string Database { get; set; } = default!;
+
+        /// <summary>
+        /// To Do
+        /// </summary>
+        public bool EnableTracing { get; set; }
     }
 }

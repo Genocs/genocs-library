@@ -18,7 +18,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
 using Serilog.Events;
 
-
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -29,19 +28,24 @@ Log.Logger = new LoggerConfiguration()
 
 
 IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostContext, builder) =>
+    {
+        builder.AddUserSecrets<Program>();
+    })
     .ConfigureServices((hostContext, services) =>
     {
-        TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
+        //TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
+        services.AddCustomOpenTelemetry(hostContext.Configuration);
 
         ConfigureMongoDb(services, hostContext.Configuration);
         ConfigureMassTransit(services, hostContext.Configuration);
-        ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
-        ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
+        //ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
+        //ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
 
     })
     .ConfigureLogging((hostingContext, logging) =>
     {
-        //logging.AddSerilog(dispose: true);
+        logging.AddSerilog(dispose: true);
         logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
     })
     .Build();
@@ -53,7 +57,7 @@ await TelemetryAndLogging.FlushAndCloseAsync();
 Log.CloseAndFlush();
 
 
-static void ConfigureMongoDb(IServiceCollection services, IConfiguration configuration)
+static IServiceCollection ConfigureMongoDb(IServiceCollection services, IConfiguration configuration)
 {
     services.Configure<DBSettings>(configuration.GetSection(DBSettings.Position));
 
@@ -61,9 +65,11 @@ static void ConfigureMongoDb(IServiceCollection services, IConfiguration configu
     services.TryAddSingleton<IRepository<Order, string>, MongoDbRepositoryBase<Order, string>>();
 
     // Add Repository here
+
+    return services;
 }
 
-static void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
+static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
     services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
     services.AddMassTransit(cfg =>
@@ -74,6 +80,8 @@ static void ConfigureMassTransit(IServiceCollection services, IConfiguration con
         // Set the transport
         cfg.UsingRabbitMq(ConfigureBus);
     });
+
+    return services;
 }
 
 static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryConfigurator configurator)

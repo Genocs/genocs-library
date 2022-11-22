@@ -3,12 +3,24 @@
     using Genocs.Persistence.MongoDb.Options;
     using Microsoft.Extensions.Options;
     using MongoDB.Driver;
+    using MongoDB.Driver.Core.Extensions.DiagnosticSources;
     using System;
 
+    /// <summary>
+    /// The MongoDatabaseProvider
+    /// </summary>
     public class MongoDatabaseProvider : IMongoDatabaseProvider
     {
+        /// <summary>
+        /// Reference to Database
+        /// </summary>
         public IMongoDatabase Database { get; set; }
 
+        /// <summary>
+        /// Default Constractor
+        /// </summary>
+        /// <param name="options"></param>
+        /// <exception cref="NullReferenceException"></exception>
         public MongoDatabaseProvider(IOptions<DBSettings> options)
         {
             if (options == null) throw new NullReferenceException(nameof(options));
@@ -16,8 +28,15 @@
 
             if (dBSettings == null) throw new NullReferenceException(nameof(dBSettings));
 
-            MongoClient client = new MongoClient(dBSettings.ConnectionString);
-            Database = client.GetDatabase(dBSettings.Database);
+            MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(dBSettings.ConnectionString);
+
+            if (dBSettings.EnableTracing)
+            {
+                clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+            }
+            MongoClient mongoClient = new MongoClient(clientSettings);
+
+            Database = mongoClient.GetDatabase(dBSettings.Database);
         }
     }
 }

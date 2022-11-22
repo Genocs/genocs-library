@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>2.2.0</Version>
+		<Version>2.2.1</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Company>[Genocs] Nocco Giovanni Emanuele</Company>
 		<Authors>Nocco Giovanni Emanuele</Authors>
@@ -17,7 +17,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
 		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-		<PackageReleaseNotes>Updated references</PackageReleaseNotes>
+		<PackageReleaseNotes>Enable support for tracing</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -26,6 +26,7 @@
 		<PackageReference Include="Genocs.Core" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
 		<PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+		<PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="1.3.0" />		
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\LICENSE">
