@@ -1,7 +1,7 @@
 ﻿using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Interfaces;
 
-namespace Genocs.Core.Demo.ServiceBusAzure.Worker.Handlers;
+namespace Genocs.Core.Demo.Worker.Handlers;
 
 public class DemoEventHandler : IEventHandler<DemoEvent>
 {

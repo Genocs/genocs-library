@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 
-namespace Genocs.Core.Demo.ServiceBusAzure.Worker;
+namespace Genocs.Core.Demo.Worker;
 
 public class MassTransitConsoleHostedService : IHostedService
 {

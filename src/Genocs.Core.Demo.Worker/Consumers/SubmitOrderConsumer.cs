@@ -3,7 +3,7 @@ using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Domain.Repositories;
 using MassTransit;
 
-namespace Genocs.Core.Demo.ServiceBusAzure.Service.Consumers;
+namespace Genocs.Core.Demo.Worker.Consumers;
 
 public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {
@@ -13,8 +13,8 @@ public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 
     public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IRepository<Order, string> orderRepository)
     {
-        _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
-        _orderRepository = orderRepository ?? throw new System.ArgumentNullException(nameof(orderRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
     }
 
     public async Task Consume(ConsumeContext<SubmitOrder> context)

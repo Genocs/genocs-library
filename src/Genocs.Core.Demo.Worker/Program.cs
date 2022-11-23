@@ -1,7 +1,7 @@
 using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
-using Genocs.Core.Demo.ServiceBusAzure.Service.Consumers;
-using Genocs.Core.Demo.ServiceBusAzure.Worker.Handlers;
+using Genocs.Core.Demo.Worker.Consumers;
+using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Core.Interfaces;
 using Genocs.Monitoring;
