@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Genocs.Persistence.MongoDb.Tests
+namespace Genocs.Persistence.MongoDb.UnitTests
 {
     public class UnitTest1
     {

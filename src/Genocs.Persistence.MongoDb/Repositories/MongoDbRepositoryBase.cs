@@ -3,7 +3,8 @@ namespace Genocs.Persistence.MongoDb.Repositories
     using Genocs.Core.Base;
     using Genocs.Core.Domain.Entities;
     using Genocs.Core.Domain.Repositories;
-    using Genocs.Persistence.MongoDb.Repository;
+    using Genocs.Persistence.MongoDb;
+    using Genocs.Persistence.MongoDb.Repositories;
     using MongoDB.Bson;
     using MongoDB.Driver;
     using MongoDB.Driver.Linq;

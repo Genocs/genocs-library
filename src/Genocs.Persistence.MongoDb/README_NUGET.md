@@ -12,3 +12,15 @@ Persistence MongoDB Core Nuget package contains general purpose functionalities 
 ## Support
 
 Please check the github repository getting more info.
+
+
+### DataProvider Settings
+Following is about how to setup **DBSettings**
+
+``` json
+  "DBSettings": {
+    "ConnectionString": "mongodb://localhost",
+    "Database": "demo_database",
+    "EnableTracing": "false"
+  }
+```

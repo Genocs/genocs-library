@@ -1,3 +1,5 @@
+using Genocs.Persistence.MongoDb.Repositories;
+
 namespace Genocs.Persistence.MongoDb.Repositories
 {
     using Genocs.Core.Base;

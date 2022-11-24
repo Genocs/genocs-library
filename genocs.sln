@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{51AC5A23-37B9-447B-8A18-2AFF171FA253}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{51AC5A23-37B9-447B-8A18-2AFF171FA253}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core", "src\Genocs.Core\Genocs.Core.csproj", "{6B284623-DDB5-44A6-807E-96293E622027}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure", "src\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj", "{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{220036E9-322D-4D4A-BA98-21DCF111C50A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{220036E9-322D-4D4A-BA98-21DCF111C50A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure.UnitTests", "src\Genocs.ServiceBusAzure.UnitTests\Genocs.ServiceBusAzure.UnitTests.csproj", "{893C21F8-7581-4BFA-8ECB-49A685CA937C}"
 EndProject

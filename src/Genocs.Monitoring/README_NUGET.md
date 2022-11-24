@@ -11,3 +11,24 @@ Core Nuget package contains Open Telemetry and logging useful for DDD service.
 ## Support
 
 Please check the github repository getting more info.
+
+
+## Support
+
+Please check the github repository getting more info.
+
+
+### DataProvider Settings
+Following all the project settings need to enable monitoring
+
+``` json
+  "AppSettings": {
+    "ServiceName": "Demo WebApi",
+  },
+  "ConnectionStrings": {
+    "ApplicationInsights": ""
+  },
+  "Monitoring": {
+    "Jaeger": "localhost",
+  }
+```

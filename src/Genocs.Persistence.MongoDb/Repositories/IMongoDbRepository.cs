@@ -1,4 +1,4 @@
-﻿namespace Genocs.Persistence.MongoDb.Repository
+﻿namespace Genocs.Persistence.MongoDb.Repositories
 {
     using Genocs.Core.Base;
     using Genocs.Core.Domain.Entities;
