@@ -1,10 +1,10 @@
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Monitoring;
 using Genocs.ServiceBusAzure.Options;
-using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
-using Genocs.ServiceBusAzure.Topics;
+using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
+using Genocs.ServiceBusAzure.Topics;
 using MassTransit;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -56,7 +56,12 @@ services.Configure<HealthCheckPublisherOptions>(options =>
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+// Add Masstransit bus configuration
 services.AddMassTransit(builder.Configuration);
+
+// Azure Service bus configuration
+//services.AddAzureServiceBusQueue(builder.Configuration);
+//services.AddAzureServiceBusTopic(builder.Configuration);
 
 services.AddOptions();
 
@@ -98,16 +103,15 @@ app.Run();
 Log.CloseAndFlush();
 
 
+//static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
+//{
+//    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
+//    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
+//}
 
-static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
-    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
-}
 
-
-static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
-    services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
-}
+//static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
+//{
+//    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
+//    services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
+//}

@@ -1,5 +1,6 @@
 using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
+using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Core.Domain.Repositories;
@@ -42,6 +43,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         //ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
         //ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
 
+        // Run the hosted service 
+        services.AddHostedService<MassTransitConsoleHostedService>();
     })
     .ConfigureLogging((hostingContext, logging) =>
     {

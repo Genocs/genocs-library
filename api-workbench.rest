@@ -6,11 +6,11 @@
 @url = https://localhost:5001
 
 
-### Home
+### Home / Welcome screen
 GET {{url}}
 
-### Simple check
-GET {{url}}/ping
+### Health Check
+GET {{url}}/healthz
 
 
 ### Send event with Masstransit
