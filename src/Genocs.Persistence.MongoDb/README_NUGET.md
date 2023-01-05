@@ -6,12 +6,12 @@ The libraries are built using .NET standard 2.1.
 
 ## Description
 
-Persistence MongoDB Core Nuget package contains general purpose functionalities to be used on DDD service.
+Persistence MongoDB Core NuGet package contains general purpose functionalities to be used on DDD service.
 
 
 ## Support
 
-Please check the github repository getting more info.
+Please check the GitHub repository getting more info.
 
 
 ### DataProvider Settings
