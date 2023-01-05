@@ -9,7 +9,7 @@
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Title>The base library useful to build .NET Core projects.</Title>
 		<Description>The base library useful to build .NET Core projects.</Description>
-		<Copyright>Genocs 2022</Copyright>
+		<Copyright>Genocs 2023</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>

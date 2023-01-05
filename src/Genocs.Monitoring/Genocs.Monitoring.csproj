@@ -11,7 +11,7 @@
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Title>Telemetry and Tracing library.</Title>
 		<Description>Telemetry and Tracing library.</Description>
-		<Copyright>Genocs 2022</Copyright>
+		<Copyright>Genocs 2023</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
