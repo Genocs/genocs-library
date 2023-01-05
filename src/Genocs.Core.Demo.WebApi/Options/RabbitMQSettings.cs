@@ -1,8 +1,8 @@
-﻿namespace Genocs.Core.Demo.WebApi.Infrastructure;
+﻿namespace Genocs.Core.Demo.WebApi.Options;
 
-public class MassTransitSettings
+public class RabbitMQSettings
 {
-    public static string Position = "MassTransitSettings";
+    public static string Position = "RabbitMQSettings";
 
     public string HostName { get; set; } = default!;
     public string VirtualHost { get; set; } = default!;

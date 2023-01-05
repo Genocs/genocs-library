@@ -8,13 +8,13 @@
         /// <summary>
         /// Default Section name
         /// </summary>
-        public static string Position { get; set; } = "DBSettings";
+        public static string Position = "DBSettings";
 
         /// <summary>
         /// The Database connection string
         /// </summary>
         public string ConnectionString { get; set; } = default!;
-        
+
         /// <summary>
         /// The database name where the data will be stored
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Core.Demo.WebApi.Options;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
@@ -50,10 +51,10 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
     {
-        var massTransitSetting = new MassTransitSettings();
-        configuration.GetSection(MassTransitSettings.Position).Bind(massTransitSetting);
+        var rabbitMQSettings = new RabbitMQSettings();
+        configuration.GetSection(RabbitMQSettings.Position).Bind(rabbitMQSettings);
 
-        services.AddSingleton(massTransitSetting);
+        services.AddSingleton(rabbitMQSettings);
 
         services.AddMassTransit(x =>
         {
@@ -63,11 +64,11 @@ public static class ServiceCollectionExtensions
             {
                 cfg.ConfigureEndpoints(context);
                 //cfg.UseHealthCheck(context);
-                cfg.Host(massTransitSetting.HostName, massTransitSetting.VirtualHost,
+                cfg.Host(rabbitMQSettings.HostName, rabbitMQSettings.VirtualHost,
                     h =>
                     {
-                        h.Username(massTransitSetting.UserName);
-                        h.Password(massTransitSetting.Password);
+                        h.Username(rabbitMQSettings.UserName);
+                        h.Password(rabbitMQSettings.Password);
                     }
                 );
             });
