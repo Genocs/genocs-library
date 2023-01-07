@@ -6,9 +6,6 @@ namespace Genocs.Core.Demo.WebApi.Controllers;
 [Route("")]
 public class HomeController : ControllerBase
 {
-
-    public HomeController() { }
-
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Get()
@@ -18,5 +15,4 @@ public class HomeController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Ping()
         => Ok("pong");
-
 }

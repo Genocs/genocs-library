@@ -1,5 +1,4 @@
-﻿using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
-using Genocs.Core.Demo.WebApi.Options;
+﻿using Genocs.Core.Demo.WebApi.Options;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
@@ -49,7 +48,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCustomMassTransit(this IServiceCollection services, IConfiguration configuration)
     {
         var rabbitMQSettings = new RabbitMQSettings();
         configuration.GetSection(RabbitMQSettings.Position).Bind(rabbitMQSettings);

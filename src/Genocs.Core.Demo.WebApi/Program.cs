@@ -57,7 +57,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 // Add Masstransit bus configuration
-services.AddMassTransit(builder.Configuration);
+services.AddCustomMassTransit(builder.Configuration);
 
 // Azure Service bus configuration
 //services.AddAzureServiceBusQueue(builder.Configuration);

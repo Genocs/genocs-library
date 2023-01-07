@@ -12,3 +12,14 @@ Core NuGet package contains Azure Service Bus functionalities to be used on DDD 
 ## Support
 
 Please check the GitHub repository getting more info.
+
+
+### DataProvider Settings
+Following are the project settings needed to enable monitoring
+
+``` json
+
+```
+
+## Release notes
+

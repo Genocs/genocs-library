@@ -32,3 +32,12 @@ Following are the project settings needed to enable monitoring
     "Jaeger": "localhost",
   }
 ```
+
+## Release notes
+
+### [2023-01-01] 1.0.0-rc2.0
+- Refactory and standardization
+
+
+### [2023-01-01] 1.0.0-rc3.0
+- Moved to netstandart
