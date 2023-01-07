@@ -2,14 +2,14 @@
 
 
 
-| Badge                    | Description                    |
-| ------------------------ | ------------------------------ |
-| Travis CI/CD             | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
-| Github Actions           | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
-| Azure CI/CD              | work in progress |
-| NuGet package version    | [![NuGet](https://img.shields.io/badge/nuget-v1.0.2-blue)](https://www.nuget.org/packages/Genocs.Core) |
-| NuGet package download   | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
-| Discord community        | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
+| Badge                      | Description                    |
+| -------------------------- | ------------------------------ |
+| Travis CI/CD               | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
+| Github Actions             | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
+| Azure CI/CD                | work in progress |
+| NuGet package latesversion | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
+| NuGet package downloads    | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
+| Discord community          | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
 
 
 ----
@@ -36,6 +36,45 @@ To push the project type following command
 dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
+
+## How to build Docker Demo images
+
+Following how to build docker images
+``` bash
+# **** webapi ****
+# Build
+docker build -t genocs/demo-webapi:1.0.0 -t genocs/demo-webapi:latest -f .\webapi.dockerfile .
+
+# Add tags
+docker tag genocs/demo-webapi genocs/demo-webapi:1.0.0
+docker tag genocs/demo-webapi genocs/demo-webapi:latest
+
+# Push on Dockerhub
+docker push genocs/demo-webapi:1.0.0
+docker push genocs/demo-webapi:latest
+
+# **** worker ****
+# Build
+docker build -t genocs/demo-worker:1.0.0 -t genocs/demo-worker:latest -f .\worker.dockerfile .
+
+# Add tags
+docker tag genocs/demo-worker genocs/demo-worker:1.0.0
+docker tag genocs/demo-worker genocs/demo-worker:latest
+
+# Push on Dockerhub
+docker push genocs/demo-worker:1.0.0
+docker push genocs/demo-worker:latest
+```
+
+A second option is to run docker-compose
+``` bash
+# Build with docker compose
+docker-compose -f .\docker-compose.yml build
+
+# Run with docker compose
+docker-compose -f .\docker-compose.yml up [-d]
+```
+
 ## Core
 
 Core project contains general purpose functionalities to be used on DDD service
@@ -57,7 +96,7 @@ az servicebus namespace create --resource-group rg-genocs --name asb-genocs --lo
 # Create the queue
 az servicebus queue create --resource-group rg-genocs --namespace-name asb-genocs --name queue_1
 
-# get the connection string
+# Get the connection string
 az servicebus namespace authorization-rule keys list --resource-group rg-genocs --namespace-name asb-genocs --name RootManageSharedAccessKey --query primaryConnectionString --output tsv 
 
 ```
