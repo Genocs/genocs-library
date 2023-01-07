@@ -3,12 +3,12 @@
     /// <summary>
     /// MongoDb database Settings
     /// </summary>
-    public class DBSettings
+    public class MongoDbSettings
     {
         /// <summary>
         /// Default Section name
         /// </summary>
-        public static string Position = "DBSettings";
+        public static string Position = "MongoDbSettings";
 
         /// <summary>
         /// The Database connection string

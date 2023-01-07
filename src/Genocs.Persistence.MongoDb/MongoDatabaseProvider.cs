@@ -21,10 +21,10 @@
         /// </summary>
         /// <param name="options"></param>
         /// <exception cref="NullReferenceException"></exception>
-        public MongoDatabaseProvider(IOptions<DBSettings> options)
+        public MongoDatabaseProvider(IOptions<MongoDbSettings> options)
         {
             if (options == null) throw new NullReferenceException(nameof(options));
-            DBSettings dBSettings = options.Value;
+            MongoDbSettings dBSettings = options.Value;
 
             if (dBSettings == null) throw new NullReferenceException(nameof(dBSettings));
 

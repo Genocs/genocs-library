@@ -15,12 +15,17 @@ Please check the GitHub repository getting more info.
 
 
 ### DataProvider Settings
-Following is about how to setup **DBSettings**
+Following is about how to setup **MongoDbSettings**
 
 ``` json
-  "DBSettings": {
+  "MongoDbSettings": {
     "ConnectionString": "mongodb://localhost",
     "Database": "demo_database",
     "EnableTracing": "false"
   }
 ```
+
+## Release notes
+
+### [2023-01-07] 3.0.0
+- Changed DBSettings to MongoDbSettings

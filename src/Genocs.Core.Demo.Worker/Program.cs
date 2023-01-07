@@ -62,7 +62,7 @@ Log.CloseAndFlush();
 
 static IServiceCollection ConfigureMongoDb(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<DBSettings>(configuration.GetSection(DBSettings.Position));
+    services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.Position));
 
     services.TryAddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
     services.TryAddSingleton<IRepository<Order, string>, MongoDbRepositoryBase<Order, string>>();
