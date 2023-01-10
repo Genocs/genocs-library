@@ -24,5 +24,21 @@
         /// Toggle database tracing
         /// </summary>
         public bool EnableTracing { get; set; }
+
+
+        /// <summary>
+        /// Check if the MongoDbSettings object contains valid data
+        /// </summary>
+        /// <param name="settings">MongoDbSettings object</param>
+        /// <returns>return true if valid otherwise false</returns>
+        public static bool IsValid(MongoDbSettings settings)
+        {
+            if (settings is null) return false;
+
+            if (string.IsNullOrWhiteSpace(settings.ConnectionString) || string.IsNullOrWhiteSpace(settings.Database)) return false;
+
+            return true;
+
+        }
     }
 }

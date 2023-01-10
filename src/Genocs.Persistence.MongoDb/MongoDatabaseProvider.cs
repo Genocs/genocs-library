@@ -28,12 +28,15 @@
 
             if (dBSettings == null) throw new NullReferenceException(nameof(dBSettings));
 
+            if (!MongoDbSettings.IsValid(dBSettings)) throw new InvalidOperationException($"{nameof(dBSettings)} is invalid");
+
             MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(dBSettings.ConnectionString);
 
             if (dBSettings.EnableTracing)
             {
                 clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
             }
+
             MongoClient mongoClient = new MongoClient(clientSettings);
 
             Database = mongoClient.GetDatabase(dBSettings.Database);
