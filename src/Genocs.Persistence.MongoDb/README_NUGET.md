@@ -27,9 +27,11 @@ Following is about how to setup **MongoDbSettings**
 
 ## Release notes
 
-### [2023-01-10] 3.0.1
-- Added Service collection extension
+### [2023-01-10] 3.1.1
+- Added MongoDbSettings validation
 
+### [2023-01-10] 3.1.0
+- Added Service collection extension
 
 ### [2023-01-07] 3.0.0
 - Changed DBSettings to MongoDbSettings
