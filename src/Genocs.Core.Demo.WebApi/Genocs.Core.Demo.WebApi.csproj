@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
 		
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 

@@ -10,4 +10,8 @@
 		<PackageReference Include="Genocs.Core" Version="2.4.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+	</ItemGroup>
+
 </Project>

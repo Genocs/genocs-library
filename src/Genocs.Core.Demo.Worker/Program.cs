@@ -1,14 +1,10 @@
 using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
-using Genocs.Core.Domain.Repositories;
 using Genocs.Core.Interfaces;
 using Genocs.Monitoring;
-using Genocs.Persistence.MongoDb;
-using Genocs.Persistence.MongoDb.Options;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
@@ -16,8 +12,10 @@ using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Serilog;
 using Serilog.Events;
+using System.Reflection;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -35,10 +33,17 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
-        //TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
+        TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
         services.AddCustomOpenTelemetry(hostContext.Configuration);
 
-        ConfigureMongoDb(services, hostContext.Configuration);
+
+        // It adds the MongoDb Repository to the project and register all the Domain Objects with the standard interface
+        services.AddMongoDatabase(hostContext.Configuration);
+
+        // It registers the repositories that has been overridden
+        // No need in whenever only 
+        services.RegisterRepositories(Assembly.GetExecutingAssembly());
+
         ConfigureMassTransit(services, hostContext.Configuration);
         //ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
         //ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
@@ -50,6 +55,25 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         logging.AddSerilog(dispose: true);
         logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+
+        // Providing a connection string is required if you're using the
+        // standalone Microsoft.Extensions.Logging.ApplicationInsights package,
+        // or when you need to capture logs during application startup, such as
+        // in Program.cs or Startup.cs itself.
+        logging.AddApplicationInsights(
+            configureTelemetryConfiguration: (config) => config.ConnectionString = hostingContext.Configuration.GetConnectionString("ApplicationInsights"),
+            configureApplicationInsightsLoggerOptions: (options) =>
+            {
+            }
+        );
+
+        // Capture all log-level entries from Program
+        logging.AddFilter<ApplicationInsightsLoggerProvider>(
+            typeof(Program).FullName, LogLevel.Trace);
+
+        //// Capture all log-level entries from Startup
+        //logging.AddFilter<ApplicationInsightsLoggerProvider>(
+        //    typeof(Startup).FullName, LogLevel.Trace);
     })
     .Build();
 
@@ -59,18 +83,6 @@ await TelemetryAndLogging.FlushAndCloseAsync();
 
 Log.CloseAndFlush();
 
-
-static IServiceCollection ConfigureMongoDb(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.Position));
-
-    services.TryAddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
-    services.TryAddSingleton<IRepository<Order, string>, MongoDbRepositoryBase<Order, string>>();
-
-    // Add Repository here
-
-    return services;
-}
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {

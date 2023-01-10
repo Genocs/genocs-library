@@ -1,4 +1,6 @@
-﻿using MassTransit;
+﻿using Genocs.Core.Demo.Domain.Aggregates;
+using Genocs.Persistence.MongoDb.Repositories;
+using MassTransit;
 
 namespace Genocs.Core.Demo.Worker;
 
@@ -9,21 +11,25 @@ namespace Genocs.Core.Demo.Worker;
 public class MassTransitConsoleHostedService : IHostedService
 {
     private readonly IBusControl _bus;
+    private readonly ILogger<MassTransitConsoleHostedService> _logger;
 
-    public MassTransitConsoleHostedService(IBusControl bus)
+    public MassTransitConsoleHostedService(IBusControl bus, ILogger<MassTransitConsoleHostedService> logger)
     {
-        _bus = bus;
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        _logger.LogInformation("MassTransitConsoleHostedService StartAsync called!");
         //await _bus.StartAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        _logger.LogInformation("MassTransitConsoleHostedService StopAsync called!");
         //return _bus.StopAsync(cancellationToken);
+        return Task.CompletedTask;
     }
 }

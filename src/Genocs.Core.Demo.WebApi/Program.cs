@@ -1,16 +1,10 @@
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Monitoring;
-using Genocs.ServiceBusAzure.Options;
-using Genocs.ServiceBusAzure.Queues.Interfaces;
-using Genocs.ServiceBusAzure.Queues;
-using Genocs.ServiceBusAzure.Topics.Interfaces;
-using Genocs.ServiceBusAzure.Topics;
-using MassTransit;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
 using System.Text.Json.Serialization;
-
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -23,15 +17,27 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc
-    .WriteTo.Console());
 
-//builder.InitializeOpenTelemetry();
+builder.Host.UseSerilog((ctx, lc) =>
+{
+    lc.WriteTo.Console();
+    lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
+    {
+        ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights")
+    }, TelemetryConverter.Traces);
+
+});
+
+
 // add services to DI container
 var services = builder.Services;
 
 // Set Custom Open telemetry
 services.AddCustomOpenTelemetry(builder.Configuration);
+
+
+//services.AddMongoDatabase(builder.Configuration);
+//services.RegisterRepositories(Assembly.GetExecutingAssembly());
 
 
 //ConfigureAzureServiceBusTopic(services, builder.Configuration);
