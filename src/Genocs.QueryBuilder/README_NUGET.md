@@ -13,8 +13,6 @@ Persistence agnostic query builder service.
 Please check the GitHub repository getting more info.
 
 
-### DataProvider Settings
-
 
 ## Release notes
 
