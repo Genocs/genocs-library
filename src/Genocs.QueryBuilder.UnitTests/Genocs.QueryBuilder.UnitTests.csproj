@@ -28,6 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
+		<ProjectReference Include="..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
 	</ItemGroup>
 </Project>

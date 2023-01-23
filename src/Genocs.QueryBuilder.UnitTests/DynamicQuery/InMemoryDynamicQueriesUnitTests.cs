@@ -163,7 +163,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "DateOfBirth", propertyValue: "1968-10-23", propertyType: "date", operatorType: OperatorTypes.GreaterThan);
+        QueryItem queryItem = new QueryItem(propertyName: "DateOfBirth", propertyValue: "1968-10-23", propertyType: "date", operatorType: QueryOperator.GreaterThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -178,7 +178,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "DateOfBirth", propertyValue: "1968-10-23", propertyType: "date", operatorType: OperatorTypes.LessThan);
+        QueryItem queryItem = new QueryItem(propertyName: "DateOfBirth", propertyValue: "1968-10-23", propertyType: "date", operatorType: QueryOperator.LessThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -192,7 +192,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "Age", propertyValue: "53", propertyType: "int", operatorType: OperatorTypes.GreaterThan);
+        QueryItem queryItem = new QueryItem(propertyName: "Age", propertyValue: "53", propertyType: "int", operatorType: QueryOperator.GreaterThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -206,7 +206,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "Age", propertyValue: "2", propertyType: "int", operatorType: OperatorTypes.GreaterThan);
+        QueryItem queryItem = new QueryItem(propertyName: "Age", propertyValue: "2", propertyType: "int", operatorType: QueryOperator.GreaterThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -221,7 +221,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "Childrens", propertyValue: "2", propertyType: "numeric", operatorType: OperatorTypes.GreaterThan);
+        QueryItem queryItem = new QueryItem(propertyName: "Childrens", propertyValue: "2", propertyType: "numeric", operatorType: QueryOperator.GreaterThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -255,7 +255,7 @@ public class InMemoryDynamicQueriesUnitTests
         var users = await GetUsers();
 
         QueryItem queryItem1 = new QueryItem(propertyName: "FirstName", propertyValue: "Giovanni");
-        QueryItem queryItem2 = new QueryItem(propertyName: "Age", propertyValue: "19", propertyType: "int", operatorType: OperatorTypes.Equal);
+        QueryItem queryItem2 = new QueryItem(propertyName: "Age", propertyValue: "19", propertyType: "int", operatorType: QueryOperator.Equal);
 
         var queryItemList = new List<QueryItem> { queryItem1, queryItem2 };
 
@@ -288,8 +288,8 @@ public class InMemoryDynamicQueriesUnitTests
         var users = await GetUsers();
 
         QueryItem queryItem1 = new QueryItem(propertyName: "FirstName", propertyValue: "Giovanni or Giulio");
-        QueryItem queryItem2 = new QueryItem(propertyName: "Age", propertyValue: "52", propertyType: "int", operatorType: OperatorTypes.GreaterThan);
-        QueryItem queryItem3 = new QueryItem(propertyName: "Age", propertyValue: "54", propertyType: "int", operatorType: OperatorTypes.LessThan);
+        QueryItem queryItem2 = new QueryItem(propertyName: "Age", propertyValue: "52", propertyType: "int", operatorType: QueryOperator.GreaterThan);
+        QueryItem queryItem3 = new QueryItem(propertyName: "Age", propertyValue: "54", propertyType: "int", operatorType: QueryOperator.LessThan);
 
         var queryItemList = new List<QueryItem> { queryItem1, queryItem2, queryItem3 };
 

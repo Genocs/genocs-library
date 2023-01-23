@@ -8,7 +8,7 @@
     public QueryItem(string propertyName,
                     string propertyValue,
                     string propertyType = "string",
-                    OperatorTypes operatorType = OperatorTypes.Equal)
+                    QueryOperator operatorType = QueryOperator.Equal)
     {
         PropertyName = propertyName;
         PropertyType = propertyType;
@@ -20,7 +20,7 @@
                      string propertyValue,
                      bool parentCanBeNull,
                      string propertyType = "string",
-                     OperatorTypes operatorType = OperatorTypes.Equal)
+                     QueryOperator operatorType = QueryOperator.Equal)
     {
         PropertyName = propertyName;
         PropertyType = propertyType;
@@ -32,7 +32,7 @@
     public string PropertyName { get; set; }
     public string PropertyType { get; set; }
     public string PropertyValue { get; set; }
-    public OperatorTypes OperatorType { get; set; }
+    public QueryOperator OperatorType { get; set; }
     public bool ParentCanBeNull { get; set; }
 }
 }

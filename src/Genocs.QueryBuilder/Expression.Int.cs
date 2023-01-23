@@ -12,7 +12,7 @@ namespace Genocs.QueryBuilder
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="pe">The pe.</param>
         /// <returns></returns>
-        internal static Expression GetExpressionInt<TSource>(string[] searchTerms, string propertyName, OperatorTypes operatorType,
+        internal static Expression GetExpressionInt<TSource>(string[] searchTerms, string propertyName, QueryOperator operatorType,
             ParameterExpression pe)
         {
             // Compose the expression tree that represents the parameter to the predicate.
@@ -29,22 +29,22 @@ namespace Genocs.QueryBuilder
             Expression? searchExpression;
             switch (operatorType)
             {
-                case OperatorTypes.GreaterThan:
+                case QueryOperator.GreaterThan:
                     searchExpression = Expression.GreaterThan(nullCheck.Item1, nullCheck.Item2);
                     break;
-                case OperatorTypes.GreaterThanOrEqual:
+                case QueryOperator.GreaterThanOrEqual:
                     searchExpression = Expression.GreaterThanOrEqual(nullCheck.Item1, nullCheck.Item2);
                     break;
-                case OperatorTypes.LessThan:
+                case QueryOperator.LessThan:
                     searchExpression = Expression.LessThan(nullCheck.Item1, nullCheck.Item2);
                     break;
-                case OperatorTypes.LessThanOrEqual:
+                case QueryOperator.LessThanOrEqual:
                     searchExpression = Expression.LessThanOrEqual(nullCheck.Item1, nullCheck.Item2);
                     break;
-                case OperatorTypes.NotEqual:
+                case QueryOperator.NotEqual:
                     searchExpression = Expression.NotEqual(nullCheck.Item1, nullCheck.Item2);
                     break;
-                case OperatorTypes.Equal:
+                case QueryOperator.Equal:
                 default:
                     searchExpression = Expression.Equal(nullCheck.Item1, nullCheck.Item2);
                     break;
