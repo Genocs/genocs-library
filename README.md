@@ -17,49 +17,38 @@
 This repo contains a set of basic libraries designed by Genocs. The libraries are built using .NET standard 2.1. The package version is hosted on [nuget](https://www.nuget.org/packages).
 
 
-To build the project type following command
+Some useful commands
 ``` bash
-dotnet build .\src
+# Build the solution 
+dotnet build
+
+# Pack the projects
+dotnet pack
 ```
 
-To pack the project type following command
 ``` bash
-dotnet pack .\src
-
+# To pack the project with nuspec file
 cd src/Genocs.Core
 dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-```
 
-
-To push the project type following command
-``` bash
+# To push on nuget
 dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
 
+
 ## How to build Docker Demo images
 
-Following how to build docker images
 ``` bash
-# *** webapi ***
-# Build
+# Build webapi
 docker build -t genocs/demo-webapi:1.1.0 -t genocs/demo-webapi:latest -f .\webapi.dockerfile .
-
-# Add tags
-docker tag genocs/demo-webapi genocs/demo-webapi:1.1.0
-docker tag genocs/demo-webapi genocs/demo-webapi:latest
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:1.1.0
 docker push genocs/demo-webapi:latest
 
-# *** worker ***
-# Build
+# Build worker
 docker build -t genocs/demo-worker:1.1.0 -t genocs/demo-worker:latest -f .\worker.dockerfile .
-
-# Add tags
-docker tag genocs/demo-worker genocs/demo-worker:1.1.0
-docker tag genocs/demo-worker genocs/demo-worker:latest
 
 # Push on Dockerhub
 docker push genocs/demo-worker:1.1.0
@@ -90,7 +79,13 @@ The ServiceBusAzure allows to publish/send messages to Azure Service Bus
 
 
 ``` PS
-# Create the namespace
+# Create Azure Resource group
+az group create -n rg-genocs --location "West Europe"
+
+# Create WebApp
+# https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-create
+
+# Create the Azure Servicebus namespace
 az servicebus namespace create --resource-group rg-genocs --name asb-genocs --location "West Europe"
 
 # Create the queue
