@@ -2,9 +2,9 @@
 
 namespace Genocs.ServiceBusAzure.Options
 {
-    public class TopicSettings
+    public class AzureServiceBusTopicSettings
     {
-        public static string Position = "TopicSettings";
+        public static string Position = "AzureServiceBusTopic";
         public string ConnectionString { get; set; }
         public string TopicName { get; set; }
         public string SubscriptionName { get; set; }

@@ -8,7 +8,7 @@
         /// <summary>
         /// Default Section name
         /// </summary>
-        public static string Position = "MongoDbSettings";
+        public static string Position = "MongoDb";
 
         /// <summary>
         /// The Database connection string
@@ -35,7 +35,8 @@
         {
             if (settings is null) return false;
 
-            if (string.IsNullOrWhiteSpace(settings.ConnectionString) || string.IsNullOrWhiteSpace(settings.Database)) return false;
+            if (string.IsNullOrWhiteSpace(settings.ConnectionString)) return false;
+            if (string.IsNullOrWhiteSpace(settings.Database)) return false;
 
             return true;
 

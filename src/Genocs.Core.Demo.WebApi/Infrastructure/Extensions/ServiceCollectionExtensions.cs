@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAzureServiceBusTopic(this IServiceCollection services, IConfiguration configuration)
     {
         // Register IOptions<TopicSettings>
-        services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
+        services.Configure<AzureServiceBusTopicSettings>(configuration.GetSection(AzureServiceBusTopicSettings.Position));
 
         // HOW to Register TopicSettings instead of IOptions<TopicSettings>
         ////var topicSetting = new TopicOptions();
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAzureServiceBusQueue(this IServiceCollection services, IConfiguration configuration)
     {
         // Register IOptions<QueueSettings>
-        services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
+        services.Configure<AzureServiceBusQueueSettings>(configuration.GetSection(AzureServiceBusQueueSettings.Position));
 
         // HOW to Register QueueSettings instead of IOptions<QueueSettings>
         ////var queueSetting = new QueueSettings();

@@ -35,6 +35,8 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
+### [2023-02-06] 1.0.0-rc4.0
+- Updated Masstransit
 
 ### [2023-01-01] 1.0.0-rc3.1
 - Updated Masstransit

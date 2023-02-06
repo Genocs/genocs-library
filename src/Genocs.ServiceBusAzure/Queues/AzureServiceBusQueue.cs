@@ -19,7 +19,7 @@ namespace Genocs.ServiceBusAzure.Queues
     public class AzureServiceBusQueue : IAzureServiceBusQueue
     {
         private readonly IQueueClient _queueClient;
-        private readonly QueueSettings _options;
+        private readonly AzureServiceBusQueueSettings _options;
         private readonly ILogger<AzureServiceBusQueue> _logger;
         private Dictionary<string, KeyValuePair<Type, Type>> _handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
         private const string COMMAND_SUFFIX = "Command";
@@ -32,7 +32,7 @@ namespace Genocs.ServiceBusAzure.Queues
         /// <param name="serviceProvider"></param>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AzureServiceBusQueue(IOptions<QueueSettings> options,
+        public AzureServiceBusQueue(IOptions<AzureServiceBusQueueSettings> options,
                                     IServiceProvider serviceProvider, 
                                     ILogger<AzureServiceBusQueue> logger)
         {
@@ -62,7 +62,7 @@ namespace Genocs.ServiceBusAzure.Queues
         /// <param name="serviceProvider"></param>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AzureServiceBusQueue(QueueSettings options,
+        public AzureServiceBusQueue(AzureServiceBusQueueSettings options,
                                        IServiceProvider serviceProvider, 
                                        ILogger<AzureServiceBusQueue> logger)
         {

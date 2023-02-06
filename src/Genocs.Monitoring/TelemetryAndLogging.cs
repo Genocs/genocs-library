@@ -16,15 +16,15 @@ namespace Genocs.Monitoring
     /// </summary>
     public static class TelemetryAndLogging
     {
-        private static DependencyTrackingTelemetryModule? _module;
-        private static TelemetryClient? _telemetryClient;
-        private static TelemetryConfiguration? _configuration;
+        private static DependencyTrackingTelemetryModule _module;
+        private static TelemetryClient _telemetryClient;
+        private static TelemetryConfiguration _configuration;
 
         /// <summary>
         /// Todo
         /// </summary>
         /// <param name="connectionString"></param>
-        public static void Initialize(string? connectionString)
+        public static void Initialize(string connectionString)
         {
             // I'm using connection string availability to start the telemetry and tracking 
             if (string.IsNullOrWhiteSpace(connectionString)) return;

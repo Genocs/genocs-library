@@ -23,7 +23,7 @@ namespace Genocs.Monitoring
         /// <returns></returns>
         public static IServiceCollection AddCustomOpenTelemetry(this IServiceCollection services, IConfiguration configuration)
         {
-            string? serviceName = configuration.GetSection("AppSettings")?.GetValue(typeof(string), "ServiceName") as string;
+            string serviceName = configuration.GetSection("AppSettings")?.GetValue(typeof(string), "ServiceName") as string;
 
             // No OpenTelemetryTracing in case of missing ServiceName
             if (string.IsNullOrWhiteSpace(serviceName)) return services;
@@ -39,7 +39,7 @@ namespace Genocs.Monitoring
                                         .AddMongoDBInstrumentation();
 
                 // Check: In case of ApplicationInsights setup Azure Application Insights
-                string? connectionString = configuration.GetConnectionString("ApplicationInsights");
+                string connectionString = configuration.GetConnectionString("ApplicationInsights");
 
                 if (!string.IsNullOrWhiteSpace(connectionString))
                 {
@@ -50,7 +50,7 @@ namespace Genocs.Monitoring
                 }
 
                 // Check: In case of Monitoring->Jaeger setup Enable Jaeger
-                string? jaegerHost = configuration.GetSection("Monitoring")?.GetValue(typeof(string), "Jaeger") as string;
+                string jaegerHost = configuration.GetSection("Monitoring")?.GetValue(typeof(string), "Jaeger") as string;
                 if (!string.IsNullOrWhiteSpace(jaegerHost))
                 {
                     providerBuilder.AddJaegerExporter(o =>

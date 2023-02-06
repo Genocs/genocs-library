@@ -125,7 +125,7 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
 
 static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
+    services.Configure<AzureServiceBusTopicSettings>(configuration.GetSection(AzureServiceBusTopicSettings.Position));
 
     services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
 
@@ -138,7 +138,7 @@ static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfigur
 
 static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
+    services.Configure<AzureServiceBusQueueSettings>(configuration.GetSection(AzureServiceBusQueueSettings.Position));
 
     services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
 

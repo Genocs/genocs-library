@@ -41,28 +41,28 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 
 Following how to build docker images
 ``` bash
-# **** webapi ****
+# *** webapi ***
 # Build
-docker build -t genocs/demo-webapi:1.0.0 -t genocs/demo-webapi:latest -f .\webapi.dockerfile .
+docker build -t genocs/demo-webapi:1.1.0 -t genocs/demo-webapi:latest -f .\webapi.dockerfile .
 
 # Add tags
-docker tag genocs/demo-webapi genocs/demo-webapi:1.0.0
+docker tag genocs/demo-webapi genocs/demo-webapi:1.1.0
 docker tag genocs/demo-webapi genocs/demo-webapi:latest
 
 # Push on Dockerhub
-docker push genocs/demo-webapi:1.0.0
+docker push genocs/demo-webapi:1.1.0
 docker push genocs/demo-webapi:latest
 
-# **** worker ****
+# *** worker ***
 # Build
-docker build -t genocs/demo-worker:1.0.0 -t genocs/demo-worker:latest -f .\worker.dockerfile .
+docker build -t genocs/demo-worker:1.1.0 -t genocs/demo-worker:latest -f .\worker.dockerfile .
 
 # Add tags
-docker tag genocs/demo-worker genocs/demo-worker:1.0.0
+docker tag genocs/demo-worker genocs/demo-worker:1.1.0
 docker tag genocs/demo-worker genocs/demo-worker:latest
 
 # Push on Dockerhub
-docker push genocs/demo-worker:1.0.0
+docker push genocs/demo-worker:1.1.0
 docker push genocs/demo-worker:latest
 ```
 

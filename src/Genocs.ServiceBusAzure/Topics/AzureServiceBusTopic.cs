@@ -17,7 +17,7 @@ namespace Genocs.ServiceBusAzure.Topics
     public class AzureServiceBusTopic : IAzureServiceBusTopic
     {
         private readonly TopicClient _topicClient;
-        private readonly TopicSettings _options;
+        private readonly AzureServiceBusTopicSettings _options;
         private readonly ILogger<AzureServiceBusTopic> _logger;
         private readonly IServiceProvider _serviceProvider;
         private const string EVENT_SUFFIX = "Event";
@@ -25,7 +25,7 @@ namespace Genocs.ServiceBusAzure.Topics
         private readonly SubscriptionClient _subscriptionClient;
         private readonly List<Type> _eventTypes;
 
-        public AzureServiceBusTopic(IOptions<TopicSettings> options,
+        public AzureServiceBusTopic(IOptions<AzureServiceBusTopicSettings> options,
                                     IServiceProvider serviceProvider,
                                     ILogger<AzureServiceBusTopic> logger)
         {
@@ -51,7 +51,7 @@ namespace Genocs.ServiceBusAzure.Topics
         }
 
 
-        public AzureServiceBusTopic(TopicSettings options,
+        public AzureServiceBusTopic(AzureServiceBusTopicSettings options,
                                     IServiceProvider serviceProvider,
                                     ILogger<AzureServiceBusTopic> logger)
         {

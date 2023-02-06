@@ -2,9 +2,9 @@
 
 namespace Genocs.ServiceBusAzure.Options
 {
-    public class QueueSettings
+    public class AzureServiceBusQueueSettings
     {
-        public static string Position = "QueueSettings";
+        public static string Position = "AzureServiceBusQueue";
         public string ConnectionString { get; set; }
         public string QueueName { get; set; }
         public int MaxConcurrentCalls { get; set; } = 20;

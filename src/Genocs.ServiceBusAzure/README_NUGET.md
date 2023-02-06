@@ -19,7 +19,19 @@ Following are the project settings needed to enable monitoring
 
 ``` json
 
+  "AzureServiceBusTopic": {
+    "ConnectionString": "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=RMQ-xxxx;SharedAccessKey=xxxx",
+    "TopicName": "topic-name",
+    "SubscriptionName": "subscription-name"
+  },
+  "AzureServiceBusQueue": {
+    "ConnectionString": "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=RMQ-xxxx;SharedAccessKey=xxxx",
+    "QueueName": "queue-name"
+  }
+
 ```
 
 ## Release notes
 
+### [2023-02-06] 2.1.0
+- Updated Settings section name
