@@ -1,7 +1,9 @@
 using Genocs.Core.Demo.Contracts;
+using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
+using Genocs.Core.Domain.Repositories;
 using Genocs.Core.Interfaces;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
@@ -11,31 +13,40 @@ using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging.ApplicationInsights;
+using MongoDB.Bson;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+    .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
 
 
 IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration((hostContext, builder) =>
+    .UseSerilog((ctx, lc) =>
     {
-        builder.AddUserSecrets<Program>();
+        lc.WriteTo.Console();
+
+        string? applicationInsightsConnectionString = ctx.Configuration.GetConnectionString("ApplicationInsights");
+
+        if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+        {
+            lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
+            {
+                ConnectionString = applicationInsightsConnectionString
+            }, TelemetryConverter.Traces);
+        }
     })
     .ConfigureServices((hostContext, services) =>
     {
-        TelemetryAndLogging.Initialize(hostContext.Configuration.GetConnectionString("ApplicationInsights"));
-        services.AddCustomOpenTelemetry(hostContext.Configuration);
-
+        // Run the hosted service 
+        services.AddHostedService<MassTransitConsoleHostedService>();
 
         // It adds the MongoDb Repository to the project and register all the Domain Objects with the standard interface
         services.AddMongoDatabase(hostContext.Configuration);
@@ -44,42 +55,17 @@ IHost host = Host.CreateDefaultBuilder(args)
         // No need in whenever only 
         services.RegisterRepositories(Assembly.GetExecutingAssembly());
 
+        RegisterCustomMongoRepository(services, hostContext.Configuration);
+
         ConfigureMassTransit(services, hostContext.Configuration);
         //ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
         //ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
 
-        // Run the hosted service 
-        services.AddHostedService<MassTransitConsoleHostedService>();
-    })
-    .ConfigureLogging((hostingContext, logging) =>
-    {
-        logging.AddSerilog(dispose: true);
-        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-
-        // Providing a connection string is required if you're using the
-        // standalone Microsoft.Extensions.Logging.ApplicationInsights package,
-        // or when you need to capture logs during application startup, such as
-        // in Program.cs or Startup.cs itself.
-        logging.AddApplicationInsights(
-            configureTelemetryConfiguration: (config) => config.ConnectionString = hostingContext.Configuration.GetConnectionString("ApplicationInsights"),
-            configureApplicationInsightsLoggerOptions: (options) =>
-            {
-            }
-        );
-
-        // Capture all log-level entries from Program
-        logging.AddFilter<ApplicationInsightsLoggerProvider>(
-            typeof(Program).FullName, LogLevel.Trace);
-
-        //// Capture all log-level entries from Startup
-        //logging.AddFilter<ApplicationInsightsLoggerProvider>(
-        //    typeof(Startup).FullName, LogLevel.Trace);
+        services.AddCustomOpenTelemetry(hostContext.Configuration);
     })
     .Build();
 
 await host.RunAsync();
-
-await TelemetryAndLogging.FlushAndCloseAsync();
 
 Log.CloseAndFlush();
 
@@ -95,6 +81,13 @@ static IServiceCollection ConfigureMassTransit(IServiceCollection services, ICon
         // Set the transport
         cfg.UsingRabbitMq(ConfigureBus);
     });
+
+    return services;
+}
+
+static IServiceCollection RegisterCustomMongoRepository(IServiceCollection services, IConfiguration configuration)
+{
+    services.AddScoped<IRepository<Order, ObjectId>, Genocs.Persistence.MongoDb.Repositories.MongoDbRepository<Order>>();
 
     return services;
 }

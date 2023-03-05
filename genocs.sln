@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder.UnitTests", "src\Genocs.QueryBuilder.UnitTests\Genocs.QueryBuilder.UnitTests.csproj", "{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		README.md = README.md

@@ -27,6 +27,9 @@ Following is about how to setup **MongoDb**
 
 ## Release notes
 
+### [2023-03-04] 3.2.1
+- Updated Scrutor
+
 ### [2023-01-10] 3.2.0
 - Updated MongoDbSettings section name
 

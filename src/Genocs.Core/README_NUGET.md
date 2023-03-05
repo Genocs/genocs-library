@@ -12,3 +12,9 @@ Core NuGet package contains general purpose functionalities to be used on DDD se
 ## Support
 
 Please check the GitHub repository getting more info.
+
+
+## Release notes
+
+### [2023-03-04] 2.4.1
+- Updated System.Text.Json

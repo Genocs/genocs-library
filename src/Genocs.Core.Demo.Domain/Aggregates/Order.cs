@@ -1,15 +1,16 @@
 ﻿using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Entities.Auditing;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Repositories;
+using MongoDB.Bson;
 
 namespace Genocs.Core.Demo.Domain.Aggregates;
 
 [TableMapping("Orders")]
-public class Order : AggregateRoot<string>, IHasCreationTime
+public class Order : AggregateRoot<ObjectId>, IMongoDbEntity, IHasCreationTime
 {
     public Order(string orderId, string userId, string cardToken, decimal amount, string currency)
     {
-        Id = orderId;
         OrderId = orderId;
         UserId = userId;
         CardToken = cardToken;

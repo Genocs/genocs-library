@@ -1,9 +1,11 @@
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Monitoring;
+using Genocs.Persistence.MongoDb.Extensions;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 Log.Logger = new LoggerConfiguration()
@@ -21,23 +23,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((ctx, lc) =>
 {
     lc.WriteTo.Console();
-    lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
-    {
-        ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights")
-    }, TelemetryConverter.Traces);
 
+    string? applicationInsightsConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
+
+    if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+    {
+        lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
+        {
+            ConnectionString = applicationInsightsConnectionString
+        }, TelemetryConverter.Traces);
+    }
 });
 
 
 // add services to DI container
 var services = builder.Services;
 
-// Set Custom Open telemetry
-services.AddCustomOpenTelemetry(builder.Configuration);
-
-
-//services.AddMongoDatabase(builder.Configuration);
-//services.RegisterRepositories(Assembly.GetExecutingAssembly());
+services.AddMongoDatabase(builder.Configuration);
+services.RegisterRepositories(Assembly.GetExecutingAssembly());
 
 
 //ConfigureAzureServiceBusTopic(services, builder.Configuration);
@@ -71,9 +74,8 @@ services.AddCustomMassTransit(builder.Configuration);
 
 services.AddOptions();
 
-// configure strongly typed settings object
-//services.Configure<AppSettings>(builder.Configuration.GetSection(AppSettings.Position));
-
+// Set Custom Open telemetry
+services.AddCustomOpenTelemetry(builder.Configuration);
 
 var app = builder.Build();
 
