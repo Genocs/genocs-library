@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Genocs.Monitoring" Version="2.0.0" />
+		<PackageReference Include="Genocs.Monitoring" Version="2.0.1" />
 		<PackageReference Include="Genocs.ServiceBusAzure" Version="2.1.0" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.13" />
 	</ItemGroup>

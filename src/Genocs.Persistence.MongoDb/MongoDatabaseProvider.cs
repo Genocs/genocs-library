@@ -12,12 +12,18 @@
     public class MongoDatabaseProvider : IMongoDatabaseProvider
     {
         /// <summary>
-        /// Reference to Database
+        /// Reference to MongoClient
         /// </summary>
-        public IMongoDatabase Database { get; set; }
+        public IMongoClient MongoClient { get; private set; }
 
         /// <summary>
-        /// Default Constractor
+        /// Reference to Database
+        /// </summary>
+        public IMongoDatabase Database { get; private set; }
+
+
+        /// <summary>
+        /// Default Constructor
         /// </summary>
         /// <param name="options"></param>
         /// <exception cref="NullReferenceException"></exception>
@@ -37,9 +43,8 @@
                 clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
             }
 
-            MongoClient mongoClient = new MongoClient(clientSettings);
-
-            Database = mongoClient.GetDatabase(dBSettings.Database);
+            this.MongoClient = new MongoClient(clientSettings);
+            this.Database = this.MongoClient.GetDatabase(dBSettings.Database);
         }
     }
 }

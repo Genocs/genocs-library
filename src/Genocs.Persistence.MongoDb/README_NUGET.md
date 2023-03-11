@@ -13,6 +13,11 @@ Persistence MongoDB Core NuGet package contains general purpose functionalities 
 
 Please check the GitHub repository getting more info.
 
+## MongoDb Convention
+
+- CamelCaseElementNameConvention(),
+- IgnoreExtraElementsConvention(true),
+- EnumRepresentationConvention(BsonType.String)
 
 ### DataProvider Settings
 Following is about how to setup **MongoDb**
@@ -26,6 +31,15 @@ Following is about how to setup **MongoDb**
 ```
 
 ## Release notes
+
+
+### [2023-03-11] 3.3.1
+- Fix register conventions
+
+### [2023-03-11] 3.3.0
+- No issue in case of registration without MongoDbSettings section
+- MongoDatabaseProvider register as Singleton
+- Added standard RegisterConventions
 
 ### [2023-03-04] 3.2.1
 - Updated Scrutor

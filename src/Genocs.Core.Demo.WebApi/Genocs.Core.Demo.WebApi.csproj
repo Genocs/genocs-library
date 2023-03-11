@@ -10,8 +10,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Genocs.Monitoring" Version="2.0.0" />
-		<PackageReference Include="Genocs.Persistence.MongoDb" Version="3.2.0" />
+		<PackageReference Include="Genocs.Monitoring" Version="2.0.1" />
+		<PackageReference Include="Genocs.Persistence.MongoDb" Version="3.3.1" />
 		<PackageReference Include="Genocs.ServiceBusAzure" Version="2.1.0" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.13" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
+		<ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

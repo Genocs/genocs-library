@@ -24,6 +24,10 @@ dotnet build
 
 # Pack the projects
 dotnet pack
+
+# Run project with console
+dotnet run --project ./src/Genocs.Core.Demo.WebApi
+dotnet run --project ./src/Genocs.Core.Demo.Worker
 ```
 
 ``` bash

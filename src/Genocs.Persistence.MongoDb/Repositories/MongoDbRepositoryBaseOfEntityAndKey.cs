@@ -1,71 +1,11 @@
 namespace Genocs.Persistence.MongoDb.Repositories
 {
-    using Genocs.Core.Base;
     using Genocs.Core.Domain.Entities;
     using Genocs.Core.Domain.Repositories;
     using Genocs.Persistence.MongoDb;
-    using Genocs.Persistence.MongoDb.Repositories;
-    using MongoDB.Bson;
     using MongoDB.Driver;
-    using MongoDB.Driver.Linq;
     using System;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
-
-
-    /// <summary>
-    /// Implements IRepository for MongoDB.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-    public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity> where TEntity : class, IMongoDbEntity
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="databaseProvider"></param>
-        public MongoDbRepository(IMongoDatabaseProvider databaseProvider)
-            : base(databaseProvider)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Implements IRepository for MongoDB.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-    public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
-        where TEntity : class, IEntity<ObjectId>
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="databaseProvider"></param>
-        public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-            : base(databaseProvider)
-        {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IMongoQueryable<TEntity> GetMongoQueryable()
-        {
-            return Collection.AsQueryable();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TQuery"></typeparam>
-        /// <param name="predicate"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
-            TQuery query) where TQuery : PagedQueryBase
-                => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
-    }
 
 
     /// <summary>
@@ -107,16 +47,32 @@ namespace Genocs.Persistence.MongoDb.Repositories
 
         private readonly IMongoDatabaseProvider _databaseProvider;
 
+
+        /// <summary>
+        /// Standard constructor
+        /// </summary>
+        /// <param name="databaseProvider"></param>
         public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
         {
             _databaseProvider = databaseProvider;
         }
 
+        /// <summary>
+        /// Get all entities as IQueryable
+        /// </summary>
+        /// <returns></returns>
         public override IQueryable<TEntity> GetAll()
         {
             return Collection.AsQueryable();
         }
 
+
+        /// <summary>
+        /// Get single entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
         public override TEntity Get(TPrimaryKey id)
         {
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
@@ -129,18 +85,33 @@ namespace Genocs.Persistence.MongoDb.Repositories
             return entity;
         }
 
+        /// <summary>
+        /// First Or Default entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public override TEntity FirstOrDefault(TPrimaryKey id)
         {
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
             return Collection.Find(filter).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Insert an entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override TEntity Insert(TEntity entity)
         {
             Collection.InsertOne(entity);
             return entity;
         }
 
+        /// <summary>
+        /// Update an existing entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override TEntity Update(TEntity entity)
         {
             Collection.ReplaceOneAsync(
@@ -149,11 +120,20 @@ namespace Genocs.Persistence.MongoDb.Repositories
             return entity;
         }
 
+        /// <summary>
+        /// Delete entity, passing the entire object
+        /// </summary>
+        /// <param name="entity"></param>
         public override void Delete(TEntity entity)
         {
             Delete(entity.Id);
         }
 
+
+        /// <summary>
+        /// Delete entity by primary key
+        /// </summary>
+        /// <param name="id"></param>
         public override void Delete(TPrimaryKey id)
         {
             FilterDefinition<TEntity> query = Builders<TEntity>.Filter.Eq(m => m.Id, id);

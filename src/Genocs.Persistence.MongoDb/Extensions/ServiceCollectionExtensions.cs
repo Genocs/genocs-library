@@ -2,7 +2,10 @@
 using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Serializers;
 using System.Reflection;
 
 namespace Genocs.Persistence.MongoDb.Extensions
@@ -20,9 +23,20 @@ namespace Genocs.Persistence.MongoDb.Extensions
         /// <returns></returns>
         public static IServiceCollection AddMongoDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<MongoDbSettings>(configuration.GetSection(MongoDbSettings.Position));
-            services.TryAddScoped<IMongoDatabaseProvider, MongoDatabaseProvider>();
+            var section = configuration.GetSection(MongoDbSettings.Position);
+
+            if (!section.Exists())
+            {
+                return services;
+            }
+
+            services.Configure<MongoDbSettings>(section);
+
+            services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
             services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
+
+            RegisterConventions();
+
             return services;
         }
 
@@ -43,6 +57,19 @@ namespace Genocs.Persistence.MongoDb.Extensions
                 .WithLifetime(lifetime));
 
             return services;
+        }
+
+        private static void RegisterConventions()
+        {
+            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
+            BsonSerializer.RegisterSerializer(typeof(decimal?),
+                new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
+            ConventionRegistry.Register("genocs", new ConventionPack
+        {
+            new CamelCaseElementNameConvention(),
+            new IgnoreExtraElementsConvention(true),
+            new EnumRepresentationConvention(BsonType.String),
+        }, _ => true);
         }
     }
 }

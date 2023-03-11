@@ -35,6 +35,9 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
+### [2023-03-04] 2.0.1
+- Updated nuget packages
+
 ### [2023-03-04] 2.0.0
 - Revisited
 

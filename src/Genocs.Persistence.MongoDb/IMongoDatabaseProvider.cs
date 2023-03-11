@@ -8,8 +8,15 @@
     public interface IMongoDatabaseProvider
     {
         /// <summary>
+        /// Gets the MongoClient
+        /// </summary>
+        IMongoClient MongoClient { get; }
+
+
+        /// <summary>
         /// Gets the <see cref="IMongoDatabase"/>.
         /// </summary>
         IMongoDatabase Database { get; }
+
     }
 }
