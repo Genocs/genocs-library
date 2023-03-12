@@ -4,13 +4,13 @@ using System.Net;
 
 namespace Genocs.HTTP;
 
-internal sealed class ConveyLoggingScopeHttpMessageHandler : DelegatingHandler
+internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
 {
     private readonly ILogger _logger;
     private readonly HashSet<string> _maskedRequestUrlParts;
     private readonly string _maskTemplate;
 
-    public ConveyLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings options)
+    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings options)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _ = options ?? throw new ArgumentNullException(nameof(options));

@@ -10,14 +10,14 @@ using Polly;
 
 namespace Genocs.HTTP;
 
-public class ConveyHttpClient : IHttpClient
+public class GenocsHttpClient : IHttpClient
 {
     private const string JsonContentType = "application/json";
     private readonly HttpClient _client;
     private readonly HttpClientSettings _options;
     private readonly IHttpClientSerializer _serializer;
 
-    public ConveyHttpClient(HttpClient client, HttpClientSettings options, IHttpClientSerializer serializer,
+    public GenocsHttpClient(HttpClient client, HttpClientSettings options, IHttpClientSerializer serializer,
         ICorrelationContextFactory correlationContextFactory, ICorrelationIdFactory correlationIdFactory)
     {
         _client = client;

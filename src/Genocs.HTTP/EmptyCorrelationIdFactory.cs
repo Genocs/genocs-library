@@ -2,5 +2,9 @@ namespace Genocs.HTTP;
 
 internal class EmptyCorrelationIdFactory : ICorrelationIdFactory
 {
-    public string Create() => default;
+    /// <summary>
+    /// CorrelationIdFactory, empty implementation 
+    /// </summary>
+    /// <returns></returns>
+    public string? Create() => default;
 }

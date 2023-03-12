@@ -1,6 +1,13 @@
 namespace Genocs.HTTP;
 
+/// <summary>
+/// Generic CorrelationId Factory interface
+/// </summary>
 public interface ICorrelationIdFactory
 {
-    string Create();
+    /// <summary>
+    /// Create a correlationId
+    /// </summary>
+    /// <returns></returns>
+    string? Create();
 }

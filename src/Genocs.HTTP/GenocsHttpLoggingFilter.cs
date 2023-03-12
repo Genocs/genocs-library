@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 namespace Genocs.HTTP;
 
 // Credits goes to https://www.stevejgordon.co.uk/httpclientfactory-asp-net-core-logging
-internal sealed class ConveyHttpLoggingFilter : IHttpMessageHandlerBuilderFilter
+internal sealed class GenocsHttpClientHttpLoggingFilter : IHttpMessageHandlerBuilderFilter
 {
     private readonly ILoggerFactory _loggerFactory;
     private readonly HttpClientSettings _options;
 
-    public ConveyHttpLoggingFilter(ILoggerFactory loggerFactory, HttpClientSettings options)
+    public GenocsHttpClientHttpLoggingFilter(ILoggerFactory loggerFactory, HttpClientSettings options)
     {
         _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         _options = options;
@@ -27,7 +27,7 @@ internal sealed class ConveyHttpLoggingFilter : IHttpMessageHandlerBuilderFilter
         {
             next(builder);
             var logger = _loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.LogicalHandler");
-            builder.AdditionalHandlers.Insert(0, new ConveyLoggingScopeHttpMessageHandler(logger, _options));
+            builder.AdditionalHandlers.Insert(0, new GenocsLoggingScopeHttpMessageHandler(logger, _options));
         };
     }
 }

@@ -8,8 +8,8 @@ namespace Genocs.HTTP;
 
 public static class Extensions
 {
-    //private const string SectionName = "httpClient";
-    //private const string RegistryName = "http.client";
+    private const string SectionName = "httpClient";
+    private const string RegistryName = "http.client";
 
     //public static IGenocsBuilder AddHttpClient(this IGenocsBuilder builder, string clientName = "genocs",
     //    IEnumerable<string> maskedRequestUrlParts = null, string sectionName = SectionName,
@@ -56,13 +56,13 @@ public static class Extensions
 
     //    builder.Services.AddSingleton(options);
     //    builder.Services.AddSingleton<IHttpClientSerializer, SystemTextJsonHttpClientSerializer>();
-    //    var clientBuilder = builder.Services.AddHttpClient<IHttpClient, ConveyHttpClient>(clientName);
+    //    var clientBuilder = builder.Services.AddHttpClient<IHttpClient, GenocsHttpClient>(clientName);
     //    httpClientBuilder?.Invoke(clientBuilder);
 
     //    if (options.RequestMasking?.Enabled == true)
     //    {
     //        builder.Services.Replace(ServiceDescriptor
-    //            .Singleton<IHttpMessageHandlerBuilderFilter, ConveyHttpLoggingFilter>());
+    //            .Singleton<IHttpMessageHandlerBuilderFilter, GenocsHttpLoggingFilter>());
     //    }
 
     //    return builder;
