@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Convey.Auth" Version="0.5.*" />
-    <PackageReference Include="Convey.Logging" Version="0.5.*" />
-    <PackageReference Include="Convey.MessageBrokers.CQRS" Version="0.5.*" />
-    <PackageReference Include="Convey.MessageBrokers.RabbitMQ" Version="0.5.*" />
-    <PackageReference Include="Convey.Metrics.Prometheus" Version="0.5.*" />
-    <PackageReference Include="Convey.Secrets.Vault" Version="0.5.*" />
-    <PackageReference Include="Convey.Security" Version="0.5.*" />
-    <PackageReference Include="Convey.Tracing.Jaeger" Version="0.5.*" />
-    <PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="0.5.*" />
-    <PackageReference Include="Convey.WebApi" Version="0.5.*" />
-    <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0-preview.10.21168.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Convey.Auth" Version="1.0.541" />
+		<PackageReference Include="Convey.Logging" Version="1.0.541" />
+		<PackageReference Include="Convey.MessageBrokers.CQRS" Version="1.0.541" />
+		<PackageReference Include="Convey.MessageBrokers.RabbitMQ" Version="1.0.541" />
+		<PackageReference Include="Convey.Metrics.Prometheus" Version="1.0.541" />
+		<PackageReference Include="Convey.Secrets.Vault" Version="1.0.541" />
+		<PackageReference Include="Convey.Security" Version="1.0.541" />
+		<PackageReference Include="Convey.Tracing.Jaeger" Version="1.0.541" />
+		<PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="1.0.541" />
+		<PackageReference Include="Convey.WebApi" Version="1.0.541" />
+		<PackageReference Include="Yarp.ReverseProxy" Version="1.0.0-preview.10.21168.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="certs\**" CopyToPublishDirectory="Always" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="certs\**" CopyToPublishDirectory="Always" />
+	</ItemGroup>
 
 </Project>
