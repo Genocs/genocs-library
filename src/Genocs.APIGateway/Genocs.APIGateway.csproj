@@ -15,7 +15,7 @@
 		<PackageReference Include="Convey.Tracing.Jaeger" Version="1.0.541" />
 		<PackageReference Include="Convey.Tracing.Jaeger.RabbitMQ" Version="1.0.541" />
 		<PackageReference Include="Convey.WebApi" Version="1.0.541" />
-		<PackageReference Include="Yarp.ReverseProxy" Version="1.0.0-preview.10.21168.2" />
+		<PackageReference Include="Yarp.ReverseProxy" Version="2.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

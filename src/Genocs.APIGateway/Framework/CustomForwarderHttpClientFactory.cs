@@ -3,27 +3,27 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using Yarp.ReverseProxy.Service.Proxy.Infrastructure;
+using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway.Framework
 {
-    internal class CustomProxyHttpClientFactory : IProxyHttpClientFactory
+    internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
     {
         private readonly CorrelationIdFactory _correlationIdFactory;
 
-        public CustomProxyHttpClientFactory(CorrelationIdFactory correlationIdFactory)
+        public CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory)
         {
             _correlationIdFactory = correlationIdFactory;
         }
         
-        public HttpMessageInvoker CreateClient(ProxyHttpClientContext context)
+        public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
         {
-            if (context.OldClient != null && context.NewOptions == context.OldOptions)
+            if (context.OldClient != null && context.NewConfig == context.OldConfig)
             {
                 return context.OldClient;
             }
 
-            var newClientOptions = context.NewOptions;
+            var newClientOptions = context.NewConfig;
 
             var handler = new SocketsHttpHandler
             {
@@ -38,13 +38,13 @@ namespace Genocs.APIGateway.Framework
                 handler.SslOptions.EnabledSslProtocols = newClientOptions.SslProtocols.Value;
             }
 
-            if (newClientOptions.ClientCertificate != null)
-            {
-                handler.SslOptions.ClientCertificates = new X509CertificateCollection
-                {
-                    newClientOptions.ClientCertificate
-                };
-            }
+            //if (newClientOptions.ClientCertificate != null)
+            //{
+            //    handler.SslOptions.ClientCertificates = new X509CertificateCollection
+            //    {
+            //        newClientOptions.ClientCertificate
+            //    };
+            //}
 
             if (newClientOptions.MaxConnectionsPerServer != null)
             {
@@ -61,6 +61,7 @@ namespace Genocs.APIGateway.Framework
 
             return httpMessageInvoker;
         }
+
 
         private class CustomHttpMessageInvoker : HttpMessageInvoker
         {

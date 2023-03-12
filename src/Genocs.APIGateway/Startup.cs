@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Yarp.ReverseProxy.Service.Proxy.Infrastructure;
+using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway
 {
@@ -39,7 +39,7 @@ namespace Genocs.APIGateway
             services.Configure<MessagingOptions>(Configuration.GetSection("messaging"));
             services.AddReverseProxy()
                 .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
-            services.AddSingleton<IProxyHttpClientFactory, CustomProxyHttpClientFactory>();
+            services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
             services
                 .AddConvey()
                 .AddJaeger()
