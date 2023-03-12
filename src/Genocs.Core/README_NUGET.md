@@ -16,6 +16,9 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
+### [2023-03-12] 3.1.0
+- Added Builders
+
 ### [2023-03-12] 3.0.0
 - Refactory to implement CQRS pattern
 

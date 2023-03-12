@@ -1,7 +1,7 @@
 namespace Genocs.Core.Types
 {
     /// <summary>
-    /// IIdentifiable interface
+    /// Identifiable interface definition
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IIdentifiable<out T>

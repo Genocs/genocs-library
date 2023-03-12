@@ -2,6 +2,7 @@ namespace Genocs.Core.Extensions
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -512,5 +513,14 @@ namespace Genocs.Core.Extensions
 
             return str.Left(maxLength - postfix.Length) + postfix;
         }
+
+        /// <summary>
+        /// Helper method
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string Underscore(this string value)
+            => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
+                .ToLowerInvariant();
     }
 }

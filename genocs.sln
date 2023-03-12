@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		worker.dockerfile = worker.dockerfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.HTTP", "src\Genocs.HTTP\Genocs.HTTP.csproj", "{F3335D07-6BCE-455C-A141-DADF8192DD84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3335D07-6BCE-455C-A141-DADF8192DD84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3335D07-6BCE-455C-A141-DADF8192DD84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3335D07-6BCE-455C-A141-DADF8192DD84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3335D07-6BCE-455C-A141-DADF8192DD84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
