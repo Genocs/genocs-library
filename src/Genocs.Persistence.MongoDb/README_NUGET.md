@@ -32,6 +32,8 @@ Following is about how to setup **MongoDb**
 
 ## Release notes
 
+### [2023-03-11] 3.4.0
+- Updated to Genocs.Core 3.0.0
 
 ### [2023-03-11] 3.3.1
 - Fix register conventions

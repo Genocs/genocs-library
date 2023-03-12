@@ -1,8 +1,6 @@
-using Genocs.Persistence.MongoDb.Repositories;
-
 namespace Genocs.Persistence.MongoDb.Repositories
 {
-    using Genocs.Core.Base;
+    using Genocs.Core.CQRS.Queries;
     using MongoDB.Driver;
     using MongoDB.Driver.Linq;
     using System;

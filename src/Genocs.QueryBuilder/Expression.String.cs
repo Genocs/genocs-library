@@ -35,9 +35,9 @@ namespace Genocs.QueryBuilder
                 propertyExp = Expression.PropertyOrField(propertyExp, member);
             }
 
-            Expression? searchExpression = null;
-            Expression? finalExpression = null;
-            Expression? nullorEmptyCheck = null;
+            Expression searchExpression = null;
+            Expression finalExpression = null;
+            Expression nullorEmptyCheck = null;
 
             MethodCallExpression left = Expression.Call(propertyExp, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
@@ -48,9 +48,8 @@ namespace Genocs.QueryBuilder
                 var searchTerm = searchTerms[count].ToLower();
                 searchTerm = searchTerm.Replace("*", string.Empty);
                 searchTerm = searchTerm.Replace("\"", string.Empty);
-                Expression? methodCallExpresssion = null;
-                Expression? rightExpression = null;
-
+                Expression rightExpression;
+                Expression methodCallExpresssion;
                 if (searchTerm.Contains(NotOperator.TrimStart()))
                 {
                     searchTerm = searchTerm.Replace(NotOperator.TrimStart(), string.Empty).Trim();

@@ -16,7 +16,7 @@
 		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>query builder boilerplate dotnet dotnetcore</PackageTags>
+		<PackageTags>dinamic query builder engine</PackageTags>
 		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
 		<PackageReleaseNotes>Refactory enum</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>

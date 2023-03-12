@@ -30,7 +30,7 @@ namespace Genocs.QueryBuilder
 
             var nullCheck = NormalizeNullable(propertyExp, constantExpression);
 
-            Expression? searchExpression;
+            Expression searchExpression;
             switch (operatorType)
             {
                 case QueryOperator.GreaterThan:

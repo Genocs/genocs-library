@@ -33,5 +33,8 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
+### [2023-03-12] 2.1.1
+- Updated to Genocs.Core 3.0.0
+
 ### [2023-02-06] 2.1.0
 - Updated Settings section name

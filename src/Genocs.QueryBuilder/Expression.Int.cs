@@ -10,7 +10,8 @@ namespace Genocs.QueryBuilder
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="searchTerms">The search terms.</param>
         /// <param name="propertyName">Name of the property.</param>
-        /// <param name="pe">The pe.</param>
+        /// <param name="operatorType">The operatorType.</param>
+        /// <param name="pe">The parameter expression.</param>
         /// <returns></returns>
         internal static Expression GetExpressionInt<TSource>(string[] searchTerms, string propertyName, QueryOperator operatorType,
             ParameterExpression pe)
@@ -26,7 +27,7 @@ namespace Genocs.QueryBuilder
 
             var nullCheck = NormalizeNullable(propertyExp, constantExpression);
 
-            Expression? searchExpression;
+            Expression searchExpression;
             switch (operatorType)
             {
                 case QueryOperator.GreaterThan:

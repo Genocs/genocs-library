@@ -1,6 +1,6 @@
 namespace Genocs.Persistence.MongoDb.Repositories
 {
-    using Genocs.Core.Base;
+    using Genocs.Core.CQRS.Queries;
     using Genocs.Core.Domain.Entities;
     using Genocs.Persistence.MongoDb;
     using MongoDB.Bson;

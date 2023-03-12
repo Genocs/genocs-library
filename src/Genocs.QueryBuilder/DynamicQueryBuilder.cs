@@ -5,7 +5,9 @@ using System.Linq.Expressions;
 
 namespace Genocs.QueryBuilder
 {
-
+    /// <summary>
+    /// DynamicQueryBuilder
+    /// </summary>
     public class DynamicQueryBuilder
     {
         #region Private static members
@@ -35,7 +37,7 @@ namespace Genocs.QueryBuilder
         public static Expression<Func<TSource, bool>> BuildAdvancedSearchExpressionTree<TSource>(List<QueryItem> searchItems, string sourceName)
         {
             ParameterExpression pe = Expression.Parameter(typeof(TSource), sourceName);
-            Expression? searchExpression = null;
+            Expression searchExpression = null;
 
             foreach (var searchItem in searchItems)
             {
@@ -132,7 +134,7 @@ namespace Genocs.QueryBuilder
         }
 
         /// <summary>
-        /// Alls the indexes of.
+        /// All the indexes of.
         /// </summary>
         /// <param name="str">The string.</param>
         /// <param name="value">The value.</param>
@@ -163,6 +165,6 @@ namespace Genocs.QueryBuilder
     internal class OperatorIndexes
     {
         public int Index { get; set; }
-        public string? Operator { get; set; }
+        public string Operator { get; set; }
     }
 }

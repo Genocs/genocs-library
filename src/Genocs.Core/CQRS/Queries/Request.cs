@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.Base
+﻿namespace Genocs.Core.CQRS.Queries
 {
     public interface ISearchRequest
     {
