@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageId>Genocs.Auth</PackageId>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>1.0.0</Version>
+		<MinClientVersion>5.0.0</MinClientVersion>
+		<Authors>Nocco Giovanni Emanuele</Authors>
+		<Company>Genocs</Company>
+		<Title>The Authorization Library.</Title>
+		<Description>The library containing authorization stack to build .NET Core projects.</Description>
+		<Copyright>Genocs 2023</Copyright>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+		<PackageReleaseNotes>Fix register conventions</PackageReleaseNotes>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Genocs.Core" Version="3.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.1" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.15.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="README_NUGET.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

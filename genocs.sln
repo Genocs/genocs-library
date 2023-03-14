@@ -45,7 +45,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP", "src\Genocs.HTTP\Genocs.HTTP.csproj", "{F3335D07-6BCE-455C-A141-DADF8192DD84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.APIGateway", "src\Genocs.APIGateway\Genocs.APIGateway.csproj", "{C914CD75-6F11-478F-A329-0A6572508338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.APIGateway", "src\Genocs.APIGateway\Genocs.APIGateway.csproj", "{C914CD75-6F11-478F-A329-0A6572508338}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Auth", "src\Genocs.Auth\Genocs.Auth.csproj", "{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{C914CD75-6F11-478F-A329-0A6572508338}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C914CD75-6F11-478F-A329-0A6572508338}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C914CD75-6F11-478F-A329-0A6572508338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
