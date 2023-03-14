@@ -1,11 +1,16 @@
-using Genocs.Core.Builders;
-using Genocs.Persistence.MongoDb.Extensions;
+using Convey;
+using Convey.Logging;
+using Convey.Secrets.Vault;
+using Convey.WebApi;
+using Convey.WebApi.CQRS;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
-using System.Reflection;
-using System.Text.Json.Serialization;
+using Trill.Services.Users.Core;
+using Trill.Services.Users.Core.Commands;
+using Trill.Services.Users.Core.DTO;
+using Trill.Services.Users.Core.Queries;
+using Trill.Services.Users.Core.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -18,7 +23,6 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Host.UseSerilog((ctx, lc) =>
 {
     lc.WriteTo.Console();
@@ -29,71 +33,48 @@ builder.Host.UseSerilog((ctx, lc) =>
     {
         lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
         {
-            ConnectionString = applicationInsightsConnectionString            
+            ConnectionString = applicationInsightsConnectionString
         }, TelemetryConverter.Traces);
     }
 });
 
-
 var services = builder.Services;
 
-IGenocsBuilder genocsBuilder = services.AddGenocs();
-
-services.AddMongoDatabase(builder.Configuration);
-services.RegisterRepositories(Assembly.GetExecutingAssembly());
-
-
-services.AddCors();
-services.AddControllers().AddJsonOptions(x =>
-{
-    // serialize enums as strings in api responses (e.g. Role)
-    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
-services.AddHealthChecks();
-
-services.Configure<HealthCheckPublisherOptions>(options =>
-{
-    options.Delay = TimeSpan.FromSeconds(2);
-    options.Predicate = check => check.Tags.Contains("ready");
-});
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
-
-
-services.AddOptions();
+services.AddConvey()
+        .AddWebApi()
+        .AddCore()
+        .Build();
 
 var app = builder.Build();
+app.UseCore();
+app.UseDispatcherEndpoints(endpoints => endpoints
+                            .Get("", ctx => ctx.GetAppName())
+                            .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
+                            {
+                                var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
+                                return ctx.Response.WriteJsonAsync(auth);
+                            })
+                            .Post<CreateUser>("sign-up")
+                            .Post<RevokeAccessToken>("access-tokens/revoke")
+                            .Post<UseRefreshToken>("refresh-tokens/use", afterDispatch: (cmd, ctx) =>
+                            {
+                                var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
+                                return ctx.Response.WriteJsonAsync(auth);
+                            })
+                            .Post<RevokeRefreshToken>("refresh-tokens/revoke")
+                            .Get<GetUser, UserDetailsDto>("users/{userId:guid}")
+                            .Get<BrowseUsers, PagedDto<UserDto>>("users")
+                            .Post<FollowUser>("users/{userId:guid}/following/{followeeId:guid}")
+                            .Delete<UnfollowUser>("users/{userId:guid}/following/{followeeId:guid}")
+                            .Put<LockUser>("users/{userId:guid}/lock")
+                            .Put<UnlockUser>("users/{userId:guid}/unlock")
+                            .Post<AddFunds>("users/{userId:guid}/funds")
+                            .Post<ChargeFunds>("users/{userId:guid}/funds/charge"));
 
+//builder.Host
+//        .UseLogging()
+//        .UseVault();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseGenocs();
-}
-
-
-// global cors policy
-app.UseCors(x => x
-    .SetIsOriginAllowed(origin => true)
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials());
-
-
-app.UseHttpsRedirection();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapHealthChecks("/healthz");
 
 app.Run();
 

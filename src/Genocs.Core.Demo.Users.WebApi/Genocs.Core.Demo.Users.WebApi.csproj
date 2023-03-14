@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UserSecretsId>__genocs</UserSecretsId>
@@ -16,13 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Infrastructure\Extensions\" />
-		<Folder Include="Models\" />
-		<Folder Include="Options\" />
+	  <ProjectReference Include="..\Genocs.Core.Demo.Users.Application\Genocs.Core.Demo.Users.Application.csproj" />
 	</ItemGroup>
 
 </Project>
