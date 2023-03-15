@@ -35,7 +35,6 @@ namespace Trill.Services.Users.Core.Commands.Handlers
 
         public async Task HandleAsync(CreateUser command, CancellationToken cancellationToken = default)
         {
-            const decimal bonusFunds = 10000;
             if (!EmailRegex.IsMatch(command.Email))
             {
                 _logger.LogError($"Invalid email: {command.Email}");
@@ -59,7 +58,7 @@ namespace Trill.Services.Users.Core.Commands.Handlers
             var role = string.IsNullOrWhiteSpace(command.Role) ? "user" : command.Role.ToLowerInvariant();
             var password = _passwordService.Hash(command.Password);
             user = new User(command.UserId, command.Email, command.Name, password, role, DateTime.UtcNow,
-                command.Permissions, bonusFunds);
+                command.Permissions);
             await _userRepository.AddAsync(user);
             _logger.LogInformation($"Created an account for the user with ID: '{user.Id}'.");
             await _messageBroker.PublishAsync(new UserCreated(user.Id, user.Name, user.Role));

@@ -13,8 +13,7 @@ public class UserDocument : IIdentifiable<Guid>
     public string Role { get; set; }
     public string Password { get; set; }
     public DateTime CreatedAt { get; set; }
-    public IEnumerable<string> Permissions { get; set; }
-    public decimal Funds { get; set; }
+    public IEnumerable<string>? Permissions { get; set; }
     public bool Locked { get; set; }
 
     public UserDocument()
@@ -30,9 +29,8 @@ public class UserDocument : IIdentifiable<Guid>
         Password = user.Password;
         CreatedAt = user.CreatedAt;
         Permissions = user.Permissions;
-        Funds = user.Funds;
         Locked = user.Locked;
     }
 
-    public User ToEntity() => new User(Id, Email, Name, Password, Role, CreatedAt, Permissions, Funds, Locked);
+    public User ToEntity() => new User(Id, Email, Name, Password, Role, CreatedAt, Permissions, Locked);
 }

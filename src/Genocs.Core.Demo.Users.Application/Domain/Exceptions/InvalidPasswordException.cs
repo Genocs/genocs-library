@@ -1,9 +1,8 @@
-namespace Trill.Services.Users.Core.Domain.Exceptions
+namespace Trill.Services.Users.Core.Domain.Exceptions;
+
+public class InvalidPasswordException : DomainException
 {
-    public class InvalidPasswordException : DomainException
+    public InvalidPasswordException() : base($"Invalid password.")
     {
-        public InvalidPasswordException() : base($"Invalid password.")
-        {
-        }
     }
 }

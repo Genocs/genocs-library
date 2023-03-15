@@ -25,10 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Trill.Services.Users.Core.Commands;
 using Trill.Services.Users.Core.Decorators;
 using Trill.Services.Users.Core.Domain.Repositories;
@@ -53,7 +50,6 @@ public static class Extensions
             .AddSingleton<IRng, Rng>()
             .AddSingleton<ITokenStorage, TokenStorage>()
             .AddScoped<IMessageBroker, MessageBroker>()
-            .AddScoped<IFollowerRepository, FollowerRepository>()
             .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddScoped<IUserRepository, UserRepository>();
 
@@ -78,7 +74,6 @@ public static class Extensions
             .AddRedis()
             .AddPrometheus()
             .AddJaeger()
-            .AddMongoRepository<FollowerDocument, Guid>("followers")
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
             .AddWebApiSwaggerDocs();

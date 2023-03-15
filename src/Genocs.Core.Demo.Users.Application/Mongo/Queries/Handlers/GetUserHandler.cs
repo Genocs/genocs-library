@@ -1,8 +1,5 @@
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Trill.Services.Users.Core.DTO;
 using Trill.Services.Users.Core.Mongo.Documents;
 using Trill.Services.Users.Core.Queries;
@@ -33,7 +30,6 @@ public class GetUserHandler : IQueryHandler<GetUser, UserDetailsDto>
                 CreatedAt = user.CreatedAt,
                 Locked = user.Locked,
                 Permissions = user.Permissions,
-                Funds = user.Funds
             };
     }
 }

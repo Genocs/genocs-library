@@ -23,6 +23,10 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Host
+//        .UseLogging()
+//        .UseVault();
+
 builder.Host.UseSerilog((ctx, lc) =>
 {
     lc.WriteTo.Console();
@@ -64,17 +68,8 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<RevokeRefreshToken>("refresh-tokens/revoke")
                             .Get<GetUser, UserDetailsDto>("users/{userId:guid}")
                             .Get<BrowseUsers, PagedDto<UserDto>>("users")
-                            .Post<FollowUser>("users/{userId:guid}/following/{followeeId:guid}")
-                            .Delete<UnfollowUser>("users/{userId:guid}/following/{followeeId:guid}")
                             .Put<LockUser>("users/{userId:guid}/lock")
-                            .Put<UnlockUser>("users/{userId:guid}/unlock")
-                            .Post<AddFunds>("users/{userId:guid}/funds")
-                            .Post<ChargeFunds>("users/{userId:guid}/funds/charge"));
-
-//builder.Host
-//        .UseLogging()
-//        .UseVault();
-
+                            .Put<UnlockUser>("users/{userId:guid}/unlock"));
 
 app.Run();
 
