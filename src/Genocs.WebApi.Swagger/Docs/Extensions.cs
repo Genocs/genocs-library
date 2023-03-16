@@ -1,4 +1,4 @@
-using Convey.Docs.Swagger.Builders;
+using Genocs.Docs.Swagger.Builders;
 using Genocs.Core.Builders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

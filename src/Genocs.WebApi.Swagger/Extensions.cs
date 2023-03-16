@@ -1,4 +1,4 @@
-using Convey.Docs.Swagger;
+using Genocs.Docs.Swagger;
 using Genocs.Core.Builders;
 using Genocs.WebApi.Swagger.Docs;
 using Genocs.WebApi.Swagger.Filters;

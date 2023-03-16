@@ -1,6 +1,6 @@
 using Genocs.WebApi.Swagger.Docs;
 
-namespace Convey.Docs.Swagger.Builders;
+namespace Genocs.Docs.Swagger.Builders;
 
 internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
 {

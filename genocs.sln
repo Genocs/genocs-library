@@ -61,6 +61,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.WebApi.Swagger", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Security", "src\Genocs.Core.Security\Genocs.Core.Security.csproj", "{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.WebApi.CQRS", "src\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj", "{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.WebApi.Security", "src\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj", "{340F4232-B7A0-4FD9-84D8-93EB133E6A62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +159,14 @@ Global
 		{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{340F4232-B7A0-4FD9-84D8-93EB133E6A62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{340F4232-B7A0-4FD9-84D8-93EB133E6A62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{340F4232-B7A0-4FD9-84D8-93EB133E6A62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{340F4232-B7A0-4FD9-84D8-93EB133E6A62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
