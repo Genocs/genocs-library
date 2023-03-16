@@ -14,13 +14,11 @@ namespace Genocs.Core.CQRS.Commands.Dispatchers
         private readonly IServiceProvider _serviceProvider;
 
         public CommandDispatcher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+            => _serviceProvider = serviceProvider;
 
         public async Task SendAsync<T>(T command, CancellationToken cancellationToken = default) where T : class, ICommand
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<T>>();
             await handler.HandleAsync(command, cancellationToken);
         }

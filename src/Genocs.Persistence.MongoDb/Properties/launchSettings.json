@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Genocs.Persistence.MongoDb": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:60119;http://localhost:60123"
+    }
+  }
+}
