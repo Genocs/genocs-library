@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<PackageId>Genocs.ServiceBusAzure</PackageId>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>2.1.1</Version>
@@ -31,6 +31,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="..\..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
@@ -39,7 +43,6 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 		<None Update="README_NUGET.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
