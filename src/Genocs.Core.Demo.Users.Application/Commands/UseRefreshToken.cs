@@ -1,16 +1,14 @@
 using Convey.CQRS.Commands;
-using System;
 
-namespace Trill.Services.Users.Core.Commands
+namespace Genocs.Core.Demo.Users.Application.Commands;
+
+public class UseRefreshToken : ICommand
 {
-    public class UseRefreshToken : ICommand
-    {
-        public Guid Id { get; } = Guid.NewGuid();
-        public string RefreshToken { get; }
+    public Guid Id { get; } = Guid.NewGuid();
+    public string RefreshToken { get; }
 
-        public UseRefreshToken(string refreshToken)
-        {
-            RefreshToken = refreshToken;
-        }
+    public UseRefreshToken(string refreshToken)
+    {
+        RefreshToken = refreshToken;
     }
 }

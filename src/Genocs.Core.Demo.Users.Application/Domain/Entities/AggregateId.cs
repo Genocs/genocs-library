@@ -1,4 +1,4 @@
-namespace Trill.Services.Users.Core.Domain.Entities;
+namespace Genocs.Core.Demo.Users.Application.Domain.Entities;
 
 public class AggregateId : IEquatable<AggregateId>
 {

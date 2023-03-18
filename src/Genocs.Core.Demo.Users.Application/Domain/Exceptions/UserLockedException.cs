@@ -1,6 +1,4 @@
-using System;
-
-namespace Trill.Services.Users.Core.Domain.Exceptions;
+namespace Genocs.Core.Demo.Users.Application.Domain.Exceptions;
 
 public class UserLockedException : DomainException
 {

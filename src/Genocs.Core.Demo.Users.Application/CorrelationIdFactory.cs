@@ -1,10 +1,8 @@
 using Convey.HTTP;
 using Convey.MessageBrokers;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading;
 
-namespace Trill.Services.Users.Core;
+namespace Genocs.Core.Demo.Users.Application;
 
 internal class CorrelationIdFactory : ICorrelationIdFactory
 {

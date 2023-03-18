@@ -1,9 +1,9 @@
 using Convey.Persistence.MongoDB;
-using Trill.Services.Users.Core.Domain.Entities;
-using Trill.Services.Users.Core.Domain.Repositories;
-using Trill.Services.Users.Core.Mongo.Documents;
+using Genocs.Core.Demo.Users.Application.Domain.Entities;
+using Genocs.Core.Demo.Users.Application.Domain.Repositories;
+using Genocs.Core.Demo.Users.Application.Mongo.Documents;
 
-namespace Trill.Services.Users.Core.Mongo.Repositories;
+namespace Genocs.Core.Demo.Users.Application.Mongo.Repositories;
 
 public class UserRepository : IUserRepository
 {

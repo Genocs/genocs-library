@@ -1,14 +1,11 @@
-using System;
+namespace Genocs.Core.Demo.Users.Application.Exceptions;
 
-namespace Trill.Services.Users.Core.Exceptions
+public class UserNotFoundException : AppException
 {
-    public class UserNotFoundException : AppException
+    public Guid UserId { get; }
+
+    public UserNotFoundException(Guid userId) : base($"User with ID: '{userId}' was not found.")
     {
-        public Guid UserId { get; }
-        
-        public UserNotFoundException(Guid userId) : base($"User with ID: '{userId}' was not found.")
-        {
-            UserId = userId;
-        }
+        UserId = userId;
     }
 }

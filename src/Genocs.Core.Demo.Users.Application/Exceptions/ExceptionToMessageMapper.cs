@@ -1,11 +1,9 @@
-using System;
 using Convey.MessageBrokers.RabbitMQ;
 
-namespace Trill.Services.Users.Core.Exceptions
+namespace Genocs.Core.Demo.Users.Application.Exceptions;
+
+internal sealed class ExceptionToMessageMapper : IExceptionToMessageMapper
 {
-    internal sealed class ExceptionToMessageMapper : IExceptionToMessageMapper
-    {
-        public object Map(Exception exception, object message) => null;
-    }
+    public object Map(Exception exception, object message) => null;
 }
 

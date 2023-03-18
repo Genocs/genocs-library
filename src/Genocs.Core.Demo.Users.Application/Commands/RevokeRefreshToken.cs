@@ -1,14 +1,13 @@
 using Convey.CQRS.Commands;
 
-namespace Trill.Services.Users.Core.Commands
-{
-    public class RevokeRefreshToken : ICommand
-    {
-        public string RefreshToken { get; }
+namespace Genocs.Core.Demo.Users.Application.Commands;
 
-        public RevokeRefreshToken(string refreshToken)
-        {
-            RefreshToken = refreshToken;
-        }
+public class RevokeRefreshToken : ICommand
+{
+    public string RefreshToken { get; }
+
+    public RevokeRefreshToken(string refreshToken)
+    {
+        RefreshToken = refreshToken;
     }
 }

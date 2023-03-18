@@ -1,11 +1,9 @@
-using System;
-using Trill.Services.Users.Core.DTO;
+using Genocs.Core.Demo.Users.Application.DTO;
 
-namespace Trill.Services.Users.Core.Services
+namespace Genocs.Core.Demo.Users.Application.Services;
+
+public interface ITokenStorage
 {
-    public interface ITokenStorage
-    {
-        void Set(Guid commandId, AuthDto token);
-        AuthDto Get(Guid commandId);
-    }
+    void Set(Guid commandId, AuthDto token);
+    AuthDto Get(Guid commandId);
 }

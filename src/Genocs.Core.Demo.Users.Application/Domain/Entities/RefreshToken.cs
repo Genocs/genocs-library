@@ -1,7 +1,6 @@
-using System;
-using Trill.Services.Users.Core.Domain.Exceptions;
+using Genocs.Core.Demo.Users.Application.Domain.Exceptions;
 
-namespace Trill.Services.Users.Core.Domain.Entities;
+namespace Genocs.Core.Demo.Users.Application.Domain.Entities;
 
 public class RefreshToken : AggregateRoot
 {

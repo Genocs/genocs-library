@@ -1,8 +1,7 @@
 using Convey.CQRS.Queries;
-using System;
-using Trill.Services.Users.Core.DTO;
+using Genocs.Core.Demo.Users.Application.DTO;
 
-namespace Trill.Services.Users.Core.Queries;
+namespace Genocs.Core.Demo.Users.Application.Queries;
 
 public class BrowseUsers : PagedQueryBase, IQuery<PagedDto<UserDto>>
 {

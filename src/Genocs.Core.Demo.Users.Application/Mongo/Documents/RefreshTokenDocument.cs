@@ -1,8 +1,7 @@
 using Convey.Types;
-using System;
-using Trill.Services.Users.Core.Domain.Entities;
+using Genocs.Core.Demo.Users.Application.Domain.Entities;
 
-namespace Trill.Services.Users.Core.Mongo.Documents;
+namespace Genocs.Core.Demo.Users.Application.Mongo.Documents;
 
 public class RefreshTokenDocument : IIdentifiable<Guid>
 {

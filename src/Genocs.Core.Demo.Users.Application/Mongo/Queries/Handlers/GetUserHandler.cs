@@ -1,10 +1,10 @@
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
-using Trill.Services.Users.Core.DTO;
-using Trill.Services.Users.Core.Mongo.Documents;
-using Trill.Services.Users.Core.Queries;
+using Genocs.Core.Demo.Users.Application.DTO;
+using Genocs.Core.Demo.Users.Application.Mongo.Documents;
+using Genocs.Core.Demo.Users.Application.Queries;
 
-namespace Trill.Services.Users.Core.Mongo.Queries.Handlers;
+namespace Genocs.Core.Demo.Users.Application.Mongo.Queries.Handlers;
 
 public class GetUserHandler : IQueryHandler<GetUser, UserDetailsDto>
 {

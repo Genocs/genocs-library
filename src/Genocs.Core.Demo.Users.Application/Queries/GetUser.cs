@@ -1,11 +1,9 @@
-using System;
 using Convey.CQRS.Queries;
-using Trill.Services.Users.Core.DTO;
+using Genocs.Core.Demo.Users.Application.DTO;
 
-namespace Trill.Services.Users.Core.Queries
+namespace Genocs.Core.Demo.Users.Application.Queries;
+
+public class GetUser : IQuery<UserDetailsDto>
 {
-    public class GetUser : IQuery<UserDetailsDto>
-    {
-        public Guid UserId { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

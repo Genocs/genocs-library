@@ -1,22 +1,19 @@
 using Convey.Auth;
 using Convey.CQRS.Commands;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Trill.Services.Users.Core.Commands.Handlers
+namespace Genocs.Core.Demo.Users.Application.Commands.Handlers;
+
+internal sealed class RevokeAccessTokenHandler : ICommandHandler<RevokeAccessToken>
 {
-    internal sealed class RevokeAccessTokenHandler : ICommandHandler<RevokeAccessToken>
+    private readonly IAccessTokenService _accessTokenService;
+
+    public RevokeAccessTokenHandler(IAccessTokenService accessTokenService)
     {
-        private readonly IAccessTokenService _accessTokenService;
+        _accessTokenService = accessTokenService;
+    }
 
-        public RevokeAccessTokenHandler(IAccessTokenService accessTokenService)
-        {
-            _accessTokenService = accessTokenService;
-        }
-
-        public async Task HandleAsync(RevokeAccessToken command, CancellationToken cancellationToken = default)
-        {
-            await _accessTokenService.DeactivateAsync(command.AccessToken);
-        }
+    public async Task HandleAsync(RevokeAccessToken command, CancellationToken cancellationToken = default)
+    {
+        await _accessTokenService.DeactivateAsync(command.AccessToken);
     }
 }

@@ -1,31 +1,27 @@
 using Convey.CQRS.Commands;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Trill.Services.Users.Core.Domain.Exceptions;
-using Trill.Services.Users.Core.Domain.Repositories;
+using Genocs.Core.Demo.Users.Application.Domain.Exceptions;
+using Genocs.Core.Demo.Users.Application.Domain.Repositories;
 
-namespace Trill.Services.Users.Core.Commands.Handlers
+namespace Genocs.Core.Demo.Users.Application.Commands.Handlers;
+
+internal sealed class RevokeRefreshTokenHandler : ICommandHandler<RevokeRefreshToken>
 {
-    internal sealed class RevokeRefreshTokenHandler : ICommandHandler<RevokeRefreshToken>
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+
+    public RevokeRefreshTokenHandler(IRefreshTokenRepository refreshTokenRepository)
     {
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        _refreshTokenRepository = refreshTokenRepository;
+    }
 
-        public RevokeRefreshTokenHandler(IRefreshTokenRepository refreshTokenRepository)
+    public async Task HandleAsync(RevokeRefreshToken command, CancellationToken cancellationToken = default)
+    {
+        var token = await _refreshTokenRepository.GetAsync(command.RefreshToken);
+        if (token is null)
         {
-            _refreshTokenRepository = refreshTokenRepository;
+            throw new InvalidRefreshTokenException();
         }
 
-        public async Task HandleAsync(RevokeRefreshToken command, CancellationToken cancellationToken = default)
-        {
-            var token = await _refreshTokenRepository.GetAsync(command.RefreshToken);
-            if (token is null)
-            {
-                throw new InvalidRefreshTokenException();
-            }
-
-            token.Revoke(DateTime.UtcNow);
-            await _refreshTokenRepository.UpdateAsync(token);
-        }
+        token.Revoke(DateTime.UtcNow);
+        await _refreshTokenRepository.UpdateAsync(token);
     }
 }

@@ -1,16 +1,14 @@
 using Convey;
-using Convey.Logging;
-using Convey.Secrets.Vault;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
+using Genocs.Core.Demo.Users.Application;
+using Genocs.Core.Demo.Users.Application.Commands;
+using Genocs.Core.Demo.Users.Application.DTO;
+using Genocs.Core.Demo.Users.Application.Queries;
+using Genocs.Core.Demo.Users.Application.Services;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
-using Trill.Services.Users.Core;
-using Trill.Services.Users.Core.Commands;
-using Trill.Services.Users.Core.DTO;
-using Trill.Services.Users.Core.Queries;
-using Trill.Services.Users.Core.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()

@@ -54,7 +54,7 @@ namespace Genocs.APIGateway.Framework
             if (newClientOptions.DangerousAcceptAnyServerCertificate is true)
             {
                 handler.SslOptions.RemoteCertificateValidationCallback =
-                    (sender, cert, chain, errors) => cert.Subject == "trill.io";
+                    (sender, cert, chain, errors) => cert.Subject == "demo.io";
             }
             
             var httpMessageInvoker =  new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);

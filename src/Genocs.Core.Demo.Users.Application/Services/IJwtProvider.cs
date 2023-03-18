@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using Trill.Services.Users.Core.DTO;
+using Genocs.Core.Demo.Users.Application.DTO;
 
-namespace Trill.Services.Users.Core.Services;
+namespace Genocs.Core.Demo.Users.Application.Services;
 
 public interface IJwtProvider
 {

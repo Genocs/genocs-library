@@ -1,15 +1,13 @@
 using Convey.CQRS.Commands;
-using System;
 
-namespace Trill.Services.Users.Core.Commands
+namespace Genocs.Core.Demo.Users.Application.Commands;
+
+public class LockUser : ICommand
 {
-    public class LockUser : ICommand
-    {
-        public Guid UserId { get; }
+    public Guid UserId { get; }
 
-        public LockUser(Guid userId)
-        {
-            UserId = userId;
-        }
+    public LockUser(Guid userId)
+    {
+        UserId = userId;
     }
 }

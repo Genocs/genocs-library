@@ -1,39 +1,37 @@
-using System;
-using System.Collections.Concurrent;
-using System.Net;
 using Convey;
 using Convey.WebApi.Exceptions;
-using Trill.Services.Users.Core.Domain.Exceptions;
+using Genocs.Core.Demo.Users.Application.Domain.Exceptions;
+using System.Collections.Concurrent;
+using System.Net;
 
-namespace Trill.Services.Users.Core.Exceptions
+namespace Genocs.Core.Demo.Users.Application.Exceptions;
+
+public class ExceptionToResponseMapper : IExceptionToResponseMapper
 {
-    public class ExceptionToResponseMapper : IExceptionToResponseMapper
-    {
-        private static readonly ConcurrentDictionary<Type, string> Codes = new ConcurrentDictionary<Type, string>();
+    private static readonly ConcurrentDictionary<Type, string> Codes = new ConcurrentDictionary<Type, string>();
 
-        public ExceptionResponse Map(Exception exception)
-            => exception switch
-            {
-                DomainException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
-                    HttpStatusCode.BadRequest),
-                AppException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
-                    HttpStatusCode.BadRequest),
-                _ => new ExceptionResponse(new {code = "error", reason = "There was an error."},
-                    HttpStatusCode.BadRequest)
-            };
-
-        private static string GetCode(Exception exception)
+    public ExceptionResponse Map(Exception exception)
+        => exception switch
         {
-            var type = exception.GetType();
-            if (Codes.TryGetValue(type, out var code))
-            {
-                return code;
-            }
+            DomainException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
+                HttpStatusCode.BadRequest),
+            AppException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
+                HttpStatusCode.BadRequest),
+            _ => new ExceptionResponse(new { code = "error", reason = "There was an error." },
+                HttpStatusCode.BadRequest)
+        };
 
-            var exceptionCode = exception.GetType().Name.Underscore().Replace("_exception", string.Empty);
-            Codes.TryAdd(type, exceptionCode);
-
-            return exceptionCode;
+    private static string GetCode(Exception exception)
+    {
+        var type = exception.GetType();
+        if (Codes.TryGetValue(type, out var code))
+        {
+            return code;
         }
+
+        var exceptionCode = exception.GetType().Name.Underscore().Replace("_exception", string.Empty);
+        Codes.TryAdd(type, exceptionCode);
+
+        return exceptionCode;
     }
 }

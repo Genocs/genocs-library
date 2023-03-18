@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace Trill.Services.Users.Core;
+namespace Genocs.Core.Demo.Users.Application;
 
 internal class CorrelationContext
 {

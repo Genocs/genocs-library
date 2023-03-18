@@ -4,36 +4,33 @@ using Convey.HTTP;
 using Convey.Types;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Trill.Services.Users.Core.Decorators
+namespace Genocs.Core.Demo.Users.Application.Decorators;
+
+[Decorator]
+internal sealed class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
+    where TCommand : class, ICommand
 {
-    [Decorator]
-    internal sealed class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : class, ICommand
+    private readonly ICommandHandler<TCommand> _handler;
+    private readonly ICorrelationIdFactory _correlationIdFactory;
+    private readonly ILogger<ICommandHandler<TCommand>> _logger;
+
+    public LoggingCommandHandlerDecorator(ICommandHandler<TCommand> handler,
+        ICorrelationIdFactory correlationIdFactory, ILogger<ICommandHandler<TCommand>> logger)
     {
-        private readonly ICommandHandler<TCommand> _handler;
-        private readonly ICorrelationIdFactory _correlationIdFactory;
-        private readonly ILogger<ICommandHandler<TCommand>> _logger;
+        _handler = handler;
+        _correlationIdFactory = correlationIdFactory;
+        _logger = logger;
+    }
 
-        public LoggingCommandHandlerDecorator(ICommandHandler<TCommand> handler,
-            ICorrelationIdFactory correlationIdFactory, ILogger<ICommandHandler<TCommand>> logger)
+    public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
+    {
+        var correlationId = _correlationIdFactory.Create();
+        using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            _handler = handler;
-            _correlationIdFactory = correlationIdFactory;
-            _logger = logger;
-        }
-
-        public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
-        {
-            var correlationId = _correlationIdFactory.Create();
-            using (LogContext.PushProperty("CorrelationId", correlationId))
-            {
-                var name = command.GetType().Name.Underscore();
-                _logger.LogInformation($"Handling a command: '{name}'...");
-                await _handler.HandleAsync(command);
-            }
+            var name = command.GetType().Name.Underscore();
+            _logger.LogInformation($"Handling a command: '{name}'...");
+            await _handler.HandleAsync(command);
         }
     }
 }

@@ -1,10 +1,10 @@
 using Convey.CQRS.Commands;
-using Trill.Services.Users.Core.Domain.Exceptions;
-using Trill.Services.Users.Core.Domain.Repositories;
-using Trill.Services.Users.Core.Exceptions;
-using Trill.Services.Users.Core.Services;
+using Genocs.Core.Demo.Users.Application.Domain.Exceptions;
+using Genocs.Core.Demo.Users.Application.Domain.Repositories;
+using Genocs.Core.Demo.Users.Application.Exceptions;
+using Genocs.Core.Demo.Users.Application.Services;
 
-namespace Trill.Services.Users.Core.Commands.Handlers;
+namespace Genocs.Core.Demo.Users.Application.Commands.Handlers;
 
 internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
 {

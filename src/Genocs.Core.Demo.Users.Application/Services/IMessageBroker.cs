@@ -1,7 +1,6 @@
 using Convey.CQRS.Events;
-using System.Threading.Tasks;
 
-namespace Trill.Services.Users.Core.Services;
+namespace Genocs.Core.Demo.Users.Application.Services;
 
 public interface IMessageBroker
 {

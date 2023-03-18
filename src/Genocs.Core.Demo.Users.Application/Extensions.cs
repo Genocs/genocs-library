@@ -20,23 +20,23 @@ using Convey.Types;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
 using Convey.WebApi.Swagger;
+using Genocs.Core.Demo.Users.Application.Commands;
+using Genocs.Core.Demo.Users.Application.Decorators;
+using Genocs.Core.Demo.Users.Application.Domain.Repositories;
+using Genocs.Core.Demo.Users.Application.Exceptions;
+using Genocs.Core.Demo.Users.Application.Logging;
+using Genocs.Core.Demo.Users.Application.Mongo;
+using Genocs.Core.Demo.Users.Application.Mongo.Documents;
+using Genocs.Core.Demo.Users.Application.Mongo.Repositories;
+using Genocs.Core.Demo.Users.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
-using Trill.Services.Users.Core.Commands;
-using Trill.Services.Users.Core.Decorators;
-using Trill.Services.Users.Core.Domain.Repositories;
-using Trill.Services.Users.Core.Exceptions;
-using Trill.Services.Users.Core.Logging;
-using Trill.Services.Users.Core.Mongo;
-using Trill.Services.Users.Core.Mongo.Documents;
-using Trill.Services.Users.Core.Mongo.Repositories;
-using Trill.Services.Users.Core.Services;
 
-namespace Trill.Services.Users.Core;
+namespace Genocs.Core.Demo.Users.Application;
 
 public static class Extensions
 {
@@ -79,7 +79,7 @@ public static class Extensions
             .AddWebApiSwaggerDocs();
 
         builder.Services.AddSingleton<ICorrelationIdFactory, CorrelationIdFactory>();
-        
+
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(LoggingEventHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
@@ -87,7 +87,7 @@ public static class Extensions
 
         return builder;
     }
-    
+
     public static long ToUnixTimeMilliseconds(this DateTime dateTime)
         => new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
 
@@ -111,12 +111,12 @@ public static class Extensions
 
     public static Task GetAppName(this HttpContext httpContext)
         => httpContext.Response.WriteAsync(httpContext.RequestServices.GetService<AppOptions>().Name);
-    
+
     internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true
             ? JsonConvert.DeserializeObject<CorrelationContext>(json.FirstOrDefault())
             : null;
-    
+
     internal static string GetSpanContext(this IMessageProperties messageProperties, string header)
     {
         if (messageProperties is null)

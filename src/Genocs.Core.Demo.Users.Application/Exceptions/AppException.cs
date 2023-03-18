@@ -1,6 +1,4 @@
-using System;
-
-namespace Trill.Services.Users.Core.Exceptions
+namespace Genocs.Core.Demo.Users.Application.Exceptions
 {
     public abstract class AppException : Exception
     {

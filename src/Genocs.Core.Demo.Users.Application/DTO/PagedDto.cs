@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Trill.Services.Users.Core.DTO;
+namespace Genocs.Core.Demo.Users.Application.DTO;
 
 public class PagedDto<T>
 {

@@ -1,7 +1,6 @@
-using System;
 using Convey.CQRS.Events;
 
-namespace Trill.Services.Users.Core.Events
+namespace Genocs.Core.Demo.Users.Application.Events
 {
     public class UserLocked : IEvent
     {

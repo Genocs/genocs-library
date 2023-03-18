@@ -1,10 +1,10 @@
 using Convey.Persistence.MongoDB;
+using Genocs.Core.Demo.Users.Application.Mongo.Documents;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using Trill.Services.Users.Core.Mongo.Documents;
 
-namespace Trill.Services.Users.Core.Mongo;
+namespace Genocs.Core.Demo.Users.Application.Mongo;
 
 public static class Extensions
 {

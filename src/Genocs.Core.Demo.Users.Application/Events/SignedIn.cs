@@ -1,7 +1,6 @@
 using Convey.CQRS.Events;
-using System;
 
-namespace Trill.Services.Users.Core.Events;
+namespace Genocs.Core.Demo.Users.Application.Events;
 
 public class SignedIn : IEvent
 {

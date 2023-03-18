@@ -1,26 +1,24 @@
-using System.Threading.Tasks;
 using Convey.HTTP;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
-namespace Trill.Services.Users.Core.Logging
+namespace Genocs.Core.Demo.Users.Application.Logging;
+
+internal class LogContextMiddleware : IMiddleware
 {
-    internal class LogContextMiddleware : IMiddleware
+    private readonly ICorrelationIdFactory _correlationIdFactory;
+
+    public LogContextMiddleware(ICorrelationIdFactory correlationIdFactory)
     {
-        private readonly ICorrelationIdFactory _correlationIdFactory;
+        _correlationIdFactory = correlationIdFactory;
+    }
 
-        public LogContextMiddleware(ICorrelationIdFactory correlationIdFactory)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        var correlationId = _correlationIdFactory.Create();
+        using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            _correlationIdFactory = correlationIdFactory;
-        }
-
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-        {
-            var correlationId = _correlationIdFactory.Create();
-            using (LogContext.PushProperty("CorrelationId", correlationId))
-            {
-                await next(context);
-            }
+            await next(context);
         }
     }
 }

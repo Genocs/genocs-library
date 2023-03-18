@@ -1,6 +1,6 @@
-using Trill.Services.Users.Core.Domain.Entities;
+using Genocs.Core.Demo.Users.Application.Domain.Entities;
 
-namespace Trill.Services.Users.Core.Domain.Repositories;
+namespace Genocs.Core.Demo.Users.Application.Domain.Repositories;
 
 public interface IUserRepository
 {

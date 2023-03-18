@@ -23,7 +23,7 @@
 		<AnalysisLevel>latest</AnalysisLevel>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="Scrutor" Version="4.2.1" />
 	</ItemGroup>
@@ -31,7 +31,7 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<None Include="..\..\LICENSE">
 			<Pack>True</Pack>

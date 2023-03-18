@@ -1,6 +1,4 @@
-using System;
-
-namespace Trill.Services.Users.Core.DTO;
+namespace Genocs.Core.Demo.Users.Application.DTO;
 
 public class UserDto
 {
