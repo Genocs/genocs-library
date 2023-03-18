@@ -3,16 +3,13 @@ using Convey.Auth;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
 using Convey.CQRS.Queries;
-using Convey.Discovery.Consul;
 using Convey.Docs.Swagger;
 using Convey.HTTP;
-using Convey.LoadBalancing.Fabio;
 using Convey.MessageBrokers;
 using Convey.MessageBrokers.CQRS;
 using Convey.MessageBrokers.Outbox;
 using Convey.MessageBrokers.Outbox.Mongo;
 using Convey.MessageBrokers.RabbitMQ;
-using Convey.Metrics.Prometheus;
 using Convey.Persistence.MongoDB;
 using Convey.Persistence.Redis;
 using Convey.Tracing.Jaeger;
@@ -66,13 +63,10 @@ public static class Extensions
             .AddInMemoryQueryDispatcher()
             .AddJwt()
             .AddHttpClient()
-            .AddConsul()
-            .AddFabio()
             .AddRabbitMq()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
-            .AddPrometheus()
             .AddJaeger()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
@@ -96,7 +90,6 @@ public static class Extensions
         app.UseMiddleware<LogContextMiddleware>()
             .UseErrorHandler()
             .UseJaeger()
-            .UsePrometheus()
             .UseSwaggerDocs()
             .UseConvey()
             .UseAccessTokenValidator()

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -13,12 +13,9 @@
 	<ItemGroup>
 		<PackageReference Include="Convey" Version="1.0.541" />
 		<PackageReference Include="Convey.Auth" Version="1.0.541" />
-		<PackageReference Include="Convey.Secrets.Vault" Version="1.0.541" />
 		<PackageReference Include="Convey.CQRS.Commands" Version="1.0.541" />
 		<PackageReference Include="Convey.CQRS.Events" Version="1.0.541" />
 		<PackageReference Include="Convey.CQRS.Queries" Version="1.0.541" />
-		<PackageReference Include="Convey.Discovery.Consul" Version="1.0.541" />
-		<PackageReference Include="Convey.LoadBalancing.Fabio" Version="1.0.541" />
 		<PackageReference Include="Convey.HTTP" Version="1.0.541" />
 		<PackageReference Include="Convey.Logging" Version="1.0.541" />
 		<PackageReference Include="Convey.MessageBrokers" Version="1.0.541" />

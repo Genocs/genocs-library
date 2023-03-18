@@ -3,7 +3,8 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###############################################################################
 
-@url = https://localhost:5001
+#@url = https://localhost:5001
+@url = https://localhost:5271
 
 
 ### Home / Welcome screen
