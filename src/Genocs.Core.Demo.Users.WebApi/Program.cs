@@ -10,6 +10,9 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
 
+using Genocs.Logging;
+using Genocs.Core.Settings;
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -40,14 +43,17 @@ builder.Host.UseSerilog((ctx, lc) =>
     }
 });
 
+
+
 var services = builder.Services;
 
-services.AddGenocs()
+services.AddGenocs(builder.Configuration)
         .AddWebApi()
         .AddCore()
         .Build();
 
 var app = builder.Build();
+
 app.UseCore();
 app.UseDispatcherEndpoints(endpoints => endpoints
                             .Get("", ctx => ctx.GetAppName())

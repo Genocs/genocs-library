@@ -12,7 +12,7 @@ using Genocs.Core.Demo.Users.Application.Mongo;
 using Genocs.Core.Demo.Users.Application.Mongo.Documents;
 using Genocs.Core.Demo.Users.Application.Mongo.Repositories;
 using Genocs.Core.Demo.Users.Application.Services;
-using Genocs.Core.Options;
+using Genocs.Core.Settings;
 using Genocs.HTTP;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.CQRS;
@@ -58,8 +58,6 @@ public static class Extensions
             .AddInMemoryCommandDispatcher()
             .AddInMemoryEventDispatcher()
             .AddInMemoryQueryDispatcher()
-            .AddQueryHandlers()
-            .AddInMemoryQueryDispatcher()
             .AddJwt()
             .AddHttpClient()
             .AddRabbitMq()
@@ -82,7 +80,7 @@ public static class Extensions
     }
 
     public static long ToUnixTimeMilliseconds(this DateTime dateTime)
-    => new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
+        => new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
 
     public static IApplicationBuilder UseCore(this IApplicationBuilder app)
     {
@@ -101,8 +99,8 @@ public static class Extensions
         return app;
     }
 
-    public static Task GetAppName(this HttpContext httpContext)
-        => httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppSettings>()?.Name ?? "ciao");
+    public static async Task GetAppName(this HttpContext httpContext)
+        => await httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppOptions>()?.Name ?? "ciao");
 
     internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true

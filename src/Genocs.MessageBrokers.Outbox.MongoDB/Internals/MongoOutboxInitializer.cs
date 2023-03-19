@@ -30,10 +30,11 @@ internal sealed class MongoOutboxInitializer : IInitializer
         var inboxCollection = string.IsNullOrWhiteSpace(_options.InboxCollection)
             ? "inbox"
             : _options.InboxCollection;
-        var builder = Builders<InboxMessage>.IndexKeys;
+
+        var inboxBuilder = Builders<InboxMessage>.IndexKeys;
         await _database.GetCollection<InboxMessage>(inboxCollection)
             .Indexes.CreateOneAsync(
-                new CreateIndexModel<InboxMessage>(builder.Ascending(i => i.ProcessedAt),
+                new CreateIndexModel<InboxMessage>(inboxBuilder.Ascending(i => i.ProcessedAt),
                     new CreateIndexOptions
                     {
                         ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
@@ -42,6 +43,7 @@ internal sealed class MongoOutboxInitializer : IInitializer
         var outboxCollection = string.IsNullOrWhiteSpace(_options.OutboxCollection)
             ? "outbox"
             : _options.OutboxCollection;
+
         var outboxBuilder = Builders<OutboxMessage>.IndexKeys;
         await _database.GetCollection<OutboxMessage>(outboxCollection)
             .Indexes.CreateOneAsync(

@@ -1,21 +1,38 @@
-namespace Genocs.Core.Builders
+namespace Genocs.Core.Builders;
+
+using Genocs.Core.Types;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+
+/// <summary>
+/// The Application builder
+/// </summary>
+public interface IGenocsBuilder
 {
-    using Genocs.Core.Types;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
+    /// <summary>
+    /// Get the service collection
+    /// </summary>
+    IServiceCollection Services { get; }
 
     /// <summary>
-    /// The Application builder
+    /// Get the configuration
     /// </summary>
-    public interface IGenocsBuilder
-    {
-        IServiceCollection Services { get; }
-        IConfiguration Configuration { get; }
-        bool TryRegister(string name);
-        void AddBuildAction(Action<IServiceProvider> execute);
-        void AddInitializer(IInitializer initializer);
-        void AddInitializer<TInitializer>() where TInitializer : IInitializer;
-        IServiceProvider Build();
-    }
+    IConfiguration Configuration { get; }
+
+    /// <summary>
+    /// try to register a service by name
+    /// </summary>
+    /// <param name="name">Name of the service trying to register</param>
+    /// <returns></returns>
+    bool TryRegister(string name);
+
+    /// <summary>
+    /// Build the actions based on the service provider
+    /// </summary>
+    /// <param name="execute"></param>
+    void AddBuildAction(Action<IServiceProvider> execute);
+    void AddInitializer(IInitializer initializer);
+    void AddInitializer<TInitializer>() where TInitializer : IInitializer;
+    IServiceProvider Build();
 }

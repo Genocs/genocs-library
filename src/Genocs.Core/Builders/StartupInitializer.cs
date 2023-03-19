@@ -1,41 +1,40 @@
-namespace Genocs.Core.Builders
+namespace Genocs.Core.Builders;
+
+using Genocs.Core.Types;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+/// <summary>
+/// StartupInitializer implementation
+/// </summary>
+public class StartupInitializer : IStartupInitializer
 {
-    using Genocs.Core.Types;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private readonly IList<IInitializer> _initializers = new List<IInitializer>();
+
 
     /// <summary>
-    /// StartupInitializer implementation
+    /// Add new initializer if not present
     /// </summary>
-    public class StartupInitializer : IStartupInitializer
+    /// <param name="initializer"></param>
+    public void AddInitializer(IInitializer initializer)
     {
-        private readonly IList<IInitializer> _initializers = new List<IInitializer>();
-
-
-        /// <summary>
-        /// Add new initializer if not present
-        /// </summary>
-        /// <param name="initializer"></param>
-        public void AddInitializer(IInitializer initializer)
+        if (initializer is null || _initializers.Contains(initializer))
         {
-            if (initializer is null || _initializers.Contains(initializer))
-            {
-                return;
-            }
-
-            _initializers.Add(initializer);
+            return;
         }
 
-        /// <summary>
-        /// Run the initializer
-        /// </summary>
-        /// <returns></returns>
-        public async Task InitializeAsync()
+        _initializers.Add(initializer);
+    }
+
+    /// <summary>
+    /// Run the initializer
+    /// </summary>
+    /// <returns></returns>
+    public async Task InitializeAsync()
+    {
+        foreach (var initializer in _initializers)
         {
-            foreach (var initializer in _initializers)
-            {
-                await initializer.InitializeAsync();
-            }
+            await initializer.InitializeAsync();
         }
     }
 }

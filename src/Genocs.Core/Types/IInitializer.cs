@@ -1,16 +1,15 @@
-namespace Genocs.Core.Types
-{
-    using System.Threading.Tasks;
+namespace Genocs.Core.Types;
 
+using System.Threading.Tasks;
+
+/// <summary>
+/// Initializer interface definition
+/// </summary>
+public interface IInitializer
+{
     /// <summary>
-    /// Initializer interface definition
+    /// Standard initializer
     /// </summary>
-    public interface IInitializer
-    {
-        /// <summary>
-        /// Standard initializer
-        /// </summary>
-        /// <returns></returns>
-        Task InitializeAsync();
-    }
+    /// <returns></returns>
+    Task InitializeAsync();
 }

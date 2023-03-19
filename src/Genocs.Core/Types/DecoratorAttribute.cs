@@ -1,11 +1,10 @@
-namespace Genocs.Core.Types
-{
-    using System;
+namespace Genocs.Core.Types;
 
-    /// <summary>
-    /// DecoratorAttribute placeholder
-    /// </summary>
-    public class DecoratorAttribute : Attribute
-    {
-    }
+using System;
+
+/// <summary>
+/// DecoratorAttribute placeholder
+/// </summary>
+public class DecoratorAttribute : Attribute
+{
 }

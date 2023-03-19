@@ -1,13 +1,12 @@
-namespace Genocs.Core.Builders
+namespace Genocs.Core.Builders;
+
+/// <summary>
+/// The ServiceId interface definition
+/// </summary>
+public interface IServiceId
 {
     /// <summary>
-    /// The ServiceId interface definition
+    /// The id of the service as a getter 
     /// </summary>
-    public interface IServiceId
-    {
-        /// <summary>
-        /// The id of the service as a getter 
-        /// </summary>
-        string Id { get; }
-    }
+    string Id { get; }
 }

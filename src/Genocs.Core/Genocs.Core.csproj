@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<PackageId>Genocs.Core</PackageId>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.1.0</Version>
+		<Version>5.0.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -18,13 +18,14 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
 		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-		<PackageReleaseNotes>Refactory to implement CQRS pattern</PackageReleaseNotes>
+		<PackageReleaseNotes>Moved to NET7.0</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Figgle" Version="0.5.1" />
 		<PackageReference Include="Scrutor" Version="4.2.1" />
 	</ItemGroup>
 

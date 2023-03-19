@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.Core.Options;
+using Genocs.Core.Settings;
 using Genocs.Logging.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,12 +19,12 @@ namespace Genocs.Logging;
 public static class Extensions
 {
     private const string LoggerSectionName = "logger";
-    private const string AppSectionName = "app";
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
 
     public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
-        Action<HostBuilderContext, LoggerConfiguration> configure = null, string loggerSectionName = LoggerSectionName,
-        string appSectionName = AppSectionName)
+                                            Action<HostBuilderContext, LoggerConfiguration>? configure = null,
+                                            string? loggerSectionName = null,
+                                            string? appSectionName = null)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
@@ -36,19 +36,20 @@ public static class Extensions
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppSectionName;
+                    appSectionName = AppOptions.Position;
                 }
 
                 var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
+                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
             });
 
     public static IWebHostBuilder UseLogging(this IWebHostBuilder webHostBuilder,
-        Action<WebHostBuilderContext, LoggerConfiguration> configure = null, string loggerSectionName = LoggerSectionName,
-        string appSectionName = AppSectionName)
+                                            Action<WebHostBuilderContext, LoggerConfiguration>? configure = null,
+                                            string? loggerSectionName = null,
+                                            string? appSectionName = null)
         => webHostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
@@ -60,11 +61,11 @@ public static class Extensions
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppSectionName;
+                    appSectionName = AppOptions.Position;
                 }
 
                 var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
+                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration,
                     context.HostingEnvironment.EnvironmentName);
@@ -75,7 +76,7 @@ public static class Extensions
         string endpointRoute = "~/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
-    private static void MapOptions(LoggerOptions loggerOptions, AppSettings appOptions,
+    private static void MapOptions(LoggerOptions loggerOptions, AppOptions appOptions,
         LoggerConfiguration loggerConfiguration, string environmentName)
     {
         LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);

@@ -1,12 +1,12 @@
-﻿using System;
+﻿namespace Genocs.Core.Types;
 
-namespace Genocs.Core.Types
+using System;
+
+
+/// <summary>
+/// 
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class HiddenAttribute : Attribute
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class HiddenAttribute : Attribute
-    {
-    }
 }
