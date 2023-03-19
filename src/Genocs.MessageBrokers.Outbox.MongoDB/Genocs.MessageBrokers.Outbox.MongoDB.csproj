@@ -7,11 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MongoDB.Driver" Version="2.19.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
+		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
 	</ItemGroup>
 
 </Project>

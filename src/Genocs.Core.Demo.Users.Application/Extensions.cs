@@ -102,7 +102,7 @@ public static class Extensions
     }
 
     public static Task GetAppName(this HttpContext httpContext)
-        => httpContext.Response.WriteAsync(httpContext.RequestServices.GetService<AppSettings>().Name);
+        => httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppSettings>()?.Name ?? "ciao");
 
     internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true
