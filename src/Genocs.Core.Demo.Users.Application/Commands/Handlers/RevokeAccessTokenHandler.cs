@@ -1,5 +1,5 @@
-using Convey.Auth;
-using Convey.CQRS.Commands;
+using Genocs.Auth;
+using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Core.Demo.Users.Application.Commands.Handlers;
 

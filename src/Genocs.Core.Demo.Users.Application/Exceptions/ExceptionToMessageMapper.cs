@@ -1,4 +1,4 @@
-using Convey.MessageBrokers.RabbitMQ;
+using Genocs.MessageBrokers.RabbitMQ;
 
 namespace Genocs.Core.Demo.Users.Application.Exceptions;
 

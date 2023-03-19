@@ -1,7 +1,7 @@
-using Convey.CQRS.Events;
-using Convey.MessageBrokers;
-using Convey.MessageBrokers.Outbox;
-using Convey.Types;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.Types;
+using Genocs.MessageBrokers;
+using Genocs.MessageBrokers.Outbox;
 
 namespace Genocs.Core.Demo.Users.Application.Decorators;
 

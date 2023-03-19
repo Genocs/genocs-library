@@ -1,4 +1,4 @@
-using Convey.CQRS.Events;
+using Genocs.Core.CQRS.Events;
 
 namespace Genocs.Core.Demo.Users.Application.Events;
 

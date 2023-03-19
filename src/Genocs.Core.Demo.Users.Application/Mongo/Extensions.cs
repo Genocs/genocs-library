@@ -1,5 +1,5 @@
-using Convey.Persistence.MongoDB;
 using Genocs.Core.Demo.Users.Application.Mongo.Documents;
+using Genocs.Persistence.MongoDb.Legacy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;

@@ -1,9 +1,9 @@
-using Convey;
-using Convey.CQRS.Events;
-using Convey.HTTP;
-using Convey.MessageBrokers;
-using Convey.MessageBrokers.Outbox;
-using Convey.MessageBrokers.RabbitMQ;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.Extensions;
+using Genocs.HTTP;
+using Genocs.MessageBrokers;
+using Genocs.MessageBrokers.Outbox;
+using Genocs.MessageBrokers.RabbitMQ;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

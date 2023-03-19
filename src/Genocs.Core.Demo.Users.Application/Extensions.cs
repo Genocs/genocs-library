@@ -1,22 +1,8 @@
-using Convey;
-using Convey.Auth;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
-using Convey.CQRS.Queries;
-using Convey.Docs.Swagger;
-using Convey.HTTP;
-using Convey.MessageBrokers;
-using Convey.MessageBrokers.CQRS;
-using Convey.MessageBrokers.Outbox;
-using Convey.MessageBrokers.Outbox.Mongo;
-using Convey.MessageBrokers.RabbitMQ;
-using Convey.Persistence.MongoDB;
-using Convey.Persistence.Redis;
-using Convey.Tracing.Jaeger;
-using Convey.Types;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
-using Convey.WebApi.Swagger;
+using Genocs.Auth;
+using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Demo.Users.Application.Commands;
 using Genocs.Core.Demo.Users.Application.Decorators;
 using Genocs.Core.Demo.Users.Application.Domain.Repositories;
@@ -26,6 +12,19 @@ using Genocs.Core.Demo.Users.Application.Mongo;
 using Genocs.Core.Demo.Users.Application.Mongo.Documents;
 using Genocs.Core.Demo.Users.Application.Mongo.Repositories;
 using Genocs.Core.Demo.Users.Application.Services;
+using Genocs.Core.Options;
+using Genocs.HTTP;
+using Genocs.MessageBrokers;
+using Genocs.MessageBrokers.CQRS;
+using Genocs.MessageBrokers.Outbox;
+using Genocs.MessageBrokers.Outbox.MongoDB;
+using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Tracing.Jaeger;
+using Genocs.WebApi;
+using Genocs.WebApi.CQRS;
+using Genocs.WebApi.Swagger;
+using Genocs.WebApi.Swagger.Docs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +36,7 @@ namespace Genocs.Core.Demo.Users.Application;
 
 public static class Extensions
 {
-    public static IConveyBuilder AddCore(this IConveyBuilder builder)
+    public static IGenocsBuilder AddCore(this IGenocsBuilder builder)
     {
         builder.Services
             .AddScoped<LogContextMiddleware>()
@@ -66,7 +65,7 @@ public static class Extensions
             .AddRabbitMq()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
-            .AddRedis()
+            //.AddRedis()
             .AddJaeger()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
@@ -83,7 +82,7 @@ public static class Extensions
     }
 
     public static long ToUnixTimeMilliseconds(this DateTime dateTime)
-        => new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
+    => new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
 
     public static IApplicationBuilder UseCore(this IApplicationBuilder app)
     {
@@ -91,7 +90,7 @@ public static class Extensions
             .UseErrorHandler()
             .UseJaeger()
             .UseSwaggerDocs()
-            .UseConvey()
+            .UseGenocs()
             .UseAccessTokenValidator()
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
@@ -103,7 +102,7 @@ public static class Extensions
     }
 
     public static Task GetAppName(this HttpContext httpContext)
-        => httpContext.Response.WriteAsync(httpContext.RequestServices.GetService<AppOptions>().Name);
+        => httpContext.Response.WriteAsync(httpContext.RequestServices.GetService<AppSettings>().Name);
 
     internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true

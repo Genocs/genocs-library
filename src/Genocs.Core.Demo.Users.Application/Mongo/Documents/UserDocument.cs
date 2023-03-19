@@ -1,9 +1,9 @@
-using Convey.Types;
 using Genocs.Core.Demo.Users.Application.Domain.Entities;
+using Genocs.Core.Types;
 
 namespace Genocs.Core.Demo.Users.Application.Mongo.Documents;
 
-public class UserDocument : IIdentifiable<Guid>
+public class UserDocument : IIdentifiable<Guid> 
 {
     public Guid Id { get; set; }
     public string Email { get; set; }

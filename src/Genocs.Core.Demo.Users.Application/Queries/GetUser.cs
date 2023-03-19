@@ -1,4 +1,4 @@
-using Convey.CQRS.Queries;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Demo.Users.Application.DTO;
 
 namespace Genocs.Core.Demo.Users.Application.Queries;

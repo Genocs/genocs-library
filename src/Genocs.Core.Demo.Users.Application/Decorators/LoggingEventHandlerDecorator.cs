@@ -1,7 +1,7 @@
-using Convey;
-using Convey.CQRS.Events;
-using Convey.HTTP;
-using Convey.Types;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.Extensions;
+using Genocs.Core.Types;
+using Genocs.HTTP;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 

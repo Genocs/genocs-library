@@ -1,7 +1,7 @@
-using Convey.Persistence.MongoDB;
 using Genocs.Core.Demo.Users.Application.Domain.Entities;
 using Genocs.Core.Demo.Users.Application.Domain.Repositories;
 using Genocs.Core.Demo.Users.Application.Mongo.Documents;
+using Genocs.Persistence.MongoDb.Legacy;
 
 namespace Genocs.Core.Demo.Users.Application.Mongo.Repositories;
 

@@ -1,4 +1,4 @@
-using Convey.CQRS.Commands;
+using Genocs.Core.CQRS.Commands;
 using Genocs.Core.Demo.Users.Application.Domain.Repositories;
 using Genocs.Core.Demo.Users.Application.Events;
 using Genocs.Core.Demo.Users.Application.Exceptions;

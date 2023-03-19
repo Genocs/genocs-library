@@ -1,8 +1,8 @@
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Demo.Users.Application.DTO;
 using Genocs.Core.Demo.Users.Application.Mongo.Documents;
 using Genocs.Core.Demo.Users.Application.Queries;
+using Genocs.Persistence.MongoDb.Legacy;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

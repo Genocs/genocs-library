@@ -1,11 +1,11 @@
-using Convey;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
+using Genocs.Core.Builders;
 using Genocs.Core.Demo.Users.Application;
 using Genocs.Core.Demo.Users.Application.Commands;
 using Genocs.Core.Demo.Users.Application.DTO;
 using Genocs.Core.Demo.Users.Application.Queries;
 using Genocs.Core.Demo.Users.Application.Services;
+using Genocs.WebApi;
+using Genocs.WebApi.CQRS;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
@@ -42,7 +42,7 @@ builder.Host.UseSerilog((ctx, lc) =>
 
 var services = builder.Services;
 
-services.AddConvey()
+services.AddGenocs()
         .AddWebApi()
         .AddCore()
         .Build();

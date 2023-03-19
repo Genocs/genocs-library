@@ -1,4 +1,4 @@
-using Convey;
+using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Demo.Users.Application.Exceptions;
 

@@ -1,4 +1,4 @@
-using Convey.Auth;
+using Genocs.Auth;
 using Genocs.Core.Demo.Users.Application.DTO;
 
 namespace Genocs.Core.Demo.Users.Application.Services;

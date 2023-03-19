@@ -1,5 +1,5 @@
-using Convey.Types;
 using Genocs.Core.Demo.Users.Application.Domain.Entities;
+using Genocs.Core.Types;
 
 namespace Genocs.Core.Demo.Users.Application.Mongo.Documents;
 
