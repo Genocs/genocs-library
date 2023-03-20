@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Auth\Genocs.Auth.csproj" />
-		<ProjectReference Include="..\Genocs.Core.Security\Genocs.Core.Security.csproj" />
+		<ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 		<ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
 		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />

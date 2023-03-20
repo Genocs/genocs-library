@@ -37,10 +37,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder.UnitTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
 		README.md = README.md
-		webapi.dockerfile = webapi.dockerfile
-		worker.dockerfile = worker.dockerfile
+		demo-worker.dockerfile = demo-worker.dockerfile
+		demo-webapi.dockerfile = demo-webapi.dockerfile
+		demo-docker-compose.yml = demo-docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP", "src\Genocs.HTTP\Genocs.HTTP.csproj", "{F3335D07-6BCE-455C-A141-DADF8192DD84}"
@@ -59,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.WebApi", "src\Genocs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.WebApi.Swagger", "src\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj", "{E01C11ED-A212-4B57-A94B-0B4CA097AB49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Security", "src\Genocs.Core.Security\Genocs.Core.Security.csproj", "{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Security", "src\Genocs.Security\Genocs.Security.csproj", "{BCCF74A5-CC6C-4027-9788-C9C1E6861B85}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.WebApi.CQRS", "src\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj", "{FC4113D0-1607-43F2-9CBE-BC72F5E323CB}"
 EndProject
@@ -71,13 +71,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Tracing", "src\Genoc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Metrics", "src\Genocs.Metrics\Genocs.Metrics.csproj", "{1DF0A91E-67B7-45E9-85F0-99525BBD3A5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.MessageBrokers", "src\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj", "{F1B5BC4A-B3D1-4108-A3A0-5146330E824D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.MessageBrokers", "src\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj", "{F1B5BC4A-B3D1-4108-A3A0-5146330E824D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.MessageBrokers.Outbox", "src\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj", "{FB7F9145-F929-4FA9-9298-262729608863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.MessageBrokers.Outbox", "src\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj", "{FB7F9145-F929-4FA9-9298-262729608863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.MessageBrokers.RabbitMQ", "src\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj", "{B8039132-B988-4042-A45B-90ED9DAA25A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.MessageBrokers.RabbitMQ", "src\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj", "{B8039132-B988-4042-A45B-90ED9DAA25A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.MessageBrokers.Outbox.MongoDB", "src\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj", "{496C63B8-830A-4E97-AC1F-BE6E84AE1040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.MessageBrokers.Outbox.MongoDB", "src\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj", "{496C63B8-830A-4E97-AC1F-BE6E84AE1040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
