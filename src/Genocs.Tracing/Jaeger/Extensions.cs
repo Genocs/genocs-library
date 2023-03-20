@@ -22,7 +22,7 @@ public static class Extensions
     private const string RegistryName = "tracing.jaeger";
 
     public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, string sectionName = SectionName,
-        Action<IOpenTracingBuilder> openTracingBuilder = null)
+        Action<IOpenTracingBuilder>? openTracingBuilder = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -109,7 +109,7 @@ public static class Extensions
         return builder;
     }
 
-    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderOptions options)
+    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderOptions? options)
     {
         if (options is null)
         {

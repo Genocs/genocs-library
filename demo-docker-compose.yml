@@ -5,10 +5,10 @@ services:
     image: genocs/demo-webapi:2.0.0
     build:
       context: .
-      dockerfile: webapi.dockerfile
+      dockerfile: demo-webapi.dockerfile
 
   application.worker:
     image: genocs/demo-worker:2.0.0
     build:
       context: .
-      dockerfile: worker.dockerfile
+      dockerfile: demo-worker.dockerfile

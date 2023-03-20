@@ -45,27 +45,27 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 
 ``` bash
 # Build webapi
-docker build -t genocs/demo-webapi:1.1.0 -t genocs/demo-webapi:latest -f ./webapi.dockerfile .
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
 
 # Push on Dockerhub
-docker push genocs/demo-webapi:1.1.0
+docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
 
 # Build worker
-docker build -t genocs/demo-worker:1.1.0 -t genocs/demo-worker:latest -f ./worker.dockerfile .
+docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-worker.dockerfile .
 
 # Push on Dockerhub
-docker push genocs/demo-worker:1.1.0
+docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
 
 A second option is to run docker-compose
 ``` bash
 # Build with docker compose
-docker-compose -f ./docker-compose.yml build
+docker-compose -f ./demo-docker-compose.yml build
 
 # Run with docker compose
-docker-compose -f ./docker-compose.yml up [-d]
+docker-compose -f ./demo-docker-compose.yml up [-d]
 ```
 
 ## Core
