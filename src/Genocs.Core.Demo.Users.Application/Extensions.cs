@@ -19,6 +19,7 @@ using Genocs.MessageBrokers.CQRS;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Legacy;
 using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
@@ -65,6 +66,7 @@ public static class Extensions
             .AddMongo()
             //.AddRedis()
             .AddJaeger()
+            .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
             .AddWebApiSwaggerDocs();
@@ -93,7 +95,8 @@ public static class Extensions
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
-            .UseRabbitMq()
+            .UseMetrics()
+            .UseRabbitMq()            
             .SubscribeCommand<CreateUser>();
 
         return app;
