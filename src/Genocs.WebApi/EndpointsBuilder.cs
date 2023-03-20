@@ -17,11 +17,14 @@ public class EndpointsBuilder : IEndpointsBuilder
         _definitions = definitions;
     }
 
-    public IEndpointsBuilder Get(string path, Func<HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
-        params string[] policies)
+    public IEndpointsBuilder Get(string path,
+                                 Func<HttpContext, Task>? context = null,
+                                 Action<IEndpointConventionBuilder>? endpoint = null,
+                                 bool auth = false,
+                                 string? roles = null,
+                                 params string[] policies)
     {
-        var builder = _routeBuilder.MapGet(path, ctx => context?.Invoke(ctx));
+        var builder = _routeBuilder.MapGet(path, ctx => context.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Get, path);
@@ -29,7 +32,7 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Get<T>(string path, Func<T, HttpContext, Task> context = null,
+    public IEndpointsBuilder Get<T>(string path, Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
         params string[] policies)
         where T : class
@@ -130,8 +133,10 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder, bool auth, string roles,
-        params string[] policies)
+    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder,
+                                                  bool auth,
+                                                  string? roles,
+                                                  params string[] policies)
     {
         if (policies is not null && policies.Any())
         {
@@ -153,7 +158,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     private static async Task BuildRequestContext<T>(HttpContext httpContext,
-        Func<T, HttpContext, Task> context = null)
+        Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = await httpContext.ReadJsonAsync<T>();
@@ -166,7 +171,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     private static async Task BuildQueryContext<T>(HttpContext httpContext,
-        Func<T, HttpContext, Task> context = null)
+        Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = httpContext.ReadQuery<T>();
@@ -200,7 +205,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     private void AddEndpointDefinition<T, U>(string method, string path)
         => AddEndpointDefinition(method, path, typeof(T), typeof(U));
 
-    private void AddEndpointDefinition(string method, string path, Type input, Type output)
+    private void AddEndpointDefinition(string method, string path, Type input, Type? output)
     {
         if (_definitions.Exists(d => d.Path == path && d.Method == method))
         {

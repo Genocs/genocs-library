@@ -1,6 +1,7 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Settings;
 using Genocs.Logging.Options;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -108,20 +109,22 @@ public static class Extensions
         Configure(loggerConfiguration, loggerOptions);
     }
 
-    private static void Configure(LoggerConfiguration loggerConfiguration,
-        LoggerOptions options)
+    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
     {
         var consoleOptions = options.Console ?? new ConsoleOptions();
-        var fileOptions = options.File ?? new Options.FileOptions();
+        var fileOptions = options.File ?? new LocalFileOptions();
         var elkOptions = options.Elk ?? new ElkOptions();
         var seqOptions = options.Seq ?? new SeqOptions();
         var lokiOptions = options.Loki ?? new LokiOptions();
+        var azureOptions = options.Azure ?? new AzureOptions();
 
+        // console
         if (consoleOptions.Enabled)
         {
             loggerConfiguration.WriteTo.Console();
         }
 
+        // local file system
         if (fileOptions.Enabled)
         {
             var path = string.IsNullOrWhiteSpace(fileOptions.Path) ? "logs/logs.txt" : fileOptions.Path;
@@ -133,6 +136,7 @@ public static class Extensions
             loggerConfiguration.WriteTo.File(path, rollingInterval: interval);
         }
 
+        // elastic search
         if (elkOptions.Enabled)
         {
             loggerConfiguration.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elkOptions.Url))
@@ -149,11 +153,13 @@ public static class Extensions
             }).MinimumLevel.ControlledBy(LoggingLevelSwitch);
         }
 
+        // seq
         if (seqOptions.Enabled)
         {
             loggerConfiguration.WriteTo.Seq(seqOptions.Url, apiKey: seqOptions.ApiKey);
         }
 
+        // loki
         if (lokiOptions.Enabled)
         {
             if (lokiOptions.LokiUsername is not null && lokiOptions.LokiPassword is not null)
@@ -177,14 +183,21 @@ public static class Extensions
                     lokiOptions.Url,
                     batchPostingLimit: lokiOptions.BatchPostingLimit ?? 1000,
                     queueLimit: lokiOptions.QueueLimit,
-                    period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch); ;
+                    period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
             }
+        }
 
-
+        // azure application insights
+        if (azureOptions.Enabled)
+        {
+            loggerConfiguration.WriteTo.ApplicationInsights(new TelemetryConfiguration
+            {
+                ConnectionString = azureOptions.ConnectionString,
+            }, TelemetryConverter.Traces);
         }
     }
 
-    internal static LogEventLevel GetLogEventLevel(string level)
+    internal static LogEventLevel GetLogEventLevel(string? level)
         => Enum.TryParse<LogEventLevel>(level, true, out var logLevel)
             ? logLevel
             : LogEventLevel.Information;

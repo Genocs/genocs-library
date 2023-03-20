@@ -9,11 +9,9 @@ internal sealed class RevokeAccessTokenHandler : ICommandHandler<RevokeAccessTok
 
     public RevokeAccessTokenHandler(IAccessTokenService accessTokenService)
     {
-        _accessTokenService = accessTokenService;
+        _accessTokenService = accessTokenService ?? throw new ArgumentNullException(nameof(accessTokenService));
     }
 
-    public async Task HandleAsync(RevokeAccessToken command, CancellationToken cancellationToken = default)
-    {
-        await _accessTokenService.DeactivateAsync(command.AccessToken);
-    }
+    public async Task HandleAsync(RevokeAccessToken command, CancellationToken cancellationToken = default) 
+        => await _accessTokenService.DeactivateAsync(command.AccessToken);
 }

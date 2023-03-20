@@ -4,14 +4,11 @@ using Genocs.Core.Demo.Users.Application.Commands;
 using Genocs.Core.Demo.Users.Application.DTO;
 using Genocs.Core.Demo.Users.Application.Queries;
 using Genocs.Core.Demo.Users.Application.Services;
+using Genocs.Logging;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
-
-using Genocs.Logging;
-using Genocs.Core.Settings;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -24,25 +21,9 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Host
-//        .UseLogging()
+builder.Host
+        .UseLogging();
 //        .UseVault();
-
-builder.Host.UseSerilog((ctx, lc) =>
-{
-    lc.WriteTo.Console();
-
-    string? applicationInsightsConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
-
-    if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
-    {
-        lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
-        {
-            ConnectionString = applicationInsightsConnectionString
-        }, TelemetryConverter.Traces);
-    }
-});
-
 
 
 var services = builder.Services;

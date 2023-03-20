@@ -2,11 +2,11 @@ namespace Genocs.Logging.CQRS;
 
 public sealed class HandlerLogTemplate
 {
-    public string Before { get; set; }
-    public string After { get; set; }
-    public IReadOnlyDictionary<Type, string> OnError { get; set; }
+    public string? Before { get; set; }
+    public string? After { get; set; }
+    public IReadOnlyDictionary<Type, string>? OnError { get; set; }
 
-    public string GetExceptionTemplate(Exception ex)
+    public string? GetExceptionTemplate(Exception ex)
     {
         var exceptionType = ex.GetType();
 

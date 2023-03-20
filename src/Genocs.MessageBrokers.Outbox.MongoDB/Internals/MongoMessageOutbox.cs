@@ -59,7 +59,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
             return;
         }
 
-        IClientSessionHandle session = null;
+        IClientSessionHandle? session = null;
         if (_transactionsEnabled)
         {
             session = await _sessionFactory.CreateAsync();

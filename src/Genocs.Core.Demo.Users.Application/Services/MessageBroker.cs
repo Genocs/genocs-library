@@ -26,13 +26,18 @@ internal class MessageBroker : IMessageBroker
         IMessagePropertiesAccessor messagePropertiesAccessor, ICorrelationIdFactory correlationIdFactory,
         RabbitMqOptions options, ILogger<IMessageBroker> logger)
     {
-        _busPublisher = busPublisher;
-        _outbox = outbox;
-        _contextAccessor = contextAccessor;
-        _httpContextAccessor = httpContextAccessor;
-        _messagePropertiesAccessor = messagePropertiesAccessor;
-        _correlationIdFactory = correlationIdFactory;
-        _logger = logger;
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        _busPublisher = busPublisher ?? throw new ArgumentNullException(nameof(busPublisher));
+        _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
+        _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _messagePropertiesAccessor = messagePropertiesAccessor ?? throw new ArgumentNullException(nameof(messagePropertiesAccessor));
+        _correlationIdFactory = correlationIdFactory ?? throw new ArgumentNullException(nameof(correlationIdFactory));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _spanContextHeader = string.IsNullOrWhiteSpace(options.SpanContextHeader)
             ? DefaultSpanContextHeader
             : options.SpanContextHeader;
@@ -40,7 +45,7 @@ internal class MessageBroker : IMessageBroker
 
     public Task PublishAsync(params IEvent[] events) => PublishAsync(events?.AsEnumerable());
 
-    private async Task PublishAsync(IEnumerable<IEvent> events)
+    private async Task PublishAsync(IEnumerable<IEvent>? events)
     {
         if (events is null)
         {
