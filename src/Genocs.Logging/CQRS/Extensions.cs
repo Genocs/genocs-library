@@ -18,7 +18,7 @@ public static class Extensions
         => builder.AddHandlerLogging(typeof(IEventHandler<>), typeof(EventHandlerLoggingDecorator<>), assembly);
 
     private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType,
-        Type decoratorType, Assembly assembly = null)
+        Type decoratorType, Assembly? assembly = null)
     {
         assembly ??= Assembly.GetCallingAssembly();
 

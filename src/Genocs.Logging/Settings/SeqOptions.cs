@@ -1,4 +1,4 @@
-namespace Genocs.Logging.Options;
+namespace Genocs.Logging.Settings;
 
 public class SeqOptions
 {

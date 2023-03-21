@@ -1,6 +1,4 @@
-using Genocs.Logging.Options;
-
-namespace Genocs.Logging;
+namespace Genocs.Logging.Settings;
 
 public class LoggerOptions
 {
@@ -12,8 +10,8 @@ public class LoggerOptions
     public LokiOptions? Loki { get; set; }
     public AzureOptions? Azure { get; set; }
 
-    public IDictionary<string, string> MinimumLevelOverrides { get; set; }
-    public IEnumerable<string> ExcludePaths { get; set; }
-    public IEnumerable<string> ExcludeProperties { get; set; }
-    public IDictionary<string, object> Tags { get; set; }
+    public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
+    public IEnumerable<string>? ExcludePaths { get; set; }
+    public IEnumerable<string>? ExcludeProperties { get; set; }
+    public IDictionary<string, object>? Tags { get; set; }
 }

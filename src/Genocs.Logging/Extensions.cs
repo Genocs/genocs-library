@@ -1,9 +1,8 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Settings;
-using Genocs.Logging.Options;
+using Genocs.Logging.Settings;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,31 +46,6 @@ public static class Extensions
                 configure?.Invoke(context, loggerConfiguration);
             });
 
-    public static IWebHostBuilder UseLogging(this IWebHostBuilder webHostBuilder,
-                                            Action<WebHostBuilderContext, LoggerConfiguration>? configure = null,
-                                            string? loggerSectionName = null,
-                                            string? appSectionName = null)
-        => webHostBuilder
-            .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
-            .UseSerilog((context, loggerConfiguration) =>
-            {
-                if (string.IsNullOrWhiteSpace(loggerSectionName))
-                {
-                    loggerSectionName = LoggerSectionName;
-                }
-
-                if (string.IsNullOrWhiteSpace(appSectionName))
-                {
-                    appSectionName = AppOptions.Position;
-                }
-
-                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
-
-                MapOptions(loggerOptions, appOptions, loggerConfiguration,
-                    context.HostingEnvironment.EnvironmentName);
-                configure?.Invoke(context, loggerConfiguration);
-            });
 
     public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder,
         string endpointRoute = "~/logging/level")
@@ -171,7 +145,7 @@ public static class Extensions
                 };
 
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url,
+                    lokiOptions.Url!,
                     credentials: auth,
                     batchPostingLimit: lokiOptions.BatchPostingLimit ?? 1000,
                     queueLimit: lokiOptions.QueueLimit,
@@ -180,7 +154,7 @@ public static class Extensions
             else
             {
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url,
+                    lokiOptions.Url!,
                     batchPostingLimit: lokiOptions.BatchPostingLimit ?? 1000,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);

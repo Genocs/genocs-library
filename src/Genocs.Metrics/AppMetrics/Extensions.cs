@@ -10,7 +10,6 @@ using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.AppMetrics.Builders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
@@ -35,7 +34,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(appSectionName))
         {
-            appSectionName = AppSectionName;
+            appSectionName = AppOptions.Position;
         }
 
         var metricsOptions = builder.GetOptions<MetricsOptions>(metricsSectionName);
@@ -71,9 +70,6 @@ public static class Extensions
 
         _initialized = true;
 
-        //TODO: Remove once fixed https://github.com/AppMetrics/AppMetrics/issues/396
-        builder.Services.Configure<KestrelServerOptions>(o => o.AllowSynchronousIO = true);
-        builder.Services.Configure<IISServerOptions>(o => o.AllowSynchronousIO = true);
 
         var metricsBuilder = new MetricsBuilder().Configuration.Configure(cfg =>
         {
@@ -118,7 +114,7 @@ public static class Extensions
             metricsBuilder.Report.ToInfluxDb(o =>
             {
                 o.InfluxDb.Database = metricsOptions.Database;
-                o.InfluxDb.BaseUri = new Uri(metricsOptions.InfluxUrl);
+                o.InfluxDb.BaseUri = new Uri(metricsOptions.InfluxUrl!);
                 o.InfluxDb.CreateDataBaseIfNotExists = true;
                 o.FlushInterval = TimeSpan.FromSeconds(metricsOptions.Interval);
             });
