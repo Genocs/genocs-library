@@ -23,7 +23,7 @@ namespace Genocs.Monitoring
         {
             // Read Settings
             string applicationInsightsConnectionString = configuration.GetConnectionString(Constants.ApplicationInsightsConnectionString);
-            string serviceName = configuration.GetValue(typeof(string), Constants.ServiceName) as string ?? "IntegrationsWorker";
+            string serviceName = configuration.GetValue<string>(Constants.ServiceName) ?? "IntegrationsWorker";
 
             MonitoringSettings settings = new MonitoringSettings();
             configuration.Bind(MonitoringSettings.Position, settings);

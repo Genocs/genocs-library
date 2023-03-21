@@ -4,12 +4,20 @@ using Prometheus.DotNetRuntime;
 
 namespace Genocs.Metrics.Prometheus.Internals;
 
+/// <summary>
+/// The PrometheusJob that fetch metrix for Prometheus
+/// </summary>
 internal sealed class PrometheusJob : IHostedService
 {
-    private IDisposable _collector;
+    private IDisposable? _collector;
     private readonly ILogger<PrometheusJob> _logger;
     private readonly bool _enabled;
 
+    /// <summary>
+    /// Default PrometheusJob Constructor
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="logger"></param>
     public PrometheusJob(PrometheusOptions options, ILogger<PrometheusJob> logger)
     {
         _enabled = options.Enabled;

@@ -8,7 +8,7 @@ public class Rng : IRng
 
     public string Generate(int length = 50, bool removeSpecialChars = true)
     {
-        using var rng = new RNGCryptoServiceProvider();
+        using var rng = RandomNumberGenerator.Create();
         var bytes = new byte[length];
         rng.GetBytes(bytes);
         var result = Convert.ToBase64String(bytes);

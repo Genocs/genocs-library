@@ -21,6 +21,7 @@ using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.Redis;
 using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
@@ -32,6 +33,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
+
 
 namespace Genocs.Core.Demo.Users.Application;
 
@@ -64,7 +66,7 @@ public static class Extensions
             .AddRabbitMq()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
-            //.AddRedis()
+            .AddRedis()
             .AddJaeger()
             .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")

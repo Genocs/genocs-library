@@ -107,3 +107,225 @@ api-workbench.rest
 
 Use this file inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
 
+
+
+
+## Configuration
+
+
+``` json
+   "app": {
+    "name": "Demo WebApi",
+    "service": "demo-service",
+    "instance": "01",
+    "version": "v1.0",
+    "displayBanner": false,
+    "displayVersion": false
+  },
+  "consul": {
+    "enabled": false,
+    "url": "http://localhost:8500",
+    "service": "demo-service",
+    "address": "docker.for.win.localhost",
+    "port": "5070",
+    "pingEnabled": true,
+    "pingEndpoint": "health",
+    "pingInterval": 3,
+    "removeAfterInterval": 3
+  },
+  "fabio": {
+    "enabled": false,
+    "url": "http://localhost:9999",
+    "service": "demo-service"
+  },
+  "httpClient": {
+    "type": "fabio",
+    "retries": 3,
+    "services": {},
+    "requestMasking": {
+      "enabled": true,
+      "maskTemplate": "*****"
+    },
+    "correlationIdHeader": "x-correlation-id"
+  },
+  "logger": {
+    "level": "information",
+    "excludePaths": [ "/", "/ping", "/metrics" ],
+    "excludeProperties": [
+      "api_key",
+      "access_key",
+      "ApiKey",
+      "ApiSecret",
+      "ClientId",
+      "ClientSecret",
+      "ConnectionString",
+      "Password",
+      "Email",
+      "Login",
+      "Secret",
+      "Token"
+    ],
+    "console": {
+      "enabled": false
+    },
+    "elk": {
+      "enabled": false,
+      "url": "http://localhost:9200"
+    },
+    "file": {
+      "enabled": false,
+      "path": "logs/logs.txt",
+      "interval": "day"
+    },
+    "seq": {
+      "enabled": false,
+      "url": "http://localhost:5341",
+      "apiKey": "secret"
+    },
+    "azure": {
+      "enabled": false,
+      "connectionString": ""
+    },
+    "tags": {}
+  },
+  "jaeger": {
+    "enabled": false,
+    "serviceName": "users",
+    "udpHost": "localhost",
+    "udpPort": 6831,
+    "maxPacketSize": 65000,
+    "sampler": "const",
+    "excludePaths": [ "/", "/ping", "/metrics" ]
+  },
+  "jwt": {
+    "certificate": {
+      "location": "certs/localhost.pfx",
+      "password": "test",
+      "rawData": ""
+    },
+    "issuer": "demo",
+    "validIssuer": "demo",
+    "validateAudience": false,
+    "validateIssuer": false,
+    "validateLifetime": false,
+    "expiry": "01:00:00"
+  },
+  "metrics": {
+    "enabled": false,
+    "influxEnabled": false,
+    "prometheusEnabled": false,
+    "influxUrl": "http://localhost:8086",
+    "database": "test",
+    "env": "local",
+    "interval": 5
+  },
+  "prometheus": {
+    "enabled": false,
+    "endpoint": "/metrics"
+  },
+  "mongo": {
+    "connectionString": "mongodb://localhost:27017",
+    "database": "genocs-users-service",
+    "seed": false
+  },
+  "outbox": {
+    "enabled": false,
+    "type": "sequential",
+    "expiry": 3600,
+    "intervalMilliseconds": 2000,
+    "inboxCollection": "inbox",
+    "outboxCollection": "outbox",
+    "disableTransactions": false
+  },
+  "rabbitMq": {
+    "connectionName": "users-service",
+    "retries": 3,
+    "retryInterval": 2,
+    "conventionsCasing": "snakeCase",
+    "logger": {
+      "enabled": false
+    },
+    "username": "guest",
+    "password": "guest",
+    "virtualHost": "/",
+    "port": 5672,
+    "hostnames": [
+      "localhost"
+    ],
+    "requestedConnectionTimeout": "00:00:30",
+    "requestedHeartbeat": "00:01:00",
+    "socketReadTimeout": "00:00:30",
+    "socketWriteTimeout": "00:00:30",
+    "continuationTimeout": "00:00:20",
+    "handshakeContinuationTimeout": "00:00:10",
+    "networkRecoveryInterval": "00:00:05",
+    "exchange": {
+      "declare": true,
+      "durable": true,
+      "autoDelete": false,
+      "type": "topic",
+      "name": "users"
+    },
+    "queue": {
+      "declare": true,
+      "durable": true,
+      "exclusive": false,
+      "autoDelete": false,
+      "template": "users-service/{{exchange}}.{{message}}"
+    },
+    "context": {
+      "enabled": true,
+      "header": "message_context"
+    },
+    "spanContextHeader": "span_context"
+  },
+  "redis": {
+    "connectionString": "localhost",
+    "instance": "users-service:",
+    "database": 0
+  },
+  "swagger": {
+    "enabled": false,
+    "reDocEnabled": false,
+    "name": "v1",
+    "title": "API",
+    "version": "v1",
+    "routePrefix": "swagger",
+    "includeSecurity": true
+  },
+  "security": {
+    "certificate": {
+      "header": "Certificate"
+    }
+  },
+  "vault": {
+    "enabled": false,
+    "url": "http://localhost:8200",
+    "authType": "token",
+    "token": "secret",
+    "username": "user",
+    "password": "secret",
+    "kv": {
+      "enabled": true,
+      "engineVersion": 2,
+      "mountPoint": "kv",
+      "path": "users-service/settings"
+    },
+    "pki": {
+      "enabled": true,
+      "roleName": "users-service",
+      "commonName": "users-service.demo.io"
+    },
+    "lease": {
+      "mongo": {
+        "type": "database",
+        "roleName": "users-service",
+        "enabled": true,
+        "autoRenewal": true,
+        "templates": {
+          "connectionString": "mongodb://{{username}}:{{password}}@localhost:27017"
+        }
+      }
+    }
+  }
+  ```

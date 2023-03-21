@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Auth\Genocs.Auth.csproj" />
+		<ProjectReference Include="..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
 		<ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 		<ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
