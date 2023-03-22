@@ -4,13 +4,12 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<UserSecretsId>genocs</UserSecretsId>
+		<UserSecretsId>__genocs</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Genocs.Monitoring" Version="2.0.1" />
 		<PackageReference Include="Genocs.ServiceBusAzure" Version="2.1.1" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
 	</ItemGroup>
@@ -32,5 +31,6 @@
 		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
 		<ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
 		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
+		<ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
 	</ItemGroup>
 </Project>

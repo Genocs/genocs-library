@@ -7,8 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-	  <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
 	</ItemGroup>
 
 </Project>
