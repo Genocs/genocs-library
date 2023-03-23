@@ -1,6 +1,4 @@
-namespace Genocs.Core.Types;
-
-using System.Threading.Tasks;
+namespace Genocs.Common.Types;
 
 /// <summary>
 /// Initializer interface definition

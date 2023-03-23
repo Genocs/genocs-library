@@ -1,6 +1,6 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
-using Genocs.Core.Types;
+using Genocs.WebApi.Helpers;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.Text.Json;

@@ -67,4 +67,9 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
+	</ItemGroup>
 </Project>

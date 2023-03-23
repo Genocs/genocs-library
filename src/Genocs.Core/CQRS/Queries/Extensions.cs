@@ -1,10 +1,9 @@
-﻿namespace Genocs.Core.CQRS.Queries;
-
-using Dispatchers;
+﻿using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.Types;
+using Genocs.Core.CQRS.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+
+namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
 /// 

@@ -1,5 +1,5 @@
+using Genocs.Common.Types;
 using Genocs.Core.CQRS.Events;
-using Genocs.Core.Types;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
 

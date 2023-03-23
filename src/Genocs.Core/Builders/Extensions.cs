@@ -1,12 +1,11 @@
-namespace Genocs.Core.Builders;
-
-using Genocs.Core.Settings;
-using Genocs.Core.Types;
+using Genocs.Common.Settings;
+using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
+
+namespace Genocs.Core.Builders;
+
 
 /// <summary>
 /// Builders Extensions

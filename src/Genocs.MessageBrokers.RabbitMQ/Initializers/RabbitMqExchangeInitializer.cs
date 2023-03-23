@@ -1,4 +1,4 @@
-using Genocs.Core.Types;
+using Genocs.Common.Types;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System.Reflection;

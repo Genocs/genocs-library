@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 	</ItemGroup>
 

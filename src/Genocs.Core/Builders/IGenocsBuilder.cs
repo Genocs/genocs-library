@@ -1,9 +1,8 @@
-namespace Genocs.Core.Builders;
-
-using Genocs.Core.Types;
+using Genocs.Common.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+
+namespace Genocs.Core.Builders;
 
 /// <summary>
 /// The Application builder

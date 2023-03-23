@@ -1,9 +1,9 @@
 using Genocs.Auth;
+using Genocs.Common.Settings;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Core.Settings;
 using Genocs.HTTP;
 using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.Decorators;

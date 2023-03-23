@@ -1,5 +1,5 @@
+using Genocs.Common.Settings;
 using Genocs.Core.Builders;
-using Genocs.Core.Settings;
 using Genocs.Logging.Settings;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;

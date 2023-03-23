@@ -35,15 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder.UnitTests", "src\Genocs.QueryBuilder.UnitTests\Genocs.QueryBuilder.UnitTests.csproj", "{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
-	ProjectSection(SolutionItems) = preProject
-		demo-docker-compose.yml = demo-docker-compose.yml
-		demo-webapi.dockerfile = demo-webapi.dockerfile
-		demo-worker.dockerfile = demo-worker.dockerfile
-		README.md = README.md
-		users-webapi.dockerfile = users-webapi.dockerfile
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP", "src\Genocs.HTTP\Genocs.HTTP.csproj", "{F3335D07-6BCE-455C-A141-DADF8192DD84}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Auth", "src\Genocs.Auth\Genocs.Auth.csproj", "{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}"
@@ -88,6 +79,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Identities.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Identities.WebApi", "src\apps\identity\Genocs.Identities.WebApi\Genocs.Identities.WebApi.csproj", "{CA411C82-9B2F-45B2-AF3F-8650C971E49D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Common", "src\Genocs.Common\Genocs.Common.csproj", "{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
+	ProjectSection(SolutionItems) = preProject
+		demo-docker-compose.yml = demo-docker-compose.yml
+		demo-webapi.dockerfile = demo-webapi.dockerfile
+		demo-worker.dockerfile = demo-worker.dockerfile
+		README.md = README.md
+		users-webapi.dockerfile = users-webapi.dockerfile
+	EndProjectSection
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +229,10 @@ Global
 		{CA411C82-9B2F-45B2-AF3F-8650C971E49D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA411C82-9B2F-45B2-AF3F-8650C971E49D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA411C82-9B2F-45B2-AF3F-8650C971E49D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

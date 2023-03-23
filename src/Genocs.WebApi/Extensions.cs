@@ -1,5 +1,5 @@
+using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.Types;
 using Genocs.WebApi;
 using Genocs.WebApi.Exceptions;
 using Genocs.WebApi.Formatters;

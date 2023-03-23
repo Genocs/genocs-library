@@ -1,5 +1,5 @@
+using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Core.Types;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

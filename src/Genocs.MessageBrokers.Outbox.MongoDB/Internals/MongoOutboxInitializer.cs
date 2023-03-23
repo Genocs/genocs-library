@@ -1,4 +1,4 @@
-using Genocs.Core.Types;
+using Genocs.Common.Types;
 using Genocs.MessageBrokers.Outbox.Messages;
 using MongoDB.Driver;
 

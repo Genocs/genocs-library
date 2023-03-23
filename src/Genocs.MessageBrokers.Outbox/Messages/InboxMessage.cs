@@ -1,4 +1,4 @@
-using Genocs.Core.Types;
+using Genocs.Common.Types;
 
 namespace Genocs.MessageBrokers.Outbox.Messages;
 

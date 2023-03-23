@@ -1,6 +1,4 @@
-namespace Genocs.Core.Types;
-
-using System;
+namespace Genocs.Common.Types;
 
 /// <summary>
 /// 

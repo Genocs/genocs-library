@@ -1,5 +1,5 @@
+using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.Types;
 using Genocs.Persistence.MongoDb.Legacy.Builders;
 using Genocs.Persistence.MongoDb.Legacy.Factories;
 using Genocs.Persistence.MongoDb.Legacy.Initializers;

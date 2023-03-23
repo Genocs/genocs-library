@@ -1,7 +1,7 @@
+using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Core.Types;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS.Builders;
 using Genocs.WebApi.CQRS.Middlewares;
