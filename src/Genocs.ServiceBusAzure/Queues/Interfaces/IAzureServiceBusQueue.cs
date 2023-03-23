@@ -1,13 +1,14 @@
-﻿using Genocs.Core.Interfaces;
-using System;
-using System.Threading.Tasks;
+﻿using Genocs.Core.CQRS.Commands;
 
-namespace Genocs.ServiceBusAzure.Queues.Interfaces
+namespace Genocs.ServiceBusAzure.Queues.Interfaces;
+
+
+/// <summary>
+/// Azure Service bus
+/// </summary>
+public interface IAzureServiceBusQueue
 {
-    public interface IAzureServiceBusQueue
-    {
-        Task SendAsync(ICommand command);
-        Task ScheduleAsync(ICommand command, DateTimeOffset offset);
-        void Consume<T, TH>() where T : ICommand where TH : ICommandHandler<T>;
-    }
+    Task SendAsync(ICommand command);
+    Task ScheduleAsync(ICommand command, DateTimeOffset offset);
+    void Consume<T, TH>() where T : ICommand where TH : ICommandHandlerLegacy<T>;
 }

@@ -1,10 +1,11 @@
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
 using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Core.Interfaces;
 using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
@@ -112,7 +113,7 @@ static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfigur
     services.AddScoped<IEventHandler<DemoEvent>, DemoEventHandler>();
 
     var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
-    topicBus.Subscribe<DemoEvent, IEventHandler<DemoEvent>>();
+    topicBus.Subscribe<DemoEvent, IEventHandlerLegacy<DemoEvent>>();
 
 }
 
@@ -125,5 +126,5 @@ static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfigur
     services.AddScoped<ICommandHandler<DemoCommand>, DemoCommandHandler>();
 
     var queueBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusQueue>();
-    queueBus.Consume<DemoCommand, ICommandHandler<DemoCommand>>();
+    queueBus.Consume<DemoCommand, ICommandHandlerLegacy<DemoCommand>>();
 }

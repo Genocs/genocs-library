@@ -10,7 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Genocs.ServiceBusAzure" Version="2.1.1" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
 	</ItemGroup>
 
@@ -32,5 +31,6 @@
 		<ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
 		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
 		<ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
+		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
 	</ItemGroup>
 </Project>

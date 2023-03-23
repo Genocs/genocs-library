@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Interfaces;
+﻿using Genocs.Core.CQRS.Events;
+using Genocs.Core.Demo.Contracts;
 
 namespace Genocs.Core.Demo.Worker.Handlers;
 
@@ -12,9 +12,9 @@ public class DemoEventHandler : IEventHandler<DemoEvent>
         _logger = logger;
     }
 
-    public Task HandleEvent(DemoEvent command)
+    public Task HandleAsync(DemoEvent @event, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"DemoEvent '{command.Name}' processed!");
+        _logger.LogInformation($"DemoEvent '{@event.Name}' processed!");
         // Do something with the message here
         return Task.CompletedTask;
     }
