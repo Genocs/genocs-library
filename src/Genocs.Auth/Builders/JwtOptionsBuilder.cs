@@ -1,5 +1,3 @@
-using System;
-
 namespace Genocs.Auth.Builders;
 
 internal sealed class JwtOptionsBuilder : IJwtOptionsBuilder

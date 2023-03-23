@@ -1,9 +1,5 @@
-using Genocs.Auth.Dates;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 
 namespace Genocs.Auth.Handlers;
@@ -109,11 +105,11 @@ internal sealed class JwtHandler : IJwtHandler
         };
     }
 
-    public JsonWebTokenPayload GetTokenPayload(string accessToken)
+    public JsonWebTokenPayload? GetTokenPayload(string accessToken)
     {
         _jwtSecurityTokenHandler.ValidateToken(accessToken, _tokenValidationParameters,
             out var validatedSecurityToken);
-        if (!(validatedSecurityToken is JwtSecurityToken jwt))
+        if (validatedSecurityToken is not JwtSecurityToken jwt)
         {
             return null;
         }

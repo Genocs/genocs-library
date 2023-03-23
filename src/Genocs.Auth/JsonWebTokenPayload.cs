@@ -1,11 +1,27 @@
-using System.Collections.Generic;
-
 namespace Genocs.Auth;
 
+/// <summary>
+/// The JsonWebToken payload
+/// </summary>
 public class JsonWebTokenPayload
 {
+    /// <summary>
+    /// The subject
+    /// </summary>
     public string Subject { get; set; }
-    public string Role { get; set; }
+
+    /// <summary>
+    /// The Identity Role
+    /// </summary>
+    public string? Role { get; set; }
+
+    /// <summary>
+    /// The expiration ticks
+    /// </summary>
     public long Expires { get; set; }
-    public IDictionary<string, IEnumerable<string>> Claims { get; set; }
+
+    /// <summary>
+    /// List of claims
+    /// </summary>
+    public IDictionary<string, IEnumerable<string>>? Claims { get; set; }
 }

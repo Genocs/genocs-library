@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Genocs.Auth;
 
 public interface IAccessTokenService

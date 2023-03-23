@@ -18,7 +18,7 @@ public static class Extensions
     private const string RegistryName = "auth";
 
     public static IGenocsBuilder AddJwt(this IGenocsBuilder builder, string sectionName = SectionName,
-        Action<JwtBearerOptions> optionsFactory = null)
+        Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -30,7 +30,7 @@ public static class Extensions
     }
 
     private static IGenocsBuilder AddJwt(this IGenocsBuilder builder, JwtOptions options,
-        Action<JwtBearerOptions> optionsFactory = null)
+        Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
         {
@@ -164,4 +164,17 @@ public static class Extensions
 
     public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
         => app.UseMiddleware<AccessTokenValidatorMiddleware>();
+}
+
+/// <summary>
+/// DateExtensions extension method
+/// </summary>
+internal static class DateExtensions
+{
+    /// <summary>
+    /// ToTimestamp support function
+    /// </summary>
+    /// <param name="dateTime"></param>
+    /// <returns></returns>
+    public static long ToTimestamp(this DateTime dateTime) => new DateTimeOffset(dateTime).ToUnixTimeSeconds();
 }
