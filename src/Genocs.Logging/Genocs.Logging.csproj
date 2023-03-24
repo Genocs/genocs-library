@@ -42,6 +42,14 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.Core" Version="5.0.*" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
@@ -54,15 +62,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="SmartFormat.NET" Version="2.7.2" />
-	</ItemGroup>
-
-
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<ProjectReference Include="Genocs.Core" Version="5.0.*" />
 	</ItemGroup>
 
 </Project>

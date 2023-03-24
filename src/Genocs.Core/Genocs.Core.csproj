@@ -28,10 +28,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="README_NUGET.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
 		<None Include="..\..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
@@ -40,7 +36,20 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+		<None Include="README_NUGET.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.Common" Version="5.0.*" />
+	</ItemGroup>
+	
 
 	<ItemGroup>
 		<PackageReference Include="Figgle" Version="0.5.1" />
@@ -68,11 +77,5 @@
 	</ItemGroup>
 
 
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
-	</ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<ProjectReference Include="Genocs.Common" Version="5.0.*" />
-	</ItemGroup>
 </Project>
