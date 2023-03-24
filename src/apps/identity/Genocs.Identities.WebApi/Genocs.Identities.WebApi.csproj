@@ -19,4 +19,8 @@
 	  <ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="logs\" />
+	</ItemGroup>
+
 </Project>

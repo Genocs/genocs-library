@@ -12,12 +12,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.Core" Version="5.0.*" />
+	</ItemGroup>
+	
 </Project>

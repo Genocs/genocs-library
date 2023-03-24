@@ -21,11 +21,26 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
 		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-		<PackageReleaseNotes>Moved to NET7.0</PackageReleaseNotes>
+		<PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README_NUGET.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Figgle" Version="0.5.1" />
@@ -53,23 +68,11 @@
 	</ItemGroup>
 
 
-	<ItemGroup>
-		<None Include="README_NUGET.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\icon.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.Common" Version="5.0.*" />
 	</ItemGroup>
 </Project>

@@ -6,10 +6,11 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
 		<ProjectReference Include="..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.MessageBrokers" Version="5.0.*" />
+	</ItemGroup>
 </Project>

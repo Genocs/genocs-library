@@ -7,7 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 		<ProjectReference Include="..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
 	</ItemGroup>
 
@@ -15,5 +14,31 @@
 		<PackageReference Include="Jaeger" Version="1.0.3" />
 		<PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.9.0" />
 	</ItemGroup>
+
+
+		<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="README_NUGET.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<ProjectReference Include="Genocs.Core" Version="5.0.*" />
+	</ItemGroup>
+	
 
 </Project>
