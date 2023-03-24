@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using System.Threading.Tasks;
 
 namespace Genocs.Persistence.MongoDb.Legacy.Factories;
 

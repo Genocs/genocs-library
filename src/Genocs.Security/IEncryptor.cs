@@ -1,11 +1,10 @@
-namespace Genocs.Core.Security
+namespace Genocs.Core.Security;
+
+// AES-256
+public interface IEncryptor
 {
-    // AES-256
-    public interface IEncryptor
-    {
-        string Encrypt(string data, string key);
-        string Decrypt(string data, string key);
-        byte[] Encrypt(byte[] data, byte[] iv, byte[] key);
-        byte[] Decrypt(byte[] data, byte[] iv, byte[] key);
-    }
+    string Encrypt(string data, string key);
+    string Decrypt(string data, string key);
+    byte[] Encrypt(byte[] data, byte[] iv, byte[] key);
+    byte[] Decrypt(byte[] data, byte[] iv, byte[] key);
 }

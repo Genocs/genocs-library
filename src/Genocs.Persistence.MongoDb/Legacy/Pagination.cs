@@ -1,10 +1,7 @@
 using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Genocs.Persistence.MongoDb.Legacy;
 

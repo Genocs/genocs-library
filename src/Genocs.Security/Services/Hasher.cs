@@ -1,34 +1,31 @@
-using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Genocs.Core.Security.Services
+namespace Genocs.Core.Security.Services;
+
+internal sealed class Hasher : IHasher
 {
-    internal sealed class Hasher : IHasher
+    public string Hash(string data)
     {
-        public string Hash(string data)
+        var hash = Hash(Encoding.UTF8.GetBytes(data));
+        var builder = new StringBuilder();
+        foreach (var @byte in hash)
         {
-            var hash = Hash(Encoding.UTF8.GetBytes(data));
-            var builder = new StringBuilder();
-            foreach (var @byte in hash)
-            {
-                builder.Append(@byte.ToString("x2"));
-            }
-
-            return builder.ToString();
+            builder.Append(@byte.ToString("x2"));
         }
 
-        public byte[] Hash(byte[] data)
+        return builder.ToString();
+    }
+
+    public byte[] Hash(byte[] data)
+    {
+        if (data is null || !data.Any())
         {
-            if (data is null || !data.Any())
-            {
-                throw new ArgumentException("Data to be hashed cannot be empty.", nameof(data));
-            }
-
-            using var sha256Hash = SHA256.Create();
-
-            return sha256Hash.ComputeHash(data);
+            throw new ArgumentException("Data to be hashed cannot be empty.", nameof(data));
         }
+
+        using var sha256Hash = SHA256.Create();
+
+        return sha256Hash.ComputeHash(data);
     }
 }

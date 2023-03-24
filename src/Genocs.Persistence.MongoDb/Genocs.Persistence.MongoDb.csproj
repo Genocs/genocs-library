@@ -5,6 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>Genocs.Persistence.MongoDb</PackageId>
+		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>5.0.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
