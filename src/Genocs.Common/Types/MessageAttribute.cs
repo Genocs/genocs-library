@@ -1,7 +1,7 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// 
+/// MessageAttribute class
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class MessageAttribute : Attribute

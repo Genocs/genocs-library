@@ -1,8 +1,7 @@
-# .NET Core Base library
+# .NET Core library
 
 This package contains a set of base functionalities designed by Genocs.
-The libraries are built using .NET standard 2.1.
-
+The library is built to be used on .NET standard 2.1 and NET6 or NET7 as well.
 
 ## Description
 
@@ -15,6 +14,9 @@ Please check the GitHub repository getting more info.
 
 
 ## Release notes
+
+### [2023-03-12] 5.0.0
+- New Architecture
 
 ### [2023-03-12] 3.1.0
 - Added Builders

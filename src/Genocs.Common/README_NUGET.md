@@ -1,4 +1,4 @@
-# .NET Core Base library
+# .NET Core Common library
 
 This package contains a set of base functionalities designed by Genocs.
 The libraries are built using .NET standard 2.1.
@@ -6,8 +6,7 @@ The libraries are built using .NET standard 2.1.
 
 ## Description
 
-Core NuGet package contains general purpose functionalities to be used on DDD services.
-
+Core Common NuGet package contains general types, interfaces and classes to be used on DDD services.
 
 ## Support
 
@@ -16,12 +15,5 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
-### [2023-03-12] 3.1.0
-- Added Builders
-
-### [2023-03-12] 3.0.0
-- Refactory to implement CQRS pattern
-
-
-### [2023-03-04] 2.4.1
-- Updated System.Text.Json
+### [2023-03-24] 5.0.0
+- First release

@@ -14,7 +14,7 @@ public static class Extensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static object GetDefaultInstance(this Type type)
+    public static object? GetDefaultInstance(this Type type)
     {
         if (type == typeof(string))
         {
@@ -51,7 +51,7 @@ public static class Extensions
         return instance;
     }
 
-    private static bool TryGetDefaultValue(Type type, out object defaultValue, Dictionary<Type, object> defaultValueCache)
+    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object> defaultValueCache)
     {
         if (defaultValueCache.TryGetValue(type, out defaultValue))
         {
@@ -125,7 +125,7 @@ public static class Extensions
         return true;
     }
 
-    private static bool TryGetCollectionDefaultValue(Type type, out object defaultValue)
+    private static bool TryGetCollectionDefaultValue(Type type, out object? defaultValue)
     {
         var elementType =
             type.IsGenericType

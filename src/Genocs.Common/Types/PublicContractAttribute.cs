@@ -1,7 +1,7 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// Marker
+/// PublicContractAttribute class
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class PublicContractAttribute : Attribute
