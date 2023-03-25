@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Update NuGet package  
+    name: Update NuGet packages
     runs-on: ubuntu-latest
     steps:
 
@@ -20,17 +20,12 @@ jobs:
 
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v2
-        with:
-          source-url: https://api.nuget.org/v3/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
 
-      - name: Build
-        run: dotnet build --no-restore
-          
-      - name: Build solution and generate NuGet package
-        run: |  
-          dotnet pack -c Debug -o out  
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Build solution and generate NuGet packages
+        run: dotnet pack -c Debug -o out -p:Version=5.0.0-preview.1.$env:GITHUB_RUN_NUMBER
 
-      - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./out/*.nupkg --skip-duplicate --no-symbols true
+      - name: Push generated packages to GitHub registry
+        run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
