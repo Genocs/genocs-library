@@ -1,6 +1,4 @@
-# .NET Core libraries 
-
-
+# Genocs .NET libraries
 
 | Badge                      | Description                    |
 | -------------------------- | ------------------------------ |
@@ -10,7 +8,6 @@
 | NuGet package latesversion | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
 | NuGet package downloads    | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
 | Discord community          | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
-
 
 ----
 
@@ -40,7 +37,6 @@ dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
 
-
 ## How to build Docker Demo images
 
 ``` bash
@@ -60,6 +56,7 @@ docker push genocs/demo-worker:latest
 ```
 
 A second option is to run docker-compose
+
 ``` bash
 # Build with docker compose
 docker-compose -f ./demo-docker-compose.yml build
@@ -68,19 +65,72 @@ docker-compose -f ./demo-docker-compose.yml build
 docker-compose -f ./demo-docker-compose.yml up [-d]
 ```
 
+## Auth
+
+Auth service defines the functionalities to build Auth system that relay on OAUTH JWT.
+
+## Common
+
+This project contains common functionalities that do not relay on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across without dependencies.
+
 ## Core
 
-Core project contains general purpose functionalities to be used on DDD service
+Core project contains general purpose functionalities to be used on DDD service.
 
-## Persistence MongoDb
+## HTTP
 
-Persistente  MongoDb is the library that allows to persist data on MongoDb
+TBW
+
+## Logging
+
+TBW
+
+## MessageBrokers
+
+TBW
+
+## MessageBrokers Outbox
+
+TBW
+
+## MessageBrokers MongoDB
+
+TBW
+
+
+## MessageBrokers RabbitMQ
+
+TBW
+
+## Metrics
+
+TBW
+
+## Persistence MongoDB
+
+Persistente MongoDB is the library that allows to persist data on MongoDB.
+
+## Persistence Redis
+
+Persistente Redis is the library that allows to persist data on Redis database.
+
+## Query Builder
+
+TBW
+
+## Secrets Vault
+
+TBW
+
+## Security
+
+TBW
 
 ## ServiceBusAzure
+
 The ServiceBusAzure allows to publish/send messages to Azure Service Bus
 
 - [service-bus-quickstart-cli](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli)
-
 
 ``` PS
 # Create Azure Resource group
@@ -100,6 +150,29 @@ az servicebus namespace authorization-rule keys list --resource-group rg-genocs 
 
 ```
 
+## Tracing
+
+TBW
+
+## WebApi
+
+TBW
+
+## WebApi CQRS
+
+TBW
+
+## WebApi Security
+
+TBW
+
+
+## WebApi Swagger
+
+TBW
+
+
+
 
 ## Support
 
@@ -107,11 +180,7 @@ api-workbench.rest
 
 Use this file inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
 
-
-
-
 ## Configuration
-
 
 ``` json
    "app": {
