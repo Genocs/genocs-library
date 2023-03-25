@@ -1,7 +1,7 @@
 # .NET Core API Gateway web api
 
 This package contains a set of functionalities to use http client for microservice, the library is designed by Genocs even thought a lot of insight came from community.
-First of all I hve to say thanks to devmentors
+First of all I have to say thanks to devmentors
 
 The libraries are built using .NET7.
 
