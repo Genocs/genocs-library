@@ -35,7 +35,7 @@ jobs:
         run: dotnet restore
         
       - name: Build solution and generate NuGet packages
-        run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }}"
+        run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }}
 
       - name: Push generated packages to GitHub registry
         run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
