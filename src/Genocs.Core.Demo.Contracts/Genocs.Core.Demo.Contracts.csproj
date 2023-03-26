@@ -9,13 +9,13 @@
 	</PropertyGroup>
 
 
-
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 	</ItemGroup>
 
+
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<ProjectReference Include="Genocs.Core" Version="5.0.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview1.0" />
 	</ItemGroup>
 
 </Project>
