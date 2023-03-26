@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+using Microsoft.AspNetCore.Authentication;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 
 namespace Genocs.APIGateway.Framework;
 

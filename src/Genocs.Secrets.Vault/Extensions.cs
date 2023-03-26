@@ -25,7 +25,8 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                var options = cfg.Build().GetValue<VaultOptions>(sectionName);
+                var options = new VaultOptions();
+                ctx.Configuration.GetSection(sectionName).Bind(options);
                 if (!options.Enabled)
                 {
                     return;
@@ -40,7 +41,8 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                var options = cfg.Build().GetValue<VaultOptions>(sectionName);
+                var options = new VaultOptions();
+                ctx.Configuration.GetSection(sectionName).Bind(options);
                 if (!options.Enabled)
                 {
                     return;
@@ -61,9 +63,13 @@ public static class Extensions
         {
             configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
-        // TODO Test
+        var options = new VaultOptions();
+        configuration.GetSection(sectionName).Bind(options);
+        if (!options.Enabled)
+        {
+            return services;
+        }
 
-        var options = configuration.GetValue<VaultOptions>(sectionName);
         VerifyOptions(options);
         services.AddSingleton(options);
         services.AddTransient<IKeyValueSecrets, KeyValueSecrets>();

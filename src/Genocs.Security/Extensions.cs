@@ -2,7 +2,7 @@ using Genocs.Core.Builders;
 using Genocs.Core.Security.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.Security;
+namespace Genocs.Security;
 
 public static class Extensions
 {

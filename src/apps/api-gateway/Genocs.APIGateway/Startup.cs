@@ -1,19 +1,13 @@
-using Convey;
-using Convey.Auth;
-using Convey.MessageBrokers.RabbitMQ;
-using Convey.Metrics.Prometheus;
-using Convey.Security;
-using Convey.Tracing.Jaeger;
-using Convey.Tracing.Jaeger.RabbitMQ;
-using Convey.Types;
-using Convey.WebApi;
 using Genocs.APIGateway.Framework;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Genocs.Auth;
+using Genocs.Common.Settings;
+using Genocs.Core.Builders;
+using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.Prometheus;
+using Genocs.Security;
+using Genocs.Tracing.Jaeger;
+using Genocs.Tracing.Jaeger.RabbitMQ;
+using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway;
@@ -41,7 +35,7 @@ internal class Startup
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
         services
-            .AddConvey()
+            .AddGenocs()
             .AddJaeger()
             .AddJwt()
             .AddPrometheus()
@@ -76,7 +70,7 @@ internal class Startup
 
         app.UseMiddleware<LogContextMiddleware>();
         app.UseCors("cors");
-        app.UseConvey();
+        app.UseGenocs();
         app.UseJaeger();
         app.UsePrometheus();
         app.UseAccessTokenValidator();

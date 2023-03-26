@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-
 namespace Genocs.APIGateway.Framework;
 
 internal class CorrelationIdFactory

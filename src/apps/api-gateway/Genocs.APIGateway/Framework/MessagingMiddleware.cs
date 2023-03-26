@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Convey.MessageBrokers.RabbitMQ;
-using Convey.MessageBrokers.RabbitMQ.Conventions;
-using Microsoft.AspNetCore.Http;
+using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.MessageBrokers.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using OpenTracing;
+using System.Collections.Concurrent;
 
 namespace Genocs.APIGateway.Framework;
 
@@ -27,11 +21,16 @@ internal class MessagingMiddleware : IMiddleware
         ICorrelationContextBuilder correlationContextBuilder, CorrelationIdFactory correlationIdFactory,
         IOptions<MessagingOptions> messagingOptions)
     {
-        _rabbitMqClient = rabbitMqClient;
-        _routeMatcher = routeMatcher;
-        _tracer = tracer;
-        _correlationContextBuilder = correlationContextBuilder;
-        _correlationIdFactory = correlationIdFactory;
+        if (messagingOptions is null)
+        {
+            throw new ArgumentNullException(nameof(messagingOptions));
+        }
+
+        _rabbitMqClient = rabbitMqClient ?? throw new ArgumentNullException(nameof(rabbitMqClient));
+        _routeMatcher = routeMatcher ?? throw new ArgumentNullException(nameof(routeMatcher));
+        _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+        _correlationContextBuilder = correlationContextBuilder ?? throw new ArgumentNullException(nameof(correlationContextBuilder));
+        _correlationIdFactory = correlationIdFactory ?? throw new ArgumentNullException(nameof(correlationIdFactory));
         _endpoints = messagingOptions.Value.Endpoints?.Any() is true
             ? messagingOptions.Value.Endpoints.GroupBy(e => e.Method.ToUpperInvariant())
                 .ToDictionary(e => e.Key, e => e.ToList())

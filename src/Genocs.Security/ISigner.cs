@@ -1,6 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 
-namespace Genocs.Core.Security;
+namespace Genocs.Security;
 
 public interface ISigner
 {

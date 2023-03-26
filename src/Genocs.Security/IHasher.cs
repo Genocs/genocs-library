@@ -1,4 +1,4 @@
-namespace Genocs.Core.Security;
+namespace Genocs.Security;
 
 // SHA-256
 public interface IHasher

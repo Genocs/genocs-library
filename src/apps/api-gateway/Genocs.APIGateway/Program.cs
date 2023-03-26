@@ -1,8 +1,5 @@
-using System.Threading.Tasks;
-using Convey.Logging;
-using Convey.Secrets.Vault;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Genocs.Logging;
+using Genocs.Secrets.Vault;
 
 namespace Genocs.APIGateway;
 

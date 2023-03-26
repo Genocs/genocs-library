@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 namespace Genocs.APIGateway.Framework;
 
 internal class MessagingOptions
 {
     public bool Enabled { get; set; }
-    public IEnumerable<EndpointOptions> Endpoints { get; set; }
+    public IEnumerable<EndpointOptions>? Endpoints { get; set; }
 
     internal class EndpointOptions
     {

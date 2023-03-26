@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
 namespace Genocs.APIGateway.Framework;
@@ -10,7 +8,7 @@ internal class LogContextMiddleware : IMiddleware
 
     public LogContextMiddleware(CorrelationIdFactory correlationIdFactory)
     {
-        _correlationIdFactory = correlationIdFactory;
+        _correlationIdFactory = correlationIdFactory ?? throw new ArgumentNullException(nameof(correlationIdFactory));
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

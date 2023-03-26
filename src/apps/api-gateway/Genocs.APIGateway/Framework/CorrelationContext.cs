@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Genocs.APIGateway.Framework;
 
 internal class CorrelationContext

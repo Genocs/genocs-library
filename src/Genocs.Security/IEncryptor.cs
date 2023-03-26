@@ -1,4 +1,4 @@
-namespace Genocs.Core.Security;
+namespace Genocs.Security;
 
 // AES-256
 public interface IEncryptor
