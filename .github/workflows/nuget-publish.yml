@@ -1,13 +1,23 @@
+# This is a manually triggered nuget build and deploy
+
 name: Publish on NuGet
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  push:
-    branches:
-      - deploy
-  pull_request:
-    types: [closed]
-    branches:
-      - deploy
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      version:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: "Packages Version"
+
+        # Default value if no value is explicitly provided
+        default: "1.0.0"
+
+        # Input has to be provided for the workflow to run
+        required: true
+
 
 jobs:
   build:
@@ -25,7 +35,7 @@ jobs:
         run: dotnet restore
         
       - name: Build solution and generate NuGet packages
-        run: dotnet pack -c Debug -o out -p:Version=5.0.0-preview.1.$env:GITHUB_RUN_NUMBER
+        run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }}"
 
       - name: Push generated packages to GitHub registry
         run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json

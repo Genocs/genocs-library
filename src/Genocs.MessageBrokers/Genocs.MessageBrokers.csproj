@@ -6,7 +6,6 @@
 		<Nullable>enable</Nullable>
 		<PackageId>Genocs.MessageBrokers</PackageId>
 		<LangVersion>10.0</LangVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>5.0.0-preview1.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
