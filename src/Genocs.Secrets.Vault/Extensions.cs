@@ -1,3 +1,4 @@
+using Genocs.Core.Builders;
 using Genocs.Secrets.Vault.Internals;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,36 @@ public static class Extensions
     private static readonly ILeaseService LeaseService = new LeaseService();
     private static readonly ICertificatesService CertificatesService = new CertificatesService();
 
-    public static IHostBuilder UseVault(this IHostBuilder builder, string keyValuePath = null,
+    /// <summary>
+    /// UseVault
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="keyValuePath"></param>
+    /// <param name="sectionName"></param>
+    /// <returns></returns>
+    public static IHostBuilder UseVault(this IHostBuilder builder, string? keyValuePath = null,
+        string sectionName = SectionName)
+        => builder.ConfigureServices(services => services.AddVault(sectionName))
+            .ConfigureAppConfiguration((ctx, cfg) =>
+            {
+                // TODO Test
+                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
+                if (!options.Enabled)
+                {
+                    return;
+                }
+
+                cfg.AddVaultAsync(options, keyValuePath).GetAwaiter().GetResult();
+            });
+
+    /// <summary>
+    /// UseVault
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="keyValuePath"></param>
+    /// <param name="sectionName"></param>
+    /// <returns></returns>
+    public static IWebHostBuilder UseVault(this IWebHostBuilder builder, string? keyValuePath = null,
         string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
@@ -35,23 +65,7 @@ public static class Extensions
                 cfg.AddVaultAsync(options, keyValuePath).GetAwaiter().GetResult();
             });
 
-    public static IWebHostBuilder UseVault(this IWebHostBuilder builder, string keyValuePath = null,
-        string sectionName = SectionName)
-        => builder.ConfigureServices(services => services.AddVault(sectionName))
-            .ConfigureAppConfiguration((ctx, cfg) =>
-            {
-                // TODO Test
-                var options = new VaultOptions();
-                ctx.Configuration.GetSection(sectionName).Bind(options);
-                if (!options.Enabled)
-                {
-                    return;
-                }
-
-                cfg.AddVaultAsync(options, keyValuePath).GetAwaiter().GetResult();
-            });
-
-    private static IServiceCollection AddVault(this IServiceCollection services, string sectionName)
+    private static IServiceCollection AddVault(this IServiceCollection services, string? sectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -119,7 +133,7 @@ public static class Extensions
     }
 
     private static async Task AddVaultAsync(this IConfigurationBuilder builder, VaultOptions options,
-        string keyValuePath)
+        string? keyValuePath)
     {
         VerifyOptions(options);
         var kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;

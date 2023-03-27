@@ -43,7 +43,11 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                                 var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
                                 return ctx.Response.WriteJsonAsync(auth);
                             })
-                            .Post<CreateUser>("sign-up")
+                            .Post<CreateUser>("sign-up", afterDispatch: (cmd, ctx) => 
+                            {
+                                ctx.Response.Headers.Add("user-id", cmd.UserId.ToString());
+                                return Task.CompletedTask;
+                            })
                             .Post<RevokeAccessToken>("access-tokens/revoke")
                             .Post<UseRefreshToken>("refresh-tokens/use", afterDispatch: (cmd, ctx) =>
                             {
