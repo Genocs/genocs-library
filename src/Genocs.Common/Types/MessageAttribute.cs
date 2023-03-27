@@ -15,9 +15,25 @@ public class MessageAttribute : Attribute
     /// The Topic used to send/receive message 
     /// </summary>
     public string Topic { get; }
+
+    /// <summary>
+    /// The queue
+    /// </summary>
     public string Queue { get; }
+
+    /// <summary>
+    /// The type of the queue
+    /// </summary>
     public string QueueType { get; }
+
+    /// <summary>
+    /// The error 
+    /// </summary>
     public string ErrorQueue { get; }
+
+    /// <summary>
+    /// The subscriptionId
+    /// </summary>
     public string SubscriptionId { get; }
 
     /// <summary>
@@ -29,8 +45,8 @@ public class MessageAttribute : Attribute
     /// <param name="queueType"></param>
     /// <param name="errorQueue"></param>
     /// <param name="subscriptionId"></param>
-    public MessageAttribute(string exchange = null, string topic = null, string queue = null,
-        string queueType = null, string errorQueue = null, string subscriptionId = null)
+    public MessageAttribute(string? exchange = null, string? topic = null, string? queue = null,
+        string? queueType = null, string? errorQueue = null, string? subscriptionId = null)
     {
         Exchange = exchange ?? string.Empty;
         Topic = topic ?? string.Empty;
