@@ -1,3 +1,5 @@
+using Genocs.HTTP.RestEase.Options;
+
 namespace Genocs.HTTP.RestEase;
 
 public interface IRestEaseServiceBuilder
@@ -6,5 +8,5 @@ public interface IRestEaseServiceBuilder
     IRestEaseServiceBuilder WithScheme(string scheme);
     IRestEaseServiceBuilder WithHost(string host);
     IRestEaseServiceBuilder WithPort(int port);
-    RestEaseOptions.Service Build();
+    RestEaseSettings.Service Build();
 }
