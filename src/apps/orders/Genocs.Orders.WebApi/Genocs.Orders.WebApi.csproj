@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageId>Genocs.Services.WebApi</PackageId>
+		<LangVersion>10.0</LangVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>5.0.0-preview1.0</Version>
+		<MinClientVersion>5.0.0</MinClientVersion>
+		<Authors>Nocco Giovanni Emanuele</Authors>
+		<Company>Genocs</Company>
+		<Title>----.</Title>
+		<Description>----.</Description>
+		<Copyright>Genocs 2023</Copyright>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
+	</ItemGroup>
+
+</Project>
