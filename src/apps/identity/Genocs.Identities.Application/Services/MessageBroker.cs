@@ -24,7 +24,7 @@ internal class MessageBroker : IMessageBroker
     public MessageBroker(IBusPublisher busPublisher, IMessageOutbox outbox,
         ICorrelationContextAccessor contextAccessor, IHttpContextAccessor httpContextAccessor,
         IMessagePropertiesAccessor messagePropertiesAccessor, ICorrelationIdFactory correlationIdFactory,
-        RabbitMqOptions options, ILogger<IMessageBroker> logger)
+        RabbitMQOptions options, ILogger<IMessageBroker> logger)
     {
         if (options is null)
         {

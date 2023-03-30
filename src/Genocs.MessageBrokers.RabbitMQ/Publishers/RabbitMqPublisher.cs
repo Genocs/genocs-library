@@ -2,10 +2,10 @@ namespace Genocs.MessageBrokers.RabbitMQ.Publishers;
 
 internal sealed class RabbitMqPublisher : IBusPublisher
 {
-    private readonly IRabbitMqClient _client;
+    private readonly IRabbitMQClient _client;
     private readonly IConventionsProvider _conventionsProvider;
 
-    public RabbitMqPublisher(IRabbitMqClient client, IConventionsProvider conventionsProvider)
+    public RabbitMqPublisher(IRabbitMQClient client, IConventionsProvider conventionsProvider)
     {
         _client = client;
         _conventionsProvider = conventionsProvider;

@@ -5,7 +5,7 @@ internal sealed class ContextProvider : IContextProvider
     private readonly IRabbitMqSerializer _serializer;
     public string HeaderName { get; }
 
-    public ContextProvider(IRabbitMqSerializer serializer, RabbitMqOptions options)
+    public ContextProvider(IRabbitMqSerializer serializer, RabbitMQOptions options)
     {
         _serializer = serializer;
         HeaderName = string.IsNullOrWhiteSpace(options.Context?.Header)

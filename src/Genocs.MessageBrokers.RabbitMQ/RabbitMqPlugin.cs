@@ -3,7 +3,7 @@ using RabbitMQ.Client.Events;
 
 namespace Genocs.MessageBrokers.RabbitMQ;
 
-public abstract class RabbitMqPlugin : IRabbitMqPlugin, IRabbitMqPluginAccessor
+public abstract class RabbitMQPlugin : IRabbitMqPlugin, IRabbitMqPluginAccessor
 {
     private Func<object, object, BasicDeliverEventArgs, Task> _successor;
 

@@ -4,11 +4,11 @@ namespace Genocs.MessageBrokers.RabbitMQ.Conventions;
 
 public class ConventionsBuilder : IConventionsBuilder
 {
-    private readonly RabbitMqOptions _options;
+    private readonly RabbitMQOptions _options;
     private readonly bool _snakeCase;
     private readonly string _queueTemplate;
 
-    public ConventionsBuilder(RabbitMqOptions options)
+    public ConventionsBuilder(RabbitMQOptions options)
     {
         _options = options;
         _queueTemplate = string.IsNullOrWhiteSpace(_options.Queue?.Template)

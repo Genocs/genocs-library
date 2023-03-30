@@ -1,6 +1,6 @@
 namespace Genocs.MessageBrokers.RabbitMQ;
 
-public class RabbitMqOptions
+public class RabbitMQOptions
 {
     public string ConnectionName { get; set; }
     public IEnumerable<string> HostNames { get; set; }

@@ -9,11 +9,11 @@ public class RabbitMqExchangeInitializer : IInitializer
 {
     private const string DefaultType = "topic";
     private readonly IConnection _connection;
-    private readonly RabbitMqOptions _options;
+    private readonly RabbitMQOptions _options;
     private readonly ILogger<RabbitMqExchangeInitializer> _logger;
     private readonly bool _loggerEnabled;
 
-    public RabbitMqExchangeInitializer(ProducerConnection connection, RabbitMqOptions options,
+    public RabbitMqExchangeInitializer(ProducerConnection connection, RabbitMQOptions options,
         ILogger<RabbitMqExchangeInitializer> logger)
     {
         _connection = connection.Connection;

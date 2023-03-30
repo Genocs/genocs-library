@@ -10,14 +10,14 @@ namespace Genocs.APIGateway.Framework;
 internal class MessagingMiddleware : IMiddleware
 {
     private static readonly ConcurrentDictionary<string, IConventions> Conventions = new();
-    private readonly IRabbitMqClient _rabbitMqClient;
+    private readonly IRabbitMQClient _rabbitMQClient;
     private readonly RouteMatcher _routeMatcher;
     private readonly ITracer _tracer;
     private readonly ICorrelationContextBuilder _correlationContextBuilder;
     private readonly CorrelationIdFactory _correlationIdFactory;
     private readonly IDictionary<string, List<MessagingOptions.EndpointOptions>> _endpoints;
 
-    public MessagingMiddleware(IRabbitMqClient rabbitMqClient, RouteMatcher routeMatcher, ITracer tracer,
+    public MessagingMiddleware(IRabbitMQClient rabbitMQClient, RouteMatcher routeMatcher, ITracer tracer,
         ICorrelationContextBuilder correlationContextBuilder, CorrelationIdFactory correlationIdFactory,
         IOptions<MessagingOptions> messagingOptions)
     {
@@ -26,7 +26,7 @@ internal class MessagingMiddleware : IMiddleware
             throw new ArgumentNullException(nameof(messagingOptions));
         }
 
-        _rabbitMqClient = rabbitMqClient ?? throw new ArgumentNullException(nameof(rabbitMqClient));
+        _rabbitMQClient = rabbitMQClient ?? throw new ArgumentNullException(nameof(rabbitMQClient));
         _routeMatcher = routeMatcher ?? throw new ArgumentNullException(nameof(routeMatcher));
         _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
         _correlationContextBuilder = correlationContextBuilder ?? throw new ArgumentNullException(nameof(correlationContextBuilder));
@@ -69,7 +69,7 @@ internal class MessagingMiddleware : IMiddleware
 
             var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
             var message = JsonConvert.DeserializeObject(content);
-            _rabbitMqClient.Send(message, conventions, messageId, correlationId, spanContext, correlationContext);
+            _rabbitMQClient.Send(message, conventions, messageId, correlationId, spanContext, correlationContext);
             context.Response.StatusCode = StatusCodes.Status202Accepted;
             return;
         }

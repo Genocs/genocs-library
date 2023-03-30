@@ -43,8 +43,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private readonly int _retryInterval;
     private readonly bool _loggerEnabled;
     private readonly bool _logMessagePayload;
-    private readonly RabbitMqOptions _options;
-    private readonly RabbitMqOptions.QosOptions _qosOptions;
+    private readonly RabbitMQOptions _options;
+    private readonly RabbitMQOptions.QosOptions _qosOptions;
     private readonly bool _requeueFailedMessages;
 
     public RabbitMqBackgroundService(IServiceProvider serviceProvider)
@@ -61,12 +61,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _exceptionToMessageMapper = _serviceProvider.GetService<IExceptionToMessageMapper>() ?? _exceptionMapper;
         _exceptionToFailedMessageMapper = _serviceProvider.GetService<IExceptionToFailedMessageMapper>() ?? _exceptionFailedMapper;
         _pluginsExecutor = _serviceProvider.GetRequiredService<IRabbitMqPluginsExecutor>();
-        _options = _serviceProvider.GetRequiredService<RabbitMqOptions>();
+        _options = _serviceProvider.GetRequiredService<RabbitMQOptions>();
         _loggerEnabled = _options.Logger?.Enabled ?? false;
         _logMessagePayload = _options.Logger?.LogMessagePayload ?? false;
         _retries = _options.Retries >= 0 ? _options.Retries : 3;
         _retryInterval = _options.RetryInterval > 0 ? _options.RetryInterval : 2;
-        _qosOptions = _options.Qos ?? new RabbitMqOptions.QosOptions();
+        _qosOptions = _options.Qos ?? new RabbitMQOptions.QosOptions();
         _requeueFailedMessages = _options.RequeueFailedMessages;
         if (_qosOptions.PrefetchCount < 1)
         {

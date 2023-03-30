@@ -8,12 +8,12 @@ using System.Text;
 
 namespace Genocs.Tracing.Jaeger.RabbitMQ.Plugins;
 
-internal sealed class JaegerPlugin : RabbitMqPlugin
+internal sealed class JaegerPlugin : RabbitMQPlugin
 {
     private readonly ITracer _tracer;
     private readonly string _spanContextHeader;
 
-    public JaegerPlugin(ITracer tracer, RabbitMqOptions options)
+    public JaegerPlugin(ITracer tracer, RabbitMQOptions options)
     {
         _tracer = tracer;
         _spanContextHeader = options.GetSpanContextHeader();

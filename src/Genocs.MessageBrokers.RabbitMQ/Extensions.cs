@@ -17,21 +17,35 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.MessageBrokers.RabbitMQ;
 
+
+/// <summary>
+/// RabbitMQ support helper
+/// </summary>
 public static class Extensions
 {
     private const string SectionName = "rabbitmq";
     private const string RegistryName = "messageBrokers.rabbitmq";
 
+    /// <summary>
+    /// AddRabbitMq extension method
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="sectionName"></param>
+    /// <param name="plugins"></param>
+    /// <param name="connectionFactoryConfigurator"></param>
+    /// <param name="serializer"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static IGenocsBuilder AddRabbitMq(this IGenocsBuilder builder, string sectionName = SectionName,
-        Func<IRabbitMqPluginsRegistry, IRabbitMqPluginsRegistry> plugins = null,
-        Action<ConnectionFactory> connectionFactoryConfigurator = null, IRabbitMqSerializer serializer = null)
+        Func<IRabbitMqPluginsRegistry, IRabbitMqPluginsRegistry>? plugins = null,
+        Action<ConnectionFactory>? connectionFactoryConfigurator = null, IRabbitMqSerializer? serializer = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<RabbitMqOptions>(sectionName);
+        var options = builder.GetOptions<RabbitMQOptions>(sectionName);
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))
         {
@@ -44,10 +58,10 @@ public static class Extensions
         }
 
 
-        ILogger<IRabbitMqClient> logger;
+        ILogger<IRabbitMQClient> logger;
         using (var serviceProvider = builder.Services.BuildServiceProvider())
         {
-            logger = serviceProvider.GetRequiredService<ILogger<IRabbitMqClient>>();
+            logger = serviceProvider.GetRequiredService<ILogger<IRabbitMQClient>>();
         }
 
         builder.Services.AddSingleton<IContextProvider, ContextProvider>();
@@ -56,7 +70,7 @@ public static class Extensions
         builder.Services.AddSingleton<IConventionsBuilder, ConventionsBuilder>();
         builder.Services.AddSingleton<IConventionsProvider, ConventionsProvider>();
         builder.Services.AddSingleton<IConventionsRegistry, ConventionsRegistry>();
-        builder.Services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
+        builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
         builder.Services.AddSingleton<IBusPublisher, RabbitMqPublisher>();
         builder.Services.AddSingleton<IBusSubscriber, RabbitMqSubscriber>();
         builder.Services.AddSingleton<MessageSubscribersChannel>();
@@ -115,8 +129,8 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureSsl(ConnectionFactory connectionFactory, RabbitMqOptions options,
-        ILogger<IRabbitMqClient> logger)
+    private static void ConfigureSsl(ConnectionFactory connectionFactory, RabbitMQOptions options,
+        ILogger<IRabbitMQClient> logger)
     {
         if (options.Ssl is null || string.IsNullOrWhiteSpace(options.Ssl.ServerName))
         {

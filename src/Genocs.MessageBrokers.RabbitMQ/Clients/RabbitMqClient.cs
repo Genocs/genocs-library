@@ -4,14 +4,14 @@ using System.Collections.Concurrent;
 
 namespace Genocs.MessageBrokers.RabbitMQ.Clients;
 
-internal sealed class RabbitMqClient : IRabbitMqClient
+internal sealed class RabbitMQClient : IRabbitMQClient
 {
     private readonly object _lockObject = new();
     private const string EmptyContext = "{}";
     private readonly IConnection _connection;
     private readonly IContextProvider _contextProvider;
     private readonly IRabbitMqSerializer _serializer;
-    private readonly ILogger<RabbitMqClient> _logger;
+    private readonly ILogger<RabbitMQClient> _logger;
     private readonly bool _contextEnabled;
     private readonly bool _loggerEnabled;
     private readonly string _spanContextHeader;
@@ -20,8 +20,8 @@ internal sealed class RabbitMqClient : IRabbitMqClient
     private readonly ConcurrentDictionary<int, IModel> _channels = new();
     private readonly int _maxChannels;
 
-    public RabbitMqClient(ProducerConnection connection, IContextProvider contextProvider, IRabbitMqSerializer serializer,
-        RabbitMqOptions options, ILogger<RabbitMqClient> logger)
+    public RabbitMQClient(ProducerConnection connection, IContextProvider contextProvider, IRabbitMqSerializer serializer,
+        RabbitMQOptions options, ILogger<RabbitMQClient> logger)
     {
         _connection = connection.Connection;
         _contextProvider = contextProvider;
