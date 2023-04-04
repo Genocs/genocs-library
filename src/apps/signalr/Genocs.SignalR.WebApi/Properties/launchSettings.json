@@ -3,26 +3,23 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5007",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:5007"
     }
   },
   "profiles": {
-    "Genocs.SignalR.WebApi": {
+    "Genocs.Services.SignalR": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "/",
+      "applicationUrl": "http://localhost:5007",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "local"
-      },
-      "applicationUrl": "http://localhost:5007"
+        "ASPNETCORE_ENVIRONMENT": "development"
+      }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "local"
+        "ASPNETCORE_ENVIRONMENT": "development"
       }
     }
   }

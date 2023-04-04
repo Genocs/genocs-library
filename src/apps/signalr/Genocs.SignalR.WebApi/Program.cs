@@ -1,23 +1,19 @@
-﻿using Genocs.Secrets.Vault;
+﻿using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Logging;
-using Genocs.Core.Builders;
-using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
+using Genocs.Secrets.Vault;
+using Genocs.SignalR.WebApi.Exceptions;
+using Genocs.SignalR.WebApi.Framework;
+using Genocs.SignalR.WebApi.Hubs;
+using Genocs.SignalR.WebApi.Services;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
 using Serilog.Events;
-
-using Genocs.SignalR.WebApi.Framework;
-using Genocs.SignalR.WebApi.Hubs;
-using Microsoft.OpenApi.Models;
-
-
-//using DShop.Common.Logging;
-//using DShop.Common.Vault;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -36,54 +32,64 @@ builder.Host
 
 var services = builder.Services;
 
-services.AddGenocs();
-services.AddMvc();
 services.AddSignalR();
 
+services.AddTransient<IHubWrapper, HubWrapper>();
+services.AddTransient<IHubService, HubService>();
+
+services.AddGenocs()
+        .AddCorrelationContextLogging()
+        .AddErrorHandler<ExceptionToResponseMapper>()
+        //.AddServices()
+        //.AddHttpClient()
+        //.AddConsul()
+        //.AddFabio()
+        //.AddJaeger()
+        //.AddMongo()
+        //.AddMongoRepository<Order, Guid>("orders")
+        .AddCommandHandlers()
+        .AddEventHandlers()
+        .AddQueryHandlers()
+        .AddInMemoryCommandDispatcher()
+        .AddInMemoryEventDispatcher()
+        .AddInMemoryQueryDispatcher()
+        //.AddPrometheus()
+        //.AddRedis()
+        //.AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        //.AddMessageOutbox(o => o.AddMongo())
+        .AddWebApi()
+        .AddSwaggerDocs()
+        .AddWebApiSwaggerDocs()
+        .Build();
 
 var app = builder.Build();
 
-app.UseGenocs();
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseGenocs()
+    .UserCorrelationContextLogging()
+    .UseErrorHandler()
+    //.UseCertificateAuthentication()
+    //.UsePrometheus()
+    .UseRouting()
+    .UseEndpoints(r => {
+        r.MapControllers();
+        r.MapHub<GenocsHub>("/notificationHub");
+    })
+    .UseDispatcherEndpoints(endpoints => endpoints
+        .Get("", ctx => ctx.Response.WriteAsync("SignalR Service"))
+        .Get("ping", ctx => ctx.Response.WriteAsync("pong")))
+    //.Get<GetOrder, OrderDto>("orders/{orderId}")
+    //.Post<CreateOrder>("orders",
+    //    afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
+    //.UseJaeger()
+    .UseSwaggerDocs();
+//.UseRabbitMq();
+//.SubscribeEvent<DeliveryStarted>();
 
-app.UseRouting();
 
-// Enable Cors policy
-app.UseCors("AllowAll");
-
-
-app.UseEndpoints(endpoints =>
-{
-    //endpoints.MapRazorPages();
-    endpoints.MapControllers();
-    // Configure SignalR
-    endpoints.MapHub<GenocsHub>("/notificationHub");
-
-});
-
+//app.UseHttpsRedirection();
+//app.UseStaticFiles();
 
 app.Run();
 
 Log.CloseAndFlush();
-
-
-
-
-
-//public class Program
-//{
-//    public static void Main(string[] args)
-//    {
-//        CreateWebHostBuilder(args).Build().Run();
-//    }
-
-//    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-//        WebHost.CreateDefaultBuilder(args)
-//            .UseStartup<Startup>()
-//            .UseLogging()
-//            .UseVault()
-//            .UseLockbox()
-//            .UseAppMetrics();
-//}

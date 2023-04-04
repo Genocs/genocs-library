@@ -36,5 +36,5 @@
 		<ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
 	</ItemGroup>
-
+	
 </Project>
