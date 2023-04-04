@@ -14,6 +14,9 @@ using VaultSharp.V1.SecretsEngines;
 
 namespace Genocs.Secrets.Vault;
 
+/// <summary>
+/// The Extensions helper class 
+/// </summary>
 public static class Extensions
 {
     private const string SectionName = "vault";

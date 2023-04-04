@@ -17,9 +17,12 @@ public sealed class GenocsBuilder : IGenocsBuilder
     private readonly IServiceCollection _services;
     IServiceCollection IGenocsBuilder.Services => _services;
 
-    public IConfiguration Configuration { get; }
+    /// <summary>
+    /// The configuration
+    /// </summary>
+    public IConfiguration? Configuration { get; }
 
-    private GenocsBuilder(IServiceCollection services, IConfiguration configuration)
+    private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
         _buildActions = new List<Action<IServiceProvider>>();
         _services = services;
@@ -27,7 +30,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
         Configuration = configuration;
     }
 
-    public static IGenocsBuilder Create(IServiceCollection services, IConfiguration configuration = null)
+    public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);
 
     public bool TryRegister(string name) 

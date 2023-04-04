@@ -18,7 +18,7 @@ public static class Extensions
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration configuration = null)
+    public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
         var builder = GenocsBuilder.Create(services, configuration);
         var appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
