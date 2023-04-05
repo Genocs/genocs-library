@@ -87,8 +87,8 @@ app.UseGenocs()
 //.SubscribeEvent<DeliveryStarted>();
 
 
-//app.UseHttpsRedirection();
-//app.UseStaticFiles();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.Run();
 

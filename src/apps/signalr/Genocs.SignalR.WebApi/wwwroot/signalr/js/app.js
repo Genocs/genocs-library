@@ -4,9 +4,10 @@
     const $connect = document.getElementById("connect");
     const $messages = document.getElementById("messages");
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl('http://localhost:5007/ReceiveMessage')
+        .withUrl('/notificationHub')
         .configureLogging(signalR.LogLevel.Information)
         .build();
+
 
     $connect.onclick = function () {
         const jwt = $jwt.value;
