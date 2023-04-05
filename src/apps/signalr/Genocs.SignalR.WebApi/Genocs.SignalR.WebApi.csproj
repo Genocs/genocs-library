@@ -6,6 +6,9 @@
 		<LangVersion>10.0</LangVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<Content Include="certs\**" CopyToPublishDirectory="Always" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />

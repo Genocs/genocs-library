@@ -1,4 +1,5 @@
-﻿using Genocs.Core.Builders;
+﻿using Genocs.Auth;
+using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
@@ -39,6 +40,7 @@ services.AddTransient<IHubService, HubService>();
 
 services.AddGenocs()
         .AddCorrelationContextLogging()
+        .AddJwt()
         .AddErrorHandler<ExceptionToResponseMapper>()
         //.AddServices()
         //.AddHttpClient()

@@ -9,8 +9,8 @@ public class GenocsHub : Hub
     private readonly IJwtHandler _jwtHandler;
 
 
-    //public GenocsHub(IJwtHandler jwtHandler)
-    //    => _jwtHandler = jwtHandler ?? throw new ArgumentNullException(nameof(jwtHandler));
+    public GenocsHub(IJwtHandler jwtHandler)
+        => _jwtHandler = jwtHandler ?? throw new ArgumentNullException(nameof(jwtHandler));
 
     public async Task InitializeAsync(string token)
     {
