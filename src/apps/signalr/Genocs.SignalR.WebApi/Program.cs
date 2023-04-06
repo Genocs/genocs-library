@@ -4,13 +4,20 @@ using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Logging;
+using Genocs.MessageBrokers.Outbox;
+using Genocs.MessageBrokers.Outbox.MongoDB;
+using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Persistence.MongoDb.Legacy;
 using Genocs.Secrets.Vault;
+using Genocs.SignalR.WebApi.Commands;
 using Genocs.SignalR.WebApi.Exceptions;
 using Genocs.SignalR.WebApi.Framework;
 using Genocs.SignalR.WebApi.Hubs;
 using Genocs.SignalR.WebApi.Services;
+using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
+using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
@@ -46,8 +53,8 @@ services.AddGenocs()
         //.AddHttpClient()
         //.AddConsul()
         //.AddFabio()
-        //.AddJaeger()
-        //.AddMongo()
+        .AddJaeger()
+        .AddMongo()
         //.AddMongoRepository<Order, Guid>("orders")
         .AddCommandHandlers()
         .AddEventHandlers()
@@ -57,8 +64,8 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         //.AddPrometheus()
         //.AddRedis()
-        //.AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
-        //.AddMessageOutbox(o => o.AddMongo())
+        .AddRabbitMq()
+        .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
         .AddWebApiSwaggerDocs()
@@ -79,13 +86,13 @@ app.UseGenocs()
     })
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get("", ctx => ctx.Response.WriteAsync("SignalR Service"))
-        .Get("ping", ctx => ctx.Response.WriteAsync("pong")))
-    //.Get<GetOrder, OrderDto>("orders/{orderId}")
-    //.Post<CreateOrder>("orders",
-    //    afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
-    //.UseJaeger()
-    .UseSwaggerDocs();
-//.UseRabbitMq();
+        .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
+        .Post<PublishNotification>("notifications",
+            afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}"))
+    )
+    .UseJaeger()
+    .UseSwaggerDocs()
+    .UseRabbitMq();
 //.SubscribeEvent<DeliveryStarted>();
 
 
