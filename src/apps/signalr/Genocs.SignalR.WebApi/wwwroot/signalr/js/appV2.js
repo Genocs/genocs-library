@@ -76,5 +76,5 @@
 
 
     // Start the connection.
-//    start();
+    start();
 })();
