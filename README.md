@@ -25,7 +25,7 @@ If you want to use docker compose to run infrastructure and application you can 
 
 ``` bash
 # Setup the infrastructure  
-docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml --project-name genocs-application up -d
+docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-application up -d
 ```
 
 

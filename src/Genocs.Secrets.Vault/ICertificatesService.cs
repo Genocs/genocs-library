@@ -2,6 +2,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.Secrets.Vault;
 
+/// <summary>
+/// The Certification Service implementation
+/// </summary>
 public interface ICertificatesService
 {
     IReadOnlyDictionary<string, X509Certificate2> All { get; }
