@@ -1,18 +1,40 @@
 # Genocs .NET libraries
 
-| Badge                      | Description                    |
-| -------------------------- | ------------------------------ |
-| Travis CI/CD               | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
-| Github Actions             | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
-| Azure CI/CD                | work in progress |
-| NuGet package latesversion | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
-| NuGet package downloads    | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
-| Discord community          | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
+| Badge                       | Description                    |
+| --------------------------- | ------------------------------ |
+| Travis CI/CD                | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
+| Github Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
+| Azure CI/CD                 | work in progress |
+| NuGet package latestversion | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
+| NuGet package downloads     | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
+| Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
 
-----
+---
 
-This repo contains a set of basic libraries designed by Genocs. The libraries are built using .NET standard 2.1. The package version is hosted on [nuget](https://www.nuget.org/packages).
+This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
 
+Packages are availables on [nuget](https://www.nuget.org/packages).
+
+
+***Infrastructure***
+---
+This section will shows how to setup the infrastructure components
+
+## Docker compose
+If you want to use docker compose to run infrastructure and application you can run the commands below
+
+``` bash
+# Setup the infrastructure  
+docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml --project-name genocs-application up -d
+```
+
+
+## Kubernetes cluster
+
+***TBW***
+
+***Application***
+---
 
 Some useful commands
 ``` bash
@@ -79,11 +101,11 @@ Core project contains general purpose functionalities to be used on DDD service.
 
 ## HTTP
 
-TBW
+This library implements HTTP client functionalities.
 
 ## Logging
 
-TBW
+This library implements logging functionalities.
 
 ## MessageBrokers
 
@@ -108,11 +130,11 @@ TBW
 
 ## Persistence MongoDB
 
-Persistente MongoDB is the library that allows to persist data on MongoDB.
+Persistence MongoDB is the library that allows to persist data on MongoDB.
 
 ## Persistence Redis
 
-Persistente Redis is the library that allows to persist data on Redis database.
+Persistence Redis is the library that allows to persist data on Redis database.
 
 ## Query Builder
 

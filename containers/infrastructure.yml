@@ -124,69 +124,6 @@ services:
   #      - genocs
   #    # network_mode: host
 
-  mongo:
-    image: mongo
-    hostname: mongo_node_1
-    container_name: mongo
-    ports:
-      - 27017:27017
-    networks:
-      - genocs
-    # network_mode: host
-    volumes:
-      - mongo:/var/lib/data/db
-
-  #  prometheus:
-  #    image: prom/prometheus
-  #    container_name: prometheus
-  #    ports:
-  #      - '9090:9090'
-  #    networks:
-  #      - genocs
-  #    # network_mode: host
-  #    volumes:
-  #      - prometheus:/var/lib/prometheus
-  #      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    hostname: rabbit_node_1
-    container_name: rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
-      - 15692:15692
-    networks:
-      - genocs
-    # network_mode: host
-    volumes:
-      - rabbitmq:/var/lib/rabbitmq
-
-  redis:
-    image: redis
-    hostname: redis_node_1
-    container_name: redis
-    ports:
-      - 6379:6379
-    networks:
-      - genocs
-    # network_mode: host
-    volumes:
-      - redis:/data
-
-#  seq:
-#    image: datalust/seq
-#    container_name: seq
-#    environment:
-#      - ACCEPT_EULA=Y
-#    ports:
-#      - 5341:80
-#    networks:
-#      - genocs
-#    # network_mode: host
-#    volumes:
-#      - seq:/data
-#
 #  sqlserver:
 #    image: "mcr.microsoft.com/mssql/server:2022-latest"
 #    container_name: sql_server
@@ -201,19 +138,6 @@ services:
 #    networks:
 #      - genocs
 #
-#  vault:
-#    image: vault
-#    container_name: vault
-#    ports:
-#      - 8200:8200
-#    networks:
-#      - genocs
-#    # network_mode: host
-#    environment:
-#      - VAULT_ADDR=http://127.0.0.1:8200
-#      - VAULT_DEV_ROOT_TOKEN_ID=secret
-#    cap_add:
-#      - IPC_LOCK
 
 networks:
   genocs:
@@ -228,17 +152,8 @@ volumes:
   #    driver: local
   #  influxdb:
   #    driver: local
-  mongo:
-    driver: local
-  #  prometheus:
-  #    driver: local
-  rabbitmq:
-    driver: local
-  redis:
-    driver: local
 # mssqlsystem:
 #   driver: local
 # mssqluser:
 #   driver: local
-# seq:
-#   driver: local
+

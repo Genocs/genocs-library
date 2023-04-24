@@ -46,9 +46,12 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
         }
 
         _logger.LogInformation($"Order with id: {command.OrderId} will cost: {pricingDto.TotalAmount}$.");
+
         var order = new Order(command.OrderId, command.CustomerId, pricingDto.TotalAmount);
         await _repository.AddAsync(order);
+        
         _logger.LogInformation($"Created an order with id: {command.OrderId}, customer: {command.CustomerId}.");
+
         var spanContext = _tracer.ActiveSpan?.Context.ToString();
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)

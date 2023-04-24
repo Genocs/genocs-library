@@ -6,11 +6,23 @@ using Genocs.WebApi.Security;
 
 namespace Genocs.Orders.WebApi.Services;
 
+
+/// <summary>
+/// The Pricing WebApi client implementation
+/// </summary>
 public class PricingServiceClient : IPricingServiceClient
 {
     private readonly IHttpClient _client;
     private readonly string _url;
 
+    /// <summary>
+    /// The standard constructor
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="certificatesService"></param>
+    /// <param name="httpClientOptions"></param>
+    /// <param name="vaultOptions"></param>
+    /// <param name="securityOptions"></param>
     public PricingServiceClient(IHttpClient client,
                                 ICertificatesService certificatesService,
                                 HttpClientSettings httpClientOptions,
@@ -36,6 +48,11 @@ public class PricingServiceClient : IPricingServiceClient
         _client.SetHeaders(h => h.Add(header, certificateData));
     }
 
+    /// <summary>
+    /// Get the pricing result based on the orderId
+    /// </summary>
+    /// <param name="orderId">The OrderId</param>
+    /// <returns>The Pricing Response</returns>
     public Task<PricingDto> GetAsync(Guid orderId)
         => _client.GetAsync<PricingDto>($"{_url}/orders/{orderId}/pricing");
 }

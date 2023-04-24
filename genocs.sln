@@ -108,6 +108,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WalletsService", "WalletsSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.SignalR.WebApi", "src\apps\signalr\Genocs.SignalR.WebApi\Genocs.SignalR.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductsService", "ProductsService", "{B2028A73-6C94-4166-A0BB-22080805E351}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -295,6 +297,7 @@ Global
 		{75D24F85-48AC-4058-AF8D-461FC6A360AD} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{9344A71B-D7EA-4C91-B303-2F8E8841B521} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2} = {75D24F85-48AC-4058-AF8D-461FC6A360AD}
+		{B2028A73-6C94-4166-A0BB-22080805E351} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF634A51-3CA4-4FB3-A8ED-71C403516166}

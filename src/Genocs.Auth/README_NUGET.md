@@ -40,6 +40,3 @@ Following are the project settings needed to enable monitoring
 
 ### [2023-03-24] 5.0.0
 - First release
-
-
-
