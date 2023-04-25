@@ -1,6 +1,6 @@
 using Genocs.APIGateway.Framework;
 using Genocs.Auth;
-using Genocs.Common.Settings;
+using Genocs.Common.Options;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
