@@ -1,4 +1,4 @@
-using Genocs.Common.Settings;
+using Genocs.Common.Options;
 using Genocs.Core.Builders;
 using Genocs.Logging.Settings;
 using Microsoft.ApplicationInsights.Extensibility;

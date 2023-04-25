@@ -1,4 +1,4 @@
-namespace Genocs.Common.Settings;
+namespace Genocs.Common.Options;
 
 /// <summary>
 /// The application settings

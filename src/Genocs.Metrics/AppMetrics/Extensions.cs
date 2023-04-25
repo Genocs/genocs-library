@@ -4,7 +4,7 @@ using App.Metrics.AspNetCore.Endpoints;
 using App.Metrics.AspNetCore.Health.Endpoints;
 using App.Metrics.AspNetCore.Tracking;
 using App.Metrics.Formatters.Prometheus;
-using Genocs.Common.Settings;
+using Genocs.Common.Options;
 using Genocs.Core.Builders;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.AppMetrics.Builders;
