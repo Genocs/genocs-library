@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core", "src\Genocs.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.UnitTests", "src\Genocs.Core.UnitTests\Genocs.Core.UnitTests.csproj", "{26927D4A-62D7-43BB-8E40-173B2331BC8B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDB", "src\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj", "{43604E79-FEA7-4A53-B2E9-C1D6FE30F8E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb", "src\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj", "{43604E79-FEA7-4A53-B2E9-C1D6FE30F8E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDB.UnitTests", "src\Genocs.Persistence.MongoDB.UnitTests\Genocs.Persistence.MongoDB.UnitTests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
 EndProject
