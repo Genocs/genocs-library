@@ -38,5 +38,5 @@ jobs:
       - name: Build solution and generate NuGet packages
         run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }}
 
-      - name: Push generated packages to GitHub registry
+      - name: Push packages to Nuget
         run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json 

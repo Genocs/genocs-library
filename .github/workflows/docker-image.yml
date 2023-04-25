@@ -44,5 +44,5 @@ jobs:
       - name: Pack
         run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }} --no-build --verbosity normal
 
-      - name: Push generated packages to GitHub registry
+      - name: Push packages to Nuget
         run: dotnet nuget push ./out/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
