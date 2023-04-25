@@ -5,87 +5,57 @@
 | Travis CI/CD                | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
 | Github Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
 | Azure CI/CD                 | work in progress |
-| NuGet package latestversion | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
-| NuGet package downloads     | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
 | Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
+
+| NuGet package Version       | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
+| NuGet package Downloads     | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
 
 ---
 
 This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
 
-Packages are availables on [nuget](https://www.nuget.org/packages).
+Packages are available on [nuget Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
 
-***Infrastructure***
 ---
-This section will shows how to setup the infrastructure components
 
-## Docker compose
-If you want to use docker compose to run infrastructure and application you can run the commands below
+## The idea
+
+***Build a software library to be cloud agnostic***
+
+Building a software library to be cloud agnostic has several advantages. First, it allows developers to create applications that can be deployed on any cloud platform without having to rewrite code or make major changes. This makes it easier for developers to quickly deploy their applications across multiple cloud providers. Additionally, it reduces the cost of development and maintenance since developers don’t have to write separate code for each cloud provider. Finally, it increases the scalability of applications since they can be easily deployed on different cloud platforms with minimal effort. 
+
+***Cloud agnostic by use of Containers***
+
+The advantages of using containers are numerous. Containers provide a lightweight, portable, and isolated environment for applications to run in, allowing them to be easily moved between different systems. This makes it easier to deploy applications quickly and reliably across different environments. Additionally, containers can help reduce resource consumption by running multiple applications on the same host, as each container is isolated from the others. This helps to improve efficiency and scalability. Finally, containers provide an additional layer of security, as they are isolated from the underlying operating system and other applications.
+
+---
+
+## Infrastructure
+
+This section will show how to setup the infrastructure components.
+
+***Docker compose***
+
+If you want to use docker compose to run infrastructure you can run the command below.
 
 ``` bash
 # Setup the infrastructure  
 docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-application up -d
 ```
 
+***Kubernetes cluster***
 
-## Kubernetes cluster
+A second option is to setup the application inside a Kubernetes cluster.
 
-***TBW***
+To setup a Kubernetes cluster that can be used for production I suggest to looking at the repo: 
+- [enterprise-containers](https://github.com/Genocs/enterprise-containers)
 
-***Application***
+There you can find everything needed to setup a cluster from scratch.
+
 ---
-
-Some useful commands
-``` bash
-# Build the solution 
-dotnet build
-
-# Pack the projects
-dotnet pack
-
-# Run project with console
-dotnet run --project ./src/Genocs.Core.Demo.WebApi
-dotnet run --project ./src/Genocs.Core.Demo.Worker
-```
-
-``` bash
-# To pack the project with nuspec file
-cd src/Genocs.Core
-dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-
-# To push on nuget
-dotnet nuget push
-dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
-```
-
-## How to build Docker Demo images
-
-``` bash
-# Build webapi
-docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
-
-# Push on Dockerhub
-docker push genocs/demo-webapi:2.0.0
-docker push genocs/demo-webapi:latest
-
-# Build worker
-docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-worker.dockerfile .
-
-# Push on Dockerhub
-docker push genocs/demo-worker:2.0.0
-docker push genocs/demo-worker:latest
-```
-
-A second option is to run docker-compose
-
-``` bash
-# Build with docker compose
-docker-compose -f ./demo-docker-compose.yml build
-
-# Run with docker compose
-docker-compose -f ./demo-docker-compose.yml up [-d]
-```
+## **Libraries**
+The following section describes the full set of libraries.
 
 ## Auth
 
@@ -93,7 +63,7 @@ Auth service defines the functionalities to build Auth system that relay on OAUT
 
 ## Common
 
-This project contains common functionalities that do not relay on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across without dependencies.
+This project contains common functionalities that do not rely on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
 
 ## Core
 
@@ -420,3 +390,60 @@ Use this file inside Visual Studio code with [REST Client](https://marketplace.v
     }
   }
   ```
+
+
+  ---
+
+## Demo Application
+Inside the library there is a simple demo application you can use to test the library. 
+
+Some commands
+``` bash
+# Build the solution 
+dotnet build
+
+# Pack the projects
+dotnet pack
+
+# Run project with console
+dotnet run --project ./src/Genocs.Core.Demo.WebApi
+dotnet run --project ./src/Genocs.Core.Demo.Worker
+```
+
+``` bash
+# To pack the project with nuspec file
+cd src/Genocs.Core
+dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
+
+# To push on nuget
+dotnet nuget push
+dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
+```
+
+### How to build Docker Demo images
+
+``` bash
+# Build webapi
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
+
+# Push on Dockerhub
+docker push genocs/demo-webapi:2.0.0
+docker push genocs/demo-webapi:latest
+
+# Build worker
+docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-worker.dockerfile .
+
+# Push on Dockerhub
+docker push genocs/demo-worker:2.0.0
+docker push genocs/demo-worker:latest
+```
+
+A second option is to run docker-compose
+
+``` bash
+# Build with docker compose
+docker-compose -f ./demo-docker-compose.yml build
+
+# Run with docker compose
+docker-compose -f ./demo-docker-compose.yml up [-d]
+```

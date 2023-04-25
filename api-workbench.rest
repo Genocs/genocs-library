@@ -53,13 +53,13 @@ Content-Type: application/json
 }
 
 
-### Sign up an Admin
+### Sign up as Admin
 POST {{identity}}/sign-up
 Content-Type: application/json
 
 {
-  "Email": "giovanni.nocco5@gmail.com",
-  "Name": "Giovanni6",
+  "Email": "giovanni.nocco@gmail.com",
+  "Name": "Giovanni",
   "Password": "Pas3word123!",
   "Role": "Admin",
   "Permissions": null
@@ -70,7 +70,7 @@ POST {{identity}}/sign-in
 Content-Type: application/json
 
 {
-  "Name": "Giovanni6",
+  "Name": "Giovanni",
   "Password": "Pas3word123!"
 }
 
@@ -88,15 +88,10 @@ POST {{identity}}/refresh-tokens/revoke
 
 
 
-### Send event to Azure Service Bus Topic
-POST {{apigateway}}/ServiceBus/SendToTopicAzureServiceBusTopic
+### Create a new order using the API Gateway
+POST {{apigateway}}/orders-service/orders
 Content-Type: application/json
 
 {
-
-  "fullname": "John Doe",
-  "address": "New York City, Street XYZ"
+  "CustomerId": "75707531-d8ed-42e0-8811-1f5184d424b9"
 }
-
-
-apigateway
