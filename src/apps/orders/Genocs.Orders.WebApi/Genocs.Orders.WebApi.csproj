@@ -23,11 +23,11 @@
 		<ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
-		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDb\Genocs.MessageBrokers.Outbox.MongoDb.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
-		<ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Tracing\Genocs.Tracing.csproj" />

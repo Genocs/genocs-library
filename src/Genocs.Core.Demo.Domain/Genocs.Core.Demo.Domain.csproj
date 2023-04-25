@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDB.csproj" />
+		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
 	</ItemGroup>
 
