@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.UnitTests", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb", "src\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj", "{43604E79-FEA7-4A53-B2E9-C1D6FE30F8E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb.UnitTests", "src\Genocs.Persistence.MongoDb.UnitTests\Genocs.Persistence.MongoDb.UnitTests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb.UnitTests", "src\Genocs.Persistence.MongoDb.UnitTests\Genocs.Persistence.MongoDB.UnitTests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure", "src\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj", "{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}"
 EndProject
