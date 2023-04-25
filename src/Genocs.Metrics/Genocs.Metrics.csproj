@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
@@ -7,7 +7,7 @@
 		<PackageId>Genocs.Metrics</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview1.0</Version>
+		<Version>5.0.0-preview.3.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -47,7 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview1.0" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.3.*" />
 	</ItemGroup>
 
 
@@ -81,6 +81,6 @@
 		<PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="5.0.2" />
 		<PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.2" />
 		<PackageReference Include="prometheus-net.SystemMetrics" Version="2.0.0" />
-	</ItemGroup>	
+	</ItemGroup>
 
 </Project>

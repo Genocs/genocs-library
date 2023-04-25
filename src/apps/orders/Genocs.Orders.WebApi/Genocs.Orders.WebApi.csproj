@@ -7,7 +7,7 @@
 		<PackageId>Genocs.Services.WebApi</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview1.0</Version>
+		<Version>5.0.0-preview.3.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -18,7 +18,7 @@
 		<AnalysisLevel>latest</AnalysisLevel>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
 		<ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
@@ -36,5 +36,24 @@
 		<ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
 	</ItemGroup>
-	
+
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<PackageReference Include="Genocs.HTTP" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.LoadBalancing.Fabio" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.MessageBrokers" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.MessageBrokers.Outbox" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Metrics" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Persistence.Redis" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Secrets.Vault" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Tracing" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.WebApi.CQRS" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.WebApi.Security" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.WebApi.Swagger" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.WebApi" Version="5.0.0-preview.3.*" />
+	</ItemGroup>
 </Project>

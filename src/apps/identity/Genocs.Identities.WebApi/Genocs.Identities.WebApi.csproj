@@ -18,11 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
+		<ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="logs\" />
+		<Folder Include="logs\" />
 	</ItemGroup>
 
 </Project>
