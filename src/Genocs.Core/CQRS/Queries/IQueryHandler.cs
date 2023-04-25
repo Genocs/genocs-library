@@ -16,6 +16,6 @@
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
+        Task<TResult?> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
     }
 }

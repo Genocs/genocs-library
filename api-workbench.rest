@@ -3,7 +3,11 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###############################################################################
 
-@url = https://localhost:5001
+#@url = https://localhost:5001
+@url = https://localhost:5271
+@apigateway = http://localhost:5000
+@identity = https://localhost:5271
+
 
 
 ### Home / Welcome screen
@@ -46,4 +50,61 @@ Content-Type: application/json
 
   "fullname": "John Doe",
   "address": "New York City, Street XYZ"
+}
+
+
+### Sign up as Admin
+POST {{identity}}/sign-up
+Content-Type: application/json
+
+{
+  "Email": "giovanni.nocco@gmail.com",
+  "Name": "Giovanni",
+  "Password": "Pas3word123!",
+  "Role": "Admin",
+  "Permissions": null
+}
+
+### Sign in
+POST {{identity}}/sign-in
+Content-Type: application/json
+
+{
+  "Name": "Giovanni",
+  "Password": "Pas3word123!"
+}
+
+
+### Get list of users
+GET {{identity}}/users?page=1
+
+
+### Revoke the refresh token
+POST {{identity}}/refresh-tokens/revoke
+
+{
+  "RefreshToken" : "5bS6POUKlouYLzZi2n8LdgyYNYTHaTbA3xH3t"
+}
+
+
+### Get list of products using the API Gateway
+GET {{apigateway}}/products-service/products/ec5983de-c667-4ad3-8e0e-d42e653572b9
+
+
+### Create new prodcut using the API Gateway
+POST {{apigateway}}/products-service/products
+
+{
+  "unitPrice" : 50.12,
+  "sku": "ABC_123"
+}
+
+
+### Create a new order using the API Gateway
+POST {{apigateway}}/orders-service/orders
+Content-Type: application/json
+
+{
+  "CustomerId": "ec5983de-c667-4ad3-8e0e-d42e653572b9",
+  "productId" : "ec5983de-c667-4ad3-8e0e-d42e653572b9"
 }

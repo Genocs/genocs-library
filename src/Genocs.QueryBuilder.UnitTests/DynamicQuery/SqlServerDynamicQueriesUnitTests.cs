@@ -9,7 +9,7 @@ namespace Genocs.Fiscanner.xUnitTests.DynamicQuery
         //    var aggregates = await promotionWallets
         //                                    .Aggregate()
         //                                  //.Unwind(x => x.CreditCards, new AggregateUnwindOptions<UnwindPromotionWallet_1> { IncludeArrayIndex = "CreditCardsCount", PreserveNullAndEmptyArrays = true })
-        //                                  //.Unwind(x => x.UtuCards, new AggregateUnwindOptions<UnwindPromotionWallet_2> { IncludeArrayIndex = "UtuCardsCount", PreserveNullAndEmptyArrays = true })
+        //                                  //.Unwind(x => x.FidelityCards, new AggregateUnwindOptions<UnwindPromotionWallet_2> { IncludeArrayIndex = "FidelityCardsCount", PreserveNullAndEmptyArrays = true })
         //                                  //.Unwind(x => x.PartnerAccounts, new AggregateUnwindOptions<UnwindPromotionWallet_3> { IncludeArrayIndex = "PartnerAccountsCount", PreserveNullAndEmptyArrays = true })
         //                                  //.Unwind(x => x.Transactions, new AggregateUnwindOptions<UnwindPromotionWallet> { IncludeArrayIndex = "TransactionsCount", PreserveNullAndEmptyArrays = true })
         //                                  //.Unwind(x => x["Bs.Cs"])

@@ -1,35 +1,41 @@
+# This is a manually triggered nuget build and deploy
 
 name: Publish on NuGet
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  push:
-    branches:
-      - deploy
-  pull_request:
-    types: [closed]
-    branches:
-      - deploy
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      version:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: "Packages Version"
+
+        # Default value if no value is explicitly provided
+        default: "1.0.0"
+
+        # Input has to be provided for the workflow to run
+        required: true
+
 
 jobs:
   build:
-    name: Update NuGet package  
+    name: Update NuGet packages
     runs-on: ubuntu-latest
     steps:
 
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup .NET Core @ Latest
+      - name: Setup .NET
         uses: actions/setup-dotnet@v2
-        with:
-          source-url: https://nuget.pkg.github.com/genocs/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
-          
-      - name: Build solution and generate NuGet package
-        run: |  
-          cd <project>
-          dotnet pack -c Release -o out  
 
-      - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./<project>/out/*.nupkg --skip-duplicate --no-symbols true
+      - name: Restore dependencies
+        run: dotnet restore
+       
+      - name: Build solution and generate NuGet packages
+        run: dotnet pack -c Debug -o out -p:Version=${{ github.event.inputs.version }}
+
+      - name: Push packages to Nuget
+        run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json 

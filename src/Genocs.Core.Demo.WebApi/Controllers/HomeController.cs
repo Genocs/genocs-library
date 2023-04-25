@@ -9,7 +9,7 @@ public class HomeController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Get()
-        => Ok("Genocs.Core.Demo.WebApi");
+        => Ok("Genocs Demo WebApi");
 
     [HttpGet("ping")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

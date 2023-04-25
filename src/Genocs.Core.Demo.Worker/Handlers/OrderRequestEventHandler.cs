@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Interfaces;
+﻿using Genocs.Core.CQRS.Events;
+using Genocs.Core.Demo.Contracts;
 
 namespace Genocs.Core.Demo.Worker.Handlers;
 
@@ -12,7 +12,7 @@ public class OrderRequestEventHandler : IEventHandler<OrderRequest>
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public Task HandleEvent(OrderRequest context)
+    public Task HandleAsync(OrderRequest context, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"OrderRequest '{0}', '{1}' processed", context.OrderId, context.UserId);
 

@@ -7,6 +7,9 @@ using System.ComponentModel;
 
 namespace Genocs.HTTP;
 
+/// <summary>
+/// The HTTP client extensions
+/// </summary>
 public static class Extensions
 {
     private const string SectionName = "httpClient";

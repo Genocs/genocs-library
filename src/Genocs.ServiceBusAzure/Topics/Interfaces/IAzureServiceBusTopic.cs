@@ -1,19 +1,15 @@
-﻿using Genocs.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Genocs.Core.CQRS.Events;
 
-namespace Genocs.ServiceBusAzure.Topics.Interfaces
+namespace Genocs.ServiceBusAzure.Topics.Interfaces;
+
+/// <summary>
+/// Todo
+/// </summary>
+public interface IAzureServiceBusTopic
 {
-    /// <summary>
-    /// Todo
-    /// </summary>
-    public interface IAzureServiceBusTopic
-    {
-        Task PublishAsync(IEvent @event);
-        Task PublishAsync(IEvent @event, Dictionary<string, object> filters);
-        Task ScheduleAsync(IEvent @event, DateTimeOffset offset);
-        Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters);
-        void Subscribe<T, TH>() where T : IEvent where TH : IEventHandler<T>;
-    }
+    Task PublishAsync(IEvent @event);
+    Task PublishAsync(IEvent @event, Dictionary<string, object> filters);
+    Task ScheduleAsync(IEvent @event, DateTimeOffset offset);
+    Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters);
+    void Subscribe<T, TH>() where T : IEvent where TH : IEventHandlerLegacy<T>;
 }

@@ -1,9 +1,8 @@
-namespace Genocs.Core.Builders
-{
-    using System;
+namespace Genocs.Core.Builders;
 
-    internal class ServiceId : IServiceId
-    {
-        public string Id { get; } = $"{Guid.NewGuid():N}";
-    }
+using System;
+
+internal class ServiceId : IServiceId
+{
+    public string Id { get; } = $"{Guid.NewGuid():N}";
 }

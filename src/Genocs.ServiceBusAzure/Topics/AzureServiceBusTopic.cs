@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Interfaces;
+﻿using Genocs.Core.CQRS.Events;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using Microsoft.Azure.ServiceBus;
@@ -6,11 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Genocs.ServiceBusAzure.Topics
 {
@@ -158,7 +154,7 @@ namespace Genocs.ServiceBusAzure.Topics
         /// <exception cref="ArgumentException"></exception>
         public void Subscribe<T, TH>()
             where T : IEvent
-            where TH : IEventHandler<T>
+            where TH : IEventHandlerLegacy<T>
         {
             var eventName = typeof(T).Name.Replace(EVENT_SUFFIX, "");
             var key = typeof(T).Name;

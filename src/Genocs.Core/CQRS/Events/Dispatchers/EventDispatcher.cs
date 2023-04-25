@@ -1,28 +1,29 @@
-namespace Genocs.Core.CQRS.Events.Dispatchers
+namespace Genocs.Core.CQRS.Events.Dispatchers;
+
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Genocs.Core.CQRS.Events;
+using Microsoft.Extensions.DependencyInjection;
+
+internal sealed class EventDispatcher : IEventDispatcher
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Genocs.Core.CQRS.Events;
-    using Microsoft.Extensions.DependencyInjection;
+    private readonly IServiceProvider _serviceProvider;
 
-    internal sealed class EventDispatcher : IEventDispatcher
+    public EventDispatcher(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : class, IEvent
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public EventDispatcher(IServiceProvider serviceProvider)
+        if (@event is null)
         {
-            _serviceProvider = serviceProvider;
+            throw new InvalidOperationException("Event cannot be null.");
         }
 
-        public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : class, IEvent
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var handlers = scope.ServiceProvider.GetServices<IEventHandler<T>>();
-            foreach (var handler in handlers)
-            {
-                await handler.HandleAsync(@event, cancellationToken);
-            }
-        }
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var handlers = scope.ServiceProvider.GetServices<IEventHandler<T>>();
+        var tasks = handlers.Select(x => x.HandleAsync(@event, cancellationToken));
+        await Task.WhenAll(tasks);
     }
 }

@@ -1,0 +1,159 @@
+version: "3.9"
+
+services:
+  # consul:
+  #   image: consul
+  #   container_name: consul
+  #   ports:
+  #     - 8500:8500
+  #   networks:
+  #     - genocs
+  #   # network_mode: host
+  #   volumes:
+  #     - consul:/consul/data
+  #
+  # fabio:
+  #   image: fabiolb/fabio
+  #   container_name: fabio
+  #   environment:
+  #   - FABIO_REGISTRY_CONSUL_ADDR=consul:8500
+  #   networks:
+  #     - genocs
+  #   # network_mode: host
+  #   ports:
+  #   - 9998:9998
+  #   - 9999:9999
+
+  #  elasticsearch:
+  #    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
+  #    container_name: elasticsearch
+  #    environment:
+  #      - cluster.name=docker-cluster
+  #      - discovery.type=single-node
+  #      - bootstrap.memory_lock=true
+  #      - http.cors.enabled=true
+  #      - http.cors.allow-origin=*
+  #      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #    ulimits:
+  #      memlock:
+  #        soft: -1
+  #        hard: -1
+  #    volumes:
+  #      - esdata:/usr/share/elasticsearch/data
+  #    ports:
+  #      - 9200:9200
+  #      - 9300:9300
+  #    networks:
+  #      - genocs
+
+  #  kibana:
+  #    image: 'docker.elastic.co/kibana/kibana:7.3.2'
+  #    container_name: kibana
+  #    environment:
+  #      SERVER_NAME: kibana.local
+  #      ELASTICSEARCH_URL: http://elasticsearch:9200
+  #    ports:
+  #      - '5601:5601'
+  #    networks:
+  #      - genocs
+
+  #  headPlugin:
+  #    image: 'mobz/elasticsearch-head:5'
+  #    container_name: head
+  #    ports:
+  #      - '9100:9100'
+  #    networks:
+  #      - genocs
+
+  #  grafana:
+  #    image: grafana/grafana
+  #    container_name: grafana
+  #    ports:
+  #      - 3000:3000
+  #    networks:
+  #      - genocs
+  #    # network_mode: host
+  #    volumes:
+  #      - grafana:/var/lib/grafana
+  #
+  #  influxdb:
+  #    image: influxdb
+  #    container_name: influxdb
+  #    ports:
+  #      - '8086:8086'
+  #    networks:
+  #      - genocs
+  #    # network_mode: host
+  #    volumes:
+  #      - influxdb:/var/lib/influxdb
+
+  #  logstash:
+  #    image: docker.elastic.co/logstash/logstash
+  #    container_name: logstash
+  #    secrets:
+  #      - source: logstash.conf
+  #        target: /usr/share/logstash/pipeline/logstash.conf
+  #      - source: logstash.yml
+  #        target: /usr/share/logstash/config/logstash.yml
+  #      - source: logstash.keystore
+  #        target: /usr/share/logstash/config/logstash.keystore
+  #      - source: ca.crt
+  #        target: /usr/share/logstash/config/certs/ca/ca.crt
+  #
+  #    healthcheck:
+  #      test: bin/logstash -t
+  #      interval: 60s
+  #      timeout: 50s
+  #      retries: 5
+  #    networks:
+  #      - genocs
+  #    depends_on: ['es01', 'es02']
+
+  #  jaeger:
+  #    image: jaegertracing/all-in-one
+  #    container_name: jaeger
+  #    ports:
+  #      - 5775:5775/udp
+  #      - 5778:5778
+  #      - 6831:6831/udp
+  #      - 6832:6832/udp
+  #      - 9411:9411
+  #      - 14268:14268
+  #      - 16686:16686
+  #    networks:
+  #      - genocs
+  #    # network_mode: host
+
+#  sqlserver:
+#    image: "mcr.microsoft.com/mssql/server:2022-latest"
+#    container_name: sql_server
+#    ports:
+#      - 1433:1433
+#    environment:
+#      SA_PASSWORD: "Vittoria02!"
+#      ACCEPT_EULA: "Y"
+#    volumes:
+#      - mssqlsystem:/var/opt/mssql
+#      - mssqluser:/var/opt/sqlserver
+#    networks:
+#      - genocs
+#
+
+networks:
+  genocs:
+    name: genocs-network
+
+volumes:
+  #  consul:
+  #    driver: local
+  #  esdata:
+  #    driver: local
+  #  grafana:
+  #    driver: local
+  #  influxdb:
+  #    driver: local
+# mssqlsystem:
+#   driver: local
+# mssqluser:
+#   driver: local
+

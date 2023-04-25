@@ -1,10 +1,9 @@
-﻿namespace Genocs.Core.Dependency
-{
-    /// <summary>
-    /// All classes implement this interface are automatically registered to dependency injection as transient object.
-    /// </summary>
-    public interface ITransientDependency
-    {
+﻿namespace Genocs.Core.Dependency;
 
-    }
+/// <summary>
+/// All classes implement this interface are automatically registered to dependency injection as transient object.
+/// </summary>
+public interface ITransientDependency
+{
+
 }

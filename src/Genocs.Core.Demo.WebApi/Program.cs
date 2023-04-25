@@ -1,7 +1,7 @@
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
@@ -19,21 +19,9 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Host.UseSerilog((ctx, lc) =>
-{
-    lc.WriteTo.Console();
-
-    string? applicationInsightsConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
-
-    if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
-    {
-        lc.WriteTo.ApplicationInsights(new TelemetryConfiguration
-        {
-            ConnectionString = applicationInsightsConnectionString
-        }, TelemetryConverter.Traces);
-    }
-});
+builder.Host
+        .UseLogging();
+//        .UseVault();
 
 
 // add services to DI container

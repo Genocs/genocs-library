@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.Serialization;
+    using Genocs.Core.Exceptions;
 
     /// <summary>
     /// This exception is thrown if an entity excepted to be found but not found.

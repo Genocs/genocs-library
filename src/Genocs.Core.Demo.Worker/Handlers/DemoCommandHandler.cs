@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Interfaces;
+﻿using Genocs.Core.CQRS.Commands;
+using Genocs.Core.Demo.Contracts;
 
 namespace Genocs.Core.Demo.Worker.Handlers;
 
@@ -12,7 +12,7 @@ public class DemoCommandHandler : ICommandHandler<DemoCommand>
         _logger = logger;
     }
 
-    public Task HandleCommand(DemoCommand command)
+    public Task HandleAsync(DemoCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"DemoCommand '{command.Payload}' processed!");
         // Do something with the message here
