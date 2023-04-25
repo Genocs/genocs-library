@@ -16,7 +16,7 @@
 		<ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
-		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDb\Genocs.MessageBrokers.Outbox.MongoDb.csproj" />
+		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
