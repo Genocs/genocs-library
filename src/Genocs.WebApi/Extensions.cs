@@ -3,6 +3,7 @@ using Genocs.Core.Builders;
 using Genocs.WebApi;
 using Genocs.WebApi.Exceptions;
 using Genocs.WebApi.Formatters;
+using Genocs.WebApi.Options;
 using Genocs.WebApi.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -91,7 +92,7 @@ public static class Extensions
         builder.Services.AddSingleton(jsonSerializer);
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSingleton(new WebApiEndpointDefinitions());
-        var options = builder.GetOptions<WebApiOptions>(sectionName);
+        var options = builder.GetOptions<WebApiSettings>(sectionName);
         builder.Services.AddSingleton(options);
         _bindRequestFromRoute = options.BindRequestFromRoute;
 

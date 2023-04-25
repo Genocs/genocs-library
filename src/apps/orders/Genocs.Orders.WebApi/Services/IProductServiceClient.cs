@@ -8,7 +8,7 @@ namespace Genocs.Orders.WebApi.Services;
 public interface IProductServiceClient
 {
     /// <summary>
-    /// Get the product result based on the productId
+    /// Get the product based on the productId
     /// </summary>
     /// <param name="productId">The ProductId</param>
     /// <returns>The Product Response</returns>

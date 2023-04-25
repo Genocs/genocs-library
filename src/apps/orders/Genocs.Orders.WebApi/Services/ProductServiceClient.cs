@@ -2,6 +2,7 @@ using Genocs.HTTP;
 using Genocs.HTTP.Options;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Secrets.Vault;
+using Genocs.Secrets.Vault.Options;
 using Genocs.WebApi.Security;
 
 namespace Genocs.Orders.WebApi.Services;
@@ -26,7 +27,7 @@ public class ProductServiceClient : IProductServiceClient
     public ProductServiceClient(IHttpClient client,
                                 ICertificatesService certificatesService,
                                 HttpClientSettings httpClientOptions,
-                                VaultOptions vaultOptions,
+                                VaultSettings vaultOptions,
                                 SecurityOptions securityOptions)
     {
         _client = client;

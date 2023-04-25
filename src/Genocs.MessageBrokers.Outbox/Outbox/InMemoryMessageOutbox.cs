@@ -1,4 +1,5 @@
 using Genocs.MessageBrokers.Outbox.Messages;
+using Genocs.MessageBrokers.Outbox.Options;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
@@ -15,7 +16,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
     private readonly ILogger<InMemoryMessageOutbox> _logger;
     private readonly int _expiry;
 
-    public InMemoryMessageOutbox(OutboxOptions options, ILogger<InMemoryMessageOutbox> logger)
+    public InMemoryMessageOutbox(OutboxSettings options, ILogger<InMemoryMessageOutbox> logger)
     {
         _logger = logger;
         _expiry = options.Expiry;

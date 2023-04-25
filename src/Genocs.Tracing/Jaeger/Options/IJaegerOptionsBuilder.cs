@@ -1,4 +1,4 @@
-namespace Genocs.Tracing.Jaeger;
+namespace Genocs.Tracing.Jaeger.Options;
 
 public interface IJaegerOptionsBuilder
 {
@@ -10,5 +10,5 @@ public interface IJaegerOptionsBuilder
     IJaegerOptionsBuilder WithSampler(string sampler);
     IJaegerOptionsBuilder WithMaxTracesPerSecond(double maxTracesPerSecond);
     IJaegerOptionsBuilder WithSamplingRate(double samplingRate);
-    JaegerOptions Build();
+    JaegerSettings Build();
 }

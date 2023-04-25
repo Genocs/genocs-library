@@ -1,6 +1,6 @@
 namespace Genocs.Logging.Settings;
 
-public class ConsoleOptions
+public class ConsoleSettings
 {
     public bool Enabled { get; set; }
 }

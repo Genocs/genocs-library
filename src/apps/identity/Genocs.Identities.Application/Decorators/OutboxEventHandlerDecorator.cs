@@ -2,6 +2,7 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Events;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
+using Genocs.MessageBrokers.Outbox.Options;
 
 namespace Genocs.Identities.Application.Decorators;
 
@@ -15,7 +16,7 @@ internal sealed class OutboxEventHandlerDecorator<TEvent> : IEventHandler<TEvent
     private readonly bool _enabled;
 
     public OutboxEventHandlerDecorator(IEventHandler<TEvent> handler, IMessageOutbox outbox,
-        OutboxOptions outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
+        OutboxSettings outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
     {
         _handler = handler;
         _outbox = outbox;

@@ -21,7 +21,7 @@ public static class Extensions
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
         var builder = GenocsBuilder.Create(services, configuration);
-        var appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
+        var appOptions = builder.GetOptions<AppSettings>(AppSettings.Position);
         services.AddSingleton(appOptions);
 
         builder.Services.AddMemoryCache();

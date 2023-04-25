@@ -1,10 +1,12 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
+using Genocs.Discovery.Consul.Options;
 using Genocs.HTTP.Options;
 using Genocs.HTTP.RestEase.Builders;
 using Genocs.HTTP.RestEase.Options;
 using Genocs.HTTP.RestEase.Serializers;
 using Genocs.LoadBalancing.Fabio;
+using Genocs.LoadBalancing.Fabio.Options;
 using Microsoft.Extensions.DependencyInjection;
 using RestEase;
 
@@ -43,7 +45,7 @@ public static class Extensions
     }
 
     public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        RestEaseSettings options, ConsulOptions consulOptions, FabioOptions fabioOptions,
+        RestEaseSettings options, ConsulSettings consulOptions, FabioSettings fabioOptions,
         HttpClientSettings httpClientOptions)
         where T : class
         => builder.AddServiceClient<T>(serviceName, options,

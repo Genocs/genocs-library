@@ -34,11 +34,11 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(appSectionName))
         {
-            appSectionName = AppOptions.Position;
+            appSectionName = AppSettings.Position;
         }
 
         var metricsOptions = builder.GetOptions<MetricsOptions>(metricsSectionName);
-        var appOptions = builder.GetOptions<AppOptions>(appSectionName);
+        var appOptions = builder.GetOptions<AppSettings>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
     }
@@ -53,14 +53,14 @@ public static class Extensions
         }
 
         var metricsOptions = buildOptions(new MetricsOptionsBuilder()).Build();
-        var appOptions = builder.GetOptions<AppOptions>(appSectionName);
+        var appOptions = builder.GetOptions<AppSettings>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
     }
 
     [Description("For the time being it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(this IGenocsBuilder builder, MetricsOptions metricsOptions,
-        AppOptions appOptions)
+        AppSettings appOptions)
     {
         builder.Services.AddSingleton(metricsOptions);
         if (!builder.TryRegister(RegistryName) || !metricsOptions.Enabled || _initialized)

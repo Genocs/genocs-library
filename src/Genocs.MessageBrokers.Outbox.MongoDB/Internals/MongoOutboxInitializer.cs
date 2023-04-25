@@ -1,5 +1,6 @@
 using Genocs.Common.Types;
 using Genocs.MessageBrokers.Outbox.Messages;
+using Genocs.MessageBrokers.Outbox.Options;
 using MongoDB.Driver;
 
 namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;
@@ -7,9 +8,9 @@ namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;
 internal sealed class MongoOutboxInitializer : IInitializer
 {
     private readonly IMongoDatabase _database;
-    private readonly OutboxOptions _options;
+    private readonly OutboxSettings _options;
 
-    public MongoOutboxInitializer(IMongoDatabase database, OutboxOptions options)
+    public MongoOutboxInitializer(IMongoDatabase database, OutboxSettings options)
     {
         _database = database;
         _options = options;

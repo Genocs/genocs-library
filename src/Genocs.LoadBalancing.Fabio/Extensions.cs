@@ -1,11 +1,13 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
 using Genocs.Discovery.Consul.Models;
+using Genocs.Discovery.Consul.Options;
 using Genocs.HTTP;
 using Genocs.HTTP.Options;
 using Genocs.LoadBalancing.Fabio.Builders;
 using Genocs.LoadBalancing.Fabio.Http;
 using Genocs.LoadBalancing.Fabio.MessageHandlers;
+using Genocs.LoadBalancing.Fabio.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.LoadBalancing.Fabio;
@@ -23,8 +25,8 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var fabioOptions = builder.GetOptions<FabioOptions>(sectionName);
-        var consulOptions = builder.GetOptions<ConsulOptions>(consulSectionName);
+        var fabioOptions = builder.GetOptions<FabioSettings>(sectionName);
+        var consulOptions = builder.GetOptions<ConsulSettings>(consulSectionName);
         var httpClientOptions = builder.GetOptions<HttpClientSettings>(httpClientSectionName);
         return builder.AddFabio(fabioOptions, httpClientOptions,
             b => b.AddConsul(consulOptions, httpClientOptions));
@@ -40,11 +42,11 @@ public static class Extensions
             b => b.AddConsul(buildConsulOptions, httpClientOptions));
     }
 
-    public static IGenocsBuilder AddFabio(this IGenocsBuilder builder, FabioOptions fabioOptions,
-        ConsulOptions consulOptions, HttpClientSettings httpClientOptions)
+    public static IGenocsBuilder AddFabio(this IGenocsBuilder builder, FabioSettings fabioOptions,
+        ConsulSettings consulOptions, HttpClientSettings httpClientOptions)
         => builder.AddFabio(fabioOptions, httpClientOptions, b => b.AddConsul(consulOptions, httpClientOptions));
 
-    private static IGenocsBuilder AddFabio(this IGenocsBuilder builder, FabioOptions fabioOptions,
+    private static IGenocsBuilder AddFabio(this IGenocsBuilder builder, FabioSettings fabioOptions,
         HttpClientSettings httpClientOptions, Action<IGenocsBuilder> registerConsul)
     {
         registerConsul(builder);
@@ -86,7 +88,7 @@ public static class Extensions
 
     public static void AddFabioHttpClient(this IGenocsBuilder builder, string clientName, string serviceName)
         => builder.Services.AddHttpClient<IHttpClient, FabioHttpClient>(clientName)
-            .AddHttpMessageHandler(c => new FabioMessageHandler(c.GetRequiredService<FabioOptions>(), serviceName));
+            .AddHttpMessageHandler(c => new FabioMessageHandler(c.GetRequiredService<FabioSettings>(), serviceName));
 
     private static void UpdateConsulRegistration(this IServiceCollection services,
         ServiceRegistration registration)

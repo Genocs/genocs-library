@@ -1,6 +1,10 @@
-namespace Genocs.Secrets.Vault;
+namespace Genocs.Secrets.Vault.Options;
 
-public class VaultOptions
+
+/// <summary>
+/// The vault Setting definition
+/// </summary>
+public class VaultSettings
 {
     public bool Enabled { get; set; }
     public string Url { get; set; }
@@ -11,11 +15,11 @@ public class VaultOptions
     public string Password { get; set; }
     public bool RevokeLeaseOnShutdown { get; set; }
     public int RenewalsInterval { get; set; }
-    public KeyValueOptions Kv { get; set; }
-    public PkiOptions Pki { get; set; }
-    public IDictionary<string, LeaseOptions> Lease { get; set; }
+    public KeyValueSettings Kv { get; set; }
+    public PkiSettings Pki { get; set; }
+    public IDictionary<string, LeaseSettings> Lease { get; set; }
 
-    public class KeyValueOptions
+    public class KeyValueSettings
     {
         public bool Enabled { get; set; }
         public int EngineVersion { get; set; } = 2;
@@ -24,7 +28,7 @@ public class VaultOptions
         public int? Version { get; set; }
     }
 
-    public class LeaseOptions
+    public class LeaseSettings
     {
         public bool Enabled { get; set; }
         public string Type { get; set; }
@@ -34,7 +38,7 @@ public class VaultOptions
         public IDictionary<string, string> Templates { get; set; }
     }
 
-    public class PkiOptions
+    public class PkiSettings
     {
         public bool Enabled { get; set; }
         public string RoleName { get; set; }

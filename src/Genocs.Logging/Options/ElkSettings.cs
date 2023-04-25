@@ -1,6 +1,6 @@
 namespace Genocs.Logging.Settings;
 
-public class ElkOptions
+public class ElkSettings
 {
     public bool Enabled { get; set; }
     public bool BasicAuthEnabled { get; set; }

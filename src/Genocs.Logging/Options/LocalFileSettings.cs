@@ -1,6 +1,6 @@
 namespace Genocs.Logging.Settings;
 
-public class LocalFileOptions
+public class LocalFileSettings
 {
     public bool Enabled { get; set; }
     public string? Path { get; set; }

@@ -5,18 +5,18 @@ namespace Genocs.HTTP;
 public interface IHttpClient
 {
     Task<HttpResponseMessage> GetAsync(string uri);
-    Task<T> GetAsync<T>(string uri, IHttpClientSerializer serializer = null);
-    Task<HttpResult<T>> GetResultAsync<T>(string uri, IHttpClientSerializer serializer = null);
-    Task<HttpResponseMessage> PostAsync(string uri, object data = null, IHttpClientSerializer serializer = null);
+    Task<T> GetAsync<T>(string uri, IHttpClientSerializer? serializer = null);
+    Task<HttpResult<T>> GetResultAsync<T>(string uri, IHttpClientSerializer? serializer = null);
+    Task<HttpResponseMessage> PostAsync(string uri, object data = null, IHttpClientSerializer? serializer = null);
     Task<HttpResponseMessage> PostAsync(string uri, HttpContent content);
-    Task<T> PostAsync<T>(string uri, object data = null, IHttpClientSerializer serializer = null);
-    Task<T> PostAsync<T>(string uri, HttpContent content, IHttpClientSerializer serializer = null);
-    Task<HttpResult<T>> PostResultAsync<T>(string uri, object data = null, IHttpClientSerializer serializer = null);
-    Task<HttpResult<T>> PostResultAsync<T>(string uri, HttpContent content, IHttpClientSerializer serializer = null);
-    Task<HttpResponseMessage> PutAsync(string uri, object data = null, IHttpClientSerializer serializer = null);
+    Task<T> PostAsync<T>(string uri, object data = null, IHttpClientSerializer? serializer = null);
+    Task<T> PostAsync<T>(string uri, HttpContent content, IHttpClientSerializer? serializer = null);
+    Task<HttpResult<T>> PostResultAsync<T>(string uri, object data = null, IHttpClientSerializer? serializer = null);
+    Task<HttpResult<T>> PostResultAsync<T>(string uri, HttpContent content, IHttpClientSerializer? serializer = null);
+    Task<HttpResponseMessage> PutAsync(string uri, object data = null, IHttpClientSerializer? serializer = null);
     Task<HttpResponseMessage> PutAsync(string uri, HttpContent content);
-    Task<T> PutAsync<T>(string uri, object data = null, IHttpClientSerializer serializer = null);
-    Task<T> PutAsync<T>(string uri, HttpContent content, IHttpClientSerializer serializer = null);
+    Task<T> PutAsync<T>(string uri, object data = null, IHttpClientSerializer? serializer = null);
+    Task<T> PutAsync<T>(string uri, HttpContent content, IHttpClientSerializer? serializer = null);
     Task<HttpResult<T>> PutResultAsync<T>(string uri, object data = null, IHttpClientSerializer serializer = null);
     Task<HttpResult<T>> PutResultAsync<T>(string uri, HttpContent content, IHttpClientSerializer serializer = null);
     Task<HttpResponseMessage> PatchAsync(string uri, object data = null, IHttpClientSerializer serializer = null);

@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Genocs.Secrets.Vault.Options;
 using VaultSharp;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SecretsEngines.PKI;
@@ -10,12 +11,12 @@ namespace Genocs.Secrets.Vault.Internals;
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {
     private readonly IVaultClient _client;
-    private readonly VaultOptions.PkiOptions _options;
+    private readonly VaultSettings.PkiSettings _options;
     private readonly CertificateFormat _certificateFormat;
     private readonly PrivateKeyFormat _privateKeyFormat;
     private readonly string _mountPoint;
 
-    public CertificatesIssuer(IVaultClient client, VaultOptions options)
+    public CertificatesIssuer(IVaultClient client, VaultSettings options)
     {
         _client = client;
         _options = options.Pki;

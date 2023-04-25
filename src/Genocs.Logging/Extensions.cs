@@ -36,11 +36,11 @@ public static class Extensions
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppOptions.Position;
+                    appSectionName = AppSettings.Position;
                 }
 
-                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
+                var loggerOptions = context.Configuration.GetOptions<LoggerSettings>(loggerSectionName);
+                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
@@ -51,7 +51,7 @@ public static class Extensions
         string endpointRoute = "~/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
-    private static void MapOptions(LoggerOptions loggerOptions, AppOptions appOptions,
+    private static void MapOptions(LoggerSettings loggerOptions, AppSettings appOptions,
         LoggerConfiguration loggerConfiguration, string environmentName)
     {
         LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
@@ -83,14 +83,14 @@ public static class Extensions
         Configure(loggerConfiguration, loggerOptions);
     }
 
-    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
+    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerSettings options)
     {
-        var consoleOptions = options.Console ?? new ConsoleOptions();
-        var fileOptions = options.File ?? new LocalFileOptions();
-        var elkOptions = options.Elk ?? new ElkOptions();
-        var seqOptions = options.Seq ?? new SeqOptions();
-        var lokiOptions = options.Loki ?? new LokiOptions();
-        var azureOptions = options.Azure ?? new AzureOptions();
+        var consoleOptions = options.Console ?? new ConsoleSettings();
+        var fileOptions = options.File ?? new LocalFileSettings();
+        var elkOptions = options.Elk ?? new ElkSettings();
+        var seqOptions = options.Seq ?? new SeqSettings();
+        var lokiOptions = options.Loki ?? new LokiSettings();
+        var azureOptions = options.Azure ?? new AzureSettings();
 
         // console
         if (consoleOptions.Enabled)

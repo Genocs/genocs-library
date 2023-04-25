@@ -1,14 +1,16 @@
+using Genocs.Discovery.Consul.Options;
+
 namespace Genocs.Discovery.Consul.MessageHandlers;
 
 internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
-    private readonly ConsulOptions _options;
+    private readonly ConsulSettings _options;
     private readonly string _serviceName;
     private readonly bool? _overrideRequestUri;
 
     public ConsulServiceDiscoveryMessageHandler(IConsulServicesRegistry servicesRegistry,
-        ConsulOptions options, string serviceName = null, bool? overrideRequestUri = null)
+        ConsulSettings options, string serviceName = null, bool? overrideRequestUri = null)
     {
         if (string.IsNullOrWhiteSpace(options.Url))
         {

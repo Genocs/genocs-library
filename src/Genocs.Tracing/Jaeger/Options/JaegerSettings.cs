@@ -1,6 +1,6 @@
-namespace Genocs.Tracing.Jaeger;
+namespace Genocs.Tracing.Jaeger.Options;
 
-public class JaegerOptions
+public class JaegerSettings
 {
     public bool Enabled { get; set; }
     public string? ServiceName { get; set; }
@@ -12,9 +12,9 @@ public class JaegerOptions
     public double SamplingRate { get; set; } = 0.2;
     public IEnumerable<string>? ExcludePaths { get; set; }
     public string? Sender { get; set; }
-    public HttpSenderOptions? HttpSender { get; set; }
+    public HttpSenderSettings? HttpSender { get; set; }
 
-    public class HttpSenderOptions
+    public class HttpSenderSettings
     {
         public string? Endpoint { get; set; }
         public string? AuthToken { get; set; }

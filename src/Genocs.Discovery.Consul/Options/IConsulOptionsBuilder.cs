@@ -1,4 +1,4 @@
-namespace Genocs.Discovery.Consul;
+namespace Genocs.Discovery.Consul.Options;
 
 public interface IConsulOptionsBuilder
 {
@@ -11,5 +11,5 @@ public interface IConsulOptionsBuilder
     IConsulOptionsBuilder WithPingInterval(string pingInterval);
     IConsulOptionsBuilder WithRemoteAfterInterval(string remoteAfterInterval);
     IConsulOptionsBuilder WithSkippingLocalhostDockerDnsReplace(bool skipLocalhostDockerDnsReplace);
-    ConsulOptions Build();
+    ConsulSettings Build();
 }

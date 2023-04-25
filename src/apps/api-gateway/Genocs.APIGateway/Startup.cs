@@ -85,7 +85,7 @@ internal class Startup
         {
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
+                await context.Response.WriteAsync(context.RequestServices.GetService<AppSettings>()?.Name ?? "Service");
             });
             endpoints.MapReverseProxy();
         });

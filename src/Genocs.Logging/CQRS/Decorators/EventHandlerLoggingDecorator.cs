@@ -63,8 +63,11 @@ internal sealed class EventHandlerLoggingDecorator<TEvent> : IEventHandler<TEven
         }
     }
 
+    /// <summary>
+    /// Null Message to log template
+    /// </summary>
     private class EmptyMessageToLogTemplateMapper : IMessageToLogTemplateMapper
     {
-        public HandlerLogTemplate Map<TMessage>(TMessage message) where TMessage : class => null;
+        public HandlerLogTemplate? Map<TMessage>(TMessage message) where TMessage : class => null;
     }
 }

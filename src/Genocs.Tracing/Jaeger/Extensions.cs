@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.Tracing.Jaeger.Builders;
+using Genocs.Tracing.Jaeger.Options;
 using Genocs.Tracing.Jaeger.Tracers;
 using Jaeger;
 using Jaeger.Reporters;
@@ -29,7 +30,7 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<JaegerOptions>(sectionName);
+        var options = builder.GetOptions<JaegerSettings>(sectionName);
         return builder.AddJaeger(options, sectionName, openTracingBuilder);
     }
 
@@ -42,7 +43,7 @@ public static class Extensions
         return builder.AddJaeger(options, sectionName, openTracingBuilder);
     }
 
-    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, JaegerOptions options,
+    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, JaegerSettings options,
         string sectionName = SectionName, Action<IOpenTracingBuilder> openTracingBuilder = null)
     {
         if (Interlocked.Exchange(ref _initialized, 1) == 1)
@@ -109,7 +110,7 @@ public static class Extensions
         return builder;
     }
 
-    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderOptions? options)
+    private static HttpSender BuildHttpSender(JaegerSettings.HttpSenderSettings? options)
     {
         if (options is null)
         {
@@ -149,12 +150,12 @@ public static class Extensions
     {
         // Could be extended with some additional middleware
         using var scope = app.ApplicationServices.CreateScope();
-        var options = scope.ServiceProvider.GetRequiredService<JaegerOptions>();
+        var options = scope.ServiceProvider.GetRequiredService<JaegerSettings>();
 
         return app;
     }
 
-    private static ISampler GetSampler(JaegerOptions options)
+    private static ISampler GetSampler(JaegerSettings options)
     {
         switch (options.Sampler)
         {

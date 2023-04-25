@@ -1,6 +1,6 @@
-namespace Genocs.Discovery.Consul;
+namespace Genocs.Discovery.Consul.Options;
 
-public class ConsulOptions
+public class ConsulSettings
 {
     public bool Enabled { get; set; }
     public string Url { get; set; }
@@ -15,9 +15,9 @@ public class ConsulOptions
     public IDictionary<string, string> Meta { get; set; }
     public bool EnableTagOverride { get; set; }
     public bool SkipLocalhostDockerDnsReplace { get; set; }
-    public ConnectOptions Connect { get; set; }
+    public ConnectSettings Connect { get; set; }
 
-    public class ConnectOptions
+    public class ConnectSettings
     {
         public bool Enabled { get; set; }
     }

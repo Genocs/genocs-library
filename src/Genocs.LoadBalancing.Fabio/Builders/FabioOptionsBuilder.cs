@@ -1,10 +1,10 @@
-using Genocs.LoadBalancing.Fabio;
+using Genocs.LoadBalancing.Fabio.Options;
 
 namespace Genocs.LoadBalancing.Fabio.Builders;
 
 public class FabioOptionsBuilder : IFabioOptionsBuilder
 {
-    private FabioOptions _options = new();
+    private FabioSettings _options = new();
 
     public IFabioOptionsBuilder Enable(bool enabled)
     {
@@ -24,5 +24,5 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
         return this;
     }
 
-    public FabioOptions Build() => _options;
+    public FabioSettings Build() => _options;
 }

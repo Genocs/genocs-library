@@ -25,7 +25,7 @@
 /// </list> 
 /// 
 /// </summary>
-public class LokiOptions
+public class LokiSettings
 {
     /// <summary>
     /// Whether or not to enable Loki Logging

@@ -1,6 +1,6 @@
-namespace Genocs.LoadBalancing.Fabio;
+namespace Genocs.LoadBalancing.Fabio.Options;
 
-public class FabioOptions
+public class FabioSettings
 {
     public bool Enabled { get; set; }
     public string Url { get; set; }

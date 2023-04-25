@@ -1,4 +1,5 @@
 using Genocs.MessageBrokers.Outbox.Messages;
+using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.Persistence.MongoDb.Legacy;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -29,7 +30,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
     public MongoMessageOutbox(IMongoSessionFactory sessionFactory,
         IMongoRepository<InboxMessage, string> inboxRepository,
         IMongoRepository<OutboxMessage, string> outboxRepository,
-        OutboxOptions options, ILogger<MongoMessageOutbox> logger)
+        OutboxSettings options, ILogger<MongoMessageOutbox> logger)
     {
         _sessionFactory = sessionFactory;
         _inboxRepository = inboxRepository;

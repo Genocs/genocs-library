@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.Outbox.Configurators;
+using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.MessageBrokers.Outbox.Outbox;
 using Genocs.MessageBrokers.Outbox.Processors;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ public static class Extensions
             return builder;
         }
 
-        var options = builder.GetOptions<OutboxOptions>(sectionName);
+        var options = builder.GetOptions<OutboxSettings>(sectionName);
         builder.Services.AddSingleton(options);
         var configurator = new MessageOutboxConfigurator(builder, options);
 

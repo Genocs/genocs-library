@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Genocs.Secrets.Vault.Options;
 using VaultSharp;
 
 namespace Genocs.Secrets.Vault.Internals;
@@ -6,9 +7,9 @@ namespace Genocs.Secrets.Vault.Internals;
 internal sealed class KeyValueSecrets : IKeyValueSecrets
 {
     private readonly IVaultClient _client;
-    private readonly VaultOptions _options;
+    private readonly VaultSettings _options;
 
-    public KeyValueSecrets(IVaultClient client, VaultOptions options)
+    public KeyValueSecrets(IVaultClient client, VaultSettings options)
     {
         _client = client;
         _options = options;
