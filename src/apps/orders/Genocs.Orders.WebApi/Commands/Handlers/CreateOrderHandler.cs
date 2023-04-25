@@ -14,18 +14,18 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
     private readonly IMongoRepository<Order, Guid> _repository;
     private readonly IBusPublisher _publisher;
     private readonly IMessageOutbox _outbox;
-    private readonly IPricingServiceClient _pricingServiceClient;
+    private readonly IProductServiceClient _productServiceClient;
     private readonly ILogger<CreateOrderHandler> _logger;
     private readonly ITracer _tracer;
 
     public CreateOrderHandler(IMongoRepository<Order, Guid> repository, IBusPublisher publisher,
-        IMessageOutbox outbox, IPricingServiceClient pricingServiceClient, ITracer tracer,
+        IMessageOutbox outbox, IProductServiceClient productServiceClient, ITracer tracer,
         ILogger<CreateOrderHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
         _outbox = outbox;
-        _pricingServiceClient = pricingServiceClient;
+        _productServiceClient = productServiceClient;
         _tracer = tracer;
         _logger = logger;
     }
@@ -38,16 +38,16 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
             throw new InvalidOperationException($"Order with given id: {command.OrderId} already exists!");
         }
 
-        _logger.LogInformation($"Fetching a price for order with id: {command.OrderId}...");
-        var pricingDto = await _pricingServiceClient.GetAsync(command.OrderId);
-        if (pricingDto is null)
+        _logger.LogInformation($"Fetching the product for order with id: {command.OrderId}...");
+        var productDto = await _productServiceClient.GetAsync(command.ProductId);
+        if (productDto is null)
         {
-            throw new InvalidOperationException($"Pricing was not found for order: {command.OrderId}");
+            throw new InvalidOperationException($"Product was not found for order: {command.ProductId}");
         }
 
-        _logger.LogInformation($"Order with id: {command.OrderId} will cost: {pricingDto.TotalAmount}$.");
+        _logger.LogInformation($"Order with id: {command.OrderId} will cost: {productDto.UnitPrice}$.");
 
-        var order = new Order(command.OrderId, command.CustomerId, pricingDto.TotalAmount);
+        var order = new Order(command.OrderId, command.CustomerId, productDto.UnitPrice);
         await _repository.AddAsync(order);
         
         _logger.LogInformation($"Created an order with id: {command.OrderId}, customer: {command.CustomerId}.");

@@ -87,11 +87,24 @@ POST {{identity}}/refresh-tokens/revoke
 }
 
 
+### Get list of products using the API Gateway
+GET {{apigateway}}/products-service/products/ec5983de-c667-4ad3-8e0e-d42e653572b9
+
+
+### Create new prodcut using the API Gateway
+POST {{apigateway}}/products-service/products
+
+{
+  "unitPrice" : 50.12,
+  "sku": "ABC_123"
+}
+
 
 ### Create a new order using the API Gateway
 POST {{apigateway}}/orders-service/orders
 Content-Type: application/json
 
 {
-  "CustomerId": "75707531-d8ed-42e0-8811-1f5184d424b9"
+  "CustomerId": "ec5983de-c667-4ad3-8e0e-d42e653572b9",
+  "productId" : "ec5983de-c667-4ad3-8e0e-d42e653572b9"
 }

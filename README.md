@@ -6,7 +6,6 @@
 | Github Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
 | Azure CI/CD                 | work in progress |
 | Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
-
 | NuGet package Version       | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
 | NuGet package Downloads     | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
 
@@ -28,6 +27,9 @@ Building a software library to be cloud agnostic has several advantages. First, 
 ***Cloud agnostic by use of Containers***
 
 The advantages of using containers are numerous. Containers provide a lightweight, portable, and isolated environment for applications to run in, allowing them to be easily moved between different systems. This makes it easier to deploy applications quickly and reliably across different environments. Additionally, containers can help reduce resource consumption by running multiple applications on the same host, as each container is isolated from the others. This helps to improve efficiency and scalability. Finally, containers provide an additional layer of security, as they are isolated from the underlying operating system and other applications.
+
+![Overview](./assets/Genocs-Library-Overview.drawio.png)
+
 
 ---
 
@@ -71,7 +73,7 @@ Core project contains general purpose functionalities to be used on DDD service.
 
 ## HTTP
 
-This library implements HTTP client functionalities.
+This library implements WebAPI client HTTP functionalities.
 
 ## Logging
 

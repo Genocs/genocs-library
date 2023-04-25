@@ -8,9 +8,9 @@ namespace Genocs.Orders.WebApi.Services;
 
 
 /// <summary>
-/// The Pricing WebApi client implementation
+/// The Product WebApi client implementation
 /// </summary>
-public class PricingServiceClient : IPricingServiceClient
+public class ProductServiceClient : IProductServiceClient
 {
     private readonly IHttpClient _client;
     private readonly string _url;
@@ -23,14 +23,14 @@ public class PricingServiceClient : IPricingServiceClient
     /// <param name="httpClientOptions"></param>
     /// <param name="vaultOptions"></param>
     /// <param name="securityOptions"></param>
-    public PricingServiceClient(IHttpClient client,
+    public ProductServiceClient(IHttpClient client,
                                 ICertificatesService certificatesService,
                                 HttpClientSettings httpClientOptions,
                                 VaultOptions vaultOptions,
                                 SecurityOptions securityOptions)
     {
         _client = client;
-        _url = httpClientOptions.Services["pricing"];
+        _url = httpClientOptions.Services["products"];
         if (!vaultOptions.Enabled || vaultOptions.Pki?.Enabled != true ||
             securityOptions.Certificate?.Enabled != true)
         {
@@ -49,10 +49,10 @@ public class PricingServiceClient : IPricingServiceClient
     }
 
     /// <summary>
-    /// Get the pricing result based on the orderId
+    /// Get the product result based on the productId
     /// </summary>
-    /// <param name="orderId">The OrderId</param>
-    /// <returns>The Pricing Response</returns>
-    public Task<PricingDto> GetAsync(Guid orderId)
-        => _client.GetAsync<PricingDto>($"{_url}/orders/{orderId}/pricing");
+    /// <param name="productId">The ProductId</param>
+    /// <returns>The Product Response</returns>
+    public Task<ProductDto> GetAsync(Guid productId)
+        => _client.GetAsync<ProductDto>($"{_url}/products/{productId}");
 }
