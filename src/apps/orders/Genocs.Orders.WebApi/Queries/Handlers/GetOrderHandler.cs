@@ -14,7 +14,13 @@ public class GetOrderHandler : IQueryHandler<GetOrder, OrderDto>
         _repository = repository;
     }
 
-    public async Task<OrderDto> HandleAsync(GetOrder query, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// GetOrder query handler
+    /// </summary>
+    /// <param name="query">The query</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns></returns>
+    public async Task<OrderDto?> HandleAsync(GetOrder query, CancellationToken cancellationToken = default)
     {
         var order = await _repository.GetAsync(query.OrderId);
 

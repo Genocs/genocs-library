@@ -16,6 +16,11 @@ EXPOSE 443
 #FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /src
+COPY ["src/Genocs.Core", "src/Genocs.Core/"]
+COPY ["src/Genocs.Common", "src/Genocs.Common/"]
+COPY ["src/Genocs.Persistence.MongoDb", "src/Genocs.Persistence.MongoDb/"]
+COPY ["src/Genocs.Core.Demo.Domain", "src/Genocs.Core.Demo.Domain/"]
+COPY ["src/Genocs.Logging", "src/Genocs.Logging/"]
 COPY ["src/Genocs.Core.Demo.WebApi", "src/Genocs.Core.Demo.WebApi/"]
 COPY ["src/Genocs.Core.Demo.Contracts", "src/Genocs.Core.Demo.Contracts/"]
 COPY ["src/Genocs.Monitoring", "src/Genocs.Monitoring/"]
