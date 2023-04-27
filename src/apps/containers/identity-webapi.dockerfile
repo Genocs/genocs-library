@@ -16,22 +16,18 @@ EXPOSE 443
 #FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /src
-COPY ["src/Genocs.Persistence.MongoDb", "src/Genocs.Persistence.MongoDb/"]
-
-COPY ["src/apps/identity/Genocs.Identities.WebApi", "src/Genocs.Identities.WebApi/"]
-COPY ["src/apps/identity/Genocs.Identities.Application", "src/Genocs.Identities.Application/"]
+COPY ["apps/identity/Genocs.Identities.WebApi", "Genocs.Identities.WebApi/"]
+COPY ["apps/identity/Genocs.Identities.Application", "Genocs.Identities.Application/"]
 
 
-WORKDIR "/src/src/Genocs.Identities.WebApi"
+WORKDIR "/src/Genocs.Identities.WebApi"
 
-RUN dotnet restore "Genocs.Identities.WebApi.csproj"
-
-RUN dotnet build "Genocs.Identities.WebApi.csproj" -c Release -o ./app/build
+RUN dotnet build "Genocs.Identities.WebApi.csproj" -c Release -o /app/build
 
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Identities.WebApi.csproj" -c Release -o ./app/publish
+RUN dotnet publish "Genocs.Identities.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish ./app/publish .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Genocs.Identities.WebApi.dll"]

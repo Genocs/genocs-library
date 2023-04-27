@@ -4,9 +4,7 @@
 		<TargetFrameworks>net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<PackageId>Genocs.Services.WebApi</PackageId>
 		<LangVersion>10.0</LangVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>5.0.0-preview.3.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>

@@ -17,12 +17,10 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 #FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /src
 
-COPY ["src/Genocs.Persistence.MongoDb", "src/Genocs.Persistence.MongoDb/"]
-COPY ["src/apps/api-gateway/Genocs.APIGateway", "src/Genocs.APIGateway/"]
+COPY ["Genocs.Persistence.MongoDb", "Genocs.Persistence.MongoDb/"]
+COPY ["apps/api-gateway/Genocs.APIGateway", "Genocs.APIGateway/"]
 
-WORKDIR "/src/src/Genocs.APIGateway"
-
-#RUN dotnet restore "Genocs.APIGateway.csproj"
+WORKDIR "/src/Genocs.APIGateway"
 
 RUN dotnet build "Genocs.APIGateway.csproj" -c Release -o /app/build
 

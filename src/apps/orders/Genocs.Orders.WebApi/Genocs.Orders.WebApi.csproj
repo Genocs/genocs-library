@@ -6,9 +6,6 @@
 		<Nullable>enable</Nullable>
 		<PackageId>Genocs.Services.WebApi</PackageId>
 		<LangVersion>10.0</LangVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview.3.0</Version>
-		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
 		<Title>----.</Title>
@@ -36,7 +33,6 @@
 		<ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
 	</ItemGroup>
-
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
 		<PackageReference Include="Genocs.HTTP" Version="5.0.0-preview.3.*" />

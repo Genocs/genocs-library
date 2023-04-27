@@ -445,6 +445,7 @@ A second option is to run docker-compose
 ``` bash
 # Build with docker compose
 docker-compose -f ./demo-docker-compose.yml build
+docker-compose -f ./src/apps/containers/application-docker-compose.yml build
 
 # Run with docker compose
 docker-compose -f ./demo-docker-compose.yml up [-d]
