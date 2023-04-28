@@ -42,6 +42,7 @@ services:
 networks:
   genocs:
     name: genocs-network
+    driver: bridge    
 
 volumes:
   mongodb:

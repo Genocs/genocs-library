@@ -427,6 +427,10 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ``` bash
 # Build webapi
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
+docker build -t genocs/apigateway:7.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
+
+
+apigateway.dockerfile
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
