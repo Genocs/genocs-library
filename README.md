@@ -43,7 +43,7 @@ If you want to use docker compose to run infrastructure you can run the command 
 
 ``` bash
 # Setup the infrastructure  
-docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-application up -d
+docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
 ```
 
 ***Kubernetes cluster***
@@ -81,7 +81,7 @@ This library implements logging functionalities.
 
 ## MessageBrokers
 
-TBW
+This library implements the domain message broker for commands and events.
 
 ## MessageBrokers Outbox
 
@@ -448,9 +448,6 @@ A second option is to run docker-compose
 
 ``` bash
 # Build with docker compose
-docker-compose -f ./demo-docker-compose.yml build
-docker-compose -f ./src/apps/containers/application-docker-compose.yml build
-
-# Run with docker compose
-docker-compose -f ./demo-docker-compose.yml up [-d]
+docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
+docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
 ```
