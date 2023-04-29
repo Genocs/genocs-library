@@ -43,7 +43,7 @@ If you want to use docker compose to run infrastructure you can run the command 
 
 ``` bash
 # Setup the infrastructure  
-docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-application up -d
+docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
 ```
 
 ***Kubernetes cluster***
@@ -81,7 +81,7 @@ This library implements logging functionalities.
 
 ## MessageBrokers
 
-TBW
+This library implements the domain message broker for commands and events.
 
 ## MessageBrokers Outbox
 
@@ -427,6 +427,10 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ``` bash
 # Build webapi
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
+docker build -t genocs/apigateway:7.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
+
+
+apigateway.dockerfile
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
@@ -444,8 +448,6 @@ A second option is to run docker-compose
 
 ``` bash
 # Build with docker compose
-docker-compose -f ./demo-docker-compose.yml build
-
-# Run with docker compose
-docker-compose -f ./demo-docker-compose.yml up [-d]
+docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
+docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
 ```

@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: apigateway-deployment
+  labels:
+    run: apigateway
+    app: genocs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: apigateway
+
+  template:
+    metadata:
+      labels:
+        run: apigateway
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image:  genocs/apigateway:1.0.0
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: RABBITMQ_HOST_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: akvsecrets
+                  key: RABBITMQ_HOST_NAME
+            - name: RABBITMQ_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: akvsecrets
+                  key: RABBITMQ_USER_NAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: akvsecrets
+                  key: RABBITMQ_PASSWORD
+            - name: RABBITMQ_BATCH_SIZE
+              value: "50"
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "20m" #2% of a core
+              memory: "20Mi"
+            limits:
+              cpu: "20m" #2% of a core
+              memory: "20Mi"
+      #          ports:
+      #            - containerPort: 8080
+      #              protocol: TCP
+      #              name: metrics-port
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst

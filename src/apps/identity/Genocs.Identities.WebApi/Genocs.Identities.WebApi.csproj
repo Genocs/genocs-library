@@ -4,12 +4,14 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<IsPublishable>false</IsPublishable>
-		<IsPackable>false</IsPackable>
 		<UserSecretsId>__genocs</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
+	
+	<ItemGroup>
+		<Content Include="certs\**" CopyToPublishDirectory="Always" />
+	</ItemGroup>	
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
@@ -18,11 +20,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
+		<ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="logs\" />
+		<Folder Include="logs\" />
 	</ItemGroup>
 
 </Project>

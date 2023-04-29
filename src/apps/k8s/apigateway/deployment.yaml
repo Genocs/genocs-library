@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: apigateway-deployment
+  labels:
+    run: apigateway
+    app: genocs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: apigateway
+
+  template:
+    metadata:
+      labels:
+        run: apigateway
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image:  genocs/apigateway:1.0.0
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "20m" #2% of a core
+              memory: "20Mi"
+            limits:
+              cpu: "20m" #2% of a core
+              memory: "20Mi"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst

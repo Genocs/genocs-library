@@ -16,22 +16,18 @@ EXPOSE 443
 #FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /src
-COPY ["src/Genocs.Core.Demo.Users.WebApi", "src/Genocs.Core.Demo.Users.WebApi/"]
-COPY ["src/Genocs.Core.Demo.Users.Application", "src/Genocs.Core.Demo.Users.Application/"]
+COPY ["products/Genocs.Products.WebApi", "Genocs.Products.WebApi/"]
 
-COPY ["LICENSE", "LICENSE"]
-COPY ["icon.png", "icon.png"]
+WORKDIR "/src/Genocs.Products.WebApi"
 
-WORKDIR "/src/src/Genocs.Core.Demo.Users.WebApi"
+RUN dotnet restore "Genocs.Products.WebApi.csproj"
 
-RUN dotnet restore "Genocs.Core.Demo.Users.WebApi.csproj"
-
-RUN dotnet build "Genocs.Core.Demo.Users.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Genocs.Products.WebApi.csproj" -c Release -o /app/build
 
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Core.Demo.Users.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Genocs.Products.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Core.Demo.Users.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Products.WebApi.dll"]

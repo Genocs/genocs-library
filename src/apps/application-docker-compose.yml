@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  apigateway:
+    image: genocs/apigateway:1.0.0
+    hostname: apigateway_node_1
+    container_name: apigateway
+    build:
+      context: .
+      dockerfile: apigateway.dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    ports:
+      - 5500:80
+
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - apigateway:/var/lib/data
+
+  identity.webapi:
+    image: genocs/identity-webapi:1.0.0
+    hostname: identity_node_1
+    container_name: identity
+    build:
+      context: .
+      dockerfile: identity-webapi.dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+    ports:
+      - 5510:80
+
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - identity:/var/lib/data
+
+  product.webapi:
+    image: genocs/product-webapi:1.0.0
+    hostname: product_node_1
+    container_name: product
+    build:
+      context: .
+      dockerfile: product-webapi.dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+    # External ports not enabled because of the apigateway
+    #ports:
+
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - product:/var/lib/data
+
+networks:
+  genocs:
+    name: genocs-network
+    external: true
+    driver: bridge
+
+volumes:
+  apigateway:
+    driver: local
+  identity:
+    driver: local
+  product:
+    driver: local
