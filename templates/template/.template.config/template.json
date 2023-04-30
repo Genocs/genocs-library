@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Nocco Giovanni Emanuele",
+  "classifications": [
+    "Web/ASP.NET"
+  ],
+  "name": "Genocs: Architecture for .NET Core",
+  "identity": "Genocs.ServiceTemplate",
+  "groupIdentity": "Genocs.ServiceTemplate",
+  "shortName": "servicetemplate",
+  "tags": {
+    "language": "C#" // Specify that this template is in C#.
+  },
+  "sourceName": "Genocs.Template", // Will replace the string 'Genocs.Template' with the value provided via -n.
+  "preferNameDirectory": true,
+  "symbols": {
+    "use-cases": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "full",
+      "choices": [
+        {
+          "choice": "full",
+          "description": "Full Wallet Account Balance Management (Read/Write)"
+        }
+      ],
+      "replaces": "use-cases",
+      "onlyIf": [
+        {
+          "after": "\"use-cases\": \""
+        }
+      ]
+    },
+    "Full": {
+      "type": "computed",
+      "value": "(use-cases == \"full\")"
+    }
+
+  },
+  "sources": [
+    {
+      "source": "./",
+      "modifiers": [
+        {
+          "condition": "(Full)",
+          "exclude": []
+        }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    {
+      "path": "src/Genocs.MicroserviceLight.Template.Application/Genocs.MicroserviceLight.Template.Application.csproj"
+    },
+    {
+      "path": "src/Genocs.MicroserviceLight.Template.WebApi/Genocs.MicroserviceLight.Template.WebApi.csproj"
+    }
+  ]
+}

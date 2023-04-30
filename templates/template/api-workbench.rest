@@ -1,0 +1,19 @@
+@url = https://localhost:5001
+@apiVersion = api-version=1.0
+
+@customerId = 1f7516de-c0b3-4bc6-a09e-564eac27c263
+
+### Create a customer
+POST {{url}}/api/v1/Customers?{{apiVersion}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "ssn": "2410196814",
+  "name": "Giovanni3",
+  "initialAmount": 100
+}
+
+### Get an existing customer
+GET {{url}}/api/v1/Customers/{{customerId}}?{{apiVersion}} HTTP/1.1
+
+
