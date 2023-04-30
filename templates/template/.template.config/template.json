@@ -50,10 +50,10 @@
   ],
   "primaryOutputs": [
     {
-      "path": "src/Genocs.MicroserviceLight.Template.Application/Genocs.MicroserviceLight.Template.Application.csproj"
+      "path": "src/Genocs.Template.Application/Genocs.Template.Application.csproj"
     },
     {
-      "path": "src/Genocs.MicroserviceLight.Template.WebApi/Genocs.MicroserviceLight.Template.WebApi.csproj"
+      "path": "src/Genocs.Template.WebApi/Genocs.Template.WebApi.csproj"
     }
   ]
 }

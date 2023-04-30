@@ -6,7 +6,7 @@
     <ProjectGuid>0db314b3-916f-41c8-8f82-9ba947f03541</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>genocs.microservicelight.template.webapi</DockerServiceName>
+    <DockerServiceName>genocs.template.webapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

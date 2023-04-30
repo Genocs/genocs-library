@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="5.0.0">
-    <id>Genocs.CleanArchitectureTemplate</id>
+    <id>Genocs.ServciceTemplate</id>
     <version>1.8.3</version>
     <authors>Nocco Giovanni Emanuele</authors>
     <owners>[Genocs] Nocco Giovanni Emanuele</owners>
-    <projectUrl>https://github.com/Genocs/clean-architecture-template</projectUrl>
-    <repository type="git" url="https://github.com/Genocs/clean-architecture-template.git" branch="master" commit="37bd57f2cdca35cb0c346d214468d7a5ede9057d" />
+    <projectUrl>https://github.com/Genocs/genocs-library</projectUrl>
+    <repository type="git" url="https://github.com/Genocs/genocs-library.git" branch="master" commit="37bd57f2cdca35cb0c346d214468d7a5ede9057d" />
     <license type="expression">MIT</license>
-    <icon>genocs-icon.png</icon>    
+    <icon>icon.png</icon>    
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <title>The clean code template by Genocs</title>
+    <title>The service template by Genocs</title>
     <summary>
-      A .NET template following the Clean Architecture Style, DDD and Separation of Concerns in Domain, Application, Infrastructure and UI. Separated host for WebApi and ServiceBus. Docker compose debugging support provided as well.
+      A .NET template that can be used in accordance with Genocs Library.
     </summary>	
     <description>
 Install the package:
-$ dotnet new -i Genocs.CleanArchitectureTemplate::1.8.3
+dotnet new -i Genocs.ServiceTemplate::1.0.0
 
 The full clean project:
-$ dotnet new cleanarchitecture
+$ dotnet new servicetemplate
     </description>
     <releaseNotes>
-- Relesase 1.8.3:
+- Relesase 1.0.0:
   Added list of events
   
 - Clean Architecture Principles Documentation
-- .NET Core 6.0
+- .NET Core 7.0
 - Swashbuckle 5 
-- Entity Framework Core 5
 - Enterprice Service Bus
     </releaseNotes>
     <tags>
-      aggregate
       architecture
       boilerplate
       clean-architecture
@@ -48,21 +46,17 @@ $ dotnet new cleanarchitecture
       dotnet-cli
       dotnet-new
       dotnet-template
-      evolutionary-architecture
       generator
-      hexagonal-architecture
       layered
       masstransit
       microservice
       microservices
-      nservicebus
       onion
       rabbitmq
       service bus
       solid
       solid-principles
       templating
-      tdd
       webapi
     </tags>
     <language>en-US</language>
