@@ -12,7 +12,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: keyvaultreader
+                name: servicetemplate-webapi
                 port:
                   number: 80
           - path: /bar

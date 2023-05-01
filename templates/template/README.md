@@ -1,7 +1,7 @@
-# The Clean Architecture Sample Implementation with .NET Core
+# The Genocs Enterprise Service Template Implementation with .NET Core
 
 
-Sample implementation of the **Clean Architecture Principles with .NET Core**. Use cases as central organizing structure, decoupled from frameworks and technology details. Built with small components that are developed and tested in isolation.
+Sample implementation of the **Genocs Enterprise Service Principles with .NET Core**. Use cases as central organizing structure, decoupled from frameworks and technology details. Built with small components that are developed and tested in isolation.
 
 ----
 
@@ -12,8 +12,8 @@ Sample implementation of the **Clean Architecture Principles with .NET Core**. U
 ## Usage
 
 ```sh
-dotnet new -i Genocs.CleanArchitecture::1.7.2
-dotnet new cleanarchitecture -n "MyCompany.MyProject"
+dotnet new -i Genocs.ServiceTemplate::1.0.0
+dotnet new servicetemplate -n "Company.Project"
 ```
 
 To get the Clean Architecture updates hit the `WATCH` button.
@@ -96,14 +96,13 @@ The folder docker-infrastructure contains the docker-compose file and everything
 
 This example implement the enterprise service bus through three different library.
  
-- NService Bus
 - Rebus
 - Bare implementation with Azure Service bus 
 
 
 ## Containers and orchestrators
 
-The example is ready to create the docker images for both WebApi and BusWorker
+The example is ready to create the docker images for both WebApi and Worker
 
 
 ## Contributing
@@ -1407,7 +1406,7 @@ deploy_script:
 The project build two different images. One for the the Web API and one for the bus worker.   
 
 ```sh
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # Copy everything else and build
@@ -1415,19 +1414,19 @@ COPY . .
 RUN dotnet publish src/{MyCompany.MyProject}.WebApi -c release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/out .
 ENV ASPNETCORE_URLS http://*:80
 ENV ASPNETCORE_ENVIRONMENT Docker
-ENTRYPOINT dotnet {MyCompany.MyProject}.WebApi.dll
+ENTRYPOINT dotnet {Company.Project}.WebApi.dll
 ```
 
 To build the docker images
 
 ```sh
-docker build -t mycompany/myproject.webapi -f .\src\Genocs.MicroserviceLight.Template.WebApi\Dockerfile .
-docker build -t mycompany/myproject.worker -f .\src\Genocs.MicroserviceLight.Template.BusWorker\Dockerfile .
+docker build -t company/project.webapi -f .\src\Genocs.MicroserviceLight.Template.WebApi\Dockerfile .
+docker build -t company/project.worker -f .\src\Genocs.MicroserviceLight.Template.BusWorker\Dockerfile .
 ```
 
 
@@ -1461,22 +1460,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="https://paulovich.net"><img src="https://avatars3.githubusercontent.com/u/7133698?v=4" width="100px;" alt="Ivan Paulovich"/><br /><sub><b>Ivan Paulovich</b></sub></a><br /><a href="#design-ivanpaulovich" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=ivanpaulovich" title="Tests">⚠️</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=ivanpaulovich" title="Code">💻</a></td>
-    <td align="center"><a href="https://spelos.net/"><img src="https://avatars3.githubusercontent.com/u/21304428?v=4" width="100px;" alt="Petr Sedláček"/><br /><sub><b>Petr Sedláček</b></sub></a><br /><a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=petrspelos" title="Tests">⚠️</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=petrspelos" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/luizgustavogp"><img src="https://avatars2.githubusercontent.com/u/5147169?v=4" width="100px;" alt="Gus"/><br /><sub><b>Gus</b></sub></a><br /><a href="#design-luizgustavogp" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=luizgustavogp" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/arulconsultant"><img src="https://avatars0.githubusercontent.com/u/47856951?v=4" width="100px;" alt="arulconsultant"/><br /><sub><b>arulconsultant</b></sub></a><br /><a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=arulconsultant" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/guilhermeps"><img src="https://avatars1.githubusercontent.com/u/38736244?v=4" width="100px;" alt="Guilherme Silva"/><br /><sub><b>Guilherme Silva</b></sub></a><br /><a href="#design-guilhermeps" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=guilhermeps" title="Tests">⚠️</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=guilhermeps" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/ostorc"><img src="https://avatars1.githubusercontent.com/u/13519594?v=4" width="100px;" alt="Ondřej Štorc"/><br /><sub><b>Ondřej Štorc</b></sub></a><br /><a href="#design-ostorc" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=ostorc" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/MarlonMiranda"><img src="https://avatars3.githubusercontent.com/u/12774904?v=4" width="100px;" alt="Marlon Miranda da Silva"/><br /><sub><b>Marlon Miranda da Silva</b></sub></a><br /><a href="#design-MarlonMiranda" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=MarlonMiranda" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/NicoCG"><img src="https://avatars1.githubusercontent.com/u/33652180?v=4" width="100px;" alt="NicoCG"/><br /><sub><b>NicoCG</b></sub></a><br /><a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=NicoCG" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://stackoverflow.com/users/2072198/fals"><img src="https://avatars2.githubusercontent.com/u/3750960?v=4" width="100px;" alt="Filipe Augusto Lima de Souza"/><br /><sub><b>Filipe Augusto Lima de Souza</b></sub></a><br /><a href="#design-fals" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=fals" title="Tests">⚠️</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=fals" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/sshaw-sml"><img src="https://avatars3.githubusercontent.com/u/33876744?v=4" width="100px;" alt="sshaw-sml"/><br /><sub><b>sshaw-sml</b></sub></a><br /><a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=sshaw-sml" title="Tests">⚠️</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=sshaw-sml" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/matheusneder"><img src="https://avatars1.githubusercontent.com/u/6011646?v=4" width="100px;" alt="Matheus Neder"/><br /><sub><b>Matheus Neder</b></sub></a><br /><a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=matheusneder" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/matiienkodimitri"><img src="https://avatars2.githubusercontent.com/u/53822759?v=4" width="100px;" alt="димитрий матиенко"/><br /><sub><b>димитрий матиенко</b></sub></a><br /><a href="#design-matiienkodimitri" title="Design">🎨</a> <a href="https://github.com/ivanpaulovich/clean-architecture-manga/commits?author=matiienkodimitri" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/giovanninocco"><img src="https://avatars.githubusercontent.com/u/6323824?v=4" width="100px;" alt="Giovanni Emananuele Nocco"/><br /><sub><b>Giovanni Nocco</b></sub></a><br /><a href="https://github.com/Genocs/genocs-library/commits?author=giovanninocco" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

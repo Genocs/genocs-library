@@ -4,7 +4,7 @@
   "classifications": [
     "Web/ASP.NET"
   ],
-  "name": "Genocs: Architecture for .NET Core",
+  "name": "Genocs: Service Template for .NET Core",
   "identity": "Genocs.ServiceTemplate",
   "groupIdentity": "Genocs.ServiceTemplate",
   "shortName": "servicetemplate",

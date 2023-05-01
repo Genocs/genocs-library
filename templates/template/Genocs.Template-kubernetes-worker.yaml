@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nservicebus
+  name: servicetemplate
   labels:
-    app: nservicebus-busworker
+    app: servicetemplate-worker
 spec:
   selector:
     matchLabels:
-      app: nservicebus-busworker
+      app: servicetemplate-worker
   replicas: 1
   template:
     metadata:
       labels:
-        app: nservicebus-busworker
+        app: servicetemplate-worker
     spec:
       containers:
-        - name: nservicebus-busworker
-          image: genocsacr.azurecr.io/nservicebusworker:1.1.370
+        - name: servicetemplate-worker
+          image: genocsacr.azurecr.io/servicetemplate-worker:latest
           env:
             - name: ParticularOptions__TransportConnectionString
               value: "<<fill_with-your_data>>"
@@ -35,10 +35,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nservicebus
+  name: servicetemplate
 spec:
   # type: LoadBalancer
   ports:
     - port: 80
   selector:
-    app: nservicebus-busworker
+    app: servicetemplate-worker

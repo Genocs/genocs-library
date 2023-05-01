@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keyvaultreader
+  name: servicetemplate
   labels:
-    app: keyvaultreader-webapi
+    app: servicetemplate-webapi
 spec:
   selector:
     matchLabels:
-      app: keyvaultreader-webapi
+      app: servicetemplate-webapi
   replicas: 1
   template:
     metadata:
       labels:
-        app: keyvaultreader-webapi
+        app: servicetemplate-webapi
     spec:
       containers:
-        - name: keyvaultreader-webapi
-          image: genocs/keyvaultreader:1.1.362
+        - name: servicetemplate-webapi
+          image: genocs/servicetemplate:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
             - name: ApiClients__SecondUrl
-              value: "http://keyvaultreader.default.svc.cluster.local"
+              value: "http://servicetemplate.default.svc.cluster.local"
           resources:
             requests:
               cpu: 100m
@@ -35,10 +35,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: keyvaultreader
+  name: servicetemplate
 spec:
   # type: LoadBalancer
   ports:
     - port: 80
   selector:
-    app: keyvaultreader-webapi
+    app: servicetemplate-webapi
