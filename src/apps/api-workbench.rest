@@ -4,8 +4,8 @@
 ###############################################################################
 
 #@url = https://localhost:5001
-@apigateway = http://localhost:5500
-@identity = http://localhost:5510
+@apigateway = http://localhost:5000
+@identity = https://localhost:5271
 
 
 ### Sign up as Admin
@@ -38,7 +38,7 @@ GET {{identity}}/users?page=1
 POST {{identity}}/refresh-tokens/revoke
 
 {
-  "RefreshToken" : "CxfNE7Yhth8kGtxh9rcSrPLk3WRYX43Nd9nlkH"
+  "RefreshToken" : "9m1vfuKUfY2DSIZYitmywy7dAVVTfMJLFeH34l6"
 }
 
 
