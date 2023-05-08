@@ -15,7 +15,6 @@ This repo contains a set of libraries designed by Genocs. The libraries are buil
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
-
 ---
 
 ## The idea
@@ -65,7 +64,7 @@ Auth service defines the functionalities to build Auth system that relay on OAUT
 
 ## Common
 
-This project contains common functionalities that do not rely on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
+This project contains common functionalities do not relied on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
 
 ## Core
 
@@ -442,12 +441,12 @@ docker push genocs/demo-worker:latest
 ```
 
 
+ ---
 
-# Enterprise Solution
----
----
+## Enterprise Application
 
-inside **./src/apps** folder you can find the an application comosed by:
+
+Take a look inside **./src/apps** folder. There you can find a full-fledged application composed by:
 - ApiGateway
 - Identity Service
 - Order service
@@ -458,12 +457,36 @@ In that way you can test the entire flow.
 
 
 
-## How to build the solution
+### **How to BUILD & RUN the application**
 
-Run docker-compose
+The build and run process can be done by using docker-compose
 
 ``` bash
 # Build with docker compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
+
+# *** Before running the solution remember to check ***
+# *** the infrastructure services were setup    ***
+
+# Run with docker compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
 ```
+
+---
+
+
+
+## **Third party libraries**
+- masstransit
+- fabio
+- consul
+
+
+---
+
+## **acknowledgments**
+
+- [devmentors](https://github.com/devmentors)
+- [abp](https://github.com/abpframework)
+
+
