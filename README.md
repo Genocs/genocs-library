@@ -48,7 +48,7 @@ docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastru
 
 ***Kubernetes cluster***
 
-A second option is to setup the application inside a Kubernetes cluster.
+Second option is to setup the application inside a Kubernetes cluster.
 
 To setup a Kubernetes cluster that can be used for production I suggest to looking at the repo: 
 - [enterprise-containers](https://github.com/Genocs/enterprise-containers)
@@ -429,9 +429,6 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
 docker build -t genocs/apigateway:7.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
 
-
-apigateway.dockerfile
-
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
@@ -444,7 +441,26 @@ docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
 
-A second option is to run docker-compose
+
+
+# Enterprise Solution
+---
+---
+
+inside **./src/apps** folder you can find the an application comosed by:
+- ApiGateway
+- Identity Service
+- Order service
+- Product Service
+- SignalR Service
+
+In that way you can test the entire flow.
+
+
+
+## How to build the solution
+
+Run docker-compose
 
 ``` bash
 # Build with docker compose

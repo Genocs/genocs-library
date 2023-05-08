@@ -4,8 +4,13 @@
 ###############################################################################
 
 #@url = https://localhost:5001
-@apigateway = http://localhost:5000
-@identity = https://localhost:5271
+#@apigateway = http://localhost:5000
+#@identity = https://localhost:5271
+
+# Container version
+@apigateway = http://localhost:5500
+@identity = http://localhost:5510
+
 
 
 ### Sign up as Admin
@@ -46,7 +51,7 @@ POST {{identity}}/refresh-tokens/revoke
 GET {{apigateway}}/products-service/products/ec5983de-c667-4ad3-8e0e-d42e653572b9
 
 
-### Create new prodcut using the API Gateway
+### Create new product using the API Gateway
 POST {{apigateway}}/products-service/products
 
 {
@@ -61,5 +66,5 @@ Content-Type: application/json
 
 {
   "CustomerId": "ec5983de-c667-4ad3-8e0e-d42e653572b9",
-  "productId" : "ec5983de-c667-4ad3-8e0e-d42e653572b9"
+  "productId" : "3be72f8e-0219-4ffc-b10d-2b29e8bd54b6"
 }
