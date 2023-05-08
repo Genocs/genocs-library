@@ -1,9 +1,8 @@
-using Genocs.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
-namespace Genocs.Core.Security.Services;
+namespace Genocs.Security.Services;
 
 internal sealed class Signer : ISigner
 {

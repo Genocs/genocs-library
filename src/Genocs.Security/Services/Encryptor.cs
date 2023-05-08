@@ -1,8 +1,7 @@
-using Genocs.Security;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Genocs.Core.Security.Services;
+namespace Genocs.Security.Services;
 
 internal sealed class Encryptor : IEncryptor
 {

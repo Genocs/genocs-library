@@ -3,7 +3,7 @@
 | Badge                       | Description                    |
 | --------------------------- | ------------------------------ |
 | Travis CI/CD                | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
-| Github Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
+| GitHub Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
 | Azure CI/CD                 | work in progress |
 | Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
 | NuGet package Version       | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
@@ -13,7 +13,7 @@
 
 This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
 
-Packages are available on [nuget Genocs](https://www.nuget.org/profiles/gioema_nocco).
+Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
 
 ---

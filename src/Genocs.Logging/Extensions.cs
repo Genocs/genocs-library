@@ -1,6 +1,6 @@
 using Genocs.Common.Options;
 using Genocs.Core.Builders;
-using Genocs.Logging.Settings;
+using Genocs.Logging.Options;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.UnitTests", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb", "src\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj", "{43604E79-FEA7-4A53-B2E9-C1D6FE30F8E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDb.UnitTests", "src\Genocs.Persistence.MongoDb.UnitTests\Genocs.Persistence.MongoDB.UnitTests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.MongoDB.UnitTests", "src\Genocs.Persistence.MongoDb.UnitTests\Genocs.Persistence.MongoDB.UnitTests.csproj", "{B432832E-7BB2-4D24-B910-23C65580AC9C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure", "src\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj", "{EF2A0B5B-40E6-48A1-B8BC-A539295BE24C}"
 EndProject
@@ -87,7 +87,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		demo-webapi.dockerfile = demo-webapi.dockerfile
 		demo-worker.dockerfile = demo-worker.dockerfile
 		README.md = README.md
-		users-webapi.dockerfile = users-webapi.dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrdersService", "OrdersService", "{80862789-8B42-4878-AC10-9CFF06A7313C}"
@@ -111,6 +110,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductsService", "ProductsService", "{B2028A73-6C94-4166-A0BB-22080805E351}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Products.WebApi", "src\apps\products\Genocs.Products.WebApi\Genocs.Products.WebApi.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B184733D-2415-4517-BC65-26ED22EEB2C2}"
+	ProjectSection(SolutionItems) = preProject
+		src\apps\apigateway.dockerfile = src\apps\apigateway.dockerfile
+		src\apps\application-docker-compose.yml = src\apps\application-docker-compose.yml
+		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
+		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -305,6 +312,7 @@ Global
 		{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2} = {75D24F85-48AC-4058-AF8D-461FC6A360AD}
 		{B2028A73-6C94-4166-A0BB-22080805E351} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{6CE8740F-8561-481B-AC9F-D1E73C449235} = {B2028A73-6C94-4166-A0BB-22080805E351}
+		{B184733D-2415-4517-BC65-26ED22EEB2C2} = {51A2E158-4686-4764-91D5-3CDDD06280D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF634A51-3CA4-4FB3-A8ED-71C403516166}

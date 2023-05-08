@@ -1,4 +1,4 @@
-namespace Genocs.Logging.Settings;
+namespace Genocs.Logging.Options;
 
 public class LocalFileSettings
 {

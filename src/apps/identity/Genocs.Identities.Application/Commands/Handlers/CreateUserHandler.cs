@@ -1,5 +1,4 @@
 using Genocs.Core.CQRS.Commands;
-using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.Domain.Entities;
 using Genocs.Identities.Application.Domain.Exceptions;
 using Genocs.Identities.Application.Domain.Repositories;
@@ -8,7 +7,7 @@ using Genocs.Identities.Application.Services;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
-namespace Genocs.Identities.Commands.Handlers;
+namespace Genocs.Identities.Application.Commands.Handlers;
 
 internal sealed class CreateUserHandler : ICommandHandler<CreateUser>
 {
