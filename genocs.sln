@@ -116,7 +116,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 		src\apps\apigateway.dockerfile = src\apps\apigateway.dockerfile
 		src\apps\application-docker-compose.yml = src\apps\application-docker-compose.yml
 		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
+		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
 		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
+		src\apps\signalr-webapi.dockerfile = src\apps\signalr-webapi.dockerfile
 	EndProjectSection
 EndProject
 Global

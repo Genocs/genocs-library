@@ -39,7 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="README_NUGET.md">
+		<None Update="README.md">
 			<PackagePath>\</PackagePath>
 			<Pack>True</Pack>
 		</None>
