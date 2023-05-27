@@ -7,7 +7,7 @@
   "name": "Genocs: Service Template for .NET Core",
   "identity": "Genocs.ServiceTemplate",
   "groupIdentity": "Genocs.ServiceTemplate",
-  "shortName": "servicetemplate",
+  "shortName": "gnx-webapi",
   "tags": {
     "language": "C#" // Specify that this template is in C#.
   },

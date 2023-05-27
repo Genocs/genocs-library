@@ -14,13 +14,18 @@ public class AggregateId : IEquatable<AggregateId>
         Value = value;
     }
 
-    public bool Equals(AggregateId other)
+    /// <summary>
+    /// The Equals operator
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(AggregateId? other)
     {
         if (ReferenceEquals(null, other)) return false;
         return ReferenceEquals(this, other) || Value.Equals(other.Value);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
@@ -28,9 +33,7 @@ public class AggregateId : IEquatable<AggregateId>
     }
 
     public override int GetHashCode()
-    {
-        return Value.GetHashCode();
-    }
+        =>  Value.GetHashCode();
 
     public static implicit operator Guid(AggregateId id)
         => id.Value;
@@ -38,5 +41,10 @@ public class AggregateId : IEquatable<AggregateId>
     public static implicit operator AggregateId(Guid id)
         => new AggregateId(id);
 
-    public override string ToString() => Value.ToString();
+    /// <summary>
+    /// Return the string data 
+    /// </summary>
+    /// <returns>string description about the object</returns>
+    public override string ToString() 
+        => Value.ToString();
 }

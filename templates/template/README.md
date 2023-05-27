@@ -1,4 +1,4 @@
-# The Genocs Enterprise Service Template Implementation with .NET Core
+# The Genocs Library Template Implementation with .NET Core
 
 
 Sample implementation of the **Genocs Enterprise Service Principles with .NET Core**. Use cases as central organizing structure, decoupled from frameworks and technology details. Built with small components that are developed and tested in isolation.
@@ -13,7 +13,7 @@ Sample implementation of the **Genocs Enterprise Service Principles with .NET Co
 
 ```sh
 dotnet new -i Genocs.ServiceTemplate::1.0.0
-dotnet new servicetemplate -n "Company.Project"
+dotnet new servicetemplate -n "CompanyName.ProjectName"
 ```
 
 To get the Clean Architecture updates hit the `WATCH` button.

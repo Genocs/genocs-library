@@ -28,7 +28,7 @@ stages:
             inputs:
               containerRegistryType: "Container Registry"
               dockerRegistryEndpoint: "DockerHub"
-              command: "Build an image"
+              command: "Build image"
               dockerFile: "Dockerfile"
               arguments: "--build-arg BuildId=$(Build.BuildId)"
               includeLatestTag: true
@@ -39,7 +39,7 @@ stages:
             inputs:
               containerRegistryType: "Container Registry"
               dockerRegistryEndpoint: "DockerHub"
-              command: "Push an image"
+              command: "Push image"
               imageName: "$(ImageName)"
             condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
@@ -48,7 +48,7 @@ stages:
             inputs:
               containerRegistryType: "Container Registry"
               dockerRegistryEndpoint: "DockerHub"
-              command: "Build an image"
+              command: "Build image"
               dockerFile: "Dockerfile"
               arguments: "--build-arg BuildId=$(Build.BuildId)"
               imageName: "$(ImageName):$(MajorVer).$(MinorVer).$(Build.BuildId)"
@@ -58,7 +58,7 @@ stages:
             inputs:
               containerRegistryType: "Container Registry"
               dockerRegistryEndpoint: "DockerHub"
-              command: "Push an image"
+              command: "Push image"
               imageName: "$(ImageName):$(MajorVer).$(MinorVer).$(Build.BuildId)"
 
             condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))

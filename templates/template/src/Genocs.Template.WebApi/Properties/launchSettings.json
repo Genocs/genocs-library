@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Genocs.Core.Demo.Users.WebApi": {
+    "Genocs.Template.WebApi": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

@@ -1,5 +1,8 @@
 namespace Genocs.Template.Application.Domain.Entities;
 
+/// <summary>
+/// The aggregate root class
+/// </summary>
 public abstract class AggregateRoot
 {
     public AggregateId Id { get; protected set; }

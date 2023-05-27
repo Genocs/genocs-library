@@ -8,7 +8,8 @@ public class RefreshToken : AggregateRoot
     public string Token { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? RevokedAt { get; private set; }
-    public bool Revoked => RevokedAt.HasValue;
+    public bool Revoked
+        => RevokedAt.HasValue;
 
     public RefreshToken(AggregateId id, AggregateId userId, string token, DateTime createdAt,
         DateTime? revokedAt = null) : base(id)
