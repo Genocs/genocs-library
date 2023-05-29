@@ -58,9 +58,9 @@ There you can find everything needed to setup a cluster from scratch.
 ## **Libraries**
 The following section describes the full set of libraries.
 
-## Auth
+You can find a full documentation on:
+[**Documentation**](https://majestic-wisp-d90424.netlify.app/library/)
 
-Auth service defines the functionalities to build Auth system that relay on OAUTH JWT.
 
 ## Common
 
@@ -152,10 +152,6 @@ TBW
 TBW
 
 ## WebApi CQRS
-
-TBW
-
-## WebApi Security
 
 TBW
 

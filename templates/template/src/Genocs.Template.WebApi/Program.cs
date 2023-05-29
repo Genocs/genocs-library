@@ -63,4 +63,3 @@ app.UseDispatcherEndpoints(endpoints => endpoints
 app.Run();
 
 Log.CloseAndFlush();
-

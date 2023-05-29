@@ -1,7 +1,29 @@
-# The Genocs Library Template Implementation with .NET Core
+# The Genocs Library Service built with Template
 
 
-Sample implementation of the **Genocs Enterprise Service Principles with .NET Core**. Use cases as central organizing structure, decoupled from frameworks and technology details. Built with small components that are developed and tested in isolation.
+Genocs.ServiceTemplate implementation.
+
+![Documentation](https://blog.genocs.com/)
+
+
+
+## Usage
+
+```sh
+dotnet new -i Genocs.ServiceTemplate::1.0.0
+dotnet new servicetemplate -n "CompanyName.ProjectName"
+```
+
+## Usage
+Update mongoDB database name before start
+
+
+
+
+This will be removed
+ 
+
+ of the **Genocs Enterprise Service Principles with .NET Core**. Use cases as central organizing structure, decoupled from frameworks and technology details. Built with small components that are developed and tested in isolation.
 
 ----
 
