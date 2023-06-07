@@ -29,7 +29,6 @@ public class AzureInitializer
         kmsProviders.Add(provider, azureKmsOptions);
         // end-kmsproviders
 
-
         // start-datakeyopts
         DataKeyOptions GetDataKeyOptions(List<string> altNames)
         {
@@ -44,8 +43,11 @@ public class AzureInitializer
         }
         // end-datakeyopts
 
-        // start-create-index
+        // start-key-vault
         var keyVaultNamespace = CollectionNamespace.FromFullName("encryption.__keyVault");
+        // end-key-vault
+
+        // start-create-index
         var keyVaultClient = new MongoClient(settings.ConnectionString);
         var indexOptions = new CreateIndexOptions<BsonDocument>
         {
@@ -146,7 +148,7 @@ public class AzureInitializer
         var extraOptions = new Dictionary<string, object>()
             {
                 {"cryptSharedLibPath", settings.LibPath},
-            };
+        };
 
         var autoEncryptionOptions = new AutoEncryptionOptions(
             keyVaultNamespace,
