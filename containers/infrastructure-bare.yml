@@ -43,8 +43,8 @@ services:
     image: postgres
     hostname: postgres_node_1
     container_name: postgres
-    enviroment:
-      - POSTGRES_PASSWORD:mysecretpassword
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
 
     ports:
       - 5432:5432
