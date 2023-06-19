@@ -462,10 +462,13 @@ The build and run process can be done by using docker-compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
 
 # *** Before running the solution remember to check ***
-# *** the infrastructure services were setup    ***
+# *** if the infrastructure services were setup     ***
 
 # Run with docker compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
+
+# Clean Docker cache
+docker builder prune
 ```
 
 ---

@@ -8,7 +8,7 @@ public class AppSettings
     /// <summary>
     /// Default section name
     /// </summary>
-    public static string Position = "App";
+    public const string Position = "App";
 
     /// <summary>
     /// Application name

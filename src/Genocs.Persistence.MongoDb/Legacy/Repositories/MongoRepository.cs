@@ -1,5 +1,6 @@
 using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;

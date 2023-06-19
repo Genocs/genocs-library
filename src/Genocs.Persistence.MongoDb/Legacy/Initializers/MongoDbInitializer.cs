@@ -1,3 +1,4 @@
+using Genocs.Persistence.MongoDb.Options;
 using MongoDB.Driver;
 
 namespace Genocs.Persistence.MongoDb.Legacy.Initializers;
@@ -9,7 +10,7 @@ internal sealed class MongoDbInitializer : IMongoDbInitializer
     private readonly IMongoDatabase _database;
     private readonly IMongoDbSeeder _seeder;
 
-    public MongoDbInitializer(IMongoDatabase database, IMongoDbSeeder seeder, MongoDbOptions options)
+    public MongoDbInitializer(IMongoDatabase database, IMongoDbSeeder seeder, MongoDbSettings options)
     {
         _database = database;
         _seeder = seeder;

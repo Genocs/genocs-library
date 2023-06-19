@@ -1,4 +1,5 @@
-﻿using Genocs.Persistence.MongoDb.Options;
+﻿using Genocs.Persistence.MongoDb.Encryptions;
+using Genocs.Persistence.MongoDb.Options;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
@@ -26,8 +27,9 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
     /// Default Constructor
     /// </summary>
     /// <param name="options"></param>
+    /// <param name="encrypOptions"></param>
     /// <exception cref="NullReferenceException"></exception>
-    public MongoDatabaseProvider(IOptions<MongoDbSettings> options)
+    public MongoDatabaseProvider(IOptions<MongoDbSettings> options, IOptions<MongoDbEncryptionSettings> encrypOptions)
     {
         if (options == null) throw new NullReferenceException(nameof(options));
         MongoDbSettings dBSettings = options.Value;
@@ -41,6 +43,13 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
         if (dBSettings.EnableTracing)
         {
             clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+        }
+
+        if (encrypOptions != null)
+        {
+            AzureInitializer initializer = new AzureInitializer();
+            var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
+            clientSettings.AutoEncryptionOptions = autoEncrypOptions;
         }
 
         this.MongoClient = new MongoClient(clientSettings);

@@ -1,16 +1,15 @@
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Persistence.MongoDb.Legacy.Builders;
+using Genocs.Persistence.MongoDb.Builders;
 using Genocs.Persistence.MongoDb.Legacy.Factories;
 using Genocs.Persistence.MongoDb.Legacy.Initializers;
 using Genocs.Persistence.MongoDb.Legacy.Repositories;
 using Genocs.Persistence.MongoDb.Legacy.Seeders;
+using Genocs.Persistence.MongoDb.Options;
+using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
 namespace Genocs.Persistence.MongoDb.Legacy;
 
@@ -18,30 +17,29 @@ public static class Extensions
 {
     // Helpful when dealing with integration testing
     private static bool _conventionsRegistered;
-    private const string SectionName = "mongo";
     private const string RegistryName = "persistence.mongoDb";
 
-    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, string sectionName = SectionName,
-        Type seederType = null, bool registerConventions = true)
+    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, string sectionName = MongoDbSettings.Position,
+        Type? seederType = null, bool registerConventions = true)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = MongoDbSettings.Position;
         }
 
-        var mongoOptions = builder.GetOptions<MongoDbOptions>(sectionName);
+        var mongoOptions = builder.GetOptions<MongoDbSettings>(sectionName);
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
     public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, Func<IMongoDbOptionsBuilder,
-        IMongoDbOptionsBuilder> buildOptions, Type seederType = null, bool registerConventions = true)
+        IMongoDbOptionsBuilder> buildOptions, Type? seederType = null, bool registerConventions = true)
     {
         var mongoOptions = buildOptions(new MongoDbOptionsBuilder()).Build();
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
-    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, MongoDbOptions mongoOptions,
-        Type seederType = null, bool registerConventions = true)
+    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, MongoDbSettings mongoOptions,
+        Type? seederType = null, bool registerConventions = true)
     {
         if (!builder.TryRegister(RegistryName))
         {
@@ -58,15 +56,25 @@ public static class Extensions
         builder.Services.AddSingleton(mongoOptions);
         builder.Services.AddSingleton<IMongoClient>(sp =>
         {
-            var options = sp.GetRequiredService<MongoDbOptions>();
-            return new MongoClient(options.ConnectionString);
+            var options = sp.GetRequiredService<MongoDbSettings>();
+
+            MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(options.ConnectionString);
+
+            if (options.EnableTracing)
+            {
+                clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+            }
+
+            return new MongoClient(clientSettings);
         });
+
         builder.Services.AddTransient(sp =>
         {
-            var options = sp.GetRequiredService<MongoDbOptions>();
+            var options = sp.GetRequiredService<MongoDbSettings>();
             var client = sp.GetRequiredService<IMongoClient>();
             return client.GetDatabase(options.Database);
         });
+
         builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
         builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();
 
@@ -82,25 +90,12 @@ public static class Extensions
         builder.AddInitializer<IMongoDbInitializer>();
         if (registerConventions && !_conventionsRegistered)
         {
-            RegisterConventions();
+            MongoDb.Extensions.ServiceCollectionExtensions.RegisterConventions();
         }
 
         return builder;
     }
 
-    private static void RegisterConventions()
-    {
-        _conventionsRegistered = true;
-        BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
-        BsonSerializer.RegisterSerializer(typeof(decimal?),
-            new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
-        ConventionRegistry.Register("genocs", new ConventionPack
-        {
-            new CamelCaseElementNameConvention(),
-            new IgnoreExtraElementsConvention(true),
-            new EnumRepresentationConvention(BsonType.String),
-        }, _ => true);
-    }
 
     public static IGenocsBuilder AddMongoRepository<TEntity, TIdentifiable>(this IGenocsBuilder builder,
         string collectionName)

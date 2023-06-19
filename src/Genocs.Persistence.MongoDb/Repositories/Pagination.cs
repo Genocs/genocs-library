@@ -5,10 +5,9 @@ using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
 
-
 public static class Pagination
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, PagedQueryBase query)
+    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query)
         => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string orderBy,
@@ -52,7 +51,7 @@ public static class Pagination
         return PagedResult<T>.Create(data, page, resultsPerPage, totalPages, totalResults);
     }
 
-    public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection, PagedQueryBase query)
+    public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection, IPagedQuery query)
         => collection.Limit(query.Page, query.Results);
 
     public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection,
@@ -71,8 +70,8 @@ public static class Pagination
         var skip = (page - 1) * resultsPerPage;
 
         var data = collection
-            .Skip(skip)
-            .Take(resultsPerPage);
+                        .Skip(skip)
+                        .Take(resultsPerPage);
 
         return data;
     }

@@ -9,7 +9,7 @@
         /// <summary>
         /// Default Section name
         /// </summary>
-        public static string Position = "MongoDbEncryption";
+        public const string Position = "MongoDbEncryption";
 
         /// <summary>
         /// The Database connection string

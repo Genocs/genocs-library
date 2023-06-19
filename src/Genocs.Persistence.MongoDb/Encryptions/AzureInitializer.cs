@@ -1,4 +1,5 @@
 ﻿using Genocs.Persistence.MongoDb.Options;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Encryption;
@@ -13,9 +14,13 @@ public class AzureInitializer
     /// <summary>
     /// Setup  the client
     /// </summary>
-    /// <param name="settings"></param>
-    public AutoEncryptionOptions EncryptionOptions(MongoDbEncryptionSettings settings)
+    /// <param name="options"></param>
+    public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionSettings> options)
     {
+        // Ge settings
+        MongoDbEncryptionSettings settings = options.Value;
+        MongoDbEncryptionSettings.IsValid(settings);
+
         // start-kmsproviders
         var kmsProviders = new Dictionary<string, IReadOnlyDictionary<string, object>>();
         const string provider = "azure";
@@ -95,6 +100,8 @@ public class AzureInitializer
 
         // start-create-enc-collection
         var encryptedCollectionNamespace = CollectionNamespace.FromFullName("medicalRecords.patients");
+
+
         var encryptedFieldsMap = new Dictionary<string, BsonDocument>
             {
                 {
