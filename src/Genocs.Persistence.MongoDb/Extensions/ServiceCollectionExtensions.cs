@@ -33,7 +33,7 @@ public static class ServiceCollectionExtensions
         services.Configure<MongoDbSettings>(section);
 
         services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
-        services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
+        services.AddScoped(typeof(IMongoDbRepository<,>), typeof(MongoDbRepository<>));
 
         RegisterConventions();
 
@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
     {
         services
             .Scan(s => s.FromAssemblyDependencies(assembly)
-            .AddClasses(c => c.AssignableTo(typeof(IMongoDbRepository<>)))
+            .AddClasses(c => c.AssignableTo(typeof(IMongoDbRepository<,>)))
             .AsImplementedInterfaces()
             .WithLifetime(lifetime));
 

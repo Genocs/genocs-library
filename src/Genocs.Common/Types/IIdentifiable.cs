@@ -10,4 +10,10 @@ public interface IIdentifiable<out T>
     /// The Id getter
     /// </summary>
     T Id { get; }
+
+    /// <summary>
+    /// Checks if this entity is transient (not persisted to database and it has not an <see cref="Id"/>).
+    /// </summary>
+    /// <returns>True, if this entity is transient</returns>
+    bool IsTransient();
 }

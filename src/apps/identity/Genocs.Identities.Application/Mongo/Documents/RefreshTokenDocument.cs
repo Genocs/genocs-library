@@ -25,4 +25,9 @@ public class RefreshTokenDocument : IIdentifiable<Guid>
     }
 
     public RefreshToken ToEntity() => new RefreshToken(Id, UserId, Token, CreatedAt, RevokedAt);
+
+    public bool IsTransient()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -9,11 +9,11 @@ namespace Genocs.Core.Demo.WebApi.Controllers;
 [Route("[controller]")]
 public class MongoDbRepositoryController : ControllerBase
 {
-    private readonly IMongoDbRepository<User> _userRepository;
+    private readonly IMongoDbRepository<User, ObjectId> _userRepository;
 
     private readonly ILogger<MongoDbRepositoryController> _logger;
 
-    public MongoDbRepositoryController(ILogger<MongoDbRepositoryController> logger, IMongoDbRepository<User> userRepository)
+    public MongoDbRepositoryController(ILogger<MongoDbRepositoryController> logger, IMongoDbRepository<User, ObjectId> userRepository)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
@@ -29,7 +29,7 @@ public class MongoDbRepositoryController : ControllerBase
     public async Task<IActionResult> PostDummy()
     {
         User user = new User(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), 21, "ITA");
-        ObjectId objectId = await _userRepository.InsertAndGetIdAsync(user);
+        ObjectId objectId = await _userRepository.InsertAndGetIdAsync<ObjectId>(user);
         return Ok(objectId.ToString());
     }
 }

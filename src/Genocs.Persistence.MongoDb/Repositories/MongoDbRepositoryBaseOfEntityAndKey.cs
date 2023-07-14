@@ -1,3 +1,4 @@
+using Genocs.Common.Types;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
@@ -11,7 +12,7 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
 /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
 public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>
-    where TEntity : class, IEntity<TPrimaryKey>
+    where TEntity : class, IIdentifiable<TPrimaryKey>
 {
     /// <summary>
     /// Todo

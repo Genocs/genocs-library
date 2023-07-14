@@ -10,9 +10,9 @@ public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {
     private readonly ILogger<SubmitOrderConsumer> _logger;
 
-    private readonly IRepository<Order, ObjectId> _orderRepository;
+    private readonly IRepositoryOfEntity<Order, ObjectId> _orderRepository;
 
-    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IRepository<Order, ObjectId> orderRepository)
+    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IRepositoryOfEntity<Order, ObjectId> orderRepository)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));

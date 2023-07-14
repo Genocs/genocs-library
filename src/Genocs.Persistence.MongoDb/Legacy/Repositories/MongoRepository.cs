@@ -17,6 +17,15 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public IMongoCollection<TEntity> Collection { get; }
 
+    /// <summary>
+    /// It returns the Mongo Collection as Queryable
+    /// </summary>
+    /// <returns></returns>
+    public IMongoQueryable<TEntity> GetMongoQueryable()
+    {
+        return Collection.AsQueryable();
+    }
+
     public Task<TEntity> GetAsync(TIdentifiable id)
         => GetAsync(e => e.Id.Equals(id));
 

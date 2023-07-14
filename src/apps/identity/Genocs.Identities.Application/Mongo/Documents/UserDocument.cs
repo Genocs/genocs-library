@@ -31,4 +31,9 @@ public class UserDocument : IIdentifiable<Guid>
     }
 
     public User ToEntity() => new User(Id, Email, Name, Password, Role, CreatedAt, Permissions, Locked);
+
+    public bool IsTransient()
+    {
+        throw new NotImplementedException();
+    }
 }

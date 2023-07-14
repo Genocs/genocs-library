@@ -1,5 +1,5 @@
+using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Core.Domain.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -12,8 +12,8 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 /// Implements base class for IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
-    where TEntity : class, IEntity<ObjectId>
+public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>
+    where TEntity : class, IIdentifiable<ObjectId>
 {
     /// <summary>
     /// 
@@ -41,6 +41,6 @@ public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, Obj
     /// <param name="query"></param>
     /// <returns></returns>
     public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
-        TQuery query) where TQuery : PagedQueryBase
+        TQuery query) where TQuery : IPagedQuery
             => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 }

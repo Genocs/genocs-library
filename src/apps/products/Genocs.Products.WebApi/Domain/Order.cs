@@ -18,4 +18,9 @@ public class Product : IIdentifiable<Guid>
         SKU = sku;
         UnitPrice = unitPrice;
     }
+
+    public bool IsTransient()
+    {
+        throw new NotImplementedException();
+    }
 }
