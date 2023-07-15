@@ -10,8 +10,8 @@ public static class Pagination
     public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query)
         => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results);
 
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string orderBy,
-        string sortOrder, int page = 1, int resultsPerPage = 10)
+    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string? orderBy,
+        string? sortOrder, int page = 1, int resultsPerPage = 10)
     {
         if (page <= 0)
         {

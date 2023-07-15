@@ -42,15 +42,15 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
         var productDto = await _productServiceClient.GetAsync(command.ProductId);
         if (productDto is null)
         {
-            throw new InvalidOperationException($"Product was not found for order: {command.ProductId}");
+            throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.ProductId}'");
         }
 
-        _logger.LogInformation($"Order with id: {command.OrderId} will cost: {productDto.UnitPrice}$.");
+        _logger.LogInformation($"Order '{command.OrderId}' will cost '{productDto.UnitPrice}'$.");
 
         var order = new Order(command.OrderId, command.CustomerId, productDto.UnitPrice);
         await _repository.AddAsync(order);
         
-        _logger.LogInformation($"Created an order with id: {command.OrderId}, customer: {command.CustomerId}.");
+        _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
         var spanContext = _tracer.ActiveSpan?.Context.ToString();
         var @event = new OrderCreated(order.Id);
