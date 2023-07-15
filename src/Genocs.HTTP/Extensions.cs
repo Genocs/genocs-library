@@ -14,10 +14,12 @@ public static class Extensions
 {
     private const string SectionName = "httpClient";
     private const string RegistryName = "http.client";
+    private const string ClientName = "genocs";
 
-    public static IGenocsBuilder AddHttpClient(this IGenocsBuilder builder, string clientName = "genocs",
-        IEnumerable<string> maskedRequestUrlParts = null, string sectionName = SectionName,
-        Action<IHttpClientBuilder> httpClientBuilder = null)
+
+    public static IGenocsBuilder AddHttpClient(this IGenocsBuilder builder, string clientName = ClientName,
+        IEnumerable<string>? maskedRequestUrlParts = null, string sectionName = SectionName,
+        Action<IHttpClientBuilder>? httpClientBuilder = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {

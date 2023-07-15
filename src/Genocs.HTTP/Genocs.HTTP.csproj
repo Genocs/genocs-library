@@ -7,7 +7,7 @@
 		<PackageId>Genocs.HTTP</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview.3.0</Version>
+		<Version>5.0.0-preview.4.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -47,7 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
 	</ItemGroup>
 
 	<ItemGroup>

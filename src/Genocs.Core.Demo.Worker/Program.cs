@@ -1,3 +1,4 @@
+using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.Demo.Contracts;
@@ -5,7 +6,6 @@ using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
-using Genocs.Core.Domain.Repositories;
 using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
@@ -36,18 +36,12 @@ IHost host = Host.CreateDefaultBuilder(args)
         // Run the hosted service 
         services.AddHostedService<MassTransitConsoleHostedService>();
 
-        // It adds the MongoDb Repository to the project and register all the Domain Objects with the standard interface
-        services.AddMongoDatabase(hostContext.Configuration);
-
-        // It registers the repositories that has been overridden
-        // No need in whenever only 
-        services.RegisterRepositories(Assembly.GetExecutingAssembly());
-
-        RegisterCustomMongoRepository(services, hostContext.Configuration);
+        services
+            .AddGenocs(hostContext.Configuration)
+            .AddMongoFast() // It adds the MongoDb Repository to the project and register all the Domain Objects with the standard interface
+            .RegisterMongoRepositories(Assembly.GetExecutingAssembly()); // It registers the repositories that has been overridden. No need in case of standard repository
 
         ConfigureMassTransit(services, hostContext.Configuration);
-        //ConfigureAzureServiceBusTopic(services, hostContext.Configuration);
-        //ConfigureAzureServiceBusQueue(services, hostContext.Configuration);
 
         services.AddCustomOpenTelemetry(hostContext.Configuration);
     })

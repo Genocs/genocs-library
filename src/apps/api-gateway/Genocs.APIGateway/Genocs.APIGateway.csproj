@@ -19,15 +19,15 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Auth" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.MessageBrokers" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Metrics" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Secrets.Vault" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Security" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Tracing" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.WebApi" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Auth" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.MessageBrokers" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Metrics" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Secrets.Vault" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Security" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Tracing" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.WebApi" Version="5.0.0-preview.4.*" />
 	</ItemGroup>
 
 	<ItemGroup>

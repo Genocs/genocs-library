@@ -6,9 +6,11 @@ using Genocs.Persistence.MongoDb.Initializers;
 using Genocs.Persistence.MongoDb.Options;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Seeders;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
+using System.Reflection;
 
 namespace Genocs.Persistence.MongoDb.Extensions;
 
@@ -21,6 +23,14 @@ public static class MongoDbExtensions
     private static bool _conventionsRegistered;
     private const string RegistryName = "persistence.mongoDb";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="sectionName"></param>
+    /// <param name="seederType"></param>
+    /// <param name="registerConventions"></param>
+    /// <returns>The Genocs builder</returns>
     public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, string sectionName = MongoDbSettings.Position,
         Type? seederType = null, bool registerConventions = true)
     {
@@ -33,6 +43,14 @@ public static class MongoDbExtensions
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
+    /// <summary>
+    /// Setup MongoDb support
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="buildOptions"></param>
+    /// <param name="seederType"></param>
+    /// <param name="registerConventions"></param>
+    /// <returns>The Genocs builder</returns>
     public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, Func<IMongoDbOptionsBuilder,
         IMongoDbOptionsBuilder> buildOptions, Type? seederType = null, bool registerConventions = true)
     {
@@ -40,6 +58,14 @@ public static class MongoDbExtensions
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
+    /// <summary>
+    /// Setup MongoDb support
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="mongoOptions">The settings</param>
+    /// <param name="seederType"></param>
+    /// <param name="registerConventions"></param>
+    /// <returns>The Genocs builder</returns>
     public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, MongoDbSettings mongoOptions,
         Type? seederType = null, bool registerConventions = true)
     {
@@ -98,7 +124,14 @@ public static class MongoDbExtensions
         return builder;
     }
 
-
+    /// <summary>
+    /// Adds a MongoDb repository to the DI container. Using Genocs builder support
+    /// </summary>
+    /// <typeparam name="TEntity">The name of the entity</typeparam>
+    /// <typeparam name="TIdentifiable">The kind of identifier</typeparam>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="collectionName">The collection name where to store data</param>
+    /// <returns>The Genocs builder</returns>
     public static IGenocsBuilder AddMongoRepository<TEntity, TIdentifiable>(this IGenocsBuilder builder,
         string collectionName)
         where TEntity : IIdentifiable<TIdentifiable>
@@ -108,6 +141,50 @@ public static class MongoDbExtensions
             var database = sp.GetRequiredService<IMongoDatabase>();
             return new MongoRepository<TEntity, TIdentifiable>(database, collectionName);
         });
+
+        return builder;
+    }
+
+
+    /// <summary>
+    /// Setup the MongoDatabase
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <returns>The Genocs builder</returns>
+    public static IGenocsBuilder AddMongoFast(this IGenocsBuilder builder)
+    {
+        var section = builder.Configuration.GetSection(MongoDbSettings.Position);
+
+        if (!section.Exists())
+        {
+            return builder;
+        }
+
+        builder.Services.Configure<MongoDbSettings>(section);
+
+        builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
+        builder.Services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
+
+        ServiceCollectionExtensions.RegisterConventions();
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Register all the default MongoDb repository
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="assembly">Assembly to scan</param>
+    /// <param name="lifetime">Kind of ServiceLifetime</param>
+    /// <returns>The Genocs builder</returns>
+    public static IGenocsBuilder RegisterMongoRepositories(this IGenocsBuilder builder, Assembly assembly,
+                      ServiceLifetime lifetime = ServiceLifetime.Transient)
+    {
+        builder.Services
+            .Scan(s => s.FromAssemblyDependencies(assembly)
+            .AddClasses(c => c.AssignableTo(typeof(IMongoDbRepository<>)))
+            .AsImplementedInterfaces()
+            .WithLifetime(lifetime));
 
         return builder;
     }
