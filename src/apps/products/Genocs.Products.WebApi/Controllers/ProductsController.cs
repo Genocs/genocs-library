@@ -20,6 +20,18 @@ public class ProductsController : ControllerBase
         _queryDispatcher = queryDispatcher;
     }
 
+    [HttpGet()]
+    public async Task<ActionResult<PagedResult<ProductDto>>> Get([FromRoute] GetProducts query)
+    {
+        var products = await _queryDispatcher.QueryAsync(query);
+        if (products is null)
+        {
+            return NotFound();
+        }
+
+        return products;
+    }
+
     [HttpGet("{productId}")]
     public async Task<ActionResult<ProductDto>> Get([FromRoute] GetProduct query)
     {
