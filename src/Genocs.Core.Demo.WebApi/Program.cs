@@ -1,7 +1,10 @@
+using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Core.Domain.Repositories;
 using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
@@ -30,9 +33,6 @@ var services = builder.Services;
 services.AddMongoDatabase(builder.Configuration);
 services.RegisterRepositories(Assembly.GetExecutingAssembly());
 
-
-//ConfigureAzureServiceBusTopic(services, builder.Configuration);
-//ConfigureAzureServiceBusQueue(services, builder.Configuration);
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>

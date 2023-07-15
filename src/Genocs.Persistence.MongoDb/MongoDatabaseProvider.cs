@@ -45,12 +45,12 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
             clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
         }
 
-        if (encrypOptions != null)
-        {
-            AzureInitializer initializer = new AzureInitializer();
-            var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
-            clientSettings.AutoEncryptionOptions = autoEncrypOptions;
-        }
+        //if (encrypOptions != null)
+        //{
+        //    AzureInitializer initializer = new AzureInitializer();
+        //    var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
+        //    clientSettings.AutoEncryptionOptions = autoEncrypOptions;
+        //}
 
         this.MongoClient = new MongoClient(clientSettings);
         this.Database = this.MongoClient.GetDatabase(dBSettings.Database);

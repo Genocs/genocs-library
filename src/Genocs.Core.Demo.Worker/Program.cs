@@ -9,6 +9,7 @@ using Genocs.Core.Domain.Repositories;
 using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
@@ -16,7 +17,6 @@ using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using MongoDB.Bson;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
@@ -75,8 +75,7 @@ static IServiceCollection ConfigureMassTransit(IServiceCollection services, ICon
 
 static IServiceCollection RegisterCustomMongoRepository(IServiceCollection services, IConfiguration configuration)
 {
-    services.AddScoped<IRepository<Order, ObjectId>, Genocs.Persistence.MongoDb.Repositories.MongoDbRepository<Order>>();
-
+    services.AddScoped<IMongoDbRepository<User>, MongoDbRepository<User>>();
     return services;
 }
 

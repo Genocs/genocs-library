@@ -1,7 +1,11 @@
 using Genocs.Common.Types;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Legacy;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
 
@@ -11,7 +15,7 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
 /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>
+public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>, IMongoRepository<TEntity, TPrimaryKey>
     where TEntity : class, IIdentifiable<TPrimaryKey>
 {
     /// <summary>
@@ -136,5 +140,60 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     {
         FilterDefinition<TEntity> query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         DeleteResult deleteResult = Collection.DeleteOneAsync(query).Result;
+    }
+
+    public IMongoQueryable<TEntity> GetMongoQueryable()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : IPagedQuery
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddAsync(TEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity)
+    {
+        throw new NotImplementedException();
     }
 }

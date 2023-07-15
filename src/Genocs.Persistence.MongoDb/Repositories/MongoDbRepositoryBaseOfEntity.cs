@@ -1,6 +1,4 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
@@ -12,8 +10,8 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 /// Implements base class for IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>
-    where TEntity : class, IIdentifiable<ObjectId>
+public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, Guid>
+    where TEntity : class, IMongoDbEntity
 {
     /// <summary>
     /// 
