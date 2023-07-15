@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>__genocs</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Content Include="certs\**" CopyToPublishDirectory="Always" />
+	</ItemGroup>	
+
+	<ItemGroup>
+		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Genocs.Template.Application\Genocs.Template.Application.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="logs\" />
+	</ItemGroup>
+
+</Project>

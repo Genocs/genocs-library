@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.4.*" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +22,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="coverlet.collector" Version="3.2.0">
+		<PackageReference Include="coverlet.collector" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

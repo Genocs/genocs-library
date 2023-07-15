@@ -5,6 +5,7 @@ namespace Genocs.Core.Domain.Repositories
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
+    using Genocs.Common.Types;
     //using Genocs.Core.Dependency;
     using Genocs.Core.Domain.Entities;
     //using Genocs.Core.Domain.Uow;
@@ -19,7 +20,7 @@ namespace Genocs.Core.Domain.Repositories
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>/*, IUnitOfWorkManagerAccessor */
-        where TEntity : class, IEntity<TPrimaryKey>
+        where TEntity : class, IIdentifiable<TPrimaryKey>
     {
         /// <summary>
         /// The multi tenancy side

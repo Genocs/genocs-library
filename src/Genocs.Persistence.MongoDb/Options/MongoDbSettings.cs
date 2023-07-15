@@ -1,4 +1,6 @@
-﻿namespace Genocs.Persistence.MongoDb.Options
+﻿using System.ComponentModel;
+
+namespace Genocs.Persistence.MongoDb.Options
 {
     /// <summary>
     /// MongoDb database Settings
@@ -8,7 +10,7 @@
         /// <summary>
         /// Default Section name
         /// </summary>
-        public static string Position = "MongoDb";
+        public const string Position = "MongoDb";
 
         /// <summary>
         /// The Database connection string
@@ -24,6 +26,19 @@
         /// Toggle database tracing
         /// </summary>
         public bool EnableTracing { get; set; }
+
+
+        /// <summary>
+        /// It defines if the database seed is applied
+        /// </summary>
+        public bool Seed { get; set; }
+
+
+        /// <summary>
+        /// It defines if random database name suffix is added
+        /// </summary>
+        [Description("Might be helpful for the integration testing.")]
+        public bool SetRandomDatabaseSuffix { get; set; }
 
 
         /// <summary>

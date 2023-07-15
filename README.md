@@ -3,7 +3,7 @@
 | Badge                       | Description                    |
 | --------------------------- | ------------------------------ |
 | Travis CI/CD                | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
-| Github Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
+| GitHub Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
 | Azure CI/CD                 | work in progress |
 | Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
 | NuGet package Version       | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
@@ -13,8 +13,7 @@
 
 This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
 
-Packages are available on [nuget Genocs](https://www.nuget.org/profiles/gioema_nocco).
-
+Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
 ---
 
@@ -48,7 +47,7 @@ docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastru
 
 ***Kubernetes cluster***
 
-A second option is to setup the application inside a Kubernetes cluster.
+Second option is to setup the application inside a Kubernetes cluster.
 
 To setup a Kubernetes cluster that can be used for production I suggest to looking at the repo: 
 - [enterprise-containers](https://github.com/Genocs/enterprise-containers)
@@ -59,13 +58,13 @@ There you can find everything needed to setup a cluster from scratch.
 ## **Libraries**
 The following section describes the full set of libraries.
 
-## Auth
+You can find a full documentation on:
+[**Documentation**](https://majestic-wisp-d90424.netlify.app/library/)
 
-Auth service defines the functionalities to build Auth system that relay on OAUTH JWT.
 
 ## Common
 
-This project contains common functionalities that do not rely on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
+This project contains common functionalities do not relied on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
 
 ## Core
 
@@ -153,10 +152,6 @@ TBW
 TBW
 
 ## WebApi CQRS
-
-TBW
-
-## WebApi Security
 
 TBW
 
@@ -429,9 +424,6 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
 docker build -t genocs/apigateway:7.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
 
-
-apigateway.dockerfile
-
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
@@ -444,10 +436,56 @@ docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
 
-A second option is to run docker-compose
+
+ ---
+
+## Enterprise Application
+
+
+Take a look inside **./src/apps** folder. There you can find a full-fledged application composed by:
+- ApiGateway
+- Identity Service
+- Order service
+- Product Service
+- SignalR Service
+
+In that way you can test the entire flow.
+
+
+
+### **How to BUILD & RUN the application**
+
+The build and run process can be done by using docker-compose
 
 ``` bash
 # Build with docker compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
+
+# *** Before running the solution remember to check ***
+# *** if the infrastructure services were setup     ***
+
+# Run with docker compose
 docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
+
+# Clean Docker cache
+docker builder prune
 ```
+
+---
+
+
+
+## **Third party libraries**
+- masstransit
+- fabio
+- consul
+
+
+---
+
+## **acknowledgments**
+
+- [devmentors](https://github.com/devmentors)
+- [abp](https://github.com/abpframework)
+
+

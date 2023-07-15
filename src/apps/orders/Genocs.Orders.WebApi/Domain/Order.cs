@@ -14,4 +14,9 @@ public class Order : IIdentifiable<Guid>
         CustomerId = customerId;
         TotalAmount = totalAmount;
     }
+
+    public bool IsTransient()
+    {
+        throw new NotImplementedException();
+    }
 }

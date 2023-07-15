@@ -1,3 +1,4 @@
+using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
 using Genocs.Monitoring;
@@ -27,17 +28,16 @@ builder.Host
 // add services to DI container
 var services = builder.Services;
 
-services.AddMongoDatabase(builder.Configuration);
-services.RegisterRepositories(Assembly.GetExecutingAssembly());
+services
+    .AddGenocs(builder.Configuration)
+    .AddMongoFast()
+    .RegisterMongoRepositories(Assembly.GetExecutingAssembly());
 
-
-//ConfigureAzureServiceBusTopic(services, builder.Configuration);
-//ConfigureAzureServiceBusQueue(services, builder.Configuration);
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
 {
-    // serialize enums as strings in api responses (e.g. Role)
+    // serialize Enums as strings in api responses (e.g. Role)
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -56,9 +56,6 @@ services.AddSwaggerGen();
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
-// Azure Service bus configuration
-//services.AddAzureServiceBusQueue(builder.Configuration);
-//services.AddAzureServiceBusTopic(builder.Configuration);
 
 services.AddOptions();
 
@@ -97,17 +94,3 @@ app.MapHealthChecks("/healthz");
 app.Run();
 
 Log.CloseAndFlush();
-
-
-//static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
-//{
-//    services.Configure<TopicSettings>(configuration.GetSection(TopicSettings.Position));
-//    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
-//}
-
-
-//static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
-//{
-//    services.Configure<QueueSettings>(configuration.GetSection(QueueSettings.Position));
-//    services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
-//}

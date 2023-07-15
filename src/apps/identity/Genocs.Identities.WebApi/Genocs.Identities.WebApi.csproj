@@ -8,10 +8,10 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Content Include="certs\**" CopyToPublishDirectory="Always" />
-	</ItemGroup>	
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />

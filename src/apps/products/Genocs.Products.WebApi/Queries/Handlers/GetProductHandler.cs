@@ -1,5 +1,5 @@
 using Genocs.Core.CQRS.Queries;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Products.WebApi.DTO;
 
 namespace Genocs.Products.WebApi.Queries.Handlers;

@@ -8,7 +8,7 @@
         /// <summary>
         /// The static position
         /// </summary>
-        public static string Position = "Monitoring";
+        public const string Position = "Monitoring";
 
         /// <summary>
         /// Jaeger url

@@ -1,18 +1,18 @@
 ﻿namespace Genocs.Core.Domain.Repositories
 {
+    using Genocs.Common.Types;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Genocs.Core.Domain.Entities;
 
     /// <summary>
     /// This interface is implemented by all repositories to ensure implementation of fixed methods.
     /// </summary>
     /// <typeparam name="TEntity">Main Entity type this repository works on</typeparam>
-    /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
-    public interface IRepository<TEntity, TPrimaryKey> : IRepository where TEntity : class, IEntity<TPrimaryKey>
+    /// <typeparam name="TIdentifiable">Primary key type of the entity</typeparam>
+    public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TEntity, TIdentifiable> where TEntity : IIdentifiable<TIdentifiable>
     {
         #region Select/Get/Query
 
@@ -71,14 +71,14 @@
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity</returns>
-        TEntity Get(TPrimaryKey id);
+        TEntity Get(TIdentifiable id);
 
         /// <summary>
         /// Gets an entity with given primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity</returns>
-        Task<TEntity> GetAsync(TPrimaryKey id);
+        Task<TEntity> GetAsync(TIdentifiable id);
 
         /// <summary>
         /// Gets exactly one entity with given predicate.
@@ -99,14 +99,14 @@
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity or null</returns>
-        TEntity FirstOrDefault(TPrimaryKey id);
+        TEntity FirstOrDefault(TIdentifiable id);
 
         /// <summary>
         /// Gets an entity with given primary key or null if not found.
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
         /// <returns>Entity or null</returns>
-        Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id);
+        Task<TEntity> FirstOrDefaultAsync(TIdentifiable id);
 
         /// <summary>
         /// Gets an entity with given given predicate or null if not found.
@@ -125,7 +125,7 @@
         /// </summary>
         /// <param name="id">Primary key of the entity to load</param>
         /// <returns>Entity</returns>
-        TEntity Load(TPrimaryKey id);
+        TEntity Load(TIdentifiable id);
 
         #endregion
 
@@ -150,7 +150,7 @@
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <returns>Id of the entity</returns>
-        TPrimaryKey InsertAndGetId(TEntity entity);
+        TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity);
 
         /// <summary>
         /// Inserts a new entity and gets it's Id.
@@ -159,7 +159,7 @@
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <returns>Id of the entity</returns>
-        Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity);
+        Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity);
 
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
@@ -181,7 +181,7 @@
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <returns>Id of the entity</returns>
-        TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
+        TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity);
 
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
@@ -191,7 +191,7 @@
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <returns>Id of the entity</returns>
-        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
+        Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity);
 
         #endregion
 
@@ -215,7 +215,7 @@
         /// <param name="id">Id of the entity</param>
         /// <param name="updateAction">Action that can be used to change values of the entity</param>
         /// <returns>Updated entity</returns>
-        TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
+        TEntity Update(TIdentifiable id, Action<TEntity> updateAction);
 
         /// <summary>
         /// Updates an existing entity.
@@ -223,7 +223,7 @@
         /// <param name="id">Id of the entity</param>
         /// <param name="updateAction">Action that can be used to change values of the entity</param>
         /// <returns>Updated entity</returns>
-        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
+        Task<TEntity> UpdateAsync(TIdentifiable id, Func<TEntity, Task> updateAction);
 
         #endregion
 
@@ -245,13 +245,13 @@
         /// Deletes an entity by primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
-        void Delete(TPrimaryKey id);
+        void Delete(TIdentifiable id);
 
         /// <summary>
         /// Deletes an entity by primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
-        Task DeleteAsync(TPrimaryKey id);
+        Task DeleteAsync(TIdentifiable id);
 
         /// <summary>
         /// Deletes many entities by function.

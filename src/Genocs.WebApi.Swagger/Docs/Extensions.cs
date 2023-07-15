@@ -1,5 +1,5 @@
-using Genocs.Docs.Swagger.Builders;
 using Genocs.Core.Builders;
+using Genocs.WebApi.Swagger.Docs.Builders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;

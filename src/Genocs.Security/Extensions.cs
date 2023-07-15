@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.Core.Security.Services;
+using Genocs.Security.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Security;

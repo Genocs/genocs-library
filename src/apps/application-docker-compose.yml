@@ -50,12 +50,47 @@ services:
 
     # External ports not enabled because of the apigateway
     #ports:
-
     networks:
       - genocs
     # network_mode: bridge
     volumes:
       - product:/var/lib/data
+
+  order.webapi:
+    image: genocs/order-webapi:1.0.0
+    hostname: order_node_1
+    container_name: order
+    build:
+      context: .
+      dockerfile: order-webapi.dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+    # External ports not enabled because of the apigateway
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - order:/var/lib/data
+
+  signalr.webapi:
+    image: genocs/signalr-webapi:1.0.0
+    hostname: signalr_node_1
+    container_name: signalr
+    build:
+      context: .
+      dockerfile: signalr-webapi.dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+    # External ports not enabled because of the apigateway
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - signalr:/var/lib/data
 
 networks:
   genocs:
@@ -69,4 +104,8 @@ volumes:
   identity:
     driver: local
   product:
+    driver: local
+  order:
+    driver: local
+  signalr:
     driver: local

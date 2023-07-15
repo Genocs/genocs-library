@@ -10,7 +10,7 @@ using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Products.WebApi;
 using Genocs.Products.WebApi.Commands;
@@ -82,6 +82,7 @@ app.UseGenocs()
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get("", ctx => ctx.Response.WriteAsync("Products Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
+        .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
         .Post<CreateProduct>("products",
             afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))

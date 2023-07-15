@@ -1,6 +1,4 @@
-using Genocs.WebApi.Swagger.Docs;
-
-namespace Genocs.Docs.Swagger.Builders;
+namespace Genocs.WebApi.Swagger.Docs.Builders;
 
 internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
 {

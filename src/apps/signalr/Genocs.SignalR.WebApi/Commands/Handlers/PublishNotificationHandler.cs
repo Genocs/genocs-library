@@ -1,13 +1,12 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.SignalR.WebApi.Commands;
-using Genocs.SignalR.WebApi.Event;
+using Genocs.SignalR.WebApi.Events;
 using Genocs.SignalR.WebApi.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using OpenTracing;
 
-namespace Genocs.Orders.WebApi.Commands.Handlers;
+namespace Genocs.SignalR.WebApi.Commands.Handlers;
 
 public class PublishNotificationHandler : ICommandHandler<PublishNotification>
 {

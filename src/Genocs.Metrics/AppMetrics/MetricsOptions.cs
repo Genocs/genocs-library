@@ -5,7 +5,7 @@ public class MetricsOptions
     /// <summary>
     /// Default section name
     /// </summary>
-    public static string Position = "Metrics";
+    public const string Position = "Metrics";
 
     /// <summary>
     /// It defines whether the section is enabled or not

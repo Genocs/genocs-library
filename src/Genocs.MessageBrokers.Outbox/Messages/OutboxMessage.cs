@@ -17,4 +17,9 @@ public sealed class OutboxMessage : IIdentifiable<string>
     public string SerializedMessageContext { get; set; }
     public DateTime SentAt { get; set; }
     public DateTime? ProcessedAt { get; set; }
+
+    public bool IsTransient()
+    {
+        throw new NotImplementedException();
+    }
 }

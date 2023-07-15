@@ -1,4 +1,5 @@
 ﻿using Genocs.Core.Demo.Domain.Aggregates;
+using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -29,7 +30,8 @@ public class MongoDbRepositoryController : ControllerBase
     public async Task<IActionResult> PostDummy()
     {
         User user = new User(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), 21, "ITA");
-        ObjectId objectId = await _userRepository.InsertAndGetIdAsync(user);
+
+        User objectId = await _userRepository.InsertAsync(user);
         return Ok(objectId.ToString());
     }
 }

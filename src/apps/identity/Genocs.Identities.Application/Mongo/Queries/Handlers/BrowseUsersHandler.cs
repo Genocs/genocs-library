@@ -2,7 +2,7 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Mongo.Documents;
 using Genocs.Identities.Application.Queries;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

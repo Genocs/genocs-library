@@ -39,10 +39,25 @@ services:
     volumes:
       - redis:/data
 
+  postgres:
+    image: postgres
+    hostname: postgres_node_1
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+
+    ports:
+      - 5432:5432
+    networks:
+      - genocs
+    # network_mode: host
+    volumes:
+      - postgres:/data      
+
 networks:
   genocs:
     name: genocs-network
-    driver: bridge    
+    driver: bridge
 
 volumes:
   mongodb:
@@ -50,4 +65,6 @@ volumes:
   rabbitmq:
     driver: local
   redis:
+    driver: local
+  postgres:    
     driver: local

@@ -1,8 +1,7 @@
 ﻿using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
-using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Repositories;
 using MassTransit;
-using MongoDB.Bson;
 
 namespace Genocs.Core.Demo.Worker.Consumers;
 
@@ -10,9 +9,9 @@ public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {
     private readonly ILogger<SubmitOrderConsumer> _logger;
 
-    private readonly IRepository<Order, ObjectId> _orderRepository;
+    private readonly IMongoDbRepository<Order> _orderRepository;
 
-    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IRepository<Order, ObjectId> orderRepository)
+    public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger, IMongoDbRepository<Order> orderRepository)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));

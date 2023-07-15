@@ -8,7 +8,7 @@
 		<PackageId>Genocs.HTTP.RestEase</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview.3.0</Version>
+		<Version>5.0.0-preview.4.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -21,7 +21,7 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-		<PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
@@ -37,7 +37,7 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<None Include="README_NUGET.md">
+		<None Include="README.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
@@ -52,14 +52,14 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.HTTP" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.Discovery.Consul" Version="5.0.0-preview.3.*" />
-		<PackageReference Include="Genocs.LoadBalancing.Fabio" Version="5.0.0-preview.3.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.HTTP" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Discovery.Consul" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.LoadBalancing.Fabio" Version="5.0.0-preview.4.*" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-		<PackageReference Include="RestEase" Version="1.6.1" />
+		<PackageReference Include="RestEase" Version="1.6.4" />
 	</ItemGroup>
 </Project>

@@ -1,13 +1,13 @@
-using Genocs.Core.Dependency;
+using Genocs.Common.Types;
 
 
 namespace Genocs.Core.Domain.Repositories;
 
 /// <summary>
-/// This interface must be implemented by all repositories to identify them by convention.
+/// This interface is used to identify a repository so can be used to be registered by convention.
 /// Implement generic version instead of this one.
 /// </summary>
-public interface IRepository : ITransientDependency
+public interface IRepository<TEntity, in TIdentifiable> where TEntity : IIdentifiable<TIdentifiable>
 {
-    
+
 }
