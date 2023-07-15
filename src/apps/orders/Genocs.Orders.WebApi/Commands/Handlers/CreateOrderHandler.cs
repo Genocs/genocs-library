@@ -4,7 +4,7 @@ using Genocs.MessageBrokers.Outbox;
 using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.Events;
 using Genocs.Orders.WebApi.Services;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Repositories;
 using OpenTracing;
 
 namespace Genocs.Orders.WebApi.Commands.Handlers;

@@ -2,7 +2,6 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Legacy;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;

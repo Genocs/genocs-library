@@ -1,9 +1,9 @@
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Legacy;
+namespace Genocs.Persistence.MongoDb.Repositories;
 
 /// <summary>
-/// The MongoDB seeder
+/// The MongoDb seeder
 /// </summary>
 public interface IMongoDbSeeder
 {

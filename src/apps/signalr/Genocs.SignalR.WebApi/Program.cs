@@ -7,7 +7,7 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.Vault;
 using Genocs.SignalR.WebApi.Commands;
 using Genocs.SignalR.WebApi.Exceptions;

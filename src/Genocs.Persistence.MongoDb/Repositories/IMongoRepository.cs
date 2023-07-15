@@ -5,7 +5,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Legacy;
+namespace Genocs.Persistence.MongoDb.Repositories;
 
 public interface IMongoRepository<TEntity, in TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier> where TEntity : IIdentifiable<TIdentifier>
 {

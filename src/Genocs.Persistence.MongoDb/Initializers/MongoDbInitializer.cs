@@ -1,7 +1,8 @@
 using Genocs.Persistence.MongoDb.Options;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Legacy.Initializers;
+namespace Genocs.Persistence.MongoDb.Initializers;
 
 internal sealed class MongoDbInitializer : IMongoDbInitializer
 {

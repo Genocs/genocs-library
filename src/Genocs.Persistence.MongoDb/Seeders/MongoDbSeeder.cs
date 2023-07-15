@@ -1,6 +1,7 @@
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Legacy.Seeders;
+namespace Genocs.Persistence.MongoDb.Seeders;
 
 internal class MongoDbSeeder : IMongoDbSeeder
 {

@@ -1,5 +1,4 @@
 ﻿using Genocs.Common.Types;
-using Genocs.Persistence.MongoDb.Legacy;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
 

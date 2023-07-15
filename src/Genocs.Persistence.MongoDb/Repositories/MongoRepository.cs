@@ -1,12 +1,11 @@
 using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Legacy.Repositories;
+namespace Genocs.Persistence.MongoDb.Repositories;
 
 internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntity, TIdentifiable>
     where TEntity : IIdentifiable<TIdentifiable>

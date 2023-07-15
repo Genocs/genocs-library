@@ -1,19 +1,21 @@
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Persistence.MongoDb.Builders;
-using Genocs.Persistence.MongoDb.Legacy.Factories;
-using Genocs.Persistence.MongoDb.Legacy.Initializers;
-using Genocs.Persistence.MongoDb.Legacy.Repositories;
-using Genocs.Persistence.MongoDb.Legacy.Seeders;
+using Genocs.Persistence.MongoDb.Factories;
+using Genocs.Persistence.MongoDb.Initializers;
 using Genocs.Persistence.MongoDb.Options;
 using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Seeders;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
-namespace Genocs.Persistence.MongoDb.Legacy;
+namespace Genocs.Persistence.MongoDb.Extensions;
 
-public static class Extensions
+/// <summary>
+/// The MongoDb Extensions
+/// </summary>
+public static class MongoDbExtensions
 {
     // Helpful when dealing with integration testing
     private static bool _conventionsRegistered;
@@ -90,7 +92,7 @@ public static class Extensions
         builder.AddInitializer<IMongoDbInitializer>();
         if (registerConventions && !_conventionsRegistered)
         {
-            MongoDb.Extensions.ServiceCollectionExtensions.RegisterConventions();
+            ServiceCollectionExtensions.RegisterConventions();
         }
 
         return builder;

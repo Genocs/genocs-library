@@ -1,6 +1,6 @@
 using Genocs.MessageBrokers.Outbox.Messages;
 using Genocs.MessageBrokers.Outbox.Options;
-using Genocs.Persistence.MongoDb.Legacy;
+using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System.Text.Json;
