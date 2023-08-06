@@ -57,7 +57,7 @@ Insise that repo you can find script, configuration file and documentation to se
 The following section describes the full set of libraries.
 
 You can find a full documentation on:
-[**Documentation**](https://majestic-wisp-d90424.netlify.app/library/)
+[**Documentation**](https://genocs-blog.netlify.app/library/)
 
 
 ## Common
@@ -474,6 +474,14 @@ docker builder prune
 - masstransit
 - fabio
 - consul
+
+### Deploy in a cloud instance
+
+You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Google Cloud Platform: 
+
+[<img src="https://www.herokucdn.com/deploy/button.svg" height="30px">](https://heroku.com/deploy?template=https://github.com/heartexlabs/label-studio/tree/heroku-persistent-pg)
+[<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
+[<img src="https://deploy.cloud.run/button.svg" height="30px">](https://deploy.cloud.run)
 
 
 ## Community
