@@ -32,4 +32,3 @@ jobs:
 
       - name: Pack
         run: dotnet pack --no-build --verbosity normal
-

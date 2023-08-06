@@ -1,21 +1,18 @@
-# Genocs .NET libraries
+# Genocs .NET library
 
-| Badge                       | Description                    |
-| --------------------------- | ------------------------------ |
-| Travis CI/CD                | [![Travis](https://travis-ci.org/Genocs/genocs-library.svg?branch=master)](https://travis-ci.org/Genocs/genocs-library)       |
-| GitHub Actions              | [![.NET](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)     |
-| Azure CI/CD                 | work in progress |
-| Discord community           | ![Discord](https://dcbadge.vercel.app/api/shield/461057072054927361?style=flat-square)  |
-| NuGet package Version       | [![NuGet](https://img.shields.io/badge/nuget-v2.4.0-blue)](https://www.nuget.org/packages/Genocs.Core) |
-| NuGet package Downloads     | [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core) |
+[![GitHub](https://img.shields.io/github/license/Genocs/genocs-library?color=2da44e&style=flat-square)](https://github.com/Genocs/genocs-library/blob/main/LICENSE)
+[![.NET build and test](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml)
+[![NuGet](https://img.shields.io/badge/nuget-v.5.0.0-blue)](https://www.nuget.org/packages/Genocs.Core)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core)
+[![Discord](https://img.shields.io/discord/1106846706512953385?color=%237289da&label=Discord&logo=discord&logoColor=%237289da&style=flat-square)](https://discord.com/invite/fWwArnkV)
+[![Twitter](https://img.shields.io/twitter/follow/genocs?color=1DA1F2&label=Twitter&logo=Twitter&style=flat-square)](https://twitter.com/genocs)
+
 
 ---
-
 This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
----
 
 ## The idea
 
@@ -30,7 +27,6 @@ The advantages of using containers are numerous. Containers provide a lightweigh
 ![Overview](./assets/Genocs-Library-Overview.drawio.png)
 
 
----
 
 ## Infrastructure
 
@@ -38,23 +34,25 @@ This section will show how to setup the infrastructure components.
 
 ***Docker compose***
 
-If you want to use docker compose to run infrastructure you can run the command below.
+Use the command below to use docker compose.
 
 ``` bash
-# Setup the infrastructure  
-docker-compose -f ./containers/infrastructure-bare.yml -f ./containers/infrastructure-monitoring.yml -f ./containers/infrastructure-scaling.yml -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
+# Setup the infrastructure
+docker-compose -f ./containers/infrastructure-bare.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-monitoring.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-scaling.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
 ```
+
 
 ***Kubernetes cluster***
 
-Second option is to setup the application inside a Kubernetes cluster.
+You can setup the application inside a Kubernetes cluster.
 
-To setup a Kubernetes cluster that can be used for production I suggest to looking at the repo: 
-- [enterprise-containers](https://github.com/Genocs/enterprise-containers)
+Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster.
 
-There you can find everything needed to setup a cluster from scratch.
+Insise that repo you can find script, configuration file and documentation to setup a cluster from scratch.
 
----
 ## **Libraries**
 The following section describes the full set of libraries.
 
@@ -471,9 +469,6 @@ docker-compose -f ./src/apps/application-docker-compose.yml --project-name genoc
 docker builder prune
 ```
 
----
-
-
 
 ## **Third party libraries**
 - masstransit
@@ -481,7 +476,39 @@ docker builder prune
 - consul
 
 
----
+## Community
+
+- Discord [@genocs](https://discord.com/invite/fWwArnkV)
+- Facebook Page [@genocs](https://facebook.com/Genocs)
+- Youtube Channel [@genocs](https://youtube.com/c/genocs)
+
+## Contributors
+
+Submit your PR and join the list!
+
+<a href="https://github.com/Genocs/genocs-library/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Genocs/genocs-library" />
+</a>
+
+## License
+
+This project is licensed with the [MIT license](LICENSE).
+
+## Support :star:
+
+Has this project helped you learn something New? or Helped you at work?
+Here are a few ways by which you can support.
+
+-   Leave a star! :star:
+-   Recommend this awesome project to your colleagues. 🥇
+-   Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/) 🦸
+-   Or, If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)! ☕
+
+<br>
+    
+<a href="https://www.buymeacoffee.com/genocs"><img width="250" alt="black-button" src="https://user-images.githubusercontent.com/31455818/138557309-27587d91-7b82-4cab-96bb-90f4f4e600f1.png" ></a>
+
+
 
 ## **acknowledgments**
 
