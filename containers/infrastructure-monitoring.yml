@@ -52,7 +52,7 @@ services:
     # network_mode: host
     volumes:
       - prometheus:/var/lib/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/var/lib/prometheus/prometheus.yml
 
   seq:
     image: datalust/seq
