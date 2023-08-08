@@ -3,7 +3,7 @@ version: "3.9"
 services:
   consul:
     image: consul
-    hostname: consul_node_1
+    hostname: consul
     container_name: consul
     ports:
       - 8500:8500
@@ -15,7 +15,7 @@ services:
 
   fabio:
     image: fabiolb/fabio
-    hostname: fabio_node_1
+    hostname: fabio
     container_name: fabio
     environment:
       - FABIO_REGISTRY_CONSUL_ADDR=consul:8500

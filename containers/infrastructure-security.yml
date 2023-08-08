@@ -3,7 +3,7 @@ version: "3.9"
 services:
   vault:
     image: vault
-    hostname: vault_node_1
+    hostname: vault
     container_name: vault
     ports:
       - 8200:8200

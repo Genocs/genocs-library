@@ -42,6 +42,9 @@ docker-compose -f ./containers/infrastructure-bare.yml --project-name genocs-inf
 docker-compose -f ./containers/infrastructure-monitoring.yml --project-name genocs-infrastructure up -d
 docker-compose -f ./containers/infrastructure-scaling.yml --project-name genocs-infrastructure up -d
 docker-compose -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-sqlserver.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
 ```
 
 
@@ -51,71 +54,11 @@ You can setup the application inside a Kubernetes cluster.
 
 Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster.
 
-Insise that repo you can find script, configuration file and documentation to setup a cluster from scratch.
+Inside the repo you can find scripts, configuration files and documentation to setup a cluster from scratch.
 
 ## **Libraries**
-The following section describes the full set of libraries.
-
 You can find a full documentation on:
 [**Documentation**](https://genocs-blog.netlify.app/library/)
-
-
-## Common
-
-This project contains common functionalities do not relied on runtime or other libraries. This project contains interfaces and base classes used as placeholders and to be used across the platform without dependencies.
-
-## Core
-
-Core project contains general purpose functionalities to be used on DDD service.
-
-## HTTP
-
-This library implements WebAPI client HTTP functionalities.
-
-## Logging
-
-This library implements logging functionalities.
-
-## MessageBrokers
-
-This library implements the domain message broker for commands and events.
-
-## MessageBrokers Outbox
-
-TBW
-
-## MessageBrokers MongoDB
-
-TBW
-
-
-## MessageBrokers RabbitMQ
-
-TBW
-
-## Metrics
-
-TBW
-
-## Persistence MongoDB
-
-Persistence MongoDB is the library that allows to persist data on MongoDB.
-
-## Persistence Redis
-
-Persistence Redis is the library that allows to persist data on Redis database.
-
-## Query Builder
-
-TBW
-
-## Secrets Vault
-
-TBW
-
-## Security
-
-TBW
 
 ## ServiceBusAzure
 
@@ -141,31 +84,13 @@ az servicebus namespace authorization-rule keys list --resource-group rg-genocs 
 
 ```
 
-## Tracing
-
-TBW
-
-## WebApi
-
-TBW
-
-## WebApi CQRS
-
-TBW
-
-
-## WebApi Swagger
-
-TBW
-
-
 
 
 ## Support
 
-api-workbench.rest
 
-Use this file inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
+
+Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
 
 ## Configuration
 
@@ -384,10 +309,8 @@ Use this file inside Visual Studio code with [REST Client](https://marketplace.v
       }
     }
   }
-  ```
-
-
-  ---
+```
+---
 
 ## Demo Application
 Inside the library there is a simple demo application you can use to test the library. 
@@ -420,7 +343,6 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ``` bash
 # Build webapi
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
-docker build -t genocs/apigateway:7.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
@@ -433,7 +355,6 @@ docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-
 docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
-
 
  ---
 
@@ -467,6 +388,39 @@ docker-compose -f ./src/apps/application-docker-compose.yml --project-name genoc
 
 # Clean Docker cache
 docker builder prune
+```
+
+
+Following commands are useful to build and push the images one by one
+
+``` bash
+# Build the api gateway
+docker build -t genocs/apigateway:1.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
+
+# Build the identities service
+docker build -t genocs/identities:1.0.0 -f ./src/apps/containers/identity-webapi.dockerfile ../../.
+
+# Build the order service
+docker build -t genocs/orders:1.0.0 -f ./src/apps/containers/order-webapi.dockerfile ../../.
+
+# Build the product service
+docker build -t genocs/products:1.0.0 -f ./src/apps/containers/product-webapi.dockerfile ../../.
+
+# Build the signalr service
+docker build -t genocs/signalr:1.0.0 -f ./src/apps/containers/signalr-webapi.dockerfile ../../.
+
+
+# Push on Dockerhub
+docker push genocs/apigateway:1.0.0
+docker push genocs/apigateway:latest
+docker push genocs/identities:1.0.0
+docker push genocs/identities:latest
+docker push genocs/orders:1.0.0
+docker push genocs/orders:latest
+docker push genocs/products:1.0.0
+docker push genocs/products:latest
+docker push genocs/signalr:1.0.0
+docker push genocs/signalr:latest
 ```
 
 
@@ -516,11 +470,7 @@ Here are a few ways by which you can support.
     
 <a href="https://www.buymeacoffee.com/genocs"><img width="250" alt="black-button" src="https://user-images.githubusercontent.com/31455818/138557309-27587d91-7b82-4cab-96bb-90f4f4e600f1.png" ></a>
 
-
-
 ## **acknowledgments**
 
 - [devmentors](https://github.com/devmentors)
 - [abp](https://github.com/abpframework)
-
-
