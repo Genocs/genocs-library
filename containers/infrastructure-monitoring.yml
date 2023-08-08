@@ -3,7 +3,7 @@ version: "3.9"
 services:
   grafana:
     image: grafana/grafana
-    hostname: grafana_node_1
+    hostname: grafana
     container_name: grafana
     ports:
       - 3000:3000
@@ -15,7 +15,7 @@ services:
 
   influxdb:
     image: influxdb
-    hostname: influxdb_node_1
+    hostname: influxdb
     container_name: influxdb
     ports:
       - 8086:8086
@@ -23,7 +23,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - influxdb:/var/lib/influxdb
+      - influxdb:/var/lib/influxdb2
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -42,8 +42,7 @@ services:
       - genocs
 
   prometheus:
-    image: prom/prometheus
-    hostname: prometheus_node_1
+    build: ./prometheus
     container_name: prometheus
     ports:
       - 9090:9090
@@ -52,11 +51,9 @@ services:
     # network_mode: host
     volumes:
       - prometheus:/var/lib/prometheus
-      - ./prometheus.yml:/var/lib/prometheus/prometheus.yml
-
   seq:
     image: datalust/seq
-    hostname: seq_node_1
+    hostname: seq
     container_name: seq
     environment:
       - ACCEPT_EULA=Y

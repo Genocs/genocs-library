@@ -3,7 +3,7 @@ version: "3.9"
 services:
   rabbitmq:
     image: masstransit/rabbitmq
-    hostname: rabbit_node_1
+    hostname: rabbitmq
     container_name: rabbitmq
     ports:
       - 5672:5672
@@ -13,11 +13,11 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - rabbitmq:/var/lib/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq/mnesia
 
   mongodb:
     image: mongo
-    hostname: mongodb_node_1
+    hostname: mongodb
     container_name: mongodb
     ports:
       - 27017:27017
@@ -25,11 +25,11 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - mongodb:/var/lib/data/db
+      - mongodb:/data/db
 
   redis:
     image: redis
-    hostname: redis_node_1
+    hostname: redis
     container_name: redis
     ports:
       - 6379:6379
@@ -41,7 +41,7 @@ services:
 
   postgres:
     image: postgres
-    hostname: postgres_node_1
+    hostname: postgres
     container_name: postgres
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
@@ -52,7 +52,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - postgres:/data      
+      - postgres:/var/lib/postgresql/data
 
 networks:
   genocs:
@@ -66,5 +66,5 @@ volumes:
     driver: local
   redis:
     driver: local
-  postgres:    
+  postgres:
     driver: local
