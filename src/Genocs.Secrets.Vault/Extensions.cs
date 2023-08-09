@@ -27,7 +27,7 @@ public static class Extensions
     /// <summary>
     /// UseVault
     /// </summary>
-    /// <param name="builder"></param>
+    /// <param name="builder">The builder</param>
     /// <param name="keyValuePath"></param>
     /// <param name="sectionName"></param>
     /// <returns></returns>

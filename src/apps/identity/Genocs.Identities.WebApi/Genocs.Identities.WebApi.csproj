@@ -10,10 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="certs\**" CopyToPublishDirectory="Always" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
 		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -22,7 +18,11 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
 	</ItemGroup>
-
+	
+	<ItemGroup>
+		<Content Include="certs\**" CopyToPublishDirectory="Always" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<Folder Include="logs\" />
 	</ItemGroup>

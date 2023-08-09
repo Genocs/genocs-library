@@ -3,6 +3,7 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System;
 using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
@@ -39,15 +40,36 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         TQuery query) where TQuery : IPagedQuery
         => Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
+    /// <summary>
+    /// It adds an entity to the Mongo Collection
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
     public Task AddAsync(TEntity entity)
         => Collection.InsertOneAsync(entity);
 
+    /// <summary>
+    /// It updates an entity in the Mongo Collection
+    /// </summary>
+    /// <param name="entity">The entity</param>
+    /// <returns>The updated entity</returns>
     public Task UpdateAsync(TEntity entity)
         => UpdateAsync(entity, e => e.Id.Equals(entity.Id));
 
+    /// <summary>
+    /// It updates an entity in the Mongo Collection in async mode
+    /// </summary>
+    /// <param name="entity">The entity</param>
+    /// <param name="predicate">The predicate</param>
+    /// <returns>The updated entity</returns>
     public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
         => Collection.ReplaceOneAsync(predicate, entity);
 
+    /// <summary>
+    /// It deletes an entity from the Mongo Collection in async mode
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Task DeleteAsync(TIdentifiable id)
         => DeleteAsync(e => e.Id.Equals(id));
 
@@ -58,9 +80,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         => Collection.Find(predicate).AnyAsync();
 
     public IQueryable<TEntity> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.AsQueryable();
 
     public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
     {
@@ -68,23 +88,29 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     }
 
     public List<TEntity> GetAllList()
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.AsQueryable().ToList();
 
-    public Task<List<TEntity>> GetAllListAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<List<TEntity>> GetAllListAsync()
+        => await Collection.AsQueryable().ToListAsync();
 
     public List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        if (predicate == null)
+        {
+            return GetAllList();
+        }
+
+        return Collection.Find(predicate).ToList();
     }
 
-    public Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        if (predicate == null)
+        {
+            return await GetAllListAsync();
+        }
+
+        return await Collection.Find(predicate).ToListAsync();
     }
 
     public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
@@ -93,38 +119,33 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     }
 
     public TEntity Get(TIdentifiable id)
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.Find(c => c.Id.Equals(id)).First();
 
     public TEntity Single(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.Find(predicate).Single();
 
-    public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        var result = await Collection.FindAsync(predicate);
+        return await result.SingleAsync();
     }
 
     public TEntity FirstOrDefault(TIdentifiable id)
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.Find(c => c.Id.Equals(id)).FirstOrDefault();
 
-    public Task<TEntity> FirstOrDefaultAsync(TIdentifiable id)
+    public async Task<TEntity> FirstOrDefaultAsync(TIdentifiable id)
     {
-        throw new NotImplementedException();
+        var result = await Collection.FindAsync(c => c.Id.Equals(id));
+        return await result.FirstOrDefaultAsync();
     }
 
     public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.Find(predicate).FirstOrDefault();
 
-    public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        var result = await Collection.FindAsync(predicate);
+        return await result.FirstOrDefaultAsync();
     }
 
     public TEntity Load(TIdentifiable id)
@@ -134,17 +155,20 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TEntity Insert(TEntity entity)
     {
-        throw new NotImplementedException();
+        Collection.InsertOne(entity);
+        return entity;
     }
 
-    public Task<TEntity> InsertAsync(TEntity entity)
+    public async Task<TEntity> InsertAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        await Collection.InsertOneAsync(entity);
+        return entity;
     }
 
-    public TIdentifiable1 InsertAndGetId<TIdentifiable1>(TEntity entity)
+    public TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity)
     {
-        throw new NotImplementedException();
+        Collection.InsertOne(entity);
+        return entity.Id;
     }
 
     public Task<TIdentifiable1> InsertAndGetIdAsync<TIdentifiable1>(TEntity entity)
@@ -154,33 +178,33 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
-        throw new NotImplementedException();
+        Collection.ReplaceOne(c => c.Id.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        return entity;
     }
 
-    public Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+    public async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        await Collection.ReplaceOneAsync(c => c.Id.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        return entity;
     }
 
-    public TIdentifiable1 InsertOrUpdateAndGetId<TIdentifiable1>(TEntity entity)
+    public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
     {
-        throw new NotImplementedException();
+        return InsertOrUpdate(entity).Id;
     }
 
     public Task<TIdentifiable1> InsertOrUpdateAndGetIdAsync<TIdentifiable1>(TEntity entity)
     {
+
         throw new NotImplementedException();
     }
 
     public TEntity Update(TEntity entity)
     {
-        throw new NotImplementedException();
+        Collection.ReplaceOne(c => c.Id.Equals(entity.Id), entity);
+        return entity;
     }
 
-    Task<TEntity> IRepositoryOfEntity<TEntity, TIdentifiable>.UpdateAsync(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
 
     public TEntity Update(TIdentifiable id, Action<TEntity> updateAction)
     {
@@ -194,61 +218,64 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public void Delete(TEntity entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        Delete(entity.Id);
     }
 
     public Task DeleteAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        if (entity == null)
+        {
+            throw new ArgumentNullException(nameof(entity));
+        }
+        return DeleteAsync(entity.Id);
     }
 
     public void Delete(TIdentifiable id)
     {
-        throw new NotImplementedException();
+        if (id == null)
+        {
+            throw new ArgumentNullException(nameof(id));
+        }
+        Collection.DeleteOne(c => c.Id.Equals(id));
     }
 
     public void Delete(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        if (predicate == null)
+        {
+            throw new ArgumentNullException(nameof(predicate));
+        }
+        Collection.DeleteMany(predicate);
     }
 
     public int Count()
-    {
-        throw new NotImplementedException();
-    }
+        => (int)Collection.EstimatedDocumentCount();
 
-    public Task<int> CountAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<int> CountAsync()
+        => (int)await Collection.EstimatedDocumentCountAsync();
 
     public int Count(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+        => (int)Collection.CountDocuments(predicate);
 
-    public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        => (int)await Collection.EstimatedDocumentCountAsync();
 
     public long LongCount()
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.EstimatedDocumentCount();
 
-    public Task<long> LongCountAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<long> LongCountAsync()
+        => await Collection.EstimatedDocumentCountAsync();
 
     public long LongCount(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.CountDocuments(predicate);
 
-    public Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        => await Collection.CountDocumentsAsync(predicate);
+
+    async Task<TEntity> IRepositoryOfEntity<TEntity, TIdentifiable>.UpdateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        await UpdateAsync(entity, e => e.Id.Equals(entity.Id));
+        return entity;
     }
 }

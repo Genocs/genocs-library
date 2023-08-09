@@ -9,6 +9,8 @@ using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Serilog;
 using Serilog.Events;
+using Genocs.Secrets.Vault;
+
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -22,8 +24,8 @@ Log.Logger = new LoggerConfiguration()
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-        .UseLogging();
-//        .UseVault();
+        .UseLogging()
+        .UseVault();
 
 
 var services = builder.Services;
