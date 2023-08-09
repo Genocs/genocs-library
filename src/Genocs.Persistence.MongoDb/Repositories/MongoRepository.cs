@@ -167,8 +167,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity)
     {
-        Collection.InsertOne(entity);
-        return entity.Id;
+        throw new NotImplementedException();
     }
 
     public Task<TIdentifiable1> InsertAndGetIdAsync<TIdentifiable1>(TEntity entity)
@@ -190,7 +189,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
     {
-        return InsertOrUpdate(entity).Id;
+        throw new NotImplementedException();
     }
 
     public Task<TIdentifiable1> InsertOrUpdateAndGetIdAsync<TIdentifiable1>(TEntity entity)
