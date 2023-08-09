@@ -15,6 +15,9 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
+### [2023-03-12] 5.0.0-preview.5.0
+- Implemented MongoDB repository interfaces
+
 ### [2023-03-12] 5.0.0
 - New Architecture
 
@@ -23,7 +26,6 @@ Please check the GitHub repository getting more info.
 
 ### [2023-03-12] 3.0.0
 - Refactory to implement CQRS pattern
-
 
 ### [2023-03-04] 2.4.1
 - Updated System.Text.Json
