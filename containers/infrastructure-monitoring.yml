@@ -50,7 +50,8 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - prometheus:/var/lib/prometheus
+      - prometheus:/etc/prometheus
+
   seq:
     image: datalust/seq
     hostname: seq
