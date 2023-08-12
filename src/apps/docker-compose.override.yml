@@ -1,27 +1,27 @@
 version: '3.9'
 
 services:
-  apigateway:
+  api-gateway:
     build:
       context: .
       dockerfile: apigateway.dockerfile
 
-  identity.webapi:
+  identity-service:
     build:
       context: .
       dockerfile: identity-webapi.dockerfile
 
-  products.webapi:
+  products-service:
     build:
       context: .
       dockerfile: product-webapi.dockerfile
 
-  orders.webapi:
+  orders-service:
     build:
       context: .
       dockerfile: order-webapi.dockerfile
 
-  signalr.webapi:
+  signalr-service:
     build:
       context: .
       dockerfile: signalr-webapi.dockerfile

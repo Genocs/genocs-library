@@ -1,10 +1,10 @@
 version: '3.9'
 
 services:
-  apigateway:
+  api-gateway:
     image: genocs/apigateway:${IMAGE_VERSION}
-    hostname: apigateway
-    container_name: apigateway
+    hostname: api-gateway
+    container_name: api-gateway
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
@@ -15,10 +15,10 @@ services:
     volumes:
       - apigateway:/var/lib/data
 
-  identity.webapi:
+  identity-service:
     image: genocs/identity-webapi:${IMAGE_VERSION}
-    hostname: identity
-    container_name: identity
+    hostname: identity-service
+    container_name: identity-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
@@ -29,13 +29,14 @@ services:
     volumes:
       - identity:/var/lib/data
 
-  products.webapi:
+  products-service:
     image: genocs/product-webapi:${IMAGE_VERSION}
-    hostname: products
-    container_name: products
+    hostname: products-service
+    container_name: products-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-    # External ports not enabled because of the apigateway
+    ports:
+      - 5502:80
     #ports:
     networks:
       - genocs
@@ -43,14 +44,14 @@ services:
     volumes:
       - products:/var/lib/data
 
-  orders.webapi:
+  orders-service:
     image: genocs/order-webapi:${IMAGE_VERSION}
-    hostname: orders
-    container_name: orders
+    hostname: orders-service
+    container_name: orders-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-
-    # External ports not enabled because of the apigateway
+    ports:
+      - 5503:80
     #ports:
     networks:
       - genocs
@@ -58,13 +59,14 @@ services:
     volumes:
       - orders:/var/lib/data
 
-  signalr.webapi:
+  signalr-service:
     image: genocs/signalr-webapi:${IMAGE_VERSION}
-    hostname: signalr
-    container_name: signalr
+    hostname: signalr-service
+    container_name: signalr-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-    # External ports not enabled because of the apigateway
+    ports:
+      - 5504:80
     #ports:
     networks:
       - genocs

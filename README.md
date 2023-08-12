@@ -25,11 +25,8 @@ The advantages of using containers are numerous. Containers provide a lightweigh
 
 ## Infrastructure
 
-This section will show how to setup the infrastructure components.
-
-***Docker compose***
-
-Use the command below to use docker compose.
+In this section you can find the infrastructure components to setup the environment.
+You will use ***Docker compose*** to setup the infrastructure components.
 
 
 ``` bash
@@ -38,19 +35,25 @@ docker-compose -f ./containers/infrastructure-bare.yml --project-name genocs-inf
 docker-compose -f ./containers/infrastructure-monitoring.yml --project-name genocs-infrastructure up -d
 docker-compose -f ./containers/infrastructure-scaling.yml --project-name genocs-infrastructure up -d
 docker-compose -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
+
+# Use this file only in case you want to setup sqlserver database (no need if you use postgres)
 docker-compose -f ./containers/infrastructure-sqlserver.yml --project-name genocs-infrastructure up -d
+
+# Use this file only in case you want to setup elk stack
 docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infrastructure up -d
+
+# Use this file only in case you want to setup AI ML components prepared by Genocs
 docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
 ```
 
-`infrastructure-bare.yml` allows to install the basic infrastructure components.
+`infrastructure-bare.yml` allows to install the basic infrastructure components. Basic componens are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
 
-Inside the file you can find:
 
-- rabbitmq
+- [rabbitmq](http://localhost:15672/)
 - redis
 - mongo
 - postgresql
+
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
 
@@ -107,30 +110,6 @@ Inside the repo you can find scripts, configuration files and documentation to s
 ## **Libraries**
 You can find a full documentation on:
 [**Documentation**](https://genocs-blog.netlify.app/library/)
-
-## ServiceBusAzure
-
-The ServiceBusAzure allows to publish/send messages to Azure Service Bus
-
-- [service-bus-quickstart-cli](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli)
-
-``` PS
-# Create Azure Resource group
-az group create -n rg-genocs --location "West Europe"
-
-# Create WebApp
-# https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-create
-
-# Create the Azure Servicebus namespace
-az servicebus namespace create --resource-group rg-genocs --name asb-genocs --location "West Europe"
-
-# Create the queue
-az servicebus queue create --resource-group rg-genocs --namespace-name asb-genocs --name queue_1
-
-# Get the connection string
-az servicebus namespace authorization-rule keys list --resource-group rg-genocs --namespace-name asb-genocs --name RootManageSharedAccessKey --query primaryConnectionString --output tsv 
-
-```
 
 
 
@@ -428,13 +407,13 @@ The build and run process can be done by using docker-compose
 cd src/apps
 
 # Build with docker compose
-docker compose -f ./application-docker-compose.yml -f ./application-docker-compose.override.yml --env-file ./local.env --project-name genocs-library build
+docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs-app build
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker compose -f ./src/apps/application-docker-compose.yml --env-file ./local.env --project-name genocs-library up -d
+docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs-app up -d
 
 # Clean Docker cache
 docker builder prune
@@ -444,20 +423,22 @@ docker builder prune
 Following commands are useful to build and push the images one by one
 
 ``` bash
-# Build the api gateway
-docker build -t genocs/apigateway:1.0.0 -f ./src/apps/containers/apigateway.dockerfile ../../.
+cd src/apps
 
-# Build the identities service
-docker build -t genocs/identities:1.0.0 -f ./src/apps/containers/identity-webapi.dockerfile ../../.
+# Build the api gateway
+docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
+
+# Build the identity service
+docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity-webapi.dockerfile .
 
 # Build the order service
-docker build -t genocs/orders:1.0.0 -f ./src/apps/containers/order-webapi.dockerfile ../../.
+docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order-webapi.dockerfile .
 
 # Build the product service
-docker build -t genocs/products:1.0.0 -f ./src/apps/containers/product-webapi.dockerfile ../../.
+docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product-webapi.dockerfile .
 
 # Build the signalr service
-docker build -t genocs/signalr:1.0.0 -f ./src/apps/containers/signalr-webapi.dockerfile ../../.
+docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr-webapi.dockerfile .
 
 
 # Push on Dockerhub

@@ -3,14 +3,14 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5007"
+      "applicationUrl": "http://localhost:5004;https://localhost:5014"
     }
   },
   "profiles": {
     "Genocs.Services.SignalR": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5007",
+      "applicationUrl": "http://localhost:5004;https://localhost:5014",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }

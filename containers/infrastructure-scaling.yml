@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   consul:
-    image: consul
+    image: hashicorp/consul
     hostname: consul
     container_name: consul
     ports:
