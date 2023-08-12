@@ -43,8 +43,10 @@ internal sealed class JwtHandler : IJwtHandler
         _issuer = options.Issuer;
     }
 
-    public JsonWebToken CreateToken(string userId, string role = null, string audience = null,
-        IDictionary<string, IEnumerable<string>> claims = null)
+    public JsonWebToken CreateToken(string userId,
+                                    string? role = null,
+                                    string? audience = null,
+                                    IDictionary<string, IEnumerable<string>>? claims = null)
     {
         if (string.IsNullOrWhiteSpace(userId))
         {

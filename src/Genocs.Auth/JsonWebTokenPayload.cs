@@ -8,7 +8,7 @@ public class JsonWebTokenPayload
     /// <summary>
     /// The subject
     /// </summary>
-    public string Subject { get; set; }
+    public string? Subject { get; set; }
 
     /// <summary>
     /// The Identity Role

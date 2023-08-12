@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Genocs.Auth.Services;
 
@@ -44,11 +41,16 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
     private string GetCurrentAsync()
     {
         var authorizationHeader = _httpContextAccessor
-            .HttpContext.Request.Headers["authorization"];
+            .HttpContext?.Request.Headers["authorization"];
 
-        return authorizationHeader == StringValues.Empty
+        if (authorizationHeader is null)
+        {
+            return StringValues.Empty;
+        }
+
+        return authorizationHeader.Value == StringValues.Empty
             ? string.Empty
-            : authorizationHeader.Single().Split(' ').Last();
+            : authorizationHeader.Value.Single().Split(' ').Last();
     }
 
     private static string GetKey(string token) => $"blacklisted-tokens:{token}";

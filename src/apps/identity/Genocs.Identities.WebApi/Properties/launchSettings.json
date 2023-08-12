@@ -21,7 +21,7 @@
           "ASPNETCORE_ENVIRONMENT": "Development"
         }
       },
-      "applicationUrl": "https://localhost:5271;http://localhost:5270"
+      "applicationUrl": "https://localhost:5011;http://localhost:5001"
     }
   }
 }

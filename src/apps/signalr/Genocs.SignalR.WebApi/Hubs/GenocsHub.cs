@@ -21,12 +21,12 @@ public class GenocsHub : Hub
         try
         {
             var payload = _jwtHandler.GetTokenPayload(token);
-            if (payload == null)
+            if (payload is null || string.IsNullOrEmpty(payload.Subject))
             {
                 await DisconnectAsync();
-
                 return;
             }
+
             var group = Guid.Parse(payload.Subject).ToUserGroup();
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
             await ConnectAsync();

@@ -8,9 +8,8 @@
 #@identity = https://localhost:5271
 
 # Container version
-@apigateway = http://localhost:5500
-@identity = http://localhost:5510
-
+@apigateway = http://localhost:5000
+@identity = http://localhost:5001
 
 
 ### Sign up as Admin
@@ -22,7 +21,7 @@ Content-Type: application/json
   "Name": "Giovanni",
   "Password": "Pas3word123!",
   "Role": "Admin",
-  "Permissions": null
+  "Permissions": ["read_orders", "create_orders", "read_products", "create_products"]
 }
 
 ### Sign in
@@ -34,16 +33,46 @@ Content-Type: application/json
   "Password": "Pas3word123!"
 }
 
-
 ### Get list of users
 GET {{identity}}/users?page=1
 
+
+### Revoke the access token
+POST {{identity}}/access-tokens/revoke
+
+{
+  "AccessToken" : "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdBMTA3NTQ0N0U3MTQ1MTEzNkQ3ODk2MDQzM0RCQTkwRjg2MTYyMjciLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiI1OWMwMGVmZTY1MDU0YTQ1ODA1YjE1NTA5NWM2NmE2ZCIsInVuaXF1ZV9uYW1lIjoiNTljMDBlZmU2NTA1NGE0NTgwNWIxNTUwOTVjNjZhNmQiLCJqdGkiOiIwYzgzMDE5OC1jNmJiLTRjNGMtODlhMi1jMzRiM2JjMjA5YjUiLCJpYXQiOiIxNjkxNjk4OTU5IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW4iLCJwZXJtaXNzaW9ucyI6WyJyZWFkX29yZGVycyIsImNyZWF0ZV9vcmRlcnMiLCJyZWFkX3Byb2R1Y3RzIiwiY3JlYXRlX3Byb2R1Y3RzIl0sIm5iZiI6MTY5MTY5ODk1OSwiZXhwIjoxNjkxNzAyNTU5LCJpc3MiOiJnZW5vY3MtaWRlbnRpdHktc2VydmljZSJ9.PSrrss26et1jkarRDMQOqzrKn1iS7FjBNvZv1CntMO0yUzEozXwmd500x6Oe-2Rtlh-rGCIrfdktQQdTbTfLBx-radOfQZgKIXzQjNmjYl3CxNM1ybJlUR2lwBeisWslPApK8l8WjozX-O-Bgjkg6gCWStG4BPCmAzHZ7vodxkG6R2wfIHJg7vSbyDtP4ujFfX8R88YjWzcA0cacolo0P5PV-ffh__d6ngOuPxK0PqPtPeCSEw2g0sqSfdZKean9RmwBPSST1nZWCmdkQzGuwYkICxIaADEXLp0ttY-NA26hWiLTmx_3w87PJlkFidBcS_QMtVdMHzgojkF5ZpVldQ"
+}
+
+
+### Use the refresh token to get a new access token
+POST {{identity}}/refresh-tokens/use
+
+{
+  "RefreshToken" : "Sh8B7S8A47tcORtiII02jXzFXpOiTuUmhw9mZaHM"
+}
 
 ### Revoke the refresh token
 POST {{identity}}/refresh-tokens/revoke
 
 {
-  "RefreshToken" : "9m1vfuKUfY2DSIZYitmywy7dAVVTfMJLFeH34l6"
+  "RefreshToken" : "Sh8B7S8A47tcORtiII02jXzFXpOiTuUmhw9mZaHM"
+}
+
+
+### Lock a user
+PUT {{identity}}/users/59c00efe-6505-4a45-805b-155095c66a6d/lock
+
+{
+  "UserId" : "59c00efe-6505-4a45-805b-155095c66a6d"
+}
+
+
+### Unlock a user
+PUT {{identity}}/users/59c00efe-6505-4a45-805b-155095c66a6d/unlock
+
+{
+  "UserId" : "59c00efe-6505-4a45-805b-155095c66a6d"
 }
 
 
