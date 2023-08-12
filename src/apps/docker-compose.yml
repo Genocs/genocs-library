@@ -2,17 +2,13 @@ version: '3.9'
 
 services:
   apigateway:
-    image: genocs/apigateway:1.0.0
-    hostname: apigateway_node_1
+    image: genocs/apigateway:${IMAGE_VERSION}
+    hostname: apigateway
     container_name: apigateway
-    build:
-      context: .
-      dockerfile: apigateway.dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
       - 5500:80
-
     networks:
       - genocs
     # network_mode: bridge
@@ -20,31 +16,37 @@ services:
       - apigateway:/var/lib/data
 
   identity.webapi:
-    image: genocs/identity-webapi:1.0.0
-    hostname: identity_node_1
+    image: genocs/identity-webapi:${IMAGE_VERSION}
+    hostname: identity
     container_name: identity
-    build:
-      context: .
-      dockerfile: identity-webapi.dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-
     ports:
-      - 5510:80
-
+      - 5501:80
     networks:
       - genocs
     # network_mode: bridge
     volumes:
       - identity:/var/lib/data
 
-  product.webapi:
-    image: genocs/product-webapi:1.0.0
-    hostname: product_node_1
-    container_name: product
-    build:
-      context: .
-      dockerfile: product-webapi.dockerfile
+  products.webapi:
+    image: genocs/product-webapi:${IMAGE_VERSION}
+    hostname: products
+    container_name: products
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    # External ports not enabled because of the apigateway
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - products:/var/lib/data
+
+  orders.webapi:
+    image: genocs/order-webapi:${IMAGE_VERSION}
+    hostname: orders
+    container_name: orders
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
 
@@ -54,36 +56,14 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - product:/var/lib/data
-
-  order.webapi:
-    image: genocs/order-webapi:1.0.0
-    hostname: order_node_1
-    container_name: order
-    build:
-      context: .
-      dockerfile: order-webapi.dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
-
-    # External ports not enabled because of the apigateway
-    #ports:
-    networks:
-      - genocs
-    # network_mode: bridge
-    volumes:
-      - order:/var/lib/data
+      - orders:/var/lib/data
 
   signalr.webapi:
-    image: genocs/signalr-webapi:1.0.0
-    hostname: signalr_node_1
+    image: genocs/signalr-webapi:${IMAGE_VERSION}
+    hostname: signalr
     container_name: signalr
-    build:
-      context: .
-      dockerfile: signalr-webapi.dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-
     # External ports not enabled because of the apigateway
     #ports:
     networks:
@@ -91,7 +71,6 @@ services:
     # network_mode: bridge
     volumes:
       - signalr:/var/lib/data
-
 networks:
   genocs:
     name: genocs-network
@@ -103,9 +82,9 @@ volumes:
     driver: local
   identity:
     driver: local
-  product:
+  products:
     driver: local
-  order:
+  orders:
     driver: local
   signalr:
     driver: local

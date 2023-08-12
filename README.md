@@ -13,7 +13,6 @@ This repo contains a set of libraries designed by Genocs. The libraries are buil
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
-
 ## The idea
 
 ***Build a software library to be cloud agnostic***
@@ -24,10 +23,6 @@ Building a software library to be cloud agnostic has several advantages. First, 
 
 The advantages of using containers are numerous. Containers provide a lightweight, portable, and isolated environment for applications to run in, allowing them to be easily moved between different systems. This makes it easier to deploy applications quickly and reliably across different environments. Additionally, containers can help reduce resource consumption by running multiple applications on the same host, as each container is isolated from the others. This helps to improve efficiency and scalability. Finally, containers provide an additional layer of security, as they are isolated from the underlying operating system and other applications.
 
-![Overview](./assets/Genocs-Library-Overview.drawio.png)
-
-
-
 ## Infrastructure
 
 This section will show how to setup the infrastructure components.
@@ -35,6 +30,7 @@ This section will show how to setup the infrastructure components.
 ***Docker compose***
 
 Use the command below to use docker compose.
+
 
 ``` bash
 # Setup the infrastructure
@@ -47,8 +43,60 @@ docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infr
 docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
 ```
 
+`infrastructure-bare.yml` allows to install the basic infrastructure components.
 
-***Kubernetes cluster***
+Inside the file you can find:
+
+- rabbitmq
+- redis
+- mongo
+- postgresql
+
+`infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
+
+Inside the file you can find:
+
+- prometheus
+- grafana
+- influxdb
+- jaeager
+- seq
+
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components.
+
+Inside the file you can find:
+
+- fabio
+- consul
+
+`infrastructure-security.yml` allows to install the security infrastructure components.
+
+Inside the file you can find:
+
+- vault (hashicorp)
+
+The script below allows to setup the infrastructure components. This means that you can find all the containers inside the same network.
+
+The network is called `genocs`.
+
+``` yml 
+networks:
+  genocs:
+    name: genocs-network
+    driver: bridge
+```
+
+Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
+
+``` yml
+networks:
+  genocs:
+    name: genocs-network
+    external: true
+    driver: bridge
+```
+
+## ***Kubernetes cluster***
 
 You can setup the application inside a Kubernetes cluster.
 
@@ -364,7 +412,7 @@ docker push genocs/demo-worker:latest
 Take a look inside **./src/apps** folder. There you can find a full-fledged application composed by:
 - ApiGateway
 - Identity Service
-- Order service
+- Order Service
 - Product Service
 - SignalR Service
 
@@ -372,19 +420,21 @@ In that way you can test the entire flow.
 
 
 
-### **How to BUILD & RUN the application**
+### How to BUILD & RUN the application
 
 The build and run process can be done by using docker-compose
 
 ``` bash
+cd src/apps
+
 # Build with docker compose
-docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app build
+docker compose -f ./application-docker-compose.yml -f ./application-docker-compose.override.yml --env-file ./local.env --project-name genocs-library build
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker-compose -f ./src/apps/application-docker-compose.yml --project-name genocs-app up -d
+docker compose -f ./src/apps/application-docker-compose.yml --env-file ./local.env --project-name genocs-library up -d
 
 # Clean Docker cache
 docker builder prune
@@ -423,11 +473,6 @@ docker push genocs/signalr:1.0.0
 docker push genocs/signalr:latest
 ```
 
-
-## **Third party libraries**
-- masstransit
-- fabio
-- consul
 
 ### Deploy in a cloud instance
 
