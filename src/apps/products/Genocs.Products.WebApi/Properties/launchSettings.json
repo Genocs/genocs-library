@@ -3,14 +3,14 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5003"
+      "applicationUrl": "http://localhost:5002;https://localhost:5012"
     }
   },
   "profiles": {
     "Genocs.Services.Products": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5003",
+      "applicationUrl": "http://localhost:5002;https://localhost:5012",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }

@@ -47,6 +47,12 @@ public class UserMiddleware : IMiddleware
             content = await reader.ReadToEndAsync();
         }
 
+        if(string.IsNullOrWhiteSpace(content))
+        {
+            await next(context);
+            return;
+        }
+
         var payload = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
         if (payload is null)
         {
