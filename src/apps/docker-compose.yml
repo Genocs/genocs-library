@@ -13,7 +13,7 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - apigateway:/var/lib/data
+      - apigateway:/root/.aspnet/DataProtection-Keys
 
   identity-service:
     image: genocs/identity-webapi:${IMAGE_VERSION}
@@ -27,7 +27,7 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - identity:/var/lib/data
+      - identity:/root/.aspnet/DataProtection-Keys
 
   products-service:
     image: genocs/product-webapi:${IMAGE_VERSION}
@@ -42,7 +42,7 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - products:/var/lib/data
+      - products:/root/.aspnet/DataProtection-Keys
 
   orders-service:
     image: genocs/order-webapi:${IMAGE_VERSION}
@@ -57,7 +57,7 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - orders:/var/lib/data
+      - orders:/root/.aspnet/DataProtection-Keys
 
   signalr-service:
     image: genocs/signalr-webapi:${IMAGE_VERSION}
@@ -72,7 +72,8 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - signalr:/var/lib/data
+      - signalr:/root/.aspnet/DataProtection-Keys
+
 networks:
   genocs:
     name: genocs-network

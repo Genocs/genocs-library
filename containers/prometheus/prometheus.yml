@@ -9,20 +9,20 @@ scrape_configs:
 
   - job_name: "api-gateway"
     static_configs:
-      - targets: ["api-gateway:5500"]
+      - targets: ["api-gateway"]
 
- - job_name: "identity-service"
-   static_configs:
-     - targets: ["identity-service:5501"]
-
- - job_name: "products-service"
-   static_configs:
-     - targets: ["products-service:5002"]
-
- - job_name: "orders-service"
-   static_configs:
-     - targets: ["orders-service:5503"]
-
- - job_name: "signalr-service"
-   static_configs:
-     - targets: ["signalr-service:5504"]
+  - job_name: "identity-service"
+    static_configs:
+      - targets: ["identity-service"]
+ 
+  - job_name: "products-service"
+    static_configs:
+      - targets: ["products-service"]
+ 
+  - job_name: "orders-service"
+    static_configs:
+      - targets: ["orders-service"]
+ 
+  - job_name: "signalr-service"
+    static_configs:
+      - targets: ["signalr-service"]

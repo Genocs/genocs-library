@@ -211,11 +211,11 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "password": "test",
       "rawData": ""
     },
-    "issuer": "demo",
-    "validIssuer": "demo",
+    "issuer": "genocs-identity-service",
+    "validIssuer": "genocs-identity-service",
     "validateAudience": false,
-    "validateIssuer": false,
-    "validateLifetime": false,
+    "validateIssuer": true,
+    "validateLifetime": true,
     "expiry": "01:00:00"
   },
   "metrics": {
