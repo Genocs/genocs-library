@@ -42,7 +42,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
         var productDto = await _productServiceClient.GetAsync(command.ProductId);
         if (productDto is null)
         {
-            throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.ProductId}'");
+            throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.OrderId}'");
         }
 
         _logger.LogInformation($"Order '{command.OrderId}' will cost '{productDto.UnitPrice}'$.");
