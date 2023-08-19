@@ -45,18 +45,27 @@
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
 		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
 		<ProjectReference Include="..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
 		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.4.*" />
 		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.4.*" />
-
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Jaeger" Version="1.0.3" />
 		<PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.9.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.0.0-beta.14" />
+		<PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
 	</ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>Genocs.Monitoring</PackageId>
@@ -42,12 +42,25 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
+		<ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
+
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Tracing" Version="5.0.0-preview.4.*" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.0.0-beta.9" />
 		<PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
-		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
-		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0" />
-		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
 	</ItemGroup>
 
 </Project>

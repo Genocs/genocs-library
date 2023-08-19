@@ -1,8 +1,21 @@
 namespace Genocs.Logging.Options;
 
+
+/// <summary>
+/// Logger Settings
+/// </summary>
 public class LoggerSettings
 {
+    /// <summary>
+    /// Default section name
+    /// </summary>
+    public const string Position = "logger";
+
     public string? Level { get; set; }
+
+    /// <summary>
+    /// The Console Logging and tracing Settings
+    /// </summary>
     public ConsoleSettings? Console { get; set; }
     public LocalFileSettings? File { get; set; }
     public ElkSettings? Elk { get; set; }

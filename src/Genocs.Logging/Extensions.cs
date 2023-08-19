@@ -18,7 +18,6 @@ namespace Genocs.Logging;
 
 public static class Extensions
 {
-    private const string LoggerSectionName = "logger";
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
 
     public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
@@ -31,7 +30,7 @@ public static class Extensions
             {
                 if (string.IsNullOrWhiteSpace(loggerSectionName))
                 {
-                    loggerSectionName = LoggerSectionName;
+                    loggerSectionName = LoggerSettings.Position;
                 }
 
                 if (string.IsNullOrWhiteSpace(appSectionName))

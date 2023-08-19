@@ -22,7 +22,7 @@ using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
-using Genocs.Tracing.Jaeger;
+using Genocs.Tracing;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -66,7 +66,8 @@ public static class Extensions
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
-            .AddJaeger()
+            .AddOpenTelemetry()
+            //.AddJaeger()
             .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
@@ -89,7 +90,7 @@ public static class Extensions
     {
         app.UseMiddleware<LogContextMiddleware>()
             .UseErrorHandler()
-            .UseJaeger()
+            //.UseJaeger()
             .UseSwaggerDocs()
             .UseGenocs()
             .UseAccessTokenValidator()

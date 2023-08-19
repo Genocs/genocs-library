@@ -1,7 +1,18 @@
 namespace Genocs.Tracing.Jaeger.Options;
 
+/// <summary>
+/// Jaeger Settings
+/// </summary>
 public class JaegerSettings
 {
+    /// <summary>
+    /// Default section name
+    /// </summary>
+    public const string Position = "jaeger";
+
+    /// <summary>
+    /// 
+    /// </summary>
     public bool Enabled { get; set; }
     public string? ServiceName { get; set; }
     public string? UdpHost { get; set; }
