@@ -71,13 +71,22 @@ internal class MessageBroker : IMessageBroker
             _logger.LogTrace($"Publishing integration event: {@event.GetType().Name.Underscore()} [ID: '{messageId}'].");
             if (_outbox.Enabled)
             {
-                await _outbox.SendAsync(@event, originatedMessageId, messageId, correlationId, spanContext,
-                    correlationContext, headers);
+                await _outbox.SendAsync(@event,
+                                        originatedMessageId,
+                                        messageId,
+                                        correlationId,
+                                        spanContext,
+                                        correlationContext,
+                                        headers);
                 continue;
             }
 
-            await _busPublisher.PublishAsync(@event, messageId, correlationId, spanContext, correlationContext,
-                headers);
+            await _busPublisher.PublishAsync(@event,
+                                             messageId,
+                                             correlationId,
+                                             spanContext,
+                                             correlationContext,
+                                             headers);
         }
     }
 }

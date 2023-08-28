@@ -23,5 +23,5 @@ public interface IJwtHandler
     /// </summary>
     /// <param name="accessToken">The access token string value</param>
     /// <returns>The JsonWebTokenPayload</returns>
-    JsonWebTokenPayload GetTokenPayload(string accessToken);
+    JsonWebTokenPayload? GetTokenPayload(string accessToken);
 }

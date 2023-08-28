@@ -107,6 +107,11 @@ internal sealed class JwtHandler : IJwtHandler
         };
     }
 
+    /// <summary>
+    /// Gets the token payload.
+    /// </summary>
+    /// <param name="accessToken"></param>
+    /// <returns></returns>
     public JsonWebTokenPayload? GetTokenPayload(string accessToken)
     {
         _jwtSecurityTokenHandler.ValidateToken(accessToken, _tokenValidationParameters,

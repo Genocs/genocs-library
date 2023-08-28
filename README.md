@@ -9,7 +9,7 @@
 
 
 ---
-This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1 or .NET7. 
+This repo contains a set of libraries designed by Genocs. The libraries are built using .NET standard 2.1, .NET6 and .NET7. 
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 

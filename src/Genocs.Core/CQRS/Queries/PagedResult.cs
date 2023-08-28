@@ -33,8 +33,10 @@
         /// <param name="totalResults"></param>
         [JsonConstructor]
         protected PagedResult(IEnumerable<T> items,
-            int currentPage, int resultsPerPage,
-            int totalPages, long totalResults) :
+                              int currentPage,
+                              int resultsPerPage,
+                              int totalPages,
+                              long totalResults) :
                 base(currentPage, resultsPerPage, totalPages, totalResults)
         {
             Items = items;

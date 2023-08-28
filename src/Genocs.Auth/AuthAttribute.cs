@@ -10,8 +10,8 @@ public class AuthAttribute : AuthorizeAttribute
     /// <summary>
     /// The AuthAttribute constructor
     /// </summary>
-    /// <param name="scheme"></param>
-    /// <param name="policy"></param>
+    /// <param name="scheme">The authorization schema</param>
+    /// <param name="policy">The authorization policy</param>
     public AuthAttribute(string scheme, string policy = "") : base(policy)
     {
         AuthenticationSchemes = scheme;

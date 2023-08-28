@@ -10,7 +10,7 @@ namespace Genocs.Persistence.MongoDb.Options
         /// <summary>
         /// Default Section name
         /// </summary>
-        public const string Position = "MongoDb";
+        public const string Position = "mongodb";
 
         /// <summary>
         /// The Database connection string

@@ -1,26 +1,42 @@
 using Genocs.Core.Builders;
 using Genocs.Persistence.Redis.Builders;
+using Genocs.Persistence.Redis.Options;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
 namespace Genocs.Persistence.Redis;
 
+
+/// <summary>
+/// The redis extensions
+/// </summary>
 public static class Extensions
 {
-    private const string SectionName = "redis";
     private const string RegistryName = "persistence.redis";
 
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = SectionName)
+    /// <summary>
+    /// Add Redis
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="sectionName"></param>
+    /// <returns></returns>
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisSettings.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = RedisSettings.Position;
         }
 
-        var options = builder.GetOptions<RedisOptions>(sectionName);
+        var options = builder.GetOptions<RedisSettings>(sectionName);
         return builder.AddRedis(options);
     }
 
+    /// <summary>
+    /// Add Redis
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="buildOptions"></param>
+    /// <returns></returns>
     public static IGenocsBuilder AddRedis(this IGenocsBuilder builder,
         Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
     {
@@ -28,7 +44,13 @@ public static class Extensions
         return builder.AddRedis(options);
     }
 
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisOptions options)
+    /// <summary>
+    /// Add Redis
+    /// </summary>
+    /// <param name="builder">The Genocs builder</param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisSettings options)
     {
         if (!builder.TryRegister(RegistryName))
         {

@@ -1,5 +1,8 @@
 namespace Genocs.Metrics.AppMetrics;
 
+/// <summary>
+/// The MetricsOptions class
+/// </summary>
 public class MetricsOptions
 {
     /// <summary>
@@ -18,7 +21,7 @@ public class MetricsOptions
     public bool InfluxEnabled { get; set; }
 
     /// <summary>
-    /// It defines whether the Promotheus is enabled or not
+    /// It defines whether the Prometheus is enabled or not
     /// </summary>
     public bool PrometheusEnabled { get; set; }
 
@@ -38,6 +41,9 @@ public class MetricsOptions
     /// </summary>
     public string? Database { get; set; }
 
+    /// <summary>
+    /// The metrics interval
+    /// </summary>
     public int Interval { get; set; } = 10;
 
     /// <summary>

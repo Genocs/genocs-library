@@ -31,8 +31,10 @@ public static class MongoDbExtensions
     /// <param name="seederType"></param>
     /// <param name="registerConventions"></param>
     /// <returns>The Genocs builder</returns>
-    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, string sectionName = MongoDbSettings.Position,
-        Type? seederType = null, bool registerConventions = true)
+    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder,
+                                          string sectionName = MongoDbSettings.Position,
+                                          Type? seederType = null,
+                                          bool registerConventions = true)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -116,6 +118,8 @@ public static class MongoDbExtensions
         }
 
         builder.AddInitializer<IMongoDbInitializer>();
+
+        // Setup conventions
         if (registerConventions && !_conventionsRegistered)
         {
             ServiceCollectionExtensions.RegisterConventions();
@@ -147,13 +151,23 @@ public static class MongoDbExtensions
 
 
     /// <summary>
-    /// Setup the MongoDatabase
+    /// Add MongoDb support
     /// </summary>
     /// <param name="builder">The Genocs builder</param>
+    /// <param name="sectionName">The Genocs builder</param>
+    /// <param name="registerConventions">The Genocs builder</param>
     /// <returns>The Genocs builder</returns>
-    public static IGenocsBuilder AddMongoFast(this IGenocsBuilder builder)
+    public static IGenocsBuilder AddMongoFast(this IGenocsBuilder builder,
+                                          string sectionName = MongoDbSettings.Position,
+                                          bool registerConventions = true)
     {
-        var section = builder.Configuration.GetSection(MongoDbSettings.Position);
+
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = MongoDbSettings.Position;
+        }
+
+        var section = builder.Configuration.GetSection(sectionName);
 
         if (!section.Exists())
         {
@@ -165,7 +179,10 @@ public static class MongoDbExtensions
         builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
         builder.Services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
 
-        ServiceCollectionExtensions.RegisterConventions();
+        if (registerConventions && !_conventionsRegistered)
+        {
+            ServiceCollectionExtensions.RegisterConventions();
+        }
 
         return builder;
     }

@@ -45,7 +45,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
 
         if (authorizationHeader is null)
         {
-            return StringValues.Empty;
+            return string.Empty;
         }
 
         return authorizationHeader.Value == StringValues.Empty

@@ -1,8 +1,10 @@
+using Genocs.Persistence.Redis.Options;
+
 namespace Genocs.Persistence.Redis.Builders;
 
 internal sealed class RedisOptionsBuilder : IRedisOptionsBuilder
 {
-    private readonly RedisOptions _options = new();
+    private readonly RedisSettings _options = new();
 
     public IRedisOptionsBuilder WithConnectionString(string connectionString)
     {
@@ -16,6 +18,6 @@ internal sealed class RedisOptionsBuilder : IRedisOptionsBuilder
         return this;
     }
 
-    public RedisOptions Build()
+    public RedisSettings Build()
         => _options;
 }

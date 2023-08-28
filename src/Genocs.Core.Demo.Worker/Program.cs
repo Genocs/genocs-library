@@ -38,7 +38,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services
             .AddGenocs(hostContext.Configuration)
-            .AddMongoFast() // It adds the MongoDb Repository to the project and register all the Domain Objects with the standard interface
+            .AddMongoFast()
             .RegisterMongoRepositories(Assembly.GetExecutingAssembly()); // It registers the repositories that has been overridden. No need in case of standard repository
 
         ConfigureMassTransit(services, hostContext.Configuration);

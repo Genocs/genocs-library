@@ -16,6 +16,10 @@ using OpenTracing.Util;
 
 namespace Genocs.Tracing.Jaeger;
 
+
+/// <summary>
+/// The Open Tracing
+/// </summary>
 public static class Extensions
 {
     private static int _initialized;
@@ -44,7 +48,7 @@ public static class Extensions
     }
 
     public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, JaegerSettings options,
-        string sectionName = SectionName, Action<IOpenTracingBuilder> openTracingBuilder = null)
+        string sectionName = SectionName, Action<IOpenTracingBuilder>? openTracingBuilder = null)
     {
         if (Interlocked.Exchange(ref _initialized, 1) == 1)
         {

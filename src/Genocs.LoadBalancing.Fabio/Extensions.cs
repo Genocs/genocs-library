@@ -14,15 +14,14 @@ namespace Genocs.LoadBalancing.Fabio;
 
 public static class Extensions
 {
-    private const string SectionName = "fabio";
     private const string RegistryName = "loadBalancing.fabio";
 
-    public static IGenocsBuilder AddFabio(this IGenocsBuilder builder, string sectionName = SectionName,
+    public static IGenocsBuilder AddFabio(this IGenocsBuilder builder, string sectionName = FabioSettings.Position,
         string consulSectionName = "consul", string httpClientSectionName = "httpClient")
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = FabioSettings.Position;
         }
 
         var fabioOptions = builder.GetOptions<FabioSettings>(sectionName);
