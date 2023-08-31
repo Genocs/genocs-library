@@ -5,6 +5,7 @@ using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
+using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
 using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
@@ -36,6 +37,7 @@ internal class Startup
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
         services
             .AddGenocs()
+            .AddOpenTelemetry()
             .AddJaeger()
             .AddJwt()
             .AddPrometheus()

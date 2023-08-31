@@ -1,5 +1,4 @@
 using Genocs.Core.Builders;
-using Genocs.Tracing.Jaeger.Builders;
 using Genocs.Tracing.Jaeger.Options;
 using Genocs.Tracing.Jaeger.Tracers;
 using Jaeger;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTracing;
-using OpenTracing.Contrib.NetCore.Configuration;
 using OpenTracing.Util;
 
 namespace Genocs.Tracing.Jaeger;
@@ -23,39 +21,28 @@ namespace Genocs.Tracing.Jaeger;
 public static class Extensions
 {
     private static int _initialized;
-    private const string SectionName = "jaeger";
     private const string RegistryName = "tracing.jaeger";
 
-    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, string sectionName = SectionName,
-        Action<IOpenTracingBuilder>? openTracingBuilder = null)
-    {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
 
-        var options = builder.GetOptions<JaegerSettings>(sectionName);
-        return builder.AddJaeger(options, sectionName, openTracingBuilder);
-    }
-
-    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder,
-        Func<IJaegerOptionsBuilder, IJaegerOptionsBuilder> buildOptions,
-        string sectionName = SectionName,
-        Action<IOpenTracingBuilder> openTracingBuilder = null)
-    {
-        var options = buildOptions(new JaegerOptionsBuilder()).Build();
-        return builder.AddJaeger(options, sectionName, openTracingBuilder);
-    }
-
-    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, JaegerSettings options,
-        string sectionName = SectionName, Action<IOpenTracingBuilder>? openTracingBuilder = null)
+    /// <summary>
+    /// Add Jaeger Tracer
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="sectionName"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, string sectionName = JaegerSettings.Position)
     {
         if (Interlocked.Exchange(ref _initialized, 1) == 1)
         {
             return builder;
         }
 
+
+        var options = builder.GetOptions<JaegerSettings>(sectionName);
+
         builder.Services.AddSingleton(options);
+
         if (!options.Enabled)
         {
             var defaultTracer = GenocsDefaultTracer.Create();
@@ -68,18 +55,6 @@ public static class Extensions
             return builder;
         }
 
-        if (options.ExcludePaths is not null)
-        {
-            builder.Services.Configure<AspNetCoreDiagnosticOptions>(o =>
-            {
-                foreach (var path in options.ExcludePaths)
-                {
-                    o.Hosting.IgnorePatterns.Add(x => x.Request.Path == path);
-                }
-            });
-        }
-
-        builder.Services.AddOpenTracing(x => openTracingBuilder?.Invoke(x));
 
         builder.Services.AddSingleton<ITracer>(sp =>
         {

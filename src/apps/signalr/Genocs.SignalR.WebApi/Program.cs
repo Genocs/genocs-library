@@ -14,6 +14,7 @@ using Genocs.SignalR.WebApi.Exceptions;
 using Genocs.SignalR.WebApi.Framework;
 using Genocs.SignalR.WebApi.Hubs;
 using Genocs.SignalR.WebApi.Services;
+using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
@@ -48,6 +49,7 @@ services.AddGenocs()
         .AddCorrelationContextLogging()
         .AddJwt()
         .AddErrorHandler<ExceptionToResponseMapper>()
+        .AddOpenTelemetry()
         .AddJaeger()
         .AddMongo()
         .AddCommandHandlers()

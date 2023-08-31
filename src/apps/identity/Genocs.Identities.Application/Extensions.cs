@@ -23,6 +23,7 @@ using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Tracing;
+using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -67,7 +68,7 @@ public static class Extensions
             .AddMongo()
             .AddRedis()
             .AddOpenTelemetry()
-            //.AddJaeger()
+            .AddJaeger()
             .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")

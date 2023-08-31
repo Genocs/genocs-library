@@ -3,7 +3,10 @@ using Genocs.Common.Options;
 using Genocs.Core.Builders;
 using Genocs.Logging.Options;
 using Genocs.Tracing.Jaeger.Options;
+using Jaeger.Samplers;
+using Jaeger.Senders.Thrift;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -11,7 +14,7 @@ using OpenTelemetry.Trace;
 namespace Genocs.Tracing;
 
 /// <summary>
-/// The Open Telemetry and Tracing
+/// The Open Telemetry extensions
 /// </summary>
 public static class Extensions
 {
@@ -44,22 +47,21 @@ public static class Extensions
                     .AddEnvironmentVariableDetector())
                 .AddSource("*");
 
-            // Remove comment below to enable tracing on console
-            // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
+            // TODO> add flag to enable feature MongoDB.Driver.Core.Extensions.OpenTelemetry
             provider.AddMongoDBInstrumentation();
 
 
             var loggerOptions = builder.GetOptions<LoggerSettings>(LoggerSettings.Position);
 
 
-            // Check for Azure ApplicationInsights 
+            // Check for Console config
             if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
             {
                 // OpenTelemetry.Exporter.Console NuGet package
                 provider.AddConsoleExporter();
             }
 
-            // Check for Azure ApplicationInsights 
+            // Check for Azure ApplicationInsights config
             if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
             {
                 provider.AddAzureMonitorTraceExporter(o =>
@@ -87,9 +89,55 @@ public static class Extensions
                     };
                 });
             }
-
         });
 
         return builder;
+    }
+
+    private static ISampler GetSampler(JaegerSettings options)
+    {
+        switch (options.Sampler)
+        {
+            case "const": return new ConstSampler(true);
+            case "rate": return new RateLimitingSampler(options.MaxTracesPerSecond);
+            case "probabilistic": return new ProbabilisticSampler(options.SamplingRate);
+            default: return new ConstSampler(true);
+        }
+    }
+
+    private static HttpSender BuildHttpSender(JaegerSettings.HttpSenderSettings? options)
+    {
+        if (options is null)
+        {
+            throw new Exception("Missing Jaeger HTTP sender options.");
+        }
+
+        if (string.IsNullOrWhiteSpace(options.Endpoint))
+        {
+            throw new Exception("Missing Jaeger HTTP sender endpoint.");
+        }
+
+        var builder = new HttpSender.Builder(options.Endpoint);
+        if (options.MaxPacketSize > 0)
+        {
+            builder = builder.WithMaxPacketSize(options.MaxPacketSize);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.AuthToken))
+        {
+            builder = builder.WithAuth(options.AuthToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.Username) && !string.IsNullOrWhiteSpace(options.Password))
+        {
+            builder = builder.WithAuth(options.Username, options.Password);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.UserAgent))
+        {
+            builder = builder.WithUserAgent(options.Username);
+        }
+
+        return builder.Build();
     }
 }
