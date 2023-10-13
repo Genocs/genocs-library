@@ -1,8 +1,7 @@
 # .NET Core Base library
 
 This package contains a set of base functionalities designed by Genocs.
-The libraries are built using .NET standard 2.1.
-
+The libraries can be used on both .NET6 and .NET7.
 
 ## Description
 

@@ -28,12 +28,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-
 IHost host = Host.CreateDefaultBuilder(args)
     .UseLogging()
     .ConfigureServices((hostContext, services) =>
     {
-        // Run the hosted service 
+        // Run the hosted service
         services.AddHostedService<MassTransitConsoleHostedService>();
 
         services
@@ -50,7 +49,6 @@ IHost host = Host.CreateDefaultBuilder(args)
 await host.RunAsync();
 
 Log.CloseAndFlush();
-
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
@@ -107,7 +105,6 @@ static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfigur
 
     var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
     topicBus.Subscribe<DemoEvent, IEventHandlerLegacy<DemoEvent>>();
-
 }
 
 static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)

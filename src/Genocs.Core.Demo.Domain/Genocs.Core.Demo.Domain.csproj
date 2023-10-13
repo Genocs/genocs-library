@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.4.*" />
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.5.*" />
 	</ItemGroup>
 
 </Project>

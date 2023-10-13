@@ -19,13 +19,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
         .UseLogging()
         .UseVault();
-
 
 var services = builder.Services;
 
@@ -64,4 +62,3 @@ app.UseDispatcherEndpoints(endpoints => endpoints
 app.Run();
 
 Log.CloseAndFlush();
-

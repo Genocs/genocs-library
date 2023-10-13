@@ -5,12 +5,12 @@ using System.Runtime.Serialization;
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// Type extensions
+/// Type extensions.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// GetDefaultInstance
+    /// GetDefaultInstance.
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
@@ -23,7 +23,7 @@ public static class Extensions
 
         var defaultValueCache = new Dictionary<Type, object>();
 
-        if (TryGetDefaultValue(type, out var instance, defaultValueCache))
+        if (TryGetDefaultValue(type, out object? instance, defaultValueCache))
         {
             return instance;
         }
@@ -42,7 +42,7 @@ public static class Extensions
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance))
         {
-            if (TryGetDefaultValue(propertyInfo.PropertyType, out var defaultValue, defaultValueCache))
+            if (TryGetDefaultValue(propertyInfo.PropertyType, out object? defaultValue, defaultValueCache))
             {
                 SetValue(propertyInfo, instance, defaultValue);
             }
@@ -158,7 +158,7 @@ public static class Extensions
         return true;
     }
 
-    private static void SetValue(PropertyInfo propertyInfo, object instance, object value)
+    private static void SetValue(PropertyInfo propertyInfo, object instance, object? value)
     {
         if (propertyInfo.CanWrite)
         {

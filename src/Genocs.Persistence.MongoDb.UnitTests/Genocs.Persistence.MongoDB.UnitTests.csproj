@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<IsPublishable>false</IsPublishable>
 		<IsPackable>false</IsPackable>
-		<UserSecretsId>bf5e372b-b320-4d11-beb8-a793edae0ad4</UserSecretsId>
+		<UserSecretsId>Genocs</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
@@ -26,7 +26,7 @@
 
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.5.*" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">

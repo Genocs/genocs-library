@@ -7,7 +7,7 @@
 		<PackageId>Genocs.Tracing</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview.4.0</Version>
+		<Version>5.0.0-preview.5.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -50,9 +50,9 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.4.*" />
-		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.4.*" />
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.4.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.5.*" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -63,8 +63,8 @@
 		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.0.0-beta.14" />
 		<PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
 		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.5.1" />
-		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
-		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />		
 	</ItemGroup>
 
 </Project>

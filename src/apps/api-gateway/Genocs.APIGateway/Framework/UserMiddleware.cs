@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -10,7 +11,7 @@ public class UserMiddleware : IMiddleware
     {
         "POST", "PUT", "PATCH"
     };
-    
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var request = context.Request;
@@ -26,7 +27,7 @@ public class UserMiddleware : IMiddleware
             return;
         }
 
-        var path = context.Request.Path.Value;
+        string? path = context.Request.Path.Value;
         if (path is not null && (path.Contains("sign-in") || path.Contains("sign-up")))
         {
             await next(context);
@@ -36,7 +37,8 @@ public class UserMiddleware : IMiddleware
         var authenticateResult = await context.AuthenticateAsync();
         if (!authenticateResult.Succeeded || authenticateResult.Principal is null)
         {
-            context.Response.StatusCode = 401;
+            // Set the response code to 401.
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             return;
         }
 
@@ -47,7 +49,7 @@ public class UserMiddleware : IMiddleware
             content = await reader.ReadToEndAsync();
         }
 
-        if(string.IsNullOrWhiteSpace(content))
+        if (string.IsNullOrWhiteSpace(content))
         {
             await next(context);
             return;
@@ -61,7 +63,7 @@ public class UserMiddleware : IMiddleware
         }
 
         payload["userId"] = Guid.Parse(context.User.Identity.Name);
-        var json = JsonSerializer.Serialize(payload);
+        string json = JsonSerializer.Serialize(payload);
         await using var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
         context.Request.Body = memoryStream;
         context.Request.ContentLength = json.Length;
