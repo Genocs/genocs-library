@@ -83,37 +83,37 @@ docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infr
 docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
 ```
 
-`infrastructure-bare.yml` allows to install the basic infrastructure components. Basic componens are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
+`infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
 
 
 - [rabbitmq](http://localhost:15672/)
-- redis
-- mongo
-- postgresql
+- Redis
+- MongoDb
+- PostgreSQL
 
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
 
 Inside the file you can find:
 
-- prometheus
-- grafana
+- Prometheus
+- Grafana
 - influxdb
-- jaeager
+- jaeger
 - seq
 
 `infrastructure-scaling.yml` allows to install the scaling infrastructure components.
 
 Inside the file you can find:
 
-- fabio
+- Fabio
 - consul
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
 
 Inside the file you can find:
 
-- vault (hashicorp)
+- vault (Hashicorp)
 
 The script below allows to setup the infrastructure components. This means that you can find all the containers inside the same network.
 

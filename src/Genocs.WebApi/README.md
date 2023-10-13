@@ -16,7 +16,13 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
-### [2023-03-12] 5.0.0-preview.5.0
+### [2023-10-13] 5.0.0-preview.5.0
+- Added [editorconfig](https://editorconfig.org/)
+- Added StyleCop
+- Updated logo
+- Updated readme
+
+### [2023-03-12] 5.0.0-preview.4.0
 - Implemented MongoDB repository interfaces
 
 ### [2023-03-12] 5.0.0
