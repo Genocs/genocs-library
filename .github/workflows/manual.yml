@@ -29,7 +29,7 @@ jobs:
     steps:
       # Runs a single command using the runners shell
       - name: Send greeting
-        run: echo "Hello ${{ github.event.inputs.name }}"
+        run: echo "Hello ${{github.event.inputs.name}}"
 
       - name: Print Run Number
         run: echo "Hello $env:GITHUB_RUN_NUMBER"
@@ -38,10 +38,10 @@ jobs:
         run: echo "Hello $env:GITHUB_RUN_ATTEMPT"
 
       - name: Output Run ID
-        run: echo ${{ github.run_id }}
+        run: echo ${{github.run_id}}
 
       - name: Output Run Number
-        run: echo ${{ github.run_number }}
+        run: echo ${{github.run_number}}
 
       - name: Output Run Attempt
-        run: echo ${{ github.run_attempt }}        
+        run: echo ${{github.run_attempt}}        
