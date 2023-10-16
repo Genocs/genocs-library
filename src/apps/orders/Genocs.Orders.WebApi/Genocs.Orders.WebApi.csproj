@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -32,7 +32,7 @@
 		<PackageReference Include="Genocs.HTTP" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.LoadBalancing.Fabio" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.Logging" Version="5.0.0-preview.5.*" />
-		<PackageReference Include="Genocs.MessageBrokers" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.MessageBrokers" Version="5.0.0.pre.preview.*" />
 		<PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.MessageBrokers.Outbox" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview.5.*" />
