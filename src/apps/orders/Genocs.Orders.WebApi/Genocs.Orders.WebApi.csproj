@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -44,6 +44,6 @@
 		<PackageReference Include="Genocs.WebApi.CQRS" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.WebApi.Security" Version="5.0.0-preview.5.*" />
 		<PackageReference Include="Genocs.WebApi.Swagger" Version="5.0.0-preview.5.*" />
-		<PackageReference Include="Genocs.WebApi" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.WebApi" Version="5.0.0.pre.preview.*" />
 	</ItemGroup>
 </Project>
