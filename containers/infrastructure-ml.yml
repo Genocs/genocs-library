@@ -45,7 +45,7 @@ services:
     hostname: deepface
     container_name: deepface
     ports:
-      - 5300:5300
+      - 5000:5000
     networks:
       - genocs
     # network_mode: host

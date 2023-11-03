@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  application.webapi:
+    image: genocs/demo-webapi:2.0.0
+    build:
+      context: .
+      dockerfile: demo-webapi.dockerfile
+
+  application.worker:
+    image: genocs/demo-worker:2.0.0
+    build:
+      context: .
+      dockerfile: demo-worker.dockerfile
