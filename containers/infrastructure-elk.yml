@@ -37,7 +37,7 @@ services:
       - genocs
 
   headPlugin:
-    image: 'mobz/elasticsearch-head:5'
+    image: "mobz/elasticsearch-head:5"
     container_name: head
     ports:
       - 9100:9100
@@ -65,7 +65,7 @@ services:
       retries: 5
     networks:
       - genocs
-    depends_on: ['es01', 'es02']
+    depends_on: ["es01", "es02"]
 
 networks:
   genocs:

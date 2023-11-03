@@ -37,7 +37,6 @@
 [twitterx-shield]: https://img.shields.io/twitter/url/https/twitter.com/genocs.svg?style=social
 [twitterx-url]: https://twitter.com/genocs
 
-
 <p align="center">
     <img src="./assets/genocs-library-logo.png" alt="icon">
 </p>
@@ -45,8 +44,7 @@
 
 # Genocs .NET library
 
-
-This repo contains a set of libraries designed by Genocs. The libraries are built using .NET6 and .NET7. 
+This repo contains a set of libraries designed by Genocs. The libraries are built using .NET6 and .NET7.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -65,32 +63,30 @@ The advantages of using containers are numerous. Containers provide a lightweigh
 In this section you can find the infrastructure components to setup the environment.
 You will use ***Docker compose*** to setup the infrastructure components.
 
-
-``` bash
+```bash
 # Setup the infrastructure
-docker-compose -f ./containers/infrastructure-bare.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-monitoring.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-scaling.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
+cd ./containers
+docker-compose -f ./infrastructure-bare.yml --env-file ./.env.local --project-name genocs up -d
+docker-compose -f ./infrastructure-monitoring.yml --env-file ./.env.local --project-name genocs up -d
+docker-compose -f ./infrastructure-scaling.yml --env-file ./.env.local --project-name genocs up -d
+docker-compose -f ./infrastructure-security.yml --env-file ./.env.local --project-name genocs up -d
 
 # Use this file only in case you want to setup sqlserver database (no need if you use postgres)
-docker-compose -f ./containers/infrastructure-sqlserver.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./infrastructure-sqlserver.yml --project-name genocs up -d
 
 # Use this file only in case you want to setup elk stack
-docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./infrastructure-elk.yml --project-name genocs up -d
 
-# Use this file only in case you want to setup AI ML components prepared by Genocs
-docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
+# Use this file only in case you want to setup AI ML components
+docker-compose -f ./infrastructure-ml.yml --project-name genocs up -d
 ```
 
 `infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
-
 
 - [rabbitmq](http://localhost:15672/)
 - Redis
 - MongoDb
 - PostgreSQL
-
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
 
@@ -119,7 +115,7 @@ The script below allows to setup the infrastructure components. This means that 
 
 The network is called `genocs`.
 
-``` yml 
+```yml
 networks:
   genocs:
     name: genocs-network
@@ -128,7 +124,7 @@ networks:
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
 
-``` yml
+```yml
 networks:
   genocs:
     name: genocs-network
@@ -148,13 +144,9 @@ Inside the repo you can find scripts, configuration files and documentation to s
 You can find a full documentation on:
 [**Documentation**](https://genocs-blog.netlify.app/library/)
 
-
-
 ## Support
 
-
-
-Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
+Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin.
 
 ## Configuration
 
@@ -374,13 +366,16 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     }
   }
 ```
+
 ---
 
 ## Demo Application
-Inside the library there is a simple demo application you can use to test the library. 
+
+Inside the library there is a simple demo application you can use to test the library.
 
 Some commands
-``` bash
+
+```bash
 # Build the solution 
 dotnet build
 
@@ -424,8 +419,8 @@ docker push genocs/demo-worker:latest
 
 ## Enterprise Application
 
-
 Take a look inside **./src/apps** folder. There you can find a full-fledged application composed by:
+
 - ApiGateway
 - Identity Service
 - Order Service
@@ -433,8 +428,6 @@ Take a look inside **./src/apps** folder. There you can find a full-fledged appl
 - SignalR Service
 
 In that way you can test the entire flow.
-
-
 
 ### How to BUILD & RUN the application
 
@@ -456,10 +449,9 @@ docker compose -f ./docker-compose.yml --env-file ./local.env --project-name gen
 docker builder prune
 ```
 
-
 Following commands are useful to build and push the images one by one
 
-``` bash
+```bash
 cd src/apps
 
 # Build the api gateway
@@ -491,7 +483,6 @@ docker push genocs/signalr:1.0.0
 docker push genocs/signalr:latest
 ```
 
-
 ### Deploy in a cloud instance
 
 You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Google Cloud Platform: 
@@ -499,9 +490,6 @@ You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Go
 [<img src="https://www.herokucdn.com/deploy/button.svg" height="30px">](https://heroku.com/deploy?template=https://github.com/heartexlabs/label-studio/tree/heroku-persistent-pg)
 [<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
 [<img src="https://deploy.cloud.run/button.svg" height="30px">](https://deploy.cloud.run)
-
-
-
 
 ## License
 
@@ -517,17 +505,15 @@ View Complete [Changelogs](https://github.com/Genocs/microservice-template/blob/
 - Facebook Page [@genocs](https://facebook.com/Genocs)
 - Youtube Channel [@genocs](https://youtube.com/c/genocs)
 
-
 ## Support
 
 Has this Project helped you learn something New? or Helped you at work?
 Here are a few ways by which you can support.
 
-- ⭐ Leave a star! 
+- ⭐ Leave a star!
 - 🥇 Recommend this project to your colleagues.
-- 🦸 Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/) 
+- 🦸 Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/)
 - ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
-  
 
 [![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/blazor-template/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
@@ -543,7 +529,7 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 
 <a href="https://opencollective.com/genocs"><img src="https://opencollective.com/genocs/individuals.svg?width=890"></a>
 
-
 ## Acknowledgements
+
 - [devmentors](https://github.com/devmentors)
 - [abp](https://github.com/abpframework)

@@ -19,6 +19,45 @@ services:
     networks:
       - genocs
 
+  langflow:
+    image: registry.hf.space/logspace-langflow:latest
+    hostname: langflow
+    container_name: langflow
+    ports:
+      - 7860:7860
+    networks:
+      - genocs
+
+  chainlit:
+    image: genocs/langchain-langlit:1.0.0
+    hostname: chainlit
+    container_name: chainlit
+    ports:
+      - 8000:8000
+    networks:
+      - genocs
+    # network_mode: host
+    volumes:
+      - chainlit:/home/appuser/app/.chainlit
+
+  deepface:
+    image: genocs/deepface-webapi:2.0.0
+    hostname: deepface
+    container_name: deepface
+    ports:
+      - 5300:5300
+    networks:
+      - genocs
+    # network_mode: host
+    volumes:
+      - deepface:/root/.deepface
+
+volumes:
+  deepface:
+    driver: local
+  chainlit:
+    driver: local
+
 networks:
   genocs:
     name: genocs-network

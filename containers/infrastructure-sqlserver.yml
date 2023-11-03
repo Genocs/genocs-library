@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     hostname: sqlserver
@@ -23,7 +22,7 @@ networks:
     external: true
 
 volumes:
- mssqlsystem:
-   driver: local
- mssqluser:
-   driver: local
+  mssqlsystem:
+    driver: local
+  mssqluser:
+    driver: local
