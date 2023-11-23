@@ -20,19 +20,36 @@ public class InMemoryDynamicQueriesUnitTests
 {
     private async Task<List<User>> GetUsers()
     {
-        List<User> users = new List<User>();
-
-        users.Add(new User { Id = 1, FirstName = "Giovanni", LastName = "Nocco", Age = 53, IsActive = true });
-        users.Add(new User { Id = 2, FirstName = "Giulio", LastName = "Nocco", Age = 19, IsActive = true });
-        users.Add(new User { Id = 3, FirstName = "Vittoria", LastName = "Nocco", Age = 17, IsActive = false });
-        users.Add(new User { Id = 4, FirstName = "Emanuele", LastName = "Nocco", Age = 54, IsActive = true, DateOfBirth = DateTime.Parse("1968-10-24"), Childrens = 4 });
-
+        List<User> users = new List<User>
+        {
+            new User { Id = 1, FirstName = "Giovanni", LastName = "Nocco", Age = 53, IsActive = true },
+            new User { Id = 2, FirstName = "Giulio", LastName = "Nocco", Age = 19, IsActive = true },
+            new User { Id = 3, FirstName = "Vittoria", LastName = "Nocco", Age = 17, IsActive = false },
+            new User { Id = 4, FirstName = "Emanuele", LastName = "Nocco", Age = 54, IsActive = true, DateOfBirth = DateTime.Parse("1968-10-24"), Childs = 4 }
+        };
 
         Address address = new Address { City = "Milano" };
 
-        users.Add(new User { Id = 5, FirstName = "Joshua", LastName = "Nocco", Age = 61, IsActive = true, DateOfBirth = DateTime.Parse("1965-10-24"), Childrens = 2, Address = address });
+        users.Add(new User { Id = 5, FirstName = "Joshua", LastName = "Nocco", Age = 61, IsActive = true, DateOfBirth = DateTime.Parse("1965-10-24"), Childs = 2, Address = address });
 
         return await Task.Run(() => users);
+    }
+
+    private async Task<List<Order>> GetOrders()
+    {
+        List<Order> orders = new List<Order>
+        {
+            new Order(1, 1),
+            new Order(2, 2),
+            new Order(3, 1),
+            new Order(4, 2)
+        };
+
+        Address address = new Address { City = "Milano" };
+
+        // users.Add(new User { Id = 5, FirstName = "Joshua", LastName = "Nocco", Age = 61, IsActive = true, DateOfBirth = DateTime.Parse("1965-10-24"), Childs = 2, Address = address });
+
+        return await Task.Run(() => orders);
     }
 
     [Fact]
@@ -40,7 +57,6 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var result = await GetUsers();
     }
-
 
     [Fact]
     public async Task ApplyAndOrOperatorToAStringTest()

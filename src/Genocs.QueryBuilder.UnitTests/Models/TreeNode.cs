@@ -1,12 +1,11 @@
 ﻿namespace Genocs.QueryBuilder.UnitTests.Models;
 
-class TreeNode
+internal class TreeNode
 {
     public string? Name { get; set; }
     public List<TreeNode>? ChildNodes { get; set; }
-    public int OwnderId { get; set; }
+    public int OrderId { get; set; }
     public bool Valid { get; set; }
-
 
     public bool FindDescendant()
     {

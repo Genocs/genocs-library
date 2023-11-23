@@ -83,4 +83,11 @@
 		<PackageReference Include="prometheus-net.SystemMetrics" Version="2.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Update="Roslynator.Analyzers" Version="4.6.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
 </Project>

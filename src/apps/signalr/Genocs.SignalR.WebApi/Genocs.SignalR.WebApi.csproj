@@ -53,4 +53,12 @@
 		<PackageReference Include="Genocs.WebApi" Version="5.0.0-preview.5.*" />
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <PackageReference Update="Roslynator.Analyzers" Version="4.6.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
 </Project>

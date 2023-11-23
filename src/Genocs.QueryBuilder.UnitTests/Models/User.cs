@@ -9,9 +9,9 @@ public class User
     public int Age { get; set; }
 
     /// <summary>
-    /// This is used as nullable to check the builder
+    /// This is used as nullable to check the builder.
     /// </summary>
-    public int? Childrens { get; set; }
+    public int? Childs { get; set; }
     public DateTime DateOfBirth { get; set; }
     public bool IsActive { get; set; }
     public string? MobileNumber { get; set; }
