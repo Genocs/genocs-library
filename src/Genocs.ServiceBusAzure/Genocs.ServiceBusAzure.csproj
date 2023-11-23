@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
@@ -48,7 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.5.*" />
+		<PackageReference Include="Genocs.Core" Version="5.0.0.pre.preview.*" />
 	</ItemGroup>	
 
 	<ItemGroup>
