@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <PackageId>Genocs.WebApi.Swagger</PackageId>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -24,8 +22,6 @@
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     </PropertyGroup>
 
     <ItemGroup>
@@ -57,13 +53,6 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>

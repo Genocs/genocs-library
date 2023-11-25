@@ -4,11 +4,11 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <NoDefaultExcludes>true</NoDefaultExcludes>
-        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
@@ -17,10 +17,12 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="Properties\stylecop.json" />
         <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig" Link="Properties\.editorconfig" />
     </ItemGroup>

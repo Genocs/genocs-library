@@ -3,8 +3,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <PackageId>Genocs.HTTP.RestEase</PackageId>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -25,7 +23,6 @@
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -60,12 +57,5 @@
 
     <ItemGroup>
         <PackageReference Include="RestEase" Version="1.6.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 </Project>

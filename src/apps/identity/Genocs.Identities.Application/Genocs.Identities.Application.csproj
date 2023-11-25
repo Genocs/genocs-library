@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
@@ -39,14 +37,6 @@
         <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>

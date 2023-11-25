@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
@@ -31,13 +29,6 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>

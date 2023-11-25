@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <UserSecretsId>_genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
@@ -51,13 +49,6 @@
     <ItemGroup>
         <Folder Include="Controllers\" />
         <Folder Include="logs\" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>

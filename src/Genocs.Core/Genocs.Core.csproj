@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <PackageId>Genocs.Core</PackageId>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -24,8 +22,6 @@
         <PackageReleaseNotes>Nove to NET8</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     </PropertyGroup>
 
     <ItemGroup>
@@ -77,13 +73,6 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>
