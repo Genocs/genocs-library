@@ -17,7 +17,6 @@
 
     <ItemGroup>
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     </ItemGroup>
 
@@ -36,7 +35,7 @@
 
 
     <ItemGroup>
-        <PackageReference Update="Roslynator.Analyzers" Version="4.6.2">
+        <PackageReference Update="Roslynator.Analyzers" Version="4.6.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
