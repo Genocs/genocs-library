@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.MessageBrokers.Outbox.MongoDB</PackageId>
+        <RootNamespace>Genocs.MessageBrokers.Outbox.MongoDB</RootNamespace>
+        <AssemblyName>Genocs.MessageBrokers.Outbox.MongoDB</AssemblyName>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

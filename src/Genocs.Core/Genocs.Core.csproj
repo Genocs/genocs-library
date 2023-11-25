@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.Core</PackageId>
+        <RootNamespace>Genocs.Core</RootNamespace>
+        <AssemblyName>Genocs.Core</AssemblyName>        
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.WebApi</PackageId>
+        <RootNamespace>Genocs.WebApi</RootNamespace>
+        <AssemblyName>Genocs.WebApi</AssemblyName>        
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

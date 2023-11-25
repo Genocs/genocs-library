@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <PackageId>Genocs.WebApi.Swagger</PackageId>
+        <RootNamespace>Genocs.WebApi.Swagger</RootNamespace>
+        <AssemblyName>Genocs.WebApi.Swagger</AssemblyName>        
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

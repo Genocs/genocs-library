@@ -4,6 +4,8 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.HTTP.RestEase</PackageId>
+        <RootNamespace>Genocs.HTTP.RestEase</RootNamespace>
+        <AssemblyName>Genocs.HTTP.RestEase</AssemblyName>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

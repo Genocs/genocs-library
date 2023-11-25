@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.MessageBrokers.RabbitMQ</PackageId>
+        <RootNamespace>Genocs.MessageBrokers.RabbitMQ</RootNamespace>
+        <AssemblyName>Genocs.MessageBrokers.RabbitMQ</AssemblyName>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>
