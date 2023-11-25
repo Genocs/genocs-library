@@ -1,44 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<IsPublishable>false</IsPublishable>
-		<IsPackable>false</IsPackable>
-		<UserSecretsId>__genocs</UserSecretsId>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerfileContext>..\..</DockerfileContext>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <IsPublishable>false</IsPublishable>
+        <IsPackable>false</IsPackable>
+        <UserSecretsId>__genocs</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+        <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-	</ItemGroup>	
-	
+    <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
-		<ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
-		<ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
-		<ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
-		<ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
-	</ItemGroup>	
-	
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
+        <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
+        <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
+        <ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
+        <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Update="Roslynator.Analyzers" Version="4.6.2">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	</ItemGroup>
 </Project>

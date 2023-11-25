@@ -1,28 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<IsPublishable>false</IsPublishable>
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <IsPublishable>false</IsPublishable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
-		<ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0-preview.5.*" />
-		<PackageReference Include="Genocs.Core" Version="5.0.0-preview.5.*" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Roslynator.Analyzers" Version="4.6.2">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	</ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="5.0.0" />
+        <PackageReference Include="Genocs.Core" Version="5.0.0" />
+    </ItemGroup>
 
 </Project>

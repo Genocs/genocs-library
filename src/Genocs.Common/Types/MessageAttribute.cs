@@ -1,28 +1,28 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// MessageAttribute class
+/// MessageAttribute class.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class MessageAttribute : Attribute
 {
     /// <summary>
-    /// The Exchange used by the system
+    /// The Exchange used by the system.
     /// </summary>
     public string Exchange { get; }
 
     /// <summary>
-    /// The Topic used to send/receive message 
+    /// The Topic used to send/receive message.
     /// </summary>
     public string Topic { get; }
 
     /// <summary>
-    /// The queue
+    /// The queue.
     /// </summary>
     public string Queue { get; }
 
     /// <summary>
-    /// The type of the queue
+    /// The type of the queue.
     /// </summary>
     public string QueueType { get; }
 
@@ -32,12 +32,12 @@ public class MessageAttribute : Attribute
     public string ErrorQueue { get; }
 
     /// <summary>
-    /// The subscriptionId
+    /// The subscriptionId.
     /// </summary>
     public string SubscriptionId { get; }
 
     /// <summary>
-    /// Standard constructor
+    /// Standard constructor.
     /// </summary>
     /// <param name="exchange"></param>
     /// <param name="topic"></param>
@@ -45,8 +45,13 @@ public class MessageAttribute : Attribute
     /// <param name="queueType"></param>
     /// <param name="errorQueue"></param>
     /// <param name="subscriptionId"></param>
-    public MessageAttribute(string? exchange = null, string? topic = null, string? queue = null,
-        string? queueType = null, string? errorQueue = null, string? subscriptionId = null)
+    public MessageAttribute(
+                            string? exchange = null,
+                            string? topic = null,
+                            string? queue = null,
+                            string? queueType = null,
+                            string? errorQueue = null,
+                            string? subscriptionId = null)
     {
         Exchange = exchange ?? string.Empty;
         Topic = topic ?? string.Empty;

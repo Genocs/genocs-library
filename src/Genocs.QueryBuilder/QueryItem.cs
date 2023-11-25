@@ -1,10 +1,10 @@
-﻿namespace Genocs.QueryBuilder
+﻿namespace Genocs.QueryBuilder;
+
+/// <summary>
+/// The QueryItem class
+/// </summary>
+public class QueryItem
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class QueryItem
-    {
     public QueryItem(string propertyName,
                     string propertyValue,
                     string propertyType = "string",
@@ -34,5 +34,4 @@
     public string PropertyValue { get; set; }
     public QueryOperator OperatorType { get; set; }
     public bool ParentCanBeNull { get; set; }
-}
 }

@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>Genocs.Tracing.Jaeger.RabbitMQ</PackageId>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview1.0</Version>
+		<Version>5.0.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
@@ -24,7 +22,6 @@
 		<PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -48,8 +45,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0-preview1.0" />
-		<PackageReference Include="Genocs.Tracing" Version="5.0.0-preview1.0" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0" />
+		<PackageReference Include="Genocs.Tracing" Version="5.0.0" />
 	</ItemGroup>
 
 </Project>
