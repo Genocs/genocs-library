@@ -48,9 +48,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="5.0.0" />
-        <PackageReference Include="Genocs.Logging" Version="5.0.0" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.0" />
+        <PackageReference Include="Genocs.Core" Version="5.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="5.0.*" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.*" />
     </ItemGroup>
 
     <ItemGroup>

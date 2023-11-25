@@ -49,9 +49,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="5.0.0" />
-        <PackageReference Include="Genocs.HTTP" Version="5.0.0" />
-        <PackageReference Include="Genocs.Discovery.Consul" Version="5.0.0" />
+        <PackageReference Include="Genocs.Core" Version="5.0.*" />
+        <PackageReference Include="Genocs.HTTP" Version="5.0.*" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="5.0.*" />
     </ItemGroup>
 
 </Project>
