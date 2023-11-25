@@ -1,14 +1,12 @@
-namespace Genocs.Core.Builders;
-
 using Genocs.Common.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+
+namespace Genocs.Core.Builders;
 
 /// <summary>
-/// Genocs builder implementation
+/// Genocs builder implementation.
 /// </summary>
 public sealed class GenocsBuilder : IGenocsBuilder
 {

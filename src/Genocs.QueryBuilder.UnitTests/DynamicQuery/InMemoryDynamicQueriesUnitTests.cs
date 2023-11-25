@@ -237,7 +237,7 @@ public class InMemoryDynamicQueriesUnitTests
     {
         var users = await GetUsers();
 
-        QueryItem queryItem = new QueryItem(propertyName: "Childrens", propertyValue: "2", propertyType: "numeric", operatorType: QueryOperator.GreaterThan);
+        QueryItem queryItem = new QueryItem(propertyName: "Childs", propertyValue: "2", propertyType: "numeric", operatorType: QueryOperator.GreaterThan);
 
         IQueryable<User> usersQuery = users.AsQueryable();
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItem, "User"));
@@ -245,8 +245,6 @@ public class InMemoryDynamicQueriesUnitTests
         var result = usersQuery.ToList();
         Assert.Single(result);
     }
-
-
 
     [Fact]
     public async Task ApplyOperatorWithQueryItemListTest()
@@ -281,7 +279,6 @@ public class InMemoryDynamicQueriesUnitTests
         var result = usersQuery.ToList();
         Assert.Empty(result);
     }
-
 
     [Fact]
     public async Task ApplyOperatorOnNestedObjectThatCanBeNull()

@@ -1,6 +1,6 @@
-﻿namespace Genocs.ServiceBusAzure.UnitTests;
+﻿using Xunit;
 
-using Xunit;
+namespace Genocs.ServiceBusAzure.UnitTests;
 
 public class SimpleUnitTests
 {

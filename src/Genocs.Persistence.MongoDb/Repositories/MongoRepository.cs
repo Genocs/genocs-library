@@ -3,7 +3,6 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
 using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
