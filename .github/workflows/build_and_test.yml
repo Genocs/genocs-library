@@ -1,6 +1,4 @@
-# This is a manually triggered dockerhub build and publish
-
-name: Publish to Dockerhub
+name: Build test and pack
 
 on:
   push:
@@ -20,7 +18,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
   
       - name: Restore dependencies
         run: dotnet restore
