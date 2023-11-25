@@ -37,11 +37,8 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
-### [2023-10-13] 5.0.0-preview.5.0
-- Added [editorconfig](https://editorconfig.org/)
-- Added StyleCop
-- Updated logo
-- Updated readme
+### [2023-11-25] 5.0.0
+- Moved to NET8
 
 ### [2023-10-13] 5.0.0-preview.5.0
 - Added [editorconfig](https://editorconfig.org/)
