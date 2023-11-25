@@ -20,9 +20,6 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Auth" Version="5.0.*" />
-        <PackageReference Include="Genocs.Logging" Version="5.0.*" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="5.0.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.*" />
         <PackageReference Include="Genocs.Metrics" Version="5.0.*" />
         <PackageReference Include="Genocs.Secrets.Vault" Version="5.0.*" />
         <PackageReference Include="Genocs.Security" Version="5.0.*" />
