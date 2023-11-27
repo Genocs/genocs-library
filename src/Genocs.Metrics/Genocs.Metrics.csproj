@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
@@ -74,7 +74,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="prometheus-net" Version="5.0.2" />
+        <PackageReference Include="prometheus-net" Version="8.1.0" />
         <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.2" />
         <PackageReference Include="prometheus-net.AspNetCore.Grpc" Version="5.0.2" />
         <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="5.0.2" />
