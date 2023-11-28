@@ -5,9 +5,10 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
+namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
 
-public interface IMongoRepository<TEntity, in TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier> where TEntity : IIdentifiable<TIdentifier>
+public interface IMongoRepository<TEntity, in TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier>
+    where TEntity : IIdentifiable<TIdentifier>
 {
     IMongoCollection<TEntity> Collection { get; }
 
@@ -16,10 +17,12 @@ public interface IMongoRepository<TEntity, in TIdentifier> : IRepositoryOfEntity
     Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
     Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
-    Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : IPagedQuery;
+    Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+        where TQuery : IPagedQuery;
 
     Task AddAsync(TEntity entity);
 
     Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate);
+
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
 }

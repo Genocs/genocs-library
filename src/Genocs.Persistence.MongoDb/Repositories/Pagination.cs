@@ -7,11 +7,21 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 
 public static class Pagination
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query)
-        => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results);
+    public static async Task<PagedResult<T>> PaginateAsync<T>(
+                                                              this IMongoQueryable<T> collection,
+                                                              IPagedQuery query)
+        => await collection.PaginateAsync(
+                                          query.OrderBy,
+                                          query.SortOrder,
+                                          query.Page,
+                                          query.Results);
 
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string? orderBy,
-        string? sortOrder, int page = 1, int resultsPerPage = 10)
+    public static async Task<PagedResult<T>> PaginateAsync<T>(
+                                                              this IMongoQueryable<T> collection,
+                                                              string? orderBy,
+                                                              string? sortOrder,
+                                                              int page = 1,
+                                                              int resultsPerPage = 10)
     {
         if (page <= 0)
         {
@@ -23,14 +33,14 @@ public static class Pagination
             resultsPerPage = 10;
         }
 
-        var isEmpty = await collection.AnyAsync() == false;
+        bool isEmpty = !await collection.AnyAsync();
         if (isEmpty)
         {
             return PagedResult<T>.Empty;
         }
 
-        var totalResults = await collection.CountAsync();
-        var totalPages = (int)Math.Ceiling((decimal)totalResults / resultsPerPage);
+        int totalResults = await collection.CountAsync();
+        int totalPages = (int)Math.Ceiling((decimal)totalResults / resultsPerPage);
 
         List<T> data;
         if (string.IsNullOrWhiteSpace(orderBy))
@@ -54,8 +64,10 @@ public static class Pagination
     public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection, IPagedQuery query)
         => collection.Limit(query.Page, query.Results);
 
-    public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection,
-        int page = 1, int resultsPerPage = 10)
+    public static IMongoQueryable<T> Limit<T>(
+                                              this IMongoQueryable<T> collection,
+                                              int page = 1,
+                                              int resultsPerPage = 10)
     {
         if (page <= 0)
         {
@@ -67,7 +79,7 @@ public static class Pagination
             resultsPerPage = 10;
         }
 
-        var skip = (page - 1) * resultsPerPage;
+        int skip = (page - 1) * resultsPerPage;
 
         var data = collection
                         .Skip(skip)

@@ -2,11 +2,12 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
+namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 
 
 /// <summary>
@@ -32,10 +33,10 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     {
         get
         {
-            Attribute[] attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.  
+            var attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.  
 
             // Displaying output.  
-            foreach (Attribute attr in attrs)
+            foreach (var attr in attrs)
             {
                 if (attr is TableMappingAttribute)
                 {
@@ -76,7 +77,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <exception cref="EntityNotFoundException"></exception>
     public override TEntity Get(TPrimaryKey id)
     {
-        FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
+        var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var entity = Collection.Find(filter).FirstOrDefault();
         if (entity == null)
         {
@@ -93,7 +94,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <returns></returns>
     public override TEntity FirstOrDefault(TPrimaryKey id)
     {
-        FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
+        var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         return Collection.Find(filter).FirstOrDefault();
     }
 
@@ -137,8 +138,8 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <param name="id"></param>
     public override void Delete(TPrimaryKey id)
     {
-        FilterDefinition<TEntity> query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
-        DeleteResult deleteResult = Collection.DeleteOneAsync(query).Result;
+        var query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
+        var deleteResult = Collection.DeleteOneAsync(query).Result;
     }
 
     public IMongoQueryable<TEntity> GetMongoQueryable()

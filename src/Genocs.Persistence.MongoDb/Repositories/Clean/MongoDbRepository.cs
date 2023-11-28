@@ -1,13 +1,13 @@
 using Genocs.Common.Types;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
-
+namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 
 /// <summary>
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, Guid>, IMongoDbRepository<TEntity> where TEntity : class, IIdentifiable<Guid>
+public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, Guid>, IMongoDbRepository<TEntity>
+    where TEntity : class, IIdentifiable<Guid>
 {
     /// <summary>
     /// 
@@ -16,5 +16,5 @@ public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, Guid>, 
     public MongoDbRepository(IMongoDatabaseProvider databaseProvider)
         : base(databaseProvider)
     {
-    } 
+    }
 }

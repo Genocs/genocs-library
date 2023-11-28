@@ -5,7 +5,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
+namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
 
 internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntity, TIdentifiable>
     where TEntity : IIdentifiable<TIdentifiable>
@@ -18,7 +18,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     public IMongoCollection<TEntity> Collection { get; }
 
     /// <summary>
-    /// It returns the Mongo Collection as Queryable
+    /// It returns the Mongo Collection as Queryable.
     /// </summary>
     /// <returns></returns>
     public IMongoQueryable<TEntity> GetMongoQueryable()
@@ -40,7 +40,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         => Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
     /// <summary>
-    /// It adds an entity to the Mongo Collection
+    /// It adds an entity to the Mongo Collection.
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
@@ -48,24 +48,24 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         => Collection.InsertOneAsync(entity);
 
     /// <summary>
-    /// It updates an entity in the Mongo Collection
+    /// It updates an entity in the Mongo Collection.
     /// </summary>
-    /// <param name="entity">The entity</param>
-    /// <returns>The updated entity</returns>
+    /// <param name="entity">The entity.</param>
+    /// <returns>The updated entity.</returns>
     public Task UpdateAsync(TEntity entity)
         => UpdateAsync(entity, e => e.Id.Equals(entity.Id));
 
     /// <summary>
-    /// It updates an entity in the Mongo Collection in async mode
+    /// It updates an entity in the Mongo Collection in async mode.
     /// </summary>
-    /// <param name="entity">The entity</param>
-    /// <param name="predicate">The predicate</param>
-    /// <returns>The updated entity</returns>
+    /// <param name="entity">The entity.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>The updated entity.</returns>
     public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
         => Collection.ReplaceOneAsync(predicate, entity);
 
     /// <summary>
-    /// It deletes an entity from the Mongo Collection in async mode
+    /// It deletes an entity from the Mongo Collection in async mode.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

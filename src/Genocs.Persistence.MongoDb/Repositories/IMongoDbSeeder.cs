@@ -3,14 +3,14 @@ using MongoDB.Driver;
 namespace Genocs.Persistence.MongoDb.Repositories;
 
 /// <summary>
-/// The MongoDb seeder
+/// The MongoDb seeder.
 /// </summary>
 public interface IMongoDbSeeder
 {
     /// <summary>
-    /// Database Seed 
+    /// Database Seed.
     /// </summary>
-    /// <param name="database"></param>
+    /// <param name="database">The database.</param>
     /// <returns></returns>
     Task SeedAsync(IMongoDatabase database);
 }

@@ -1,7 +1,7 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.Events;
 using OpenTracing;

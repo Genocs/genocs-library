@@ -1,7 +1,7 @@
 ﻿using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Entities.Auditing;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Repositories.Clean;
 
 namespace Genocs.Core.Demo.Domain.Aggregates;
 

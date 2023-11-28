@@ -10,6 +10,7 @@ using Genocs.Logging;
 using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Repositories.Clean;
 using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;

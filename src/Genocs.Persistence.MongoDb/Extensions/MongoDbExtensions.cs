@@ -5,6 +5,8 @@ using Genocs.Persistence.MongoDb.Factories;
 using Genocs.Persistence.MongoDb.Initializers;
 using Genocs.Persistence.MongoDb.Options;
 using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Repositories.Clean;
+using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Genocs.Persistence.MongoDb.Seeders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
