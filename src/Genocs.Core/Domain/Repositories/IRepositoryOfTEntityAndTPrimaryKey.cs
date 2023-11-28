@@ -8,7 +8,7 @@ namespace Genocs.Core.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Main Entity type this repository works on.</typeparam>
 /// <typeparam name="TIdentifiable">Primary key type of the entity.</typeparam>
-public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TEntity, TIdentifiable>
+public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEntity, TIdentifiable>
     where TEntity : IIdentifiable<TIdentifiable>
 {
     #region Select/Get/Query
@@ -146,7 +146,7 @@ public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TE
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity);
+    TIdentifiable InsertAndGetId(TEntity entity);
 
     /// <summary>
     /// Inserts a new entity and gets it's Id.
@@ -155,7 +155,7 @@ public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TE
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity);
+    Task<TIdentifiable> InsertAndGetIdAsync(TEntity entity);
 
     /// <summary>
     /// Inserts or updates given entity depending on Id's value.
@@ -177,7 +177,7 @@ public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TE
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity);
+    TIdentifiable InsertOrUpdateAndGetId(TEntity entity);
 
     /// <summary>
     /// Inserts or updates given entity depending on Id's value.
@@ -187,7 +187,7 @@ public interface IRepositoryOfEntity<TEntity, in TIdentifiable> : IRepository<TE
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity);
+    Task<TIdentifiable> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
     #endregion
 

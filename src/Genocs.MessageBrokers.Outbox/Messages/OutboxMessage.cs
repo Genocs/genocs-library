@@ -5,9 +5,9 @@ namespace Genocs.MessageBrokers.Outbox.Messages;
 public sealed class OutboxMessage : IIdentifiable<string>
 {
     public string Id { get; set; }
-    public string OriginatedMessageId { get; set; }
-    public string CorrelationId { get; set; }
-    public string SpanContext { get; set; }
+    public string? OriginatedMessageId { get; set; }
+    public string? CorrelationId { get; set; }
+    public string? SpanContext { get; set; }
     public Dictionary<string, object> Headers { get; set; } = new();
     public string MessageType { get; set; }
     public string MessageContextType { get; set; }

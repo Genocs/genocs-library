@@ -9,33 +9,40 @@ using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 
-
 /// <summary>
 /// Implements IRepository for MongoDB.
 /// </summary>
-/// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
-/// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
+/// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
+/// <typeparam name="TPrimaryKey">Primary key of the entity.</typeparam>
 public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>, IMongoRepository<TEntity, TPrimaryKey>
     where TEntity : class, IIdentifiable<TPrimaryKey>
 {
     /// <summary>
-    /// Todo
+    /// Get the Mongodb database.
     /// </summary>
     public virtual IMongoDatabase Database
     {
         get { return _databaseProvider.Database; }
     }
 
+    private readonly IMongoDatabaseProvider _databaseProvider;
+    protected IMongoCollection<TEntity>? _collection;
+
     /// <summary>
-    /// Todo
+    /// Get the Mongodb collection from a custom attribute or from the entity name.
     /// </summary>
     public virtual IMongoCollection<TEntity> Collection
     {
         get
         {
-            var attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.  
+            if (_collection != null)
+            {
+                return _collection;
+            }
 
-            // Displaying output.  
+            var attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.
+
+            // Displaying output.
             foreach (var attr in attrs)
             {
                 if (attr is TableMappingAttribute)
@@ -43,15 +50,15 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
                     return _databaseProvider.Database.GetCollection<TEntity>((attr as TableMappingAttribute).Name);
                 }
             }
-            return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+
+            _collection = _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+
+            return _collection;
         }
     }
 
-    private readonly IMongoDatabaseProvider _databaseProvider;
-
-
     /// <summary>
-    /// Standard constructor
+    /// Standard constructor.
     /// </summary>
     /// <param name="databaseProvider"></param>
     public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
@@ -60,21 +67,18 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     }
 
     /// <summary>
-    /// Get all entities as IQueryable
+    /// Get all entities as IQueryable.
     /// </summary>
     /// <returns></returns>
     public override IQueryable<TEntity> GetAll()
-    {
-        return Collection.AsQueryable();
-    }
-
+        => Collection.AsQueryable();
 
     /// <summary>
-    /// Get single entity
+    /// Get single entity.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    /// <exception cref="EntityNotFoundException"></exception>
+    /// <exception cref="EntityNotFoundException">It is thrown if the entity is not found.</exception>
     public override TEntity Get(TPrimaryKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
@@ -88,7 +92,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     }
 
     /// <summary>
-    /// First Or Default entity
+    /// First Or Default entity.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -99,7 +103,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     }
 
     /// <summary>
-    /// Insert an entity
+    /// Insert an entity.
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
@@ -110,30 +114,25 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     }
 
     /// <summary>
-    /// Update an existing entity
+    /// Update an existing entity.
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
     public override TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOneAsync(
-        filter: g => g.Id.Equals(entity.Id),
-        replacement: entity);
+        Collection.ReplaceOneAsync(filter: g => g.Id.Equals(entity.Id), replacement: entity);
         return entity;
     }
 
     /// <summary>
-    /// Delete entity, passing the entire object
+    /// Delete entity, passing the entire object.
     /// </summary>
     /// <param name="entity"></param>
     public override void Delete(TEntity entity)
-    {
-        Delete(entity.Id);
-    }
-
+        => Delete(entity.Id);
 
     /// <summary>
-    /// Delete entity by primary key
+    /// Delete entity by primary key.
     /// </summary>
     /// <param name="id"></param>
     public override void Delete(TPrimaryKey id)
@@ -143,57 +142,40 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     }
 
     public IMongoQueryable<TEntity> GetMongoQueryable()
-    {
-        throw new NotImplementedException();
-    }
+        => Collection.AsQueryable();
 
-    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        => await Collection.AsQueryable().Where(predicate).FirstAsync();
 
-    public Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        => await Collection.AsQueryable().Where(predicate).ToListAsync();
 
-    public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query) where TQuery : IPagedQuery
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+        where TQuery : IPagedQuery
+        => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
-    public Task AddAsync(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task AddAsync(TEntity entity)
+        => await Collection.InsertOneAsync(entity);
 
-    public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
+        => await Collection.ReplaceOneAsync(predicate, entity);
 
-    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+        => await Collection.AsQueryable().Where(predicate).AnyAsync();
 
-    public TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    //public Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    //public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    public Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    //public Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

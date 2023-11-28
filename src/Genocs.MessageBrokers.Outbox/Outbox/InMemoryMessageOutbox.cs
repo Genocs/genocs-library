@@ -7,11 +7,9 @@ namespace Genocs.MessageBrokers.Outbox.Outbox;
 
 internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAccessor
 {
-    private readonly ConcurrentDictionary<string, bool> _inboxMessages =
-        new();
+    private readonly ConcurrentDictionary<string, bool> _inboxMessages = new();
 
-    private readonly ConcurrentDictionary<string, OutboxMessage> _outboxMessages =
-        new();
+    private readonly ConcurrentDictionary<string, OutboxMessage> _outboxMessages = new();
 
     private readonly ILogger<InMemoryMessageOutbox> _logger;
     private readonly int _expiry;
@@ -58,9 +56,15 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
         _logger.LogTrace($"Processed a message with id: '{messageId}'.");
     }
 
-    public Task SendAsync<T>(T message, string originatedMessageId = null, string messageId = null,
-        string correlationId = null, string spanContext = null, object messageContext = null,
-        IDictionary<string, object> headers = null) where T : class
+    public Task SendAsync<T>(
+                             T message,
+                             string? originatedMessageId = null,
+                             string? messageId = null,
+                             string? correlationId = null,
+                             string? spanContext = null,
+                             object? messageContext = null,
+                             IDictionary<string, object>? headers = null)
+        where T : class
     {
         if (!Enabled)
         {

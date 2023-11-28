@@ -38,7 +38,7 @@ public class MongoDbRepositoryBase<TEntity> : MongoDbRepositoryBase<TEntity, Gui
     /// <param name="predicate"></param>
     /// <param name="query"></param>
     /// <returns></returns>
-    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
-        TQuery query) where TQuery : IPagedQuery
+    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+        where TQuery : IPagedQuery
             => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 }

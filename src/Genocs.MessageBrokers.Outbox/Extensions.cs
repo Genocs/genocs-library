@@ -12,8 +12,10 @@ public static class Extensions
     private const string SectionName = "outbox";
     private const string RegistryName = "messageBrokers.outbox";
 
-    public static IGenocsBuilder AddMessageOutbox(this IGenocsBuilder builder,
-        Action<IMessageOutboxConfigurator> configure = null, string sectionName = SectionName)
+    public static IGenocsBuilder AddMessageOutbox(
+                                                  this IGenocsBuilder builder,
+                                                  Action<IMessageOutboxConfigurator>? configure = null,
+                                                  string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -48,7 +50,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator, string? mongoSectionName = null)
+    public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator)
     {
         configurator.Builder.Services.AddTransient<IMessageOutbox, InMemoryMessageOutbox>();
 

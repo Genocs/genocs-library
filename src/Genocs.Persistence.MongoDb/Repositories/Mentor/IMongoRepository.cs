@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
 
-public interface IMongoRepository<TEntity, in TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier>
+public interface IMongoRepository<TEntity, TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier>
     where TEntity : IIdentifiable<TIdentifier>
 {
     IMongoCollection<TEntity> Collection { get; }

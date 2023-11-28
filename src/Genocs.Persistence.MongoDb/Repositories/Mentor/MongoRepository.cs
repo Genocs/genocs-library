@@ -35,8 +35,8 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         => await Collection.Find(predicate).ToListAsync();
 
-    public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
-        TQuery query) where TQuery : IPagedQuery
+    public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+        where TQuery : IPagedQuery
         => Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
     /// <summary>
@@ -82,9 +82,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         => Collection.AsQueryable();
 
     public IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
-    {
-        throw new NotImplementedException();
-    }
+        => GetAll();
 
     public List<TEntity> GetAllList()
         => Collection.AsQueryable().ToList();
@@ -148,9 +146,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     }
 
     public TEntity Load(TIdentifiable id)
-    {
-        throw new NotImplementedException();
-    }
+        => FirstOrDefault(id);
 
     public TEntity Insert(TEntity entity)
     {
@@ -164,15 +160,11 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return entity;
     }
 
-    public TIdentifiable InsertAndGetId<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    public TIdentifiable InsertAndGetId(TEntity entity)
+        => Insert(entity).Id;
 
-    public Task<TIdentifiable1> InsertAndGetIdAsync<TIdentifiable1>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<TIdentifiable> InsertAndGetIdAsync(TEntity entity)
+        => (await InsertAsync(entity)).Id;
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
@@ -186,23 +178,17 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return entity;
     }
 
-    public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    public TIdentifiable InsertOrUpdateAndGetId(TEntity entity)
+        => InsertOrUpdate(entity).Id;
 
-    public Task<TIdentifiable1> InsertOrUpdateAndGetIdAsync<TIdentifiable1>(TEntity entity)
-    {
-
-        throw new NotImplementedException();
-    }
+    public async Task<TIdentifiable> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        => (await InsertOrUpdateAsync(entity)).Id;
 
     public TEntity Update(TEntity entity)
     {
         Collection.ReplaceOne(c => c.Id.Equals(entity.Id), entity);
         return entity;
     }
-
 
     public TEntity Update(TIdentifiable id, Action<TEntity> updateAction)
     {
@@ -226,6 +212,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         {
             throw new ArgumentNullException(nameof(entity));
         }
+
         return DeleteAsync(entity.Id);
     }
 
@@ -235,6 +222,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         {
             throw new ArgumentNullException(nameof(id));
         }
+
         Collection.DeleteOne(c => c.Id.Equals(id));
     }
 
@@ -244,6 +232,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         {
             throw new ArgumentNullException(nameof(predicate));
         }
+
         Collection.DeleteMany(predicate);
     }
 
