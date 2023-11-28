@@ -18,7 +18,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     where TEntity : class, IIdentifiable<TPrimaryKey>
 {
     /// <summary>
-    /// Get the Mongodb database.
+    /// Get the MongoDB database.
     /// </summary>
     public virtual IMongoDatabase Database
     {
@@ -29,7 +29,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     protected IMongoCollection<TEntity>? _collection;
 
     /// <summary>
-    /// Get the Mongodb collection from a custom attribute or from the entity name.
+    /// Get the MongoDB collection from a custom attribute or from the entity name.
     /// </summary>
     public virtual IMongoCollection<TEntity> Collection
     {
@@ -141,6 +141,10 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
         var deleteResult = Collection.DeleteOneAsync(query).Result;
     }
 
+    /// <summary>
+    /// It returns the Mongo Collection as Queryable.
+    /// </summary>
+    /// <returns></returns>
     public IMongoQueryable<TEntity> GetMongoQueryable()
         => Collection.AsQueryable();
 
@@ -150,6 +154,13 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         => await Collection.AsQueryable().Where(predicate).ToListAsync();
 
+    /// <summary>
+    /// Query data from the Mongo Collection and convert it to a PagedResult.
+    /// </summary>
+    /// <typeparam name="TQuery">The query type.</typeparam>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="query">The query.</param>
+    /// <returns>The paged result.</returns>
     public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
         where TQuery : IPagedQuery
         => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
@@ -162,20 +173,4 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
 
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
         => await Collection.AsQueryable().Where(predicate).AnyAsync();
-
-
-    //public Task<TIdentifiable> InsertAndGetIdAsync<TIdentifiable>(TEntity entity)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public TIdentifiable InsertOrUpdateAndGetId<TIdentifiable>(TEntity entity)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public Task<TIdentifiable> InsertOrUpdateAndGetIdAsync<TIdentifiable>(TEntity entity)
-    //{
-    //    throw new NotImplementedException();
-    //}
 }

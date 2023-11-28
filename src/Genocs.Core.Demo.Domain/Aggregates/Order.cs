@@ -2,11 +2,12 @@
 using Genocs.Core.Domain.Entities.Auditing;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Clean;
+using MongoDB.Bson;
 
 namespace Genocs.Core.Demo.Domain.Aggregates;
 
 [TableMapping("Orders")]
-public class Order : AggregateRoot<Guid>, IMongoDbEntity, IHasCreationTime
+public class Order : AggregateRoot<ObjectId>, IMongoDbEntity, IHasCreationTime
 {
     public Order(string orderId, string userId, string cardToken, decimal amount, string currency)
     {
@@ -17,7 +18,7 @@ public class Order : AggregateRoot<Guid>, IMongoDbEntity, IHasCreationTime
         Currency = currency;
     }
 
-    public string OrderId { get; set; } = Guid.NewGuid().ToString();
+    public string OrderId { get; set; } = ObjectId.GenerateNewId().ToString();
     public string UserId { get; set; } = default!;
     public DateTime CreationTime { get; set; } = DateTime.UtcNow;
     public string CardToken { get; set; } = default!;
