@@ -3,7 +3,6 @@ using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities;
 
-
 /// <summary>
 /// Some useful extension methods for Entities.
 /// </summary>

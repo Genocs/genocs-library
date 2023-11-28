@@ -5,16 +5,16 @@ namespace Genocs.Core.CQRS.Queries;
 /// <summary>
 /// The paged result.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">The page result type.</typeparam>
 public class PagedResult<T> : PagedResultBase
 {
     /// <summary>
-    /// Returned items
+    /// Returned items.
     /// </summary>
     public IEnumerable<T> Items { get; }
 
     /// <summary>
-    /// Default constructor
+    /// Default constructor.
     /// </summary>
     protected PagedResult()
     {
@@ -22,7 +22,7 @@ public class PagedResult<T> : PagedResultBase
     }
 
     /// <summary>
-    /// Standard constructor
+    /// Standard constructor.
     /// </summary>
     /// <param name="items"></param>
     /// <param name="currentPage"></param>
@@ -30,18 +30,19 @@ public class PagedResult<T> : PagedResultBase
     /// <param name="totalPages"></param>
     /// <param name="totalResults"></param>
     [JsonConstructor]
-    protected PagedResult(IEnumerable<T> items,
+    protected PagedResult(
+                          IEnumerable<T> items,
                           int currentPage,
                           int resultsPerPage,
                           int totalPages,
-                          long totalResults) :
-            base(currentPage, resultsPerPage, totalPages, totalResults)
+                          long totalResults)
+        : base(currentPage, resultsPerPage, totalPages, totalResults)
     {
         Items = items;
     }
 
     /// <summary>
-    /// Create helper
+    /// Create helper.
     /// </summary>
     /// <param name="items"></param>
     /// <param name="currentPage"></param>
@@ -49,23 +50,32 @@ public class PagedResult<T> : PagedResultBase
     /// <param name="totalPages"></param>
     /// <param name="totalResults"></param>
     /// <returns></returns>
-    public static PagedResult<T> Create(IEnumerable<T> items,
-        int currentPage, int resultsPerPage,
-        int totalPages, long totalResults)
+    public static PagedResult<T> Create(
+                                        IEnumerable<T> items,
+                                        int currentPage,
+                                        int resultsPerPage,
+                                        int totalPages,
+                                        long totalResults)
         => new PagedResult<T>(items, currentPage, resultsPerPage, totalPages, totalResults);
 
     /// <summary>
-    /// From helper
+    /// From helper.
     /// </summary>
     /// <param name="result"></param>
     /// <param name="items"></param>
     /// <returns></returns>
-    public static PagedResult<T> From(PagedResultBase result, IEnumerable<T> items)
-        => new PagedResult<T>(items, result.CurrentPage, result.ResultsPerPage,
-            result.TotalPages, result.TotalResults);
+    public static PagedResult<T> From(
+                                      PagedResultBase result,
+                                      IEnumerable<T> items)
+        => new PagedResult<T>(
+                              items,
+                              result.CurrentPage,
+                              result.ResultsPerPage,
+                              result.TotalPages,
+                              result.TotalResults);
 
     /// <summary>
-    /// Static helper to get Empty result
+    /// Static helper to get Empty result.
     /// </summary>
     public static PagedResult<T> Empty => new PagedResult<T>();
 }
