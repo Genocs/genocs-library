@@ -70,7 +70,6 @@ public static class Extensions
 
         _initialized = true;
 
-
         var metricsBuilder = new MetricsBuilder().Configuration.Configure(cfg =>
         {
             var tags = metricsOptions.Tags;

@@ -21,6 +21,7 @@ using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Tracing.Jaeger;
 using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
@@ -57,6 +58,7 @@ services.AddGenocs()
         .AddFabio()
         .AddOpenTelemetry()
         .AddJaeger()
+        .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Order, Guid>("orders")
         .AddCommandHandlers()

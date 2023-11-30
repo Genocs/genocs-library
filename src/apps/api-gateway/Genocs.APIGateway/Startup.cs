@@ -21,7 +21,7 @@ internal class Startup
     {
         Configuration = configuration;
     }
-    
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<LogContextMiddleware>();
@@ -45,7 +45,7 @@ internal class Startup
             .AddSecurity()
             .AddWebApi()
             .Build();
-        
+
         services.AddAuthorization(options =>
         {
             options.AddPolicy("authenticatedUser", policy =>
@@ -61,6 +61,8 @@ internal class Startup
                     .WithHeaders("Content-Type", "Authorization");
             });
         });
+
+        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,6 +92,8 @@ internal class Startup
                 await context.Response.WriteAsync(context.RequestServices.GetService<AppSettings>()?.Name ?? "Service");
             });
             endpoints.MapReverseProxy();
+
+            endpoints.MapHealthChecks("/healthz");
         });
     }
 }

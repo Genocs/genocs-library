@@ -20,20 +20,19 @@ public static class Extensions
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
         var builder = GenocsBuilder.Create(services, configuration);
-        var appOptions = builder.GetOptions<AppSettings>(AppSettings.Position);
-        services.AddSingleton(appOptions);
+        var options = builder.GetOptions<AppSettings>(AppSettings.Position);
+        services.AddSingleton(options);
 
         builder.Services.AddMemoryCache();
         services.AddSingleton<IServiceId, ServiceId>();
-        if (!appOptions.DisplayBanner || string.IsNullOrWhiteSpace(appOptions.Name))
+        if (!options.DisplayBanner || string.IsNullOrWhiteSpace(options.Name))
         {
             return builder;
         }
 
-        string version = appOptions.DisplayVersion ? $" {appOptions.Version}" : string.Empty;
-        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(appOptions.Name + version));
-        ConsoleColor current = Console.BackgroundColor;
-
+        string version = options.DisplayVersion ? $" {options.Version}" : string.Empty;
+        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(options.Name + version));
+        ConsoleColor current = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
         Console.ForegroundColor = current;
@@ -61,7 +60,7 @@ public static class Extensions
     /// <typeparam name="TModel">The option type parameter.</typeparam>
     /// <param name="configuration"></param>
     /// <param name="sectionName"></param>
-    /// <returns>The option.</returns>
+    /// <returns>The option model or the default options.</returns>
     public static TModel GetOptions<TModel>(this IConfiguration configuration, string sectionName)
         where TModel : new()
     {

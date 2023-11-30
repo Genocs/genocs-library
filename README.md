@@ -68,19 +68,19 @@ You will use ***Docker compose*** to setup the infrastructure components.
 
 ``` bash
 # Setup the infrastructure
-docker-compose -f ./containers/infrastructure-bare.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-monitoring.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-scaling.yml --project-name genocs-infrastructure up -d
-docker-compose -f ./containers/infrastructure-security.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-bare.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker-compose -f ./containers/infrastructure-monitoring.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker-compose -f ./containers/infrastructure-scaling.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker-compose -f ./containers/infrastructure-security.yml --env-file ./containers/.env --project-name genocs-app up -d
 
 # Use this file only in case you want to setup sqlserver database (no need if you use postgres)
-docker-compose -f ./containers/infrastructure-sqlserver.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-sqlserver.yml --env-file ./containers/.env --project-name genocs-app up -d
 
 # Use this file only in case you want to setup elk stack
-docker-compose -f ./containers/infrastructure-elk.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-elk.yml --env-file ./containers/.env --project-name genocs-app up -d
 
 # Use this file only in case you want to setup AI ML components prepared by Genocs
-docker-compose -f ./containers/infrastructure-ml.yml --project-name genocs-infrastructure up -d
+docker-compose -f ./containers/infrastructure-ml.yml --env-file ./containers/.env --project-name genocs-app up -d
 ```
 
 `infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).

@@ -24,7 +24,6 @@ builder.Host
         .UseLogging();
 //        .UseVault();
 
-
 // add services to DI container
 var services = builder.Services;
 
@@ -32,7 +31,6 @@ services
     .AddGenocs(builder.Configuration)
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly());
-
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
@@ -56,7 +54,6 @@ services.AddSwaggerGen();
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
-
 services.AddOptions();
 
 // Set Custom Open telemetry
@@ -64,14 +61,12 @@ services.AddCustomOpenTelemetry(builder.Configuration);
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 // global cors policy
 app.UseCors(x => x

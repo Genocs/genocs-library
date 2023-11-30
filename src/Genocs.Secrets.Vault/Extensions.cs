@@ -25,14 +25,16 @@ public static class Extensions
     private static readonly ICertificatesService CertificatesService = new CertificatesService();
 
     /// <summary>
-    /// UseVault
+    /// UseVault.
     /// </summary>
-    /// <param name="builder">The builder</param>
+    /// <param name="builder">The builder.</param>
     /// <param name="keyValuePath"></param>
     /// <param name="sectionName"></param>
     /// <returns></returns>
-    public static IHostBuilder UseVault(this IHostBuilder builder, string? keyValuePath = null,
-        string sectionName = SectionName)
+    public static IHostBuilder UseVault(
+                                        this IHostBuilder builder,
+                                        string? keyValuePath = null,
+                                        string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
@@ -53,8 +55,10 @@ public static class Extensions
     /// <param name="keyValuePath"></param>
     /// <param name="sectionName"></param>
     /// <returns></returns>
-    public static IWebHostBuilder UseVault(this IWebHostBuilder builder, string? keyValuePath = null,
-        string sectionName = SectionName)
+    public static IWebHostBuilder UseVault(
+                                           this IWebHostBuilder builder,
+                                           string? keyValuePath = null,
+                                           string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
@@ -81,6 +85,7 @@ public static class Extensions
         {
             configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
+
         var options = new VaultSettings();
         configuration.GetSection(sectionName).Bind(options);
         if (!options.Enabled)
@@ -136,11 +141,13 @@ public static class Extensions
         }
     }
 
-    private static async Task AddVaultAsync(this IConfigurationBuilder builder, VaultSettings options,
-        string? keyValuePath)
+    private static async Task AddVaultAsync(
+                                            this IConfigurationBuilder builder,
+                                            VaultSettings options,
+                                            string? keyValuePath)
     {
         VerifyOptions(options);
-        var kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
+        string? kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
         var (client, _) = GetClientAndSettings(options);
         if (!string.IsNullOrWhiteSpace(kvPath) && options.Kv.Enabled)
         {
@@ -148,7 +155,7 @@ public static class Extensions
             var keyValueSecrets = new KeyValueSecrets(client, options);
             var secret = await keyValueSecrets.GetAsync(kvPath);
             var parser = new JsonParser();
-            var json = JsonConvert.SerializeObject(secret);
+            string json = JsonConvert.SerializeObject(secret);
             var data = parser.Parse(json);
             var source = new MemoryConfigurationSource { InitialData = data };
             builder.Add(source);
@@ -184,8 +191,11 @@ public static class Extensions
         }
     }
 
-    private static Task InitLeaseAsync(string key, IVaultClient client, VaultSettings.LeaseSettings options,
-        IDictionary<string, string> configuration)
+    private static Task InitLeaseAsync(
+                                       string key,
+                                       IVaultClient client,
+                                       VaultSettings.LeaseSettings options,
+                                        IDictionary<string, string> configuration)
         => options.Type.ToLowerInvariant() switch
         {
             "activedirectory" => SetActiveDirectorySecretsAsync(key, client, options, configuration),
@@ -196,11 +206,14 @@ public static class Extensions
             _ => Task.CompletedTask
         };
 
-    private static async Task SetActiveDirectorySecretsAsync(string key, IVaultClient client,
-        VaultSettings.LeaseSettings options, IDictionary<string, string> configuration)
+    private static async Task SetActiveDirectorySecretsAsync(
+                                                             string key,
+                                                             IVaultClient client,
+                                                             VaultSettings.LeaseSettings options,
+                                                             IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
-        var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials =
             await client.V1.Secrets.ActiveDirectory.GetCredentialsAsync(options.RoleName, mountPoint);
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>

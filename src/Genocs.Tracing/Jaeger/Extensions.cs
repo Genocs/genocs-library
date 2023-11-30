@@ -14,18 +14,16 @@ using OpenTracing.Util;
 
 namespace Genocs.Tracing.Jaeger;
 
-
 /// <summary>
-/// The Open Tracing
+/// The Open Tracing.
 /// </summary>
 public static class Extensions
 {
     private static int _initialized;
     private const string RegistryName = "tracing.jaeger";
 
-
     /// <summary>
-    /// Add Jaeger Tracer
+    /// Add Jaeger Tracer.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="sectionName"></param>
@@ -37,7 +35,6 @@ public static class Extensions
         {
             return builder;
         }
-
 
         var options = builder.GetOptions<JaegerSettings>(sectionName);
 
@@ -54,7 +51,6 @@ public static class Extensions
         {
             return builder;
         }
-
 
         builder.Services.AddSingleton<ITracer>(sp =>
         {
