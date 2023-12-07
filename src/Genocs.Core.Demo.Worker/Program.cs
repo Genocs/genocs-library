@@ -7,7 +7,7 @@ using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
-using Genocs.Monitoring;
+using Genocs.Tracing;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Clean;
@@ -38,12 +38,12 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services
             .AddGenocs(hostContext.Configuration)
+            .AddOpenTelemetry()
             .AddMongoFast()
             .RegisterMongoRepositories(Assembly.GetExecutingAssembly()); // It registers the repositories that has been overridden. No need in case of standard repository
 
         ConfigureMassTransit(services, hostContext.Configuration);
 
-        services.AddCustomOpenTelemetry(hostContext.Configuration);
     })
     .Build();
 

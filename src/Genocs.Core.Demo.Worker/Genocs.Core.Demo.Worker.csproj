@@ -20,7 +20,7 @@
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
         <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\Genocs.Monitoring\Genocs.Monitoring.csproj" />
+        <ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
     </ItemGroup>
 
