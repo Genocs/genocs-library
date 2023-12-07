@@ -17,12 +17,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
         .UseLogging();
-//        .UseVault();
 
 // add services to DI container
 var services = builder.Services;
@@ -75,7 +73,6 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .AllowCredentials());
 
-
 app.UseHttpsRedirection();
 
 app.UseRouting();
@@ -84,7 +81,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHealthChecks("/healthz");
+app.MapHealthChecks("/hc");
 
 app.Run();
 

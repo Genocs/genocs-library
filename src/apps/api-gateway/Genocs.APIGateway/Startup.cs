@@ -93,7 +93,7 @@ internal class Startup
             });
             endpoints.MapReverseProxy();
 
-            endpoints.MapHealthChecks("/healthz");
+            endpoints.MapHealthChecks("/hc");
         });
     }
 }

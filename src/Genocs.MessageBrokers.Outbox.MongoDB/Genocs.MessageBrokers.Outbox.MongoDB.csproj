@@ -5,14 +5,14 @@
         <PackageId>Genocs.MessageBrokers.Outbox.MongoDB</PackageId>
         <RootNamespace>Genocs.MessageBrokers.Outbox.MongoDB</RootNamespace>
         <AssemblyName>Genocs.MessageBrokers.Outbox.MongoDB</AssemblyName>
+        <Title>The message brokers outbox MongoDB interface library useful to build .NET Core projects.</Title>
+        <Description>The message brokers MongoDB outbox interface library useful to build .NET Core projects.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
-        <Title>The message brokers outbox MongoDB interface library useful to build .NET Core projects.</Title>
-        <Description>The message brokers MongoDB outbox interface library useful to build .NET Core projects.</Description>
         <Copyright>Genocs 2023</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>

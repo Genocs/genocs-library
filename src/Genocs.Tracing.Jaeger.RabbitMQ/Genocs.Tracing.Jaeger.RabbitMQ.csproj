@@ -3,14 +3,16 @@
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>Genocs.Tracing.Jaeger.RabbitMQ</PackageId>
+        <RootNamespace>Genocs.Tracing.Jaeger.RabbitMQ</RootNamespace>
+        <AssemblyName>Genocs.Tracing.Jaeger.RabbitMQ</AssemblyName>   		
+		<Title>The load balacer based on Fabio library useful to build .NET Core projects.</Title>
+		<Description>The load balacer based on Fabio library useful to build .NET Core projects.</Description>
 		<LangVersion>10.0</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>5.0.0</Version>
 		<MinClientVersion>5.0.0</MinClientVersion>
 		<Authors>Nocco Giovanni Emanuele</Authors>
 		<Company>Genocs</Company>
-		<Title>The load balacer based on Fabio library useful to build .NET Core projects.</Title>
-		<Description>The load balacer based on Fabio library useful to build .NET Core projects.</Description>
 		<Copyright>Genocs 2023</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>

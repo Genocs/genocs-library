@@ -5,14 +5,14 @@
         <PackageId>Genocs.Tracing</PackageId>
         <RootNamespace>Genocs.Tracing</RootNamespace>
         <AssemblyName>Genocs.Tracing</AssemblyName>
+        <Title>The tracing library to use Azure Service Bus.</Title>
+        <Description>The tracing library to use Azure Service Bus.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
-        <Title>The tracing library to use Azure Service Bus.</Title>
-        <Description>The tracing library to use Azure Service Bus.</Description>
         <Copyright>Genocs 2023</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>

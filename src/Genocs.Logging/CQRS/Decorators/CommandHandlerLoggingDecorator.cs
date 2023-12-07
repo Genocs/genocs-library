@@ -66,6 +66,7 @@ internal sealed class CommandHandlerLoggingDecorator<TCommand> : ICommandHandler
 
     private class EmptyMessageToLogTemplateMapper : IMessageToLogTemplateMapper
     {
-        public HandlerLogTemplate? Map<TMessage>(TMessage message) where TMessage : class => null;
+        public HandlerLogTemplate? Map<TMessage>(TMessage message)
+            where TMessage : class => null;
     }
 }
