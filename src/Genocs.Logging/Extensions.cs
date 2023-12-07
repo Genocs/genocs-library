@@ -20,10 +20,11 @@ public static class Extensions
 {
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
 
-    public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
-                                            Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-                                            string? loggerSectionName = null,
-                                            string? appSectionName = null)
+    public static IHostBuilder UseLogging(
+                                          this IHostBuilder hostBuilder,
+                                          Action<HostBuilderContext, LoggerConfiguration>? configure = null,
+                                          string? loggerSectionName = null,
+                                          string? appSectionName = null)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
@@ -45,13 +46,16 @@ public static class Extensions
                 configure?.Invoke(context, loggerConfiguration);
             });
 
-
-    public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder,
-        string endpointRoute = "~/logging/level")
+    public static IEndpointConventionBuilder MapLogLevelHandler(
+                                                                this IEndpointRouteBuilder builder,
+                                                                string endpointRoute = "~/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
-    private static void MapOptions(LoggerSettings loggerOptions, AppSettings appOptions,
-        LoggerConfiguration loggerConfiguration, string environmentName)
+    private static void MapOptions(
+                                   LoggerSettings loggerOptions,
+                                   AppSettings appOptions,
+                                   LoggerConfiguration loggerConfiguration,
+                                   string environmentName)
     {
         LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
 
@@ -100,7 +104,7 @@ public static class Extensions
         // local file system
         if (fileOptions.Enabled)
         {
-            var path = string.IsNullOrWhiteSpace(fileOptions.Path) ? "logs/logs.txt" : fileOptions.Path;
+            string path = string.IsNullOrWhiteSpace(fileOptions.Path) ? "logs/logs.txt" : fileOptions.Path;
             if (!Enum.TryParse<RollingInterval>(fileOptions.Interval, true, out var interval))
             {
                 interval = RollingInterval.Day;
@@ -129,7 +133,7 @@ public static class Extensions
         // seq
         if (seqOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.Seq(seqOptions.Url, apiKey: seqOptions.ApiKey);
+            loggerConfiguration.WriteTo.Seq(seqOptions.Url!, apiKey: seqOptions.ApiKey);
         }
 
         // loki

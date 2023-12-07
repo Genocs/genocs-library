@@ -36,7 +36,7 @@ Following are the project settings needed to enable monitoring
 ## Release notes
 
 ### [2023-03-04] 2.0.1
-- Updated nuget packages
+- Updated NuGet packages
 
 ### [2023-03-04] 2.0.0
 - Revisited
@@ -51,7 +51,7 @@ Following are the project settings needed to enable monitoring
 - Moved to netstandart
 
 ### [2023-01-01] 1.0.0-rc2.0
-- Refactory and standardization
+- Refactor and standardization
 
 
 

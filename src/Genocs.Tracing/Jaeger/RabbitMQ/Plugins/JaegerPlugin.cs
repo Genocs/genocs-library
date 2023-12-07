@@ -19,14 +19,17 @@ internal sealed class JaegerPlugin : RabbitMQPlugin
         _spanContextHeader = options.GetSpanContextHeader();
     }
 
-    public override async Task HandleAsync(object message, object correlationContext,
-        BasicDeliverEventArgs args)
+    public override async Task HandleAsync(
+                                            object message,
+                                            object correlationContext,
+                                            BasicDeliverEventArgs args)
     {
-        var messageName = message.GetType().Name.Underscore();
-        var messageId = args.BasicProperties.MessageId;
-        var spanContext = string.Empty;
+        string messageName = message.GetType().Name.Underscore();
+        string messageId = args.BasicProperties.MessageId;
+        string spanContext = string.Empty;
+
         if (args.BasicProperties.Headers is { } &&
-            args.BasicProperties.Headers.TryGetValue(_spanContextHeader, out var spanContextHeader) &&
+            args.BasicProperties.Headers.TryGetValue(_spanContextHeader, out object? spanContextHeader) &&
             spanContextHeader is byte[] spanContextBytes)
         {
             spanContext = Encoding.UTF8.GetString(spanContextBytes);

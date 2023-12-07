@@ -55,8 +55,8 @@ public static class Extensions
         builder.Services.AddSingleton<ITracer>(sp =>
         {
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-            var maxPacketSize = options.MaxPacketSize <= 0 ? 64967 : options.MaxPacketSize;
-            var senderType = string.IsNullOrWhiteSpace(options.Sender) ? "udp" : options.Sender?.ToLowerInvariant();
+            int maxPacketSize = options.MaxPacketSize <= 0 ? 64967 : options.MaxPacketSize;
+            string? senderType = string.IsNullOrWhiteSpace(options.Sender) ? "udp" : options.Sender?.ToLowerInvariant();
             ISender sender = senderType switch
             {
                 "http" => BuildHttpSender(options.HttpSender),
@@ -132,12 +132,12 @@ public static class Extensions
 
     private static ISampler GetSampler(JaegerSettings options)
     {
-        switch (options.Sampler)
+        return options.Sampler switch
         {
-            case "const": return new ConstSampler(true);
-            case "rate": return new RateLimitingSampler(options.MaxTracesPerSecond);
-            case "probabilistic": return new ProbabilisticSampler(options.SamplingRate);
-            default: return new ConstSampler(true);
-        }
+            "const" => new ConstSampler(true),
+            "rate" => new RateLimitingSampler(options.MaxTracesPerSecond),
+            "probabilistic" => new ProbabilisticSampler(options.SamplingRate),
+            _ => new ConstSampler(true),
+        };
     }
 }

@@ -23,7 +23,7 @@ public static class Extensions
     /// <summary>
     /// Custom settings for OpenTelemetry.
     /// </summary>
-    /// <param name="builder">The genocs builder.</param>
+    /// <param name="builder">The Genocs builder.</param>
     /// <returns>The builder.</returns>
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
@@ -41,73 +41,81 @@ public static class Extensions
         // Set Custom Open telemetry
         services.AddOpenTelemetry().WithTracing(x =>
         {
-/*
-            Action<ResourceBuilder> appResourceBuilder =
-                resource => resource
-                    .AddDetector(new ContainerResourceDetector());
-
-                        builder.Services.AddOpenTelemetry()
-                            .ConfigureResource(appResourceBuilder)
-                            .WithTracing(tracerBuilder => tracerBuilder
-                                .AddRedisInstrumentation(
-                                    cartStore.GetConnection(),
-                                    options => options.SetVerboseDatabaseStatements = true)
-                                .AddAspNetCoreInstrumentation()
-                                .AddGrpcClientInstrumentation()
-                                .AddHttpClientInstrumentation()
-                                .AddOtlpExporter())
-                            .WithMetrics(meterBuilder => meterBuilder
-                                .AddRuntimeInstrumentation()
-                                .AddAspNetCoreInstrumentation()
-                                .AddOtlpExporter());
-*/
-
             TracerProviderBuilder provider = x.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                    .AddService(appOptions.Service)
-                    .AddTelemetrySdk()
-                    .AddEnvironmentVariableDetector())
-                .AddSource("*");
-
-            // TODO> add flag to enable feature MongoDB.Driver.Core.Extensions.OpenTelemetry
-            provider.AddMongoDBInstrumentation();
+                                                        .AddService(appOptions.Service)
+                                                        .AddTelemetrySdk()
+                                                        .AddEnvironmentVariableDetector())
+                                                    .AddSource("*");
 
             var loggerOptions = builder.GetOptions<LoggerSettings>(LoggerSettings.Position);
 
-            // Check for Console config
-            if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+            // No OpenTelemetryTracing in case of missing LoggerSettings
+            if (loggerOptions != null)
             {
-                // OpenTelemetry.Exporter.Console NuGet package
-                provider.AddConsoleExporter();
-            }
-
-            // Check for Azure ApplicationInsights config
-            if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
-            {
-                provider.AddAzureMonitorTraceExporter(o =>
+                if (loggerOptions.Mongo != null && loggerOptions.Mongo.Enabled)
                 {
-                    o.ConnectionString = loggerOptions.Azure.ConnectionString;
-                });
+                    // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
+                    provider.AddMongoDBInstrumentation();
+                }
+
+                // Check for Console config
+                if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    provider.AddConsoleExporter();
+                }
+
+                // Check for Azure ApplicationInsights config
+                if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                {
+                    provider.AddAzureMonitorTraceExporter(o =>
+                    {
+                        o.ConnectionString = loggerOptions.Azure.ConnectionString;
+                    });
+                }
             }
 
             var jaegerOptions = builder.GetOptions<JaegerSettings>(JaegerSettings.Position);
 
             if (jaegerOptions != null && jaegerOptions.Enabled)
             {
-                //provider.AddJaegerExporter(o =>
-                //{
-                //    o.AgentHost = jaegerOptions.UdpHost;
-                //    o.AgentPort = jaegerOptions.UdpPort;
-                //    o.MaxPayloadSizeInBytes = jaegerOptions.MaxPacketSize;
-                //    o.ExportProcessorType = ExportProcessorType.Batch;
-                //    o.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
-                //    {
-                //        MaxQueueSize = 2048,
-                //        ScheduledDelayMilliseconds = 5000,
-                //        ExporterTimeoutMilliseconds = 30000,
-                //        MaxExportBatchSize = 512,
-                //    };
-                //});
+
+                provider.AddJaegerExporter(o =>
+                {
+                    o.AgentHost = jaegerOptions.UdpHost;
+                    o.AgentPort = jaegerOptions.UdpPort;
+                    o.MaxPayloadSizeInBytes = jaegerOptions.MaxPacketSize;
+                    o.ExportProcessorType = ExportProcessorType.Batch;
+                    o.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
+                    {
+                        MaxQueueSize = 2048,
+                        ScheduledDelayMilliseconds = 5000,
+                        ExporterTimeoutMilliseconds = 30000,
+                        MaxExportBatchSize = 512,
+                    };
+                });
             }
+
+            /*
+                Action<ResourceBuilder> appResourceBuilder =
+                    resource => resource
+                        .AddDetector(new ContainerResourceDetector());
+
+                            builder.Services.AddOpenTelemetry()
+                                .ConfigureResource(appResourceBuilder)
+                                .WithTracing(tracerBuilder => tracerBuilder
+                                    .AddRedisInstrumentation(
+                                        cartStore.GetConnection(),
+                                        options => options.SetVerboseDatabaseStatements = true)
+                                    .AddAspNetCoreInstrumentation()
+                                    .AddGrpcClientInstrumentation()
+                                    .AddHttpClientInstrumentation()
+                                    .AddOtlpExporter())
+                                .WithMetrics(meterBuilder => meterBuilder
+                                    .AddRuntimeInstrumentation()
+                                    .AddAspNetCoreInstrumentation()
+                                    .AddOtlpExporter());
+            */
         });
 
         return builder;

@@ -83,10 +83,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Common", "src\Genocs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{51A2E158-4686-4764-91D5-3CDDD06280D4}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		demo-docker-compose.yml = demo-docker-compose.yml
 		demo-webapi.dockerfile = demo-webapi.dockerfile
 		demo-worker.dockerfile = demo-worker.dockerfile
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		dotnet.ruleset = dotnet.ruleset
+		global.json = global.json
+		launchSettings.json = launchSettings.json
+		Makefile = Makefile
 		README.md = README.md
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrdersService", "OrdersService", "{80862789-8B42-4878-AC10-9CFF06A7313C}"

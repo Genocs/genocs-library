@@ -4,7 +4,7 @@
         <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.Core</PackageId>
         <RootNamespace>Genocs.Core</RootNamespace>
-        <AssemblyName>Genocs.Core</AssemblyName>        
+        <AssemblyName>Genocs.Core</AssemblyName>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>
@@ -21,7 +21,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageReleaseNotes>Nove to NET8</PackageReleaseNotes>
+        <PackageReleaseNotes>Updated to NET8</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

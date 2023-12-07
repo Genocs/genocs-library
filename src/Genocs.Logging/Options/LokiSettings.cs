@@ -1,7 +1,7 @@
 ﻿namespace Genocs.Logging.Options;
 
 /// <summary>
-/// Relevant options for the Serilog Loki sink
+/// Relevant options for the Serilog Loki sink.
 /// <para></para>
 /// Not all options have been included as some have been covered by Genocs.Logging already.
 /// The sink has reasonable defaults for the unused options.
@@ -22,38 +22,42 @@
 /// <item><term>TextFormatter</term></item>
 /// <item><term>HttpClient</term></item>
 /// <item><term>CreateLevelLabel</term></item>
-/// </list> 
-/// 
+/// </list>
 /// </summary>
 public class LokiSettings
 {
     /// <summary>
-    /// Whether or not to enable Loki Logging
+    /// Whether or not to enable Loki Logging.
     /// </summary>
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// The Uri at which the Loki instance can be found
+    /// The Uri at which the Loki instance can be found.
     /// </summary>
     public string? Url { get; set; }
+
     /// <summary>
     /// The maximum number of events to post in a single batch. Default value is 1000.
     /// </summary>
     public int? BatchPostingLimit { get; set; }
+
     /// <summary>
-    /// The maximum number of events stored in the queue in memory, waiting to be posted over
+    /// The maximum number of events stored in the queue in memory, waiting to be posted over.
     /// </summary>
     public int? QueueLimit { get; set; }
+
     /// <summary>
     /// The time to wait between checking for event batches. Default value is 2 seconds.
     /// </summary>
     public TimeSpan? Period { get; set; }
+
     /// <summary>
-    /// Username used for Grafana Loki authorization
+    /// Username used for Grafana Loki authorization.
     /// </summary>
     public string? LokiUsername { get; set; }
+
     /// <summary>
-    /// Password used for Grafana Loki authorization
+    /// Password used for Grafana Loki authorization.
     /// </summary>
     public string? LokiPassword { get; set; }
 }

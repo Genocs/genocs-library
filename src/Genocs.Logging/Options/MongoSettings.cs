@@ -1,12 +1,12 @@
 namespace Genocs.Logging.Options;
 
 /// <summary>
-/// Console Settings.
+/// MongoDb logging settings.
 /// </summary>
-public class ConsoleSettings
+public class MongoSettings
 {
     /// <summary>
-    /// It define whether the console logger and tracing are enabled or not.
+    /// It define whether the MongoDb logger and tracing are enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
 }

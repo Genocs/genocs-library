@@ -20,8 +20,21 @@ public class LoggerSettings
     public LocalFileSettings? File { get; set; }
     public ElkSettings? Elk { get; set; }
     public SeqSettings? Seq { get; set; }
+
+    /// <summary>
+    /// Loki logging settings.
+    /// </summary>
     public LokiSettings? Loki { get; set; }
+
+    /// <summary>
+    /// Azure application insights logging settings.
+    /// </summary>
     public AzureSettings? Azure { get; set; }
+
+    /// <summary>
+    /// MongoDb logging settings.
+    /// </summary>
+    public MongoSettings? Mongo { get; set; }
 
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
     public IEnumerable<string>? ExcludePaths { get; set; }

@@ -23,7 +23,7 @@ Please check the GitHub repository getting more info.
 Following is about how to setup **MongoDb**
 
 ``` json
-  "MongoDb": {
+  "mongoDb": {
     "ConnectionString": "mongodb://localhost",
     "Database": "demo_database",
     "EnableTracing": false

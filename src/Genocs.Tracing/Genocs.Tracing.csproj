@@ -58,9 +58,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.0.0" />
+        <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.1.0" />
         <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.6.0" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.6.0" />
     </ItemGroup>
