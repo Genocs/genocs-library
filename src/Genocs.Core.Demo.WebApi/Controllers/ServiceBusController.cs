@@ -22,7 +22,6 @@ public class ServiceBusController : ControllerBase
         _azureServiceBusTopic = azureServiceBusTopic;
     }
 
-
     [HttpPost("SendToQueueAzureServiceBusQueue")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

@@ -2,9 +2,8 @@ using System.Net.Http.Headers;
 
 namespace Genocs.HTTP;
 
-
 /// <summary>
-/// The Genocs HTTP client
+/// The Genocs HTTP client.
 /// </summary>
 public interface IHttpClient
 {
@@ -36,23 +35,23 @@ public interface IHttpClient
     Task<T> SendAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null);
 
     /// <summary>
-    /// Send the request and return the result
+    /// Send the request and return the result.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type to be send.</typeparam>
     /// <param name="request"></param>
     /// <param name="serializer"></param>
     /// <returns></returns>
     Task<HttpResult<T>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null);
 
     /// <summary>
-    /// Set the headers for the HTTP client
+    /// Set the headers for the HTTP client.
     /// </summary>
-    /// <param name="headers">The headers dictionary</param>
+    /// <param name="headers">The headers dictionary.</param>
     void SetHeaders(IDictionary<string, string> headers);
 
     /// <summary>
-    /// Set the headers for the HTTP client
+    /// Set the headers for the HTTP client.
     /// </summary>
-    /// <param name="headers">The headers action delegate</param>
+    /// <param name="headers">The headers action delegate.</param>
     void SetHeaders(Action<HttpRequestHeaders> headers);
 }

@@ -1,7 +1,7 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
-using Genocs.Monitoring;
+using Genocs.Tracing;
 using Genocs.Persistence.MongoDb.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -27,6 +27,7 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+    .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly());
 
@@ -53,9 +54,6 @@ services.AddSwaggerGen();
 services.AddCustomMassTransit(builder.Configuration);
 
 services.AddOptions();
-
-// Set Custom Open telemetry
-services.AddCustomOpenTelemetry(builder.Configuration);
 
 var app = builder.Build();
 

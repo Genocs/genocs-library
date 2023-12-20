@@ -13,7 +13,7 @@ internal sealed class ConsulServicesRegistry : IConsulServicesRegistry
         _consulService = consulService;
     }
 
-    public async Task<ServiceAgent> GetAsync(string name)
+    public async Task<ServiceAgent?> GetAsync(string name)
     {
         var services = await _consulService.GetServiceAgentsAsync(name);
         if (!services.Any())
@@ -33,7 +33,7 @@ internal sealed class ConsulServicesRegistry : IConsulServicesRegistry
         return GetService(services, name);
     }
 
-    private ServiceAgent GetService(IDictionary<string, ServiceAgent> services, string name)
+    private ServiceAgent? GetService(IDictionary<string, ServiceAgent> services, string name)
     {
         switch (services.Count)
         {

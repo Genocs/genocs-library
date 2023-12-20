@@ -4,5 +4,5 @@ namespace Genocs.Discovery.Consul;
 
 public interface IConsulServicesRegistry
 {
-    Task<ServiceAgent> GetAsync(string name);
+    Task<ServiceAgent?> GetAsync(string name);
 }

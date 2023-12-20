@@ -51,8 +51,11 @@ public static class Extensions
         => builder.AddServiceClient<T>(serviceName, options,
             b => b.AddFabio(fabioOptions, consulOptions, httpClientOptions));
 
-    private static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        RestEaseSettings options, Action<IGenocsBuilder> registerFabio)
+    private static IGenocsBuilder AddServiceClient<T>(
+                                                        this IGenocsBuilder builder,
+                                                        string serviceName,
+                                                        RestEaseSettings options,
+                                                        Action<IGenocsBuilder> registerFabio)
         where T : class
     {
         if (!builder.TryRegister(RegistryName))
@@ -60,7 +63,7 @@ public static class Extensions
             return builder;
         }
 
-        var clientName = typeof(T).ToString();
+        string clientName = typeof(T).ToString();
 
         switch (options.LoadBalancer?.ToLowerInvariant())
         {
@@ -82,17 +85,19 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureDefaultClient(IServiceCollection services, string clientName,
-        string serviceName, RestEaseSettings options)
+    private static void ConfigureDefaultClient(
+                                                IServiceCollection services,
+                                                string clientName,
+                                                string serviceName,
+                                                RestEaseSettings options)
     {
         services.AddHttpClient(clientName, client =>
         {
-            var service = options.Services.SingleOrDefault(s => s.Name.Equals(serviceName,
-                StringComparison.InvariantCultureIgnoreCase));
+            var service = options.Services.SingleOrDefault(s => s.Name.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));
+
             if (service is null)
             {
-                throw new RestEaseServiceNotFoundException($"RestEase service: '{serviceName}' was not found.",
-                    serviceName);
+                throw new RestEaseServiceNotFoundException($"RestEase service: '{serviceName}' was not found.", serviceName);
             }
 
             client.BaseAddress = new UriBuilder
@@ -104,7 +109,8 @@ public static class Extensions
         });
     }
 
-    private static void ConfigureForwarder<T>(IServiceCollection services, string clientName) where T : class
+    private static void ConfigureForwarder<T>(IServiceCollection services, string clientName)
+        where T : class
     {
         services.AddTransient(c => new RestClient(c.GetRequiredService<IHttpClientFactory>().CreateClient(clientName))
         {
