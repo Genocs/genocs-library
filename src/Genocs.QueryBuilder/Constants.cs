@@ -1,59 +1,58 @@
-﻿namespace Genocs.QueryBuilder
+﻿namespace Genocs.QueryBuilder;
+
+/// <summary>
+/// Query constants.
+/// </summary>
+public static class Constants
 {
     /// <summary>
-    /// Query constants
+    /// Default date format.
     /// </summary>
-    public static class Constants
-    {
-        /// <summary>
-        /// Default date format
-        /// </summary>
-        public const string DATE_FORMAT = "yyyy-MM-dd";
-
-        /// <summary>
-        /// Default filtering date
-        /// </summary>
-        public const string DATE_FILTERING = "UpdatedAt";
-
-        /// <summary>
-        /// Default property name
-        /// </summary>
-        public const string DEFAULT_PROPERY_NAME = "IsDefault";
-    }
+    public const string DATE_FORMAT = "yyyy-MM-dd";
 
     /// <summary>
-    /// Query operator types
+    /// Default filtering date.
     /// </summary>
-    public enum QueryOperator
-    {
-        /// <summary>
-        /// GreaterThan
-        /// </summary>
-        GreaterThan,
+    public const string DATE_FILTERING = "UpdatedAt";
 
-        /// <summary>
-        /// GreaterThanOrEqual
-        /// </summary>
-        GreaterThanOrEqual,
+    /// <summary>
+    /// Default property name.
+    /// </summary>
+    public const string DEFAULT_PROPERY_NAME = "IsDefault";
+}
 
-        /// <summary>
-        /// Equal
-        /// </summary>
-        Equal,
+/// <summary>
+/// Query operator types.
+/// </summary>
+public enum QueryOperator
+{
+    /// <summary>
+    /// GreaterThan.
+    /// </summary>
+    GreaterThan,
 
-        /// <summary>
-        /// NotEqual
-        /// </summary>
-        NotEqual,
+    /// <summary>
+    /// GreaterThanOrEqual.
+    /// </summary>
+    GreaterThanOrEqual,
 
-        /// <summary>
-        /// LessThan
-        /// </summary>
-        LessThan,
+    /// <summary>
+    /// Equal.
+    /// </summary>
+    Equal,
 
-        /// <summary>
-        /// LessThanOrEqual
-        /// </summary>
-        LessThanOrEqual
-    }
+    /// <summary>
+    /// NotEqual.
+    /// </summary>
+    NotEqual,
+
+    /// <summary>
+    /// LessThan.
+    /// </summary>
+    LessThan,
+
+    /// <summary>
+    /// LessThanOrEqual.
+    /// </summary>
+    LessThanOrEqual
 }

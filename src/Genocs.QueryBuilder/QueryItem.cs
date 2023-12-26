@@ -1,11 +1,12 @@
 ﻿namespace Genocs.QueryBuilder;
 
 /// <summary>
-/// The QueryItem class
+/// The QueryItem class.
 /// </summary>
 public class QueryItem
 {
-    public QueryItem(string propertyName,
+    public QueryItem(
+                    string propertyName,
                     string propertyValue,
                     string propertyType = "string",
                     QueryOperator operatorType = QueryOperator.Equal)
@@ -16,7 +17,8 @@ public class QueryItem
         OperatorType = operatorType;
     }
 
-    public QueryItem(string propertyName,
+    public QueryItem(
+                     string propertyName,
                      string propertyValue,
                      bool parentCanBeNull,
                      string propertyType = "string",

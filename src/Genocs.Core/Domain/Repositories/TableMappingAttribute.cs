@@ -1,19 +1,18 @@
-﻿namespace Genocs.Core.Domain.Repositories
+﻿namespace Genocs.Core.Domain.Repositories;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+public class TableMappingAttribute : Attribute
 {
-    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct)]
-    public class TableMappingAttribute : System.Attribute
+    /// <summary>
+    /// The Collection/Table name.
+    /// </summary>
+    public string Name { get; set; }
+
+    public readonly double Version;
+
+    public TableMappingAttribute(string tableName)
     {
-        /// <summary>
-        /// The Collection/Table name
-        /// </summary>
-        public string Name { get; set; }
-
-        public double version;
-
-        public TableMappingAttribute(string tableName)
-        {
-            Name = tableName;
-            version = 1.0;
-        }
+        Name = tableName;
+        Version = 1.0;
     }
 }

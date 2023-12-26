@@ -35,7 +35,7 @@ public class EntityNotFoundException : GenocsException
     {
 
     }
-    
+
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
@@ -68,8 +68,8 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    /// <param name="message">Exception message</param>
-    /// <param name="innerException">Inner exception</param>
+    /// <param name="message">Exception message.</param>
+    /// <param name="innerException">Inner exception.</param>
     public EntityNotFoundException(string message, Exception innerException)
         : base(message, innerException)
     {
