@@ -53,7 +53,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
     </ItemGroup>
 
 </Project>
