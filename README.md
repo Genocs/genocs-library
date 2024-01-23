@@ -45,8 +45,7 @@
 
 # Genocs .NET library
 
-
-This repo contains a set of libraries designed by Genocs. The libraries are built using .NET6 and .NET7. 
+This repo contains a set of libraries designed by Genocs. The library is built on top of .NET8. 
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -67,20 +66,21 @@ You will use ***Docker compose*** to setup the infrastructure components.
 
 
 ``` bash
+cd ./containers
 # Setup the infrastructure
-docker-compose -f ./containers/infrastructure-bare.yml --env-file ./containers/.env --project-name genocs-app up -d
-docker-compose -f ./containers/infrastructure-monitoring.yml --env-file ./containers/.env --project-name genocs-app up -d
-docker-compose -f ./containers/infrastructure-scaling.yml --env-file ./containers/.env --project-name genocs-app up -d
-docker-compose -f ./containers/infrastructure-security.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker compose -f ./infrastructure-bare.yml --env-file ./.env --project-name genocs up -d
+docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
+docker compose -f ./infrastructure-scaling.yml --env-file ./.env --project-name genocs up -d
+docker compose -f ./infrastructure-security.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup sqlserver database (no need if you use postgres)
-docker-compose -f ./containers/infrastructure-sqlserver.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker compose -f ./infrastructure-sqlserver.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup elk stack
-docker-compose -f ./containers/infrastructure-elk.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup AI ML components prepared by Genocs
-docker-compose -f ./containers/infrastructure-ml.yml --env-file ./containers/.env --project-name genocs-app up -d
+docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
 
 `infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
@@ -128,21 +128,13 @@ networks:
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
 
-``` yml
-networks:
-  genocs:
-    name: genocs-network
-    external: true
-    driver: bridge
-```
 
 ## ***Kubernetes cluster***
 
 You can setup the application inside a Kubernetes cluster.
 
-Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster.
-
-Inside the repo you can find scripts, configuration files and documentation to setup a cluster from scratch.
+Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster. 
+There you can find scripts, configuration files and documentation to setup a cluster from scratch.
 
 ## **Libraries**
 You can find a full documentation on:
@@ -435,7 +427,6 @@ Take a look inside **./src/apps** folder. There you can find a full-fledged appl
 In that way you can test the entire flow.
 
 
-
 ### How to BUILD & RUN the application
 
 The build and run process can be done by using docker-compose
@@ -499,9 +490,6 @@ You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Go
 [<img src="https://www.herokucdn.com/deploy/button.svg" height="30px">](https://heroku.com/deploy?template=https://github.com/heartexlabs/label-studio/tree/heroku-persistent-pg)
 [<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
 [<img src="https://deploy.cloud.run/button.svg" height="30px">](https://deploy.cloud.run)
-
-
-
 
 ## License
 
