@@ -13,7 +13,7 @@
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
-        <Copyright>Genocs 2023</Copyright>
+        <Copyright>Genocs 2024</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
@@ -57,12 +57,12 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-        <PackageReference Include="System.Text.Json" Version="8.0.0" />
+        <PackageReference Include="System.Text.Json" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">

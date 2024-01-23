@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.Metrics.Prometheus.Internals;
+using Genocs.Metrics.Prometheus.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Prometheus;
@@ -11,7 +12,7 @@ public static class Extensions
 {
     public static IGenocsBuilder AddPrometheus(this IGenocsBuilder builder)
     {
-        var prometheusOptions = builder.GetOptions<PrometheusOptions>("prometheus");
+        var prometheusOptions = builder.GetOptions<PrometheusSettings>("prometheus");
         builder.Services.AddSingleton(prometheusOptions);
         if (!prometheusOptions.Enabled)
         {
@@ -27,13 +28,13 @@ public static class Extensions
 
     public static IApplicationBuilder UsePrometheus(this IApplicationBuilder app)
     {
-        var options = app.ApplicationServices.GetRequiredService<PrometheusOptions>();
+        var options = app.ApplicationServices.GetRequiredService<PrometheusSettings>();
         if (!options.Enabled)
         {
             return app;
         }
 
-        var endpoint = string.IsNullOrWhiteSpace(options.Endpoint) ? "/metrics" :
+        string endpoint = string.IsNullOrWhiteSpace(options.Endpoint) ? "/metrics" :
             options.Endpoint.StartsWith("/") ? options.Endpoint : $"/{options.Endpoint}";
 
         return app

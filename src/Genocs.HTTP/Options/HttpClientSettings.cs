@@ -6,8 +6,8 @@ namespace Genocs.HTTP.Options;
 public class HttpClientSettings
 {
     /// <summary>
-    /// It defines if set consul as service discovery or fabio as load balancer.
-    /// Allowed values are: consul, fabio
+    /// It defines if set consul as service discovery or Fabio as load balancer.
+    /// Allowed values are: consul, Fabio.
     /// </summary>
     public string? Type { get; set; }
 
@@ -19,7 +19,7 @@ public class HttpClientSettings
     /// <summary>
     /// It defines the list of services to be registered.
     /// </summary>
-    public IDictionary<string, string> Services { get; set; }
+    public IDictionary<string, string>? Services { get; set; }
     public RequestMaskingSettings RequestMasking { get; set; }
     public bool RemoveCharsetFromContentType { get; set; }
     public string CorrelationContextHeader { get; set; }

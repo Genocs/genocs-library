@@ -13,7 +13,7 @@
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
-        <Copyright>Genocs 2023</Copyright>
+        <Copyright>Genocs 2024</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
@@ -53,7 +53,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
     </ItemGroup>
 
 </Project>

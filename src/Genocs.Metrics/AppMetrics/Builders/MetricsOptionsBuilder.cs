@@ -1,8 +1,10 @@
+using Genocs.Metrics.AppMetrics.Options;
+
 namespace Genocs.Metrics.AppMetrics.Builders;
 
 internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
 {
-    private readonly MetricsOptions _options = new();
+    private readonly MetricsSettings _options = new();
 
     public IMetricsOptionsBuilder Enable(bool enabled)
     {
@@ -52,6 +54,6 @@ internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
         return this;
     }
 
-    public MetricsOptions Build()
+    public MetricsSettings Build()
         => _options;
 }

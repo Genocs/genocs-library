@@ -28,8 +28,8 @@ public static class Extensions
     /// <summary>
     /// AddRabbitMq extension method.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="sectionName"></param>
+    /// <param name="builder">The builder.</param>
+    /// <param name="sectionName">the default section name.</param>
     /// <param name="plugins"></param>
     /// <param name="connectionFactoryConfigurator"></param>
     /// <param name="serializer"></param>

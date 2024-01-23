@@ -13,7 +13,7 @@
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
-        <Copyright>Genocs 2023</Copyright>
+        <Copyright>Genocs 2024</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>

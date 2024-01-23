@@ -1,3 +1,5 @@
+using Genocs.Metrics.AppMetrics.Options;
+
 namespace Genocs.Metrics.AppMetrics;
 
 public interface IMetricsOptionsBuilder
@@ -10,5 +12,5 @@ public interface IMetricsOptionsBuilder
     IMetricsOptionsBuilder WithDatabase(string database);
     IMetricsOptionsBuilder WithInterval(int interval);
     IMetricsOptionsBuilder WithTags(IDictionary<string, string> tags);
-    MetricsOptions Build();
+    MetricsSettings Build();
 }

@@ -1,27 +1,28 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Genocs.Metrics.Prometheus.Options;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prometheus.DotNetRuntime;
 
 namespace Genocs.Metrics.Prometheus.Internals;
 
 /// <summary>
-/// The PrometheusJob that fetch metrix for Prometheus
+/// The PrometheusJob that fetch metrics for Prometheus.
 /// </summary>
 internal sealed class PrometheusJob : IHostedService
 {
-    private IDisposable? _collector;
     private readonly ILogger<PrometheusJob> _logger;
     private readonly bool _enabled;
+    private IDisposable? _collector;
 
     /// <summary>
-    /// Default PrometheusJob Constructor
+    /// Default PrometheusJob Constructor.
     /// </summary>
     /// <param name="options"></param>
     /// <param name="logger"></param>
-    public PrometheusJob(PrometheusOptions options, ILogger<PrometheusJob> logger)
+    public PrometheusJob(PrometheusSettings options, ILogger<PrometheusJob> logger)
     {
         _enabled = options.Enabled;
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _logger.LogInformation($"Prometheus integration is {(_enabled ? "enabled" : "disabled")}.");
     }
 

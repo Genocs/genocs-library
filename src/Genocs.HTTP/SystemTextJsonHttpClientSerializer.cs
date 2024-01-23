@@ -7,7 +7,7 @@ public class SystemTextJsonHttpClientSerializer : IHttpClientSerializer
 {
     private readonly JsonSerializerOptions _options;
 
-    public SystemTextJsonHttpClientSerializer(JsonSerializerOptions options = null)
+    public SystemTextJsonHttpClientSerializer(JsonSerializerOptions? options = null)
     {
         _options = options ?? new JsonSerializerOptions
         {
@@ -20,5 +20,5 @@ public class SystemTextJsonHttpClientSerializer : IHttpClientSerializer
 
     public string Serialize<T>(T value) => JsonSerializer.Serialize(value, _options);
 
-    public ValueTask<T> DeserializeAsync<T>(Stream stream) => JsonSerializer.DeserializeAsync<T>(stream, _options);
+    public ValueTask<T?> DeserializeAsync<T>(Stream stream) => JsonSerializer.DeserializeAsync<T>(stream, _options);
 }

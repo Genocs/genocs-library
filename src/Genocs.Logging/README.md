@@ -22,6 +22,25 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
+### [2024-01-23] 5.0.6
+- Refactory Settings
+- Updated nuget packages
+
+### [2023-11-25] 5.0.5
+- Moved to NET8
+
+### [yyyy-mm-dd] 5.0.4
+- 
+
+### [yyyy-mm-dd] 5.0.3
+- 
+
+### [yyyy-mm-dd] 5.0.2
+- 
+
+### [yyyy-mm-dd] 5.0.1
+- 
+
 ### [2023-11-25] 5.0.0
 - Moved to NET8
 

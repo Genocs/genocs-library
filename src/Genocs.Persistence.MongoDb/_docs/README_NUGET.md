@@ -32,6 +32,28 @@ Following is about how to setup **MongoDb**
 
 ## Release notes
 
+### [2024-01-23] 5.0.6
+- Refactory Settings
+- Updated nuget packages
+
+### [2023-11-25] 5.0.5
+- Moved to NET8
+
+### [yyyy-mm-dd] 5.0.4
+- 
+
+### [yyyy-mm-dd] 5.0.3
+- 
+
+### [yyyy-mm-dd] 5.0.2
+- 
+
+### [yyyy-mm-dd] 5.0.1
+- 
+
+### [2023-11-25] 5.0.0
+- Moved to NET8
+
 ### [2023-03-11] 3.4.0
 - Updated to Genocs.Core 3.0.0
 

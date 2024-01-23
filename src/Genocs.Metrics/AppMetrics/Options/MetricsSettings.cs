@@ -1,9 +1,9 @@
-namespace Genocs.Metrics.AppMetrics;
+namespace Genocs.Metrics.AppMetrics.Options;
 
 /// <summary>
-/// The MetricsOptions class.
+/// The MetricsSettings class.
 /// </summary>
-public class MetricsOptions
+public class MetricsSettings
 {
     /// <summary>
     /// Default section name.
