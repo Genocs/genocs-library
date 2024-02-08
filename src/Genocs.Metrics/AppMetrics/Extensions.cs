@@ -24,7 +24,6 @@ public static class Extensions
     private const string RegistryName = "metrics.metrics";
     private static bool _initialized;
 
-
     [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,

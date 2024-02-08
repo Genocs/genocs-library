@@ -6,12 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
-/// 
+/// Extension helper class for CQRS Queries.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// AddQueryHandlers
+    /// AddQueryHandlers.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
@@ -28,7 +28,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// AddInMemoryQueryDispatcher
+    /// AddInMemoryQueryDispatcher.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>

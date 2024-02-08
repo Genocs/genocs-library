@@ -17,8 +17,10 @@ public static class Extensions
     private const string SectionName = "consul";
     private const string RegistryName = "discovery.consul";
 
-    public static IGenocsBuilder AddConsul(this IGenocsBuilder builder, string sectionName = SectionName,
-        string httpClientSectionName = "httpClient")
+    public static IGenocsBuilder AddConsul(
+                                            this IGenocsBuilder builder,
+                                            string sectionName = SectionName,
+                                            string httpClientSectionName = "httpClient")
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -30,15 +32,19 @@ public static class Extensions
         return builder.AddConsul(consulOptions, httpClientOptions);
     }
 
-    public static IGenocsBuilder AddConsul(this IGenocsBuilder builder,
-        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildOptions, HttpClientSettings httpClientOptions)
+    public static IGenocsBuilder AddConsul(
+                                            this IGenocsBuilder builder,
+                                            Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildOptions,
+                                            HttpClientSettings httpClientOptions)
     {
         var options = buildOptions(new ConsulOptionsBuilder()).Build();
         return builder.AddConsul(options, httpClientOptions);
     }
 
-    public static IGenocsBuilder AddConsul(this IGenocsBuilder builder, ConsulSettings options,
-        HttpClientSettings httpClientOptions)
+    public static IGenocsBuilder AddConsul(
+                                            this IGenocsBuilder builder,
+                                            ConsulSettings options,
+                                            HttpClientSettings httpClientOptions)
     {
         builder.Services.AddSingleton(options);
         if (!options.Enabled || !builder.TryRegister(RegistryName))
@@ -68,7 +74,7 @@ public static class Extensions
         return builder;
     }
 
-    public static void AddConsulHttpClient(this IGenocsBuilder builder, string clientName, string serviceName)
+    public static void AddConsulHttpClient(this IGenocsBuilder builder, string clientName, string? serviceName)
         => builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>(clientName)
             .AddHttpMessageHandler(c => new ConsulServiceDiscoveryMessageHandler(
                 c.GetRequiredService<IConsulServicesRegistry>(),
@@ -77,8 +83,8 @@ public static class Extensions
     private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder,
         ConsulSettings options)
     {
-        var enabled = options.Enabled;
-        var consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
+        bool enabled = options.Enabled;
+        string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
         if (!string.IsNullOrWhiteSpace(consulEnabled))
         {
             enabled = consulEnabled is "true" or "1";
@@ -132,7 +138,7 @@ public static class Extensions
             pingEndpoint = pingEndpoint.Substring(0, pingEndpoint.Length - 1);
         }
 
-        var scheme = options.Address.StartsWith("http", StringComparison.InvariantCultureIgnoreCase)
+        string scheme = options.Address.StartsWith("http", StringComparison.InvariantCultureIgnoreCase)
             ? string.Empty
             : "http://";
         var check = new ServiceCheck

@@ -10,6 +10,6 @@ public interface IMongoSessionFactory
     /// <summary>
     /// Create a new session.
     /// </summary>
-    /// <returns>The ClientSessionHandle.</returns>
+    /// <returns>The async ClientSessionHandle.</returns>
     Task<IClientSessionHandle> CreateAsync();
 }

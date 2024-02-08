@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-// using Genocs.Extensions;
 
 namespace Genocs.Core.Domain.Entities;
 
@@ -23,15 +22,15 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// <summary>
     /// Unique identifier for this entity.
     /// </summary>
-    public virtual TPrimaryKey Id { get; set; }
+    public virtual TPrimaryKey? Id { get; set; }
 
     /// <summary>
     /// Checks if this entity is transient (it has not an Id).
     /// </summary>
-    /// <returns>True, if this entity is transient</returns>
+    /// <returns>True, if this entity is transient.</returns>
     public virtual bool IsTransient()
     {
-        if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default(TPrimaryKey)))
+        if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default))
         {
             return true;
         }

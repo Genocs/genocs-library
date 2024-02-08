@@ -1,120 +1,120 @@
-﻿namespace Genocs.Core.Domain.Entities.Auditing
+﻿// using Genocs.Timing;
+// using Genocs.Core.Configuration.Startup;
+// using Genocs.Core.MultiTenancy;
+using Genocs.Core.Extensions;
+
+namespace Genocs.Core.Domain.Entities.Auditing;
+
+public static class EntityAuditingHelper
 {
-    //using Genocs.Timing;
-    using System;
-    //using Genocs.Core.Configuration.Startup;
-    //using Genocs.Core.MultiTenancy;
-    using Genocs.Core.Extensions;
+    public static void SetCreationAuditProperties(
 
-    public static class EntityAuditingHelper
+        // IMultiTenancyConfig multiTenancyConfig, 
+        object entityAsObj, 
+        int? tenantId,
+        long? userId)
     {
-        public static void SetCreationAuditProperties(
-            //IMultiTenancyConfig multiTenancyConfig, 
-            object entityAsObj, 
-            int? tenantId,
-            long? userId)
+        var entityWithCreationTime = entityAsObj as IHasCreationTime;
+        if (entityWithCreationTime == null)
         {
-            var entityWithCreationTime = entityAsObj as IHasCreationTime;
-            if (entityWithCreationTime == null)
-            {
-                //Object does not implement IHasCreationTime
-                return;
-            }
-
-            if (entityWithCreationTime.CreationTime == default(DateTime))
-            {
-                //entityWithCreationTime.CreationTime = Clock.Now;
-                entityWithCreationTime.CreationTime = DateTime.Now;
-
-            }
-
-            if (!(entityAsObj is ICreationAudited))
-            {
-                //Object does not implement ICreationAudited
-                return;
-            }
-
-            if (!userId.HasValue)
-            {
-                //Unknown user
-                return;
-            }
-
-            var entity = entityAsObj as ICreationAudited;
-            if (entity.CreatorUserId != null)
-            {
-                //CreatorUserId is already set
-                return;
-            }
-
-            //if (multiTenancyConfig?.IsEnabled == true)
-            //{
-            //    if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
-            //        !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
-            //    {
-            //        //A tenant entitiy is created by host or a different tenant
-            //        return;
-            //    }
-
-            //    if (tenantId.HasValue && MultiTenancyHelper.IsHostEntity(entity))
-            //    {
-            //        //Tenant user created a host entity
-            //        return;
-            //    }
-            //}
-
-            //Finally, set CreatorUserId!
-            entity.CreatorUserId = userId;
+            // Object does not implement IHasCreationTime
+            return;
         }
 
-        public static void SetModificationAuditProperties(
-            //IMultiTenancyConfig multiTenancyConfig,
-            object entityAsObj,
-            int? tenantId,
-            long? userId)
+        if (entityWithCreationTime.CreationTime == default(DateTime))
         {
-            if (entityAsObj is IHasModificationTime)
-            {
-                //entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
-                entityAsObj.As<IHasModificationTime>().LastModificationTime = DateTime.Now;
-            }
+            // entityWithCreationTime.CreationTime = Clock.Now;
+            entityWithCreationTime.CreationTime = DateTime.Now;
 
-            if (!(entityAsObj is IModificationAudited))
-            {
-                //Entity does not implement IModificationAudited
-                return;
-            }
+        }
 
-            var entity = entityAsObj.As<IModificationAudited>();
+        if (!(entityAsObj is ICreationAudited))
+        {
+            // Object does not implement ICreationAudited
+            return;
+        }
 
-            if (userId == null)
+        if (!userId.HasValue)
+        {
+            // Unknown user
+            return;
+        }
+
+        var entity = entityAsObj as ICreationAudited;
+        if (entity.CreatorUserId != null)
+        {
+            // CreatorUserId is already set
+            return;
+        }
+
+        //if (multiTenancyConfig?.IsEnabled == true)
+        //{
+        //    if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
+        //        !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
+        //    {
+        //        //A tenant entitiy is created by host or a different tenant
+        //        return;
+        //    }
+
+        //    if (tenantId.HasValue && MultiTenancyHelper.IsHostEntity(entity))
+        //    {
+        //        //Tenant user created a host entity
+        //        return;
+        //    }
+        //}
+
+        //Finally, set CreatorUserId!
+        entity.CreatorUserId = userId;
+    }
+
+    public static void SetModificationAuditProperties(
+        //IMultiTenancyConfig multiTenancyConfig,
+        object entityAsObj,
+        int? tenantId,
+        long? userId)
+    {
+        if (entityAsObj is IHasModificationTime)
+        {
+            //entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+            entityAsObj.As<IHasModificationTime>().LastModificationTime = DateTime.Now;
+        }
+
+        if (!(entityAsObj is IModificationAudited))
+        {
+            //Entity does not implement IModificationAudited
+            return;
+        }
+
+        var entity = entityAsObj.As<IModificationAudited>();
+
+        if (userId == null)
+        {
+            //Unknown user
+            entity.LastModifierUserId = null;
+            return;
+        }
+
+        /*
+        if (multiTenancyConfig?.IsEnabled == true)
+        {
+            if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
+                !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
             {
-                //Unknown user
+                //A tenant entitiy is modified by host or a different tenant
                 entity.LastModifierUserId = null;
                 return;
             }
 
-            /*
-            if (multiTenancyConfig?.IsEnabled == true)
+            if (tenantId.HasValue && MultiTenancyHelper.IsHostEntity(entity))
             {
-                if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
-                    !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
-                {
-                    //A tenant entitiy is modified by host or a different tenant
-                    entity.LastModifierUserId = null;
-                    return;
-                }
-
-                if (tenantId.HasValue && MultiTenancyHelper.IsHostEntity(entity))
-                {
-                    //Tenant user modified a host entity
-                    entity.LastModifierUserId = null;
-                    return;
-                }
+                //Tenant user modified a host entity
+                entity.LastModifierUserId = null;
+                return;
             }
-            */
-            //Finally, set LastModifierUserId!
-            entity.LastModifierUserId = userId;
         }
+        */
+
+        // Finally, set LastModifierUserId!
+        entity.LastModifierUserId = userId;
     }
 }

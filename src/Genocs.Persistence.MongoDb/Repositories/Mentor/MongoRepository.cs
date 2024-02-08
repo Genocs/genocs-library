@@ -127,10 +127,10 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return await result.SingleAsync();
     }
 
-    public TEntity FirstOrDefault(TIdentifiable id)
+    public TEntity? FirstOrDefault(TIdentifiable id)
         => Collection.Find(c => c.Id.Equals(id)).FirstOrDefault();
 
-    public async Task<TEntity> FirstOrDefaultAsync(TIdentifiable id)
+    public async Task<TEntity?> FirstOrDefaultAsync(TIdentifiable id)
     {
         var result = await Collection.FindAsync(c => c.Id.Equals(id));
         return await result.FirstOrDefaultAsync();
@@ -139,13 +139,13 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         => Collection.Find(predicate).FirstOrDefault();
 
-    public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
     {
         var result = await Collection.FindAsync(predicate);
         return await result.FirstOrDefaultAsync();
     }
 
-    public TEntity Load(TIdentifiable id)
+    public TEntity? Load(TIdentifiable id)
         => FirstOrDefault(id);
 
     public TEntity Insert(TEntity entity)
@@ -168,13 +168,13 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
-        Collection.ReplaceOne(c => c.Id.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        Collection.ReplaceOne(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
         return entity;
     }
 
     public async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
     {
-        await Collection.ReplaceOneAsync(c => c.Id.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        await Collection.ReplaceOneAsync(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
         return entity;
     }
 
@@ -186,7 +186,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOne(c => c.Id.Equals(entity.Id), entity);
+        Collection.ReplaceOne(c => c.Id!.Equals(entity.Id), entity);
         return entity;
     }
 
@@ -223,7 +223,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
             throw new ArgumentNullException(nameof(id));
         }
 
-        Collection.DeleteOne(c => c.Id.Equals(id));
+        Collection.DeleteOne(c => c.Id!.Equals(id));
     }
 
     public void Delete(Expression<Func<TEntity, bool>> predicate)
@@ -262,7 +262,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     async Task<TEntity> IRepositoryOfEntity<TEntity, TIdentifiable>.UpdateAsync(TEntity entity)
     {
-        await UpdateAsync(entity, e => e.Id.Equals(entity.Id));
+        await UpdateAsync(entity, e => e.Id!.Equals(entity.Id));
         return entity;
     }
 }

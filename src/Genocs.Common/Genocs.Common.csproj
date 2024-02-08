@@ -5,8 +5,8 @@
         <PackageId>Genocs.Common</PackageId>
         <RootNamespace>Genocs.Common</RootNamespace>
         <AssemblyName>Genocs.Common</AssemblyName>
-        <Title>The commons components library useful to build .NET Core projects.</Title>
-        <Description>The commons components library useful to build .NET Core projects.</Description>
+        <Title>The Genocs Library - Common components.</Title>
+        <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>5.0.0</Version>

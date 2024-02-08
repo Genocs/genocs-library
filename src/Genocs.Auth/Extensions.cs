@@ -71,28 +71,28 @@ public static class Extensions
             tokenValidationParameters.AuthenticationType = options.AuthenticationType;
         }
 
-        var hasCertificate = false;
+        bool hasCertificate = false;
         if (options.Certificate is not null)
         {
             X509Certificate2 certificate = null;
-            var password = options.Certificate.Password;
-            var hasPassword = !string.IsNullOrWhiteSpace(password);
+            string password = options.Certificate.Password;
+            bool hasPassword = !string.IsNullOrWhiteSpace(password);
             if (!string.IsNullOrWhiteSpace(options.Certificate.Location))
             {
                 certificate = hasPassword
                     ? new X509Certificate2(options.Certificate.Location, password)
                     : new X509Certificate2(options.Certificate.Location);
-                var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
+                string keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
                 Console.WriteLine($"Loaded X.509 certificate from location: '{options.Certificate.Location}' {keyType}.");
             }
 
             if (!string.IsNullOrWhiteSpace(options.Certificate.RawData))
             {
-                var rawData = Convert.FromBase64String(options.Certificate.RawData);
+                byte[] rawData = Convert.FromBase64String(options.Certificate.RawData);
                 certificate = hasPassword
                     ? new X509Certificate2(rawData, password)
                     : new X509Certificate2(rawData);
-                var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
+                string keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
                 Console.WriteLine($"Loaded X.509 certificate from raw data {keyType}.");
             }
 
@@ -105,7 +105,7 @@ public static class Extensions
 
                 hasCertificate = true;
                 tokenValidationParameters.IssuerSigningKey = new X509SecurityKey(certificate);
-                var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
+                string actionType = certificate.HasPrivateKey ? "issuing" : "validating";
                 Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
             }
         }
@@ -117,7 +117,7 @@ public static class Extensions
                 options.Algorithm = SecurityAlgorithms.HmacSha256;
             }
 
-            var rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
+            byte[] rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
             tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(rawKey);
             Console.WriteLine("Using symmetric encryption for issuing tokens.");
         }
@@ -167,12 +167,12 @@ public static class Extensions
 }
 
 /// <summary>
-/// DateExtensions extension method
+/// DateExtensions extension method.
 /// </summary>
 internal static class DateExtensions
 {
     /// <summary>
-    /// ToTimestamp support function
+    /// ToTimestamp support function.
     /// </summary>
     /// <param name="dateTime"></param>
     /// <returns></returns>

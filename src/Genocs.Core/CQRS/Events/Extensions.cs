@@ -6,12 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Genocs.Core.CQRS.Events;
 
 /// <summary>
-/// CQRS events extensions
+/// CQRS events extensions.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// AddEventHandlers
+    /// AddEventHandlers.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
@@ -29,7 +29,7 @@ public static class Extensions
 
 
     /// <summary>
-    /// AddInMemoryEventDispatcher
+    /// AddInMemoryEventDispatcher.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
@@ -40,7 +40,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// AddEventHandlers
+    /// AddEventHandlers.
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
@@ -57,7 +57,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// AddInMemoryEventDispatcher
+    /// AddInMemoryEventDispatcher.
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>

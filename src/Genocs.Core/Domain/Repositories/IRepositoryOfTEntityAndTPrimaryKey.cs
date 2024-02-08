@@ -95,33 +95,33 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity or null.</returns>
-    TEntity FirstOrDefault(TIdentifiable id);
+    TEntity? FirstOrDefault(TIdentifiable id);
 
     /// <summary>
     /// Gets an entity with given primary key or null if not found.
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity or null.</returns>
-    Task<TEntity> FirstOrDefaultAsync(TIdentifiable id);
+    Task<TEntity?> FirstOrDefaultAsync(TIdentifiable id);
 
     /// <summary>
     /// Gets an entity with given predicate or null if not found.
     /// </summary>
     /// <param name="predicate">Predicate to filter entities.</param>
-    TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+    TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
 
     /// <summary>
     /// Gets an entity with given predicate or null if not found.
     /// </summary>
     /// <param name="predicate">Predicate to filter entities.</param>
-    Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
     /// <summary>
     /// Creates an entity with given primary key without database access.
     /// </summary>
     /// <param name="id">Primary key of the entity to load.</param>
     /// <returns>Entity.</returns>
-    TEntity Load(TIdentifiable id);
+    TEntity? Load(TIdentifiable id);
 
     #endregion
 

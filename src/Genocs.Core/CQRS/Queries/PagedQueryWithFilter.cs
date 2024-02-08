@@ -1,13 +1,12 @@
-﻿namespace Genocs.Core.CQRS.Queries
+﻿namespace Genocs.Core.CQRS.Queries;
+
+/// <summary>
+/// Paged query extension with Filter.
+/// </summary>
+public class PagedQueryWithFilter : PagedQueryBase
 {
     /// <summary>
-    /// Paged query extension with Filter 
+    /// The filter.
     /// </summary>
-    public class PagedQueryWithFilter : PagedQueryBase
-    {
-        /// <summary>
-        /// The filter 
-        /// </summary>
-        public string FilterBy { get; set; } = string.Empty;
-    }
+    public string FilterBy { get; set; } = string.Empty;
 }

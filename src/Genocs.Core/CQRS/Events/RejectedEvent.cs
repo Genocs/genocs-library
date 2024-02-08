@@ -1,21 +1,19 @@
-namespace Genocs.Core.CQRS.Events
+using System.Text.Json.Serialization;
+
+namespace Genocs.Core.CQRS.Events;
+
+public class RejectedEvent : IRejectedEvent
 {
-    using System.Text.Json.Serialization;
+    public string Reason { get; }
+    public string Code { get; }
 
-    public class RejectedEvent : IRejectedEvent
+    [JsonConstructor]
+    public RejectedEvent(string reason, string code)
     {
-        public string Reason { get; }
-        public string Code { get; }
-
-        [JsonConstructor]
-        public RejectedEvent(string reason, string code)
-        {
-            Reason = reason;
-            Code = code;
-        }
-
-        public static IRejectedEvent For(string name)
-            => new RejectedEvent($"There was an error when executing: " +
-                                 $"{name}", $"{name}_error");
+        Reason = reason;
+        Code = code;
     }
+
+    public static IRejectedEvent For(string name)
+        => new RejectedEvent($"There was an error when executing: " + $"{name}", $"{name}_error");
 }

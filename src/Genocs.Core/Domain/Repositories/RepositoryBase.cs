@@ -102,22 +102,22 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(Single(predicate));
     }
 
-    public virtual TEntity FirstOrDefault(TPrimaryKey id)
+    public virtual TEntity? FirstOrDefault(TPrimaryKey id)
     {
         return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
     }
 
-    public virtual Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(TPrimaryKey id)
     {
         return Task.FromResult(FirstOrDefault(id));
     }
 
-    public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+    public virtual TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
     {
         return GetAll().FirstOrDefault(predicate);
     }
 
-    public virtual Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
     {
         return Task.FromResult(FirstOrDefault(predicate));
     }

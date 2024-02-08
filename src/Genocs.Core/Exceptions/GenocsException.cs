@@ -1,8 +1,8 @@
-﻿namespace Genocs.Core.Exceptions;
+﻿using System.Runtime.Serialization;
 
-using System;
+namespace Genocs.Core.Exceptions;
 
-/* Unmerged change from project 'Genocs.Core (netstandard2.1)'
+/* Unmerged change from project 'Genocs.Core (netstandard2.0)'
 Before:
     using System.Runtime.Serialization;
 After:
@@ -11,7 +11,6 @@ After:
     using Genocs.Core;
     using Genocs.Core.Exceptions;
 */
-using System.Runtime.Serialization;
 
 /// <summary>
 /// Base exception type for those are thrown by Genocs system for Genocs specific exceptions.
@@ -39,7 +38,7 @@ public class GenocsException : Exception
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
-    /// <param name="message">Exception message</param>
+    /// <param name="message">Exception message.</param>
     public GenocsException(string message)
         : base(message)
     {
@@ -49,8 +48,8 @@ public class GenocsException : Exception
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
-    /// <param name="message">Exception message</param>
-    /// <param name="innerException">Inner exception</param>
+    /// <param name="message">Exception message.</param>
+    /// <param name="innerException">Inner exception.</param>
     public GenocsException(string message, Exception innerException)
         : base(message, innerException)
     {

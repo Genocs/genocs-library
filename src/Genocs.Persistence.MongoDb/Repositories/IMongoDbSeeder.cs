@@ -11,6 +11,6 @@ public interface IMongoDbSeeder
     /// Database Seed.
     /// </summary>
     /// <param name="database">The database.</param>
-    /// <returns></returns>
+    /// <returns>The async Task</returns>
     Task SeedAsync(IMongoDatabase database);
 }

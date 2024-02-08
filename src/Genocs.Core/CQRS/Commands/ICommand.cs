@@ -1,9 +1,8 @@
-namespace Genocs.Core.CQRS.Commands
+namespace Genocs.Core.CQRS.Commands;
+
+/// <summary>
+/// CQRS command interface
+/// </summary>
+public interface ICommand
 {
-    /// <summary>
-    /// CQRS command interface
-    /// </summary>
-    public interface ICommand
-    {
-    }
 }

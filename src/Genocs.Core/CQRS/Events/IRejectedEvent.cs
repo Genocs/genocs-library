@@ -1,8 +1,7 @@
-namespace Genocs.Core.CQRS.Events
+namespace Genocs.Core.CQRS.Events;
+
+public interface IRejectedEvent : IEvent
 {
-    public interface IRejectedEvent : IEvent
-    {
-        string Reason { get; }
-        string Code { get; }
-    }
+    string Reason { get; }
+    string Code { get; }
 }

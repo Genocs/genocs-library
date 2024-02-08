@@ -6,11 +6,14 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
     private readonly ConsulSettings _options;
-    private readonly string _serviceName;
+    private readonly string? _serviceName;
     private readonly bool? _overrideRequestUri;
 
-    public ConsulServiceDiscoveryMessageHandler(IConsulServicesRegistry servicesRegistry,
-        ConsulSettings options, string serviceName = null, bool? overrideRequestUri = null)
+    public ConsulServiceDiscoveryMessageHandler(
+                                                IConsulServicesRegistry servicesRegistry,
+                                                ConsulSettings options,
+                                                string? serviceName = null,
+                                                bool? overrideRequestUri = null)
     {
         if (string.IsNullOrWhiteSpace(options.Url))
         {
@@ -23,11 +26,12 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
         _overrideRequestUri = overrideRequestUri;
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(
+                                                                    HttpRequestMessage request,
+                                                                    CancellationToken cancellationToken)
     {
         var uri = GetUri(request);
-        var serviceName = string.IsNullOrWhiteSpace(_serviceName) ? uri.Host : _serviceName;
+        string serviceName = string.IsNullOrWhiteSpace(_serviceName) ? uri.Host : _serviceName;
 
         return await SendAsync(request, serviceName, uri, cancellationToken);
     }
@@ -40,8 +44,11 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
                     $"{request.RequestUri.Scheme}://{_serviceName}/{request.RequestUri.Host}{request.RequestUri.PathAndQuery}")
                 : request.RequestUri;
 
-    private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        string serviceName, Uri uri, CancellationToken cancellationToken)
+    private async Task<HttpResponseMessage> SendAsync(
+                                                        HttpRequestMessage request,
+                                                        string serviceName,
+                                                        Uri uri,
+                                                        CancellationToken cancellationToken)
     {
         if (!_options.Enabled)
         {
@@ -53,15 +60,13 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
         return await base.SendAsync(request, cancellationToken);
     }
 
-    private async Task<Uri> GetRequestUriAsync(HttpRequestMessage request,
-        string serviceName, Uri uri)
+    private async Task<Uri> GetRequestUriAsync(
+                                                HttpRequestMessage request,
+                                                string serviceName,
+                                                Uri uri)
     {
-        var service = await _servicesRegistry.GetAsync(serviceName);
-        if (service is null)
-        {
-            throw new ConsulServiceNotFoundException($"Consul service: '{serviceName}' was not found.",
-                serviceName);
-        }
+        var service = await _servicesRegistry.GetAsync(serviceName)
+            ?? throw new ConsulServiceNotFoundException($"Consul service: '{serviceName}' was not found.", serviceName);
 
         if (!_options.SkipLocalhostDockerDnsReplace)
         {

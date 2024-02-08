@@ -1,46 +1,42 @@
-﻿namespace Genocs.Core.CQRS.Queries.Dispatchers
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Genocs.Core.CQRS.Queries.Dispatchers;
+
+internal sealed class QueryDispatcher : IQueryDispatcher
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
+    private readonly IServiceProvider _serviceProvider;
 
-    internal sealed class QueryDispatcher : IQueryDispatcher
+    public QueryDispatcher(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public QueryDispatcher(IServiceProvider serviceProvider)
+    public async Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+    {
+        if (query is null)
         {
-            _serviceProvider = serviceProvider;
+            throw new InvalidOperationException("Query cannot be null.");
         }
 
-        public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+        object handler = scope.ServiceProvider.GetRequiredService(handlerType);
+
+        var method = handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync));
+        if (method is null)
         {
-            if (query is null)
-            {
-                throw new InvalidOperationException("Query cannot be null.");
-            }
-
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
-            var handler = scope.ServiceProvider.GetRequiredService(handlerType);
-
-            var method = handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync));
-            if (method is null)
-            {
-                throw new InvalidOperationException($"Query handler for '{typeof(TResult).Name}' is invalid.");
-            }
-
-            return await (Task<TResult>)method.Invoke(handler, new object[] { query, cancellationToken });
-
+            throw new InvalidOperationException($"Query handler for '{typeof(TResult).Name}' is invalid.");
         }
 
-        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
-            where TQuery : class, IQuery<TResult>
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-            return await handler.HandleAsync(query, cancellationToken);
-        }
+        return await (Task<TResult?>)method.Invoke(handler, new object[] { query, cancellationToken });
+
+    }
+
+    public async Task<TResult?> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        where TQuery : class, IQuery<TResult>
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
+        return await handler.HandleAsync(query, cancellationToken);
     }
 }

@@ -14,7 +14,7 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
-    public static string EnsureEndsWith(this string str, char c)
+    public static string? EnsureEndsWith(this string? str, char c)
     {
         return EnsureEndsWith(str, c, StringComparison.Ordinal);
     }
@@ -22,11 +22,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
-    public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
+    public static string? EnsureEndsWith(this string? str, char c, StringComparison comparisonType)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException(nameof(str));
+            return str;
         }
 
         if (str.EndsWith(c.ToString(), comparisonType))
@@ -40,11 +40,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
-    public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
+    public static string? EnsureEndsWith(this string? str, char c, bool ignoreCase, CultureInfo culture)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException(nameof(str));
+            return str;
         }
 
         if (str.EndsWith(c.ToString(culture), ignoreCase, culture))
@@ -58,7 +58,7 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string EnsureStartsWith(this string str, char c)
+    public static string? EnsureStartsWith(this string? str, char c)
     {
         return EnsureStartsWith(str, c, StringComparison.Ordinal);
     }
@@ -66,11 +66,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
+    public static string? EnsureStartsWith(this string? str, char c, StringComparison comparisonType)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException(nameof(str));
+            return str;
         }
 
         if (str.StartsWith(c.ToString(), comparisonType))
@@ -84,11 +84,11 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
+    public static string? EnsureStartsWith(this string? str, char c, bool ignoreCase, CultureInfo culture)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException("str");
+            return str;
         }
 
         if (str.StartsWith(c.ToString(culture), ignoreCase, culture))
@@ -102,13 +102,13 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from beginning of the string.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
-    public static string Left(this string str, int len)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length.</exception>
+    public static string? Left(this string? str, int len)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException("str");
+            return str;
         }
 
         if (str.Length < len)
@@ -116,32 +116,34 @@ public static class StringExtensions
             throw new ArgumentException("len argument can not be bigger than given string's length!");
         }
 
-        return str.Substring(0, len);
+        return str[..len];
     }
 
     /// <summary>
     /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
     /// </summary>
-    public static string NormalizeLineEndings(this string str)
+    public static string? NormalizeLineEndings(this string? str)
     {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
         return str.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
     }
 
     /// <summary>
-    /// Gets index of nth occurence of a char in a string.
+    /// Gets index of nth occurrence of a char in a string.
     /// </summary>
-    /// <param name="str">source string to be searched</param>
-    /// <param name="c">Char to search in <see cref="str"/></param>
-    /// <param name="n">Count of the occurence</param>
+    /// <param name="str">source string to be searched.</param>
+    /// <param name="c">Char to search in <see cref="str"/>.</param>
+    /// <param name="n">Count of the occurrence.</param>
     public static int NthIndexOf(this string str, char c, int n)
     {
-        if (str == null)
-        {
-            throw new ArgumentNullException(nameof(str));
-        }
+        if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
 
-        var count = 0;
-        for (var i = 0; i < str.Length; i++)
+        int count = 0;
+        for (int i = 0; i < str.Length; i++)
         {
             if (str[i] != c)
             {
@@ -163,17 +165,12 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="postFixes">one or more postfix.</param>
-    /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
-    public static string RemovePostFix(this string str, params string[] postFixes)
+    /// <returns>Modified string or the same string if it has not any of given postfixes.</returns>
+    public static string? RemovePostFix(this string? str, params string[] postFixes)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            return null;
-        }
-
-        if (str == string.Empty)
-        {
-            return string.Empty;
+            return str;
         }
 
         if (postFixes.IsNullOrEmpty())
@@ -181,7 +178,7 @@ public static class StringExtensions
             return str;
         }
 
-        foreach (var postFix in postFixes)
+        foreach (string postFix in postFixes)
         {
             if (str.EndsWith(postFix))
             {
@@ -198,17 +195,12 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">The string.</param>
     /// <param name="preFixes">one or more prefix.</param>
-    /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    public static string RemovePreFix(this string str, params string[] preFixes)
+    /// <returns>Modified string or the same string if it has not any of given prefixes.</returns>
+    public static string? RemovePreFix(this string? str, params string[] preFixes)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            return null;
-        }
-
-        if (str == string.Empty)
-        {
-            return string.Empty;
+            return str;
         }
 
         if (preFixes.IsNullOrEmpty())
@@ -216,7 +208,7 @@ public static class StringExtensions
             return str;
         }
 
-        foreach (var preFix in preFixes)
+        foreach (string preFix in preFixes)
         {
             if (str.StartsWith(preFix))
             {
@@ -230,13 +222,13 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from end of the string.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
-    public static string Right(this string str, int len)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length.</exception>
+    public static string? Right(this string? str, int len)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            throw new ArgumentNullException("str");
+            return str;
         }
 
         if (str.Length < len)
@@ -282,10 +274,10 @@ public static class StringExtensions
     /// <summary>
     /// Converts PascalCase string to camelCase string.
     /// </summary>
-    /// <param name="str">String to convert</param>
-    /// <param name="invariantCulture">Invariant culture</param>
-    /// <returns>camelCase of the string</returns>
-    public static string ToCamelCase(this string str, bool invariantCulture = true)
+    /// <param name="str">String to convert.</param>
+    /// <param name="invariantCulture">Invariant culture.</param>
+    /// <returns>camelCase of the string.</returns>
+    public static string? ToCamelCase(this string? str, bool invariantCulture = true)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -303,10 +295,10 @@ public static class StringExtensions
     /// <summary>
     /// Converts PascalCase string to camelCase string in specified culture.
     /// </summary>
-    /// <param name="str">String to convert</param>
-    /// <param name="culture">An object that supplies culture-specific casing rules</param>
-    /// <returns>camelCase of the string</returns>
-    public static string ToCamelCase(this string str, CultureInfo culture)
+    /// <param name="str">String to convert.</param>
+    /// <param name="culture">An object that supplies culture-specific casing rules.</param>
+    /// <returns>camelCase of the string.</returns>
+    public static string? ToCamelCase(this string? str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -318,7 +310,7 @@ public static class StringExtensions
             return str.ToLower(culture);
         }
 
-        return char.ToLower(str[0], culture) + str.Substring(1);
+        return char.ToLower(str[0], culture) + str[1..];
     }
 
     /// <summary>
@@ -326,8 +318,8 @@ public static class StringExtensions
     /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
     /// </summary>
     /// <param name="str">String to convert.</param>
-    /// <param name="invariantCulture">Invariant culture</param>
-    public static string ToSentenceCase(this string str, bool invariantCulture = false)
+    /// <param name="invariantCulture">Invariant culture.</param>
+    public static string? ToSentenceCase(this string? str, bool invariantCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -347,7 +339,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="culture">An object that supplies culture-specific casing rules.</param>
-    public static string ToSentenceCase(this string str, CultureInfo culture)
+    public static string? ToSentenceCase(this string? str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -360,62 +352,54 @@ public static class StringExtensions
     /// <summary>
     /// Converts string to enum value.
     /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value)
+    /// <typeparam name="T">Type of enum.</typeparam>
+    /// <param name="str">String value to convert.</param>
+    /// <returns>Returns enum object.</returns>
+    public static T ToEnum<T>(this string? str)
         where T : struct
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
 
-        return (T)Enum.Parse(typeof(T), value);
+        return (T)Enum.Parse(typeof(T), str);
     }
 
     /// <summary>
     /// Converts string to enum value.
     /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <param name="ignoreCase">Ignore case</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value, bool ignoreCase)
+    /// <typeparam name="T">Type of enum.</typeparam>
+    /// <param name="str">String value to convert.</param>
+    /// <param name="ignoreCase">Ignore case.</param>
+    /// <returns>Returns enum object.</returns>
+    public static T ToEnum<T>(this string? str, bool ignoreCase)
         where T : struct
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
 
-        return (T)Enum.Parse(typeof(T), value, ignoreCase);
+        return (T)Enum.Parse(typeof(T), str, ignoreCase);
     }
 
     public static string ToMd5(this string str)
     {
-        using (var md5 = MD5.Create())
+        using var md5 = MD5.Create();
+        byte[] inputBytes = Encoding.UTF8.GetBytes(str);
+        byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+        var sb = new StringBuilder();
+        foreach (byte hashByte in hashBytes)
         {
-            var inputBytes = Encoding.UTF8.GetBytes(str);
-            var hashBytes = md5.ComputeHash(inputBytes);
-
-            var sb = new StringBuilder();
-            foreach (var hashByte in hashBytes)
-            {
-                sb.Append(hashByte.ToString("X2"));
-            }
-
-            return sb.ToString();
+            sb.Append(hashByte.ToString("X2"));
         }
+
+        return sb.ToString();
     }
 
     /// <summary>
     /// Converts camelCase string to PascalCase string.
     /// </summary>
-    /// <param name="str">String to convert</param>
-    /// <param name="invariantCulture">Invariant culture</param>
-    /// <returns>PascalCase of the string</returns>
-    public static string ToPascalCase(this string str, bool invariantCulture = true)
+    /// <param name="str">String to convert.</param>
+    /// <param name="invariantCulture">Invariant culture.</param>
+    /// <returns>PascalCase of the string.</returns>
+    public static string? ToPascalCase(this string? str, bool invariantCulture = true)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -424,7 +408,7 @@ public static class StringExtensions
 
         if (str.Length == 1)
         {
-            return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
+            return invariantCulture ? str.ToUpperInvariant() : str.ToUpper();
         }
 
         return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);
@@ -433,10 +417,10 @@ public static class StringExtensions
     /// <summary>
     /// Converts camelCase string to PascalCase string in specified culture.
     /// </summary>
-    /// <param name="str">String to convert</param>
-    /// <param name="culture">An object that supplies culture-specific casing rules</param>
-    /// <returns>PascalCase of the string</returns>
-    public static string ToPascalCase(this string str, CultureInfo culture)
+    /// <param name="str">String to convert.</param>
+    /// <param name="culture">An object that supplies culture-specific casing rules.</param>
+    /// <returns>PascalCase of the string.</returns>
+    public static string? ToPascalCase(this string? str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -454,12 +438,12 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string Truncate(this string str, int maxLength)
+    /// <returns>Truncated string if it is too long, otherwise the entire string.</returns>
+    public static string? Truncate(this string? str, int maxLength)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            return null;
+            return str;
         }
 
         if (str.Length <= maxLength)
@@ -475,8 +459,8 @@ public static class StringExtensions
     /// It adds a "..." postfix to end of the string if it's truncated.
     /// Returning string can not be longer than maxLength.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string TruncateWithPostfix(this string str, int maxLength)
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
+    public static string? TruncateWithPostfix(this string? str, int maxLength)
     {
         return TruncateWithPostfix(str, maxLength, "...");
     }
@@ -486,15 +470,14 @@ public static class StringExtensions
     /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
     /// Returning string can not be longer than maxLength.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
+    public static string? TruncateWithPostfix(this string? str, int maxLength, string postfix)
     {
-        if (str == null)
+        if (string.IsNullOrWhiteSpace(str))
         {
-            return null;
+            return str;
         }
 
-        if (str == string.Empty || maxLength == 0)
+        if (maxLength == 0)
         {
             return string.Empty;
         }
@@ -513,11 +496,18 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Helper method
+    /// Helper method. It's used to convert a string to snake case.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public static string Underscore(this string value)
-        => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
+    /// <param name="str">The input string.</param>
+    /// <returns>The output result.</returns>
+    public static string? Underscore(this string? str)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
+        return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
             .ToLowerInvariant();
+    }
 }
