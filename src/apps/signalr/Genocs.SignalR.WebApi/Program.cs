@@ -7,6 +7,7 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.Vault;
 using Genocs.SignalR.WebApi.Commands;
@@ -31,7 +32,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
@@ -51,6 +51,7 @@ services.AddGenocs()
         .AddErrorHandler<ExceptionToResponseMapper>()
         .AddOpenTelemetry()
         .AddJaeger()
+        .AddMetrics()
         .AddMongo()
         .AddCommandHandlers()
         .AddEventHandlers()
@@ -67,12 +68,12 @@ services.AddGenocs()
 
 var app = builder.Build();
 
-
 app.UseGenocs()
     .UserCorrelationContextLogging()
     .UseErrorHandler()
     .UseRouting()
-    .UseEndpoints(r => {
+    .UseEndpoints(r =>
+    {
         r.MapControllers();
         r.MapHub<GenocsHub>("/notificationHub");
     })
@@ -80,12 +81,10 @@ app.UseGenocs()
         .Get("", ctx => ctx.Response.WriteAsync("SignalR Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Post<PublishNotification>("notifications",
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}"))
-    )
+            afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
     .UseJaeger()
     .UseSwaggerDocs()
     .UseRabbitMq();
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

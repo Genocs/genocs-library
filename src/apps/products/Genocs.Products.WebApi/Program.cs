@@ -9,6 +9,7 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
@@ -37,7 +38,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
@@ -55,6 +55,7 @@ services.AddGenocs()
         .AddFabio()
         .AddOpenTelemetry()
         .AddJaeger()
+        .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Product, Guid>("products")
         .AddCommandHandlers()
@@ -95,4 +96,3 @@ app.UseGenocs()
 app.Run();
 
 Log.CloseAndFlush();
-

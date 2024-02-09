@@ -10,6 +10,7 @@ using Genocs.MessageBrokers.CQRS;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Orders.WebApi;
 using Genocs.Orders.WebApi.Commands;
@@ -21,7 +22,6 @@ using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Tracing.Jaeger;
 using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
@@ -39,7 +39,6 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
-
 
 var builder = WebApplication.CreateBuilder(args);
 
