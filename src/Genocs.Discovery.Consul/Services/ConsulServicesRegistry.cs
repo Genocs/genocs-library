@@ -35,15 +35,12 @@ internal sealed class ConsulServicesRegistry : IConsulServicesRegistry
 
     private ServiceAgent? GetService(IDictionary<string, ServiceAgent> services, string name)
     {
-        switch (services.Count)
+        return services.Count switch
         {
-            case 0:
-                return null;
-            case 1:
-                return services.First().Value;
-            default:
-                return ChooseService(services, name);
-        }
+            0 => null,
+            1 => services.First().Value,
+            _ => ChooseService(services, name),
+        };
     }
 
     private ServiceAgent ChooseService(IDictionary<string, ServiceAgent> services, string name)

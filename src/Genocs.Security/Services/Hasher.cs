@@ -7,9 +7,9 @@ internal sealed class Hasher : IHasher
 {
     public string Hash(string data)
     {
-        var hash = Hash(Encoding.UTF8.GetBytes(data));
+        byte[] hash = Hash(Encoding.UTF8.GetBytes(data));
         var builder = new StringBuilder();
-        foreach (var @byte in hash)
+        foreach (byte @byte in hash)
         {
             builder.Append(@byte.ToString("x2"));
         }

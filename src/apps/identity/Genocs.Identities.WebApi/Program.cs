@@ -36,7 +36,7 @@ var app = builder.Build();
 
 app.UseCore();
 app.UseDispatcherEndpoints(endpoints => endpoints
-                            .Get("", ctx => ctx.GetAppName())
+                            .Get(string.Empty, ctx => ctx.GetAppName())
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
                             {
                                 var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
@@ -44,7 +44,7 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             })
                             .Post<CreateUser>("sign-up", afterDispatch: (cmd, ctx) =>
                             {
-                                ctx.Response.Headers.Add("user-id", cmd.UserId.ToString());
+                                ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                 return Task.CompletedTask;
                             })
                             .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, roles: "admin")

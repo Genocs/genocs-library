@@ -80,8 +80,7 @@ public static class Extensions
                 c.GetRequiredService<IConsulServicesRegistry>(),
                 c.GetRequiredService<ConsulSettings>(), serviceName, true));
 
-    private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder,
-        ConsulSettings options)
+    private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulSettings options)
     {
         bool enabled = options.Enabled;
         string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
@@ -97,8 +96,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(options.Address))
         {
-            throw new ArgumentException("Consul address can not be empty.",
-                nameof(options.PingEndpoint));
+            throw new ArgumentException("Consul address can not be empty.", nameof(options.PingEndpoint));
         }
 
         builder.Services.AddHttpClient<IConsulService, ConsulService>(c => c.BaseAddress = new Uri(options.Url));

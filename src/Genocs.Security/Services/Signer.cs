@@ -18,8 +18,8 @@ internal sealed class Signer : ISigner
             throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
         }
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(data);
-        var signature = Sign(bytes, certificate);
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data);
+        byte[] signature = Sign(bytes, certificate);
 
         return BitConverter.ToString(signature).Replace("-", string.Empty);
     }
@@ -107,8 +107,8 @@ internal sealed class Signer : ISigner
 
     private static byte[] ToByteArray(string hex)
     {
-        var bytes = new byte[hex.Length / 2];
-        for (var i = 0; i < hex.Length; i += 2)
+        byte[] bytes = new byte[hex.Length / 2];
+        for (int i = 0; i < hex.Length; i += 2)
         {
             bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
         }

@@ -1,12 +1,12 @@
 namespace Genocs.LoadBalancing.Fabio.Options;
 
 /// <summary>
-/// The Fabio settings
+/// The Fabio settings.
 /// </summary>
 public class FabioSettings
 {
     /// <summary>
-    /// The default Fabio section name
+    /// The default Fabio section name.
     /// </summary>
     public const string Position = "fabio";
 
@@ -16,7 +16,7 @@ public class FabioSettings
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// 
+    /// The service url.
     /// </summary>
     public string? Url { get; set; }
 

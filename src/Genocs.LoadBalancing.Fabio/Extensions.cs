@@ -99,7 +99,7 @@ public static class Extensions
 
     private static List<string> GetFabioTags(string consulService, string fabioService)
     {
-        var service = (string.IsNullOrWhiteSpace(fabioService) ? consulService : fabioService)
+        string service = (string.IsNullOrWhiteSpace(fabioService) ? consulService : fabioService)
             .ToLowerInvariant();
 
         return new List<string> { $"urlprefix-/{service} strip=/{service}" };
