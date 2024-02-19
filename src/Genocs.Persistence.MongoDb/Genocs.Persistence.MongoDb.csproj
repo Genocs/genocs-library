@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.Persistence.MongoDb</PackageId>
         <RootNamespace>Genocs.Persistence.MongoDb</RootNamespace>
         <AssemblyName>Genocs.Persistence.MongoDb</AssemblyName>
@@ -51,7 +51,7 @@
 
     <ItemGroup>
         <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
-        <PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="1.3.0" />
+        <PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="1.4.0" />
     </ItemGroup>
 
 </Project>
