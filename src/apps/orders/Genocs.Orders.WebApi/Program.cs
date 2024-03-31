@@ -85,7 +85,7 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get("", ctx => ctx.Response.WriteAsync("Orders Service"))
+        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Orders Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders",

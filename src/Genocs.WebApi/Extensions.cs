@@ -184,7 +184,7 @@ public static class Extensions
             throw new InvalidOperationException("Invalid member expression.");
         }
 
-        var propertyName = memberExpression.Member.Name.ToLowerInvariant();
+        string propertyName = memberExpression.Member.Name.ToLowerInvariant();
         var modelType = model.GetType();
         var field = modelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
             .SingleOrDefault(x => x.Name.ToLowerInvariant().StartsWith($"<{propertyName}>"));
@@ -363,7 +363,7 @@ public static class Extensions
         {
             var queryString = HttpUtility.ParseQueryString(request.HttpContext.Request.QueryString.Value);
             values ??= new RouteValueDictionary();
-            foreach (var key in queryString.AllKeys)
+            foreach (string? key in queryString.AllKeys)
             {
                 values.TryAdd(key, queryString[key]);
             }
@@ -375,7 +375,7 @@ public static class Extensions
             return serializer.Deserialize<T>(EmptyJsonObject);
         }
 
-        var serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
+        string? serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
             ?.Replace("\\\"", "\"")
             .Replace("\"{", "{")
             .Replace("}\"", "}")

@@ -74,9 +74,9 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task PublishAsync(IEvent @event)
         {
-            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
-            var jsonMessage = JsonConvert.SerializeObject(@event);
-            var body = Encoding.UTF8.GetBytes(jsonMessage);
+            string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+            string jsonMessage = JsonConvert.SerializeObject(@event);
+            byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
 
             var message = new Message
             {
@@ -91,9 +91,9 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task PublishAsync(IEvent @event, Dictionary<string, object> filters)
         {
-            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
-            var jsonMessage = JsonConvert.SerializeObject(@event);
-            var body = Encoding.UTF8.GetBytes(jsonMessage);
+            string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+            string jsonMessage = JsonConvert.SerializeObject(@event);
+            byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
 
             var message = new Message
             {
@@ -112,9 +112,9 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset)
         {
-            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
-            var jsonMessage = JsonConvert.SerializeObject(@event);
-            var body = Encoding.UTF8.GetBytes(jsonMessage);
+            string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+            string jsonMessage = JsonConvert.SerializeObject(@event);
+            byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
 
             var message = new Message
             {
@@ -127,9 +127,9 @@ namespace Genocs.ServiceBusAzure.Topics
 
         public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters)
         {
-            var eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, "");
-            var jsonMessage = JsonConvert.SerializeObject(@event);
-            var body = Encoding.UTF8.GetBytes(jsonMessage);
+            string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+            string jsonMessage = JsonConvert.SerializeObject(@event);
+            byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
 
             var message = new Message
             {
@@ -156,8 +156,8 @@ namespace Genocs.ServiceBusAzure.Topics
             where T : IEvent
             where TH : IEventHandlerLegacy<T>
         {
-            var eventName = typeof(T).Name.Replace(EVENT_SUFFIX, "");
-            var key = typeof(T).Name;
+            string eventName = typeof(T).Name.Replace(EVENT_SUFFIX, "");
+            string key = typeof(T).Name;
             if (!_handlers.ContainsKey(key))
             {
                 _handlers.Add(key, new List<SubscriptionInfo>());
@@ -168,6 +168,7 @@ namespace Genocs.ServiceBusAzure.Topics
                 //    Name = eventName
                 //}).GetAwaiter().GetResult();
             }
+
             Type handlerType = typeof(TH);
 
             if (_handlers[key].Any(s => s.HandlerType == handlerType))
@@ -182,7 +183,6 @@ namespace Genocs.ServiceBusAzure.Topics
             }
 
             _handlers[key].Add(SubscriptionInfo.Typed(handlerType));
-
         }
 
         private void RegisterSubscriptionClientMessageHandler()
@@ -190,8 +190,8 @@ namespace Genocs.ServiceBusAzure.Topics
             _subscriptionClient.RegisterMessageHandler(
                 async (message, token) =>
                 {
-                    var eventName = $"{message.Label}{EVENT_SUFFIX}";
-                    var messageData = Encoding.UTF8.GetString(message.Body);
+                    string eventName = $"{message.Label}{EVENT_SUFFIX}";
+                    string messageData = Encoding.UTF8.GetString(message.Body);
 
                     // Complete the message so that it is not received again.
                     if (await ProcessEvent(eventName, messageData))
@@ -212,10 +212,9 @@ namespace Genocs.ServiceBusAzure.Topics
             return Task.CompletedTask;
         }
 
-
         private async Task<bool> ProcessEvent(string eventName, string message)
         {
-            var processed = false;
+            bool processed = false;
             if (_handlers.ContainsKey(eventName))
             {
                 using (var scope = _serviceProvider.CreateScope())
@@ -224,22 +223,24 @@ namespace Genocs.ServiceBusAzure.Topics
 
                     foreach (var subscription in subscriptions)
                     {
-                        var handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType);
+                        object handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType);
                         if (handler != null)
                         {
                             var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-                            var command = JsonConvert.DeserializeObject(message, eventType);
+                            object command = JsonConvert.DeserializeObject(message, eventType);
                             var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
                             await (Task)concreteType.GetMethod("HandleEvent").Invoke(handler, new object[] { command });
                         }
                     }
                 }
+
                 processed = true;
             }
             else
             {
                 _logger.LogError($"Event '{eventName}' do not contains handlers. Check whether Subscribe is set");
             }
+
             return processed;
         }
     }

@@ -136,7 +136,7 @@ public static class StringExtensions
     /// Gets index of nth occurrence of a char in a string.
     /// </summary>
     /// <param name="str">source string to be searched.</param>
-    /// <param name="c">Char to search in <see cref="str"/>.</param>
+    /// <param name="c">Char to search in <see cref="string"/>.</param>
     /// <param name="n">Count of the occurrence.</param>
     public static int NthIndexOf(this string str, char c, int n)
     {
@@ -222,7 +222,7 @@ public static class StringExtensions
     /// <summary>
     /// Gets a substring of a string from end of the string.
     /// </summary>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length.</exception>
     public static string? Right(this string? str, int len)
     {

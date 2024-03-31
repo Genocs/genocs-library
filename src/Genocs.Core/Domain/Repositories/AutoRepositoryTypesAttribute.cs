@@ -1,7 +1,5 @@
 namespace Genocs.Core.Domain.Repositories
 {
-    using System;
-
     /// <summary>
     /// Used to define auto-repository types for entities.
     /// This can be used for DbContext types.

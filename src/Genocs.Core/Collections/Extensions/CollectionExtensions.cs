@@ -1,7 +1,5 @@
 namespace Genocs.Core.Collections.Extensions
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Extension methods for Collections.
