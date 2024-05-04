@@ -16,7 +16,8 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
     private readonly ITracer _tracer;
     private readonly IHubContext<GenocsHub> _hub;
 
-    public PublishNotificationHandler(IBusPublisher publisher,
+    public PublishNotificationHandler(
+                                      IBusPublisher publisher,
                                       IMessageOutbox outbox,
                                       ITracer tracer,
                                       ILogger<PublishNotificationHandler> logger,
@@ -32,7 +33,7 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
     public async Task HandleAsync(PublishNotification command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"Created a notification with id: {command.NotificationId}, customer: {command.CustomerId}.");
-        var spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = _tracer.ActiveSpan?.Context.ToString();
         var @event = new NotificationPosted(command.NotificationId);
 
         // Send the notification

@@ -6,9 +6,8 @@ public class HubService : IHubService
 {
     private readonly IHubWrapper _hubContextWrapper;
 
-    public HubService(IHubWrapper hubContextWrapper) 
+    public HubService(IHubWrapper hubContextWrapper)
         => _hubContextWrapper = hubContextWrapper ?? throw new ArgumentNullException(nameof(hubContextWrapper));
-
 
     public async Task PublishOperationPendingAsync(OperationPending @event)
         => await _hubContextWrapper.PublishToUserAsync(@event.UserId,
@@ -42,6 +41,5 @@ public class HubService : IHubService
                 resource = @event.Resource,
                 code = @event.Code,
                 reason = @event.Message
-            }
-        );
+            });
 }

@@ -12,7 +12,7 @@ public class ExceptionToResponseMapper : IExceptionToResponseMapper
     public ExceptionResponse Map(Exception exception)
         => exception switch
         {
-            //DomainException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
+            // DomainException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
             //    HttpStatusCode.BadRequest),
             AppException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
                 HttpStatusCode.BadRequest),
@@ -28,7 +28,7 @@ public class ExceptionToResponseMapper : IExceptionToResponseMapper
             return code;
         }
 
-        var exceptionCode = exception.GetType().Name.Underscore().Replace("_exception", string.Empty);
+        string exceptionCode = exception.GetType().Name.Underscore().Replace("_exception", string.Empty);
         Codes.TryAdd(type, exceptionCode);
 
         return exceptionCode;

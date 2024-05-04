@@ -20,15 +20,14 @@ public static class Extensions
         return builder;
     }
 
-
-    public static IApplicationBuilder UseSignalR(this IApplicationBuilder builder)
+    public static IGenocsBuilder UseSignalR(this IGenocsBuilder builder)
     {
-    //    var options = builder.GetOptions<SignalRSettings>("signalr");
+        var options = builder.GetOptions<SignalRSettings>("signalr");
 
-    //    if (options is not null)
-    //    {
-    //        builder.Services.AddSingleton(options);
-    //    }
+        if (options is not null)
+        {
+            builder.Services.AddSingleton(options);
+        }
 
         return builder;
     }

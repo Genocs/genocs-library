@@ -9,7 +9,7 @@ public class OperationUpdatedHandler : IEventHandler<OperationPending>,
 {
     private readonly IHubService _hubService;
 
-    public OperationUpdatedHandler(IHubService hubService) 
+    public OperationUpdatedHandler(IHubService hubService)
         => _hubService = hubService ?? throw new ArgumentNullException(nameof(hubService));
 
     public async Task HandleAsync(OperationPending @event, CancellationToken cancellationToken = default)

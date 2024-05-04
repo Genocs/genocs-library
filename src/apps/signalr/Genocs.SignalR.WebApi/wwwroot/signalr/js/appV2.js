@@ -6,7 +6,7 @@
     const $messages = document.getElementById("messages");
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5007/notificationHub")
+        .withUrl("https://localhost:5014/notificationHub")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
@@ -20,6 +20,7 @@
         }
     };
 
+    // Start the connection.
     $connect.onclick = function () {
         const jwt = $jwt.value;
         if (!jwt || /\s/g.test(jwt)) {
@@ -30,7 +31,8 @@
         appendMessage('Connecting to Genocs Hub...');
         connection.start()
             .then(() => {
-                //connection.invoke('initializeAsync', $jwt.value);
+                console.log("SignalR Connected.");
+                connection.invoke('initializeAsync', $jwt.value);
             })
             .catch(err => appendMessage(err));
     }
@@ -76,5 +78,5 @@
 
 
     // Start the connection.
-    start();
+    //start();
 })();

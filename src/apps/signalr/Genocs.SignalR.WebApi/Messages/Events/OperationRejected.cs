@@ -15,9 +15,13 @@ public class OperationRejected : IEvent
     public string Message { get; }
 
     [JsonConstructor]
-    public OperationRejected(Guid id,
-        Guid userId, string name, string resource,
-        string code, string message)
+    public OperationRejected(
+                            Guid id,
+                            Guid userId,
+                            string name,
+                            string resource,
+                            string code,
+                            string message)
     {
         Id = id;
         UserId = userId;

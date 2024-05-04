@@ -1,7 +1,7 @@
 namespace Genocs.SignalR.WebApi.Options;
 
 /// <summary>
-/// The signalR Settings definition
+/// The signalR Settings definition.
 /// </summary>
 public class SignalRSettings
 {
