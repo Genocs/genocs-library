@@ -1,7 +1,7 @@
 namespace Genocs.HTTP.Options;
 
 /// <summary>
-/// The HttpClientSettings options class.
+/// The HttpClient Settings class.
 /// </summary>
 public class HttpClientSettings
 {

@@ -22,13 +22,13 @@ public class ProductServiceClient : IProductServiceClient
     /// <param name="certificatesService">The certification service.</param>
     /// <param name="httpClientOptions"></param>
     /// <param name="vaultOptions"></param>
-    /// <param name="securityOptions"></param>
+    /// <param name="securitySettings"></param>
     public ProductServiceClient(
                                 IHttpClient client,
-                                ICertificatesService? certificatesService,
+                                ICertificatesService certificatesService,
                                 HttpClientSettings httpClientOptions,
                                 VaultSettings vaultOptions,
-                                SecurityOptions securityOptions)
+                                SecuritySettings securitySettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
 
@@ -43,9 +43,9 @@ public class ProductServiceClient : IProductServiceClient
             throw new ArgumentNullException(nameof(vaultOptions));
         }
 
-        if (securityOptions is null)
+        if (securitySettings is null)
         {
-            throw new ArgumentNullException(nameof(securityOptions));
+            throw new ArgumentNullException(nameof(securitySettings));
         }
 
         string? url = httpClientOptions?.Services?["products"];
@@ -58,7 +58,7 @@ public class ProductServiceClient : IProductServiceClient
         _url = url;
 
         if (!vaultOptions.Enabled || vaultOptions.Pki?.Enabled != true ||
-            securityOptions.Certificate?.Enabled != true)
+            securitySettings.Certificate?.Enabled != true)
         {
             return;
         }
@@ -69,7 +69,7 @@ public class ProductServiceClient : IProductServiceClient
             return;
         }
 
-        string header = securityOptions.Certificate.GetHeaderName();
+        string header = securitySettings.Certificate.GetHeaderName();
         string certificateData = certificate.GetRawCertDataString();
         _client.SetHeaders(h => h.Add(header, certificateData));
     }

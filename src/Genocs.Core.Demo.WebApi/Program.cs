@@ -1,8 +1,11 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.HTTP;
 using Genocs.Logging;
-using Genocs.Tracing;
 using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Secrets.Vault;
+using Genocs.Security;
+using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
@@ -20,16 +23,20 @@ Log.Logger = new LoggerConfiguration()
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-        .UseLogging();
+        .UseLogging()
+        .UseVault();
 
-// add services to DI container
 var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+    .AddServices()
+    .AddHttpClient()
     .AddOpenTelemetry()
     .AddMongoFast()
-    .RegisterMongoRepositories(Assembly.GetExecutingAssembly());
+    .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
+    .AddSecurity()
+    .Build();
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>

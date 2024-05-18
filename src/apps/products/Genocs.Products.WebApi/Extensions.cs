@@ -8,6 +8,7 @@ public static class Extensions
     public static IGenocsBuilder AddServices(this IGenocsBuilder builder)
     {
         builder.AddCertificateAuthentication();
+
         // Add here services like API client
         //       builder.Services.AddSingleton<IPricingServiceClient, PricingServiceClient>();
         return builder;
