@@ -19,8 +19,7 @@ public static class Extensions
         return builder.AddWebApiSwaggerDocs(b => b.AddSwaggerDocs(sectionName));
     }
 
-    public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder,
-        Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
+    public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
         => builder.AddWebApiSwaggerDocs(b => b.AddSwaggerDocs(buildOptions));
 
     public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions options)

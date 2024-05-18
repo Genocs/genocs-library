@@ -41,7 +41,7 @@ internal sealed class Signer : ISigner
             throw new ArgumentException("Signature cannot be empty.", nameof(signature));
         }
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(data);
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data);
 
         return Verify(bytes, certificate, ToByteArray(signature), throwException);
     }

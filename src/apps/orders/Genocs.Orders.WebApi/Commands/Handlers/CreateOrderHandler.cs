@@ -18,9 +18,13 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
     private readonly ILogger<CreateOrderHandler> _logger;
     private readonly ITracer _tracer;
 
-    public CreateOrderHandler(IMongoRepository<Order, Guid> repository, IBusPublisher publisher,
-        IMessageOutbox outbox, IProductServiceClient productServiceClient, ITracer tracer,
-        ILogger<CreateOrderHandler> logger)
+    public CreateOrderHandler(
+                                IMongoRepository<Order, Guid> repository,
+                                IBusPublisher publisher,
+                                IMessageOutbox outbox,
+                                IProductServiceClient productServiceClient,
+                                ITracer tracer,
+                                ILogger<CreateOrderHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
@@ -32,7 +36,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
     public async Task HandleAsync(CreateOrder command, CancellationToken cancellationToken = default)
     {
-        var exists = await _repository.ExistsAsync(o => o.Id == command.OrderId);
+        bool exists = await _repository.ExistsAsync(o => o.Id == command.OrderId);
         if (exists)
         {
             throw new InvalidOperationException($"Order with given id: {command.OrderId} already exists!");
@@ -49,10 +53,10 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
         var order = new Order(command.OrderId, command.CustomerId, productDto.UnitPrice);
         await _repository.AddAsync(order);
-        
+
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        var spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = _tracer.ActiveSpan?.Context.ToString();
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {

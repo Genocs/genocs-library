@@ -35,7 +35,7 @@ public class JsonParser
 
     private void VisitElement(JsonElement element)
     {
-        var isEmpty = true;
+        bool isEmpty = true;
 
         foreach (JsonProperty property in element.EnumerateObject())
         {

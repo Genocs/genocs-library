@@ -64,7 +64,7 @@ public static class Extensions
             return builder;
         }
 
-        var routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
+        string routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
 
         builder.UseStaticFiles()
             .UseSwagger(c =>

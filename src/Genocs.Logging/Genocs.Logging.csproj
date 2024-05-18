@@ -60,7 +60,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SmartFormat.NET" Version="3.3.2" />
+        <PackageReference Include="SmartFormat.NET" Version="3.4.0" />
     </ItemGroup>
 
 </Project>
