@@ -5,7 +5,6 @@
 
 namespace Genocs.Core.Domain.Entities;
 
-
 public class AggregateRoot : AggregateRoot<int>, IAggregateRoot
 {
 

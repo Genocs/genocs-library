@@ -13,7 +13,7 @@ public class TypeList : TypeList<object>, ITypeList
 /// <summary>
 /// Extends <see cref="List{Type}"/> to add restriction a specific base type.
 /// </summary>
-/// <typeparam name="TBaseType">Base Type of <see cref="Type"/>s in this list</typeparam>
+/// <typeparam name="TBaseType">Base Type of <see cref="Type"/>s in this list.</typeparam>
 public class TypeList<TBaseType> : ITypeList<TBaseType>
 {
     /// <summary>
@@ -26,7 +26,10 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
     /// Gets a value indicating whether this instance is read only.
     /// </summary>
     /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
-    public bool IsReadOnly { get { return false; } }
+    public bool IsReadOnly
+    {
+        get { return false; }
+    }
 
     /// <summary>
     /// Gets or sets the <see cref="Type"/> at the specified index.

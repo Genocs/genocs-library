@@ -9,7 +9,7 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// </summary>
 [Serializable]
 public abstract class CreationAuditedAggregateRoot : CreationAuditedAggregateRoot<int>
-{    
+{
 }
 
 /// <summary>
@@ -34,7 +34,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     /// </summary>
     protected CreationAuditedAggregateRoot()
     {
-        // CreationTime = Clock.Now; // Manage timezone
+        // CreationTime = Clock.Now; // Manage time zone
         CreationTime = DateTime.Now;
     }
 }

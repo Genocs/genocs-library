@@ -27,7 +27,7 @@ public class MessageAttribute : Attribute
     public string QueueType { get; }
 
     /// <summary>
-    /// The error 
+    /// The error.
     /// </summary>
     public string ErrorQueue { get; }
 

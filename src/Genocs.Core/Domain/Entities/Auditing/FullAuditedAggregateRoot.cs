@@ -24,7 +24,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRo
     public virtual bool IsDeleted { get; set; }
 
     /// <summary>
-    /// Which user deleted this entity?
+    /// Which user deleted this entity.
     /// </summary>
     public virtual long? DeleterUserId { get; set; }
 

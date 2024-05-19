@@ -1,13 +1,13 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// Initializer interface definition
+/// Initializer interface definition.
 /// </summary>
 public interface IInitializer
 {
     /// <summary>
-    /// Standard initializer
+    /// Standard initializer.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The Task.</returns>
     Task InitializeAsync();
 }

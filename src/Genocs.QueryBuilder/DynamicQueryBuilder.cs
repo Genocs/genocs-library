@@ -160,5 +160,5 @@ public class DynamicQueryBuilder
 internal class OperatorIndexes
 {
     public int Index { get; set; }
-    public string Operator { get; set; }
+    public string Operator { get; set; } = default!;
 }

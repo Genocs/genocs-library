@@ -2,16 +2,6 @@
 
 namespace Genocs.Core.Exceptions;
 
-/* Unmerged change from project 'Genocs.Core (netstandard2.0)'
-Before:
-    using System.Runtime.Serialization;
-After:
-    using System.Runtime.Serialization;
-    using Genocs;
-    using Genocs.Core;
-    using Genocs.Core.Exceptions;
-*/
-
 /// <summary>
 /// Base exception type for those are thrown by Genocs system for Genocs specific exceptions.
 /// </summary>
@@ -50,7 +40,7 @@ public class GenocsException : Exception
     /// </summary>
     /// <param name="message">Exception message.</param>
     /// <param name="innerException">Inner exception.</param>
-    public GenocsException(string message, Exception innerException)
+    public GenocsException(string message, Exception? innerException)
         : base(message, innerException)
     {
 

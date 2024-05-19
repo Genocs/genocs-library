@@ -9,7 +9,7 @@ public static class EntityAuditingHelper
 {
     public static void SetCreationAuditProperties(
 
-        // IMultiTenancyConfig multiTenancyConfig, 
+        // IMultiTenancyConfig multiTenancyConfig,
         object entityAsObj, 
         int? tenantId,
         long? userId)

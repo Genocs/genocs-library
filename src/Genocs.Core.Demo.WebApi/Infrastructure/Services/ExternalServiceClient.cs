@@ -1,10 +1,7 @@
 ﻿using Genocs.Core.Demo.WebApi.Options;
 using Genocs.HTTP;
 using Genocs.HTTP.Options;
-using Genocs.Secrets.Vault;
-using Genocs.Secrets.Vault.Options;
 using Genocs.Security;
-using Genocs.WebApi.Security;
 using Newtonsoft.Json;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure.Services;
@@ -25,17 +22,11 @@ public class ExternalServiceClient : IExternalServiceClient
     /// <param name="client">The http client.</param>
     /// <param name="hasher">The Hash service.</param>
     /// <param name="httpClientSettings">The http client settings.</param>
-    /// <param name="certificatesService">The certification service.</param>
-    /// <param name="vaultSettings">The vault settings.</param>
-    /// <param name="securitySettings">The security settings.</param>
     /// <param name="externalServiceSettings">The security settings.</param>
     public ExternalServiceClient(
                                 IHttpClient client,
                                 IHasher hasher,
                                 HttpClientSettings httpClientSettings,
-                                ICertificatesService certificatesService,
-                                VaultSettings vaultSettings,
-                                SecuritySettings securitySettings,
                                 ExternalServiceSettings externalServiceSettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
@@ -47,16 +38,6 @@ public class ExternalServiceClient : IExternalServiceClient
             throw new ArgumentNullException(nameof(httpClientSettings));
         }
 
-        if (vaultSettings is null)
-        {
-            throw new ArgumentNullException(nameof(vaultSettings));
-        }
-
-        if (securitySettings is null)
-        {
-            throw new ArgumentNullException(nameof(securitySettings));
-        }
-
         string? url = httpClientSettings?.Services?["ca_issuer"];
 
         if (string.IsNullOrWhiteSpace(url))
@@ -65,22 +46,6 @@ public class ExternalServiceClient : IExternalServiceClient
         }
 
         _url = url;
-
-        if (!vaultSettings.Enabled || vaultSettings.Pki?.Enabled != true ||
-            securitySettings.Certificate?.Enabled != true)
-        {
-            return;
-        }
-
-        var certificate = certificatesService?.Get(vaultSettings.Pki.RoleName);
-        if (certificate is null)
-        {
-            return;
-        }
-
-        string header = securitySettings.Certificate.GetHeaderName();
-        string certificateData = certificate.GetRawCertDataString();
-        _client.SetHeaders(h => h.Add(header, certificateData));
     }
 
     private void SetHeaders(string request)
@@ -94,7 +59,7 @@ public class ExternalServiceClient : IExternalServiceClient
     /// Send a request for gift card issuing.
     /// </summary>
     /// <param name="request">The issuing Request.</param>
-    /// <returns>The issuing Response.</returns>
+    /// <returns>The issuing Response containing the gift card details.</returns>
     public async Task<IssuingResponse> IssueAsync(IssuingRequest request)
     {
         string serializedRequest = JsonConvert.SerializeObject(request);
@@ -106,13 +71,13 @@ public class ExternalServiceClient : IExternalServiceClient
     }
 
     /// <summary>
-    /// Get the product based on the Caller.
+    /// Get the product based on the productId.
     /// </summary>
-    /// <param name="callerId">The CallerId.</param>
-    /// <returns>The Product Response.</returns>
-    public async Task<string> RedeemAsync(string callerId)
+    /// <param name="request">The redemption request.</param>
+    /// <returns>The redemption Response.</returns>
+    public async Task<string> RedeemAsync(RedemptionRequest request)
     {
         // SetHeaders(callerId);
-        return await _client.PostAsync<string>($"{_url}/redemptions/gift-cards/custom/redeem", new { });
+        return await _client.PostAsync<string>($"{_url}/redemptions/gift-cards/custom/redeem", request);
     }
 }
