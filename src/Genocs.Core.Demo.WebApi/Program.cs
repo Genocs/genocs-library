@@ -1,10 +1,8 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
-using Genocs.HTTP;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.Vault;
-using Genocs.Security;
 using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -30,12 +28,10 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
-    .AddServices()
-    .AddHttpClient()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
-    .AddSecurity()
+    .AddApplicationServices()
     .Build();
 
 services.AddCors();

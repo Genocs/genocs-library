@@ -18,14 +18,14 @@ public class ExternalApiController : ControllerBase
     }
 
     [HttpGet("")]
-    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> HomeAsync()
         => await Task.Run(() => Ok("done"));
 
     [HttpPost("")]
-    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IssuingResponse), StatusCodes.Status200OK)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> PostIssueAsync(IssuingRequest request)
         => Ok(await _externalServiceClient.IssueAsync(request));
 }
