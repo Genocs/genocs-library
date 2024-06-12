@@ -16,7 +16,6 @@
         <ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
-        <ProjectReference Include="..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
         <ProjectReference Include="..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
     </ItemGroup>
 
@@ -27,19 +26,18 @@
         <PackageReference Include="Genocs.Tracing" Version="5.0.*" />
         <PackageReference Include="Genocs.HTTP" Version="5.0.*" />
         <PackageReference Include="Genocs.Security" Version="5.0.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="5.0.*" />
         <PackageReference Include="Genocs.WebApi.Security" Version="5.0.*" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
-        <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
+        <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
     </ItemGroup>
 
 </Project>

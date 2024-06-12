@@ -1,8 +1,9 @@
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Core.Demo.WebApi.Options;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Secrets.Vault;
+using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -22,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
         .UseLogging()
-        .UseVault();
+        .UseAzureKeyVault();
 
 var services = builder.Services;
 
@@ -42,6 +43,12 @@ services.AddControllers().AddJsonOptions(x =>
 });
 
 services.AddHealthChecks();
+
+services.Configure<SecretSettings>(builder.Configuration.GetSection(SecretSettings.Position));
+
+var settings = new SecretSettings();
+builder.Configuration.GetSection(SecretSettings.Position).Bind(settings);
+services.AddSingleton(settings);
 
 services.Configure<HealthCheckPublisherOptions>(options =>
 {
