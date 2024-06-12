@@ -7,11 +7,13 @@ namespace Genocs.WebApi.Swagger.Filters;
 
 internal sealed class WebApiDocumentFilter : IDocumentFilter
 {
-    private readonly WebApiEndpointDefinitions _definitions;
     private const string InBody = "body";
     private const string InQuery = "query";
 
-    private readonly Func<OpenApiPathItem, string, OpenApiOperation> _getOperation = (item, path) =>
+    private readonly WebApiEndpointDefinitions _definitions;
+
+
+    private readonly Func<OpenApiPathItem, string, OpenApiOperation?> _getOperation = (item, path) =>
     {
         switch (path)
         {

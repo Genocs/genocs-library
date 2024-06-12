@@ -7,15 +7,23 @@ namespace Genocs.WebApi.CQRS;
 
 public interface IDispatcherEndpointsBuilder
 {
-    IDispatcherEndpointsBuilder Get(string path, Func<HttpContext, Task>? context = null,
-        Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies);
+    IDispatcherEndpointsBuilder Get(
+                                    string path,
+                                    Func<HttpContext, Task>? context = null,
+                                    Action<IEndpointConventionBuilder>? endpoint = null,
+                                    bool auth = false,
+                                    string? roles = null,
+                                    params string[] policies);
 
-    IDispatcherEndpointsBuilder Get<TQuery, TResult>(string path,
-        Func<TQuery, HttpContext, Task>? beforeDispatch = null,
-        Func<TQuery, TResult, HttpContext, Task>? afterDispatch = null,
-        Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies) where TQuery : class, IQuery<TResult>;
+    IDispatcherEndpointsBuilder Get<TQuery, TResult>(
+                                                        string path,
+                                                        Func<TQuery, HttpContext, Task>? beforeDispatch = null,
+                                                        Func<TQuery, TResult, HttpContext, Task>? afterDispatch = null,
+                                                        Action<IEndpointConventionBuilder>? endpoint = null,
+                                                        bool auth = false,
+                                                        string? roles = null,
+                                                        params string[] policies)
+        where TQuery : class, IQuery<TResult>;
 
     IDispatcherEndpointsBuilder Post(string path, Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,

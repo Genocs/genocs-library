@@ -16,7 +16,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
     IServiceCollection IGenocsBuilder.Services => _services;
 
     /// <summary>
-    /// The configuration
+    /// The configuration.
     /// </summary>
     public IConfiguration? Configuration { get; }
 
@@ -31,7 +31,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
     public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);
 
-    public bool TryRegister(string name) 
+    public bool TryRegister(string name)
         => _registry.TryAdd(name, true);
 
     public void AddBuildAction(Action<IServiceProvider> execute)
@@ -44,7 +44,8 @@ public sealed class GenocsBuilder : IGenocsBuilder
             startupInitializer.AddInitializer(initializer);
         });
 
-    public void AddInitializer<TInitializer>() where TInitializer : IInitializer
+    public void AddInitializer<TInitializer>()
+        where TInitializer : IInitializer
         => AddBuildAction(sp =>
         {
             var initializer = sp.GetRequiredService<TInitializer>();

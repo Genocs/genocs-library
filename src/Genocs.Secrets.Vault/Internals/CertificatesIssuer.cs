@@ -55,7 +55,7 @@ internal sealed class CertificatesIssuer : ICertificatesIssuer
             return certificate;
         }
 
-        var privateKey = Convert.FromBase64String(credentials.Data.PrivateKeyContent
+        byte[] privateKey = Convert.FromBase64String(credentials.Data.PrivateKeyContent
             .Replace("-----BEGIN RSA PRIVATE KEY-----", string.Empty)
             .Replace("-----END RSA PRIVATE KEY-----", string.Empty));
 

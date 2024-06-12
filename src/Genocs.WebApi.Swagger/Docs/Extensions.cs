@@ -22,8 +22,7 @@ public static class Extensions
         return builder.AddSwaggerDocs(options);
     }
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder,
-        Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
+    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
     {
         var options = buildOptions(new SwaggerOptionsBuilder()).Build();
         return builder.AddSwaggerDocs(options);
@@ -88,7 +87,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Replaces leading double forward slash caused by an empty route prefix
+    /// Replaces leading double forward slash caused by an empty route prefix.
     /// </summary>
     /// <param name="route"></param>
     /// <returns></returns>

@@ -195,7 +195,7 @@ public static class Extensions
                                        string key,
                                        IVaultClient client,
                                        VaultSettings.LeaseSettings options,
-                                        IDictionary<string, string> configuration)
+                                       IDictionary<string, string> configuration)
         => options.Type.ToLowerInvariant() switch
         {
             "activedirectory" => SetActiveDirectorySecretsAsync(key, client, options, configuration),
