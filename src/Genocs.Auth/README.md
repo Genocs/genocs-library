@@ -37,6 +37,10 @@ Following are the project settings needed to enable monitoring
 
 ## Release notes
 
+### [2024-06-15] 6.0.0
+- Added support for Azure Key Vault
+- Unified settings
+
 ### [2024-01-23] 5.0.6
 - Refactory Settings
 - Updated nuget packages

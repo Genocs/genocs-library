@@ -9,7 +9,7 @@
         <Description>The persistence agnostic query builder library.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>5.0.0</Version>
+        <Version>6.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>

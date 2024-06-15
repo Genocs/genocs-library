@@ -9,7 +9,7 @@
         <Description>The tracing library to use Azure Service Bus.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>5.0.0</Version>
+        <Version>6.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
@@ -48,9 +48,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="5.0.*" />
-        <PackageReference Include="Genocs.Logging" Version="5.0.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="5.0.*" />
+        <PackageReference Include="Genocs.Core" Version="6.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="6.0.*" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="6.0.*" />
     </ItemGroup>
 
     <ItemGroup>

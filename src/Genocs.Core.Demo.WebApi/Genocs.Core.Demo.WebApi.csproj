@@ -20,13 +20,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="5.0.*" />
-        <PackageReference Include="Genocs.Core" Version="5.0.*" />
-        <PackageReference Include="Genocs.Logging" Version="5.0.*" />
-        <PackageReference Include="Genocs.Tracing" Version="5.0.*" />
-        <PackageReference Include="Genocs.HTTP" Version="5.0.*" />
-        <PackageReference Include="Genocs.Security" Version="5.0.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="5.0.*" />
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.0.*" />
+        <PackageReference Include="Genocs.Core" Version="6.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="6.0.*" />
+        <PackageReference Include="Genocs.Tracing" Version="6.0.*" />
+        <PackageReference Include="Genocs.HTTP" Version="6.0.*" />
+        <PackageReference Include="Genocs.Security" Version="6.0.*" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.0.*" />
     </ItemGroup>
 
     <ItemGroup>
