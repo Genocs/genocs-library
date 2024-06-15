@@ -1,12 +1,27 @@
-# .NET Core Base library
+# Genocs Security library
 
-This package contains a set of base functionalities designed by Genocs.
-The libraries can be used on both .NET6 and .NET7.
+This package contains the functionalities to be used to handle standard security concerns.
+The libraries can be used on .NET6, .NET7, .NET8.
 
 ## Description
 
-Core NuGet package contains general purpose functionalities to be used on DDD services.
+Following an example of how the key should be.
 
+**WARNING: DO NOT USE IT IN PROD!!!**
+
+``` xml
+<RSAKeyValue>
+    <Modulus>svbEQ96xMdgUpnkDiSaULDbM/HVFLHLc46BdyqwEzIhK+Ml2dqWq/RZIh8kLWmYwpB5gqfOya8Wid3GKIpq7Ke8ciV53qW/1ImOZZPxOtwX1mNzvIEagq80QJoMLphtU1ytPWRXvOjBdGUeTzmdV2kpHNax41n4Uv0QpOPIhzME=</Modulus>
+    <Exponent>AQAB</Exponent>
+    <P></P>
+    <Q></Q>
+    <DP></DP>
+    <DQ></DQ>
+    <InverseQ></InverseQ>
+    <D></D>
+</RSAKeyValue>"
+```
+  
 
 ## Support
 
@@ -15,45 +30,7 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
-### [2024-01-23] 5.0.6
+### [2024-06-15] 5.0.6
 - Refactory Settings
-- Updated nuget packages
 
-### [2023-11-25] 5.0.5
-- Moved to NET8
 
-### [yyyy-mm-dd] 5.0.4
-- 
-
-### [yyyy-mm-dd] 5.0.3
-- 
-
-### [yyyy-mm-dd] 5.0.2
-- 
-
-### [yyyy-mm-dd] 5.0.1
-- 
-
-### [2023-11-25] 5.0.0
-- Moved to NET8
-
-### [2023-10-13] 5.0.0-preview.5.0
-- Added [editorconfig](https://editorconfig.org/)
-- Added StyleCop
-- Updated logo
-- Updated readme
-
-### [2023-03-12] 5.0.0-preview.4.0
-- Implemented MongoDB repository interfaces
-
-### [2023-03-12] 5.0.0
-- New Architecture
-
-### [2023-03-12] 3.1.0
-- Added Builders
-
-### [2023-03-12] 3.0.0
-- Refactory to implement CQRS pattern
-
-### [2023-03-04] 2.4.1
-- Updated System.Text.Json

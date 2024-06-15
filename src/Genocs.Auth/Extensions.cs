@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Genocs.Auth.Options;
 
 namespace Genocs.Auth;
 
@@ -17,20 +21,24 @@ public static class Extensions
     private const string SectionName = "jwt";
     private const string RegistryName = "auth";
 
-    public static IGenocsBuilder AddJwt(this IGenocsBuilder builder, string sectionName = SectionName,
-        Action<JwtBearerOptions>? optionsFactory = null)
+    public static IGenocsBuilder AddJwt(
+                                        this IGenocsBuilder builder,
+                                        string sectionName = SectionName,
+                                        Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<JwtOptions>(sectionName);
+        var options = builder.GetOptions<JwtSettings>(sectionName);
         return builder.AddJwt(options, optionsFactory);
     }
 
-    private static IGenocsBuilder AddJwt(this IGenocsBuilder builder, JwtOptions options,
-        Action<JwtBearerOptions>? optionsFactory = null)
+    private static IGenocsBuilder AddJwt(
+                                        this IGenocsBuilder builder,
+                                        JwtSettings options,
+                                        Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
         {
@@ -74,7 +82,7 @@ public static class Extensions
         bool hasCertificate = false;
         if (options.Certificate is not null)
         {
-            X509Certificate2 certificate = null;
+            X509Certificate2? certificate = null;
             string password = options.Certificate.Password;
             bool hasPassword = !string.IsNullOrWhiteSpace(password);
             if (!string.IsNullOrWhiteSpace(options.Certificate.Location))
@@ -158,6 +166,45 @@ public static class Extensions
 
         builder.Services.AddSingleton(options);
         builder.Services.AddSingleton(tokenValidationParameters);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Enable OpenId Connect Authentication.
+    /// It can be used with Firebase Authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The configuration name. Default value is 'FirebaseAuthentication'.</param>
+    /// <returns>The Genocs builder you can use for chain.</returns>
+    public static IGenocsBuilder AddOpenIdJwt(
+                                                this IGenocsBuilder builder,
+                                                string sectionName = "openIdAuth")
+    {
+
+
+        var jwtSettings = new JwtSettings();
+        builder.Configuration.GetSection(sectionName).Bind(jwtSettings);
+
+        // Enable Firebase Authentication
+        string metadataAddress = $"{jwtSettings.Issuer}{jwtSettings.MetadataAddress}";
+        var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
+
+        builder.Services
+            .AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = jwtSettings.Challenge;
+                o.DefaultChallengeScheme = jwtSettings.Challenge;
+                o.DefaultScheme = jwtSettings.Challenge;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.IncludeErrorDetails = jwtSettings.IncludeErrorDetails;
+                o.RefreshOnIssuerKeyNotFound = jwtSettings.RefreshOnIssuerKeyNotFound;
+                o.MetadataAddress = metadataAddress;
+                o.ConfigurationManager = configurationManager;
+                o.Audience = jwtSettings.Audience;
+            });
 
         return builder;
     }
