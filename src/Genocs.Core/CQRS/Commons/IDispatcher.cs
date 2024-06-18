@@ -20,7 +20,7 @@ public interface IDispatcher
         where T : class, ICommand;
 
     /// <summary>
-    /// Generic event publisher 
+    /// Generic event publisher.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="event"></param>

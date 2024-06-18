@@ -11,7 +11,6 @@ public static class SecurityKeyBuilder
     /// </summary>
     /// <param name="secret">The secret key as xml string.</param>
     /// <returns>The created RSA.</returns>
-
     public static SecurityKey CreateRsaSecurityKey(string secret)
     {
         RSA rsa = RSA.Create();

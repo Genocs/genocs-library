@@ -2,7 +2,15 @@ namespace Genocs.Auth.Options;
 
 public class JwtSettings
 {
-    public bool AuthenticationDisabled { get; set; }
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "jwt";
+
+    /// <summary>
+    /// It is used to enable or disable the authentication.
+    /// </summary>
+    public bool Enabled { get; set; }
     public IEnumerable<string>? AllowAnonymousEndpoints { get; set; }
     public CertificateOptions? Certificate { get; set; }
     public string? Algorithm { get; set; }
@@ -10,6 +18,10 @@ public class JwtSettings
     public string? IssuerSigningKey { get; set; }
     public string? Authority { get; set; }
     public string? Audience { get; set; }
+
+    /// <summary>
+    /// This is the Authentication Scheme name.
+    /// </summary>
     public string Challenge { get; set; } = "Bearer";
     public string MetadataAddress { get; set; } = "/.well-known/openid-configuration";
     public bool SaveToken { get; set; } = true;

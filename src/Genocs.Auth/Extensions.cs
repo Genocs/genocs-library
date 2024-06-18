@@ -1,34 +1,34 @@
 using Genocs.Auth.Handlers;
+using Genocs.Auth.Options;
 using Genocs.Auth.Services;
 using Genocs.Core.Builders;
+using Genocs.Security.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Genocs.Auth.Options;
 
 namespace Genocs.Auth;
 
 public static class Extensions
 {
-    private const string SectionName = "jwt";
     private const string RegistryName = "auth";
 
     public static IGenocsBuilder AddJwt(
                                         this IGenocsBuilder builder,
-                                        string sectionName = SectionName,
+                                        string sectionName = JwtSettings.Position,
                                         Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = JwtSettings.Position;
         }
 
         var options = builder.GetOptions<JwtSettings>(sectionName);
@@ -37,7 +37,7 @@ public static class Extensions
 
     private static IGenocsBuilder AddJwt(
                                         this IGenocsBuilder builder,
-                                        JwtSettings options,
+                                        JwtSettings jwtSettings,
                                         Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
@@ -50,53 +50,53 @@ public static class Extensions
         builder.Services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
         builder.Services.AddTransient<AccessTokenValidatorMiddleware>();
 
-        if (options.AuthenticationDisabled)
+        if (!jwtSettings.Enabled)
         {
             builder.Services.AddSingleton<IPolicyEvaluator, DisabledAuthenticationPolicyEvaluator>();
         }
 
         var tokenValidationParameters = new TokenValidationParameters
         {
-            RequireAudience = options.RequireAudience,
-            ValidIssuer = options.ValidIssuer,
-            ValidIssuers = options.ValidIssuers,
-            ValidateActor = options.ValidateActor,
-            ValidAudience = options.ValidAudience,
-            ValidAudiences = options.ValidAudiences,
-            ValidateAudience = options.ValidateAudience,
-            ValidateIssuer = options.ValidateIssuer,
-            ValidateLifetime = options.ValidateLifetime,
-            ValidateTokenReplay = options.ValidateTokenReplay,
-            ValidateIssuerSigningKey = options.ValidateIssuerSigningKey,
-            SaveSigninToken = options.SaveSigninToken,
-            RequireExpirationTime = options.RequireExpirationTime,
-            RequireSignedTokens = options.RequireSignedTokens,
+            RequireAudience = jwtSettings.RequireAudience,
+            ValidIssuer = jwtSettings.ValidIssuer,
+            ValidIssuers = jwtSettings.ValidIssuers,
+            ValidateActor = jwtSettings.ValidateActor,
+            ValidAudience = jwtSettings.ValidAudience,
+            ValidAudiences = jwtSettings.ValidAudiences,
+            ValidateAudience = jwtSettings.ValidateAudience,
+            ValidateIssuer = jwtSettings.ValidateIssuer,
+            ValidateLifetime = jwtSettings.ValidateLifetime,
+            ValidateTokenReplay = jwtSettings.ValidateTokenReplay,
+            ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,
+            SaveSigninToken = jwtSettings.SaveSigninToken,
+            RequireExpirationTime = jwtSettings.RequireExpirationTime,
+            RequireSignedTokens = jwtSettings.RequireSignedTokens,
             ClockSkew = TimeSpan.Zero
         };
 
-        if (!string.IsNullOrWhiteSpace(options.AuthenticationType))
+        if (!string.IsNullOrWhiteSpace(jwtSettings.AuthenticationType))
         {
-            tokenValidationParameters.AuthenticationType = options.AuthenticationType;
+            tokenValidationParameters.AuthenticationType = jwtSettings.AuthenticationType;
         }
 
         bool hasCertificate = false;
-        if (options.Certificate is not null)
+        if (jwtSettings.Certificate is not null)
         {
             X509Certificate2? certificate = null;
-            string password = options.Certificate.Password;
+            string password = jwtSettings.Certificate.Password;
             bool hasPassword = !string.IsNullOrWhiteSpace(password);
-            if (!string.IsNullOrWhiteSpace(options.Certificate.Location))
+            if (!string.IsNullOrWhiteSpace(jwtSettings.Certificate.Location))
             {
                 certificate = hasPassword
-                    ? new X509Certificate2(options.Certificate.Location, password)
-                    : new X509Certificate2(options.Certificate.Location);
+                    ? new X509Certificate2(jwtSettings.Certificate.Location, password)
+                    : new X509Certificate2(jwtSettings.Certificate.Location);
                 string keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
-                Console.WriteLine($"Loaded X.509 certificate from location: '{options.Certificate.Location}' {keyType}.");
+                Console.WriteLine($"Loaded X.509 certificate from location: '{jwtSettings.Certificate.Location}' {keyType}.");
             }
 
-            if (!string.IsNullOrWhiteSpace(options.Certificate.RawData))
+            if (!string.IsNullOrWhiteSpace(jwtSettings.Certificate.RawData))
             {
-                byte[] rawData = Convert.FromBase64String(options.Certificate.RawData);
+                byte[] rawData = Convert.FromBase64String(jwtSettings.Certificate.RawData);
                 certificate = hasPassword
                     ? new X509Certificate2(rawData, password)
                     : new X509Certificate2(rawData);
@@ -106,9 +106,9 @@ public static class Extensions
 
             if (certificate is not null)
             {
-                if (string.IsNullOrWhiteSpace(options.Algorithm))
+                if (string.IsNullOrWhiteSpace(jwtSettings.Algorithm))
                 {
-                    options.Algorithm = SecurityAlgorithms.RsaSha256;
+                    jwtSettings.Algorithm = SecurityAlgorithms.RsaSha256;
                 }
 
                 hasCertificate = true;
@@ -118,53 +118,54 @@ public static class Extensions
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(options.IssuerSigningKey) && !hasCertificate)
+        if (!string.IsNullOrWhiteSpace(jwtSettings.IssuerSigningKey) && !hasCertificate)
         {
-            if (string.IsNullOrWhiteSpace(options.Algorithm) || hasCertificate)
+            if (string.IsNullOrWhiteSpace(jwtSettings.Algorithm) || hasCertificate)
             {
-                options.Algorithm = SecurityAlgorithms.HmacSha256;
+                jwtSettings.Algorithm = SecurityAlgorithms.HmacSha256;
             }
 
-            byte[] rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
+            byte[] rawKey = Encoding.UTF8.GetBytes(jwtSettings.IssuerSigningKey);
             tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(rawKey);
             Console.WriteLine("Using symmetric encryption for issuing tokens.");
         }
 
-        if (!string.IsNullOrWhiteSpace(options.NameClaimType))
+        if (!string.IsNullOrWhiteSpace(jwtSettings.NameClaimType))
         {
-            tokenValidationParameters.NameClaimType = options.NameClaimType;
+            tokenValidationParameters.NameClaimType = jwtSettings.NameClaimType;
         }
 
-        if (!string.IsNullOrWhiteSpace(options.RoleClaimType))
+        if (!string.IsNullOrWhiteSpace(jwtSettings.RoleClaimType))
         {
-            tokenValidationParameters.RoleClaimType = options.RoleClaimType;
+            tokenValidationParameters.RoleClaimType = jwtSettings.RoleClaimType;
         }
 
         builder.Services
             .AddAuthentication(o =>
             {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = jwtSettings.Challenge;
+                o.DefaultChallengeScheme = jwtSettings.Challenge;
+                o.DefaultScheme = jwtSettings.Challenge;
             })
             .AddJwtBearer(o =>
             {
-                o.Authority = options.Authority;
-                o.Audience = options.Audience;
-                o.MetadataAddress = options.MetadataAddress;
-                o.SaveToken = options.SaveToken;
-                o.RefreshOnIssuerKeyNotFound = options.RefreshOnIssuerKeyNotFound;
-                o.RequireHttpsMetadata = options.RequireHttpsMetadata;
-                o.IncludeErrorDetails = options.IncludeErrorDetails;
+                o.Authority = jwtSettings.Authority;
+                o.Audience = jwtSettings.Audience;
+                o.MetadataAddress = jwtSettings.MetadataAddress;
+                o.SaveToken = jwtSettings.SaveToken;
+                o.RefreshOnIssuerKeyNotFound = jwtSettings.RefreshOnIssuerKeyNotFound;
+                o.RequireHttpsMetadata = jwtSettings.RequireHttpsMetadata;
+                o.IncludeErrorDetails = jwtSettings.IncludeErrorDetails;
                 o.TokenValidationParameters = tokenValidationParameters;
-                if (!string.IsNullOrWhiteSpace(options.Challenge))
+                if (!string.IsNullOrWhiteSpace(jwtSettings.Challenge))
                 {
-                    o.Challenge = options.Challenge;
+                    o.Challenge = jwtSettings.Challenge;
                 }
 
                 optionsFactory?.Invoke(o);
             });
 
-        builder.Services.AddSingleton(options);
+        builder.Services.AddSingleton(jwtSettings);
         builder.Services.AddSingleton(tokenValidationParameters);
 
         return builder;
@@ -175,18 +176,16 @@ public static class Extensions
     /// It can be used with Firebase Authentication.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <param name="sectionName">The configuration name. Default value is 'FirebaseAuthentication'.</param>
+    /// <param name="sectionName">The configuration section name.</param>
     /// <returns>The Genocs builder you can use for chain.</returns>
     public static IGenocsBuilder AddOpenIdJwt(
                                                 this IGenocsBuilder builder,
-                                                string sectionName = "openIdAuth")
+                                                string sectionName = JwtSettings.Position)
     {
-
 
         var jwtSettings = new JwtSettings();
         builder.Configuration.GetSection(sectionName).Bind(jwtSettings);
 
-        // Enable Firebase Authentication
         string metadataAddress = $"{jwtSettings.Issuer}{jwtSettings.MetadataAddress}";
         var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
 
@@ -204,6 +203,57 @@ public static class Extensions
                 o.MetadataAddress = metadataAddress;
                 o.ConfigurationManager = configurationManager;
                 o.Audience = jwtSettings.Audience;
+            });
+
+        return builder;
+    }
+
+
+    /// <summary>
+    /// It adds the private key JWT authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The optional section name. Default name: 'jwt'.</param>
+    /// <returns>The Genocs builder you can use for chaining.</returns>
+    /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
+    public static IGenocsBuilder AddPrivateKeyJwt(
+                                    this IGenocsBuilder builder,
+                                    string sectionName = JwtSettings.Position)
+    {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = JwtSettings.Position;
+        }
+
+        var jwtSettings = new JwtSettings();
+        builder.Configuration.GetSection(sectionName).Bind(jwtSettings);
+
+        if (string.IsNullOrWhiteSpace(jwtSettings.IssuerSigningKey))
+        {
+            throw new InvalidOperationException("Issuer signing key is missing.");
+        }
+
+        SecurityKey signingKey = SecurityKeyBuilder.CreateRsaSecurityKey(jwtSettings.IssuerSigningKey);
+
+        builder.Services
+            .AddAuthentication(o =>
+            {
+                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.SaveToken = jwtSettings.SaveToken;
+                o.RequireHttpsMetadata = jwtSettings.RequireHttpsMetadata;
+                o.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = signingKey,
+                    ValidateAudience = jwtSettings.ValidateAudience,
+                    ValidAudience = jwtSettings.ValidAudience,
+                    ValidateIssuer = jwtSettings.ValidateIssuer,
+                    ValidIssuer = jwtSettings.ValidIssuer,
+                    ValidateLifetime = jwtSettings.ValidateLifetime,
+                    ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey
+                };
             });
 
         return builder;

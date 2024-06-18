@@ -52,5 +52,4 @@
         <PackageReference Include="Genocs.WebApi.Swagger" Version="6.0.*" />
         <PackageReference Include="Genocs.WebApi" Version="6.0.*" />
     </ItemGroup>
-
 </Project>

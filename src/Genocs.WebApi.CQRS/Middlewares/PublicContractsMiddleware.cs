@@ -86,8 +86,8 @@ public class PublicContractsMiddleware
         foreach (var @event in contracts.Where(t => typeof(IEvent).IsAssignableFrom(t) &&
                                                     t != typeof(RejectedEvent)))
         {
-            var instance = @event.GetDefaultInstance();
-            var name = instance.GetType().Name;
+            object? instance = @event.GetDefaultInstance();
+            string? name = instance?.GetType().Name;
 
             if (Contracts.Events.ContainsKey(name))
             {

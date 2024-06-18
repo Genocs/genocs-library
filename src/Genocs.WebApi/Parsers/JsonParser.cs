@@ -78,7 +78,7 @@ public class JsonParser
             case JsonValueKind.True:
             case JsonValueKind.False:
             case JsonValueKind.Null:
-                var key = _stack.Peek();
+                string key = _stack.Peek();
 
                 if (_data.ContainsKey(key))
                 {
