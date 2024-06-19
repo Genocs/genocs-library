@@ -1,3 +1,4 @@
+using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Core.Demo.WebApi.Options;
@@ -29,6 +30,7 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+    .AddPrivateKeyJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
