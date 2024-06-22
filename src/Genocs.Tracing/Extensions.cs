@@ -1,7 +1,7 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
+using Genocs.Logging.Configurations;
 using Genocs.Tracing.Jaeger.Options;
 using Jaeger.Samplers;
 using Jaeger.Senders.Thrift;
@@ -28,7 +28,7 @@ public static class Extensions
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
 
-        var appOptions = builder.GetOptions<AppSettings>(AppSettings.Position);
+        var appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
 
         // No OpenTelemetryTracing in case of missing ServiceName
         if (string.IsNullOrWhiteSpace(appOptions.Service))
@@ -47,7 +47,7 @@ public static class Extensions
                                                         .AddEnvironmentVariableDetector())
                                                     .AddSource("*");
 
-            var loggerOptions = builder.GetOptions<LoggerSettings>(LoggerSettings.Position);
+            var loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
 
             // No OpenTelemetryTracing in case of missing LoggerSettings
             if (loggerOptions != null)

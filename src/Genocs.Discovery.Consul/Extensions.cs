@@ -1,12 +1,12 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul.Builders;
+using Genocs.Discovery.Consul.Configurations;
 using Genocs.Discovery.Consul.Http;
 using Genocs.Discovery.Consul.MessageHandlers;
 using Genocs.Discovery.Consul.Models;
-using Genocs.Discovery.Consul.Options;
 using Genocs.Discovery.Consul.Services;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Discovery.Consul;
@@ -27,15 +27,15 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var consulOptions = builder.GetOptions<ConsulSettings>(sectionName);
-        var httpClientOptions = builder.GetOptions<HttpClientSettings>(httpClientSectionName);
+        var consulOptions = builder.GetOptions<ConsulOptions>(sectionName);
+        var httpClientOptions = builder.GetOptions<HttpClientOptions>(httpClientSectionName);
         return builder.AddConsul(consulOptions, httpClientOptions);
     }
 
     public static IGenocsBuilder AddConsul(
                                             this IGenocsBuilder builder,
                                             Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildOptions,
-                                            HttpClientSettings httpClientOptions)
+                                            HttpClientOptions httpClientOptions)
     {
         var options = buildOptions(new ConsulOptionsBuilder()).Build();
         return builder.AddConsul(options, httpClientOptions);
@@ -43,8 +43,8 @@ public static class Extensions
 
     public static IGenocsBuilder AddConsul(
                                             this IGenocsBuilder builder,
-                                            ConsulSettings options,
-                                            HttpClientSettings httpClientOptions)
+                                            ConsulOptions options,
+                                            HttpClientOptions httpClientOptions)
     {
         builder.Services.AddSingleton(options);
         if (!options.Enabled || !builder.TryRegister(RegistryName))
@@ -78,9 +78,9 @@ public static class Extensions
         => builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>(clientName)
             .AddHttpMessageHandler(c => new ConsulServiceDiscoveryMessageHandler(
                 c.GetRequiredService<IConsulServicesRegistry>(),
-                c.GetRequiredService<ConsulSettings>(), serviceName, true));
+                c.GetRequiredService<ConsulOptions>(), serviceName, true));
 
-    private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulSettings options)
+    private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
     {
         bool enabled = options.Enabled;
         string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();

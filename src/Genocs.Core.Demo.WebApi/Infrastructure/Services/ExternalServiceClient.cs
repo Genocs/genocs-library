@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.Demo.WebApi.Options;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.Security;
 using Newtonsoft.Json;
 
@@ -26,7 +26,7 @@ public class ExternalServiceClient : IExternalServiceClient
     public ExternalServiceClient(
                                 IHttpClient client,
                                 IHasher hasher,
-                                HttpClientSettings httpClientSettings,
+                                HttpClientOptions httpClientSettings,
                                 ExternalServiceSettings externalServiceSettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));

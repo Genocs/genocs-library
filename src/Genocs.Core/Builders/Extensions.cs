@@ -1,4 +1,4 @@
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -20,18 +20,18 @@ public static class Extensions
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
         var builder = GenocsBuilder.Create(services, configuration);
-        var options = builder.GetOptions<AppSettings>(AppSettings.Position);
-        services.AddSingleton(options);
+        var settings = builder.GetOptions<AppOptions>(AppOptions.Position);
+        services.AddSingleton(settings);
 
         builder.Services.AddMemoryCache();
         services.AddSingleton<IServiceId, ServiceId>();
-        if (!options.DisplayBanner || string.IsNullOrWhiteSpace(options.Name))
+        if (!settings.DisplayBanner || string.IsNullOrWhiteSpace(settings.Name))
         {
             return builder;
         }
 
-        string version = options.DisplayVersion ? $" {options.Version}" : string.Empty;
-        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(options.Name + version));
+        string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
+        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(settings.Name + version));
         ConsoleColor current = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());

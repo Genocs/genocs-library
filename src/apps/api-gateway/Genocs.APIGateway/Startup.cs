@@ -1,7 +1,7 @@
 using Genocs.APIGateway.Framework;
 using Genocs.APIGateway.Options;
 using Genocs.Auth;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
@@ -90,7 +90,7 @@ internal class Startup
         {
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppSettings>()?.Name ?? "Service");
+                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
             });
             endpoints.MapReverseProxy();
 

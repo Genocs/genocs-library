@@ -1,4 +1,4 @@
-using Genocs.Auth.Options;
+using Genocs.Auth.Configurations;
 
 namespace Genocs.Auth;
 
@@ -10,5 +10,5 @@ public interface IJwtOptionsBuilder
     IJwtOptionsBuilder WithLifetimeValidation(bool validateLifetime);
     IJwtOptionsBuilder WithAudienceValidation(bool validateAudience);
     IJwtOptionsBuilder WithValidAudience(string validAudience);
-    JwtSettings Build();
+    JwtOptions Build();
 }

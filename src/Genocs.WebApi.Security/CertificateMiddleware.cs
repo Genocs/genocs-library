@@ -1,3 +1,4 @@
+using Genocs.WebApi.Security.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
@@ -8,16 +9,16 @@ internal sealed class CertificateMiddleware : IMiddleware
 {
     private readonly ICertificatePermissionValidator _certificatePermissionValidator;
     private readonly ILogger<CertificateMiddleware> _logger;
-    private readonly SecuritySettings.CertificateSettings _options;
+    private readonly SecurityOptions.CertificateOptions _options;
     private readonly HashSet<string> _allowedHosts;
-    private readonly IDictionary<string, SecuritySettings.CertificateSettings.AclSettings> _acl;
+    private readonly IDictionary<string, SecurityOptions.CertificateOptions.AclOptions> _acl;
     private readonly IDictionary<string, string> _subjects = new Dictionary<string, string>();
     private readonly bool _validateAcl;
     private readonly bool _skipRevocationCheck;
 
     public CertificateMiddleware(
                                     ICertificatePermissionValidator certificatePermissionValidator,
-                                    SecuritySettings options,
+                                    SecurityOptions options,
                                     ILogger<CertificateMiddleware> logger)
     {
         _certificatePermissionValidator = certificatePermissionValidator;
@@ -32,7 +33,7 @@ internal sealed class CertificateMiddleware : IMiddleware
             return;
         }
 
-        _acl = new Dictionary<string, SecuritySettings.CertificateSettings.AclSettings>();
+        _acl = new Dictionary<string, SecurityOptions.CertificateOptions.AclOptions>();
         foreach (var (key, acl) in _options.Acl)
         {
             if (!string.IsNullOrWhiteSpace(acl.ValidIssuer) && !acl.ValidIssuer.StartsWith("CN="))
@@ -77,7 +78,7 @@ internal sealed class CertificateMiddleware : IMiddleware
             return next(context);
         }
 
-        SecuritySettings.CertificateSettings.AclSettings acl;
+        SecurityOptions.CertificateOptions.AclOptions acl;
         if (_subjects.TryGetValue(certificate.Subject, out string? subject))
         {
             if (!_acl.TryGetValue(subject, out var existingAcl))

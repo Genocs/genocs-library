@@ -1,54 +1,54 @@
-using Genocs.Metrics.AppMetrics.Options;
+using Genocs.Metrics.AppMetrics.Configurations;
 
 namespace Genocs.Metrics.AppMetrics.Builders;
 
-internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
+internal sealed class MetricsOptionsBuilder : IMetricsSettingsBuilder
 {
     private readonly MetricsSettings _options = new();
 
-    public IMetricsOptionsBuilder Enable(bool enabled)
+    public IMetricsSettingsBuilder Enable(bool enabled)
     {
         _options.Enabled = enabled;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithInfluxEnabled(bool influxEnabled)
+    public IMetricsSettingsBuilder WithInfluxEnabled(bool influxEnabled)
     {
         _options.InfluxEnabled = influxEnabled;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithPrometheusEnabled(bool prometheusEnabled)
+    public IMetricsSettingsBuilder WithPrometheusEnabled(bool prometheusEnabled)
     {
         _options.PrometheusEnabled = prometheusEnabled;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithPrometheusFormatter(string prometheusFormatter)
+    public IMetricsSettingsBuilder WithPrometheusFormatter(string prometheusFormatter)
     {
         _options.PrometheusFormatter = prometheusFormatter;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithInfluxUrl(string influxUrl)
+    public IMetricsSettingsBuilder WithInfluxUrl(string influxUrl)
     {
         _options.InfluxUrl = influxUrl;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithDatabase(string database)
+    public IMetricsSettingsBuilder WithDatabase(string database)
     {
         _options.Database = database;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithInterval(int interval)
+    public IMetricsSettingsBuilder WithInterval(int interval)
     {
         _options.Interval = interval;
         return this;
     }
 
-    public IMetricsOptionsBuilder WithTags(IDictionary<string, string> tags)
+    public IMetricsSettingsBuilder WithTags(IDictionary<string, string> tags)
     {
         _options.Tags = tags;
         return this;

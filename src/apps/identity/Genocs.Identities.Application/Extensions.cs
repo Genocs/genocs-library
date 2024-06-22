@@ -1,5 +1,5 @@
 using Genocs.Auth;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
@@ -106,7 +106,7 @@ public static class Extensions
     }
 
     public static async Task GetAppName(this HttpContext httpContext)
-        => await httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppSettings>()?.Name ?? string.Empty);
+        => await httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppOptions>()?.Name ?? string.Empty);
 
     internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true

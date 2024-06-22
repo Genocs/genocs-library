@@ -1,4 +1,4 @@
-using Genocs.Auth.Options;
+using Genocs.Auth.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -14,11 +14,11 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
     public InMemoryAccessTokenService(
                                         IMemoryCache cache,
                                         IHttpContextAccessor httpContextAccessor,
-                                        JwtSettings jwtOptions)
+                                        JwtOptions jwtSettings)
     {
         _cache = cache;
         _httpContextAccessor = httpContextAccessor;
-        _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
+        _expires = jwtSettings.Expiry ?? TimeSpan.FromMinutes(jwtSettings.ExpiryMinutes);
     }
 
     public Task<bool> IsCurrentActiveToken()

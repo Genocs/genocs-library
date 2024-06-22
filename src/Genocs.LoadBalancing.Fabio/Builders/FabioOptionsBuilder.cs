@@ -1,4 +1,4 @@
-using Genocs.LoadBalancing.Fabio.Options;
+using Genocs.LoadBalancing.Fabio.Configurations;
 
 namespace Genocs.LoadBalancing.Fabio.Builders;
 
@@ -7,7 +7,7 @@ namespace Genocs.LoadBalancing.Fabio.Builders;
 /// </summary>
 public class FabioOptionsBuilder : IFabioOptionsBuilder
 {
-    private readonly FabioSettings _options = new();
+    private readonly FabioOptions _options = new();
 
     /// <summary>
     /// Enable or disable the Fabio load balancer
@@ -46,5 +46,5 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
     /// Build the Fabio options
     /// </summary>
     /// <returns>The Fabio options</returns>
-    public FabioSettings Build() => _options;
+    public FabioOptions Build() => _options;
 }

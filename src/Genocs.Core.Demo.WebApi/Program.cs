@@ -6,6 +6,7 @@ using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
+using Genocs.WebApi.Security;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
@@ -30,7 +31,6 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
-    .AddPrivateKeyJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())

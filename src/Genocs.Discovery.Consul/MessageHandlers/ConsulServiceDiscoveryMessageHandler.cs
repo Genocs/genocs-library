@@ -1,29 +1,34 @@
-using Genocs.Discovery.Consul.Options;
+using Genocs.Discovery.Consul.Configurations;
 
 namespace Genocs.Discovery.Consul.MessageHandlers;
 
 internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
-    private readonly ConsulSettings _options;
+    private readonly ConsulOptions _settings;
     private readonly string? _serviceName;
     private readonly bool? _overrideRequestUri;
 
     public ConsulServiceDiscoveryMessageHandler(
                                                 IConsulServicesRegistry servicesRegistry,
-                                                ConsulSettings options,
+                                                ConsulOptions settings,
                                                 string? serviceName = null,
                                                 bool? overrideRequestUri = null)
     {
-        if (string.IsNullOrWhiteSpace(options.Url))
+        _servicesRegistry = servicesRegistry;
+        _settings = settings;
+        _serviceName = serviceName;
+        _overrideRequestUri = overrideRequestUri;
+
+        if (!settings.Enabled)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(settings.Url))
         {
             throw new InvalidOperationException("Consul URL was not provided.");
         }
-
-        _servicesRegistry = servicesRegistry;
-        _options = options;
-        _serviceName = serviceName;
-        _overrideRequestUri = overrideRequestUri;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
@@ -50,7 +55,7 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
                                                         Uri uri,
                                                         CancellationToken cancellationToken)
     {
-        if (!_options.Enabled)
+        if (!_settings.Enabled)
         {
             return await base.SendAsync(request, cancellationToken);
         }
@@ -68,7 +73,7 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
         var service = await _servicesRegistry.GetAsync(serviceName)
             ?? throw new ConsulServiceNotFoundException($"Consul service: '{serviceName}' was not found.", serviceName);
 
-        if (!_options.SkipLocalhostDockerDnsReplace)
+        if (!_settings.SkipLocalhostDockerDnsReplace)
         {
             service.Address = service.Address.Replace("docker.for.mac.localhost", "localhost")
                 .Replace("docker.for.win.localhost", "localhost")

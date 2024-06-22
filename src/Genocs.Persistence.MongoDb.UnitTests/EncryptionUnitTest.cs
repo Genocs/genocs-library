@@ -1,5 +1,4 @@
 using Genocs.Persistence.MongoDb.Encryptions;
-using Genocs.Persistence.MongoDb.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Moq;

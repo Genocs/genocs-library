@@ -1,13 +1,13 @@
-using Genocs.LoadBalancing.Fabio.Options;
+using Genocs.LoadBalancing.Fabio.Configurations;
 
 namespace Genocs.LoadBalancing.Fabio.MessageHandlers;
 
 internal sealed class FabioMessageHandler : DelegatingHandler
 {
-    private readonly FabioSettings _options;
+    private readonly FabioOptions _options;
     private readonly string _servicePath;
 
-    public FabioMessageHandler(FabioSettings options, string? serviceName = null)
+    public FabioMessageHandler(FabioOptions options, string? serviceName = null)
     {
         if (string.IsNullOrWhiteSpace(options.Url))
         {

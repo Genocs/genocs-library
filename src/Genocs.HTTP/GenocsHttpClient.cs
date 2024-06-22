@@ -1,4 +1,4 @@
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Polly;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,12 +12,12 @@ public class GenocsHttpClient : IHttpClient
 {
     private const string JsonContentType = "application/json";
     private readonly HttpClient _client;
-    private readonly HttpClientSettings _options;
+    private readonly HttpClientOptions _options;
     private readonly IHttpClientSerializer _serializer;
 
     public GenocsHttpClient(
                             HttpClient client,
-                            HttpClientSettings options,
+                            HttpClientOptions options,
                             IHttpClientSerializer serializer,
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)

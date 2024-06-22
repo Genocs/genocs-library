@@ -1,5 +1,5 @@
+using Genocs.Auth.Configurations;
 using Genocs.Auth.Handlers;
-using Genocs.Auth.Options;
 using Genocs.Auth.Services;
 using Genocs.Core.Builders;
 using Genocs.Security.Services;
@@ -23,21 +23,21 @@ public static class Extensions
 
     public static IGenocsBuilder AddJwt(
                                         this IGenocsBuilder builder,
-                                        string sectionName = JwtSettings.Position,
+                                        string sectionName = JwtOptions.Position,
                                         Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = JwtSettings.Position;
+            sectionName = JwtOptions.Position;
         }
 
-        var options = builder.GetOptions<JwtSettings>(sectionName);
+        var options = builder.GetOptions<JwtOptions>(sectionName);
         return builder.AddJwt(options, optionsFactory);
     }
 
     private static IGenocsBuilder AddJwt(
                                         this IGenocsBuilder builder,
-                                        JwtSettings jwtSettings,
+                                        JwtOptions jwtSettings,
                                         Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
@@ -180,10 +180,10 @@ public static class Extensions
     /// <returns>The Genocs builder you can use for chain.</returns>
     public static IGenocsBuilder AddOpenIdJwt(
                                                 this IGenocsBuilder builder,
-                                                string sectionName = JwtSettings.Position)
+                                                string sectionName = JwtOptions.Position)
     {
 
-        var jwtSettings = new JwtSettings();
+        var jwtSettings = new JwtOptions();
         builder.Configuration.GetSection(sectionName).Bind(jwtSettings);
 
         string metadataAddress = $"{jwtSettings.Issuer}{jwtSettings.MetadataAddress}";
@@ -218,14 +218,14 @@ public static class Extensions
     /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
     public static IGenocsBuilder AddPrivateKeyJwt(
                                     this IGenocsBuilder builder,
-                                    string sectionName = JwtSettings.Position)
+                                    string sectionName = JwtOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = JwtSettings.Position;
+            sectionName = JwtOptions.Position;
         }
 
-        var jwtSettings = new JwtSettings();
+        var jwtSettings = new JwtOptions();
         builder.Configuration.GetSection(sectionName).Bind(jwtSettings);
 
         if (string.IsNullOrWhiteSpace(jwtSettings.IssuerSigningKey))

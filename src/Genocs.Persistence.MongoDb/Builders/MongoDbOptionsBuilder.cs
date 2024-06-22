@@ -1,11 +1,10 @@
-using Genocs.Persistence.MongoDb.Options;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Configurations;
 
 namespace Genocs.Persistence.MongoDb.Builders;
 
 internal sealed class MongoDbOptionsBuilder : IMongoDbOptionsBuilder
 {
-    private readonly MongoDbSettings _options = new();
+    private readonly MongoDbOptions _options = new();
 
     public IMongoDbOptionsBuilder WithConnectionString(string connectionString)
     {
@@ -25,6 +24,6 @@ internal sealed class MongoDbOptionsBuilder : IMongoDbOptionsBuilder
         return this;
     }
 
-    public MongoDbSettings Build()
+    public MongoDbOptions Build()
         => _options;
 }

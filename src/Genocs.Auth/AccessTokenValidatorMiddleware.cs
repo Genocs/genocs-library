@@ -1,4 +1,4 @@
-using Genocs.Auth.Options;
+using Genocs.Auth.Configurations;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
@@ -17,7 +17,7 @@ public class AccessTokenValidatorMiddleware : IMiddleware
     /// </summary>
     /// <param name="accessTokenService">The access token service.</param>
     /// <param name="options">The options.</param>
-    public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtSettings options)
+    public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtOptions options)
     {
         _accessTokenService = accessTokenService;
         _endpoints = options.AllowAnonymousEndpoints ?? Enumerable.Empty<string>();

@@ -1,11 +1,11 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 
 namespace Genocs.LoadBalancing.Fabio.Http;
 
 internal sealed class FabioHttpClient : GenocsHttpClient, IFabioHttpClient
 {
-    public FabioHttpClient(HttpClient client, HttpClientSettings options, IHttpClientSerializer serializer,
+    public FabioHttpClient(HttpClient client, HttpClientOptions options, IHttpClientSerializer serializer,
         ICorrelationContextFactory correlationContextFactory, ICorrelationIdFactory correlationIdFactory)
         : base(client, options, serializer, correlationContextFactory, correlationIdFactory)
     {

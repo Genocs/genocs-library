@@ -1,6 +1,6 @@
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
+using Genocs.Logging.Configurations;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,16 +31,16 @@ public static class Extensions
             {
                 if (string.IsNullOrWhiteSpace(loggerSectionName))
                 {
-                    loggerSectionName = LoggerSettings.Position;
+                    loggerSectionName = LoggerOptions.Position;
                 }
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppSettings.Position;
+                    appSectionName = AppOptions.Position;
                 }
 
-                var loggerOptions = context.Configuration.GetOptions<LoggerSettings>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
+                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
+                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
@@ -52,48 +52,48 @@ public static class Extensions
         => builder.MapPost(endpointRoute, LevelSwitch);
 
     private static void MapOptions(
-                                   LoggerSettings loggerOptions,
-                                   AppSettings appOptions,
+                                   LoggerOptions loggerSettings,
+                                   AppOptions appSettings,
                                    LoggerConfiguration loggerConfiguration,
                                    string environmentName)
     {
-        LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
+        LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerSettings.Level);
 
         loggerConfiguration.Enrich.FromLogContext()
             .MinimumLevel.ControlledBy(LoggingLevelSwitch)
             .Enrich.WithProperty("Environment", environmentName)
-            .Enrich.WithProperty("Application", appOptions.Service)
-            .Enrich.WithProperty("Instance", appOptions.Instance)
-            .Enrich.WithProperty("Version", appOptions.Version);
+            .Enrich.WithProperty("Application", appSettings.Service)
+            .Enrich.WithProperty("Instance", appSettings.Instance)
+            .Enrich.WithProperty("Version", appSettings.Version);
 
-        foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
+        foreach (var (key, value) in loggerSettings.Tags ?? new Dictionary<string, object>())
         {
             loggerConfiguration.Enrich.WithProperty(key, value);
         }
 
-        foreach (var (key, value) in loggerOptions.MinimumLevelOverrides ?? new Dictionary<string, string>())
+        foreach (var (key, value) in loggerSettings.MinimumLevelOverrides ?? new Dictionary<string, string>())
         {
             var logLevel = GetLogEventLevel(value);
             loggerConfiguration.MinimumLevel.Override(key, logLevel);
         }
 
-        loggerOptions.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
+        loggerSettings.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty<string>("RequestPath", n => n.EndsWith(p))));
 
-        loggerOptions.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
+        loggerSettings.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty(p)));
 
-        Configure(loggerConfiguration, loggerOptions);
+        Configure(loggerConfiguration, loggerSettings);
     }
 
-    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerSettings options)
+    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
     {
-        var consoleOptions = options.Console ?? new ConsoleSettings();
-        var fileOptions = options.File ?? new LocalFileSettings();
-        var elkOptions = options.Elk ?? new ElkSettings();
-        var seqOptions = options.Seq ?? new SeqSettings();
-        var lokiOptions = options.Loki ?? new LokiSettings();
-        var azureOptions = options.Azure ?? new AzureSettings();
+        var consoleOptions = options.Console ?? new ConsoleOptions();
+        var fileOptions = options.File ?? new LocalFileOptions();
+        var elkOptions = options.Elk ?? new ElkOptions();
+        var seqOptions = options.Seq ?? new SeqOptions();
+        var lokiOptions = options.Loki ?? new LokiOptions();
+        var azureOptions = options.Azure ?? new AzureOptions();
 
         // console
         if (consoleOptions.Enabled)

@@ -1,5 +1,5 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.MessageBrokers;
 using Microsoft.AspNetCore.Http;
 
@@ -14,7 +14,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
     private readonly string _header;
 
     public CorrelationIdFactory(IMessagePropertiesAccessor messagePropertiesAccessor,
-        IHttpContextAccessor httpContextAccessor, HttpClientSettings httpClientOptions)
+        IHttpContextAccessor httpContextAccessor, HttpClientOptions httpClientOptions)
     {
         _messagePropertiesAccessor = messagePropertiesAccessor;
         _httpContextAccessor = httpContextAccessor;

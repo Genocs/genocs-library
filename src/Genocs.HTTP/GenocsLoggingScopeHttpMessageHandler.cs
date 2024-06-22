@@ -1,4 +1,4 @@
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -10,7 +10,7 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
     private readonly HashSet<string> _maskedRequestUrlParts;
     private readonly string _maskTemplate;
 
-    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings options)
+    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientOptions options)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _ = options ?? throw new ArgumentNullException(nameof(options));
