@@ -5,27 +5,27 @@ namespace Genocs.Discovery.Consul.MessageHandlers;
 internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
-    private readonly ConsulOptions _settings;
+    private readonly ConsulOptions _options;
     private readonly string? _serviceName;
     private readonly bool? _overrideRequestUri;
 
     public ConsulServiceDiscoveryMessageHandler(
                                                 IConsulServicesRegistry servicesRegistry,
-                                                ConsulOptions settings,
+                                                ConsulOptions options,
                                                 string? serviceName = null,
                                                 bool? overrideRequestUri = null)
     {
         _servicesRegistry = servicesRegistry;
-        _settings = settings;
+        _options = options;
         _serviceName = serviceName;
         _overrideRequestUri = overrideRequestUri;
 
-        if (!settings.Enabled)
+        if (!options.Enabled)
         {
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(settings.Url))
+        if (string.IsNullOrWhiteSpace(options.Url))
         {
             throw new InvalidOperationException("Consul URL was not provided.");
         }
@@ -55,7 +55,7 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
                                                         Uri uri,
                                                         CancellationToken cancellationToken)
     {
-        if (!_settings.Enabled)
+        if (!_options.Enabled)
         {
             return await base.SendAsync(request, cancellationToken);
         }
@@ -73,7 +73,7 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
         var service = await _servicesRegistry.GetAsync(serviceName)
             ?? throw new ConsulServiceNotFoundException($"Consul service: '{serviceName}' was not found.", serviceName);
 
-        if (!_settings.SkipLocalhostDockerDnsReplace)
+        if (!_options.SkipLocalhostDockerDnsReplace)
         {
             service.Address = service.Address.Replace("docker.for.mac.localhost", "localhost")
                 .Replace("docker.for.win.localhost", "localhost")

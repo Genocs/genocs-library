@@ -1,6 +1,6 @@
 ﻿namespace Genocs.Core.Demo.WebApi.Options;
 
-public class SecretSettings
+public class SecretOptions
 {
     /// <summary>
     /// Default section name.

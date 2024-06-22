@@ -1,11 +1,11 @@
-namespace Genocs.APIGateway.Options;
+namespace Genocs.APIGateway.Configurations;
 
-internal class MessagingSettings
+internal class MessagingOptions
 {
     public bool Enabled { get; set; }
-    public IEnumerable<EndpointSettings>? Endpoints { get; set; }
+    public IEnumerable<EndpointOptions>? Endpoints { get; set; }
 
-    internal class EndpointSettings
+    internal class EndpointOptions
     {
         public string? Method { get; set; }
         public string? Path { get; set; }

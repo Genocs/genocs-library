@@ -1,6 +1,6 @@
 ﻿namespace Genocs.Core.Demo.WebApi.Options;
 
-public class ExternalServiceSettings
+public class ExternalServiceOptions
 {
     public const string Position = "ExternalService";
 

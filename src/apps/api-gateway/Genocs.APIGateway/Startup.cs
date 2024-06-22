@@ -1,5 +1,5 @@
+using Genocs.APIGateway.Configurations;
 using Genocs.APIGateway.Framework;
-using Genocs.APIGateway.Options;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
@@ -32,7 +32,7 @@ internal class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICorrelationContextBuilder, CorrelationContextBuilder>();
         services.AddSingleton<RouteMatcher>();
-        services.Configure<MessagingSettings>(Configuration.GetSection("messaging"));
+        services.Configure<MessagingOptions>(Configuration.GetSection("messaging"));
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();

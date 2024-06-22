@@ -20,9 +20,9 @@ public class ConsulOptions
     public IDictionary<string, string>? Meta { get; set; }
     public bool EnableTagOverride { get; set; }
     public bool SkipLocalhostDockerDnsReplace { get; set; }
-    public ConnectSettings? Connect { get; set; }
+    public ConnectOptions? Connect { get; set; }
 
-    public class ConnectSettings
+    public class ConnectOptions
     {
         public bool Enabled { get; set; }
     }

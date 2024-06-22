@@ -1,4 +1,4 @@
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,13 +10,13 @@ internal sealed class OutboxProcessor : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IBusPublisher _publisher;
-    private readonly OutboxSettings _options;
+    private readonly OutboxOptions _options;
     private readonly ILogger<OutboxProcessor> _logger;
     private readonly TimeSpan _interval;
     private readonly OutboxType _type;
     private Timer _timer;
 
-    public OutboxProcessor(IServiceProvider serviceProvider, IBusPublisher publisher, OutboxSettings options,
+    public OutboxProcessor(IServiceProvider serviceProvider, IBusPublisher publisher, OutboxOptions options,
         ILogger<OutboxProcessor> logger)
     {
         if (options.Enabled && options.IntervalMilliseconds <= 0)

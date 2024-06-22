@@ -14,7 +14,7 @@ public class ExternalServiceClient : IExternalServiceClient
     private readonly IHttpClient _client;
     private readonly string _url;
     private readonly IHasher _hasher;
-    private readonly ExternalServiceSettings _externalServiceSettings;
+    private readonly ExternalServiceOptions _externalServiceSettings;
 
     /// <summary>
     /// The standard constructor.
@@ -27,7 +27,7 @@ public class ExternalServiceClient : IExternalServiceClient
                                 IHttpClient client,
                                 IHasher hasher,
                                 HttpClientOptions httpClientSettings,
-                                ExternalServiceSettings externalServiceSettings)
+                                ExternalServiceOptions externalServiceSettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));

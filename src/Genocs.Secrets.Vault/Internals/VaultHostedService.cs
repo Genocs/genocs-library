@@ -1,4 +1,4 @@
-using Genocs.Secrets.Vault.Options;
+using Genocs.Secrets.Vault.Configurations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VaultSharp;
@@ -11,7 +11,7 @@ internal sealed class VaultHostedService : BackgroundService
     private readonly ILeaseService _leaseService;
     private readonly ICertificatesIssuer _certificatesIssuer;
     private readonly ICertificatesService _certificatesService;
-    private readonly VaultSettings _options;
+    private readonly VaultOptions _options;
     private readonly ILogger<VaultHostedService> _logger;
     private readonly int _interval;
 
@@ -20,7 +20,7 @@ internal sealed class VaultHostedService : BackgroundService
                                 ILeaseService leaseService,
                                 ICertificatesIssuer certificatesIssuer,
                                 ICertificatesService certificatesService,
-                                VaultSettings options,
+                                VaultOptions options,
                                 ILogger<VaultHostedService> logger)
     {
         _client = client;

@@ -2,7 +2,7 @@ using Genocs.HTTP;
 using Genocs.HTTP.Configurations;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Secrets.Vault;
-using Genocs.Secrets.Vault.Options;
+using Genocs.Secrets.Vault.Configurations;
 using Genocs.WebApi.Security.Configurations;
 
 namespace Genocs.Orders.WebApi.Services;
@@ -27,7 +27,7 @@ public class ProductServiceClient : IProductServiceClient
                                 IHttpClient client,
                                 ICertificatesService certificatesService,
                                 HttpClientOptions httpClientOptions,
-                                VaultSettings vaultOptions,
+                                VaultOptions vaultOptions,
                                 SecurityOptions securityOptions)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));

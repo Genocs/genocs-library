@@ -2,58 +2,58 @@ using Genocs.Metrics.AppMetrics.Configurations;
 
 namespace Genocs.Metrics.AppMetrics.Builders;
 
-internal sealed class MetricsOptionsBuilder : IMetricsSettingsBuilder
+internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
 {
-    private readonly MetricsSettings _options = new();
+    private readonly MetricsOptions _options = new();
 
-    public IMetricsSettingsBuilder Enable(bool enabled)
+    public IMetricsOptionsBuilder Enable(bool enabled)
     {
         _options.Enabled = enabled;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithInfluxEnabled(bool influxEnabled)
+    public IMetricsOptionsBuilder WithInfluxEnabled(bool influxEnabled)
     {
         _options.InfluxEnabled = influxEnabled;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithPrometheusEnabled(bool prometheusEnabled)
+    public IMetricsOptionsBuilder WithPrometheusEnabled(bool prometheusEnabled)
     {
         _options.PrometheusEnabled = prometheusEnabled;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithPrometheusFormatter(string prometheusFormatter)
+    public IMetricsOptionsBuilder WithPrometheusFormatter(string prometheusFormatter)
     {
         _options.PrometheusFormatter = prometheusFormatter;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithInfluxUrl(string influxUrl)
+    public IMetricsOptionsBuilder WithInfluxUrl(string influxUrl)
     {
         _options.InfluxUrl = influxUrl;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithDatabase(string database)
+    public IMetricsOptionsBuilder WithDatabase(string database)
     {
         _options.Database = database;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithInterval(int interval)
+    public IMetricsOptionsBuilder WithInterval(int interval)
     {
         _options.Interval = interval;
         return this;
     }
 
-    public IMetricsSettingsBuilder WithTags(IDictionary<string, string> tags)
+    public IMetricsOptionsBuilder WithTags(IDictionary<string, string> tags)
     {
         _options.Tags = tags;
         return this;
     }
 
-    public MetricsSettings Build()
+    public MetricsOptions Build()
         => _options;
 }

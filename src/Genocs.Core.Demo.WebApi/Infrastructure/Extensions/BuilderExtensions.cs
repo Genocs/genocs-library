@@ -26,8 +26,7 @@ public static class BuilderExtensions
         builder.AddHttpClient();
 
         // Add the External Service settings
-        var settings = new ExternalServiceSettings();
-        builder.Configuration.GetSection(ExternalServiceSettings.Position).Bind(settings);
+        ExternalServiceOptions settings = builder.Configuration.GetOptions<ExternalServiceOptions>(ExternalServiceOptions.Position);
         builder.Services.AddSingleton(settings);
 
         // Add the External Service http Client

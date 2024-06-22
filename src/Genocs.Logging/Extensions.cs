@@ -52,38 +52,38 @@ public static class Extensions
         => builder.MapPost(endpointRoute, LevelSwitch);
 
     private static void MapOptions(
-                                   LoggerOptions loggerSettings,
-                                   AppOptions appSettings,
+                                   LoggerOptions loggerOptions,
+                                   AppOptions appOptions,
                                    LoggerConfiguration loggerConfiguration,
                                    string environmentName)
     {
-        LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerSettings.Level);
+        LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
 
         loggerConfiguration.Enrich.FromLogContext()
             .MinimumLevel.ControlledBy(LoggingLevelSwitch)
             .Enrich.WithProperty("Environment", environmentName)
-            .Enrich.WithProperty("Application", appSettings.Service)
-            .Enrich.WithProperty("Instance", appSettings.Instance)
-            .Enrich.WithProperty("Version", appSettings.Version);
+            .Enrich.WithProperty("Application", appOptions.Service)
+            .Enrich.WithProperty("Instance", appOptions.Instance)
+            .Enrich.WithProperty("Version", appOptions.Version);
 
-        foreach (var (key, value) in loggerSettings.Tags ?? new Dictionary<string, object>())
+        foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
         {
             loggerConfiguration.Enrich.WithProperty(key, value);
         }
 
-        foreach (var (key, value) in loggerSettings.MinimumLevelOverrides ?? new Dictionary<string, string>())
+        foreach (var (key, value) in loggerOptions.MinimumLevelOverrides ?? new Dictionary<string, string>())
         {
             var logLevel = GetLogEventLevel(value);
             loggerConfiguration.MinimumLevel.Override(key, logLevel);
         }
 
-        loggerSettings.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
+        loggerOptions.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty<string>("RequestPath", n => n.EndsWith(p))));
 
-        loggerSettings.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
+        loggerOptions.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty(p)));
 
-        Configure(loggerConfiguration, loggerSettings);
+        Configure(loggerConfiguration, loggerOptions);
     }
 
     private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
@@ -203,7 +203,7 @@ public static class Extensions
             return;
         }
 
-        var level = context.Request.Query["level"].ToString();
+        string level = context.Request.Query["level"].ToString();
 
         if (string.IsNullOrEmpty(level))
         {

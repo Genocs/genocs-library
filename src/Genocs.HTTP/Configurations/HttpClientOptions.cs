@@ -20,12 +20,12 @@ public class HttpClientOptions
     /// It defines the list of services to be registered.
     /// </summary>
     public IDictionary<string, string>? Services { get; set; }
-    public RequestMaskingSettings? RequestMasking { get; set; }
+    public RequestMaskingOptions? RequestMasking { get; set; }
     public bool RemoveCharsetFromContentType { get; set; }
     public string? CorrelationContextHeader { get; set; }
     public string? CorrelationIdHeader { get; set; }
 
-    public class RequestMaskingSettings
+    public class RequestMaskingOptions
     {
         public bool Enabled { get; set; }
         public IEnumerable<string>? UrlParts { get; set; }
