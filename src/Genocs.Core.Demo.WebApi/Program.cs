@@ -1,12 +1,10 @@
-using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
-using Genocs.Core.Demo.WebApi.Options;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
-using Genocs.WebApi.Security;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using System.Reflection;

@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Demo.WebApi.Options;
+﻿using Genocs.Core.Demo.WebApi.Configurations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Core.Demo.WebApi.Controllers;
