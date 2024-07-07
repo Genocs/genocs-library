@@ -1,4 +1,4 @@
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -10,15 +10,15 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
     private readonly HashSet<string> _maskedRequestUrlParts;
     private readonly string _maskTemplate;
 
-    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings options)
+    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings settings)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _ = options ?? throw new ArgumentNullException(nameof(options));
+        _ = settings ?? throw new ArgumentNullException(nameof(settings));
         _maskedRequestUrlParts =
-            new HashSet<string>(options.RequestMasking?.UrlParts ?? Enumerable.Empty<string>());
-        _maskTemplate = string.IsNullOrWhiteSpace(options.RequestMasking?.MaskTemplate)
+            new HashSet<string>(settings.RequestMasking?.UrlParts ?? Enumerable.Empty<string>());
+        _maskTemplate = string.IsNullOrWhiteSpace(settings.RequestMasking?.MaskTemplate)
             ? "*****"
-            : options.RequestMasking.MaskTemplate;
+            : settings.RequestMasking.MaskTemplate;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

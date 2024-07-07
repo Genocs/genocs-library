@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;

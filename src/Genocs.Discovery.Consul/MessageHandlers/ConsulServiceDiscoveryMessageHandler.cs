@@ -1,4 +1,4 @@
-using Genocs.Discovery.Consul.Options;
+using Genocs.Discovery.Consul.Configurations;
 
 namespace Genocs.Discovery.Consul.MessageHandlers;
 

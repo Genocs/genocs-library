@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.MessageBrokers.Outbox.Configurations;
 
 namespace Genocs.MessageBrokers.Outbox;
 

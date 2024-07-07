@@ -1,7 +1,8 @@
 ﻿using Genocs.Core.Demo.WebApi.Options;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.Security;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure.Services;
@@ -22,16 +23,16 @@ public class ExternalServiceClient : IExternalServiceClient
     /// <param name="client">The http client.</param>
     /// <param name="hasher">The Hash service.</param>
     /// <param name="httpClientSettings">The http client settings.</param>
-    /// <param name="externalServiceSettings">The security settings.</param>
+    /// <param name="options">The security settings.</param>
     public ExternalServiceClient(
                                 IHttpClient client,
                                 IHasher hasher,
                                 HttpClientSettings httpClientSettings,
-                                ExternalServiceSettings externalServiceSettings)
+                                IOptions<ExternalServiceSettings> options)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
-        _externalServiceSettings = externalServiceSettings ?? throw new ArgumentNullException(nameof(externalServiceSettings));
+        _externalServiceSettings = options.Value ?? throw new ArgumentNullException(nameof(options));
 
         if (httpClientSettings is null)
         {

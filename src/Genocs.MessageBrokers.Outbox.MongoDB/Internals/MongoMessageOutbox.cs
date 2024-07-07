@@ -1,5 +1,5 @@
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Microsoft.Extensions.Logging;

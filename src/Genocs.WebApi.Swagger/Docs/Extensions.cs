@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.WebApi.Swagger.Docs.Builders;
+using Genocs.WebApi.Swagger.Docs.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -18,7 +19,7 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<SwaggerOptions>(sectionName);
+        var options = builder.GetOptions<SwaggerSettings>(sectionName);
         return builder.AddSwaggerDocs(options);
     }
 
@@ -28,7 +29,7 @@ public static class Extensions
         return builder.AddSwaggerDocs(options);
     }
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions options)
+    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerSettings options)
     {
         if (!options.Enabled || !builder.TryRegister(RegistryName))
         {
@@ -57,7 +58,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<SwaggerOptions>();
+        var options = builder.ApplicationServices.GetRequiredService<SwaggerSettings>();
         if (!options.Enabled)
         {
             return builder;

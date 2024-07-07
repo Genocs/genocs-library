@@ -1,9 +1,9 @@
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Persistence.MongoDb.Builders;
+using Genocs.Persistence.MongoDb.Configurations;
 using Genocs.Persistence.MongoDb.Factories;
 using Genocs.Persistence.MongoDb.Initializers;
-using Genocs.Persistence.MongoDb.Options;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Clean;
 using Genocs.Persistence.MongoDb.Repositories.Mentor;

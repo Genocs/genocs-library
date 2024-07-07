@@ -1,8 +1,8 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Logging.Configurations;
+using Genocs.Tracing.Jaeger.Configurations;
 using Jaeger.Samplers;
 using Jaeger.Senders.Thrift;
 using Microsoft.Extensions.DependencyInjection;

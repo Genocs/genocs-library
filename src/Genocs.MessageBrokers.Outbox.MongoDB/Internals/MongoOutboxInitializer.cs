@@ -1,6 +1,6 @@
 using Genocs.Common.Types;
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.MessageBrokers.Outbox.Options;
 using MongoDB.Driver;
 
 namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;

@@ -1,5 +1,5 @@
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.MessageBrokers.Outbox.Options;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 

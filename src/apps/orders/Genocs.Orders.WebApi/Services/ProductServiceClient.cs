@@ -1,9 +1,9 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Secrets.Vault;
-using Genocs.Secrets.Vault.Options;
-using Genocs.WebApi.Security;
+using Genocs.Secrets.Vault.Configurations;
+using Genocs.WebApi.Security.Configurations;
 
 namespace Genocs.Orders.WebApi.Services;
 

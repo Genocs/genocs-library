@@ -1,5 +1,5 @@
+using Genocs.Auth.Configurations;
 using Genocs.Auth.Handlers;
-using Genocs.Auth.Options;
 using Genocs.Auth.Services;
 using Genocs.Core.Builders;
 using Genocs.Security.Services;
@@ -83,7 +83,7 @@ public static class Extensions
         if (jwtSettings.Certificate is not null)
         {
             X509Certificate2? certificate = null;
-            string password = jwtSettings.Certificate.Password;
+            string? password = jwtSettings.Certificate.Password;
             bool hasPassword = !string.IsNullOrWhiteSpace(password);
             if (!string.IsNullOrWhiteSpace(jwtSettings.Certificate.Location))
             {
@@ -207,7 +207,6 @@ public static class Extensions
 
         return builder;
     }
-
 
     /// <summary>
     /// It adds the private key JWT authentication.

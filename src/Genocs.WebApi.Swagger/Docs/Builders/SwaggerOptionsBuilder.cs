@@ -1,8 +1,10 @@
+using Genocs.WebApi.Swagger.Docs.Configurations;
+
 namespace Genocs.WebApi.Swagger.Docs.Builders;
 
 internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
 {
-    private readonly SwaggerOptions _options = new();
+    private readonly SwaggerSettings _options = new();
 
     public ISwaggerOptionsBuilder Enable(bool enabled)
     {
@@ -52,5 +54,5 @@ internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
         return this;
     }
 
-    public SwaggerOptions Build() => _options;
+    public SwaggerSettings Build() => _options;
 }

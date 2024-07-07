@@ -1,3 +1,4 @@
+using Genocs.WebApi.Security.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;

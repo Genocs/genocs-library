@@ -1,4 +1,4 @@
-using Genocs.Secrets.Vault.Options;
+using Genocs.Secrets.Vault.Configurations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VaultSharp;
@@ -11,7 +11,7 @@ internal sealed class VaultHostedService : BackgroundService
     private readonly ILeaseService _leaseService;
     private readonly ICertificatesIssuer _certificatesIssuer;
     private readonly ICertificatesService _certificatesService;
-    private readonly VaultSettings _options;
+    private readonly VaultSettings _settings;
     private readonly ILogger<VaultHostedService> _logger;
     private readonly int _interval;
 
@@ -20,28 +20,28 @@ internal sealed class VaultHostedService : BackgroundService
                                 ILeaseService leaseService,
                                 ICertificatesIssuer certificatesIssuer,
                                 ICertificatesService certificatesService,
-                                VaultSettings options,
+                                VaultSettings settings,
                                 ILogger<VaultHostedService> logger)
     {
         _client = client;
         _leaseService = leaseService;
         _certificatesIssuer = certificatesIssuer;
         _certificatesService = certificatesService;
-        _options = options;
+        _settings = settings;
         _logger = logger;
-        _interval = _options.RenewalsInterval <= 0 ? 10 : _options.RenewalsInterval;
+        _interval = _settings.RenewalsInterval <= 0 ? 10 : _settings.RenewalsInterval;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!_options.Enabled)
+        if (!_settings.Enabled)
         {
             return;
         }
 
-        if ((_options.Pki is null || !_options.Pki.Enabled) &&
-            (_options.Lease is null || _options.Lease.All(l => !l.Value.Enabled) ||
-             !_options.Lease.Any(l => l.Value.AutoRenewal)))
+        if ((_settings.Pki is null || !_settings.Pki.Enabled) &&
+            (_settings.Lease is null || _settings.Lease.All(l => !l.Value.Enabled) ||
+             !_settings.Lease.Any(l => l.Value.AutoRenewal)))
         {
             return;
         }
@@ -53,7 +53,7 @@ internal sealed class VaultHostedService : BackgroundService
             var now = DateTime.UtcNow;
             var nextIterationAt = now.AddSeconds(2 * _interval);
 
-            if (_options.Pki is not null && _options.Pki.Enabled)
+            if (_settings.Pki is not null && _settings.Pki.Enabled)
             {
                 foreach (var (role, cert) in _certificatesService.All)
                 {
@@ -86,7 +86,7 @@ internal sealed class VaultHostedService : BackgroundService
             await Task.Delay(interval.Subtract(DateTime.UtcNow - now), stoppingToken);
         }
 
-        if (!_options.RevokeLeaseOnShutdown)
+        if (!_settings.RevokeLeaseOnShutdown)
         {
             return;
         }

@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.WebApi.Swagger.Docs;
+using Genocs.WebApi.Swagger.Docs.Configurations;
 using Genocs.WebApi.Swagger.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,7 @@ public static class Extensions
     public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
         => builder.AddWebApiSwaggerDocs(b => b.AddSwaggerDocs(buildOptions));
 
-    public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions options)
+    public static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, SwaggerSettings options)
         => builder.AddWebApiSwaggerDocs(b => b.AddSwaggerDocs(options));
 
     private static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, Action<IGenocsBuilder> registerSwagger)

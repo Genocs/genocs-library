@@ -2,9 +2,8 @@ using Genocs.Common.Types;
 
 namespace Genocs.Products.WebApi.Domain;
 
-
 /// <summary>
-/// The product definition 
+/// The product definition.
 /// </summary>
 public class Product : IIdentifiable<Guid>
 {

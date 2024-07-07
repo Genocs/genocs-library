@@ -1,7 +1,7 @@
+using Genocs.Secrets.Vault.Configurations;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Genocs.Secrets.Vault.Options;
 using VaultSharp;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SecretsEngines.PKI;

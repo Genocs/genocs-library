@@ -1,5 +1,5 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 
 namespace Genocs.Discovery.Consul.Http;
 

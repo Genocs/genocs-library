@@ -1,6 +1,6 @@
 using Genocs.Core.Builders;
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Configurators;
-using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.MessageBrokers.Outbox.Outbox;
 using Genocs.MessageBrokers.Outbox.Processors;
 using Microsoft.Extensions.DependencyInjection;

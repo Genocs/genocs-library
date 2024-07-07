@@ -1,5 +1,5 @@
+using Genocs.Secrets.Vault.Configurations;
 using System.Text.Json;
-using Genocs.Secrets.Vault.Options;
 using VaultSharp;
 
 namespace Genocs.Secrets.Vault.Internals;

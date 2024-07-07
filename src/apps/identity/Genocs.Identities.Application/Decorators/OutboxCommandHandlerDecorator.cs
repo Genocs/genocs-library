@@ -2,7 +2,7 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.MessageBrokers.Outbox.Configurations;
 
 namespace Genocs.Identities.Application.Decorators;
 

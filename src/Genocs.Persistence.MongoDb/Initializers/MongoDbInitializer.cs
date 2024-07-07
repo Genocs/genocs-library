@@ -1,4 +1,4 @@
-using Genocs.Persistence.MongoDb.Options;
+using Genocs.Persistence.MongoDb.Configurations;
 using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 

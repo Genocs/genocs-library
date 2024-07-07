@@ -1,4 +1,5 @@
 using Genocs.Core.Builders;
+using Genocs.WebApi.Security.Configurations;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

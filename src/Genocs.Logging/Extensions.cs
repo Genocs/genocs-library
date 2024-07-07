@@ -1,6 +1,6 @@
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
+using Genocs.Logging.Configurations;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,8 +23,8 @@ public static class Extensions
     public static IHostBuilder UseLogging(
                                           this IHostBuilder hostBuilder,
                                           Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-                                          string? loggerSectionName = null,
-                                          string? appSectionName = null)
+                                          string? loggerSectionName = LoggerSettings.Position,
+                                          string? appSectionName = AppSettings.Position)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
@@ -167,10 +167,12 @@ public static class Extensions
         // azure application insights
         if (azureOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.ApplicationInsights(new TelemetryConfiguration
-            {
-                ConnectionString = azureOptions.ConnectionString,
-            }, TelemetryConverter.Traces);
+            loggerConfiguration.WriteTo.ApplicationInsights(
+                new TelemetryConfiguration
+                {
+                    ConnectionString = azureOptions.ConnectionString,
+                },
+                TelemetryConverter.Traces);
         }
     }
 
@@ -203,7 +205,7 @@ public static class Extensions
             return;
         }
 
-        var level = context.Request.Query["level"].ToString();
+        string level = context.Request.Query["level"].ToString();
 
         if (string.IsNullOrEmpty(level))
         {

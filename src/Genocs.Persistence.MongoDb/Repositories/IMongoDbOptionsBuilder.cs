@@ -1,4 +1,4 @@
-using Genocs.Persistence.MongoDb.Options;
+using Genocs.Persistence.MongoDb.Configurations;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
 

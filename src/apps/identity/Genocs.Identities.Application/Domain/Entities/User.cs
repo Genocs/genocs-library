@@ -12,8 +12,16 @@ public class User : AggregateRoot
     public IEnumerable<string>? Permissions { get; private set; }
     public bool Locked { get; private set; }
 
-    public User(Guid id, string email, string name, string password, string role, DateTime createdAt,
-        IEnumerable<string>? permissions = null, bool locked = false) : base(id)
+    public User(
+                Guid id,
+                string email,
+                string name,
+                string password,
+                string role,
+                DateTime createdAt,
+                IEnumerable<string>? permissions = null,
+                bool locked = false)
+        : base(id)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -44,7 +52,6 @@ public class User : AggregateRoot
         Permissions = permissions ?? Enumerable.Empty<string>();
         Locked = locked;
     }
-
 
     public bool Lock()
     {

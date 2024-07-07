@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Tracing.Jaeger.Configurations;
 using Genocs.Tracing.Jaeger.Tracers;
 using Jaeger;
 using Jaeger.Reporters;

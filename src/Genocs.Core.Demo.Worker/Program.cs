@@ -11,7 +11,6 @@ using Genocs.Tracing;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Clean;
-using Genocs.ServiceBusAzure.Options;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
@@ -21,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
+using Genocs.ServiceBusAzure.Configurations;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()

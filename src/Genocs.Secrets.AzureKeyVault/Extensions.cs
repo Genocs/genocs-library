@@ -1,6 +1,6 @@
 using Azure.Identity;
 using Genocs.Core.Builders;
-using Genocs.Secrets.AzureKeyVault.Options;
+using Genocs.Secrets.AzureKeyVault.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +26,11 @@ public static class Extensions
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
+                if (string.IsNullOrWhiteSpace(sectionName))
+                {
+                    sectionName = AzureKeyVaultSettings.Position;
+                }
+
                 var settings = ctx.Configuration.GetOptions<AzureKeyVaultSettings>(sectionName);
                 if (!settings.Enabled)
                 {

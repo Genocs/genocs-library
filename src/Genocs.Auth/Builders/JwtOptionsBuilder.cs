@@ -1,4 +1,4 @@
-using Genocs.Auth.Options;
+using Genocs.Auth.Configurations;
 
 namespace Genocs.Auth.Builders;
 

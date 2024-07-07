@@ -1,4 +1,4 @@
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Tracing.Jaeger.Configurations;
 
 namespace Genocs.Tracing.Jaeger.Builders;
 

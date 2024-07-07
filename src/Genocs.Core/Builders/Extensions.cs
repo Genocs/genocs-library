@@ -1,4 +1,4 @@
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

@@ -1,12 +1,12 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul.Builders;
+using Genocs.Discovery.Consul.Configurations;
 using Genocs.Discovery.Consul.Http;
 using Genocs.Discovery.Consul.MessageHandlers;
 using Genocs.Discovery.Consul.Models;
-using Genocs.Discovery.Consul.Options;
 using Genocs.Discovery.Consul.Services;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Discovery.Consul;
@@ -34,10 +34,10 @@ public static class Extensions
 
     public static IGenocsBuilder AddConsul(
                                             this IGenocsBuilder builder,
-                                            Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildOptions,
+                                            Func<IConsulSettingsBuilder, IConsulSettingsBuilder> buildOptions,
                                             HttpClientSettings httpClientOptions)
     {
-        var options = buildOptions(new ConsulOptionsBuilder()).Build();
+        var options = buildOptions(new ConsulSettingsBuilder()).Build();
         return builder.AddConsul(options, httpClientOptions);
     }
 

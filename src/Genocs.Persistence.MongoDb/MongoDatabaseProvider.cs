@@ -1,5 +1,5 @@
-﻿using Genocs.Persistence.MongoDb.Encryptions;
-using Genocs.Persistence.MongoDb.Options;
+﻿using Genocs.Persistence.MongoDb.Configurations;
+using Genocs.Persistence.MongoDb.Encryptions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;

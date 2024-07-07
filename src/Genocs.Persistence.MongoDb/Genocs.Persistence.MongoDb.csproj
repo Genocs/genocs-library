@@ -20,7 +20,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <PackageTags>mongodb aggregate architecture boilerplate repository-patterns domain-driven-design dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Moved to NET8.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
@@ -35,7 +35,7 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-        <None Include="README.md">
+        <None Include="README_NUGET.md">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>

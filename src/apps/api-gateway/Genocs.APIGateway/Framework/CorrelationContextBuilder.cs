@@ -8,8 +8,8 @@ internal sealed class CorrelationContextBuilder : ICorrelationContextBuilder
                                     HttpContext context,
                                     string correlationId,
                                     string spanContext,
-                                    string name = null,
-                                    string resourceId = null)
+                                    string? name = null,
+                                    string? resourceId = null)
         => new CorrelationContext
         {
             CorrelationId = correlationId,

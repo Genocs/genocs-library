@@ -1,4 +1,4 @@
-using Genocs.Auth.Options;
+using Genocs.Auth.Configurations;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 

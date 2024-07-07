@@ -1,6 +1,6 @@
 using Genocs.Core.Builders;
+using Genocs.Secrets.Vault.Configurations;
 using Genocs.Secrets.Vault.Internals;
-using Genocs.Secrets.Vault.Options;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;

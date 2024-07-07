@@ -1,13 +1,13 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
+using Genocs.Discovery.Consul.Configurations;
 using Genocs.Discovery.Consul.Models;
-using Genocs.Discovery.Consul.Options;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.LoadBalancing.Fabio.Builders;
+using Genocs.LoadBalancing.Fabio.Configurations;
 using Genocs.LoadBalancing.Fabio.Http;
 using Genocs.LoadBalancing.Fabio.MessageHandlers;
-using Genocs.LoadBalancing.Fabio.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.LoadBalancing.Fabio;
@@ -32,11 +32,11 @@ public static class Extensions
     }
 
     public static IGenocsBuilder AddFabio(this IGenocsBuilder builder,
-        Func<IFabioOptionsBuilder, IFabioOptionsBuilder> buildOptions,
-        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildConsulOptions,
+        Func<IFabioSettingsBuilder, IFabioSettingsBuilder> buildOptions,
+        Func<IConsulSettingsBuilder, IConsulSettingsBuilder> buildConsulOptions,
         HttpClientSettings httpClientOptions)
     {
-        var fabioOptions = buildOptions(new FabioOptionsBuilder()).Build();
+        var fabioOptions = buildOptions(new FabioSettingsBuilder()).Build();
         return builder.AddFabio(fabioOptions, httpClientOptions,
             b => b.AddConsul(buildConsulOptions, httpClientOptions));
     }

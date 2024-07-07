@@ -1,5 +1,5 @@
 ﻿using Genocs.Core.Demo.WebApi.Options;
-using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;

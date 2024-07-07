@@ -4,11 +4,11 @@ using App.Metrics.AspNetCore.Endpoints;
 using App.Metrics.AspNetCore.Health.Endpoints;
 using App.Metrics.AspNetCore.Tracking;
 using App.Metrics.Formatters.Prometheus;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.AppMetrics.Builders;
-using Genocs.Metrics.AppMetrics.Options;
+using Genocs.Metrics.AppMetrics.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +49,7 @@ public static class Extensions
     [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
-                                            Func<IMetricsOptionsBuilder, IMetricsOptionsBuilder> buildOptions,
+                                            Func<IMetricsSettingsBuilder, IMetricsSettingsBuilder> buildOptions,
                                             string appSectionName = AppSectionName)
     {
         if (string.IsNullOrWhiteSpace(appSectionName))
@@ -57,7 +57,7 @@ public static class Extensions
             appSectionName = AppSectionName;
         }
 
-        var metricsOptions = buildOptions(new MetricsOptionsBuilder()).Build();
+        var metricsOptions = buildOptions(new MetricsSettingsBuilder()).Build();
         var appOptions = builder.GetOptions<AppSettings>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);

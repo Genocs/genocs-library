@@ -1,15 +1,12 @@
 ﻿using Genocs.Core.CQRS.Commands;
-using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Genocs.ServiceBusAzure.Queues;
 
@@ -70,6 +67,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
         {
             throw new ArgumentNullException(nameof(options));
         }
+
         _options = options;
 
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
