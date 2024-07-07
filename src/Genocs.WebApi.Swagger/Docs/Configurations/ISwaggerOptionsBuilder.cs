@@ -1,5 +1,4 @@
 namespace Genocs.WebApi.Swagger.Docs.Configurations;
-
 public interface ISwaggerOptionsBuilder
 {
     ISwaggerOptionsBuilder Enable(bool enabled);

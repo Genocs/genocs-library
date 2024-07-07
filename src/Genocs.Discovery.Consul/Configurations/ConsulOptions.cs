@@ -1,7 +1,12 @@
 namespace Genocs.Discovery.Consul.Configurations;
 
-public class ConsulSettings
+public class ConsulOptions
 {
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "consul";
+
     public bool Enabled { get; set; }
     public string? Url { get; set; }
     public string? Service { get; set; }
@@ -15,9 +20,9 @@ public class ConsulSettings
     public IDictionary<string, string>? Meta { get; set; }
     public bool EnableTagOverride { get; set; }
     public bool SkipLocalhostDockerDnsReplace { get; set; }
-    public ConnectSettings? Connect { get; set; }
+    public ConnectOptions? Connect { get; set; }
 
-    public class ConnectSettings
+    public class ConnectOptions
     {
         public bool Enabled { get; set; }
     }

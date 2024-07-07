@@ -39,7 +39,7 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                VaultSettings options = ctx.Configuration.GetOptions<VaultSettings>(sectionName);
+                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -49,7 +49,7 @@ public static class Extensions
             });
 
     /// <summary>
-    /// UseVault
+    /// UseVault.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="keyValuePath"></param>
@@ -63,8 +63,7 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                var options = new VaultSettings();
-                ctx.Configuration.GetSection(sectionName).Bind(options);
+                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -86,8 +85,7 @@ public static class Extensions
             configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
 
-        var options = new VaultSettings();
-        configuration.GetSection(sectionName).Bind(options);
+        VaultOptions options = configuration.GetOptions<VaultOptions>(sectionName);
         if (!options.Enabled)
         {
             return services;
@@ -114,13 +112,13 @@ public static class Extensions
         return services;
     }
 
-    private static void VerifyOptions(VaultSettings options)
+    private static void VerifyOptions(VaultOptions options)
     {
         if (options.Kv is null)
         {
             if (!string.IsNullOrWhiteSpace(options.Key))
             {
-                options.Kv = new VaultSettings.KeyValueSettings
+                options.Kv = new VaultOptions.KeyValueOptions
                 {
                     Enabled = options.Enabled,
                     Path = options.Key
@@ -143,7 +141,7 @@ public static class Extensions
 
     private static async Task AddVaultAsync(
                                             this IConfigurationBuilder builder,
-                                            VaultSettings options,
+                                            VaultOptions options,
                                             string? keyValuePath)
     {
         VerifyOptions(options);
@@ -194,7 +192,7 @@ public static class Extensions
     private static Task InitLeaseAsync(
                                        string key,
                                        IVaultClient client,
-                                       VaultSettings.LeaseSettings options,
+                                       VaultOptions.LeaseOptions options,
                                        IDictionary<string, string> configuration)
         => options.Type.ToLowerInvariant() switch
         {
@@ -209,7 +207,7 @@ public static class Extensions
     private static async Task SetActiveDirectorySecretsAsync(
                                                              string key,
                                                              IVaultClient client,
-                                                             VaultSettings.LeaseSettings options,
+                                                             VaultOptions.LeaseOptions options,
                                                              IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
@@ -225,7 +223,7 @@ public static class Extensions
     }
 
     private static async Task SetAzureSecretsAsync(string key, IVaultClient client,
-        VaultSettings.LeaseSettings options,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
@@ -240,7 +238,7 @@ public static class Extensions
     }
 
     private static async Task SetConsulSecretsAsync(string key, IVaultClient client,
-        VaultSettings.LeaseSettings options,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
@@ -254,7 +252,7 @@ public static class Extensions
     }
 
     private static async Task SetDatabaseSecretsAsync(string key, IVaultClient client,
-        VaultSettings.LeaseSettings options,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
@@ -268,7 +266,7 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetPkiSecretsAsync(IVaultClient client, VaultSettings options)
+    private static async Task SetPkiSecretsAsync(IVaultClient client, VaultOptions options)
     {
         var issuer = new CertificatesIssuer(client, options);
         var certificate = await issuer.IssueAsync();
@@ -276,7 +274,7 @@ public static class Extensions
     }
 
     private static async Task SetRabbitMqSecretsAsync(string key, IVaultClient client,
-        VaultSettings.LeaseSettings options,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
@@ -290,7 +288,7 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static void SetSecrets(string key, VaultSettings.LeaseSettings options,
+    private static void SetSecrets(string key, VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration, string name,
         Func<(object, Dictionary<string, string>, string, int, bool)> lease)
     {
@@ -301,7 +299,7 @@ public static class Extensions
         LeaseService.Set(key, leaseData);
     }
 
-    private static (IVaultClient client, VaultClientSettings settings) GetClientAndSettings(VaultSettings options)
+    private static (IVaultClient client, VaultClientSettings settings) GetClientAndSettings(VaultOptions options)
     {
         var settings = new VaultClientSettings(options.Url, GetAuthMethod(options));
         var client = new VaultClient(settings);
@@ -309,7 +307,7 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, VaultSettings.LeaseSettings lease,
+    private static void SetTemplates(string key, VaultOptions.LeaseOptions lease,
         IDictionary<string, string> configuration, IDictionary<string, string> values)
     {
         if (lease.Templates is null || !lease.Templates.Any())
@@ -331,7 +329,7 @@ public static class Extensions
         }
     }
 
-    private static IAuthMethodInfo GetAuthMethod(VaultSettings options)
+    private static IAuthMethodInfo GetAuthMethod(VaultOptions options)
         => options.AuthType?.ToLowerInvariant() switch
         {
             "token" => new TokenAuthMethodInfo(options.Token),

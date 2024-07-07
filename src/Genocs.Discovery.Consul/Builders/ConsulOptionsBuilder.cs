@@ -2,63 +2,63 @@ using Genocs.Discovery.Consul.Configurations;
 
 namespace Genocs.Discovery.Consul.Builders;
 
-internal sealed class ConsulSettingsBuilder : IConsulSettingsBuilder
+internal sealed class ConsulOptionsBuilder : IConsulOptionsBuilder
 {
-    private readonly ConsulSettings _options = new();
+    private readonly ConsulOptions _options = new();
 
-    public IConsulSettingsBuilder Enable(bool enabled)
+    public IConsulOptionsBuilder Enable(bool enabled)
     {
         _options.Enabled = enabled;
         return this;
     }
 
-    public IConsulSettingsBuilder WithUrl(string url)
+    public IConsulOptionsBuilder WithUrl(string url)
     {
         _options.Url = url;
         return this;
     }
 
-    public IConsulSettingsBuilder WithService(string service)
+    public IConsulOptionsBuilder WithService(string service)
     {
         _options.Service = service;
         return this;
     }
 
-    public IConsulSettingsBuilder WithAddress(string address)
+    public IConsulOptionsBuilder WithAddress(string address)
     {
         _options.Address = address;
         return this;
     }
 
-    public IConsulSettingsBuilder WithEnabledPing(bool pingEnabled)
+    public IConsulOptionsBuilder WithEnabledPing(bool pingEnabled)
     {
         _options.PingEnabled = pingEnabled;
         return this;
     }
 
-    public IConsulSettingsBuilder WithPingEndpoint(string pingEndpoint)
+    public IConsulOptionsBuilder WithPingEndpoint(string pingEndpoint)
     {
         _options.PingEndpoint = pingEndpoint;
         return this;
     }
 
-    public IConsulSettingsBuilder WithPingInterval(string pingInterval)
+    public IConsulOptionsBuilder WithPingInterval(string pingInterval)
     {
         _options.PingInterval = pingInterval;
         return this;
     }
 
-    public IConsulSettingsBuilder WithRemoteAfterInterval(string remoteAfterInterval)
+    public IConsulOptionsBuilder WithRemoteAfterInterval(string remoteAfterInterval)
     {
         _options.RemoveAfterInterval = remoteAfterInterval;
         return this;
     }
 
-    public IConsulSettingsBuilder WithSkippingLocalhostDockerDnsReplace(bool skipLocalhostDockerDnsReplace)
+    public IConsulOptionsBuilder WithSkippingLocalhostDockerDnsReplace(bool skipLocalhostDockerDnsReplace)
     {
         _options.SkipLocalhostDockerDnsReplace = skipLocalhostDockerDnsReplace;
         return this;
     }
 
-    public ConsulSettings Build() => _options;
+    public ConsulOptions Build() => _options;
 }

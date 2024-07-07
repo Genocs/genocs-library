@@ -15,7 +15,8 @@ namespace Genocs.Secrets.AzureKeyVault;
 public static class Extensions
 {
     /// <summary>
-    /// UseVault.
+    /// This method is used to add the Azure Key Vault to the Host builder.
+    /// You can use the Azure Key Vault to store and manage application secrets.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="sectionName">The section name.</param>
@@ -56,8 +57,7 @@ public static class Extensions
                                            string sectionName = AzureKeyVaultSettings.Position)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
             {
-                var settings = new AzureKeyVaultSettings();
-                ctx.Configuration.GetSection(sectionName).Bind(settings);
+                AzureKeyVaultSettings settings = ctx.Configuration.GetOptions<AzureKeyVaultSettings>(sectionName);
                 if (!settings.Enabled)
                 {
                     return;
@@ -74,8 +74,7 @@ public static class Extensions
     public static WebApplicationBuilder UseAzureKeyVault(this WebApplicationBuilder builder)
     {
 
-        var settings = new AzureKeyVaultSettings();
-        builder.Configuration.GetSection(AzureKeyVaultSettings.Position).Bind(settings);
+        AzureKeyVaultSettings settings = builder.Configuration.GetOptions<AzureKeyVaultSettings>(AzureKeyVaultSettings.Position);
         if (!settings.Enabled)
         {
             return builder;

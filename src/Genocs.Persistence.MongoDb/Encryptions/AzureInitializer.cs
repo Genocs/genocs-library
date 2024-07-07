@@ -15,11 +15,11 @@ public class AzureInitializer
     /// Setup  the client
     /// </summary>
     /// <param name="options"></param>
-    public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionSettings> options)
+    public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionOptions> options)
     {
         // Ge settings
-        MongoDbEncryptionSettings settings = options.Value;
-        MongoDbEncryptionSettings.IsValid(settings);
+        MongoDbEncryptionOptions settings = options.Value;
+        MongoDbEncryptionOptions.IsValid(settings);
 
         // start-kmsproviders
         var kmsProviders = new Dictionary<string, IReadOnlyDictionary<string, object>>();

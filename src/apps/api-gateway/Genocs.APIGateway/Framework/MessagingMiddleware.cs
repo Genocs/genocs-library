@@ -1,4 +1,4 @@
-using Genocs.APIGateway.Options;
+using Genocs.APIGateway.Configurations;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.MessageBrokers.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
@@ -16,7 +16,7 @@ internal class MessagingMiddleware : IMiddleware
     private readonly ITracer _tracer;
     private readonly ICorrelationContextBuilder _correlationContextBuilder;
     private readonly CorrelationIdFactory _correlationIdFactory;
-    private readonly IDictionary<string, List<MessagingSettings.EndpointSettings>> _endpoints;
+    private readonly IDictionary<string, List<MessagingOptions.EndpointOptions>> _endpoints;
 
     public MessagingMiddleware(
                                 IRabbitMQClient rabbitMQClient,
@@ -24,7 +24,7 @@ internal class MessagingMiddleware : IMiddleware
                                 ITracer tracer,
                                 ICorrelationContextBuilder correlationContextBuilder,
                                 CorrelationIdFactory correlationIdFactory,
-                                IOptions<MessagingSettings> messagingOptions)
+                                IOptions<MessagingOptions> messagingOptions)
     {
         if (messagingOptions is null)
         {
@@ -39,7 +39,7 @@ internal class MessagingMiddleware : IMiddleware
         _endpoints = messagingOptions.Value.Endpoints?.Any() is true
             ? messagingOptions.Value.Endpoints.GroupBy(e => e.Method.ToUpperInvariant())
                 .ToDictionary(e => e.Key, e => e.ToList())
-            : new Dictionary<string, List<MessagingSettings.EndpointSettings>>();
+            : new Dictionary<string, List<MessagingOptions.EndpointOptions>>();
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

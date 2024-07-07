@@ -38,7 +38,7 @@ public static class Extensions
             throw new ArgumentException("HTTP client name cannot be empty.", nameof(clientName));
         }
 
-        var options = builder.GetOptions<HttpClientSettings>(sectionName);
+        var options = builder.GetOptions<HttpClientOptions>(sectionName);
         if (maskedRequestUrlParts is not null && options.RequestMasking is not null)
         {
             options.RequestMasking.UrlParts = maskedRequestUrlParts;

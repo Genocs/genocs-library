@@ -32,12 +32,14 @@ public static class BuilderExtensions
         // builder.Services.AddSingleton(settings);
 
         // Option 2: In this way ExternalServiceSettings is available for dependency injection. By using IOptions<ExternalServiceSettings> you can access the settings.
-        builder.Services.AddOptions<ExternalServiceSettings>()
-                .BindConfiguration(ExternalServiceSettings.Position)
+        builder.Services.AddOptions<ExternalServiceOptions>()
+                .BindConfiguration(ExternalServiceOptions.Position)
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
         // builder.Services.AddSingleton<IConfigureOptions<WebApiSettings>, ConfigureWebApiSettings>();
+        ExternalServiceOptions settings = builder.Configuration.GetOptions<ExternalServiceOptions>(ExternalServiceOptions.Position);
+        builder.Services.AddSingleton(settings);
 
         // Add the External Service http Client
         builder.Services.AddTransient<IExternalServiceClient, ExternalServiceClient>();

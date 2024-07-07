@@ -3,7 +3,7 @@ namespace Genocs.Common.Configurations;
 /// <summary>
 /// The application settings.
 /// </summary>
-public class AppSettings
+public class AppOptions
 {
     /// <summary>
     /// Default section name.

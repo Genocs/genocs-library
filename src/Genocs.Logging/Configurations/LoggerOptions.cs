@@ -1,8 +1,4 @@
 namespace Genocs.Logging.Configurations;
-<<<<<<<< HEAD:src/Genocs.Logging/Configurations/LoggerSettings.cs
-
-========
->>>>>>>> 3b27e463fa91d72fe87473c7d6918114896433cd:src/Genocs.Logging/Configurations/LoggerOptions.cs
 
 /// <summary>
 /// Logger Settings.

@@ -1,6 +1,6 @@
 namespace Genocs.Auth.Configurations;
 
-public class JwtSettings
+public class JwtOptions
 {
     /// <summary>
     /// Default section name.
@@ -12,7 +12,7 @@ public class JwtSettings
     /// </summary>
     public bool Enabled { get; set; }
     public IEnumerable<string>? AllowAnonymousEndpoints { get; set; }
-    public CertificateSettings? Certificate { get; set; }
+    public CertificateOptions? Certificate { get; set; }
     public string? Algorithm { get; set; }
     public string? Issuer { get; set; }
     public string? IssuerSigningKey { get; set; }
@@ -48,7 +48,7 @@ public class JwtSettings
     public string? NameClaimType { get; set; }
     public string? RoleClaimType { get; set; }
 
-    public class CertificateSettings
+    public class CertificateOptions
     {
         public string? Location { get; set; }
         public string? RawData { get; set; }

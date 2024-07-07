@@ -15,7 +15,7 @@ public class ExternalServiceClient : IExternalServiceClient
     private readonly IHttpClient _client;
     private readonly string _url;
     private readonly IHasher _hasher;
-    private readonly ExternalServiceOptions _externalServiceSettings;
+    private readonly ExternalServiceOptions _externalServiceOptions;
 
     /// <summary>
     /// The standard constructor.
@@ -27,12 +27,12 @@ public class ExternalServiceClient : IExternalServiceClient
     public ExternalServiceClient(
                                 IHttpClient client,
                                 IHasher hasher,
-                                HttpClientSettings httpClientSettings,
-                                IOptions<ExternalServiceSettings> options)
+                                HttpClientOptions httpClientSettings,
+                                IOptions<ExternalServiceOptions> options)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
-        _externalServiceSettings = options.Value ?? throw new ArgumentNullException(nameof(options));
+        _externalServiceOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
 
         if (httpClientSettings is null)
         {
@@ -51,8 +51,8 @@ public class ExternalServiceClient : IExternalServiceClient
 
     private void SetHeaders(string request)
     {
-        string hash = _hasher.Hash(request, _externalServiceSettings.Private);
-        string headerData = $"Credential={_externalServiceSettings.Public}, Signature={hash}";
+        string hash = _hasher.Hash(request, _externalServiceOptions.Private);
+        string headerData = $"Credential={_externalServiceOptions.Public}, Signature={hash}";
         _client.SetHeaders(h => h.TryAddWithoutValidation("Authorization", headerData));
     }
 
@@ -67,7 +67,7 @@ public class ExternalServiceClient : IExternalServiceClient
         SetHeaders(serializedRequest);
         using (var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json"))
         {
-            return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceSettings.Caller}/direct-issue", content);
+            return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceOptions.Caller}/direct-issue", content);
         }
     }
 

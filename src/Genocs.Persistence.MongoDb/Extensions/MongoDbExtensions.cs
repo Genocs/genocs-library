@@ -34,16 +34,16 @@ public static class MongoDbExtensions
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddMongo(
                                           this IGenocsBuilder builder,
-                                          string sectionName = MongoDbSettings.Position,
+                                          string sectionName = MongoDbOptions.Position,
                                           Type? seederType = null,
                                           bool registerConventions = true)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = MongoDbSettings.Position;
+            sectionName = MongoDbOptions.Position;
         }
 
-        var mongoOptions = builder.GetOptions<MongoDbSettings>(sectionName);
+        var mongoOptions = builder.GetOptions<MongoDbOptions>(sectionName);
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
@@ -70,32 +70,32 @@ public static class MongoDbExtensions
     /// Setup MongoDb support.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <param name="mongoOptions">The settings.</param>
+    /// <param name="options">The settings.</param>
     /// <param name="seederType"></param>
     /// <param name="registerConventions"></param>
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddMongo(
                                           this IGenocsBuilder builder,
-                                          MongoDbSettings mongoOptions,
+                                          MongoDbOptions options,
                                           Type? seederType = null,
                                           bool registerConventions = true)
     {
-        if (!builder.TryRegister(MongoDbSettings.Position))
+        if (!builder.TryRegister(MongoDbOptions.Position))
         {
             return builder;
         }
 
-        if (mongoOptions.SetRandomDatabaseSuffix)
+        if (options.SetRandomDatabaseSuffix)
         {
             string suffix = $"{Guid.NewGuid():N}";
             Console.WriteLine($"Setting a random MongoDB database suffix: '{suffix}'.");
-            mongoOptions.Database = $"{mongoOptions.Database}_{suffix}";
+            options.Database = $"{options.Database}_{suffix}";
         }
 
-        builder.Services.AddSingleton(mongoOptions);
+        builder.Services.AddSingleton(options);
         builder.Services.AddSingleton<IMongoClient>(sp =>
         {
-            var options = sp.GetRequiredService<MongoDbSettings>();
+            var options = sp.GetRequiredService<MongoDbOptions>();
 
             MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(options.ConnectionString);
 
@@ -109,7 +109,7 @@ public static class MongoDbExtensions
 
         builder.Services.AddTransient(sp =>
         {
-            var options = sp.GetRequiredService<MongoDbSettings>();
+            var options = sp.GetRequiredService<MongoDbOptions>();
             var client = sp.GetRequiredService<IMongoClient>();
             return client.GetDatabase(options.Database);
         });
@@ -168,13 +168,13 @@ public static class MongoDbExtensions
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddMongoFast(
                                               this IGenocsBuilder builder,
-                                              string sectionName = MongoDbSettings.Position,
+                                              string sectionName = MongoDbOptions.Position,
                                               bool registerConventions = true)
     {
 
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = MongoDbSettings.Position;
+            sectionName = MongoDbOptions.Position;
         }
 
         var section = builder.Configuration.GetSection(sectionName);
@@ -184,7 +184,7 @@ public static class MongoDbExtensions
             return builder;
         }
 
-        builder.Services.Configure<MongoDbSettings>(section);
+        builder.Services.Configure<MongoDbOptions>(section);
 
         builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
         builder.Services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));

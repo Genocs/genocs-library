@@ -16,7 +16,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
     public CorrelationIdFactory(
                                 IMessagePropertiesAccessor messagePropertiesAccessor,
                                 IHttpContextAccessor httpContextAccessor,
-                                HttpClientSettings httpClientOptions)
+                                HttpClientOptions httpClientOptions)
     {
         if (httpClientOptions is null)
         {

@@ -16,8 +16,11 @@ public static class Extensions
 {
     private const string RegistryName = "loadBalancing.fabio";
 
-    public static IGenocsBuilder AddFabio(this IGenocsBuilder builder, string sectionName = FabioOptions.Position,
-        string consulSectionName = "consul", string httpClientSectionName = "httpClient")
+    public static IGenocsBuilder AddFabio(
+                                            this IGenocsBuilder builder,
+                                            string sectionName = FabioOptions.Position,
+                                            string consulSectionName = ConsulOptions.Position,
+                                            string httpClientSectionName = HttpClientOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -27,16 +30,19 @@ public static class Extensions
         var fabioOptions = builder.GetOptions<FabioOptions>(sectionName);
         var consulOptions = builder.GetOptions<ConsulOptions>(consulSectionName);
         var httpClientOptions = builder.GetOptions<HttpClientOptions>(httpClientSectionName);
-        return builder.AddFabio(fabioOptions, httpClientOptions,
-            b => b.AddConsul(consulOptions, httpClientOptions));
+
+        return builder.AddFabio(
+                                fabioOptions,
+                                httpClientOptions,
+                                b => b.AddConsul(consulOptions, httpClientOptions));
     }
 
     public static IGenocsBuilder AddFabio(this IGenocsBuilder builder,
-        Func<IFabioSettingsBuilder, IFabioSettingsBuilder> buildOptions,
-        Func<IConsulSettingsBuilder, IConsulSettingsBuilder> buildConsulOptions,
-        HttpClientSettings httpClientOptions)
+        Func<IFabioOptionsBuilder, IFabioOptionsBuilder> buildOptions,
+        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildConsulOptions,
+        HttpClientOptions httpClientOptions)
     {
-        var fabioOptions = buildOptions(new FabioSettingsBuilder()).Build();
+        var fabioOptions = buildOptions(new FabioOptionsBuilder()).Build();
         return builder.AddFabio(fabioOptions, httpClientOptions,
             b => b.AddConsul(buildConsulOptions, httpClientOptions));
     }

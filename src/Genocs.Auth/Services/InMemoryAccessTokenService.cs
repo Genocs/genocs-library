@@ -14,7 +14,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
     public InMemoryAccessTokenService(
                                         IMemoryCache cache,
                                         IHttpContextAccessor httpContextAccessor,
-                                        JwtSettings jwtOptions)
+                                        JwtOptions jwtOptions)
     {
         _cache = cache;
         _httpContextAccessor = httpContextAccessor;

@@ -12,12 +12,12 @@ public class GenocsHttpClient : IHttpClient
 {
     private const string JsonContentType = "application/json";
     private readonly HttpClient _client;
-    private readonly HttpClientSettings _settings;
+    private readonly HttpClientOptions _settings;
     private readonly IHttpClientSerializer _serializer;
 
     public GenocsHttpClient(
                             HttpClient client,
-                            HttpClientSettings settings,
+                            HttpClientOptions settings,
                             IHttpClientSerializer serializer,
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)

@@ -6,9 +6,9 @@ namespace Genocs.MessageBrokers.Outbox.Configurators;
 internal sealed class MessageOutboxConfigurator : IMessageOutboxConfigurator
 {
     public IGenocsBuilder Builder { get; }
-    public OutboxSettings Options { get; }
+    public OutboxOptions Options { get; }
 
-    public MessageOutboxConfigurator(IGenocsBuilder builder, OutboxSettings options)
+    public MessageOutboxConfigurator(IGenocsBuilder builder, OutboxOptions options)
     {
         Builder = builder;
         Options = options;

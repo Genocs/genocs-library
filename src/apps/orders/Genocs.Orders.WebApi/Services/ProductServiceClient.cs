@@ -26,8 +26,8 @@ public class ProductServiceClient : IProductServiceClient
     public ProductServiceClient(
                                 IHttpClient client,
                                 ICertificatesService certificatesService,
-                                HttpClientSettings httpClientOptions,
-                                VaultSettings vaultOptions,
+                                HttpClientOptions httpClientOptions,
+                                VaultOptions vaultOptions,
                                 SecuritySettings securitySettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));

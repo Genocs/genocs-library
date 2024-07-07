@@ -11,7 +11,7 @@ internal sealed class VaultHostedService : BackgroundService
     private readonly ILeaseService _leaseService;
     private readonly ICertificatesIssuer _certificatesIssuer;
     private readonly ICertificatesService _certificatesService;
-    private readonly VaultSettings _settings;
+    private readonly VaultOptions _settings;
     private readonly ILogger<VaultHostedService> _logger;
     private readonly int _interval;
 
@@ -20,7 +20,7 @@ internal sealed class VaultHostedService : BackgroundService
                                 ILeaseService leaseService,
                                 ICertificatesIssuer certificatesIssuer,
                                 ICertificatesService certificatesService,
-                                VaultSettings settings,
+                                VaultOptions settings,
                                 ILogger<VaultHostedService> logger)
     {
         _client = client;

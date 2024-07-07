@@ -17,9 +17,13 @@ public static class Extensions
     private const string SectionName = "restEase";
     private const string RegistryName = "http.restEase";
 
-    public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        string sectionName = SectionName, string consulSectionName = "consul", string fabioSectionName = "fabio",
-        string httpClientSectionName = "httpClient")
+    public static IGenocsBuilder AddServiceClient<T>(
+                                                        this IGenocsBuilder builder,
+                                                        string serviceName,
+                                                        string sectionName = SectionName,
+                                                        string consulSectionName = "consul",
+                                                        string fabioSectionName = "fabio",
+                                                        string httpClientSectionName = "httpClient")
         where T : class
     {
         if (string.IsNullOrWhiteSpace(sectionName))
@@ -33,10 +37,10 @@ public static class Extensions
     }
 
     public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        Func<IRestEaseSettingsBuilder, IRestEaseSettingsBuilder> buildOptions,
-        Func<IConsulSettingsBuilder, IConsulSettingsBuilder> buildConsulOptions,
-        Func<IFabioSettingsBuilder, IFabioSettingsBuilder> buildFabioOptions,
-        HttpClientSettings httpClientOptions)
+        Func<IRestEaseOptionsBuilder, IRestEaseOptionsBuilder> buildOptions,
+        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildConsulOptions,
+        Func<IFabioOptionsBuilder, IFabioOptionsBuilder> buildFabioOptions,
+        HttpClientOptions httpClientOptions)
         where T : class
     {
         var options = buildOptions(new RestEaseOptionsBuilder()).Build();
@@ -44,12 +48,15 @@ public static class Extensions
             b => b.AddFabio(buildFabioOptions, buildConsulOptions, httpClientOptions));
     }
 
-    public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        RestEaseOptions options, ConsulOptions consulOptions, FabioOptions fabioOptions,
-        HttpClientOptions httpClientOptions)
+    public static IGenocsBuilder AddServiceClient<T>(
+                                                        this IGenocsBuilder builder,
+                                                        string serviceName,
+                                                        RestEaseOptions options,
+                                                        ConsulOptions consulOptions,
+                                                        FabioOptions fabioOptions,
+                                                        HttpClientOptions httpClientOptions)
         where T : class
-        => builder.AddServiceClient<T>(serviceName, options,
-            b => b.AddFabio(fabioOptions, consulOptions, httpClientOptions));
+        => builder.AddServiceClient<T>(serviceName, options, b => b.AddFabio(fabioOptions, consulOptions, httpClientOptions));
 
     private static IGenocsBuilder AddServiceClient<T>(
                                                         this IGenocsBuilder builder,

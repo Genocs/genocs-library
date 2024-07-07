@@ -7,7 +7,7 @@ internal sealed class FabioHttpClient : GenocsHttpClient, IFabioHttpClient
 {
     public FabioHttpClient(
                             HttpClient client,
-                            HttpClientSettings options,
+                            HttpClientOptions options,
                             IHttpClientSerializer serializer,
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)

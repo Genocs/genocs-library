@@ -10,7 +10,7 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
     private readonly HashSet<string> _maskedRequestUrlParts;
     private readonly string _maskTemplate;
 
-    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientSettings settings)
+    public GenocsLoggingScopeHttpMessageHandler(ILogger logger, HttpClientOptions settings)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _ = settings ?? throw new ArgumentNullException(nameof(settings));

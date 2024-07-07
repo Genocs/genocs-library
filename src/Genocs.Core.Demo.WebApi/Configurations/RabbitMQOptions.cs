@@ -1,6 +1,6 @@
 ﻿namespace Genocs.Core.Demo.WebApi.Options;
 
-public class RabbitMQSettings
+public class RabbitMQOptions
 {
     public const string Position = "RabbitMQ";
 

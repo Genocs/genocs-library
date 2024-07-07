@@ -2,7 +2,10 @@
 
 namespace Genocs.Core.Demo.WebApi.Options;
 
-public class ExternalServiceSettings : IValidatableObject
+/// <summary>
+/// This class implements Options pattern with Validation.
+/// </summary>
+public class ExternalServiceOptions : IValidatableObject
 {
     public const string Position = "ExternalService";
 

@@ -11,8 +11,8 @@ public sealed class OutboxMessage : IIdentifiable<string>
     public Dictionary<string, object> Headers { get; set; } = new();
     public string MessageType { get; set; }
     public string MessageContextType { get; set; }
-    public object Message { get; set; }
-    public object MessageContext { get; set; }
+    public object? Message { get; set; }
+    public object? MessageContext { get; set; }
     public string SerializedMessage { get; set; }
     public string SerializedMessageContext { get; set; }
     public DateTime SentAt { get; set; }

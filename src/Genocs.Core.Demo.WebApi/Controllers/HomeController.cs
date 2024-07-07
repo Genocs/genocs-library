@@ -7,9 +7,9 @@ namespace Genocs.Core.Demo.WebApi.Controllers;
 [Route("")]
 public class HomeController : ControllerBase
 {
-    public readonly SecretSettings _secretSettings;
+    public readonly SecretOptions _secretSettings;
 
-    public HomeController(SecretSettings secretSettings)
+    public HomeController(SecretOptions secretSettings)
     {
         _secretSettings = secretSettings ?? throw new ArgumentNullException(nameof(secretSettings));
     }

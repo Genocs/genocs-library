@@ -4,7 +4,7 @@ namespace Genocs.Auth.Builders;
 
 internal sealed class JwtOptionsBuilder : IJwtOptionsBuilder
 {
-    private readonly JwtSettings _options = new();
+    private readonly JwtOptions _options = new();
 
     public IJwtOptionsBuilder WithIssuerSigningKey(string issuerSigningKey)
     {
@@ -48,6 +48,6 @@ internal sealed class JwtOptionsBuilder : IJwtOptionsBuilder
         return this;
     }
 
-    public JwtSettings Build()
+    public JwtOptions Build()
         => _options;
 }

@@ -1,6 +1,6 @@
 namespace Genocs.MessageBrokers.Outbox.Configurations;
 
-public class OutboxSettings
+public class OutboxOptions
 {
     public bool Enabled { get; set; }
     public int Expiry { get; set; }

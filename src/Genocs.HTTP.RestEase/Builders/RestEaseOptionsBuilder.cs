@@ -1,26 +1,26 @@
-using Genocs.HTTP.RestEase.Options;
+using Genocs.HTTP.RestEase.Configurations;
 
 namespace Genocs.HTTP.RestEase.Builders;
 
-internal sealed class RestEaseSettingsBuilder : IRestEaseSettingsBuilder
+internal sealed class RestEaseOptionsBuilder : IRestEaseOptionsBuilder
 {
-    private readonly RestEaseSettings _options = new();
-    private readonly List<RestEaseSettings.Service> _services = new();
+    private readonly RestEaseOptions _options = new();
+    private readonly List<RestEaseOptions.Service> _services = new();
 
-    public IRestEaseSettingsBuilder WithLoadBalancer(string loadBalancer)
+    public IRestEaseOptionsBuilder WithLoadBalancer(string loadBalancer)
     {
         _options.LoadBalancer = loadBalancer;
         return this;
     }
 
-    public IRestEaseSettingsBuilder WithService(Func<IRestEaseServiceBuilder, IRestEaseServiceBuilder> buildService)
+    public IRestEaseOptionsBuilder WithService(Func<IRestEaseServiceBuilder, IRestEaseServiceBuilder> buildService)
     {
         var service = buildService(new RestEaseServiceBuilder()).Build();
         _services.Add(service);
         return this;
     }
 
-    public RestEaseSettings Build()
+    public RestEaseOptions Build()
     {
         _options.Services = _services;
         return _options;
@@ -28,7 +28,7 @@ internal sealed class RestEaseSettingsBuilder : IRestEaseSettingsBuilder
 
     private class RestEaseServiceBuilder : IRestEaseServiceBuilder
     {
-        private readonly RestEaseSettings.Service _service = new();
+        private readonly RestEaseOptions.Service _service = new();
 
         public IRestEaseServiceBuilder WithName(string name)
         {
@@ -54,6 +54,6 @@ internal sealed class RestEaseSettingsBuilder : IRestEaseSettingsBuilder
             return this;
         }
 
-        public RestEaseSettings.Service Build() => _service;
+        public RestEaseOptions.Service Build() => _service;
     }
 }

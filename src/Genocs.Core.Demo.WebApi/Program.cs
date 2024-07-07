@@ -6,6 +6,7 @@ using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
+using Genocs.WebApi.Security;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using System.Reflection;
@@ -23,7 +24,6 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
-    .AddPrivateKeyJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
@@ -39,10 +39,9 @@ services.AddControllers().AddJsonOptions(x =>
 
 services.AddHealthChecks();
 
-services.Configure<SecretSettings>(builder.Configuration.GetSection(SecretSettings.Position));
+services.Configure<SecretOptions>(builder.Configuration.GetSection(SecretOptions.Position));
 
-var settings = new SecretSettings();
-builder.Configuration.GetSection(SecretSettings.Position).Bind(settings);
+SecretOptions settings = builder.Configuration.GetOptions<SecretOptions>(SecretOptions.Position);
 services.AddSingleton(settings);
 
 services.Configure<HealthCheckPublisherOptions>(options =>

@@ -16,7 +16,7 @@ internal sealed class OutboxCommandHandlerDecorator<TCommand> : ICommandHandler<
     private readonly bool _enabled;
 
     public OutboxCommandHandlerDecorator(ICommandHandler<TCommand> handler, IMessageOutbox outbox,
-        OutboxSettings outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
+        OutboxOptions outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
     {
         _handler = handler;
         _outbox = outbox;

@@ -27,7 +27,7 @@ public static class Extensions
             return builder;
         }
 
-        var options = builder.GetOptions<OutboxSettings>(sectionName);
+        var options = builder.GetOptions<OutboxOptions>(sectionName);
         builder.Services.AddSingleton(options);
         var configurator = new MessageOutboxConfigurator(builder, options);
 

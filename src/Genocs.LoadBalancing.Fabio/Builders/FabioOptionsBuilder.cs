@@ -5,16 +5,16 @@ namespace Genocs.LoadBalancing.Fabio.Builders;
 /// <summary>
 /// The Fabio options builder.
 /// </summary>
-public class FabioSettingsBuilder : IFabioSettingsBuilder
+public class FabioOptionsBuilder : IFabioOptionsBuilder
 {
-    private readonly FabioSettings _settings = new();
+    private readonly FabioOptions _settings = new();
 
     /// <summary>
     /// Enable or disable the Fabio load balancer.
     /// </summary>
     /// <param name="enabled"></param>
     /// <returns>The option builder to be used for chain the build.</returns>
-    public IFabioSettingsBuilder Enable(bool enabled)
+    public IFabioOptionsBuilder Enable(bool enabled)
     {
         _settings.Enabled = enabled;
         return this;
@@ -25,7 +25,7 @@ public class FabioSettingsBuilder : IFabioSettingsBuilder
     /// </summary>
     /// <param name="url">The url.</param>
     /// <returns>The option builder to be used for chain the build.</returns>
-    public IFabioSettingsBuilder WithUrl(string url)
+    public IFabioOptionsBuilder WithUrl(string url)
     {
         _settings.Url = url;
         return this;
@@ -36,7 +36,7 @@ public class FabioSettingsBuilder : IFabioSettingsBuilder
     /// </summary>
     /// <param name="service">The service name</param>
     /// <returns>The option builder to be used for chain the build.</returns>
-    public IFabioSettingsBuilder WithService(string service)
+    public IFabioOptionsBuilder WithService(string service)
     {
         _settings.Service = service;
         return this;
@@ -46,5 +46,5 @@ public class FabioSettingsBuilder : IFabioSettingsBuilder
     /// Build the Fabio options.
     /// </summary>
     /// <returns>The Fabio options.</returns>
-    public FabioSettings Build() => _settings;
+    public FabioOptions Build() => _settings;
 }

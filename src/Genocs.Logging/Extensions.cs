@@ -23,24 +23,24 @@ public static class Extensions
     public static IHostBuilder UseLogging(
                                           this IHostBuilder hostBuilder,
                                           Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-                                          string? loggerSectionName = LoggerSettings.Position,
-                                          string? appSectionName = AppSettings.Position)
+                                          string? loggerSectionName = LoggerOptions.Position,
+                                          string? appSectionName = AppOptions.Position)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
             {
                 if (string.IsNullOrWhiteSpace(loggerSectionName))
                 {
-                    loggerSectionName = LoggerSettings.Position;
+                    loggerSectionName = LoggerOptions.Position;
                 }
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppSettings.Position;
+                    appSectionName = AppOptions.Position;
                 }
 
-                var loggerOptions = context.Configuration.GetOptions<LoggerSettings>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
+                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
+                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
@@ -52,8 +52,8 @@ public static class Extensions
         => builder.MapPost(endpointRoute, LevelSwitch);
 
     private static void MapOptions(
-                                   LoggerSettings loggerOptions,
-                                   AppSettings appOptions,
+                                   LoggerOptions loggerOptions,
+                                   AppOptions appOptions,
                                    LoggerConfiguration loggerConfiguration,
                                    string environmentName)
     {
@@ -86,14 +86,14 @@ public static class Extensions
         Configure(loggerConfiguration, loggerOptions);
     }
 
-    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerSettings options)
+    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
     {
-        var consoleOptions = options.Console ?? new ConsoleSettings();
-        var fileOptions = options.File ?? new LocalFileSettings();
-        var elkOptions = options.Elk ?? new ElkSettings();
-        var seqOptions = options.Seq ?? new SeqSettings();
-        var lokiOptions = options.Loki ?? new LokiSettings();
-        var azureOptions = options.Azure ?? new AzureSettings();
+        var consoleOptions = options.Console ?? new ConsoleOptions();
+        var fileOptions = options.File ?? new LocalFileOptions();
+        var elkOptions = options.Elk ?? new ElkOptions();
+        var seqOptions = options.Seq ?? new SeqOptions();
+        var lokiOptions = options.Loki ?? new LokiOptions();
+        var azureOptions = options.Azure ?? new AzureOptions();
 
         // console
         if (consoleOptions.Enabled)

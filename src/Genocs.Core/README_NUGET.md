@@ -1,7 +1,7 @@
 # .NET Core library
 
 This package contains a set of base functionalities designed by Genocs.
-The library is built to be used on .NET standard 2.1 and NET6 or NET7 as well.
+The library is built to be used on .NET standard 2.1 and NET6, NET7 NET8.
 
 ## Description
 
@@ -14,6 +14,10 @@ Please check the GitHub repository getting more info.
 
 
 ## Release notes
+
+### [2024-06-22] 6.0.0-preview.1.0
+- Upgrade toward Version 6.0.0
+- 
 
 ### [2024-01-23] 5.0.6
 - Refactory Settings
