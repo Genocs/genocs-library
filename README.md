@@ -83,7 +83,11 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
 
-`infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
+`infrastructure-bare.yml` allows to install the basic infrastructure components. They are:
+- [RabbitMQ](https://rabbitmq.com)
+- [Redis](https://redis.io)
+- [MongoDB](https://mongodb.com)
+- [Postgres](https://www.postgresql.org/).
 
 
 - [rabbitmq](http://localhost:15672/)
@@ -260,7 +264,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "enabled": false,
     "endpoint": "/metrics"
   },
-  "mongo": {
+  "mongodb": {
     "connectionString": "mongodb://localhost:27017",
     "database": "genocs-users-service",
     "seed": false
@@ -334,6 +338,11 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "certificate": {
       "header": "Certificate"
     }
+  },
+  "azureKeyVault": {
+    "enabled": false,
+    "name": "gnx-keyvault",
+    "managedIdentityId": "secret",
   },
   "vault": {
     "enabled": false,
