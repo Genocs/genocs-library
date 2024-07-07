@@ -95,7 +95,7 @@ public static class Extensions
         builder.Services.AddSingleton(jsonSerializer);
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSingleton(new WebApiEndpointDefinitions());
-        var options = builder.GetOptions<WebApiSettings>(sectionName);
+        var options = builder.GetOptions<WebApiOptions>(sectionName);
         builder.Services.AddSingleton(options);
         _bindRequestFromRoute = options.BindRequestFromRoute;
 

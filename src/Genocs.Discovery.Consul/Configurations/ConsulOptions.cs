@@ -7,7 +7,11 @@ public class ConsulOptions
     /// </summary>
     public const string Position = "consul";
 
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
     public bool Enabled { get; set; }
+
     public string? Url { get; set; }
     public string? Service { get; set; }
     public string? Address { get; set; }

@@ -5,11 +5,15 @@
 /// </summary>
 public class MongoDbEncryptionOptions
 {
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "mongoDbEncryption";
 
     /// <summary>
-    /// Default Section name.
+    /// It defines whether the section is enabled or not.
     /// </summary>
-    public const string Position = "MongoDbEncryption";
+    public bool Enabled { get; set; }
 
     /// <summary>
     /// The Database connection string.

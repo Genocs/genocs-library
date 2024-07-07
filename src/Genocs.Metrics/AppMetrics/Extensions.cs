@@ -40,7 +40,7 @@ public static class Extensions
             appSectionName = AppOptions.Position;
         }
 
-        var metricsOptions = builder.GetOptions<MetricsSettings>(metricsSectionName);
+        var metricsOptions = builder.GetOptions<Configurations.MetricsOptions>(metricsSectionName);
         var appOptions = builder.GetOptions<AppOptions>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
@@ -49,7 +49,7 @@ public static class Extensions
     [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
-                                            Func<IMetricsSettingsBuilder, IMetricsSettingsBuilder> buildOptions,
+                                            Func<IMetricsOptionsBuilder, IMetricsOptionsBuilder> buildOptions,
                                             string appSectionName = AppSectionName)
     {
         if (string.IsNullOrWhiteSpace(appSectionName))
@@ -57,7 +57,7 @@ public static class Extensions
             appSectionName = AppSectionName;
         }
 
-        var metricsOptions = buildOptions(new MetricsSettingsBuilder()).Build();
+        var metricsOptions = buildOptions(new MetricsOptionsBuilder()).Build();
         var appOptions = builder.GetOptions<AppOptions>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
@@ -66,7 +66,7 @@ public static class Extensions
     [Description("For the time being it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
-                                            Configurations.MetricsSettings metricsSettings,
+                                            Configurations.MetricsOptions metricsSettings,
                                             AppOptions appSettings)
     {
         builder.Services.AddSingleton(metricsSettings);
@@ -161,7 +161,7 @@ public static class Extensions
                 .UseMetricsAllMiddleware();
     }
 
-    private static MetricsWebHostOptions GetMetricsWebHostOptions(MetricsSettings metricsOptions)
+    private static MetricsWebHostOptions GetMetricsWebHostOptions(Configurations.MetricsOptions metricsOptions)
     {
         var options = new MetricsWebHostOptions();
 

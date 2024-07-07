@@ -2,22 +2,22 @@ using Genocs.Persistence.Redis.Configurations;
 
 namespace Genocs.Persistence.Redis.Builders;
 
-internal sealed class RedisSettingsBuilder : IRedisSettingsBuilder
+internal sealed class RedisSettingsBuilder : IRedisOptionsBuilder
 {
-    private readonly RedisSettings _options = new();
+    private readonly RedisOptions _options = new();
 
-    public IRedisSettingsBuilder WithConnectionString(string connectionString)
+    public IRedisOptionsBuilder WithConnectionString(string connectionString)
     {
         _options.ConnectionString = connectionString;
         return this;
     }
 
-    public IRedisSettingsBuilder WithInstance(string instance)
+    public IRedisOptionsBuilder WithInstance(string instance)
     {
         _options.Instance = instance;
         return this;
     }
 
-    public RedisSettings Build()
+    public RedisOptions Build()
         => _options;
 }

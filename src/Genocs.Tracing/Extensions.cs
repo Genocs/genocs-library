@@ -75,7 +75,7 @@ public static class Extensions
                 }
             }
 
-            var jaegerOptions = builder.GetOptions<JaegerSettings>(JaegerSettings.Position);
+            var jaegerOptions = builder.GetOptions<JaegerOptions>(JaegerOptions.Position);
 
             if (jaegerOptions != null && jaegerOptions.Enabled)
             {
@@ -121,7 +121,7 @@ public static class Extensions
         return builder;
     }
 
-    private static ISampler GetSampler(JaegerSettings options)
+    private static ISampler GetSampler(JaegerOptions options)
     {
         switch (options.Sampler)
         {
@@ -132,7 +132,7 @@ public static class Extensions
         }
     }
 
-    private static HttpSender BuildHttpSender(JaegerSettings.HttpSenderSettings? options)
+    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderSettings? options)
     {
         if (options is null)
         {

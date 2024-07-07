@@ -12,7 +12,7 @@ public static class Extensions
 {
     public static IGenocsBuilder AddPrometheus(this IGenocsBuilder builder)
     {
-        var prometheusOptions = builder.GetOptions<PrometheusSettings>("prometheus");
+        var prometheusOptions = builder.GetOptions<PrometheusOptions>(PrometheusOptions.Position);
         builder.Services.AddSingleton(prometheusOptions);
         if (!prometheusOptions.Enabled)
         {
@@ -28,7 +28,7 @@ public static class Extensions
 
     public static IApplicationBuilder UsePrometheus(this IApplicationBuilder app)
     {
-        var options = app.ApplicationServices.GetRequiredService<PrometheusSettings>();
+        var options = app.ApplicationServices.GetRequiredService<PrometheusOptions>();
         if (!options.Enabled)
         {
             return app;

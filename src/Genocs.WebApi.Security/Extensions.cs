@@ -17,7 +17,7 @@ public static class Extensions
                                                                 string sectionName = SectionName,
                                                                 Type? permissionValidatorType = null)
     {
-        var options = builder.GetOptions<SecuritySettings>(sectionName);
+        var options = builder.GetOptions<SecurityOptions>(sectionName);
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))
         {
@@ -57,7 +57,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseCertificateAuthentication(this IApplicationBuilder app)
     {
-        var options = app.ApplicationServices.GetRequiredService<SecuritySettings>();
+        var options = app.ApplicationServices.GetRequiredService<SecurityOptions>();
         if (options.Certificate is null || !options.Certificate.Enabled)
         {
             return app;

@@ -6,12 +6,12 @@ namespace Genocs.LoadBalancing.Fabio.Configurations;
 public class FabioOptions
 {
     /// <summary>
-    /// The default Fabio section name.
+    /// Default section name.
     /// </summary>
     public const string Position = "fabio";
 
     /// <summary>
-    /// Gets or sets a value indicating whether this <see cref="FabioOptions"/> is enabled.
+    /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
 

@@ -19,7 +19,7 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<SwaggerSettings>(sectionName);
+        var options = builder.GetOptions<SwaggerOptions>(sectionName);
         return builder.AddSwaggerDocs(options);
     }
 
@@ -29,7 +29,7 @@ public static class Extensions
         return builder.AddSwaggerDocs(options);
     }
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerSettings options)
+    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions options)
     {
         if (!options.Enabled || !builder.TryRegister(RegistryName))
         {
@@ -58,7 +58,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<SwaggerSettings>();
+        var options = builder.ApplicationServices.GetRequiredService<SwaggerOptions>();
         if (!options.Enabled)
         {
             return builder;

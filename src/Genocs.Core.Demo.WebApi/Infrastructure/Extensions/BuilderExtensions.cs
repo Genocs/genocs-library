@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.Builders;
+using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Services;
-using Genocs.Core.Demo.WebApi.Options;
 using Genocs.HTTP;
 using Genocs.Security;
 using Genocs.WebApi.Security;
@@ -37,7 +37,7 @@ public static class BuilderExtensions
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-        // builder.Services.AddSingleton<IConfigureOptions<WebApiSettings>, ConfigureWebApiSettings>();
+        // builder.Services.AddSingleton<IConfigureOptions<WebApiOptions>, ConfigureWebApiSettings>();
         ExternalServiceOptions settings = builder.Configuration.GetOptions<ExternalServiceOptions>(ExternalServiceOptions.Position);
         builder.Services.AddSingleton(settings);
 

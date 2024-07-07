@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.Demo.WebApi.Options;
+﻿namespace Genocs.Core.Demo.WebApi.Configurations;
 
 public class SecretOptions
 {
@@ -7,6 +7,10 @@ public class SecretOptions
     /// </summary>
     public const string Position = "secrets";
 
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
 
     /// <summary>
     /// This is an example of a secret. That should be stored in a secure way.

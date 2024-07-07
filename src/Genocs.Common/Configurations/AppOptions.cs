@@ -11,6 +11,12 @@ public class AppOptions
     public const string Position = "app";
 
     /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
+
+
+    /// <summary>
     /// Application name.
     /// </summary>
     public string? Name { get; set; }

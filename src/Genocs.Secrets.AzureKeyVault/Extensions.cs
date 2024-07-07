@@ -4,7 +4,6 @@ using Genocs.Secrets.AzureKeyVault.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Genocs.Secrets.AzureKeyVault;
@@ -23,16 +22,16 @@ public static class Extensions
     /// <returns>The Host builder.</returns>
     public static IHostBuilder UseAzureKeyVault(
                                         this IHostBuilder builder,
-                                        string sectionName = AzureKeyVaultSettings.Position)
+                                        string sectionName = AzureKeyVaultOptions.Position)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
                 if (string.IsNullOrWhiteSpace(sectionName))
                 {
-                    sectionName = AzureKeyVaultSettings.Position;
+                    sectionName = AzureKeyVaultOptions.Position;
                 }
 
-                var settings = ctx.Configuration.GetOptions<AzureKeyVaultSettings>(sectionName);
+                var settings = ctx.Configuration.GetOptions<AzureKeyVaultOptions>(sectionName);
                 if (!settings.Enabled)
                 {
                     return;
@@ -54,10 +53,10 @@ public static class Extensions
     /// <returns>The Web Host builder.</returns>
     public static IWebHostBuilder UseAzureKeyVault(
                                            this IWebHostBuilder builder,
-                                           string sectionName = AzureKeyVaultSettings.Position)
+                                           string sectionName = AzureKeyVaultOptions.Position)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
             {
-                AzureKeyVaultSettings settings = ctx.Configuration.GetOptions<AzureKeyVaultSettings>(sectionName);
+                AzureKeyVaultOptions settings = ctx.Configuration.GetOptions<AzureKeyVaultOptions>(sectionName);
                 if (!settings.Enabled)
                 {
                     return;
@@ -74,7 +73,7 @@ public static class Extensions
     public static WebApplicationBuilder UseAzureKeyVault(this WebApplicationBuilder builder)
     {
 
-        AzureKeyVaultSettings settings = builder.Configuration.GetOptions<AzureKeyVaultSettings>(AzureKeyVaultSettings.Position);
+        AzureKeyVaultOptions settings = builder.Configuration.GetOptions<AzureKeyVaultOptions>(AzureKeyVaultOptions.Position);
         if (!settings.Enabled)
         {
             return builder;

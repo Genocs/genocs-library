@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Demo.WebApi.Options;
+﻿using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.HTTP;
 using Genocs.HTTP.Configurations;
 using Newtonsoft.Json;

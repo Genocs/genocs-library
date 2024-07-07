@@ -61,8 +61,4 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="8.0.*" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Configurations\" />
-    </ItemGroup>
-
 </Project>

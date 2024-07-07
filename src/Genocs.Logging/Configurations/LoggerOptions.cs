@@ -10,6 +10,11 @@ public class LoggerOptions
     /// </summary>
     public const string Position = "logger";
 
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
+
     public string? Level { get; set; }
 
     /// <summary>

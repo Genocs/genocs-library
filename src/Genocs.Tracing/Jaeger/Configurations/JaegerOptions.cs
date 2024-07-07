@@ -3,7 +3,7 @@ namespace Genocs.Tracing.Jaeger.Configurations;
 /// <summary>
 /// Jaeger Settings.
 /// </summary>
-public class JaegerSettings
+public class JaegerOptions
 {
     /// <summary>
     /// Default section name.
@@ -11,9 +11,10 @@ public class JaegerSettings
     public const string Position = "jaeger";
 
     /// <summary>
-    /// 
+    /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
+
     public string? ServiceName { get; set; }
     public string? UdpHost { get; set; }
     public int UdpPort { get; set; }

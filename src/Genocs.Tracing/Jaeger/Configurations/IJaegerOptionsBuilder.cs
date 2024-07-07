@@ -10,5 +10,5 @@ public interface IJaegerOptionsBuilder
     IJaegerOptionsBuilder WithSampler(string sampler);
     IJaegerOptionsBuilder WithMaxTracesPerSecond(double maxTracesPerSecond);
     IJaegerOptionsBuilder WithSamplingRate(double samplingRate);
-    JaegerSettings Build();
+    JaegerOptions Build();
 }

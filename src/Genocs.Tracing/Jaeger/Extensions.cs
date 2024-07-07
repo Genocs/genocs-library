@@ -29,14 +29,14 @@ public static class Extensions
     /// <param name="sectionName"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, string sectionName = JaegerSettings.Position)
+    public static IGenocsBuilder AddJaeger(this IGenocsBuilder builder, string sectionName = JaegerOptions.Position)
     {
         if (Interlocked.Exchange(ref _initialized, 1) == 1)
         {
             return builder;
         }
 
-        var options = builder.GetOptions<JaegerSettings>(sectionName);
+        var options = builder.GetOptions<JaegerOptions>(sectionName);
 
         builder.Services.AddSingleton(options);
 
@@ -85,7 +85,7 @@ public static class Extensions
         return builder;
     }
 
-    private static HttpSender BuildHttpSender(JaegerSettings.HttpSenderSettings? options)
+    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderSettings? options)
     {
         if (options is null)
         {
@@ -125,12 +125,12 @@ public static class Extensions
     {
         // Could be extended with some additional middleware
         using var scope = app.ApplicationServices.CreateScope();
-        var options = scope.ServiceProvider.GetRequiredService<JaegerSettings>();
+        var options = scope.ServiceProvider.GetRequiredService<JaegerOptions>();
 
         return app;
     }
 
-    private static ISampler GetSampler(JaegerSettings options)
+    private static ISampler GetSampler(JaegerOptions options)
     {
         return options.Sampler switch
         {

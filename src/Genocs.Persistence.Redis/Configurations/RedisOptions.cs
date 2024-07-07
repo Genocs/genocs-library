@@ -1,27 +1,32 @@
 namespace Genocs.Persistence.Redis.Configurations;
 
 /// <summary>
-/// The Redis Options
+/// The Redis Options.
 /// </summary>
-public class RedisSettings
+public class RedisOptions
 {
     /// <summary>
-    /// The section name
+    /// Default section name.
     /// </summary>
     public const string Position = "redis";
 
     /// <summary>
-    /// The connection string
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
+
+    /// <summary>
+    /// The connection string.
     /// </summary>
     public string ConnectionString { get; set; } = "localhost";
 
     /// <summary>
-    /// Redis instance
+    /// Redis instance.
     /// </summary>
     public string? Instance { get; set; }
 
     /// <summary>
-    /// The database Id
+    /// The database Id.
     /// </summary>
     public int Database { get; set; }
 }

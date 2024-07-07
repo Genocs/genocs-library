@@ -1,13 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Genocs.Core.Demo.WebApi.Options;
+namespace Genocs.Core.Demo.WebApi.Configurations;
 
 /// <summary>
 /// This class implements Options pattern with Validation.
 /// </summary>
 public class ExternalServiceOptions : IValidatableObject
 {
-    public const string Position = "ExternalService";
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "externalService";
+
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
 
     public string Caller { get; set; } = default!;
     public string Private { get; set; } = default!;

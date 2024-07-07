@@ -9,5 +9,5 @@ public interface ISwaggerOptionsBuilder
     ISwaggerOptionsBuilder WithRoutePrefix(string routePrefix);
     ISwaggerOptionsBuilder IncludeSecurity(bool includeSecurity);
     ISwaggerOptionsBuilder SerializeAsOpenApiV2(bool serializeAsOpenApiV2);
-    SwaggerSettings Build();
+    SwaggerOptions Build();
 }

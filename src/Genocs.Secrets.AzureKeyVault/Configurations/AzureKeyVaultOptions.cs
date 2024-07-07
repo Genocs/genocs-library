@@ -3,12 +3,15 @@ namespace Genocs.Secrets.AzureKeyVault.Configurations;
 /// <summary>
 /// The vault Setting definition.
 /// </summary>
-public class AzureKeyVaultSettings
+public class AzureKeyVaultOptions
 {
-    public const string Position = "AzureKeyVault";
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "azureKeyVault";
 
     /// <summary>
-    /// The flag to enable or disable the Azure Key Vault.
+    /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
 

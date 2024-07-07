@@ -19,14 +19,14 @@ public static class Extensions
     /// <param name="builder">The Genocs builder</param>
     /// <param name="sectionName"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisSettings.Position)
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = RedisSettings.Position;
+            sectionName = RedisOptions.Position;
         }
 
-        var options = builder.GetOptions<RedisSettings>(sectionName);
+        var options = builder.GetOptions<RedisOptions>(sectionName);
         return builder.AddRedis(options);
     }
 
@@ -38,7 +38,7 @@ public static class Extensions
     /// <returns></returns>
     public static IGenocsBuilder AddRedis(
                                             this IGenocsBuilder builder,
-                                            Func<IRedisSettingsBuilder, IRedisSettingsBuilder> buildOptions)
+                                            Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
     {
         var options = buildOptions(new RedisSettingsBuilder()).Build();
         return builder.AddRedis(options);
@@ -50,7 +50,7 @@ public static class Extensions
     /// <param name="builder">The Genocs builder</param>
     /// <param name="options"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisSettings options)
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisOptions options)
     {
         if (!builder.TryRegister(RegistryName))
         {

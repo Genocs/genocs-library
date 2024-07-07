@@ -1,8 +1,16 @@
-﻿namespace Genocs.Core.Demo.WebApi.Options;
+﻿namespace Genocs.Core.Demo.WebApi.Configurations;
 
 public class VerificationServiceOptions
 {
-    public const string Position = "VerificationService";
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "verificationService";
+
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
+    public bool Enabled { get; set; }
 
     public string ApiKey { get; set; } = default!;
 }

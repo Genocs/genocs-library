@@ -3,8 +3,13 @@
 /// <summary>
 /// The Prometheus Setting definition.
 /// </summary>
-public class PrometheusSettings
+public class PrometheusOptions
 {
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "prometheus";
+
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>

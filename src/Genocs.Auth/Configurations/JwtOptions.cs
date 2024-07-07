@@ -8,9 +8,10 @@ public class JwtOptions
     public const string Position = "jwt";
 
     /// <summary>
-    /// It is used to enable or disable the authentication.
+    /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
+
     public IEnumerable<string>? AllowAnonymousEndpoints { get; set; }
     public CertificateOptions? Certificate { get; set; }
     public string? Algorithm { get; set; }

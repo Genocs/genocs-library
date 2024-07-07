@@ -1,6 +1,6 @@
 namespace Genocs.WebApi.Swagger.Docs.Configurations;
 
-public class SwaggerSettings
+public class SwaggerOptions
 {
     public bool Enabled { get; set; }
     public bool ReDocEnabled { get; set; }
