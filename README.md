@@ -89,11 +89,12 @@ docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genoc
 - [MongoDB](https://mongodb.com)
 - [Postgres](https://www.postgresql.org/).
 
+You can run them locally:
 
-- [rabbitmq](http://localhost:15672/)
-- Redis
-- MongoDb
-- PostgreSQL
+- RrabbitMQ]: `localhost:15672`
+- Redis: `localhost:6379`
+- MongoDb: `localhost:27017`
+- PostgreSQL: `localhost:5432`
 
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
@@ -105,6 +106,14 @@ Inside the file you can find:
 - influxdb
 - jaeger
 - seq
+
+
+- Prometheus: `localhost:9090`
+- Grafana: `localhost:3000`
+- influxdb: `localhost:8086`
+- jaeger: `localhost:16686`
+- seq: `localhost:5341`
+
 
 `infrastructure-scaling.yml` allows to install the scaling infrastructure components.
 
