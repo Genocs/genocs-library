@@ -1,6 +1,6 @@
-namespace Genocs.HTTP.RestEase.Options;
+namespace Genocs.HTTP.RestEase.Configurations;
 
-public class RestEaseSettings
+public class RestEaseOptions
 {
     public string? LoadBalancer { get; set; }
     public IEnumerable<Service>? Services { get; set; }

@@ -3,7 +3,7 @@ namespace Genocs.Logging.Configurations;
 /// <summary>
 /// File settings for local file logging.
 /// </summary>
-public class LocalFileSettings
+public class LocalFileOptions
 {
     /// <summary>
     /// If enabled, local file logging is enabled.

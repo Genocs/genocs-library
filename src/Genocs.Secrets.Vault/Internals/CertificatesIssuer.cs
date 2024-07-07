@@ -11,12 +11,12 @@ namespace Genocs.Secrets.Vault.Internals;
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {
     private readonly IVaultClient _client;
-    private readonly VaultSettings.PkiSettings _options;
+    private readonly VaultOptions.PkiOptions _options;
     private readonly CertificateFormat _certificateFormat;
     private readonly PrivateKeyFormat _privateKeyFormat;
     private readonly string _mountPoint;
 
-    public CertificatesIssuer(IVaultClient client, VaultSettings options)
+    public CertificatesIssuer(IVaultClient client, VaultOptions options)
     {
         _client = client;
         _options = options.Pki;

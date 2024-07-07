@@ -1,6 +1,6 @@
 namespace Genocs.Logging.Configurations;
 
-public class SeqSettings
+public class SeqOptions
 {
     public bool Enabled { get; set; }
     public string? Url { get; set; }

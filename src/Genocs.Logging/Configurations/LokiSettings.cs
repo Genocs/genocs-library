@@ -24,7 +24,7 @@
 /// <item><term>CreateLevelLabel</term></item>
 /// </list>
 /// </summary>
-public class LokiSettings
+public class LokiOptions
 {
     /// <summary>
     /// Whether or not to enable Loki Logging.

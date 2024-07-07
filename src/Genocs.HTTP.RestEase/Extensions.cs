@@ -3,7 +3,7 @@ using Genocs.Discovery.Consul;
 using Genocs.Discovery.Consul.Configurations;
 using Genocs.HTTP.Configurations;
 using Genocs.HTTP.RestEase.Builders;
-using Genocs.HTTP.RestEase.Options;
+using Genocs.HTTP.RestEase.Configurations;
 using Genocs.HTTP.RestEase.Serializers;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.LoadBalancing.Fabio.Configurations;
@@ -27,7 +27,7 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var restEaseOptions = builder.GetOptions<RestEaseSettings>(sectionName);
+        var restEaseOptions = builder.GetOptions<RestEaseOptions>(sectionName);
         return builder.AddServiceClient<T>(serviceName, restEaseOptions,
             b => b.AddFabio(fabioSectionName, consulSectionName, httpClientSectionName));
     }
@@ -39,14 +39,14 @@ public static class Extensions
         HttpClientSettings httpClientOptions)
         where T : class
     {
-        var options = buildOptions(new RestEaseSettingsBuilder()).Build();
+        var options = buildOptions(new RestEaseOptionsBuilder()).Build();
         return builder.AddServiceClient<T>(serviceName, options,
             b => b.AddFabio(buildFabioOptions, buildConsulOptions, httpClientOptions));
     }
 
     public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        RestEaseSettings options, ConsulSettings consulOptions, FabioSettings fabioOptions,
-        HttpClientSettings httpClientOptions)
+        RestEaseOptions options, ConsulOptions consulOptions, FabioOptions fabioOptions,
+        HttpClientOptions httpClientOptions)
         where T : class
         => builder.AddServiceClient<T>(serviceName, options,
             b => b.AddFabio(fabioOptions, consulOptions, httpClientOptions));
@@ -54,7 +54,7 @@ public static class Extensions
     private static IGenocsBuilder AddServiceClient<T>(
                                                         this IGenocsBuilder builder,
                                                         string serviceName,
-                                                        RestEaseSettings options,
+                                                        RestEaseOptions options,
                                                         Action<IGenocsBuilder> registerFabio)
         where T : class
     {
@@ -89,7 +89,7 @@ public static class Extensions
                                                 IServiceCollection services,
                                                 string clientName,
                                                 string serviceName,
-                                                RestEaseSettings options)
+                                                RestEaseOptions options)
     {
         services.AddHttpClient(clientName, client =>
         {

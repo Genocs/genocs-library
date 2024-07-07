@@ -15,7 +15,7 @@ public class ExternalServiceClient : IExternalServiceClient
     private readonly IHttpClient _client;
     private readonly string _url;
     private readonly IHasher _hasher;
-    private readonly ExternalServiceSettings _externalServiceSettings;
+    private readonly ExternalServiceOptions _externalServiceSettings;
 
     /// <summary>
     /// The standard constructor.

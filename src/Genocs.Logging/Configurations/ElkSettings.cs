@@ -3,7 +3,7 @@ namespace Genocs.Logging.Configurations;
 /// <summary>
 /// Elasticsearch Settings.
 /// </summary>
-public class ElkSettings
+public class ElkOptions
 {
     /// <summary>
     /// It define whether the Elasticsearch logger and tracing are enabled or not.

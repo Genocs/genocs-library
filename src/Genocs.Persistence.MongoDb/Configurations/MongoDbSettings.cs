@@ -5,7 +5,7 @@ namespace Genocs.Persistence.MongoDb.Configurations;
 /// <summary>
 /// MongoDb database Settings.
 /// </summary>
-public class MongoDbSettings
+public class MongoDbOptions
 {
     /// <summary>
     /// Default Section name.
@@ -43,7 +43,7 @@ public class MongoDbSettings
     /// </summary>
     /// <param name="settings">MongoDbSettings object.</param>
     /// <returns>return true if valid otherwise false.</returns>
-    public static bool IsValid(MongoDbSettings settings)
+    public static bool IsValid(MongoDbOptions settings)
     {
         if (settings is null) return false;
 

@@ -3,7 +3,7 @@ namespace Genocs.Logging.Configurations;
 /// <summary>
 /// Azure application insights logging settings.
 /// </summary>
-public class AzureSettings
+public class AzureOptions
 {
     /// <summary>
     /// It define whether the Azure application insights logger and tracing are enabled or not.

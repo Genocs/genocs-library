@@ -1,10 +1,13 @@
 namespace Genocs.Logging.Configurations;
+<<<<<<<< HEAD:src/Genocs.Logging/Configurations/LoggerSettings.cs
 
+========
+>>>>>>>> 3b27e463fa91d72fe87473c7d6918114896433cd:src/Genocs.Logging/Configurations/LoggerOptions.cs
 
 /// <summary>
 /// Logger Settings.
 /// </summary>
-public class LoggerSettings
+public class LoggerOptions
 {
     /// <summary>
     /// Default section name.
@@ -16,25 +19,25 @@ public class LoggerSettings
     /// <summary>
     /// The Console Logging and tracing Settings.
     /// </summary>
-    public ConsoleSettings? Console { get; set; }
-    public LocalFileSettings? File { get; set; }
-    public ElkSettings? Elk { get; set; }
-    public SeqSettings? Seq { get; set; }
+    public ConsoleOptions? Console { get; set; }
+    public LocalFileOptions? File { get; set; }
+    public ElkOptions? Elk { get; set; }
+    public SeqOptions? Seq { get; set; }
 
     /// <summary>
     /// Loki logging settings.
     /// </summary>
-    public LokiSettings? Loki { get; set; }
+    public LokiOptions? Loki { get; set; }
 
     /// <summary>
     /// Azure application insights logging settings.
     /// </summary>
-    public AzureSettings? Azure { get; set; }
+    public AzureOptions? Azure { get; set; }
 
     /// <summary>
     /// MongoDb logging settings.
     /// </summary>
-    public MongoSettings? Mongo { get; set; }
+    public MongoOptions? Mongo { get; set; }
 
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
     public IEnumerable<string>? ExcludePaths { get; set; }
