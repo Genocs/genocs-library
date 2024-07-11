@@ -1,3 +1,4 @@
+// using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
@@ -22,6 +23,7 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+//    .AddOpenIdJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
@@ -78,6 +80,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+// Use it only if you need to authenticate with Firebase
+// app.UseFirebaseAuthentication();
 
 app.MapControllers();
 

@@ -91,36 +91,32 @@ docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genoc
 
 You can run them locally:
 
-- RrabbitMQ]: `localhost:15672`
+- [RabbitMQ](http://localhost:15672): `localhost:15672`
 - Redis: `localhost:6379`
-- MongoDb: `localhost:27017`
-- PostgreSQL: `localhost:5432`
+- MongoDB: `localhost:27017`
+- Postgres: `localhost:5432`
 
 
-`infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
-
-Inside the file you can find:
-
-- Prometheus
-- Grafana
-- influxdb
-- jaeger
-- seq
+`infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
+- [Prometheus](https://prometheus.io/)
+- [Grafana](https://grafana.com/)
+- [InfluxDB](https://www.influxdata.com/)
+- [Jaeger](https://www.jaegertracing.io/)
+- [Seq](https://datalust.co/seq)
 
 
-- Prometheus: `localhost:9090`
-- Grafana: `localhost:3000`
-- influxdb: `localhost:8086`
-- jaeger: `localhost:16686`
-- seq: `localhost:5341`
+You can run them locally:
+
+- [Prometheus](localhost:9090): `localhost:9090`
+- [Grafana](localhost:3000): `localhost:3000`
+- [InfluxDB](localhost:8086): `localhost:8086`
+- [Jaeger](localhost:16686): `localhost:16686`
+- [Seq](localhost:5341): `localhost:5341`
 
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components.
-
-Inside the file you can find:
-
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components. They are:
 - Fabio
-- consul
+- Consul
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
 

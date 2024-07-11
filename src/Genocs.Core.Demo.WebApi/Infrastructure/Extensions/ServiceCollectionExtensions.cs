@@ -78,4 +78,9 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IApplicationBuilder UseFirebaseAuthentication(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<FirebaseAuthenticationMiddleware>();
+    }
 }
