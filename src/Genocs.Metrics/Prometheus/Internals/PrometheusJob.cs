@@ -19,7 +19,7 @@ internal sealed class PrometheusJob : IHostedService
     /// </summary>
     /// <param name="options"></param>
     /// <param name="logger"></param>
-    public PrometheusJob(PrometheusSettings options, ILogger<PrometheusJob> logger)
+    public PrometheusJob(PrometheusOptions options, ILogger<PrometheusJob> logger)
     {
         _enabled = options.Enabled;
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

@@ -4,11 +4,11 @@ using App.Metrics.AspNetCore.Endpoints;
 using App.Metrics.AspNetCore.Health.Endpoints;
 using App.Metrics.AspNetCore.Tracking;
 using App.Metrics.Formatters.Prometheus;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.AppMetrics.Builders;
-using Genocs.Metrics.AppMetrics.Options;
+using Genocs.Metrics.AppMetrics.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,11 +37,11 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(appSectionName))
         {
-            appSectionName = AppSettings.Position;
+            appSectionName = AppOptions.Position;
         }
 
-        var metricsOptions = builder.GetOptions<MetricsSettings>(metricsSectionName);
-        var appOptions = builder.GetOptions<AppSettings>(appSectionName);
+        var metricsOptions = builder.GetOptions<Configurations.MetricsOptions>(metricsSectionName);
+        var appOptions = builder.GetOptions<AppOptions>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
     }
@@ -58,7 +58,7 @@ public static class Extensions
         }
 
         var metricsOptions = buildOptions(new MetricsOptionsBuilder()).Build();
-        var appOptions = builder.GetOptions<AppSettings>(appSectionName);
+        var appOptions = builder.GetOptions<AppOptions>(appSectionName);
 
         return builder.AddMetrics(metricsOptions, appOptions);
     }
@@ -66,11 +66,11 @@ public static class Extensions
     [Description("For the time being it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
-                                            MetricsSettings metricsOptions,
-                                            AppSettings appOptions)
+                                            Configurations.MetricsOptions metricsSettings,
+                                            AppOptions appSettings)
     {
-        builder.Services.AddSingleton(metricsOptions);
-        if (!builder.TryRegister(RegistryName) || !metricsOptions.Enabled || _initialized)
+        builder.Services.AddSingleton(metricsSettings);
+        if (!builder.TryRegister(RegistryName) || !metricsSettings.Enabled || _initialized)
         {
             return builder;
         }
@@ -79,7 +79,7 @@ public static class Extensions
 
         var metricsBuilder = new MetricsBuilder().Configuration.Configure(cfg =>
         {
-            var tags = metricsOptions.Tags;
+            var tags = metricsSettings.Tags;
             if (tags is null)
             {
                 return;
@@ -88,17 +88,17 @@ public static class Extensions
             tags.TryGetValue("app", out string? app);
             tags.TryGetValue("env", out string? env);
             tags.TryGetValue("server", out string? server);
-            cfg.AddAppTag(string.IsNullOrWhiteSpace(app) ? appOptions.Service : app);
+            cfg.AddAppTag(string.IsNullOrWhiteSpace(app) ? appSettings.Service : app);
             cfg.AddEnvTag(string.IsNullOrWhiteSpace(env) ? null : env);
             cfg.AddServerTag(string.IsNullOrWhiteSpace(server) ? null : server);
-            if (!string.IsNullOrWhiteSpace(appOptions.Instance))
+            if (!string.IsNullOrWhiteSpace(appSettings.Instance))
             {
-                cfg.GlobalTags.Add("instance", appOptions.Instance);
+                cfg.GlobalTags.Add("instance", appSettings.Instance);
             }
 
-            if (!string.IsNullOrWhiteSpace(appOptions.Version))
+            if (!string.IsNullOrWhiteSpace(appSettings.Version))
             {
-                cfg.GlobalTags.Add("version", appOptions.Version);
+                cfg.GlobalTags.Add("version", appSettings.Version);
             }
 
             foreach (var tag in tags)
@@ -115,19 +115,19 @@ public static class Extensions
             }
         });
 
-        if (metricsOptions.InfluxEnabled)
+        if (metricsSettings.InfluxEnabled)
         {
             metricsBuilder.Report.ToInfluxDb(o =>
             {
-                o.InfluxDb.Database = metricsOptions.Database;
-                o.InfluxDb.BaseUri = new Uri(metricsOptions.InfluxUrl!);
+                o.InfluxDb.Database = metricsSettings.Database;
+                o.InfluxDb.BaseUri = new Uri(metricsSettings.InfluxUrl!);
                 o.InfluxDb.CreateDataBaseIfNotExists = true;
-                o.FlushInterval = TimeSpan.FromSeconds(metricsOptions.Interval);
+                o.FlushInterval = TimeSpan.FromSeconds(metricsSettings.Interval);
             });
         }
 
         var metrics = metricsBuilder.Build();
-        var metricsWebHostOptions = GetMetricsWebHostOptions(metricsOptions);
+        var metricsWebHostOptions = GetMetricsWebHostOptions(metricsSettings);
 
         using var serviceProvider = builder.Services.BuildServiceProvider();
         var configuration = builder.Configuration ?? serviceProvider.GetRequiredService<IConfiguration>();
@@ -148,10 +148,10 @@ public static class Extensions
 
     public static IApplicationBuilder UseMetrics(this IApplicationBuilder app)
     {
-        MetricsOptions options;
+        App.Metrics.MetricsOptions options;
         using (var scope = app.ApplicationServices.CreateScope())
         {
-            options = scope.ServiceProvider.GetRequiredService<MetricsOptions>();
+            options = scope.ServiceProvider.GetRequiredService<App.Metrics.MetricsOptions>();
         }
 
         return !options.Enabled
@@ -161,7 +161,7 @@ public static class Extensions
                 .UseMetricsAllMiddleware();
     }
 
-    private static MetricsWebHostOptions GetMetricsWebHostOptions(MetricsSettings metricsOptions)
+    private static MetricsWebHostOptions GetMetricsWebHostOptions(Configurations.MetricsOptions metricsOptions)
     {
         var options = new MetricsWebHostOptions();
 

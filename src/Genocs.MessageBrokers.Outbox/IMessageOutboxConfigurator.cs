@@ -1,10 +1,10 @@
 using Genocs.Core.Builders;
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.MessageBrokers.Outbox.Configurations;
 
 namespace Genocs.MessageBrokers.Outbox;
 
 public interface IMessageOutboxConfigurator
 {
     IGenocsBuilder Builder { get; }
-    OutboxSettings Options { get; }
+    OutboxOptions Options { get; }
 }

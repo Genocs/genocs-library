@@ -2,7 +2,7 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.MessageBrokers.Outbox.Configurations;
 
 namespace Genocs.Identities.Application.Decorators;
 
@@ -16,7 +16,7 @@ internal sealed class OutboxCommandHandlerDecorator<TCommand> : ICommandHandler<
     private readonly bool _enabled;
 
     public OutboxCommandHandlerDecorator(ICommandHandler<TCommand> handler, IMessageOutbox outbox,
-        OutboxSettings outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
+        OutboxOptions outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
     {
         _handler = handler;
         _outbox = outbox;

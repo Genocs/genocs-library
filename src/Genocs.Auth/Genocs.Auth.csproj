@@ -9,7 +9,7 @@
         <Description>The authorization library useful to build .NET Core projects.</Description>
         <LangVersion>10.0</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>5.0.0</Version>
+        <Version>6.0.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <Company>Genocs</Company>
@@ -20,7 +20,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
@@ -35,7 +35,7 @@
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-        <None Include="README.md">
+        <None Include="README_NUGET.md">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
@@ -43,10 +43,13 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
+
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="5.0.*" />
+        <PackageReference Include="Genocs.Core" Version="6.0.*" />
+        <PackageReference Include="Genocs.Security" Version="6.0.*" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -63,9 +66,4 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.*" />
     </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
-    </ItemGroup>
-
 </Project>

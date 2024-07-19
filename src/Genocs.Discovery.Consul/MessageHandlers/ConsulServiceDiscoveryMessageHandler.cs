@@ -1,29 +1,34 @@
-using Genocs.Discovery.Consul.Options;
+using Genocs.Discovery.Consul.Configurations;
 
 namespace Genocs.Discovery.Consul.MessageHandlers;
 
 internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
-    private readonly ConsulSettings _options;
+    private readonly ConsulOptions _options;
     private readonly string? _serviceName;
     private readonly bool? _overrideRequestUri;
 
     public ConsulServiceDiscoveryMessageHandler(
                                                 IConsulServicesRegistry servicesRegistry,
-                                                ConsulSettings options,
+                                                ConsulOptions options,
                                                 string? serviceName = null,
                                                 bool? overrideRequestUri = null)
     {
-        if (string.IsNullOrWhiteSpace(options.Url))
-        {
-            throw new InvalidOperationException("Consul URL was not provided.");
-        }
-
         _servicesRegistry = servicesRegistry;
         _options = options;
         _serviceName = serviceName;
         _overrideRequestUri = overrideRequestUri;
+
+        if (!options.Enabled)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(options.Url))
+        {
+            throw new InvalidOperationException("Consul URL was not provided.");
+        }
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(

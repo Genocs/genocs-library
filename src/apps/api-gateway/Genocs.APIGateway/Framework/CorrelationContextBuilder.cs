@@ -4,8 +4,12 @@ namespace Genocs.APIGateway.Framework;
 
 internal sealed class CorrelationContextBuilder : ICorrelationContextBuilder
 {
-    public CorrelationContext Build(HttpContext context, string correlationId, string spanContext,
-        string name = null, string resourceId = null)
+    public CorrelationContext Build(
+                                    HttpContext context,
+                                    string correlationId,
+                                    string spanContext,
+                                    string? name = null,
+                                    string? resourceId = null)
         => new CorrelationContext
         {
             CorrelationId = correlationId,

@@ -1,59 +1,59 @@
-using Genocs.Metrics.AppMetrics.Options;
+using Genocs.Metrics.AppMetrics.Configurations;
 
 namespace Genocs.Metrics.AppMetrics.Builders;
 
 internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
 {
-    private readonly MetricsSettings _options = new();
+    private readonly MetricsOptions _settings = new();
 
     public IMetricsOptionsBuilder Enable(bool enabled)
     {
-        _options.Enabled = enabled;
+        _settings.Enabled = enabled;
         return this;
     }
 
     public IMetricsOptionsBuilder WithInfluxEnabled(bool influxEnabled)
     {
-        _options.InfluxEnabled = influxEnabled;
+        _settings.InfluxEnabled = influxEnabled;
         return this;
     }
 
     public IMetricsOptionsBuilder WithPrometheusEnabled(bool prometheusEnabled)
     {
-        _options.PrometheusEnabled = prometheusEnabled;
+        _settings.PrometheusEnabled = prometheusEnabled;
         return this;
     }
 
     public IMetricsOptionsBuilder WithPrometheusFormatter(string prometheusFormatter)
     {
-        _options.PrometheusFormatter = prometheusFormatter;
+        _settings.PrometheusFormatter = prometheusFormatter;
         return this;
     }
 
     public IMetricsOptionsBuilder WithInfluxUrl(string influxUrl)
     {
-        _options.InfluxUrl = influxUrl;
+        _settings.InfluxUrl = influxUrl;
         return this;
     }
 
     public IMetricsOptionsBuilder WithDatabase(string database)
     {
-        _options.Database = database;
+        _settings.Database = database;
         return this;
     }
 
     public IMetricsOptionsBuilder WithInterval(int interval)
     {
-        _options.Interval = interval;
+        _settings.Interval = interval;
         return this;
     }
 
     public IMetricsOptionsBuilder WithTags(IDictionary<string, string> tags)
     {
-        _options.Tags = tags;
+        _settings.Tags = tags;
         return this;
     }
 
-    public MetricsSettings Build()
-        => _options;
+    public MetricsOptions Build()
+        => _settings;
 }

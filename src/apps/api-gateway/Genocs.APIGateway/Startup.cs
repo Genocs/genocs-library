@@ -1,6 +1,7 @@
+using Genocs.APIGateway.Configurations;
 using Genocs.APIGateway.Framework;
 using Genocs.Auth;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
@@ -31,7 +32,7 @@ internal class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICorrelationContextBuilder, CorrelationContextBuilder>();
         services.AddSingleton<RouteMatcher>();
-        services.Configure<MessagingOptions>(Configuration.GetSection("messaging"));
+        services.Configure<MessagingOptions>(Configuration.GetSection(MessagingOptions.Position));
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
@@ -89,7 +90,7 @@ internal class Startup
         {
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppSettings>()?.Name ?? "Service");
+                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
             });
             endpoints.MapReverseProxy();
 

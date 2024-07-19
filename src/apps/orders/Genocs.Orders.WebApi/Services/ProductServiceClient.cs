@@ -1,9 +1,9 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Secrets.Vault;
-using Genocs.Secrets.Vault.Options;
-using Genocs.WebApi.Security;
+using Genocs.Secrets.Vault.Configurations;
+using Genocs.WebApi.Security.Configurations;
 
 namespace Genocs.Orders.WebApi.Services;
 
@@ -22,13 +22,13 @@ public class ProductServiceClient : IProductServiceClient
     /// <param name="certificatesService">The certification service.</param>
     /// <param name="httpClientOptions"></param>
     /// <param name="vaultOptions"></param>
-    /// <param name="securitySettings"></param>
+    /// <param name="securityOptions"></param>
     public ProductServiceClient(
                                 IHttpClient client,
                                 ICertificatesService certificatesService,
-                                HttpClientSettings httpClientOptions,
-                                VaultSettings vaultOptions,
-                                SecuritySettings securitySettings)
+                                HttpClientOptions httpClientOptions,
+                                VaultOptions vaultOptions,
+                                SecurityOptions securityOptions)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
 
@@ -43,9 +43,9 @@ public class ProductServiceClient : IProductServiceClient
             throw new ArgumentNullException(nameof(vaultOptions));
         }
 
-        if (securitySettings is null)
+        if (securityOptions is null)
         {
-            throw new ArgumentNullException(nameof(securitySettings));
+            throw new ArgumentNullException(nameof(securityOptions));
         }
 
         string? url = httpClientOptions?.Services?["products"];
@@ -58,7 +58,7 @@ public class ProductServiceClient : IProductServiceClient
         _url = url;
 
         if (!vaultOptions.Enabled || vaultOptions.Pki?.Enabled != true ||
-            securitySettings.Certificate?.Enabled != true)
+            securityOptions.Certificate?.Enabled != true)
         {
             return;
         }
@@ -69,7 +69,7 @@ public class ProductServiceClient : IProductServiceClient
             return;
         }
 
-        string header = securitySettings.Certificate.GetHeaderName();
+        string header = securityOptions.Certificate.GetHeaderName();
         string certificateData = certificate.GetRawCertDataString();
         _client.SetHeaders(h => h.Add(header, certificateData));
     }

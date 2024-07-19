@@ -1,5 +1,5 @@
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.MessageBrokers;
 using Microsoft.AspNetCore.Http;
 
@@ -11,17 +11,24 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
 
     private readonly IMessagePropertiesAccessor _messagePropertiesAccessor;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly string _header;
+    private readonly string? _header;
 
-    public CorrelationIdFactory(IMessagePropertiesAccessor messagePropertiesAccessor,
-        IHttpContextAccessor httpContextAccessor, HttpClientSettings httpClientOptions)
+    public CorrelationIdFactory(
+                                IMessagePropertiesAccessor messagePropertiesAccessor,
+                                IHttpContextAccessor httpContextAccessor,
+                                HttpClientOptions httpClientOptions)
     {
-        _messagePropertiesAccessor = messagePropertiesAccessor;
-        _httpContextAccessor = httpContextAccessor;
+        if (httpClientOptions is null)
+        {
+            throw new ArgumentNullException(nameof(httpClientOptions));
+        }
+
+        _messagePropertiesAccessor = messagePropertiesAccessor ?? throw new ArgumentNullException(nameof(messagePropertiesAccessor));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _header = httpClientOptions.CorrelationIdHeader;
     }
 
-    private static string CorrelationId
+    private static string? CorrelationId
     {
         get => Holder.Value?.Id;
         set
@@ -41,7 +48,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
 
     private class CorrelationIdHolder
     {
-        public string Id;
+        public string? Id;
     }
 
     public string Create()
@@ -51,7 +58,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
             return CorrelationId;
         }
 
-        var correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
+        string? correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
         if (!string.IsNullOrWhiteSpace(correlationId))
         {
             CorrelationId = correlationId;

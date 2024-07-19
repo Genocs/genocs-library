@@ -1,9 +1,9 @@
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.WebApi;
+using Genocs.WebApi.Configurations;
 using Genocs.WebApi.Exceptions;
 using Genocs.WebApi.Formatters;
-using Genocs.WebApi.Options;
 using Genocs.WebApi.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -53,8 +53,11 @@ public static class Extensions
     }
 
     [Description("By default System JSON serializer is being used. If Newtonsoft JSON serializer is used then it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true")]
-    public static IGenocsBuilder AddWebApi(this IGenocsBuilder builder, Action<IMvcCoreBuilder> configureMvc = null,
-        IJsonSerializer jsonSerializer = null, string sectionName = SectionName)
+    public static IGenocsBuilder AddWebApi(
+                                            this IGenocsBuilder builder,
+                                            Action<IMvcCoreBuilder>? configureMvc = null,
+                                            IJsonSerializer? jsonSerializer = null,
+                                            string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -92,7 +95,7 @@ public static class Extensions
         builder.Services.AddSingleton(jsonSerializer);
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSingleton(new WebApiEndpointDefinitions());
-        var options = builder.GetOptions<WebApiSettings>(sectionName);
+        var options = builder.GetOptions<WebApiOptions>(sectionName);
         builder.Services.AddSingleton(options);
         _bindRequestFromRoute = options.BindRequestFromRoute;
 

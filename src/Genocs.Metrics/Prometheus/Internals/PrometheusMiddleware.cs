@@ -9,7 +9,7 @@ internal sealed class PrometheusMiddleware : IMiddleware
     private readonly string _endpoint;
     private readonly string? _apiKey;
 
-    public PrometheusMiddleware(PrometheusSettings options)
+    public PrometheusMiddleware(PrometheusOptions options)
     {
         _allowedHosts = new HashSet<string>(options.AllowedHosts ?? Array.Empty<string>());
         _endpoint = string.IsNullOrWhiteSpace(options.Endpoint) ? "/metrics" :

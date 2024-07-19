@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.Builders;
+using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Services;
-using Genocs.Core.Demo.WebApi.Options;
 using Genocs.HTTP;
 using Genocs.Security;
 using Genocs.WebApi.Security;
@@ -26,8 +26,19 @@ public static class BuilderExtensions
         builder.AddHttpClient();
 
         // Add the External Service settings
-        var settings = new ExternalServiceSettings();
-        builder.Configuration.GetSection(ExternalServiceSettings.Position).Bind(settings);
+        // Option 1: In this way ExternalServiceSettings is available for dependency injection.
+        // var settings = new ExternalServiceSettings();
+        // builder.Configuration.GetSection(ExternalServiceSettings.Position).Bind(settings);
+        // builder.Services.AddSingleton(settings);
+
+        // Option 2: In this way ExternalServiceSettings is available for dependency injection. By using IOptions<ExternalServiceSettings> you can access the settings.
+        builder.Services.AddOptions<ExternalServiceOptions>()
+                .BindConfiguration(ExternalServiceOptions.Position)
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+        // builder.Services.AddSingleton<IConfigureOptions<WebApiOptions>, ConfigureWebApiSettings>();
+        ExternalServiceOptions settings = builder.Configuration.GetOptions<ExternalServiceOptions>(ExternalServiceOptions.Position);
         builder.Services.AddSingleton(settings);
 
         // Add the External Service http Client

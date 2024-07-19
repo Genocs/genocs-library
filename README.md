@@ -45,7 +45,7 @@
 
 # Genocs .NET library
 
-This repo contains a set of libraries designed by Genocs. The library is built on top of .NET8. 
+This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET8, it is designed and maintained by Genocs. 
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -59,10 +59,16 @@ Building a software library to be cloud agnostic has several advantages. First, 
 
 The advantages of using containers are numerous. Containers provide a lightweight, portable, and isolated environment for applications to run in, allowing them to be easily moved between different systems. This makes it easier to deploy applications quickly and reliably across different environments. Additionally, containers can help reduce resource consumption by running multiple applications on the same host, as each container is isolated from the others. This helps to improve efficiency and scalability. Finally, containers provide an additional layer of security, as they are isolated from the underlying operating system and other applications.
 
+## Documentation
+
+You can find a useful documentation about how to use the library. The documentation contains the complete set of libraries, template, CLI that altogether make the *genocs ecosystem* a comprensive set of tools to build enterprise solutions.
+
+Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
+
 ## Infrastructure
 
-In this section you can find the infrastructure components to setup the environment.
-You will use ***Docker compose*** to setup the infrastructure components.
+In this section you can find the infrastructure components you need to execute the solution. Infrastucture components are the database, the enterprice servise bus, the distributed logging, monitoring, tracing systems along with database and many more.
+You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
 
 ``` bash
@@ -83,31 +89,40 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
 
-`infrastructure-bare.yml` allows to install the basic infrastructure components. Basic components are the [RabbitMQ](https://rabbitmq.com), [Redis](https://redis.io), [Mongo](https://mongodb.com), [Postgres](https://www.postgresql.org/).
+`infrastructure-bare.yml` allows to install the basic infrastructure components. They are:
+- [RabbitMQ](https://rabbitmq.com)
+- [Redis](https://redis.io)
+- [MongoDB](https://mongodb.com)
+- [Postgres](https://www.postgresql.org/).
+
+You can run them locally:
+
+- [RabbitMQ](http://localhost:15672): `localhost:15672`
+- Redis: `localhost:6379`
+- MongoDB: `localhost:27017`
+- Postgres: `localhost:5432`
 
 
-- [rabbitmq](http://localhost:15672/)
-- Redis
-- MongoDb
-- PostgreSQL
+`infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
+- [Prometheus](https://prometheus.io/)
+- [Grafana](https://grafana.com/)
+- [InfluxDB](https://www.influxdata.com/)
+- [Jaeger](https://www.jaegertracing.io/)
+- [Seq](https://datalust.co/seq)
 
 
-`infrastructure-monitoring.yml` allows to install the monitoring infrastructure components.
+You can run them locally:
 
-Inside the file you can find:
+- [Prometheus](localhost:9090): `localhost:9090`
+- [Grafana](localhost:3000): `localhost:3000`
+- [InfluxDB](localhost:8086): `localhost:8086`
+- [Jaeger](localhost:16686): `localhost:16686`
+- [Seq](localhost:5341): `localhost:5341`
 
-- Prometheus
-- Grafana
-- influxdb
-- jaeger
-- seq
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components.
-
-Inside the file you can find:
-
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components. They are:
 - Fabio
-- consul
+- Consul
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
 
@@ -136,15 +151,7 @@ You can setup the application inside a Kubernetes cluster.
 Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster. 
 There you can find scripts, configuration files and documentation to setup a cluster from scratch.
 
-## **Libraries**
-You can find a full documentation on:
-[**Documentation**](https://genocs-blog.netlify.app/library/)
-
-
-
 ## Support
-
-
 
 Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
 
@@ -260,7 +267,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "enabled": false,
     "endpoint": "/metrics"
   },
-  "mongo": {
+  "mongodb": {
     "connectionString": "mongodb://localhost:27017",
     "database": "genocs-users-service",
     "seed": false
@@ -335,6 +342,11 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "header": "Certificate"
     }
   },
+  "azureKeyVault": {
+    "enabled": false,
+    "name": "gnx-keyvault",
+    "managedIdentityId": "secret",
+  },
   "vault": {
     "enabled": false,
     "url": "http://localhost:8200",
@@ -371,7 +383,8 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 ## Demo Application
 Inside the library there is a simple demo application you can use to test the library. 
 
-Some commands
+Following are the commands to build and run the demo application.
+
 ``` bash
 # Build the solution 
 dotnet build
@@ -411,13 +424,11 @@ docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-
 docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
-
- ---
+---
 
 ## Enterprise Application
 
-
-Take a look inside **./src/apps** folder. There you can find a full-fledged application composed by:
+Inside **./src/apps** folder you can find a full-fledged application composed by:
 - ApiGateway
 - Identity Service
 - Order Service
@@ -426,6 +437,7 @@ Take a look inside **./src/apps** folder. There you can find a full-fledged appl
 
 In that way you can test the entire flow.
 
+**TODO**: Add a architecture diagram to show the components and how they interact with each other.
 
 ### How to BUILD & RUN the application
 
@@ -495,9 +507,9 @@ You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Go
 
 This project is licensed with the [MIT license](LICENSE).
 
-## Changelogs
+## Changelog
 
-View Complete [Changelogs](https://github.com/Genocs/microservice-template/blob/main/CHANGELOGS.md).
+View Complete [Changelog](https://github.com/Genocs/microservice-template/blob/main/CHANGELOG.md).
 
 ## Community
 

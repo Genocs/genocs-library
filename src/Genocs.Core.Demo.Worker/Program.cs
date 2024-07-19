@@ -7,27 +7,21 @@ using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
-using Genocs.Tracing;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Clean;
-using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
+using Genocs.Tracing;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
-using Serilog.Events;
 using System.Reflection;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+StaticLogger.EnsureInitialized();
 
 IHost host = Host.CreateDefaultBuilder(args)
     .UseLogging()
@@ -98,7 +92,7 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
 
 static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<AzureServiceBusTopicSettings>(configuration.GetSection(AzureServiceBusTopicSettings.Position));
+    services.Configure<AzureServiceBusTopicOptions>(configuration.GetSection(AzureServiceBusTopicOptions.Position));
 
     services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
 
@@ -110,7 +104,7 @@ static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfigur
 
 static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<AzureServiceBusQueueSettings>(configuration.GetSection(AzureServiceBusQueueSettings.Position));
+    services.Configure<AzureServiceBusQueueOptions>(configuration.GetSection(AzureServiceBusQueueOptions.Position));
 
     services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
 

@@ -1,3 +1,4 @@
+using Genocs.APIGateway.Configurations;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.MessageBrokers.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
@@ -17,9 +18,13 @@ internal class MessagingMiddleware : IMiddleware
     private readonly CorrelationIdFactory _correlationIdFactory;
     private readonly IDictionary<string, List<MessagingOptions.EndpointOptions>> _endpoints;
 
-    public MessagingMiddleware(IRabbitMQClient rabbitMQClient, RouteMatcher routeMatcher, ITracer tracer,
-        ICorrelationContextBuilder correlationContextBuilder, CorrelationIdFactory correlationIdFactory,
-        IOptions<MessagingOptions> messagingOptions)
+    public MessagingMiddleware(
+                                IRabbitMQClient rabbitMQClient,
+                                RouteMatcher routeMatcher,
+                                ITracer tracer,
+                                ICorrelationContextBuilder correlationContextBuilder,
+                                CorrelationIdFactory correlationIdFactory,
+                                IOptions<MessagingOptions> messagingOptions)
     {
         if (messagingOptions is null)
         {

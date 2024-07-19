@@ -1,4 +1,4 @@
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Polly;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,32 +12,32 @@ public class GenocsHttpClient : IHttpClient
 {
     private const string JsonContentType = "application/json";
     private readonly HttpClient _client;
-    private readonly HttpClientSettings _options;
+    private readonly HttpClientOptions _settings;
     private readonly IHttpClientSerializer _serializer;
 
     public GenocsHttpClient(
                             HttpClient client,
-                            HttpClientSettings options,
+                            HttpClientOptions settings,
                             IHttpClientSerializer serializer,
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)
     {
         _client = client;
-        _options = options;
+        _settings = settings;
         _serializer = serializer;
-        if (!string.IsNullOrWhiteSpace(_options.CorrelationContextHeader))
+        if (!string.IsNullOrWhiteSpace(_settings.CorrelationContextHeader))
         {
             string correlationContext = correlationContextFactory.Create();
             _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                    _options.CorrelationContextHeader,
+                                                                    _settings.CorrelationContextHeader,
                                                                     correlationContext);
         }
 
-        if (!string.IsNullOrWhiteSpace(_options.CorrelationIdHeader))
+        if (!string.IsNullOrWhiteSpace(_settings.CorrelationIdHeader))
         {
             string? correlationId = correlationIdFactory.Create();
             _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                    _options.CorrelationIdHeader,
+                                                                    _settings.CorrelationIdHeader,
                                                                     correlationId);
         }
     }
@@ -116,12 +116,12 @@ public class GenocsHttpClient : IHttpClient
 
     public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_options.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
+            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(() => _client.SendAsync(request));
 
     public Task<T> SendAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null)
         => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_options.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
+            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(async () =>
             {
                 var response = await _client.SendAsync(request);
@@ -137,7 +137,7 @@ public class GenocsHttpClient : IHttpClient
 
     public Task<HttpResult<T>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null)
         => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_options.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
+            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(async () =>
             {
                 var response = await _client.SendAsync(request);
@@ -205,7 +205,7 @@ public class GenocsHttpClient : IHttpClient
 
     protected virtual Task<HttpResponseMessage> SendAsync(string uri, Method method, HttpContent? content = null)
         => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_options.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
+            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(() =>
             {
                 string requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
@@ -233,7 +233,7 @@ public class GenocsHttpClient : IHttpClient
 
         serializer ??= _serializer;
         var content = new StringContent(serializer.Serialize(data), Encoding.UTF8, JsonContentType);
-        if (_options.RemoveCharsetFromContentType && content.Headers.ContentType is not null)
+        if (_settings.RemoveCharsetFromContentType && content.Headers.ContentType is not null)
         {
             content.Headers.ContentType.CharSet = null;
         }

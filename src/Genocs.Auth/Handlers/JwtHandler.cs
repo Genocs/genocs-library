@@ -1,3 +1,4 @@
+using Genocs.Auth.Configurations;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,7 +23,7 @@ internal sealed class JwtHandler : IJwtHandler
     private readonly JwtOptions _options;
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly SigningCredentials _signingCredentials;
-    private readonly string _issuer;
+    private readonly string? _issuer;
 
     public JwtHandler(JwtOptions options, TokenValidationParameters tokenValidationParameters)
     {

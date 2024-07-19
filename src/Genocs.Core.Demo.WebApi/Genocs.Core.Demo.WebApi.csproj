@@ -12,6 +12,7 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
@@ -20,17 +21,18 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="5.0.*" />
-        <PackageReference Include="Genocs.Core" Version="5.0.*" />
-        <PackageReference Include="Genocs.Logging" Version="5.0.*" />
-        <PackageReference Include="Genocs.Tracing" Version="5.0.*" />
-        <PackageReference Include="Genocs.HTTP" Version="5.0.*" />
-        <PackageReference Include="Genocs.Security" Version="5.0.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="5.0.*" />
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.0.*" />
+        <PackageReference Include="Genocs.Core" Version="6.0.*" />
+        <PackageReference Include="Genocs.Auth" Version="6.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="6.0.*" />
+        <PackageReference Include="Genocs.Tracing" Version="6.0.*" />
+        <PackageReference Include="Genocs.HTTP" Version="6.0.*" />
+        <PackageReference Include="Genocs.Security" Version="6.0.*" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.0.*" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
@@ -38,6 +40,7 @@
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
         <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
+        <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
 
 </Project>

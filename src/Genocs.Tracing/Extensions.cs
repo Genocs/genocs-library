@@ -1,8 +1,8 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Logging.Configurations;
+using Genocs.Tracing.Jaeger.Configurations;
 using Jaeger.Samplers;
 using Jaeger.Senders.Thrift;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +28,7 @@ public static class Extensions
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
 
-        var appOptions = builder.GetOptions<AppSettings>(AppSettings.Position);
+        var appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
 
         // No OpenTelemetryTracing in case of missing ServiceName
         if (string.IsNullOrWhiteSpace(appOptions.Service))
@@ -47,7 +47,7 @@ public static class Extensions
                                                         .AddEnvironmentVariableDetector())
                                                     .AddSource("*");
 
-            var loggerOptions = builder.GetOptions<LoggerSettings>(LoggerSettings.Position);
+            var loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
 
             // No OpenTelemetryTracing in case of missing LoggerSettings
             if (loggerOptions != null)
@@ -75,7 +75,7 @@ public static class Extensions
                 }
             }
 
-            var jaegerOptions = builder.GetOptions<JaegerSettings>(JaegerSettings.Position);
+            var jaegerOptions = builder.GetOptions<JaegerOptions>(JaegerOptions.Position);
 
             if (jaegerOptions != null && jaegerOptions.Enabled)
             {
@@ -121,7 +121,7 @@ public static class Extensions
         return builder;
     }
 
-    private static ISampler GetSampler(JaegerSettings options)
+    private static ISampler GetSampler(JaegerOptions options)
     {
         switch (options.Sampler)
         {
@@ -132,7 +132,7 @@ public static class Extensions
         }
     }
 
-    private static HttpSender BuildHttpSender(JaegerSettings.HttpSenderSettings? options)
+    private static HttpSender BuildHttpSender(JaegerOptions.HttpSenderSettings? options)
     {
         if (options is null)
         {

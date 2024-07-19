@@ -1,10 +1,10 @@
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Tracing.Jaeger.Configurations;
 
 namespace Genocs.Tracing.Jaeger.Builders;
 
 internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
 {
-    private readonly JaegerSettings _options = new();
+    private readonly JaegerOptions _options = new();
 
     public IJaegerOptionsBuilder Enable(bool enabled)
     {
@@ -54,6 +54,6 @@ internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
         return this;
     }
 
-    public JaegerSettings Build()
+    public JaegerOptions Build()
         => _options;
 }

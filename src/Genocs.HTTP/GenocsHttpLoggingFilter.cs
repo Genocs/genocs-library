@@ -1,4 +1,4 @@
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
@@ -8,9 +8,9 @@ namespace Genocs.HTTP;
 internal sealed class GenocsHttpLoggingFilter : IHttpMessageHandlerBuilderFilter
 {
     private readonly ILoggerFactory _loggerFactory;
-    private readonly HttpClientSettings _options;
+    private readonly HttpClientOptions _options;
 
-    public GenocsHttpLoggingFilter(ILoggerFactory loggerFactory, HttpClientSettings options)
+    public GenocsHttpLoggingFilter(ILoggerFactory loggerFactory, HttpClientOptions options)
     {
         _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         _options = options;

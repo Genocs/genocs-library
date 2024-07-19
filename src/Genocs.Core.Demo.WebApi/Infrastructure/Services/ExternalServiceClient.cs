@@ -1,7 +1,8 @@
-﻿using Genocs.Core.Demo.WebApi.Options;
+﻿using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.HTTP;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Genocs.Security;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure.Services;
@@ -14,7 +15,7 @@ public class ExternalServiceClient : IExternalServiceClient
     private readonly IHttpClient _client;
     private readonly string _url;
     private readonly IHasher _hasher;
-    private readonly ExternalServiceSettings _externalServiceSettings;
+    private readonly ExternalServiceOptions _externalServiceOptions;
 
     /// <summary>
     /// The standard constructor.
@@ -22,16 +23,16 @@ public class ExternalServiceClient : IExternalServiceClient
     /// <param name="client">The http client.</param>
     /// <param name="hasher">The Hash service.</param>
     /// <param name="httpClientSettings">The http client settings.</param>
-    /// <param name="externalServiceSettings">The security settings.</param>
+    /// <param name="options">The security settings.</param>
     public ExternalServiceClient(
                                 IHttpClient client,
                                 IHasher hasher,
-                                HttpClientSettings httpClientSettings,
-                                ExternalServiceSettings externalServiceSettings)
+                                HttpClientOptions httpClientSettings,
+                                IOptions<ExternalServiceOptions> options)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
-        _externalServiceSettings = externalServiceSettings ?? throw new ArgumentNullException(nameof(externalServiceSettings));
+        _externalServiceOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
 
         if (httpClientSettings is null)
         {
@@ -50,8 +51,8 @@ public class ExternalServiceClient : IExternalServiceClient
 
     private void SetHeaders(string request)
     {
-        string hash = _hasher.Hash(request, _externalServiceSettings.Private);
-        string headerData = $"Credential={_externalServiceSettings.Public}, Signature={hash}";
+        string hash = _hasher.Hash(request, _externalServiceOptions.Private);
+        string headerData = $"Credential={_externalServiceOptions.Public}, Signature={hash}";
         _client.SetHeaders(h => h.TryAddWithoutValidation("Authorization", headerData));
     }
 
@@ -66,7 +67,7 @@ public class ExternalServiceClient : IExternalServiceClient
         SetHeaders(serializedRequest);
         using (var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json"))
         {
-            return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceSettings.Caller}/direct-issue", content);
+            return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceOptions.Caller}/direct-issue", content);
         }
     }
 

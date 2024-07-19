@@ -1,5 +1,5 @@
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Microsoft.Extensions.Logging;
@@ -11,6 +11,8 @@ namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;
 
 internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccessor
 {
+    private const string EmptyJsonObject = "{}";
+
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -19,7 +21,6 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
 
-    private const string EmptyJsonObject = "{}";
     private readonly IMongoSessionFactory _sessionFactory;
     private readonly IMongoRepository<InboxMessage, string> _inboxRepository;
     private readonly IMongoRepository<OutboxMessage, string> _outboxRepository;
@@ -31,7 +32,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
     public MongoMessageOutbox(IMongoSessionFactory sessionFactory,
         IMongoRepository<InboxMessage, string> inboxRepository,
         IMongoRepository<OutboxMessage, string> outboxRepository,
-        OutboxSettings options, ILogger<MongoMessageOutbox> logger)
+        OutboxOptions options, ILogger<MongoMessageOutbox> logger)
     {
         _sessionFactory = sessionFactory;
         _inboxRepository = inboxRepository;

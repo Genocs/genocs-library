@@ -1,5 +1,6 @@
 using Genocs.Core.Builders;
 using Genocs.WebApi.Swagger.Docs;
+using Genocs.WebApi.Swagger.Docs.Configurations;
 using Genocs.WebApi.Swagger.Filters;
 using Microsoft.Extensions.DependencyInjection;
 

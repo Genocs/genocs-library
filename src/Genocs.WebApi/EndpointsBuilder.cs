@@ -108,7 +108,7 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Delete(string path, Func<HttpContext, Task> context = null,
+    public IEndpointsBuilder Delete(string path, Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
     {
@@ -120,8 +120,8 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task>? context = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
         where T : class
     {
