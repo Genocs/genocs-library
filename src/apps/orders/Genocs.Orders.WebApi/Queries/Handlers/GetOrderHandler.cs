@@ -15,10 +15,10 @@ public class GetOrderHandler : IQueryHandler<GetOrder, OrderDto>
     }
 
     /// <summary>
-    /// GetOrder query handler
+    /// GetOrder query handler.
     /// </summary>
-    /// <param name="query">The query</param>
-    /// <param name="cancellationToken">The cancellation token</param>
+    /// <param name="query">The query.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
     public async Task<OrderDto?> HandleAsync(GetOrder query, CancellationToken cancellationToken = default)
     {
