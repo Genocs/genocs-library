@@ -73,8 +73,7 @@ app.UseGenocs()
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get("", ctx => ctx.Response.WriteAsync("SignalR Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
-        .Post<PublishNotification>("notifications",
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
+        .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
     .UseJaeger()
     .UseSwaggerDocs()
     .UseRabbitMq();

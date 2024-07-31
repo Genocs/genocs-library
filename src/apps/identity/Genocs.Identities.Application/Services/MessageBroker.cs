@@ -21,10 +21,15 @@ internal class MessageBroker : IMessageBroker
     private readonly ILogger<IMessageBroker> _logger;
     private readonly string _spanContextHeader;
 
-    public MessageBroker(IBusPublisher busPublisher, IMessageOutbox outbox,
-        ICorrelationContextAccessor contextAccessor, IHttpContextAccessor httpContextAccessor,
-        IMessagePropertiesAccessor messagePropertiesAccessor, ICorrelationIdFactory correlationIdFactory,
-        RabbitMQOptions options, ILogger<IMessageBroker> logger)
+    public MessageBroker(
+                            IBusPublisher busPublisher,
+                            IMessageOutbox outbox,
+                            ICorrelationContextAccessor contextAccessor,
+                            IHttpContextAccessor httpContextAccessor,
+                            IMessagePropertiesAccessor messagePropertiesAccessor,
+                            ICorrelationIdFactory correlationIdFactory,
+                            RabbitMQOptions options,
+                            ILogger<IMessageBroker> logger)
     {
         if (options is null)
         {
@@ -53,11 +58,12 @@ internal class MessageBroker : IMessageBroker
         }
 
         var messageProperties = _messagePropertiesAccessor.MessageProperties;
-        var originatedMessageId = messageProperties?.MessageId;
-        var correlationId = _correlationIdFactory.Create();
-        var spanContext = messageProperties?.GetSpanContext(_spanContextHeader);
-        var correlationContext = _contextAccessor.CorrelationContext ??
+        string? originatedMessageId = messageProperties?.MessageId;
+        string? correlationId = _correlationIdFactory.Create();
+        string? spanContext = messageProperties?.GetSpanContext(_spanContextHeader);
+        object correlationContext = _contextAccessor.CorrelationContext ??
                                  _httpContextAccessor.GetCorrelationContext();
+
         var headers = new Dictionary<string, object>();
 
         foreach (var @event in events)
@@ -67,11 +73,12 @@ internal class MessageBroker : IMessageBroker
                 continue;
             }
 
-            var messageId = Guid.NewGuid().ToString("N");
+            string messageId = Guid.NewGuid().ToString("N");
             _logger.LogTrace($"Publishing integration event: {@event.GetType().Name.Underscore()} [ID: '{messageId}'].");
             if (_outbox.Enabled)
             {
-                await _outbox.SendAsync(@event,
+                await _outbox.SendAsync(
+                                        @event,
                                         originatedMessageId,
                                         messageId,
                                         correlationId,
@@ -81,12 +88,13 @@ internal class MessageBroker : IMessageBroker
                 continue;
             }
 
-            await _busPublisher.PublishAsync(@event,
-                                             messageId,
-                                             correlationId,
-                                             spanContext,
-                                             correlationContext,
-                                             headers);
+            await _busPublisher.PublishAsync(
+                                                @event,
+                                                messageId,
+                                                correlationId,
+                                                spanContext,
+                                                correlationContext,
+                                                headers);
         }
     }
 }

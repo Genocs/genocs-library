@@ -1,7 +1,7 @@
 namespace Genocs.Secrets.AzureKeyVault.Configurations;
 
 /// <summary>
-/// The vault Setting definition.
+/// The Azure Kay Vault setting definition.
 /// </summary>
 public class AzureKeyVaultOptions
 {

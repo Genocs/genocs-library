@@ -38,11 +38,11 @@ public static class Extensions
                 }
 
                 cfg.AddAzureKeyVault(
-                                        new Uri($"https://{settings.Name}.vault.azure.net/"),
-                                        new DefaultAzureCredential(new DefaultAzureCredentialOptions
-                                        {
-                                            ManagedIdentityClientId = settings.ManagedIdentityId
-                                        }));
+                                    new Uri($"https://{settings.Name}.vault.azure.net/"),
+                                    new DefaultAzureCredential(new DefaultAzureCredentialOptions
+                                    {
+                                        ManagedIdentityClientId = settings.ManagedIdentityId
+                                    }));
             });
 
     /// <summary>
@@ -56,6 +56,11 @@ public static class Extensions
                                            string sectionName = AzureKeyVaultOptions.Position)
         => builder.ConfigureAppConfiguration((ctx, cfg) =>
             {
+                if (string.IsNullOrWhiteSpace(sectionName))
+                {
+                    sectionName = AzureKeyVaultOptions.Position;
+                }
+
                 AzureKeyVaultOptions settings = ctx.Configuration.GetOptions<AzureKeyVaultOptions>(sectionName);
                 if (!settings.Enabled)
                 {

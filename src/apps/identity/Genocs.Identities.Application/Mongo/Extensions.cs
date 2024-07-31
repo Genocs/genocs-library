@@ -11,17 +11,26 @@ public static class Extensions
     public static IApplicationBuilder UseMongo(this IApplicationBuilder builder)
     {
         using var scope = builder.ApplicationServices.CreateScope();
-        var users = scope.ServiceProvider.GetService<IMongoRepository<UserDocument, Guid>>().Collection;
+        var users = scope.ServiceProvider.GetService<IMongoRepository<UserDocument, Guid>>()?.Collection;
+
+        if (users is null)
+        {
+            return builder;
+        }
+
         var userBuilder = Builders<UserDocument>.IndexKeys;
+
         Task.Run(async () => await users.Indexes.CreateManyAsync(
             new[]
             {
-                new CreateIndexModel<UserDocument>(userBuilder.Ascending(i => i.Email),
+                new CreateIndexModel<UserDocument>(
+                    userBuilder.Ascending(i => i.Email),
                     new CreateIndexOptions
                     {
                         Unique = true
                     }),
-                new CreateIndexModel<UserDocument>(userBuilder.Ascending(i => i.Name),
+                new CreateIndexModel<UserDocument>(
+                    userBuilder.Ascending(i => i.Name),
                     new CreateIndexOptions
                     {
                         Unique = true

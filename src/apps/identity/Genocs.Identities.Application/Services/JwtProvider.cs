@@ -12,11 +12,12 @@ public class JwtProvider : IJwtProvider
         _jwtHandler = jwtHandler;
     }
 
-    public AuthDto Create(Guid userId,
-                          string username,
-                          string role,
-                          string? audience = null,
-                          IDictionary<string, IEnumerable<string>>? claims = null)
+    public AuthDto Create(
+                            Guid userId,
+                            string username,
+                            string role,
+                            string? audience = null,
+                            IDictionary<string, IEnumerable<string>>? claims = null)
     {
         var jwt = _jwtHandler.CreateToken(userId.ToString("N"), role, audience, claims);
 

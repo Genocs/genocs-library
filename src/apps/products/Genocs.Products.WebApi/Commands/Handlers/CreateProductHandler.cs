@@ -16,9 +16,12 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
     private readonly ILogger<CreateProductHandler> _logger;
     private readonly ITracer _tracer;
 
-    public CreateProductHandler(IMongoRepository<Product, Guid> repository, IBusPublisher publisher,
-        IMessageOutbox outbox, ITracer tracer,
-        ILogger<CreateProductHandler> logger)
+    public CreateProductHandler(
+                                IMongoRepository<Product, Guid> repository,
+                                IBusPublisher publisher,
+                                IMessageOutbox outbox,
+                                ITracer tracer,
+                                ILogger<CreateProductHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
@@ -29,7 +32,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
     public async Task HandleAsync(CreateProduct command, CancellationToken cancellationToken = default)
     {
-        var exists = await _repository.ExistsAsync(o => o.Id == command.ProductId);
+        bool exists = await _repository.ExistsAsync(o => o.Id == command.ProductId);
         if (exists)
         {
             throw new InvalidOperationException($"Product with given id: {command.ProductId} already exists!");
@@ -40,7 +43,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");
 
-        var spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = _tracer.ActiveSpan?.Context.ToString();
         var @event = new ProductCreated(product.Id);
         if (_outbox.Enabled)
         {

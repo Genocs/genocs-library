@@ -21,5 +21,4 @@ public class OperationUpdatedHandler : IEventHandler<OperationPending>,
     public async Task HandleAsync(OperationRejected @event, CancellationToken cancellationToken = default)
         => await _hubService.PublishOperationRejectedAsync(@event);
 
-
 }

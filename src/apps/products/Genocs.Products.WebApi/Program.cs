@@ -76,12 +76,11 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get("", ctx => ctx.Response.WriteAsync("Products Service"))
+        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Products Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
-        .Post<CreateProduct>("products",
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
+        .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
     .UseJaeger()
     .UseSwaggerDocs()
     .UseRabbitMq();
