@@ -24,7 +24,7 @@ public static class Extensions
     /// Custom settings for OpenTelemetry.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <returns>The builder.</returns>
+    /// <returns>The Genocs builder you can use for chain.</returns>
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
 

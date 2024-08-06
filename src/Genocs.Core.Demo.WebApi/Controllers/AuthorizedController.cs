@@ -21,6 +21,6 @@ public class AuthorizedController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public async Task<IActionResult> PostSubmitDemoCommand()
     {
-        return await Task.Run(() => Ok("Done"));
+        return await Task.Run(() => Ok($"Done! Authorization is: {HttpContext.Request.Headers["Authorization"]}"));
     }
 }
