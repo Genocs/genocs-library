@@ -2,10 +2,9 @@ namespace Genocs.MessageBrokers;
 
 public class MessagePropertiesAccessor : IMessagePropertiesAccessor
 {
-    private static readonly AsyncLocal<MessageContextHolder>
-        Holder = new();
+    private static readonly AsyncLocal<MessageContextHolder> Holder = new();
 
-    public IMessageProperties MessageProperties
+    public IMessageProperties? MessageProperties
     {
         get => Holder.Value?.Properties;
         set
@@ -25,6 +24,6 @@ public class MessagePropertiesAccessor : IMessagePropertiesAccessor
 
     private class MessageContextHolder
     {
-        public IMessageProperties Properties;
+        public IMessageProperties? Properties;
     }
 }

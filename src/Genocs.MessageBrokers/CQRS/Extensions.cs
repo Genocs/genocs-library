@@ -16,14 +16,16 @@ public static class Extensions
         where TEvent : class, IEvent
         => busPublisher.PublishAsync(@event, messageContext: messageContext);
 
-    public static IBusSubscriber SubscribeCommand<T>(this IBusSubscriber busSubscriber) where T : class, ICommand
+    public static IBusSubscriber SubscribeCommand<T>(this IBusSubscriber busSubscriber)
+        where T : class, ICommand
         => busSubscriber.Subscribe<T>(async (serviceProvider, command, _) =>
         {
             using var scope = serviceProvider.CreateScope();
             await scope.ServiceProvider.GetRequiredService<ICommandHandler<T>>().HandleAsync(command);
         });
 
-    public static IBusSubscriber SubscribeEvent<T>(this IBusSubscriber busSubscriber) where T : class, IEvent
+    public static IBusSubscriber SubscribeEvent<T>(this IBusSubscriber busSubscriber)
+        where T : class, IEvent
         => busSubscriber.Subscribe<T>(async (serviceProvider, @event, _) =>
         {
             using var scope = serviceProvider.CreateScope();

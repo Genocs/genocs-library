@@ -77,7 +77,6 @@ public static class Extensions
 
     public static WebApplicationBuilder UseAzureKeyVault(this WebApplicationBuilder builder)
     {
-
         AzureKeyVaultOptions settings = builder.Configuration.GetOptions<AzureKeyVaultOptions>(AzureKeyVaultOptions.Position);
         if (!settings.Enabled)
         {

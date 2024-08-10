@@ -1,3 +1,5 @@
+using Azure.Core;
+
 namespace Genocs.Secrets.AzureKeyVault.Configurations;
 
 /// <summary>
@@ -24,5 +26,7 @@ public class AzureKeyVaultOptions
     /// The managed identity id.
     /// </summary>
     public string? ManagedIdentityId { get; set; }
-
+    public object? AzureADCertThumbprint { get; internal set; }
+    public string? AzureADApplicationId { get; internal set; }
+    public string? AzureADDirectoryId { get; internal set; }
 }

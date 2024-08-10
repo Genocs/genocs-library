@@ -1,7 +1,7 @@
 namespace Genocs.MessageBrokers;
 
 /// <summary>
-/// Message Attribute
+/// Message Attribute.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class MessageAttribute : Attribute
