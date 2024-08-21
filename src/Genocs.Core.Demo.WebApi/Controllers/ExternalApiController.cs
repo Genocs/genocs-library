@@ -11,7 +11,9 @@ public class ExternalApiController : ControllerBase
     private readonly ILogger<DemoController> _logger;
     private readonly IExternalServiceClient _externalServiceClient;
 
-    public ExternalApiController(ILogger<DemoController> logger, IExternalServiceClient externalServiceClient)
+    public ExternalApiController(
+                                    ILogger<DemoController> logger,
+                                    IExternalServiceClient externalServiceClient)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _externalServiceClient = externalServiceClient ?? throw new ArgumentNullException(nameof(externalServiceClient));
@@ -24,6 +26,7 @@ public class ExternalApiController : ControllerBase
         => await Task.Run(() => Ok("done"));
 
     [HttpPost("")]
+    [Produces("application/json")]
     [ProducesResponseType(typeof(IssuingResponse), StatusCodes.Status200OK)]
     [Consumes(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> PostIssueAsync(IssuingRequest request)
