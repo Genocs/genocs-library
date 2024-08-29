@@ -86,8 +86,7 @@ docker compose -f ./infrastructure-sqlserver.yml --env-file ./.env --project-nam
 docker compose -f ./infrastructure-mysql.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup oracle database (no need if you use postgres)
-# docker compose -f ./infrastructure-oracle.yml --env-file ./.env --project-name genocs up -d
-
+docker compose -f ./infrastructure-oracle.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup elk stack
 docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name genocs up -d
