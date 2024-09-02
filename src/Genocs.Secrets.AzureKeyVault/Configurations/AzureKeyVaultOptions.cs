@@ -26,17 +26,17 @@ public class AzureKeyVaultOptions
     public string? ManagedIdentityId { get; set; }
 
     /// <summary>
-    /// The client id. To be used with Certificate authentication.
+    /// The certificate thumbprint. To be used with Certificate authentication.
     /// </summary>
-    public object? AzureADCertThumbprint { get; internal set; }
+    public object? AzureADCertThumbprint { get; set; }
 
     /// <summary>
-    /// The client id. To be used with Certificate authentication.
+    /// The Active Directory Application id. To be used with Certificate authentication.
     /// </summary>
-    public string? AzureADApplicationId { get; internal set; }
+    public string? AzureADApplicationId { get; set; }
 
     /// <summary>
     /// The Azure EntraID tenant Id. To be used with Certificate authentication.
     /// </summary>
-    public string? AzureADDirectoryId { get; internal set; }
+    public string? AzureADDirectoryId { get; set; }
 }

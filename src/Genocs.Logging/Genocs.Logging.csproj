@@ -51,7 +51,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
         <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
