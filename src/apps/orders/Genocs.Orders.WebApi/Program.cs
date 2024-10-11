@@ -23,7 +23,6 @@ using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
@@ -61,7 +60,7 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         .AddPrometheus()
         .AddRedis()
-        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        .AddRabbitMq()
         .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()

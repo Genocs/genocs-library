@@ -8,7 +8,6 @@ using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 
@@ -42,7 +41,7 @@ internal class Startup
             .AddJaeger()
             .AddJwt()
             .AddPrometheus()
-            .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+            .AddRabbitMq()
             .AddSecurity()
             .AddWebApi()
             .Build();

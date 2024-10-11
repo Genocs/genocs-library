@@ -18,27 +18,15 @@ internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
         return this;
     }
 
-    public IJaegerOptionsBuilder WithUdpHost(string udpHost)
+    public IJaegerOptionsBuilder WithEndpoint(string endpoint)
     {
-        _options.UdpHost = udpHost;
-        return this;
-    }
-
-    public IJaegerOptionsBuilder WithUdpPort(int udpPort)
-    {
-        _options.UdpPort = udpPort;
+        _options.Endpoint = endpoint;
         return this;
     }
 
     public IJaegerOptionsBuilder WithMaxPacketSize(int maxPacketSize)
     {
         _options.MaxPacketSize = maxPacketSize;
-        return this;
-    }
-
-    public IJaegerOptionsBuilder WithSampler(string sampler)
-    {
-        _options.Sampler = sampler;
         return this;
     }
 

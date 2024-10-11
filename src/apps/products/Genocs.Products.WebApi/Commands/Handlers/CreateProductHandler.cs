@@ -4,7 +4,6 @@ using Genocs.MessageBrokers.Outbox;
 using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.Events;
-using OpenTracing;
 
 namespace Genocs.Products.WebApi.Commands.Handlers;
 
@@ -14,19 +13,16 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
     private readonly IBusPublisher _publisher;
     private readonly IMessageOutbox _outbox;
     private readonly ILogger<CreateProductHandler> _logger;
-    private readonly ITracer _tracer;
 
     public CreateProductHandler(
                                 IMongoRepository<Product, Guid> repository,
                                 IBusPublisher publisher,
                                 IMessageOutbox outbox,
-                                ITracer tracer,
                                 ILogger<CreateProductHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
         _outbox = outbox;
-        _tracer = tracer;
         _logger = logger;
     }
 
@@ -43,7 +39,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");
 
-        string? spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = "TODO: Genocs";
         var @event = new ProductCreated(product.Id);
         if (_outbox.Enabled)
         {
