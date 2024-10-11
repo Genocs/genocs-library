@@ -21,7 +21,21 @@ public class JaegerOptions
     /// The Jaeger agent endpoint.
     /// </summary>
     public string Endpoint { get; set; } = "http://localhost:4317";
-    public int MaxPacketSize { get; set; } = 64967;
-    public double MaxTracesPerSecond { get; set; } = 5;
-    public double SamplingRate { get; set; } = 0.2;
+
+    /// <summary>
+    /// The used OtlpExportProtocol.
+    /// IT could be [Grpc|HttpProtobuf].
+    /// </summary>
+    public string Protocol { get; set; } = "Grpc";
+
+    /// <summary>
+    /// The used ExportProcessorType.
+    /// It could be [Simple|Batch].
+    /// </summary>
+    public string ProcessorType { get; set; } = "Batch";
+
+    public int MaxQueueSize { get; set; } = 2048;
+    public int ScheduledDelayMilliseconds { get; set; } = 5000;
+    public int ExporterTimeoutMilliseconds { get; set; } = 30000;
+    public int MaxExportBatchSize { get; set; } = 512;
 }

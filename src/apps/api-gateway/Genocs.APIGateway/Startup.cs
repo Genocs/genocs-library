@@ -38,7 +38,6 @@ internal class Startup
         services
             .AddGenocs()
             .AddOpenTelemetry()
-            .AddJaeger()
             .AddJwt()
             .AddPrometheus()
             .AddRabbitMq()
@@ -75,7 +74,6 @@ internal class Startup
         app.UseMiddleware<LogContextMiddleware>();
         app.UseCors("cors");
         app.UseGenocs();
-        app.UseJaeger();
         app.UsePrometheus();
         app.UseAccessTokenValidator();
         app.UseAuthentication();

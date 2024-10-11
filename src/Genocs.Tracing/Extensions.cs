@@ -40,6 +40,13 @@ public static class Extensions
         //    logging.IncludeScopes = true;
         //});
 
+        LoggerOptions loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
+
+        if (loggerOptions is null)
+        {
+            return builder;
+        }
+
         var services = builder.Services;
 
         // Set Custom Open telemetry
@@ -54,51 +61,49 @@ public static class Extensions
                                                             .AddHttpClientInstrumentation()
                                                         .AddSource("*");
 
-                var loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
-
                 // No OpenTelemetryTracing in case of missing LoggerSettings
-                if (loggerOptions != null)
+                if (loggerOptions.Mongo != null && loggerOptions.Mongo.Enabled)
                 {
-                    if (loggerOptions.Mongo != null && loggerOptions.Mongo.Enabled)
-                    {
-                        // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
-                        provider.AddMongoDBInstrumentation();
-                    }
+                    // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
+                    provider.AddMongoDBInstrumentation();
+                }
 
-                    // Check for Console config
-                    if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
-                    {
-                        // you should add OpenTelemetry.Exporter.Console NuGet package
-                        // Any OTEL supportable exporter can be used here
-                        provider.AddConsoleExporter();
-                    }
+                // Check for Console config
+                if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    // Any OTEL supportable exporter can be used here
+                    provider.AddConsoleExporter();
+                }
 
-                    // Check for Azure ApplicationInsights config
-                    if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                // Check for Azure ApplicationInsights config
+                if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                {
+                    provider.AddAzureMonitorTraceExporter(o =>
                     {
-                        provider.AddAzureMonitorTraceExporter(o =>
-                        {
-                            o.ConnectionString = loggerOptions.Azure.ConnectionString;
-                        });
-                    }
+                        o.ConnectionString = loggerOptions.Azure.ConnectionString;
+                    });
                 }
 
                 var jaegerOptions = builder.GetOptions<JaegerOptions>(JaegerOptions.Position);
 
                 if (jaegerOptions != null && jaegerOptions.Enabled)
                 {
-
                     provider.AddOtlpExporter(o =>
                     {
                         o.Endpoint = new Uri(jaegerOptions.Endpoint);
-                        o.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-                        o.ExportProcessorType = ExportProcessorType.Batch;
+
+                        // Parse enum
+                        o.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(jaegerOptions.Protocol);
+                        o.ExportProcessorType = Enum.Parse<ExportProcessorType>(jaegerOptions.ProcessorType);
+
+                        // Check if Batch Exporter before setting options
                         o.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
                         {
-                            MaxQueueSize = 2048,
-                            ScheduledDelayMilliseconds = 5000,
-                            ExporterTimeoutMilliseconds = 30000,
-                            MaxExportBatchSize = 512,
+                            MaxQueueSize = jaegerOptions.MaxQueueSize,
+                            ScheduledDelayMilliseconds = jaegerOptions.ScheduledDelayMilliseconds,
+                            ExporterTimeoutMilliseconds = jaegerOptions.ExporterTimeoutMilliseconds,
+                            MaxExportBatchSize = jaegerOptions.MaxExportBatchSize
                         };
                     });
                 }
@@ -114,7 +119,6 @@ public static class Extensions
                                         .AddRedisInstrumentation(
                                             cartStore.GetConnection(),
                                             options => options.SetVerboseDatabaseStatements = true)
-                                        .AddAspNetCoreInstrumentation()
                                         .AddGrpcClientInstrumentation()
                                         .AddHttpClientInstrumentation()
                                         .AddOtlpExporter())
@@ -124,13 +128,29 @@ public static class Extensions
             {
                 MeterProviderBuilder provider = x.SetResourceBuilder(ResourceBuilder.CreateDefault());
 
-                provider.AddConsoleExporter();
                 provider.AddAspNetCoreInstrumentation();
 
                 // provider.AddRuntimeInstrumentation();
                 provider.AddHttpClientInstrumentation();
                 provider.AddOtlpExporter();
 
+
+                // Check for Console config
+                if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    // Any OTEL supportable exporter can be used here
+                    provider.AddConsoleExporter();
+                }
+
+                // Check for Azure ApplicationInsights config
+                if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                {
+                    provider.AddAzureMonitorMetricExporter(o =>
+                    {
+                        o.ConnectionString = loggerOptions.Azure.ConnectionString;
+                    });
+                }
             });
 
         return builder;

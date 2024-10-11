@@ -24,21 +24,45 @@ internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
         return this;
     }
 
-    public IJaegerOptionsBuilder WithMaxPacketSize(int maxPacketSize)
+    public IJaegerOptionsBuilder WithProtocol(string protocol)
     {
-        _options.MaxPacketSize = maxPacketSize;
+        _options.Protocol = protocol;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithMaxTracesPerSecond(double maxTracesPerSecond)
+    public IJaegerOptionsBuilder WithProcessorType(string processorType)
     {
-        _options.MaxTracesPerSecond = maxTracesPerSecond;
+        _options.ProcessorType = processorType;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithSamplingRate(double samplingRate)
+    public IJaegerOptionsBuilder WithMaxQueueSize(int maxQueueSize)
     {
-        _options.SamplingRate = samplingRate;
+        _options.MaxQueueSize = maxQueueSize;
+        return this;
+    }
+
+    public IJaegerOptionsBuilder MaxQueueSize(int maxQueueSize)
+    {
+        _options.MaxQueueSize = maxQueueSize;
+        return this;
+    }
+
+    public IJaegerOptionsBuilder WithScheduledDelayMilliseconds(int scheduledDelayMilliseconds)
+    {
+        _options.ScheduledDelayMilliseconds = scheduledDelayMilliseconds;
+        return this;
+    }
+
+    public IJaegerOptionsBuilder WithExporterTimeoutMilliseconds(int exporterTimeoutMilliseconds)
+    {
+        _options.ExporterTimeoutMilliseconds = exporterTimeoutMilliseconds;
+        return this;
+    }
+
+    public IJaegerOptionsBuilder WithMaxExportBatchSize(int maxExportBatchSize)
+    {
+        _options.MaxExportBatchSize = maxExportBatchSize;
         return this;
     }
 
