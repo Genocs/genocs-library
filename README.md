@@ -553,6 +553,3 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 ## Acknowledgements
 - [devmentors](https://github.com/devmentors)
 - [abp](https://github.com/abpframework)
-
-
-- simple changes
