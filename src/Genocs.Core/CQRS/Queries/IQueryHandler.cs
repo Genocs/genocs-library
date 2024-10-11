@@ -8,10 +8,11 @@ namespace Genocs.Core.CQRS.Queries;
 /// </summary>
 /// <typeparam name="TQuery"></typeparam>
 /// <typeparam name="TResult"></typeparam>
-public interface IQueryHandler<in TQuery, TResult> where TQuery : class, IQuery<TResult>
+public interface IQueryHandler<in TQuery, TResult>
+    where TQuery : class, IQuery<TResult>
 {
     /// <summary>
-    /// HandleAsync
+    /// HandleAsync.
     /// </summary>
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>

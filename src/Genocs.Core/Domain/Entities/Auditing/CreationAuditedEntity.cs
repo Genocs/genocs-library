@@ -16,7 +16,7 @@ public abstract class CreationAuditedEntity : CreationAuditedEntity<int>, IEntit
 /// <summary>
 /// This class can be used to simplify implementing <see cref="ICreationAudited"/>.
 /// </summary>
-/// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+/// <typeparam name="TPrimaryKey">Type of the primary key of the entity.</typeparam>
 [Serializable]
 public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, ICreationAudited
 {

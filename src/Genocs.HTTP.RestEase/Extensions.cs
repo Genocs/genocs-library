@@ -32,20 +32,26 @@ public static class Extensions
         }
 
         var restEaseOptions = builder.GetOptions<RestEaseOptions>(sectionName);
-        return builder.AddServiceClient<T>(serviceName, restEaseOptions,
-            b => b.AddFabio(fabioSectionName, consulSectionName, httpClientSectionName));
+        return builder.AddServiceClient<T>(
+                                            serviceName,
+                                            restEaseOptions,
+                                            b => b.AddFabio(fabioSectionName, consulSectionName, httpClientSectionName));
     }
 
-    public static IGenocsBuilder AddServiceClient<T>(this IGenocsBuilder builder, string serviceName,
-        Func<IRestEaseOptionsBuilder, IRestEaseOptionsBuilder> buildOptions,
-        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildConsulOptions,
-        Func<IFabioOptionsBuilder, IFabioOptionsBuilder> buildFabioOptions,
-        HttpClientOptions httpClientOptions)
+    public static IGenocsBuilder AddServiceClient<T>(
+                                                        this IGenocsBuilder builder,
+                                                        string serviceName,
+                                                        Func<IRestEaseOptionsBuilder, IRestEaseOptionsBuilder> buildOptions,
+                                                        Func<IConsulOptionsBuilder, IConsulOptionsBuilder> buildConsulOptions,
+                                                        Func<IFabioOptionsBuilder, IFabioOptionsBuilder> buildFabioOptions,
+                                                        HttpClientOptions httpClientOptions)
         where T : class
     {
         var options = buildOptions(new RestEaseOptionsBuilder()).Build();
-        return builder.AddServiceClient<T>(serviceName, options,
-            b => b.AddFabio(buildFabioOptions, buildConsulOptions, httpClientOptions));
+        return builder.AddServiceClient<T>(
+                                            serviceName,
+                                            options,
+                                            b => b.AddFabio(buildFabioOptions, buildConsulOptions, httpClientOptions));
     }
 
     public static IGenocsBuilder AddServiceClient<T>(
@@ -100,7 +106,7 @@ public static class Extensions
     {
         services.AddHttpClient(clientName, client =>
         {
-            var service = options.Services.SingleOrDefault(s => s.Name.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));
+            var service = options.Services?.SingleOrDefault(s => s.Name.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));
 
             if (service is null)
             {
