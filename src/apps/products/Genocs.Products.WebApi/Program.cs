@@ -20,8 +20,6 @@ using Genocs.Products.WebApi.DTO;
 using Genocs.Products.WebApi.Queries;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
@@ -39,6 +37,12 @@ builder.Host
 
 var services = builder.Services;
 
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
 services.AddGenocs()
         .AddErrorHandler<ExceptionToResponseMapper>()
         .AddServices()
@@ -47,7 +51,6 @@ services.AddGenocs()
         .AddConsul()
         .AddFabio()
         .AddOpenTelemetry()
-        .AddJaeger()
         .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Product, Guid>("products")
@@ -59,7 +62,7 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         .AddPrometheus()
         .AddRedis()
-        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        .AddRabbitMq()
         .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
@@ -81,7 +84,6 @@ app.UseGenocs()
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
         .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
-    .UseJaeger()
     .UseSwaggerDocs()
     .UseRabbitMq();
 

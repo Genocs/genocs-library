@@ -82,6 +82,12 @@ docker compose -f ./infrastructure-security.yml --env-file ./.env --project-name
 # Use this file only in case you want to setup sqlserver database (no need if you use postgres)
 docker compose -f ./infrastructure-sqlserver.yml --env-file ./.env --project-name genocs up -d
 
+# Use this file only in case you want to setup mySql database (no need if you use postgres)
+docker compose -f ./infrastructure-mysql.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup oracle database (no need if you use postgres)
+docker compose -f ./infrastructure-oracle.yml --env-file ./.env --project-name genocs up -d
+
 # Use this file only in case you want to setup elk stack
 docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name genocs up -d
 
@@ -233,13 +239,15 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "tags": {}
   },
   "jaeger": {
-    "enabled": false,
-    "serviceName": "users",
-    "udpHost": "localhost",
-    "udpPort": 6831,
-    "maxPacketSize": 65000,
-    "sampler": "const",
-    "excludePaths": [ "/", "/ping", "/metrics" ]
+    "enabled": true,
+    "serviceName": "orders",
+    "endpoint": "http://localhost:4317",
+    "protocol": "Grpc",
+    "processorType": "Batch",
+    "maxQueueSize": 2048,
+    "scheduledDelayMilliseconds": 5000,
+    "exporterTimeoutMilliseconds": 30000,
+    "maxExportBatchSize": 512
   },
   "jwt": {
     "certificate": {
@@ -547,6 +555,3 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 ## Acknowledgements
 - [devmentors](https://github.com/devmentors)
 - [abp](https://github.com/abpframework)
-
-
-- simple changes

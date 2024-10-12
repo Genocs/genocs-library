@@ -11,8 +11,10 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
     private readonly IJsonSerializer _jsonSerializer;
     private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
-    public ErrorHandlerMiddleware(IExceptionToResponseMapper exceptionToResponseMapper,
-        IJsonSerializer jsonSerializer, ILogger<ErrorHandlerMiddleware> logger)
+    public ErrorHandlerMiddleware(
+                                    IExceptionToResponseMapper exceptionToResponseMapper,
+                                    IJsonSerializer jsonSerializer,
+                                    ILogger<ErrorHandlerMiddleware> logger)
     {
         _exceptionToResponseMapper = exceptionToResponseMapper;
         _jsonSerializer = jsonSerializer;
@@ -36,7 +38,7 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
     {
         var exceptionResponse = _exceptionToResponseMapper.Map(exception);
         context.Response.StatusCode = (int)(exceptionResponse?.StatusCode ?? HttpStatusCode.BadRequest);
-        var response = exceptionResponse?.Response;
+        object? response = exceptionResponse?.Response;
         if (response is null)
         {
             await context.Response.WriteAsync(string.Empty);

@@ -25,4 +25,18 @@ public class AzureKeyVaultOptions
     /// </summary>
     public string? ManagedIdentityId { get; set; }
 
+    /// <summary>
+    /// The certificate thumbprint. To be used with Certificate authentication.
+    /// </summary>
+    public object? AzureADCertThumbprint { get; set; }
+
+    /// <summary>
+    /// The Active Directory Application id. To be used with Certificate authentication.
+    /// </summary>
+    public string? AzureADApplicationId { get; set; }
+
+    /// <summary>
+    /// The Azure EntraID tenant Id. To be used with Certificate authentication.
+    /// </summary>
+    public string? AzureADDirectoryId { get; set; }
 }

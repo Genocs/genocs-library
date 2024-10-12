@@ -13,11 +13,10 @@ on:
         description: "Packages Version"
 
         # Default value if no value is explicitly provided
-        default: "6.0.0"
+        default: "6.1.0"
 
         # Input has to be provided for the workflow to run
         required: true
-
 
 jobs:
   build:

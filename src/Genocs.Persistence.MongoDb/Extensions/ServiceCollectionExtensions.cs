@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Serializers;
 namespace Genocs.Persistence.MongoDb.Extensions;
 
 /// <summary>
-/// Service Collection Extension for MongoDb Repository setup
+/// Service Collection Extension for MongoDb Repository setup.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

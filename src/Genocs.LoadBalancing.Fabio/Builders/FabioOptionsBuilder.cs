@@ -46,5 +46,6 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
     /// Build the Fabio options.
     /// </summary>
     /// <returns>The Fabio options.</returns>
-    public FabioOptions Build() => _settings;
+    public FabioOptions Build()
+        => _settings;
 }

@@ -4,7 +4,8 @@ namespace Genocs.Core.CQRS.Events;
 /// Generic interface for CQRS Event handler.
 /// </summary>
 /// <typeparam name="TEvent"></typeparam>
-public interface IEventHandler<in TEvent> where TEvent : class, IEvent
+public interface IEventHandler<in TEvent>
+    where TEvent : class, IEvent
 {
     /// <summary>
     /// Standard Event handler
@@ -16,10 +17,11 @@ public interface IEventHandler<in TEvent> where TEvent : class, IEvent
 }
 
 /// <summary>
-/// Legacy Event handler interface definition
+/// Legacy Event handler interface definition.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public interface IEventHandlerLegacy<T> where T : IEvent
+public interface IEventHandlerLegacy<T>
+    where T : IEvent
 {
     /// <summary>
     /// Legacy event handler place holder.

@@ -8,17 +8,17 @@ public static class Constants
     /// <summary>
     /// Default date format.
     /// </summary>
-    public const string DATE_FORMAT = "yyyy-MM-dd";
+    public const string DateFormat = "yyyy-MM-dd";
 
     /// <summary>
     /// Default filtering date.
     /// </summary>
-    public const string DATE_FILTERING = "UpdatedAt";
+    public const string DateFiltering = "UpdatedAt";
 
     /// <summary>
     /// Default property name.
     /// </summary>
-    public const string DEFAULT_PROPERY_NAME = "IsDefault";
+    public const string DefaultPropertyName = "IsDefault";
 }
 
 /// <summary>

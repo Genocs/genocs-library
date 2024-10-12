@@ -15,7 +15,7 @@ public class DynamicQueryBuilder
     private static readonly string GtEOperator = " gte ";
     private static readonly string LtEOperator = " lte ";
 
-    private static readonly string NotOperator = " not ";
+    // private static readonly string NotOperator = " not ";
 
     private static readonly string[] StringSeparators = new string[] { AndOperator, OrOperator, LtOperator, GtOperator, GtEOperator, LtEOperator };
     #endregion
@@ -33,7 +33,7 @@ public class DynamicQueryBuilder
     public static Expression<Func<TSource, bool>> BuildAdvancedSearchExpressionTree<TSource>(List<QueryItem> searchItems, string sourceName)
     {
         ParameterExpression pe = Expression.Parameter(typeof(TSource), sourceName);
-        Expression searchExpression = null;
+        Expression? searchExpression = null;
 
         foreach (var searchItem in searchItems)
         {

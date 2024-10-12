@@ -30,9 +30,9 @@ public static class Extensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="sectionName">the default section name.</param>
-    /// <param name="plugins"></param>
-    /// <param name="connectionFactoryConfigurator"></param>
-    /// <param name="serializer"></param>
+    /// <param name="plugins">The plugin action method.</param>
+    /// <param name="connectionFactoryConfigurator">The configurator.</param>
+    /// <param name="serializer">The serializer.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">Raised when configuration is incorrect.</exception>
     public static IGenocsBuilder AddRabbitMq(

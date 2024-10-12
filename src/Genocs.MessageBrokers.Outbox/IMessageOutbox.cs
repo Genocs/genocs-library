@@ -1,7 +1,7 @@
 namespace Genocs.MessageBrokers.Outbox;
 
 /// <summary>
-/// The Message Outbox interface definition
+/// The Message Outbox interface definition.
 /// </summary>
 public interface IMessageOutbox
 {
@@ -9,11 +9,13 @@ public interface IMessageOutbox
 
     Task HandleAsync(string messageId, Func<Task> handler);
 
-    Task SendAsync<T>(T message,
-                      string? originatedMessageId = null,
-                      string? messageId = null,
-                      string? correlationId = null,
-                      string? spanContext = null,
-                      object? messageContext = null,
-                      IDictionary<string, object>? headers = null) where T : class;
+    Task SendAsync<T>(
+                        T message,
+                        string? originatedMessageId = null,
+                        string? messageId = null,
+                        string? correlationId = null,
+                        string? spanContext = null,
+                        object? messageContext = null,
+                        IDictionary<string, object>? headers = null)
+        where T : class;
 }

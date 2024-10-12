@@ -222,14 +222,17 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetAzureSecretsAsync(string key, IVaultClient client,
-        VaultOptions.LeaseOptions options,
-        IDictionary<string, string> configuration)
+    private static async Task SetAzureSecretsAsync(
+                                                    string key,
+                                                    IVaultClient client,
+                                                    VaultOptions.LeaseOptions options,
+                                                    IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
-        var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
-        var credentials =
-            await client.V1.Secrets.Azure.GetCredentialsAsync(options.RoleName, mountPoint);
+        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+
+        var credentials = await client.V1.Secrets.Azure.GetCredentialsAsync(options.RoleName, mountPoint);
+
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
         {
             ["clientId"] = credentials.Data.ClientId,
@@ -237,28 +240,32 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetConsulSecretsAsync(string key, IVaultClient client,
-        VaultOptions.LeaseOptions options,
-        IDictionary<string, string> configuration)
+    private static async Task SetConsulSecretsAsync(
+                                                    string key,
+                                                    IVaultClient client,
+                                                    VaultOptions.LeaseOptions options,
+                                                    IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
-        var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
-        var credentials =
-            await client.V1.Secrets.Consul.GetCredentialsAsync(options.RoleName, mountPoint);
+        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        var credentials = await client.V1.Secrets.Consul.GetCredentialsAsync(options.RoleName, mountPoint);
+
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
         {
             ["token"] = credentials.Data.Token
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetDatabaseSecretsAsync(string key, IVaultClient client,
-        VaultOptions.LeaseOptions options,
-        IDictionary<string, string> configuration)
+    private static async Task SetDatabaseSecretsAsync(
+                                                        string key,
+                                                        IVaultClient client,
+                                                        VaultOptions.LeaseOptions options,
+                                                        IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
-        var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
-        var credentials =
-            await client.V1.Secrets.Database.GetCredentialsAsync(options.RoleName, mountPoint);
+        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        var credentials = await client.V1.Secrets.Database.GetCredentialsAsync(options.RoleName, mountPoint);
+
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
         {
             ["username"] = credentials.Data.Username,
@@ -273,14 +280,16 @@ public static class Extensions
         CertificatesService.Set(options.Pki.RoleName, certificate);
     }
 
-    private static async Task SetRabbitMqSecretsAsync(string key, IVaultClient client,
-        VaultOptions.LeaseOptions options,
-        IDictionary<string, string> configuration)
+    private static async Task SetRabbitMqSecretsAsync(
+                                                        string key,
+                                                        IVaultClient client,
+                                                        VaultOptions.LeaseOptions options,
+                                                        IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
-        var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
-        var credentials =
-            await client.V1.Secrets.RabbitMQ.GetCredentialsAsync(options.RoleName, mountPoint);
+        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        var credentials = await client.V1.Secrets.RabbitMQ.GetCredentialsAsync(options.RoleName, mountPoint);
+
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
         {
             ["username"] = credentials.Data.Username,
@@ -288,9 +297,12 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static void SetSecrets(string key, VaultOptions.LeaseOptions options,
-        IDictionary<string, string> configuration, string name,
-        Func<(object, Dictionary<string, string>, string, int, bool)> lease)
+    private static void SetSecrets(
+                                    string key,
+                                    VaultOptions.LeaseOptions options,
+                                    IDictionary<string, string> configuration,
+                                    string name,
+                                    Func<(object Credentials, Dictionary<string, string> Values, string LeaseId, int Duration, bool Renewable)> lease)
     {
         var createdAt = DateTime.UtcNow;
         var (credentials, values, leaseId, duration, renewable) = lease();
@@ -299,7 +311,7 @@ public static class Extensions
         LeaseService.Set(key, leaseData);
     }
 
-    private static (IVaultClient client, VaultClientSettings settings) GetClientAndSettings(VaultOptions options)
+    private static (IVaultClient Client, VaultClientSettings Settings) GetClientAndSettings(VaultOptions options)
     {
         var settings = new VaultClientSettings(options.Url, GetAuthMethod(options));
         var client = new VaultClient(settings);

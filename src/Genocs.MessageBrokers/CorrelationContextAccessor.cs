@@ -5,7 +5,7 @@ public class CorrelationContextAccessor : ICorrelationContextAccessor
     private static readonly AsyncLocal<CorrelationContextHolder>
         Holder = new();
 
-    public object CorrelationContext
+    public object? CorrelationContext
     {
         get => Holder.Value?.Context;
         set

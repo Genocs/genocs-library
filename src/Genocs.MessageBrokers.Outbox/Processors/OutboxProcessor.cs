@@ -16,8 +16,11 @@ internal sealed class OutboxProcessor : IHostedService
     private readonly OutboxType _type;
     private Timer _timer;
 
-    public OutboxProcessor(IServiceProvider serviceProvider, IBusPublisher publisher, OutboxOptions options,
-        ILogger<OutboxProcessor> logger)
+    public OutboxProcessor(
+                            IServiceProvider serviceProvider,
+                            IBusPublisher publisher,
+                            OutboxOptions options,
+                            ILogger<OutboxProcessor> logger)
     {
         if (options.Enabled && options.IntervalMilliseconds <= 0)
         {
@@ -79,7 +82,7 @@ internal sealed class OutboxProcessor : IHostedService
 
     private async Task SendOutboxMessagesAsync()
     {
-        var jobId = Guid.NewGuid().ToString("N");
+        string jobId = Guid.NewGuid().ToString("N");
         _logger.LogTrace($"Started processing outbox messages... [job id: '{jobId}']");
         var stopwatch = new Stopwatch();
         stopwatch.Start();

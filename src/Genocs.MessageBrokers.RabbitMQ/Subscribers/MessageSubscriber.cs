@@ -4,10 +4,12 @@ internal class MessageSubscriber : IMessageSubscriber
 {
     public MessageSubscriberAction Action { get; }
     public Type Type { get; }
-    public Func<IServiceProvider, object, object, Task> Handle { get; }
+    public Func<IServiceProvider, object, object, Task>? Handle { get; }
 
-    private MessageSubscriber(MessageSubscriberAction action, Type type,
-        Func<IServiceProvider, object, object, Task> handle = null)
+    private MessageSubscriber(
+                                MessageSubscriberAction action,
+                                Type type,
+                                Func<IServiceProvider, object, object, Task>? handle = null)
     {
         Action = action;
         Type = type;

@@ -50,7 +50,6 @@ public static class Extensions
         using var scope = app.ApplicationServices.CreateScope();
         var initializer = scope.ServiceProvider.GetRequiredService<IStartupInitializer>();
         Task.Run(() => initializer.InitializeAsync()).GetAwaiter().GetResult();
-
         return app;
     }
 

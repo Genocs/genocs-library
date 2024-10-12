@@ -38,8 +38,8 @@ public class JwtOptions
     public string? ValidIssuer { get; set; }
     public IEnumerable<string>? ValidIssuers { get; set; }
     public bool ValidateActor { get; set; }
-    public bool ValidateAudience { get; set; } = true;
-    public bool ValidateIssuer { get; set; } = true;
+    public bool ValidateAudience { get; set; }
+    public bool ValidateIssuer { get; set; }
     public bool ValidateLifetime { get; set; } = true;
     public bool ValidateTokenReplay { get; set; }
     public bool ValidateIssuerSigningKey { get; set; }

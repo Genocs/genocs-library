@@ -15,7 +15,6 @@ public class AppOptions
     /// </summary>
     public bool Enabled { get; set; }
 
-
     /// <summary>
     /// Application name.
     /// </summary>

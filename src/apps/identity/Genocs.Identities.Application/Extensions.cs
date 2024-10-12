@@ -68,7 +68,6 @@ public static class Extensions
             .AddMongo()
             .AddRedis()
             .AddOpenTelemetry()
-            .AddJaeger()
             .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")

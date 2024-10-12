@@ -12,12 +12,12 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Type of the entity.
     /// </summary>
-    public Type EntityType { get; set; }
+    public Type? EntityType { get; set; }
 
     /// <summary>
     /// Id of the Entity.
     /// </summary>
-    public object Id { get; set; }
+    public object? Id { get; set; }
 
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.

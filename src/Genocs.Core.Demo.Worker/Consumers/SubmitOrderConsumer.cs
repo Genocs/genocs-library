@@ -19,7 +19,7 @@ public class SubmitOrderConsumer : IConsumer<SubmitOrder>
 
     public async Task Consume(ConsumeContext<SubmitOrder> context)
     {
-        Order order = new Order(context.Message.OrderId, context.Message.UserId, "", 1, "EUR");
+        Order order = new Order(context.Message.OrderId, context.Message.UserId, 1, "EUR");
         await _orderRepository.InsertAsync(order);
         _logger.LogInformation($"Order {context.Message.OrderId} processed!");
     }
