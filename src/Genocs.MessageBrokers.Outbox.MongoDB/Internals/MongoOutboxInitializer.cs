@@ -28,7 +28,7 @@ internal sealed class MongoOutboxInitializer : IInitializer
             return;
         }
 
-        var inboxCollection = string.IsNullOrWhiteSpace(_options.InboxCollection)
+        string inboxCollection = string.IsNullOrWhiteSpace(_options.InboxCollection)
             ? "inbox"
             : _options.InboxCollection;
 
@@ -41,7 +41,7 @@ internal sealed class MongoOutboxInitializer : IInitializer
                         ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
                     }));
 
-        var outboxCollection = string.IsNullOrWhiteSpace(_options.OutboxCollection)
+        string outboxCollection = string.IsNullOrWhiteSpace(_options.OutboxCollection)
             ? "outbox"
             : _options.OutboxCollection;
 
