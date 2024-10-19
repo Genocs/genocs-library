@@ -19,9 +19,11 @@ public static class Extensions
         return builder;
     }
 
-    public static IApplicationBuilder UseDispatcherEndpoints(this IApplicationBuilder app,
-        Action<IDispatcherEndpointsBuilder> builder, bool useAuthorization = true,
-        Action<IApplicationBuilder> middleware = null)
+    public static IApplicationBuilder UseDispatcherEndpoints(
+                                                                this IApplicationBuilder app,
+                                                                Action<IDispatcherEndpointsBuilder> builder,
+                                                                bool useAuthorization = true,
+                                                                Action<IApplicationBuilder>? middleware = null)
     {
         var definitions = app.ApplicationServices.GetRequiredService<WebApiEndpointDefinitions>();
         app.UseRouting();

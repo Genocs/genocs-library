@@ -72,7 +72,6 @@ public class PublicContractsMiddleware
 
             if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-
                 if (Contracts.Commands.ContainsKey(name))
                 {
                     throw new InvalidOperationException($"Command: '{name}' already exists.");
@@ -89,12 +88,15 @@ public class PublicContractsMiddleware
             object? instance = @event.GetDefaultInstance();
             string? name = instance?.GetType().Name;
 
-            if (Contracts.Events.ContainsKey(name))
+            if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-                throw new InvalidOperationException($"Event: '{name}' already exists.");
-            }
+                if (Contracts.Events.ContainsKey(name))
+                {
+                    throw new InvalidOperationException($"Event: '{name}' already exists.");
+                }
 
-            Contracts.Events[name] = instance;
+                Contracts.Events[name] = instance;
+            }
         }
 
         _serializedContracts = JsonSerializer.Serialize(Contracts, SerializerOptions);
