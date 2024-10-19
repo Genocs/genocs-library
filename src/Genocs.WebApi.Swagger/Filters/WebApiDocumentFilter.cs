@@ -12,7 +12,6 @@ internal sealed class WebApiDocumentFilter : IDocumentFilter
 
     private readonly WebApiEndpointDefinitions _definitions;
 
-
     private readonly Func<OpenApiPathItem, string, OpenApiOperation?> _getOperation = (item, path) =>
     {
         switch (path)
@@ -48,6 +47,12 @@ internal sealed class WebApiDocumentFilter : IDocumentFilter
             foreach (var methodDefinition in pathDefinition)
             {
                 var operation = _getOperation(pathItem, methodDefinition.Method);
+
+                if (operation is null)
+                {
+                    continue;
+                }
+
                 operation.Responses = new OpenApiResponses();
                 operation.Parameters = new List<OpenApiParameter>();
 

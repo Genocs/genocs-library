@@ -1,7 +1,9 @@
+using System.Reflection;
 using Genocs.Core.Builders;
-using Genocs.WebApi.Swagger.Docs.Builders;
-using Genocs.WebApi.Swagger.Docs.Configurations;
+using Genocs.WebApi.Swagger.Builders;
+using Genocs.WebApi.Swagger.Configurations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -19,38 +21,126 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<SwaggerOptions>(sectionName);
-        return builder.AddSwaggerDocs(options);
-    }
+        OpenApiSettings settings = builder.GetOptions<OpenApiSettings>(sectionName);
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
-    {
-        var options = buildOptions(new SwaggerOptionsBuilder()).Build();
-        return builder.AddSwaggerDocs(options);
-    }
-
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions options)
-    {
-        if (!options.Enabled || !builder.TryRegister(RegistryName))
+        if (settings is null)
         {
             return builder;
         }
 
-        builder.Services.AddSingleton(options);
+        return builder.AddSwaggerDocs(settings);
+    }
+
+    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, Func<IOpenApiSettingsBuilder, IOpenApiSettingsBuilder> buildOptions)
+    {
+        OpenApiSettings settings = buildOptions(new OpenApiSettingsBuilder()).Build();
+
+        if (settings is null)
+        {
+            return builder;
+        }
+
+        return builder.AddSwaggerDocs(settings);
+    }
+
+    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, OpenApiSettings settings)
+    {
+        if (!settings.Enabled || !builder.TryRegister(RegistryName))
+        {
+            return builder;
+        }
+
+        // TODO: Double-check if this is necessary
+        builder.Services.AddSingleton(settings);
+
+        // Register the Swagger generator, defining 1 or more Swagger documents
         builder.Services.AddSwaggerGen(c =>
         {
             c.EnableAnnotations();
-            c.SwaggerDoc(options.Name, new OpenApiInfo { Title = options.Title, Version = options.Version });
-            if (options.IncludeSecurity)
+
+            c.SwaggerDoc(
+                            settings.Name,
+                            new OpenApiInfo
+                            {
+                                Version = settings.Version,
+                                Title = settings.Title,
+                                Description = settings.Description,
+                                TermsOfService = new Uri(settings.TermsAndConditionsUrl ?? "https://www.genocs.com/terms_and_conditions.html"),
+                                Contact = new OpenApiContact
+                                {
+                                    Name = settings.ContactName,
+                                    Email = settings.ContactEmail,
+                                    Url = new Uri(settings.ContactUrl ?? "https://www.genocs.com")
+                                },
+                                License = new OpenApiLicense
+                                {
+                                    Name = settings.LicenseName,
+                                    Url = new Uri(settings.LicenseUrl ?? "https://opensource.org/license/mit/")
+                                }
+                            });
+
+            if (settings.IncludeSecurity)
             {
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Name = "Bearer",
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
                 });
             }
+
+            // This is required to make the custom operation ids work
+            // It's required to be used by LangChain tools
+            c.CustomOperationIds(oid =>
+            {
+                if (oid.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
+                {
+                    return null; // default behavior
+                }
+
+                return oid.GroupName switch
+                {
+                    "v1" => $"{actionDescriptor.ActionName}",
+                    _ => $"_{actionDescriptor.ActionName}", // default behavior
+                };
+            });
+
+            // Add list of servers
+
+            if (settings.Servers != null)
+            {
+                foreach (var server in settings.Servers)
+                {
+                    c.AddServer(new OpenApiServer() { Url = server.Url, Description = server.Description });
+                }
+            }
+
+            // c.AddServer(new OpenApiServer() { Url = "http://localhost:5300", Description = "Local version to be used for development" });
+            // c.AddServer(new OpenApiServer() { Url = "http://fiscanner-api", Description = "Containerized version to be used into with docker or k8s" });
+            // c.AddServer(new OpenApiServer() { Url = "https://fiscanner-api.azurewebsites.net", Description = "Production deployed on Azure" });
+
+            string documentationFile = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml");
+            c.IncludeXmlComments(documentationFile);
         });
 
         return builder;
@@ -58,7 +148,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<SwaggerOptions>();
+        var options = builder.ApplicationServices.GetRequiredService<OpenApiSettings>();
         if (!options.Enabled)
         {
             return builder;

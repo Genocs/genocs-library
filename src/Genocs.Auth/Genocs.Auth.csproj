@@ -11,7 +11,7 @@
         <Version>6.1.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageTags>microservice microservices solid solid-principles authentication genocs</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>

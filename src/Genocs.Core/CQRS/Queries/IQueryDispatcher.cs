@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-
-namespace Genocs.Core.CQRS.Queries;
+﻿namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
 /// The query dispatcher interface.

@@ -11,7 +11,7 @@
         <Version>6.1.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageTags>microservice microservices solid solid-principles genocs webapi swagger openapi open-api</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
@@ -42,6 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.8.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.8.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.8.1" />
