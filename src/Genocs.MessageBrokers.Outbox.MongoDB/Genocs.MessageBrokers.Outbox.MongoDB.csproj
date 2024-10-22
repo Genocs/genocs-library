@@ -8,7 +8,7 @@
         <Title>The message brokers outbox MongoDB interface library useful to build .NET Core projects.</Title>
         <Description>The message brokers MongoDB outbox interface library useful to build .NET Core projects.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.1.0</Version>
+        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
@@ -39,8 +39,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.1.*" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.2.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.2.*" />
     </ItemGroup>
 
 </Project>

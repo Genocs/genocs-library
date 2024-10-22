@@ -34,22 +34,22 @@
 
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="6.1.*" />
-        <PackageReference Include="Genocs.HTTP" Version="6.1.*" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.1.*" />
-        <PackageReference Include="Genocs.Logging" Version="6.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="6.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="6.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="6.1.*" />
-        <PackageReference Include="Genocs.Metrics" Version="6.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.1.*" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="6.1.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="6.1.*" />
-        <PackageReference Include="Genocs.Tracing" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi" Version="6.1.*" />
+        <PackageReference Include="Genocs.Auth" Version="6.2.*" />
+        <PackageReference Include="Genocs.HTTP" Version="6.2.*" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.2.*" />
+        <PackageReference Include="Genocs.Logging" Version="6.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="6.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="6.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="6.2.*" />
+        <PackageReference Include="Genocs.Metrics" Version="6.2.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.2.*" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="6.2.*" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="6.2.*" />
+        <PackageReference Include="Genocs.Tracing" Version="6.2.*" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="6.2.*" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.2.*" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="6.2.*" />
+        <PackageReference Include="Genocs.WebApi" Version="6.2.*" />
     </ItemGroup>
 </Project>

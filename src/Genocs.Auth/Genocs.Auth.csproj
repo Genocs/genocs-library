@@ -8,7 +8,7 @@
         <Title>The authorization library useful to build .NET Core projects.</Title>
         <Description>The authorization library useful to build .NET Core projects.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.1.0</Version>
+        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles authentication genocs</PackageTags>
@@ -40,8 +40,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.1.*" />
-        <PackageReference Include="Genocs.Security" Version="6.1.*" />
+        <PackageReference Include="Genocs.Core" Version="6.2.*" />
+        <PackageReference Include="Genocs.Security" Version="6.2.*" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
