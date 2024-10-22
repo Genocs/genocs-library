@@ -17,6 +17,12 @@ public static class Extensions
                                                                 string sectionName = SectionName,
                                                                 Type? permissionValidatorType = null)
     {
+
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = SectionName;
+        }
+
         var options = builder.GetOptions<SecurityOptions>(sectionName);
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))

@@ -36,17 +36,24 @@ public class RabbitMqExchangeInitializer : IInitializer
         if (_options.Exchange?.Declare == true)
         {
             Log(_options.Exchange.Name, _options.Exchange.Type);
-            channel.ExchangeDeclare(_options.Exchange.Name, _options.Exchange.Type, _options.Exchange.Durable,
-                _options.Exchange.AutoDelete);
+
+            channel.ExchangeDeclare(
+                                    _options.Exchange.Name,
+                                    _options.Exchange.Type,
+                                    _options.Exchange.Durable,
+                                    _options.Exchange.AutoDelete);
 
             if (_options.DeadLetter?.Enabled is true && _options.DeadLetter?.Declare is true)
             {
-                channel.ExchangeDeclare($"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}",
-                    ExchangeType.Direct, _options.Exchange.Durable, _options.Exchange.AutoDelete);
+                channel.ExchangeDeclare(
+                                        $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}",
+                                        ExchangeType.Direct,
+                                        _options.Exchange.Durable,
+                                        _options.Exchange.AutoDelete);
             }
         }
 
-        foreach (var exchange in exchanges)
+        foreach (string? exchange in exchanges)
         {
             if (exchange.Equals(_options.Exchange?.Name, StringComparison.InvariantCultureIgnoreCase))
             {

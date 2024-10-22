@@ -8,10 +8,10 @@
         <Title>The Genocs Library - Core components.</Title>
         <Description>The core components to build .NET Core projects along with Genocs Library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.1.0</Version>
+        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Updated to NET8</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Common" Version="6.1.*" />
+        <PackageReference Include="Genocs.Common" Version="6.2.0" />
     </ItemGroup>
 
     <ItemGroup>

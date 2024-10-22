@@ -29,17 +29,17 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.HTTP" Version="6.1.*" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="6.1.*" />
-        <PackageReference Include="Genocs.Metrics" Version="6.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.1.*" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="6.1.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="6.1.*" />
-        <PackageReference Include="Genocs.Tracing" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="6.1.*" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="6.1.*" />
+        <PackageReference Include="Genocs.HTTP" Version="6.2.0" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.2.0" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="6.2.0" />
+        <PackageReference Include="Genocs.Metrics" Version="6.2.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.2.0" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="6.2.0" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="6.2.0" />
+        <PackageReference Include="Genocs.Tracing" Version="6.2.0" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="6.2.0" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.2.0" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="6.2.0" />
     </ItemGroup>
 
 </Project>
