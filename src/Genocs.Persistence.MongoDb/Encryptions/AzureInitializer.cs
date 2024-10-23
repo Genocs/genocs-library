@@ -60,7 +60,7 @@ public class AzureInitializer
         {
             Unique = true,
             PartialFilterExpression = new BsonDocument
-                    {{"keyAltNames", new BsonDocument {{"$exists", new BsonBoolean(true)}}}}
+                    { { "keyAltNames", new BsonDocument { { "$exists", new BsonBoolean(true) } } } }
         };
 
         var builder = Builders<BsonDocument>.IndexKeys;
@@ -87,7 +87,6 @@ public class AzureInitializer
         var dataKeyOptions2 = GetDataKeyOptions(new List<string> { "dataKey2" });
         var dataKeyOptions3 = GetDataKeyOptions(new List<string> { "dataKey3" });
         var dataKeyOptions4 = GetDataKeyOptions(new List<string> { "dataKey4" });
-
 
         BsonBinaryData CreateKeyGetID(DataKeyOptions options)
         {
@@ -165,7 +164,6 @@ public class AzureInitializer
             kmsProviders,
             encryptedFieldsMap: encryptedFieldsMap,
             extraOptions: extraOptions);
-
 
         return autoEncryptionOptions;
 
