@@ -64,8 +64,8 @@ public static class Extensions
                 // No OpenTelemetryTracing in case of missing LoggerSettings
                 if (loggerOptions.Mongo != null && loggerOptions.Mongo.Enabled)
                 {
-                    // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
-                    provider.AddMongoDBInstrumentation();
+                    // Check for MongoDB config
+                    provider.AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources");
                 }
 
                 // Check for Console config

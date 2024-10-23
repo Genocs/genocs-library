@@ -1,9 +1,9 @@
+using System.Linq.Expressions;
 using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
 

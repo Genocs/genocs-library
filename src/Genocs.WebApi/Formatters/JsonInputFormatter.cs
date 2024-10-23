@@ -33,7 +33,7 @@ internal class JsonInputFormatter : IInputFormatter
         }
 
         var request = context.HttpContext.Request;
-        var json = string.Empty;
+        string json = string.Empty;
         if (request.Body is not null)
         {
             using var streamReader = new StreamReader(request.Body);
@@ -45,7 +45,7 @@ internal class JsonInputFormatter : IInputFormatter
             json = EmptyJson;
         }
 
-        var result = method.Invoke(_serializer, new object[] { json });
+        object? result = method.Invoke(_serializer, new object[] { json });
 
         return await InputFormatterResult.SuccessAsync(result);
     }
