@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
-/// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class AuditedEntity : AuditedEntity<int>, IEntity
+public abstract class AuditedEntity : AuditedEntity<Guid>, IEntity
 {
 
 }

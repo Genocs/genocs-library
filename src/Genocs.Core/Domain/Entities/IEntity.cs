@@ -3,9 +3,9 @@ using Genocs.Common.Types;
 namespace Genocs.Core.Domain.Entities;
 
 /// <summary>
-/// A shortcut of <see cref="IEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="IEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
-public interface IEntity : IIdentifiable<int>
+public interface IEntity : IIdentifiable<Guid>
 {
 
 }

@@ -3,7 +3,7 @@
 
 namespace Genocs.Core.Domain.Entities;
 
-public interface IAggregateRoot : IAggregateRoot<int>, IEntity
+public interface IAggregateRoot : IAggregateRoot<Guid>, IEntity
 {
 
 }

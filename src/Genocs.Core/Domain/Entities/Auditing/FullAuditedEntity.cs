@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
-/// A shortcut of <see cref="FullAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="FullAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class FullAuditedEntity : FullAuditedEntity<int>, IEntity
+public abstract class FullAuditedEntity : FullAuditedEntity<Guid>, IEntity
 {
 
 }
@@ -19,12 +19,13 @@ public abstract class FullAuditedEntity : FullAuditedEntity<int>, IEntity
 public abstract class FullAuditedEntity<TPrimaryKey> : AuditedEntity<TPrimaryKey>, IFullAudited
 {
     /// <summary>
-    /// Is this entity Deleted?
+    /// it determines if the entity is deleted.
+    /// Used for soft delete.
     /// </summary>
     public virtual bool IsDeleted { get; set; }
 
     /// <summary>
-    /// Which user deleted this entity?
+    /// It determines the user who deleted this entity.
     /// </summary>
     public virtual long? DeleterUserId { get; set; }
 

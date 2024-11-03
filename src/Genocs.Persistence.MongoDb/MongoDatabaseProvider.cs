@@ -6,7 +6,6 @@ using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
 namespace Genocs.Persistence.MongoDb;
 
-
 /// <summary>
 /// The MongoDatabaseProvider.
 /// </summary>
@@ -28,7 +27,7 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
     /// </summary>
     /// <param name="options"></param>
     /// <param name="encrypOptions"></param>
-    /// <exception cref="NullReferenceException"></exception>
+    /// <exception cref="NullReferenceException">This exception happend in case mandatory data is missing.</exception>
     public MongoDatabaseProvider(IOptions<MongoDbOptions> options, IOptions<MongoDbEncryptionOptions> encrypOptions)
     {
         if (options == null) throw new NullReferenceException(nameof(options));
@@ -45,14 +44,17 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
             clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
         }
 
-        //if (encrypOptions != null)
-        //{
-        //    AzureInitializer initializer = new AzureInitializer();
-        //    var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
-        //    clientSettings.AutoEncryptionOptions = autoEncrypOptions;
-        //}
+        /*
+        if (encrypOptions != null)
+        {
+            AzureInitializer initializer = new AzureInitializer();
+            var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
+            clientSettings.AutoEncryptionOptions = autoEncrypOptions;
+        }
+        */
 
         this.MongoClient = new MongoClient(clientSettings);
         this.Database = this.MongoClient.GetDatabase(dBSettings.Database);
+
     }
 }
