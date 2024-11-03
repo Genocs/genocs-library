@@ -8,7 +8,6 @@ using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 
@@ -39,10 +38,9 @@ internal class Startup
         services
             .AddGenocs()
             .AddOpenTelemetry()
-            .AddJaeger()
             .AddJwt()
             .AddPrometheus()
-            .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+            .AddRabbitMq()
             .AddSecurity()
             .AddWebApi()
             .Build();
@@ -76,7 +74,6 @@ internal class Startup
         app.UseMiddleware<LogContextMiddleware>();
         app.UseCors("cors");
         app.UseGenocs();
-        app.UseJaeger();
         app.UsePrometheus();
         app.UseAccessTokenValidator();
         app.UseAuthentication();

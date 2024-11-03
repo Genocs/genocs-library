@@ -48,6 +48,18 @@ internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
         return this;
     }
 
+    public ISwaggerOptionsBuilder WithDescription(string description)
+    {
+        _options.Description = description;
+        return this;
+    }
+
+    public ISwaggerOptionsBuilder WithContactName(string contactName)
+    {
+        _options.ContactName = contactName;
+        return this;
+    }
+
     public ISwaggerOptionsBuilder SerializeAsOpenApiV2(bool serializeAsOpenApiV2)
     {
         _options.SerializeAsOpenApiV2 = serializeAsOpenApiV2;
@@ -55,4 +67,6 @@ internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
     }
 
     public SwaggerOptions Build() => _options;
+
+
 }

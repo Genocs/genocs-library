@@ -31,7 +31,7 @@ public class DispatcherEndpointsBuilder : IDispatcherEndpointsBuilder
     public IDispatcherEndpointsBuilder Get<TQuery, TResult>(
                                                             string path,
                                                             Func<TQuery, HttpContext, Task>? beforeDispatch = null,
-                                                            Func<TQuery, TResult, HttpContext, Task>? afterDispatch = null,
+                                                            Func<TQuery, TResult?, HttpContext, Task>? afterDispatch = null,
                                                             Action<IEndpointConventionBuilder>? endpoint = null,
                                                             bool auth = false,
                                                             string? roles = null,

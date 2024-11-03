@@ -11,14 +11,13 @@ namespace Genocs.Logging.CQRS;
 
 public static class Extensions
 {
-    public static IGenocsBuilder AddCommandHandlersLogging(this IGenocsBuilder builder, Assembly assembly = null)
+    public static IGenocsBuilder AddCommandHandlersLogging(this IGenocsBuilder builder, Assembly? assembly = null)
         => builder.AddHandlerLogging(typeof(ICommandHandler<>), typeof(CommandHandlerLoggingDecorator<>), assembly);
 
-    public static IGenocsBuilder AddEventHandlersLogging(this IGenocsBuilder builder, Assembly assembly = null)
+    public static IGenocsBuilder AddEventHandlersLogging(this IGenocsBuilder builder, Assembly? assembly = null)
         => builder.AddHandlerLogging(typeof(IEventHandler<>), typeof(EventHandlerLoggingDecorator<>), assembly);
 
-    private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType,
-        Type decoratorType, Assembly? assembly = null)
+    private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType, Type decoratorType, Assembly? assembly = null)
     {
         assembly ??= Assembly.GetCallingAssembly();
 

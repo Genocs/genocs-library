@@ -35,6 +35,7 @@ services:
       - 9411:9411
       - 14268:14268
       - 16686:16686
+      - 4317:4317
     # network_mode: host
     networks:
       - genocs

@@ -33,5 +33,5 @@ internal sealed class FabioMessageHandler : DelegatingHandler
     }
 
     private Uri GetRequestUri(HttpRequestMessage request)
-        => new($"{_settings.Url}/{_servicePath}{request.RequestUri.Host}{request.RequestUri.PathAndQuery}");
+        => new($"{_settings.Url}/{_servicePath}{request.RequestUri?.Host}{request.RequestUri?.PathAndQuery}");
 }

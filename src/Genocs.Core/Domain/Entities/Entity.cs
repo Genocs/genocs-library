@@ -30,7 +30,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// <returns>True, if this entity is transient.</returns>
     public virtual bool IsTransient()
     {
-        if (EqualityComparer<TPrimaryKey>.Default.Equals(Id, default))
+        if (EqualityComparer<TPrimaryKey>.Default.Equals(Id!, default!))
         {
             return true;
         }
@@ -50,7 +50,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || !(obj is Entity<TPrimaryKey>))
         {

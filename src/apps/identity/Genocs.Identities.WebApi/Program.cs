@@ -20,6 +20,12 @@ builder.Host
 
 var services = builder.Services;
 
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
 services.AddGenocs(builder.Configuration)
         .AddWebApi()
         .AddCore()

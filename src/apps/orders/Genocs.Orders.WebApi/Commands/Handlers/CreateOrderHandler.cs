@@ -5,7 +5,6 @@ using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.Events;
 using Genocs.Orders.WebApi.Services;
 using Genocs.Persistence.MongoDb.Repositories.Mentor;
-using OpenTracing;
 
 namespace Genocs.Orders.WebApi.Commands.Handlers;
 
@@ -16,21 +15,18 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
     private readonly IMessageOutbox _outbox;
     private readonly IProductServiceClient _productServiceClient;
     private readonly ILogger<CreateOrderHandler> _logger;
-    private readonly ITracer _tracer;
 
     public CreateOrderHandler(
                                 IMongoRepository<Order, Guid> repository,
                                 IBusPublisher publisher,
                                 IMessageOutbox outbox,
                                 IProductServiceClient productServiceClient,
-                                ITracer tracer,
                                 ILogger<CreateOrderHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
         _outbox = outbox;
         _productServiceClient = productServiceClient;
-        _tracer = tracer;
         _logger = logger;
     }
 
@@ -56,7 +52,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        string? spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = "TODO: Genocs";
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {

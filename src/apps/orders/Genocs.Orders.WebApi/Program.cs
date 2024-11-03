@@ -22,8 +22,6 @@ using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
@@ -39,6 +37,12 @@ builder.Host
         .UseLogging()
         .UseVault();
 
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
 var services = builder.Services;
 
 services.AddGenocs()
@@ -49,7 +53,6 @@ services.AddGenocs()
         .AddConsul()
         .AddFabio()
         .AddOpenTelemetry()
-        .AddJaeger()
         .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Order, Guid>("orders")
@@ -61,7 +64,7 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         .AddPrometheus()
         .AddRedis()
-        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        .AddRabbitMq()
         .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
@@ -82,7 +85,6 @@ app.UseGenocs()
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders",            afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
-    .UseJaeger()
     .UseSwaggerDocs()
     .UseRabbitMq()
     .SubscribeEvent<DeliveryStarted>();

@@ -9,7 +9,7 @@ public interface IPagedFilter<TResult, in TQuery>
     where TQuery : IQuery
 {
     /// <summary>
-    /// Filter
+    /// Filter.
     /// </summary>
     /// <param name="values"></param>
     /// <param name="query"></param>

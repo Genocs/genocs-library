@@ -17,8 +17,8 @@ StaticLogger.EnsureInitialized();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-        .UseLogging()
-        .UseAzureKeyVault();
+        .UseAzureKeyVault()
+        .UseLogging();
 
 var services = builder.Services;
 

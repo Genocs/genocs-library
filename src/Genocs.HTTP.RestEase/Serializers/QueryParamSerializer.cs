@@ -33,9 +33,9 @@ internal sealed class QueryParamSerializer : RequestQueryParamSerializer
         }
     }
 
-    private Dictionary<string, object> GetPropertiesDeepRecursive(object obj, string name)
+    private Dictionary<string, object?> GetPropertiesDeepRecursive(object? obj, string name)
     {
-        var dict = new Dictionary<string, object>();
+        var dict = new Dictionary<string, object?>();
 
         if (obj is null)
         {

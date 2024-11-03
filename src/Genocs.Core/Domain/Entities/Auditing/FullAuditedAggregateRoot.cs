@@ -19,7 +19,7 @@ public abstract class FullAuditedAggregateRoot : FullAuditedAggregateRoot<int>
 public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRoot<TPrimaryKey>, IFullAudited
 {
     /// <summary>
-    /// Is this entity Deleted?
+    /// It defines whether this entity is deleted or not.
     /// </summary>
     public virtual bool IsDeleted { get; set; }
 
@@ -44,7 +44,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggr
     where TUser : IEntity<long>
 {
     /// <summary>
-    /// Is this entity Deleted?
+    /// It defines whether this entity is deleted or not.
     /// </summary>
     public virtual bool IsDeleted { get; set; }
 
@@ -55,7 +55,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggr
     public virtual TUser DeleterUser { get; set; }
 
     /// <summary>
-    /// Which user deleted this entity?
+    /// Which user deleted this entity.
     /// </summary>
     public virtual long? DeleterUserId { get; set; }
 

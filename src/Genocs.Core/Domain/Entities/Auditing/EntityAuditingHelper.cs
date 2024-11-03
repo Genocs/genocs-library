@@ -63,25 +63,26 @@ public static class EntityAuditingHelper
         //    }
         //}
 
-        //Finally, set CreatorUserId!
+        // Finally, set CreatorUserId!
         entity.CreatorUserId = userId;
     }
 
     public static void SetModificationAuditProperties(
-        //IMultiTenancyConfig multiTenancyConfig,
+
+        // IMultiTenancyConfig multiTenancyConfig,
         object entityAsObj,
         int? tenantId,
         long? userId)
     {
         if (entityAsObj is IHasModificationTime)
         {
-            //entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+            // entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
             entityAsObj.As<IHasModificationTime>().LastModificationTime = DateTime.Now;
         }
 
         if (!(entityAsObj is IModificationAudited))
         {
-            //Entity does not implement IModificationAudited
+            // Entity does not implement IModificationAudited
             return;
         }
 
@@ -89,7 +90,7 @@ public static class EntityAuditingHelper
 
         if (userId == null)
         {
-            //Unknown user
+            // Unknown user
             entity.LastModifierUserId = null;
             return;
         }
@@ -100,7 +101,7 @@ public static class EntityAuditingHelper
             if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
                 !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
             {
-                //A tenant entitiy is modified by host or a different tenant
+                //A tenant entity is modified by host or a different tenant
                 entity.LastModifierUserId = null;
                 return;
             }

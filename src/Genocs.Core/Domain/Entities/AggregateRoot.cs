@@ -1,7 +1,7 @@
-//using System.Collections.Generic;
-//using System.Collections.ObjectModel;
-//using System.ComponentModel.DataAnnotations.Schema;
-//using Genocs.Events.Bus;
+// using System.Collections.Generic;
+// using System.Collections.ObjectModel;
+// using System.ComponentModel.DataAnnotations.Schema;
+// using Genocs.Events.Bus;
 
 namespace Genocs.Core.Domain.Entities;
 
@@ -10,7 +10,8 @@ public class AggregateRoot : AggregateRoot<Guid>, IAggregateRoot
 
 }
 
-public class AggregateRoot<TPrimaryKey> : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
+public class AggregateRoot<TPrimaryKey>
+    : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
 {
     /*
     [NotMapped]
