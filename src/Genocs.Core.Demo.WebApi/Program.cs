@@ -8,6 +8,7 @@ using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using Genocs.Auth;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,7 @@ var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+    .AddJwt()
 //    .AddOpenIdJwt()
     .AddOpenTelemetry()
     .AddMongoFast()

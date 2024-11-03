@@ -38,16 +38,41 @@ public class JwtOptions
     public string? ValidIssuer { get; set; }
     public IEnumerable<string>? ValidIssuers { get; set; }
     public bool ValidateActor { get; set; }
+
+    /// <summary>
+    /// It defines whether the audience should be validated.
+    /// Defaults to true.
+    /// </summary>
     public bool ValidateAudience { get; set; } = true;
+
+    /// <summary>
+    /// It defines whether the issuer should be validated.
+    /// Defaults to true.
+    /// </summary>
     public bool ValidateIssuer { get; set; } = true;
     public bool ValidateLifetime { get; set; } = true;
     public bool ValidateTokenReplay { get; set; }
     public bool ValidateIssuerSigningKey { get; set; }
+
+    /// <summary>
+    /// It defines whether the token should be refreshed when the issuer key is not found.
+    /// Defaults to true.
+    /// </summary>
     public bool RefreshOnIssuerKeyNotFound { get; set; } = true;
+
+    /// <summary>
+    /// It defines whether the error details should be included in the response.
+    /// Defaults to true.
+    /// </summary>
     public bool IncludeErrorDetails { get; set; } = true;
     public string? AuthenticationType { get; set; }
     public string? NameClaimType { get; set; }
-    public string? RoleClaimType { get; set; }
+
+    /// <summary>
+    /// The claim type that will be used to determine the user's roles.
+    /// Defaults to "Role".
+    /// </summary>
+    public string RoleClaimType { get; set; } = "Role";
 
     public class CertificateOptions
     {
