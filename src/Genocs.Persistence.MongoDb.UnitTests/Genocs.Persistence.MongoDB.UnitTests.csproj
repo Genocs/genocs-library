@@ -23,7 +23,6 @@
         </PackageReference>
     </ItemGroup>
 
-
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.2.0" />
     </ItemGroup>

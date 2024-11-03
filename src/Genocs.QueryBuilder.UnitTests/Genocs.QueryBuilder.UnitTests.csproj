@@ -25,7 +25,6 @@
         </PackageReference>
     </ItemGroup>
 
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
         <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />

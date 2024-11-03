@@ -18,21 +18,6 @@
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\icon.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="README_NUGET.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
