@@ -8,7 +8,6 @@
         <Title>The web api Security library</Title>
         <Description>The web api Security library</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
@@ -18,27 +17,12 @@
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\icon.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="README_NUGET.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.2.0" />
+        <PackageReference Include="Genocs.Core" Version="6.3.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">

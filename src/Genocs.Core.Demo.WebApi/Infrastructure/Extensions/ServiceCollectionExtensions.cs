@@ -65,14 +65,16 @@ public static class ServiceCollectionExtensions
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.ConfigureEndpoints(context);
-                //cfg.UseHealthCheck(context);
-                cfg.Host(rabbitMQSettings.HostName, rabbitMQSettings.VirtualHost,
-                    h =>
-                    {
-                        h.Username(rabbitMQSettings.UserName);
-                        h.Password(rabbitMQSettings.Password);
-                    }
-                );
+
+                // cfg.UseHealthCheck(context);
+                cfg.Host(
+                            rabbitMQSettings.HostName,
+                            rabbitMQSettings.VirtualHost,
+                            h =>
+                            {
+                                h.Username(rabbitMQSettings.UserName);
+                                h.Password(rabbitMQSettings.Password);
+                            });
             });
         });
 

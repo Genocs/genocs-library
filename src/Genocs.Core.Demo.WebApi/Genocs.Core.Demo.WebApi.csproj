@@ -11,36 +11,37 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
-        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
+        <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
         <ProjectReference Include="..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
+        <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.2.0" />
-        <PackageReference Include="Genocs.Core" Version="6.2.0" />
-        <PackageReference Include="Genocs.Auth" Version="6.2.0" />
-        <PackageReference Include="Genocs.Logging" Version="6.2.0" />
-        <PackageReference Include="Genocs.Tracing" Version="6.2.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.2.0" />
-        <PackageReference Include="Genocs.Security" Version="6.2.0" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="6.2.0" />
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.3.0" />
+        <PackageReference Include="Genocs.Auth" Version="6.3.0" />
+        <PackageReference Include="Genocs.Logging" Version="6.3.0" />
+        <PackageReference Include="Genocs.Tracing" Version="6.3.0" />
+        <PackageReference Include="Genocs.HTTP" Version="6.3.0" />
+        <PackageReference Include="Genocs.Security" Version="6.3.0" />
+        <PackageReference Include="Genocs.WebApi" Version="6.3.0" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.3.0" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="6.3.0" />
+
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
-        <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
-        <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
 
 </Project>

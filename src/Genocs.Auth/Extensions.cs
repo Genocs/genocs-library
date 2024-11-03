@@ -70,6 +70,7 @@ public static class Extensions
             SaveSigninToken = options.SaveSigninToken,
             RequireExpirationTime = options.RequireExpirationTime,
             RequireSignedTokens = options.RequireSignedTokens,
+            RoleClaimType = options.RoleClaimType,
             ClockSkew = TimeSpan.Zero
         };
 
@@ -117,6 +118,7 @@ public static class Extensions
             }
         }
 
+        // If no certificate is provided, use symmetric encryption.
         if (!string.IsNullOrWhiteSpace(options.IssuerSigningKey) && !hasCertificate)
         {
             if (string.IsNullOrWhiteSpace(options.Algorithm) || hasCertificate)
