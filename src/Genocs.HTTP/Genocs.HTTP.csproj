@@ -8,7 +8,6 @@
         <Title>The http support library useful to build .NET Core projects.</Title>
         <Description>The http support library useful to build .NET Core projects.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs http-client</PackageTags>
@@ -23,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.2.0" />
+        <PackageReference Include="Genocs.Core" Version="6.3.0" />
     </ItemGroup>
 
     <ItemGroup>
