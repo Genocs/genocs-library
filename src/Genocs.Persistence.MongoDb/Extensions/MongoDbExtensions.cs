@@ -1,5 +1,5 @@
-using Genocs.Common.Types;
 using Genocs.Core.Builders;
+using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDb.Builders;
 using Genocs.Persistence.MongoDb.Configurations;
 using Genocs.Persistence.MongoDb.Factories;
@@ -141,19 +141,19 @@ public static class MongoDbExtensions
     /// Adds a MongoDb repository to the DI container. Using Genocs builder support.
     /// </summary>
     /// <typeparam name="TEntity">The name of the entity.</typeparam>
-    /// <typeparam name="TIdentifiable">The kind of identifier.</typeparam>
+    /// <typeparam name="TKey">The kind of identifier.</typeparam>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="collectionName">The collection name where to store data.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongoRepository<TEntity, TIdentifiable>(
-                                                                            this IGenocsBuilder builder,
-                                                                            string collectionName)
-        where TEntity : IIdentifiable<TIdentifiable>
+    public static IGenocsBuilder AddMongoRepository<TEntity, TKey>(
+                                                                    this IGenocsBuilder builder,
+                                                                    string collectionName)
+        where TEntity : IEntity<TKey>
     {
-        builder.Services.AddTransient<IMongoRepository<TEntity, TIdentifiable>>(sp =>
+        builder.Services.AddTransient<IMongoRepository<TEntity, TKey>>(sp =>
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return new MongoRepository<TEntity, TIdentifiable>(database, collectionName);
+            return new MongoRepository<TEntity, TKey>(database, collectionName);
         });
 
         return builder;

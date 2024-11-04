@@ -1,4 +1,3 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
@@ -13,9 +12,9 @@ namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
-/// <typeparam name="TPrimaryKey">Primary key of the entity.</typeparam>
-public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>, IMongoRepository<TEntity, TPrimaryKey>
-    where TEntity : class, IIdentifiable<TPrimaryKey>
+/// <typeparam name="TKey">Primary key of the entity.</typeparam>
+public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoRepository<TEntity, TKey>
+    where TEntity : class, IEntity<TKey>
 {
     /// <summary>
     /// Get the MongoDB database.
@@ -79,7 +78,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <param name="id"></param>
     /// <returns></returns>
     /// <exception cref="EntityNotFoundException">It is thrown if the entity is not found.</exception>
-    public override TEntity Get(TPrimaryKey id)
+    public override TEntity Get(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var entity = Collection.Find(filter).FirstOrDefault();
@@ -95,8 +94,8 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// First Or Default entity.
     /// </summary>
     /// <param name="id"></param>
-    /// <returns></returns>
-    public override TEntity FirstOrDefault(TPrimaryKey id)
+    /// <returns>The entity if found otherwise null</returns>
+    public override TEntity FirstOrDefault(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         return Collection.Find(filter).FirstOrDefault();
@@ -135,7 +134,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// Delete entity by primary key.
     /// </summary>
     /// <param name="id"></param>
-    public override void Delete(TPrimaryKey id)
+    public override void Delete(TKey id)
     {
         var query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var deleteResult = Collection.DeleteOneAsync(query).Result;

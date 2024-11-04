@@ -1,12 +1,12 @@
-﻿using Genocs.Common.Types;
+﻿using Genocs.Core.Domain.Entities;
 using MongoDB.Bson;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 
 /// <summary>
-/// General purpose Entity used by default in MongoDB.
+/// Default MongoDB entity.
 /// </summary>
-public interface IMongoDbEntity : IIdentifiable<ObjectId>
+public interface IMongoDbEntity : IEntity<ObjectId>
 {
 
 }

@@ -1,4 +1,4 @@
-﻿using Genocs.Common.Types;
+﻿using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Entities.Auditing;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Bson;
@@ -6,7 +6,7 @@ using MongoDB.Bson;
 namespace Genocs.Core.Demo.Domain.Aggregates;
 
 [TableMapping("Users")]
-public class User : IIdentifiable<ObjectId>, IHasCreationTime
+public class User : IEntity<ObjectId>, IHasCreationTime
 {
 
     public ObjectId Id { get; set; }

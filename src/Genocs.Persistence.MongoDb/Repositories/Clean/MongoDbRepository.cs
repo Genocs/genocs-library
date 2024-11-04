@@ -1,4 +1,4 @@
-using Genocs.Common.Types;
+using Genocs.Core.Domain.Entities;
 using MongoDB.Bson;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Clean;
@@ -8,7 +8,7 @@ namespace Genocs.Persistence.MongoDb.Repositories.Clean;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
-    where TEntity : class, IIdentifiable<ObjectId>
+    where TEntity : class, IEntity<ObjectId>
 {
     /// <summary>
     /// The standard constructor.

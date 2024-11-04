@@ -1,4 +1,4 @@
-﻿using Genocs.Common.Types;
+﻿using Genocs.Core.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace Genocs.Core.Domain.Repositories;
@@ -7,9 +7,9 @@ namespace Genocs.Core.Domain.Repositories;
 /// This interface is implemented by all repositories to ensure implementation of fixed methods.
 /// </summary>
 /// <typeparam name="TEntity">Main Entity type this repository works on.</typeparam>
-/// <typeparam name="TIdentifiable">Primary key type of the entity.</typeparam>
-public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEntity, TIdentifiable>
-    where TEntity : IIdentifiable<TIdentifiable>
+/// <typeparam name="TKey">Primary key type of the entity.</typeparam>
+public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
     #region Select/Get/Query
 
@@ -67,14 +67,14 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity.</returns>
-    TEntity Get(TIdentifiable id);
+    TEntity Get(TKey id);
 
     /// <summary>
     /// Gets an entity with given primary key.
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity.</returns>
-    Task<TEntity> GetAsync(TIdentifiable id);
+    Task<TEntity> GetAsync(TKey id);
 
     /// <summary>
     /// Gets exactly one entity with given predicate.
@@ -95,14 +95,14 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity or null.</returns>
-    TEntity? FirstOrDefault(TIdentifiable id);
+    TEntity? FirstOrDefault(TKey id);
 
     /// <summary>
     /// Gets an entity with given primary key or null if not found.
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
     /// <returns>Entity or null.</returns>
-    Task<TEntity?> FirstOrDefaultAsync(TIdentifiable id);
+    Task<TEntity?> FirstOrDefaultAsync(TKey id);
 
     /// <summary>
     /// Gets an entity with given predicate or null if not found.
@@ -121,7 +121,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="id">Primary key of the entity to load.</param>
     /// <returns>Entity.</returns>
-    TEntity? Load(TIdentifiable id);
+    TEntity? Load(TKey id);
 
     #endregion
 
@@ -146,7 +146,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    TIdentifiable InsertAndGetId(TEntity entity);
+    TKey InsertAndGetId(TEntity entity);
 
     /// <summary>
     /// Inserts a new entity and gets it's Id.
@@ -155,7 +155,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    Task<TIdentifiable> InsertAndGetIdAsync(TEntity entity);
+    Task<TKey> InsertAndGetIdAsync(TEntity entity);
 
     /// <summary>
     /// Inserts or updates given entity depending on Id's value.
@@ -177,7 +177,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    TIdentifiable InsertOrUpdateAndGetId(TEntity entity);
+    TKey InsertOrUpdateAndGetId(TEntity entity);
 
     /// <summary>
     /// Inserts or updates given entity depending on Id's value.
@@ -187,7 +187,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <returns>Id of the entity.</returns>
-    Task<TIdentifiable> InsertOrUpdateAndGetIdAsync(TEntity entity);
+    Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
     #endregion
 
@@ -211,7 +211,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// <param name="id">Id of the entity.</param>
     /// <param name="updateAction">Action that can be used to change values of the entity.</param>
     /// <returns>Updated entity.</returns>
-    TEntity Update(TIdentifiable id, Action<TEntity> updateAction);
+    TEntity Update(TKey id, Action<TEntity> updateAction);
 
     /// <summary>
     /// Updates an existing entity.
@@ -219,7 +219,7 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// <param name="id">Id of the entity.</param>
     /// <param name="updateAction">Action that can be used to change values of the entity.</param>
     /// <returns>Updated entity.</returns>
-    Task<TEntity> UpdateAsync(TIdentifiable id, Func<TEntity, Task> updateAction);
+    Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction);
 
     #endregion
 
@@ -241,13 +241,13 @@ public interface IRepositoryOfEntity<TEntity, TIdentifiable> : IRepository<TEnti
     /// Deletes an entity by primary key.
     /// </summary>
     /// <param name="id">Primary key of the entity.</param>
-    void Delete(TIdentifiable id);
+    void Delete(TKey id);
 
     /// <summary>
     /// Deletes an entity by primary key.
     /// </summary>
     /// <param name="id">Primary key of the entity.</param>
-    Task DeleteAsync(TIdentifiable id);
+    Task DeleteAsync(TKey id);
 
     /// <summary>
     /// Deletes many entities by function.

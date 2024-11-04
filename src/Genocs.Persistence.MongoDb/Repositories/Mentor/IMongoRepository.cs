@@ -1,5 +1,5 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
+using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
 
-public interface IMongoRepository<TEntity, TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier>
-    where TEntity : IIdentifiable<TIdentifier>
+public interface IMongoRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
     IMongoCollection<TEntity> Collection { get; }
 

@@ -3,12 +3,12 @@
 
 namespace Genocs.Core.Domain.Entities;
 
-public interface IAggregateRoot : IAggregateRoot<Guid>
+public interface IAggregateRoot : IEntity
 {
 
 }
 
-public interface IAggregateRoot<TPrimaryKey> : IEntity<TPrimaryKey>/*, IGeneratesDomainEvents */
+public interface IAggregateRoot<TKey> : IEntity<TKey>, IAggregateRoot/*, IGeneratesDomainEvents */
 {
 
 }
