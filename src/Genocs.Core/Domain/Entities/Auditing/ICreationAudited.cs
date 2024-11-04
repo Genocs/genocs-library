@@ -9,7 +9,7 @@ public interface ICreationAudited : IHasCreationTime
     /// <summary>
     /// Id of the creator user of this entity.
     /// </summary>
-    long? CreatorUserId { get; set; }
+    long CreatorUserId { get; set; }
 }
 
 /// <summary>

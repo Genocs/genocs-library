@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-// using Genocs.Timing;
-
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
@@ -23,12 +21,12 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     /// <summary>
     /// Creation time of this entity.
     /// </summary>
-    public virtual DateTime CreationTime { get; set; }
+    public virtual DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Creator of this entity.
     /// </summary>
-    public virtual long? CreatorUserId { get; set; }
+    public virtual long CreatorUserId { get; set; }
 
     /// <summary>
     /// Constructor.
@@ -36,7 +34,7 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     protected CreationAuditedEntity()
     {
         // CreationTime = Clock.Now;
-        CreationTime = DateTime.Now;
+        CreatedAt = DateTime.Now;
 
     }
 }

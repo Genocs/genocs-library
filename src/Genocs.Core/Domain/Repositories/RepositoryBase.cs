@@ -72,23 +72,13 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     public virtual TEntity Get(TKey id)
     {
         var entity = FirstOrDefault(id);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
-
-        return entity;
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
     public virtual async Task<TEntity> GetAsync(TKey id)
     {
         var entity = await FirstOrDefaultAsync(id);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
-
-        return entity;
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
     public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)

@@ -26,12 +26,12 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRo
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeleterUserId { get; set; }
+    public virtual long? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
     /// </summary>
-    public virtual DateTime? DeletionTime { get; set; }
+    public virtual DateTime? DeletedAt { get; set; }
 }
 
 /// <summary>
@@ -52,15 +52,15 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggr
     /// Reference to the deleter user of this entity.
     /// </summary>
     [ForeignKey("DeleterUserId")]
-    public virtual TUser DeleterUser { get; set; }
+    public virtual TUser DeletedByUser { get; set; }
 
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeleterUserId { get; set; }
+    public virtual long? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
     /// </summary>
-    public virtual DateTime? DeletionTime { get; set; }
+    public virtual DateTime? DeletedAt { get; set; }
 }

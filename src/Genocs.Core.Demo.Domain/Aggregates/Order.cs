@@ -19,7 +19,7 @@ public class Order : AggregateRoot<ObjectId>, IMongoDbEntity, IHasCreationTime
 
     public string OrderId { get; set; } = ObjectId.GenerateNewId().ToString();
     public string UserId { get; set; } = default!;
-    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public decimal Amount { get; set; }
     public string Currency { get; set; } = default!;
 }

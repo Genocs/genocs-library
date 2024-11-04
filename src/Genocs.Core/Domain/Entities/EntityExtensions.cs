@@ -26,8 +26,8 @@ public static class EntityExtensions
         if (entity is IDeletionAudited)
         {
             var deletionAuditedEntity = entity.As<IDeletionAudited>();
-            deletionAuditedEntity.DeletionTime = null;
-            deletionAuditedEntity.DeleterUserId = null;
+            deletionAuditedEntity.DeletedAt = null;
+            deletionAuditedEntity.DeletedBy = null;
         }
     }
 }

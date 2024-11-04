@@ -8,7 +8,7 @@ public interface IDeletionAudited : IHasDeletionTime
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    long? DeleterUserId { get; set; }
+    long? DeletedBy { get; set; }
 }
 
 /// <summary>
@@ -21,5 +21,5 @@ public interface IDeletionAudited<TUser> : IDeletionAudited
     /// <summary>
     /// Reference to the deleter user of this entity.
     /// </summary>
-    TUser DeleterUser { get; set; }
+    TUser? DeletedByUser { get; set; }
 }

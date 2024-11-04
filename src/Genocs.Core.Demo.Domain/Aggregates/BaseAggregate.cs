@@ -10,5 +10,5 @@ namespace Genocs.Core.Demo.Domain.Aggregates;
 /// </summary>
 public class BaseAggregate : AggregateRoot<ObjectId>, IMongoDbEntity, IHasCreationTime
 {
-    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

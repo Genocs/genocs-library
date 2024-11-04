@@ -8,10 +8,9 @@ namespace Genocs.Core.Demo.Domain.Aggregates;
 [TableMapping("Users")]
 public class User : IEntity<ObjectId>, IHasCreationTime
 {
-
     public ObjectId Id { get; set; }
     public string UserId { get; set; } = default!;
-    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string Username { get; set; } = default!;
     public decimal Age { get; set; }
     public string Country { get; set; } = default!;
