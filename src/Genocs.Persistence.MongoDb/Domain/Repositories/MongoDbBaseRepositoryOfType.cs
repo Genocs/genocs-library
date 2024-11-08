@@ -13,9 +13,21 @@ namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Primary key of the entity.</typeparam>
-public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
+public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
+    private readonly IMongoDatabaseProvider _databaseProvider;
+    protected IMongoCollection<TEntity>? _collection;
+
+    /// <summary>
+    /// Standard constructor.
+    /// </summary>
+    /// <param name="databaseProvider"></param>
+    public MongoDbBaseRepositoryOfType(IMongoDatabaseProvider databaseProvider)
+    {
+        _databaseProvider = databaseProvider;
+    }
+
     /// <summary>
     /// Get the MongoDB database.
     /// </summary>
@@ -23,9 +35,6 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
     {
         get { return _databaseProvider.Database; }
     }
-
-    private readonly IMongoDatabaseProvider _databaseProvider;
-    protected IMongoCollection<TEntity>? _collection;
 
     /// <summary>
     /// Get the MongoDB collection from a custom attribute or from the entity name.
@@ -60,15 +69,6 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
     }
 
     /// <summary>
-    /// Standard constructor.
-    /// </summary>
-    /// <param name="databaseProvider"></param>
-    public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-    {
-        _databaseProvider = databaseProvider;
-    }
-
-    /// <summary>
     /// Get all entities as IQueryable.
     /// </summary>
     /// <returns></returns>
@@ -96,8 +96,8 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
     /// <summary>
     /// First Or Default entity.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns>The entity if found otherwise null</returns>
+    /// <param name="id">The domain objjet id.</param>
+    /// <returns>The entity if found otherwise null.</returns>
     public override TEntity FirstOrDefault(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
@@ -107,8 +107,8 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
     /// <summary>
     /// Insert an entity.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to insert.</param>
+    /// <returns>The entity.</returns>
     public override TEntity Insert(TEntity entity)
     {
         Collection.InsertOne(entity);
@@ -118,8 +118,8 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
     /// <summary>
     /// Update an existing entity.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to insert.</param>
+    /// <returns>The entity.</returns>
     public override TEntity Update(TEntity entity)
     {
         Collection.ReplaceOneAsync(filter: g => g.Id.Equals(entity.Id), replacement: entity);

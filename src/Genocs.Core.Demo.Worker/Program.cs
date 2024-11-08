@@ -9,7 +9,6 @@ using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Persistence.MongoDb.Repositories;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;

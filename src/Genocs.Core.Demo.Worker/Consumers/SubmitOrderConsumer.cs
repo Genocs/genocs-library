@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Domain.Aggregates;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using MassTransit;
 
 namespace Genocs.Core.Demo.Worker.Consumers;

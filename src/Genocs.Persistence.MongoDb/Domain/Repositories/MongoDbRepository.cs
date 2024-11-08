@@ -1,5 +1,4 @@
 using Genocs.Persistence.MongoDb.Domain.Entities;
-using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Bson;
 
 namespace Genocs.Persistence.MongoDb.Domain.Repositories;
@@ -8,7 +7,7 @@ namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
-public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
+public class MongoDbRepository<TEntity> : MongoDbBaseRepositoryOfType<TEntity, ObjectId>, IMongoDbRepository<TEntity>
     where TEntity : IMongoDbEntity
 {
     /// <summary>
