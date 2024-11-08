@@ -1,20 +1,20 @@
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Clean;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
 /// <summary>
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Primary key of the entity.</typeparam>
-public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoRepository<TEntity, TKey>
-    where TEntity : class, IEntity<TKey>
+public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
     /// <summary>
     /// Get the MongoDB database.
@@ -39,14 +39,17 @@ public class MongoDbRepositoryBase<TEntity, TKey> : RepositoryBase<TEntity, TKey
                 return _collection;
             }
 
-            var attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.
+            Attribute[] attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.
 
             // Displaying output.
             foreach (var attr in attrs)
             {
-                if (attr is TableMappingAttribute)
+                if (attr != null)
                 {
-                    return _databaseProvider.Database.GetCollection<TEntity>((attr as TableMappingAttribute).Name);
+                    if ((attr != null) && attr is TableMappingAttribute tmp)
+                    {
+                        return _databaseProvider.Database.GetCollection<TEntity>(tmp.Name);
+                    }
                 }
             }
 

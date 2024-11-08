@@ -24,8 +24,7 @@ public static class EntityAuditingHelper
         if (entityWithCreationTime.CreatedAt == default(DateTime))
         {
             // entityWithCreationTime.CreationTime = Clock.Now;
-            entityWithCreationTime.CreatedAt = DateTime.Now;
-
+            // entityWithCreationTime.CreatedAt = DateTime.Now;
         }
 
         if (!(entityAsObj is ICreationAudited))

@@ -9,5 +9,5 @@ public interface IHasCreationTime
     /// <summary>
     /// Creation time of this entity.
     /// </summary>
-    DateTime CreatedAt { get; set; }
+    DateTime CreatedAt { get; }
 }

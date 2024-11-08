@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Domain.Entities;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+﻿using Genocs.Persistence.MongoDb.Domain.Entities;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using MongoDB.Bson;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
@@ -8,8 +8,8 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 /// The MongoDb repository interface.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
-public interface IMongoDbRepository<TEntity> : IMongoRepository<TEntity, ObjectId>
-    where TEntity : IEntity<ObjectId>
+public interface IMongoDbRepository<TEntity> : IMongoDbBaseRepository<TEntity, ObjectId>
+    where TEntity : IMongoDbEntity
 {
 
 }

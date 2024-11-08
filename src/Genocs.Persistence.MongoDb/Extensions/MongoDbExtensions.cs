@@ -2,11 +2,10 @@ using Genocs.Core.Builders;
 using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDb.Builders;
 using Genocs.Persistence.MongoDb.Configurations;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Factories;
 using Genocs.Persistence.MongoDb.Initializers;
 using Genocs.Persistence.MongoDb.Repositories;
-using Genocs.Persistence.MongoDb.Repositories.Clean;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Genocs.Persistence.MongoDb.Seeders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -150,10 +149,10 @@ public static class MongoDbExtensions
                                                                     string collectionName)
         where TEntity : IEntity<TKey>
     {
-        builder.Services.AddTransient<IMongoRepository<TEntity, TKey>>(sp =>
+        builder.Services.AddTransient<IMongoDbBaseRepository<TEntity, TKey>>(sp =>
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return new MongoRepository<TEntity, TKey>(database, collectionName);
+            return new MongoDbBaseRepository<TEntity, TKey>(database, collectionName);
         });
 
         return builder;

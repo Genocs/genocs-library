@@ -1,17 +1,17 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
-internal class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
+internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
-    public MongoRepository(IMongoDatabase database, string collectionName)
+    public MongoDbBaseRepository(IMongoDatabase database, string collectionName)
     {
         Collection = database.GetCollection<TEntity>(collectionName);
     }

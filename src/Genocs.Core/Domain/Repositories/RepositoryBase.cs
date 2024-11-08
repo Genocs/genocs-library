@@ -15,7 +15,7 @@ namespace Genocs.Core.Domain.Repositories;
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Type of the Primary Key for this repository.</typeparam>
 public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>/*, IUnitOfWorkManagerAccessor */
-    where TEntity : class, IEntity<TKey>
+    where TEntity : IEntity<TKey>
 {
     /// <summary>
     /// The multi tenancy side.

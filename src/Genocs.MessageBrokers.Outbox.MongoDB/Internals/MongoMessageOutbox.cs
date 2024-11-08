@@ -1,7 +1,7 @@
 using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System.Text.Json;
@@ -22,17 +22,19 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
     };
 
     private readonly IMongoSessionFactory _sessionFactory;
-    private readonly IMongoRepository<InboxMessage, string> _inboxRepository;
-    private readonly IMongoRepository<OutboxMessage, string> _outboxRepository;
+    private readonly IMongoDbBaseRepository<InboxMessage, string> _inboxRepository;
+    private readonly IMongoDbBaseRepository<OutboxMessage, string> _outboxRepository;
     private readonly ILogger<MongoMessageOutbox> _logger;
     private readonly bool _transactionsEnabled;
 
     public bool Enabled { get; }
 
-    public MongoMessageOutbox(IMongoSessionFactory sessionFactory,
-        IMongoRepository<InboxMessage, string> inboxRepository,
-        IMongoRepository<OutboxMessage, string> outboxRepository,
-        OutboxOptions options, ILogger<MongoMessageOutbox> logger)
+    public MongoMessageOutbox(
+                                IMongoSessionFactory sessionFactory,
+                                IMongoDbBaseRepository<InboxMessage, string> inboxRepository,
+                                IMongoDbBaseRepository<OutboxMessage, string> outboxRepository,
+                                OutboxOptions options,
+                                ILogger<MongoMessageOutbox> logger)
     {
         _sessionFactory = sessionFactory;
         _inboxRepository = inboxRepository;
@@ -102,9 +104,15 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
         }
     }
 
-    public async Task SendAsync<T>(T message, string originatedMessageId = null, string messageId = null,
-        string correlationId = null, string spanContext = null, object messageContext = null,
-        IDictionary<string, object> headers = null) where T : class
+    public async Task SendAsync<T>(
+                                    T message,
+                                    string? originatedMessageId = null,
+                                    string? messageId = null,
+                                    string? correlationId = null,
+                                    string? spanContext = null,
+                                    object? messageContext = null,
+                                    IDictionary<string, object>? headers = null)
+        where T : class
     {
         if (!Enabled)
         {

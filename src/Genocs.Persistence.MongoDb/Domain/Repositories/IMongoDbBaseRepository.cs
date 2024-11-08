@@ -5,9 +5,9 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
-public interface IMongoRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+public interface IMongoDbBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
     IMongoCollection<TEntity> Collection { get; }

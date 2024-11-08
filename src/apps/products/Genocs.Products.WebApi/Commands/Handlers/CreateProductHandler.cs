@@ -1,7 +1,7 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.Events;
 
@@ -9,13 +9,13 @@ namespace Genocs.Products.WebApi.Commands.Handlers;
 
 public class CreateProductHandler : ICommandHandler<CreateProduct>
 {
-    private readonly IMongoRepository<Product, Guid> _repository;
+    private readonly IMongoDbBaseRepository<Product, Guid> _repository;
     private readonly IBusPublisher _publisher;
     private readonly IMessageOutbox _outbox;
     private readonly ILogger<CreateProductHandler> _logger;
 
     public CreateProductHandler(
-                                IMongoRepository<Product, Guid> repository,
+                                IMongoDbBaseRepository<Product, Guid> repository,
                                 IBusPublisher publisher,
                                 IMessageOutbox outbox,
                                 ILogger<CreateProductHandler> logger)
