@@ -229,10 +229,7 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
 
     public void Delete(Expression<Func<TEntity, bool>> predicate)
     {
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate));
-        }
+        ArgumentNullException.ThrowIfNull(predicate);
 
         Collection.DeleteMany(predicate);
     }

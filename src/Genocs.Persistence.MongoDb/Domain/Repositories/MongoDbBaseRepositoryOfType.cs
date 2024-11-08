@@ -85,12 +85,9 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var entity = Collection.Find(filter).FirstOrDefault();
-        if (entity == null)
-        {
-            throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
-        }
-
-        return entity;
+        return entity == null
+            ? throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id)
+            : entity;
     }
 
     /// <summary>
