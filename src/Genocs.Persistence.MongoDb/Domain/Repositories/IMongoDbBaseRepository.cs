@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;

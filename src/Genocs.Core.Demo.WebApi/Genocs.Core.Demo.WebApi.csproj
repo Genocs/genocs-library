@@ -31,7 +31,6 @@
         <PackageReference Include="Genocs.WebApi" Version="6.3.0" />
         <PackageReference Include="Genocs.WebApi.Security" Version="6.3.0" />
         <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="6.3.0" />
-
     </ItemGroup>
 
     <ItemGroup>
@@ -42,8 +41,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
-        <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
-        <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
 
 </Project>
