@@ -21,11 +21,10 @@ public static class EntityAuditingHelper
             return;
         }
 
-        if (entityWithCreationTime.CreationTime == default(DateTime))
+        if (entityWithCreationTime.CreatedAt == default(DateTime))
         {
             // entityWithCreationTime.CreationTime = Clock.Now;
-            entityWithCreationTime.CreationTime = DateTime.Now;
-
+            // entityWithCreationTime.CreatedAt = DateTime.Now;
         }
 
         if (!(entityAsObj is ICreationAudited))
@@ -64,7 +63,7 @@ public static class EntityAuditingHelper
         //}
 
         // Finally, set CreatorUserId!
-        entity.CreatorUserId = userId;
+        entity.CreatorUserId = userId.Value;
     }
 
     public static void SetModificationAuditProperties(
@@ -77,7 +76,7 @@ public static class EntityAuditingHelper
         if (entityAsObj is IHasModificationTime)
         {
             // entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
-            entityAsObj.As<IHasModificationTime>().LastModificationTime = DateTime.Now;
+            entityAsObj.As<IHasModificationTime>().LastUpdate = DateTime.Now;
         }
 
         if (!(entityAsObj is IModificationAudited))
@@ -91,7 +90,7 @@ public static class EntityAuditingHelper
         if (userId == null)
         {
             // Unknown user
-            entity.LastModifierUserId = null;
+            entity.UpdatedBy = null;
             return;
         }
 
@@ -116,6 +115,6 @@ public static class EntityAuditingHelper
         */
 
         // Finally, set LastModifierUserId!
-        entity.LastModifierUserId = userId;
+        entity.UpdatedBy = userId;
     }
 }

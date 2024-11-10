@@ -8,7 +8,6 @@
         <Title>The service discovery by Consul library useful to build .NET Core projects.</Title>
         <Description>The service discovery by Consul library useful to build .NET Core projects.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs service-discovery</PackageTags>
@@ -18,21 +17,6 @@
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\icon.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="README_NUGET.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
@@ -40,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.2.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.2.0" />
+        <PackageReference Include="Genocs.Core" Version="6.3.0" />
+        <PackageReference Include="Genocs.HTTP" Version="6.3.0" />
     </ItemGroup>
 
     <ItemGroup>

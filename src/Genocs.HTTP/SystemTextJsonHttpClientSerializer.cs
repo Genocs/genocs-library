@@ -9,6 +9,7 @@ public class SystemTextJsonHttpClientSerializer : IHttpClientSerializer
 
     public SystemTextJsonHttpClientSerializer(JsonSerializerOptions? options = null)
     {
+        // Default options
         _options = options ?? new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -18,7 +19,9 @@ public class SystemTextJsonHttpClientSerializer : IHttpClientSerializer
         };
     }
 
-    public string Serialize<T>(T value) => JsonSerializer.Serialize(value, _options);
+    public string Serialize<T>(T value)
+        => JsonSerializer.Serialize(value, _options);
 
-    public ValueTask<T?> DeserializeAsync<T>(Stream stream) => JsonSerializer.DeserializeAsync<T>(stream, _options);
+    public ValueTask<T?> DeserializeAsync<T>(Stream stream)
+        => JsonSerializer.DeserializeAsync<T>(stream, _options);
 }

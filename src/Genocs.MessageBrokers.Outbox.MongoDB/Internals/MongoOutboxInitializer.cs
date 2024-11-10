@@ -35,11 +35,13 @@ internal sealed class MongoOutboxInitializer : IInitializer
         var inboxBuilder = Builders<InboxMessage>.IndexKeys;
         await _database.GetCollection<InboxMessage>(inboxCollection)
             .Indexes.CreateOneAsync(
-                new CreateIndexModel<InboxMessage>(inboxBuilder.Ascending(i => i.ProcessedAt),
-                    new CreateIndexOptions
-                    {
-                        ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
-                    }));
+                new CreateIndexModel<InboxMessage>(
+                                                    inboxBuilder.Ascending(i => i.ProcessedAt),
+                                                    new CreateIndexOptions
+                                                    {
+                                                        ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
+                                                    })
+                );
 
         string outboxCollection = string.IsNullOrWhiteSpace(_options.OutboxCollection)
             ? "outbox"
@@ -48,10 +50,11 @@ internal sealed class MongoOutboxInitializer : IInitializer
         var outboxBuilder = Builders<OutboxMessage>.IndexKeys;
         await _database.GetCollection<OutboxMessage>(outboxCollection)
             .Indexes.CreateOneAsync(
-                new CreateIndexModel<OutboxMessage>(outboxBuilder.Ascending(i => i.ProcessedAt),
-                    new CreateIndexOptions
-                    {
-                        ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
-                    }));
+                new CreateIndexModel<OutboxMessage>(
+                                                    outboxBuilder.Ascending(i => i.ProcessedAt),
+                                                    new CreateIndexOptions
+                                                    {
+                                                        ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
+                                                    }));
     }
 }

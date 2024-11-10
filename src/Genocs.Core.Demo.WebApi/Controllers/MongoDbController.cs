@@ -1,5 +1,5 @@
 ﻿using Genocs.Core.Demo.Domain.Aggregates;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Core.Demo.WebApi.Controllers;

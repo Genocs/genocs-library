@@ -1,9 +1,9 @@
-using Genocs.Common.Types;
+using Genocs.Core.Domain.Entities;
 using Genocs.Identities.Application.Domain.Entities;
 
 namespace Genocs.Identities.Application.Mongo.Documents;
 
-public class RefreshTokenDocument : IIdentifiable<Guid>
+public class RefreshTokenDocument : IEntity<Guid>
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
-/// A shortcut of <see cref="FullAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="FullAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class FullAuditedEntity : FullAuditedEntity<int>, IEntity
+public abstract class FullAuditedEntity : FullAuditedEntity<Guid>, IEntity
 {
 
 }
@@ -19,19 +19,20 @@ public abstract class FullAuditedEntity : FullAuditedEntity<int>, IEntity
 public abstract class FullAuditedEntity<TPrimaryKey> : AuditedEntity<TPrimaryKey>, IFullAudited
 {
     /// <summary>
-    /// Is this entity Deleted?
+    /// it determines if the entity is deleted.
+    /// Used for soft delete.
     /// </summary>
     public virtual bool IsDeleted { get; set; }
 
     /// <summary>
-    /// Which user deleted this entity.
+    /// It determines the user who deleted this entity.
     /// </summary>
-    public virtual long? DeleterUserId { get; set; }
+    public virtual long? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
     /// </summary>
-    public virtual DateTime? DeletionTime { get; set; }
+    public virtual DateTime? DeletedAt { get; set; }
 }
 
 /// <summary>
@@ -44,7 +45,7 @@ public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPri
     where TUser : IEntity<long>
 {
     /// <summary>
-    /// Is this entity Deleted?
+    /// It determines if the entity is deleted.
     /// </summary>
     public virtual bool IsDeleted { get; set; }
 
@@ -52,15 +53,15 @@ public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPri
     /// Reference to the deleter user of this entity.
     /// </summary>
     [ForeignKey("DeleterUserId")]
-    public virtual TUser DeleterUser { get; set; }
+    public virtual TUser? DeletedByUser { get; set; }
 
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeleterUserId { get; set; }
+    public virtual long? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
     /// </summary>
-    public virtual DateTime? DeletionTime { get; set; }
+    public virtual DateTime? DeletedAt { get; set; }
 }

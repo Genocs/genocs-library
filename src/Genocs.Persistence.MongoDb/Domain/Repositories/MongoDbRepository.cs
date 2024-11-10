@@ -1,14 +1,14 @@
-using Genocs.Common.Types;
+using Genocs.Persistence.MongoDb.Domain.Entities;
 using MongoDB.Bson;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Clean;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
 /// <summary>
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
-public class MongoDbRepository<TEntity> : MongoDbRepositoryBase<TEntity, ObjectId>, IMongoDbRepository<TEntity>
-    where TEntity : class, IIdentifiable<ObjectId>
+public class MongoDbRepository<TEntity> : MongoDbBaseRepositoryOfType<TEntity, ObjectId>, IMongoDbRepository<TEntity>
+    where TEntity : IMongoDbEntity
 {
     /// <summary>
     /// The standard constructor.

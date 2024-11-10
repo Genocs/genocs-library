@@ -22,12 +22,12 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     /// <summary>
     /// Creation time of this entity.
     /// </summary>
-    public virtual DateTime CreationTime { get; set; }
+    public virtual DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Creator of this entity.
     /// </summary>
-    public virtual long? CreatorUserId { get; set; }
+    public virtual long CreatorUserId { get; set; }
 
     /// <summary>
     /// Constructor.
@@ -35,7 +35,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     protected CreationAuditedAggregateRoot()
     {
         // CreationTime = Clock.Now; // Manage time zone
-        CreationTime = DateTime.Now;
+        CreatedAt = DateTime.Now;
     }
 }
 

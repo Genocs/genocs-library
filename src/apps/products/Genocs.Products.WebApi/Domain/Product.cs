@@ -1,11 +1,11 @@
-using Genocs.Common.Types;
+using Genocs.Core.Domain.Entities;
 
 namespace Genocs.Products.WebApi.Domain;
 
 /// <summary>
 /// The product definition.
 /// </summary>
-public class Product : IIdentifiable<Guid>
+public class Product : IEntity<Guid>
 {
     public Guid Id { get; private set; }
     public string SKU { get; private set; }

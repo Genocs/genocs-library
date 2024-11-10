@@ -1,5 +1,9 @@
 <Project>
 
+    <!--
+        This Directory.Build.props files sets default properties that apply to all projects found in
+        this folder or subfolders, recursively.
+    -->
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -9,6 +13,7 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <Version>6.3.0</Version>        
         <LangVersion>10.0</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2024</Copyright>
@@ -21,7 +26,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Roslynator.Analyzers" Version="4.12.8">
+        <PackageReference Include="Roslynator.Analyzers" Version="4.12.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -35,10 +40,27 @@
         <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig" Link="Properties\.editorconfig" />
     </ItemGroup>
 
-    <!--
-        This Directory.Build.props files sets default properties that apply to all projects found in
-        this folder or subfolders, recursively.
-    -->
+    <ItemGroup>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="README_NUGET.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Define the global DefaultIdType here. -->
+        <Using Include="System.Guid" Alias="DefaultIdType" />
+    </ItemGroup>
+
+
     <PropertyGroup>
         <!-- Enable Build Acceleration in Visual Studio. -->
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>

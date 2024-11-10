@@ -1,16 +1,17 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
+using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
-internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntity, TIdentifiable>
-    where TEntity : IIdentifiable<TIdentifiable>
+internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
-    public MongoRepository(IMongoDatabase database, string collectionName)
+    public MongoDbBaseRepository(IMongoDatabase database, string collectionName)
     {
         Collection = database.GetCollection<TEntity>(collectionName);
     }
@@ -26,7 +27,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return Collection.AsQueryable();
     }
 
-    public Task<TEntity> GetAsync(TIdentifiable id)
+    public Task<TEntity> GetAsync(TKey id)
         => GetAsync(e => e.Id.Equals(id));
 
     public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
@@ -69,7 +70,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Task DeleteAsync(TIdentifiable id)
+    public Task DeleteAsync(TKey id)
         => DeleteAsync(e => e.Id.Equals(id));
 
     public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
@@ -115,7 +116,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         throw new NotImplementedException();
     }
 
-    public TEntity Get(TIdentifiable id)
+    public TEntity Get(TKey id)
         => Collection.Find(c => c.Id.Equals(id)).First();
 
     public TEntity Single(Expression<Func<TEntity, bool>> predicate)
@@ -127,10 +128,10 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return await result.SingleAsync();
     }
 
-    public TEntity? FirstOrDefault(TIdentifiable id)
+    public TEntity? FirstOrDefault(TKey id)
         => Collection.Find(c => c.Id.Equals(id)).FirstOrDefault();
 
-    public async Task<TEntity?> FirstOrDefaultAsync(TIdentifiable id)
+    public async Task<TEntity?> FirstOrDefaultAsync(TKey id)
     {
         var result = await Collection.FindAsync(c => c.Id.Equals(id));
         return await result.FirstOrDefaultAsync();
@@ -145,7 +146,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return await result.FirstOrDefaultAsync();
     }
 
-    public TEntity? Load(TIdentifiable id)
+    public TEntity? Load(TKey id)
         => FirstOrDefault(id);
 
     public TEntity Insert(TEntity entity)
@@ -160,10 +161,10 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return entity;
     }
 
-    public TIdentifiable InsertAndGetId(TEntity entity)
+    public TKey InsertAndGetId(TEntity entity)
         => Insert(entity).Id;
 
-    public async Task<TIdentifiable> InsertAndGetIdAsync(TEntity entity)
+    public async Task<TKey> InsertAndGetIdAsync(TEntity entity)
         => (await InsertAsync(entity)).Id;
 
     public TEntity InsertOrUpdate(TEntity entity)
@@ -178,10 +179,10 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return entity;
     }
 
-    public TIdentifiable InsertOrUpdateAndGetId(TEntity entity)
+    public TKey InsertOrUpdateAndGetId(TEntity entity)
         => InsertOrUpdate(entity).Id;
 
-    public async Task<TIdentifiable> InsertOrUpdateAndGetIdAsync(TEntity entity)
+    public async Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         => (await InsertOrUpdateAsync(entity)).Id;
 
     public TEntity Update(TEntity entity)
@@ -190,12 +191,12 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return entity;
     }
 
-    public TEntity Update(TIdentifiable id, Action<TEntity> updateAction)
+    public TEntity Update(TKey id, Action<TEntity> updateAction)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TEntity> UpdateAsync(TIdentifiable id, Func<TEntity, Task> updateAction)
+    public Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction)
     {
         throw new NotImplementedException();
     }
@@ -216,7 +217,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
         return DeleteAsync(entity.Id);
     }
 
-    public void Delete(TIdentifiable id)
+    public void Delete(TKey id)
     {
         if (id == null)
         {
@@ -228,10 +229,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
 
     public void Delete(Expression<Func<TEntity, bool>> predicate)
     {
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate));
-        }
+        ArgumentNullException.ThrowIfNull(predicate);
 
         Collection.DeleteMany(predicate);
     }
@@ -260,7 +258,7 @@ internal class MongoRepository<TEntity, TIdentifiable> : IMongoRepository<TEntit
     public async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         => await Collection.CountDocumentsAsync(predicate);
 
-    async Task<TEntity> IRepositoryOfEntity<TEntity, TIdentifiable>.UpdateAsync(TEntity entity)
+    async Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity)
     {
         await UpdateAsync(entity, e => e.Id!.Equals(entity.Id));
         return entity;

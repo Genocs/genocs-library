@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
-/// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class AuditedEntity : AuditedEntity<int>, IEntity
+public abstract class AuditedEntity : AuditedEntity<Guid>, IEntity
 {
 
 }
@@ -21,12 +21,12 @@ public abstract class AuditedEntity<TPrimaryKey> : CreationAuditedEntity<TPrimar
     /// <summary>
     /// Last modification date of this entity.
     /// </summary>
-    public virtual DateTime? LastModificationTime { get; set; }
+    public virtual DateTime? LastUpdate { get; set; }
 
     /// <summary>
     /// Last modifier user of this entity.
     /// </summary>
-    public virtual long? LastModifierUserId { get; set; }
+    public virtual long? UpdatedBy { get; set; }
 }
 
 /// <summary>
@@ -48,5 +48,5 @@ public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimary
     /// Reference to the last modifier user of this entity.
     /// </summary>
     [ForeignKey("LastModifierUserId")]
-    public virtual TUser? LastModifierUser { get; set; }
+    public virtual TUser? UpdatedByUser { get; set; }
 }

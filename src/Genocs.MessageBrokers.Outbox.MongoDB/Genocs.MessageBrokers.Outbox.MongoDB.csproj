@@ -8,7 +8,6 @@
         <Title>The message brokers outbox MongoDB interface library useful to build .NET Core projects.</Title>
         <Description>The message brokers MongoDB outbox interface library useful to build .NET Core projects.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>6.2.0</Version>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
@@ -18,29 +17,14 @@
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="..\..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="..\..\icon.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-        <None Include="README_NUGET.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
         <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.2.0" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.2.0" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.3.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.3.0" />
     </ItemGroup>
 
 </Project>

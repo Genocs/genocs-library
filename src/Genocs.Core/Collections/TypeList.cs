@@ -20,7 +20,13 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
     /// Gets the count.
     /// </summary>
     /// <value>The count.</value>
-    public int Count { get { return _typeList.Count; } }
+    public int Count
+    {
+        get
+        {
+            return _typeList.Count;
+        }
+    }
 
     /// <summary>
     /// Gets a value indicating whether this instance is read only.

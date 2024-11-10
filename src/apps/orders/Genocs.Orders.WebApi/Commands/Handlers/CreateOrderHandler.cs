@@ -4,20 +4,20 @@ using Genocs.MessageBrokers.Outbox;
 using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.Events;
 using Genocs.Orders.WebApi.Services;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 
 namespace Genocs.Orders.WebApi.Commands.Handlers;
 
 public class CreateOrderHandler : ICommandHandler<CreateOrder>
 {
-    private readonly IMongoRepository<Order, Guid> _repository;
+    private readonly IMongoDbBaseRepository<Order, Guid> _repository;
     private readonly IBusPublisher _publisher;
     private readonly IMessageOutbox _outbox;
     private readonly IProductServiceClient _productServiceClient;
     private readonly ILogger<CreateOrderHandler> _logger;
 
     public CreateOrderHandler(
-                                IMongoRepository<Order, Guid> repository,
+                                IMongoDbBaseRepository<Order, Guid> repository,
                                 IBusPublisher publisher,
                                 IMessageOutbox outbox,
                                 IProductServiceClient productServiceClient,

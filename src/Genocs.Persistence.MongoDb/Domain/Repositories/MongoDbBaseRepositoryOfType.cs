@@ -1,22 +1,33 @@
-using Genocs.Common.Types;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Clean;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
 /// <summary>
 /// Implements IRepository for MongoDB.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
-/// <typeparam name="TPrimaryKey">Primary key of the entity.</typeparam>
-public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntity, TPrimaryKey>, IMongoRepository<TEntity, TPrimaryKey>
-    where TEntity : class, IIdentifiable<TPrimaryKey>
+/// <typeparam name="TKey">Primary key of the entity.</typeparam>
+public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
+    private readonly IMongoDatabaseProvider _databaseProvider;
+    protected IMongoCollection<TEntity>? _collection;
+
+    /// <summary>
+    /// Standard constructor.
+    /// </summary>
+    /// <param name="databaseProvider"></param>
+    public MongoDbBaseRepositoryOfType(IMongoDatabaseProvider databaseProvider)
+    {
+        _databaseProvider = databaseProvider;
+    }
+
     /// <summary>
     /// Get the MongoDB database.
     /// </summary>
@@ -24,9 +35,6 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     {
         get { return _databaseProvider.Database; }
     }
-
-    private readonly IMongoDatabaseProvider _databaseProvider;
-    protected IMongoCollection<TEntity>? _collection;
 
     /// <summary>
     /// Get the MongoDB collection from a custom attribute or from the entity name.
@@ -40,14 +48,17 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
                 return _collection;
             }
 
-            var attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.
+            Attribute[] attrs = Attribute.GetCustomAttributes(typeof(TEntity));  // Reflection.
 
             // Displaying output.
             foreach (var attr in attrs)
             {
-                if (attr is TableMappingAttribute)
+                if (attr != null)
                 {
-                    return _databaseProvider.Database.GetCollection<TEntity>((attr as TableMappingAttribute).Name);
+                    if ((attr != null) && attr is TableMappingAttribute tmp)
+                    {
+                        return _databaseProvider.Database.GetCollection<TEntity>(tmp.Name);
+                    }
                 }
             }
 
@@ -55,15 +66,6 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
 
             return _collection;
         }
-    }
-
-    /// <summary>
-    /// Standard constructor.
-    /// </summary>
-    /// <param name="databaseProvider"></param>
-    public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
-    {
-        _databaseProvider = databaseProvider;
     }
 
     /// <summary>
@@ -79,24 +81,21 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <param name="id"></param>
     /// <returns></returns>
     /// <exception cref="EntityNotFoundException">It is thrown if the entity is not found.</exception>
-    public override TEntity Get(TPrimaryKey id)
+    public override TEntity Get(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var entity = Collection.Find(filter).FirstOrDefault();
-        if (entity == null)
-        {
-            throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
-        }
-
-        return entity;
+        return entity == null
+            ? throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id)
+            : entity;
     }
 
     /// <summary>
     /// First Or Default entity.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public override TEntity FirstOrDefault(TPrimaryKey id)
+    /// <param name="id">The domain objjet id.</param>
+    /// <returns>The entity if found otherwise null.</returns>
+    public override TEntity FirstOrDefault(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         return Collection.Find(filter).FirstOrDefault();
@@ -105,8 +104,8 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <summary>
     /// Insert an entity.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to insert.</param>
+    /// <returns>The entity.</returns>
     public override TEntity Insert(TEntity entity)
     {
         Collection.InsertOne(entity);
@@ -116,8 +115,8 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// <summary>
     /// Update an existing entity.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to insert.</param>
+    /// <returns>The entity.</returns>
     public override TEntity Update(TEntity entity)
     {
         Collection.ReplaceOneAsync(filter: g => g.Id.Equals(entity.Id), replacement: entity);
@@ -135,7 +134,7 @@ public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : RepositoryBase<TEntit
     /// Delete entity by primary key.
     /// </summary>
     /// <param name="id"></param>
-    public override void Delete(TPrimaryKey id)
+    public override void Delete(TKey id)
     {
         var query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         var deleteResult = Collection.DeleteOneAsync(query).Result;

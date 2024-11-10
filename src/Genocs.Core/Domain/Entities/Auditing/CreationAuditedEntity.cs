@@ -1,14 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-// using Genocs.Timing;
-
 namespace Genocs.Core.Domain.Entities.Auditing;
 
 /// <summary>
-/// A shortcut of <see cref="CreationAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+/// A shortcut of <see cref="CreationAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class CreationAuditedEntity : CreationAuditedEntity<int>, IEntity
+public abstract class CreationAuditedEntity : CreationAuditedEntity<Guid>, IEntity
 {
 
 }
@@ -23,12 +21,12 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     /// <summary>
     /// Creation time of this entity.
     /// </summary>
-    public virtual DateTime CreationTime { get; set; }
+    public virtual DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Creator of this entity.
     /// </summary>
-    public virtual long? CreatorUserId { get; set; }
+    public virtual long CreatorUserId { get; set; }
 
     /// <summary>
     /// Constructor.
@@ -36,7 +34,7 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     protected CreationAuditedEntity()
     {
         // CreationTime = Clock.Now;
-        CreationTime = DateTime.Now;
+        CreatedAt = DateTime.Now;
 
     }
 }
