@@ -21,12 +21,12 @@ public abstract class AuditedEntity<TPrimaryKey> : CreationAuditedEntity<TPrimar
     /// <summary>
     /// Last modification date of this entity.
     /// </summary>
-    public virtual DateTime? LastModificationTime { get; set; }
+    public virtual DateTime? LastUpdate { get; set; }
 
     /// <summary>
     /// Last modifier user of this entity.
     /// </summary>
-    public virtual long? LastModifierUserId { get; set; }
+    public virtual long? UpdatedBy { get; set; }
 }
 
 /// <summary>
@@ -48,5 +48,5 @@ public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimary
     /// Reference to the last modifier user of this entity.
     /// </summary>
     [ForeignKey("LastModifierUserId")]
-    public virtual TUser? LastModifierUser { get; set; }
+    public virtual TUser? UpdatedByUser { get; set; }
 }

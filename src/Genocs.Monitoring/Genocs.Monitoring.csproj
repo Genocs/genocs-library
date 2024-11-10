@@ -40,9 +40,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.3.0" />
-        <PackageReference Include="Genocs.Logging" Version="6.3.0" />
-        <PackageReference Include="Genocs.Tracing" Version="6.3.0" />
+        <PackageReference Include="Genocs.Core" Version="6.4.0" />
+        <PackageReference Include="Genocs.Logging" Version="6.4.0" />
+        <PackageReference Include="Genocs.Tracing" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>

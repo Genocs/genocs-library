@@ -1,14 +1,14 @@
-using Genocs.Common.Types;
+using System.Linq.Expressions;
 using Genocs.Core.CQRS.Queries;
+using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
 
-namespace Genocs.Persistence.MongoDb.Repositories.Mentor;
+namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
-public interface IMongoRepository<TEntity, TIdentifier> : IRepositoryOfEntity<TEntity, TIdentifier>
-    where TEntity : IIdentifiable<TIdentifier>
+public interface IMongoDbBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+    where TEntity : IEntity<TKey>
 {
     IMongoCollection<TEntity> Collection { get; }
 

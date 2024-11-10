@@ -1,6 +1,5 @@
-using System.Linq.Expressions;
-using Genocs.Common.Types;
 using Genocs.Core.Domain.Entities;
+using System.Linq.Expressions;
 
 // using Genocs.Core.Dependency;
 // using Genocs.Core.Domain.Uow;
@@ -10,13 +9,13 @@ using Genocs.Core.Domain.Entities;
 namespace Genocs.Core.Domain.Repositories;
 
 /// <summary>
-/// Base class to implement <see cref="IRepository{TEntity,TPrimaryKey}"/>.
+/// Base class to implement <see cref="IRepository{TEntity, TKey}"/>.
 /// It implements some methods in most simple way.
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
-/// <typeparam name="TPrimaryKey">Type of the Primary Key for this repository.</typeparam>
-public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>/*, IUnitOfWorkManagerAccessor */
-    where TEntity : class, IIdentifiable<TPrimaryKey>
+/// <typeparam name="TKey">Type of the Primary Key for this repository.</typeparam>
+public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>/*, IUnitOfWorkManagerAccessor */
+    where TEntity : IEntity<TKey>
 {
     /// <summary>
     /// The multi tenancy side.
@@ -70,26 +69,16 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return queryMethod(GetAll());
     }
 
-    public virtual TEntity Get(TPrimaryKey id)
+    public virtual TEntity Get(TKey id)
     {
         var entity = FirstOrDefault(id);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
-
-        return entity;
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
-    public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
+    public virtual async Task<TEntity> GetAsync(TKey id)
     {
         var entity = await FirstOrDefaultAsync(id);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
-
-        return entity;
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
     public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
@@ -102,12 +91,12 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(Single(predicate));
     }
 
-    public virtual TEntity? FirstOrDefault(TPrimaryKey id)
+    public virtual TEntity? FirstOrDefault(TKey id)
     {
         return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
     }
 
-    public virtual Task<TEntity?> FirstOrDefaultAsync(TPrimaryKey id)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(TKey id)
     {
         return Task.FromResult(FirstOrDefault(id));
     }
@@ -122,7 +111,7 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(FirstOrDefault(predicate));
     }
 
-    public virtual TEntity Load(TPrimaryKey id)
+    public virtual TEntity Load(TKey id)
     {
         return Get(id);
     }
@@ -134,12 +123,12 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(Insert(entity));
     }
 
-    public virtual TPrimaryKey InsertAndGetId(TEntity entity)
+    public virtual TKey InsertAndGetId(TEntity entity)
     {
         return Insert(entity).Id;
     }
 
-    public virtual Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+    public virtual Task<TKey> InsertAndGetIdAsync(TEntity entity)
     {
         return Task.FromResult(InsertAndGetId(entity));
     }
@@ -158,12 +147,12 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
             : await UpdateAsync(entity);
     }
 
-    public virtual TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
+    public virtual TKey InsertOrUpdateAndGetId(TEntity entity)
     {
         return InsertOrUpdate(entity).Id;
     }
 
-    public virtual Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+    public virtual Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
     {
         return Task.FromResult(InsertOrUpdateAndGetId(entity));
     }
@@ -175,14 +164,14 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(Update(entity));
     }
 
-    public virtual TEntity Update(TPrimaryKey id, Action<TEntity> updateAction)
+    public virtual TEntity Update(TKey id, Action<TEntity> updateAction)
     {
         var entity = Get(id);
         updateAction(entity);
         return entity;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
+    public virtual async Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction)
     {
         var entity = await GetAsync(id);
         await updateAction(entity);
@@ -197,9 +186,9 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(0);
     }
 
-    public abstract void Delete(TPrimaryKey id);
+    public abstract void Delete(TKey id);
 
-    public virtual Task DeleteAsync(TPrimaryKey id)
+    public virtual Task DeleteAsync(TKey id)
     {
         Delete(id);
         return Task.FromResult(0);
@@ -259,13 +248,13 @@ public abstract class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity
         return Task.FromResult(LongCount(predicate));
     }
 
-    protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
+    protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TKey id)
     {
         var lambdaParam = Expression.Parameter(typeof(TEntity));
 
         var lambdaBody = Expression.Equal(
             Expression.PropertyOrField(lambdaParam, "Id"),
-            Expression.Constant(id, typeof(TPrimaryKey)));
+            Expression.Constant(id, typeof(TKey)));
 
         return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
     }

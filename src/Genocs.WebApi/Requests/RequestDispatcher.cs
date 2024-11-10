@@ -11,8 +11,8 @@ public class RequestDispatcher : IRequestDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResult> DispatchAsync<TRequest, TResult>(TRequest request,
-        CancellationToken cancellationToken = default) where TRequest : class, IRequest
+    public async Task<TResult> DispatchAsync<TRequest, TResult>(TRequest request, CancellationToken cancellationToken = default)
+        where TRequest : class, IRequest
     {
         using var scope = _serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<IRequestHandler<TRequest, TResult>>();

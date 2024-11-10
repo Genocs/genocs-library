@@ -27,30 +27,14 @@ namespace Genocs.WebApi;
 
 public static class Extensions
 {
-    private static readonly byte[] InvalidJsonRequestBytes = Encoding.UTF8.GetBytes("An invalid JSON was sent.");
     private const string SectionName = "webApi";
     private const string RegistryName = "webApi";
     private const string EmptyJsonObject = "{}";
     private const string LocationHeader = "Location";
+
     private const string JsonContentType = "application/json";
+    private static readonly byte[] InvalidJsonRequestBytes = Encoding.UTF8.GetBytes("An invalid JSON was sent.");
     private static bool _bindRequestFromRoute;
-
-    public static IApplicationBuilder UseEndpoints(this IApplicationBuilder app, Action<IEndpointsBuilder> build,
-        bool useAuthorization = true, Action<IApplicationBuilder> middleware = null)
-    {
-        var definitions = app.ApplicationServices.GetRequiredService<WebApiEndpointDefinitions>();
-        app.UseRouting();
-        if (useAuthorization)
-        {
-            app.UseAuthorization();
-        }
-
-        middleware?.Invoke(app);
-
-        app.UseEndpoints(router => build(new EndpointsBuilder(router, definitions)));
-
-        return app;
-    }
 
     [Description("By default System JSON serializer is being used. If Newtonsoft JSON serializer is used then it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true")]
     public static IGenocsBuilder AddWebApi(
@@ -79,8 +63,6 @@ public static class Extensions
                 Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
 
-            jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-
             var factory = new Open.Serialization.Json.System.JsonSerializerFactory(jsonSerializerOptions);
 
             jsonSerializer = factory.GetSerializer();
@@ -95,13 +77,15 @@ public static class Extensions
         builder.Services.AddSingleton(jsonSerializer);
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddSingleton(new WebApiEndpointDefinitions());
+
         var options = builder.GetOptions<WebApiOptions>(sectionName);
         builder.Services.AddSingleton(options);
+
         _bindRequestFromRoute = options.BindRequestFromRoute;
 
         var mvcCoreBuilder = builder.Services
-            .AddLogging()
-            .AddMvcCore();
+                                            .AddLogging()
+                                            .AddMvcCore();
 
         mvcCoreBuilder.AddMvcOptions(o =>
             {
@@ -142,16 +126,39 @@ public static class Extensions
         return builder;
     }
 
+    public static IApplicationBuilder UseEndpoints(
+                                                    this IApplicationBuilder app,
+                                                    Action<IEndpointsBuilder> build,
+                                                    bool useAuthorization = true,
+                                                    Action<IApplicationBuilder>? middleware = null)
+    {
+        WebApiEndpointDefinitions definitions = app.ApplicationServices.GetRequiredService<WebApiEndpointDefinitions>();
+
+        app.UseRouting();
+        if (useAuthorization)
+        {
+            app.UseAuthorization();
+        }
+
+        middleware?.Invoke(app);
+
+        app.UseEndpoints(router => build(new EndpointsBuilder(router, definitions)));
+
+        return app;
+    }
+
     public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         => builder.UseMiddleware<ErrorHandlerMiddleware>();
 
-    public static IApplicationBuilder UseAllForwardedHeaders(this IApplicationBuilder builder,
-        bool resetKnownNetworksAndProxies = true)
+    public static IApplicationBuilder UseAllForwardedHeaders(
+                                                                this IApplicationBuilder builder,
+                                                                bool resetKnownNetworksAndProxies = true)
     {
-        var forwardingOptions = new ForwardedHeadersOptions
+        ForwardedHeadersOptions forwardingOptions = new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.All
         };
+
         if (resetKnownNetworksAndProxies)
         {
             forwardingOptions.KnownNetworks.Clear();
@@ -174,8 +181,7 @@ public static class Extensions
     public static T BindId<T>(this T model, Expression<Func<T, string>> expression)
         => model.Bind(expression, Guid.NewGuid().ToString("N"));
 
-    private static TModel Bind<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> expression,
-        object value)
+    private static TModel Bind<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> expression, object value)
     {
         if (!(expression.Body is MemberExpression memberExpression))
         {
@@ -189,8 +195,10 @@ public static class Extensions
 
         string propertyName = memberExpression.Member.Name.ToLowerInvariant();
         var modelType = model.GetType();
+
         var field = modelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-            .SingleOrDefault(x => x.Name.ToLowerInvariant().StartsWith($"<{propertyName}>"));
+                                .SingleOrDefault(x => x.Name.ToLowerInvariant().StartsWith($"<{propertyName}>"));
+
         if (field is null)
         {
             return model;
@@ -201,15 +209,16 @@ public static class Extensions
         return model;
     }
 
-    public static Task Ok(this HttpResponse response, object data = null)
+    public static Task Ok(this HttpResponse response, object? data = null)
     {
         response.StatusCode = 200;
         return data is null ? Task.CompletedTask : response.WriteJsonAsync(data);
     }
 
-    public static Task Created(this HttpResponse response, string location = null, object data = null)
+    public static Task Created(this HttpResponse response, string? location = null, object? data = null)
     {
         response.StatusCode = 201;
+
         if (string.IsNullOrWhiteSpace(location))
         {
             return Task.CompletedTask;
@@ -353,10 +362,11 @@ public static class Extensions
         }
     }
 
-    public static T ReadQuery<T>(this HttpContext context) where T : class
+    public static T ReadQuery<T>(this HttpContext context)
+        where T : class
     {
         var request = context.Request;
-        RouteValueDictionary values = null;
+        RouteValueDictionary? values = null;
         if (request.HasRouteData())
         {
             values = request.HttpContext.GetRouteData().Values;

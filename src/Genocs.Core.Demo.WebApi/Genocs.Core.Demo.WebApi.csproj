@@ -22,21 +22,20 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.3.0" />
-        <PackageReference Include="Genocs.Auth" Version="6.3.0" />
-        <PackageReference Include="Genocs.Logging" Version="6.3.0" />
-        <PackageReference Include="Genocs.Tracing" Version="6.3.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.3.0" />
-        <PackageReference Include="Genocs.Security" Version="6.3.0" />
-        <PackageReference Include="Genocs.WebApi" Version="6.3.0" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="6.3.0" />
-        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="6.3.0" />
-
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="6.4.0" />
+        <PackageReference Include="Genocs.Auth" Version="6.4.0" />
+        <PackageReference Include="Genocs.Logging" Version="6.4.0" />
+        <PackageReference Include="Genocs.Tracing" Version="6.4.0" />
+        <PackageReference Include="Genocs.HTTP" Version="6.4.0" />
+        <PackageReference Include="Genocs.Security" Version="6.4.0" />
+        <PackageReference Include="Genocs.WebApi" Version="6.4.0" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="6.4.0" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     </ItemGroup>
 
     <ItemGroup>

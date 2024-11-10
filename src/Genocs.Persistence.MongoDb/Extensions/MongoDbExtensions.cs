@@ -1,12 +1,11 @@
-using Genocs.Common.Types;
 using Genocs.Core.Builders;
+using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDb.Builders;
 using Genocs.Persistence.MongoDb.Configurations;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Factories;
 using Genocs.Persistence.MongoDb.Initializers;
 using Genocs.Persistence.MongoDb.Repositories;
-using Genocs.Persistence.MongoDb.Repositories.Clean;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
 using Genocs.Persistence.MongoDb.Seeders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -141,19 +140,19 @@ public static class MongoDbExtensions
     /// Adds a MongoDb repository to the DI container. Using Genocs builder support.
     /// </summary>
     /// <typeparam name="TEntity">The name of the entity.</typeparam>
-    /// <typeparam name="TIdentifiable">The kind of identifier.</typeparam>
+    /// <typeparam name="TKey">The kind of identifier.</typeparam>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="collectionName">The collection name where to store data.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongoRepository<TEntity, TIdentifiable>(
-                                                                            this IGenocsBuilder builder,
-                                                                            string collectionName)
-        where TEntity : IIdentifiable<TIdentifiable>
+    public static IGenocsBuilder AddMongoRepository<TEntity, TKey>(
+                                                                    this IGenocsBuilder builder,
+                                                                    string collectionName)
+        where TEntity : IEntity<TKey>
     {
-        builder.Services.AddTransient<IMongoRepository<TEntity, TIdentifiable>>(sp =>
+        builder.Services.AddTransient<IMongoDbBaseRepository<TEntity, TKey>>(sp =>
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return new MongoRepository<TEntity, TIdentifiable>(database, collectionName);
+            return new MongoDbBaseRepository<TEntity, TKey>(database, collectionName);
         });
 
         return builder;

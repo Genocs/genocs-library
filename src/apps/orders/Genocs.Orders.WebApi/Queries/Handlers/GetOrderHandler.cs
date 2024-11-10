@@ -1,15 +1,15 @@
 using Genocs.Core.CQRS.Queries;
 using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.DTO;
-using Genocs.Persistence.MongoDb.Repositories.Mentor;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 
 namespace Genocs.Orders.WebApi.Queries.Handlers;
 
 public class GetOrderHandler : IQueryHandler<GetOrder, OrderDto>
 {
-    private readonly IMongoRepository<Order, Guid> _repository;
+    private readonly IMongoDbBaseRepository<Order, Guid> _repository;
 
-    public GetOrderHandler(IMongoRepository<Order, Guid> repository)
+    public GetOrderHandler(IMongoDbBaseRepository<Order, Guid> repository)
     {
         _repository = repository;
     }

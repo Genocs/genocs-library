@@ -1,9 +1,10 @@
 using Genocs.Common.Types;
+using Genocs.Core.Domain.Entities;
 using Genocs.Identities.Application.Domain.Entities;
 
 namespace Genocs.Identities.Application.Mongo.Documents;
 
-public class UserDocument : IIdentifiable<Guid>
+public class UserDocument : IEntity<Guid>
 {
     public Guid Id { get; set; }
     public string Email { get; set; }

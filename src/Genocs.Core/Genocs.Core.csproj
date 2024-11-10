@@ -22,12 +22,12 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Common" Version="6.3.0" />
+        <PackageReference Include="Genocs.Common" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Figgle" Version="0.5.1" />
-        <PackageReference Include="Scrutor" Version="5.0.1" />
+        <PackageReference Include="Scrutor" Version="5.0.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 

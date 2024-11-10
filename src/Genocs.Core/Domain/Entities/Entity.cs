@@ -6,7 +6,7 @@ namespace Genocs.Core.Domain.Entities;
 /// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class Entity : Entity<Guid>, IEntity
+public abstract class Entity : Entity<Guid>
 {
 
 }
@@ -22,7 +22,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// <summary>
     /// Unique identifier for this entity.
     /// </summary>
-    public virtual TPrimaryKey Id { get; set; }
+    public virtual TPrimaryKey Id { get; set; } = default!;
 
     /// <summary>
     /// Checks if this entity is transient (it has not an Id).
@@ -52,7 +52,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj == null || !(obj is Entity<TPrimaryKey>))
+        if (obj == null || obj is not Entity<TPrimaryKey>)
         {
             return false;
         }
@@ -91,7 +91,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
             return false;
         }
         */
-        return Id.Equals(other.Id);
+        return Id!.Equals(other.Id);
     }
 
     /// <inheritdoc/>

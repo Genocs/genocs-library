@@ -15,6 +15,6 @@ public sealed class HandlerLogTemplate
             return null;
         }
 
-        return OnError.TryGetValue(exceptionType, out var template) ? template : null;
+        return OnError.TryGetValue(exceptionType, out string? template) ? template : null;
     }
 }

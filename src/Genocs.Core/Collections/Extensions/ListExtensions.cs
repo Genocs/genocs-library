@@ -6,11 +6,11 @@
 public static class ListExtensions
 {
     /// <summary>
-    /// Sort a list by a topological sorting, which consider their  dependencies
+    /// Sort a list by a topological sorting, which consider their  dependencies.
     /// </summary>
     /// <typeparam name="T">The type of the members of values.</typeparam>
-    /// <param name="source">A list of objects to sort</param>
-    /// <param name="getDependencies">Function to resolve the dependencies</param>
+    /// <param name="source">A list of objects to sort.</param>
+    /// <param name="getDependencies">Function to resolve the dependencies.</param>
     /// <returns></returns>
     public static List<T> SortByDependencies<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> getDependencies)
     {
