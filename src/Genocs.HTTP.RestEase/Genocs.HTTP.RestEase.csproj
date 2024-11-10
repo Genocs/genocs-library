@@ -25,10 +25,10 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.3.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.3.0" />
-        <PackageReference Include="Genocs.Discovery.Consul" Version="6.3.0" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.3.0" />
+        <PackageReference Include="Genocs.Core" Version="6.4.0" />
+        <PackageReference Include="Genocs.HTTP" Version="6.4.0" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="6.4.0" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.WebApi" Version="6.3.0" />
+        <PackageReference Include="Genocs.WebApi" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
