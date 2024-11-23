@@ -47,4 +47,8 @@
         <PackageReference Include="Genocs.WebApi" Version="6.4.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Polly" Version="8.5.0" />
+    </ItemGroup>
+
 </Project>
