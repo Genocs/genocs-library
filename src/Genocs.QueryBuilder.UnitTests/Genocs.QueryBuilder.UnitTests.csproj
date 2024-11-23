@@ -31,8 +31,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.QueryBuilder" Version="6.4.0" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.4.0" />
+        <PackageReference Include="Genocs.QueryBuilder" Version="7.0.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

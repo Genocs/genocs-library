@@ -20,16 +20,16 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="6.4.0" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="6.4.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.4.0" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="6.4.0" />
-        <PackageReference Include="Genocs.Metrics" Version="6.4.0" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.4.0" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="6.4.0" />
-        <PackageReference Include="Genocs.Tracing" Version="6.4.0" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="6.4.0" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="6.4.0" />
+        <PackageReference Include="Genocs.Auth" Version="7.0.0" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="7.0.0" />
+        <PackageReference Include="Genocs.HTTP" Version="7.0.0" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.0.0" />
+        <PackageReference Include="Genocs.Metrics" Version="7.0.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.0.0" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="7.0.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.0.0" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.0.0" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

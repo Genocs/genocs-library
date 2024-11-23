@@ -23,8 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="6.4.0" />
-		<PackageReference Include="Genocs.Tracing" Version="6.4.0" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.0.0" />
+		<PackageReference Include="Genocs.Tracing" Version="7.0.0" />
 	</ItemGroup>
 
 </Project>
