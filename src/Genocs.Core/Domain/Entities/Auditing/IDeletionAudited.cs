@@ -1,26 +1,25 @@
-namespace Genocs.Core.Domain.Entities.Auditing
+namespace Genocs.Core.Domain.Entities.Auditing;
+
+/// <summary>
+/// This interface is implemented by entities which wanted to store deletion information (who and when deleted).
+/// </summary>
+public interface IDeletionAudited : IHasDeletionTime
 {
     /// <summary>
-    /// This interface is implemented by entities which wanted to store deletion information (who and when deleted).
+    /// Which user deleted this entity.
     /// </summary>
-    public interface IDeletionAudited : IHasDeletionTime
-    {
-        /// <summary>
-        /// Which user deleted this entity?
-        /// </summary>
-        long? DeleterUserId { get; set; }
-    }
+    long? DeletedBy { get; set; }
+}
 
+/// <summary>
+/// Adds navigation properties to <see cref="IDeletionAudited"/> interface for user.
+/// </summary>
+/// <typeparam name="TUser">Type of the user.</typeparam>
+public interface IDeletionAudited<TUser> : IDeletionAudited
+    where TUser : IEntity<long>
+{
     /// <summary>
-    /// Adds navigation properties to <see cref="IDeletionAudited"/> interface for user.
+    /// Reference to the deleter user of this entity.
     /// </summary>
-    /// <typeparam name="TUser">Type of the user</typeparam>
-    public interface IDeletionAudited<TUser> : IDeletionAudited
-        where TUser : IEntity<long>
-    {
-        /// <summary>
-        /// Reference to the deleter user of this entity.
-        /// </summary>
-        TUser DeleterUser { get; set; }
-    }
+    TUser? DeletedByUser { get; set; }
 }

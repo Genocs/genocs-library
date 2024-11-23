@@ -1,26 +1,22 @@
-namespace Genocs.Core.CQRS.Commands.Dispatchers
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Genocs.Core.CQRS.Commands.Dispatchers;
+
+/// <summary>
+/// CommandDispatcher implementation.
+/// </summary>
+internal sealed class CommandDispatcher : ICommandDispatcher
 {
-    using Genocs.Core.CQRS.Commands;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private readonly IServiceProvider _serviceProvider;
 
-    /// <summary>
-    /// CommandDispatcher implementation
-    /// </summary>
-    internal sealed class CommandDispatcher : ICommandDispatcher
+    public CommandDispatcher(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task SendAsync<T>(T command, CancellationToken cancellationToken = default)
+        where T : class, ICommand
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public CommandDispatcher(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
-
-        public async Task SendAsync<T>(T command, CancellationToken cancellationToken = default) where T : class, ICommand
-        {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<T>>();
-            await handler.HandleAsync(command, cancellationToken);
-        }
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<T>>();
+        await handler.HandleAsync(command, cancellationToken);
     }
 }

@@ -19,7 +19,7 @@ internal sealed class Encryptor : IEncryptor
 
         using var aes = Aes.Create();
         aes.Key = Encoding.UTF8.GetBytes(key);
-        var iv = Convert.ToBase64String(aes.IV);
+        string iv = Convert.ToBase64String(aes.IV);
         var transform = aes.CreateEncryptor(aes.Key, aes.IV);
         using var memoryStream = new MemoryStream();
         using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write);

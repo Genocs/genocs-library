@@ -3,7 +3,6 @@ using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities;
 
-
 /// <summary>
 /// Some useful extension methods for Entities.
 /// </summary>
@@ -27,8 +26,8 @@ public static class EntityExtensions
         if (entity is IDeletionAudited)
         {
             var deletionAuditedEntity = entity.As<IDeletionAudited>();
-            deletionAuditedEntity.DeletionTime = null;
-            deletionAuditedEntity.DeleterUserId = null;
+            deletionAuditedEntity.DeletedAt = null;
+            deletionAuditedEntity.DeletedBy = null;
         }
     }
 }

@@ -8,7 +8,6 @@ public class CreateProduct : ICommand
     public string SKU { get; }
     public decimal UnitPrice { get; }
 
-
     public CreateProduct(Guid productId, string sku, decimal unitPrice)
     {
         ProductId = productId == Guid.Empty ? Guid.NewGuid() : productId;

@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Demo.WebApi.Options;
-using Genocs.ServiceBusAzure.Options;
+﻿using Genocs.Core.Demo.WebApi.Configurations;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAzureServiceBusTopic(this IServiceCollection services, IConfiguration configuration)
     {
         // Register IOptions<TopicSettings>
-        services.Configure<AzureServiceBusTopicSettings>(configuration.GetSection(AzureServiceBusTopicSettings.Position));
+        services.Configure<AzureServiceBusTopicOptions>(configuration.GetSection(AzureServiceBusTopicOptions.Position));
 
         // HOW to Register TopicSettings instead of IOptions<TopicSettings>
         ////var topicSetting = new TopicOptions();
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAzureServiceBusQueue(this IServiceCollection services, IConfiguration configuration)
     {
         // Register IOptions<QueueSettings>
-        services.Configure<AzureServiceBusQueueSettings>(configuration.GetSection(AzureServiceBusQueueSettings.Position));
+        services.Configure<AzureServiceBusQueueOptions>(configuration.GetSection(AzureServiceBusQueueOptions.Position));
 
         // HOW to Register QueueSettings instead of IOptions<QueueSettings>
         ////var queueSetting = new QueueSettings();
@@ -50,8 +50,11 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomMassTransit(this IServiceCollection services, IConfiguration configuration)
     {
-        var rabbitMQSettings = new RabbitMQSettings();
-        configuration.GetSection(RabbitMQSettings.Position).Bind(rabbitMQSettings);
+        RabbitMQOptions rabbitMQSettings = new RabbitMQOptions();
+        configuration.GetSection(RabbitMQOptions.Position).Bind(rabbitMQSettings);
+
+        // This is another way to get the RabbitMQOptions
+        // RabbitMQOptions? rabbitMQSettingsV2 = configuration.GetSection(RabbitMQOptions.Position).Get<RabbitMQOptions>();
 
         services.AddSingleton(rabbitMQSettings);
 
@@ -62,17 +65,24 @@ public static class ServiceCollectionExtensions
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.ConfigureEndpoints(context);
-                //cfg.UseHealthCheck(context);
-                cfg.Host(rabbitMQSettings.HostName, rabbitMQSettings.VirtualHost,
-                    h =>
-                    {
-                        h.Username(rabbitMQSettings.UserName);
-                        h.Password(rabbitMQSettings.Password);
-                    }
-                );
+
+                // cfg.UseHealthCheck(context);
+                cfg.Host(
+                            rabbitMQSettings.HostName,
+                            rabbitMQSettings.VirtualHost,
+                            h =>
+                            {
+                                h.Username(rabbitMQSettings.UserName);
+                                h.Password(rabbitMQSettings.Password);
+                            });
             });
         });
 
         return services;
+    }
+
+    public static IApplicationBuilder UseFirebaseAuthentication(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<FirebaseAuthenticationMiddleware>();
     }
 }

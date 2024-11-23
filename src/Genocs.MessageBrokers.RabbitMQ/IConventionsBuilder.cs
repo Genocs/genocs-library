@@ -1,5 +1,3 @@
-using System;
-
 namespace Genocs.MessageBrokers.RabbitMQ;
 
 public interface IConventionsBuilder

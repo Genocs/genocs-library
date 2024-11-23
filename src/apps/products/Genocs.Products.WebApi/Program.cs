@@ -9,6 +9,7 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
@@ -19,24 +20,14 @@ using Genocs.Products.WebApi.DTO;
 using Genocs.Products.WebApi.Queries;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
-using Serilog.Events;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
+StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +37,12 @@ builder.Host
 
 var services = builder.Services;
 
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
 services.AddGenocs()
         .AddErrorHandler<ExceptionToResponseMapper>()
         .AddServices()
@@ -54,7 +51,7 @@ services.AddGenocs()
         .AddConsul()
         .AddFabio()
         .AddOpenTelemetry()
-        .AddJaeger()
+        .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Product, Guid>("products")
         .AddCommandHandlers()
@@ -65,7 +62,7 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         .AddPrometheus()
         .AddRedis()
-        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        .AddRabbitMq()
         .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
@@ -82,17 +79,14 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get("", ctx => ctx.Response.WriteAsync("Products Service"))
+        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Products Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
-        .Post<CreateProduct>("products",
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
-    .UseJaeger()
+        .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
     .UseSwaggerDocs()
     .UseRabbitMq();
 
 app.Run();
 
 Log.CloseAndFlush();
-

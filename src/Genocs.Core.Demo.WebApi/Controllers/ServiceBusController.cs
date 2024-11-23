@@ -22,7 +22,6 @@ public class ServiceBusController : ControllerBase
         _azureServiceBusTopic = azureServiceBusTopic;
     }
 
-
     [HttpPost("SendToQueueAzureServiceBusQueue")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -61,7 +60,6 @@ public class ServiceBusController : ControllerBase
         {
             OrderId = Guid.NewGuid().ToString(),
             UserId = Guid.NewGuid().ToString(),
-            CardToken = "6500-1254-2548",
             Amount = 10.0M,
             Currency = "EUR",
             Basket = new List<Product>()

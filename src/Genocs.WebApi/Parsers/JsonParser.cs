@@ -3,9 +3,9 @@ using System.Text.Json;
 
 namespace Genocs.WebApi.Parsers;
 
-//Credits goes to .NET Foundation Team.
-//JSON parser is based on JsonConfigurationFileParser found in Microsoft.Extensions.Configuration.Json library.
-//https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Json/src/JsonConfigurationFileParser.cs
+// Credits goes to .NET Foundation Team.
+// JSON parser is based on JsonConfigurationFileParser found in Microsoft.Extensions.Configuration.Json library.
+// https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Json/src/JsonConfigurationFileParser.cs
 public class JsonParser
 {
     private readonly Dictionary<string, string> _data = new(StringComparer.OrdinalIgnoreCase);
@@ -24,7 +24,7 @@ public class JsonParser
         {
             if (doc.RootElement.ValueKind != JsonValueKind.Object)
             {
-                throw new FormatException($"Invalidtop level JSON element: {doc.RootElement.ValueKind}");
+                throw new FormatException($"Invalid top level JSON element: {doc.RootElement.ValueKind}");
             }
 
             VisitElement(doc.RootElement);
@@ -35,7 +35,7 @@ public class JsonParser
 
     private void VisitElement(JsonElement element)
     {
-        var isEmpty = true;
+        bool isEmpty = true;
 
         foreach (JsonProperty property in element.EnumerateObject())
         {
@@ -78,7 +78,7 @@ public class JsonParser
             case JsonValueKind.True:
             case JsonValueKind.False:
             case JsonValueKind.Null:
-                var key = _stack.Peek();
+                string key = _stack.Peek();
 
                 if (_data.ContainsKey(key))
                 {

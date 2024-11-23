@@ -27,7 +27,7 @@ public class GenocsHub : Hub
                 return;
             }
 
-            var group = Guid.Parse(payload.Subject).ToUserGroup();
+            string group = Guid.Parse(payload.Subject).ToUserGroup();
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
             await ConnectAsync();
         }

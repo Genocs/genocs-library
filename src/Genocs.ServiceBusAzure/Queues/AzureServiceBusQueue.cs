@@ -1,15 +1,12 @@
 ﻿using Genocs.Core.CQRS.Commands;
-using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Genocs.ServiceBusAzure.Queues;
 
@@ -19,7 +16,7 @@ namespace Genocs.ServiceBusAzure.Queues;
 public class AzureServiceBusQueue : IAzureServiceBusQueue
 {
     private readonly IQueueClient _queueClient;
-    private readonly AzureServiceBusQueueSettings _options;
+    private readonly AzureServiceBusQueueOptions _options;
     private readonly ILogger<AzureServiceBusQueue> _logger;
     private Dictionary<string, KeyValuePair<Type, Type>> _handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
     private const string COMMAND_SUFFIX = "Command";
@@ -32,7 +29,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
     /// <param name="serviceProvider"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public AzureServiceBusQueue(IOptions<AzureServiceBusQueueSettings> options,
+    public AzureServiceBusQueue(IOptions<AzureServiceBusQueueOptions> options,
                                 IServiceProvider serviceProvider, 
                                 ILogger<AzureServiceBusQueue> logger)
     {
@@ -62,7 +59,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
     /// <param name="serviceProvider"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public AzureServiceBusQueue(AzureServiceBusQueueSettings options,
+    public AzureServiceBusQueue(AzureServiceBusQueueOptions options,
                                    IServiceProvider serviceProvider, 
                                    ILogger<AzureServiceBusQueue> logger)
     {
@@ -70,6 +67,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
         {
             throw new ArgumentNullException(nameof(options));
         }
+
         _options = options;
 
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

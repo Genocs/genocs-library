@@ -2,8 +2,7 @@ namespace Genocs.QueryBuilder.UnitTests.Models;
 
 public class Customer
 {
-    public int CustomerID { get; set; }
-    public int OrderId { get; set; }
+    public int CustomerId { get; set; }
     public string? CustomerName { get; set; }
     public string? CustomerAddress { get; set; }
     public string? CustomerPinCode { get; set; }
@@ -13,7 +12,6 @@ public class Customer
     public string? LocationCode { get; set; }
 
     public Customer(int custid,
-                    int orderid,
                     string custname,
                     string cusAddress,
                     string custtPin,
@@ -22,8 +20,7 @@ public class Customer
                     string custOffice,
                     string locCode)
     {
-        CustomerID = custid;
-        OrderId = orderid;
+        CustomerId = custid;
         CustomerName = custname;
         CustomerAddress = cusAddress;
         CustomerPinCode = custtPin;
@@ -31,7 +28,5 @@ public class Customer
         CustomerEmail = custEmail;
         CustomerOffice = custOffice;
         LocationCode = locCode;
-
     }
-
 }

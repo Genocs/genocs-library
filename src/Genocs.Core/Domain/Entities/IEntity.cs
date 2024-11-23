@@ -1,12 +1,14 @@
-using Genocs.Common.Types;
+namespace Genocs.Core.Domain.Entities;
 
-namespace Genocs.Core.Domain.Entities
+/// <summary>
+/// The base interface for all entities.
+/// </summary>
+public interface IEntity
 {
-    /// <summary>
-    /// A shortcut of <see cref="IEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
-    /// </summary>
-    public interface IEntity : IIdentifiable<int>
-    {
 
-    }
+    /// <summary>
+    /// Checks if this entity is transient (not persisted to database) />).
+    /// </summary>
+    /// <returns>True, if this entity is transient, otherwise false.</returns>
+    bool IsTransient();
 }

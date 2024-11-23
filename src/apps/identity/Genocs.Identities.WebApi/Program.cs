@@ -9,16 +9,8 @@ using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Serilog;
-using Serilog.Events;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
+StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +18,13 @@ builder.Host
         .UseLogging()
         .UseVault();
 
-
 var services = builder.Services;
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
 
 services.AddGenocs(builder.Configuration)
         .AddWebApi()
@@ -38,7 +35,7 @@ var app = builder.Build();
 
 app.UseCore();
 app.UseDispatcherEndpoints(endpoints => endpoints
-                            .Get("", ctx => ctx.GetAppName())
+                            .Get(string.Empty, ctx => ctx.GetAppName())
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
                             {
                                 var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
@@ -46,7 +43,7 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             })
                             .Post<CreateUser>("sign-up", afterDispatch: (cmd, ctx) =>
                             {
-                                ctx.Response.Headers.Add("user-id", cmd.UserId.ToString());
+                                ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                 return Task.CompletedTask;
                             })
                             .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, roles: "admin")
@@ -64,4 +61,3 @@ app.UseDispatcherEndpoints(endpoints => endpoints
 app.Run();
 
 Log.CloseAndFlush();
-

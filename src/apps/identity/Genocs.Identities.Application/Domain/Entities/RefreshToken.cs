@@ -10,8 +10,13 @@ public class RefreshToken : AggregateRoot
     public DateTime? RevokedAt { get; private set; }
     public bool Revoked => RevokedAt.HasValue;
 
-    public RefreshToken(AggregateId id, AggregateId userId, string token, DateTime createdAt,
-        DateTime? revokedAt = null) : base(id)
+    public RefreshToken(
+                        AggregateId id,
+                        AggregateId userId,
+                        string token,
+                        DateTime createdAt,
+                        DateTime? revokedAt = null)
+        : base(id)
     {
         if (string.IsNullOrWhiteSpace(token))
         {

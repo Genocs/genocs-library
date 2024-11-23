@@ -4,7 +4,6 @@ using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
 using MongoDB.Driver;
 
-
 namespace Genocs.Products.WebApi.Queries.Handlers;
 
 public class BrowseProductsHandler : IQueryHandler<BrowseProducts, PagedResult<ProductDto>>
@@ -25,7 +24,6 @@ public class BrowseProductsHandler : IQueryHandler<BrowseProducts, PagedResult<P
         var pagedResult = PagedResult<ProductDto>.From(result, result.Items.Select(x => Map(x)));
 
         return pagedResult;
-
     }
 
     private static ProductDto Map(Product product)

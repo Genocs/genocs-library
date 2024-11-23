@@ -10,20 +10,20 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Genocs.Core.CQRS.Commons;
 
 /// <summary>
-/// Extension helper to handle the whole set of Dispatcher
+/// Extension helper to handle the whole set of Dispatcher.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// AddHandlers implementation
+    /// AddHandlers implementation.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="project"></param>
+    /// <param name="services">The service collection.</param>
+    /// <param name="project">Name of the project.</param>
     /// <returns></returns>
     public static IServiceCollection AddHandlers(this IServiceCollection services, string project)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(x => x.FullName  != null && x.FullName.Contains(project))
+            .Where(x => x.FullName != null && x.FullName.Contains(project))
             .ToArray();
 
         services.Scan(s => s.FromAssemblies(assemblies)
@@ -48,10 +48,10 @@ public static class Extensions
     }
 
     /// <summary>
-    /// AddDispatchers Implementation  
+    /// AddDispatchers Implementation.
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The service collection to be used for chaining pattern.</returns>
     public static IServiceCollection AddDispatchers(this IServiceCollection services)
         => services
             .AddSingleton<IDispatcher, InMemoryDispatcher>()

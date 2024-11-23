@@ -18,19 +18,18 @@ namespace Genocs.QueryBuilder
         {
             // Compose the expression tree that represents the parameter to the predicate.
             Expression propertyExp = pe;
-            foreach (var member in propertyName.Split('.'))
+            foreach (string? member in propertyName.Split('.'))
             {
                 propertyExp = Expression.PropertyOrField(propertyExp, member);
             }
 
             // To do for date management
-            MethodCallExpression left = Expression.Call(propertyExp, typeof(DateTime).GetMethod("ToString", new Type[] { typeof(String) }), Expression.Constant(Constants.DATE_FORMAT));
+            MethodCallExpression left = Expression.Call(propertyExp, typeof(DateTime).GetMethod("ToString", new Type[] { typeof(string) }), Expression.Constant(Constants.DateFormat));
             var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
 
             ConstantExpression constantExpression = Expression.Constant(DateTime.Parse(searchTerms[0].ToLower()));
 
             var nullCheck = NormalizeNullable(propertyExp, constantExpression);
-
 
             Expression searchExpression;
             switch (operatorType)

@@ -13,7 +13,7 @@ internal class LogContextMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var correlationId = _correlationIdFactory.Create();
+        string correlationId = _correlationIdFactory.Create();
         using (LogContext.PushProperty("CorrelationId", correlationId))
         {
             await next(context);

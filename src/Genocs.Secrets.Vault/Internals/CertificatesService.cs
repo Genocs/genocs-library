@@ -10,7 +10,7 @@ internal sealed class CertificatesService : ICertificatesService
 
     public IReadOnlyDictionary<string, X509Certificate2> All => Certificates;
 
-    public X509Certificate2 Get(string name) => Certificates.TryGetValue(name, out var cert) ? cert : null;
+    public X509Certificate2? Get(string name) => Certificates.TryGetValue(name, out var cert) ? cert : null;
 
     public void Set(string name, X509Certificate2 certificate)
     {

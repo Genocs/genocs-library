@@ -1,10 +1,10 @@
-using Genocs.Tracing.Jaeger.Options;
+using Genocs.Tracing.Jaeger.Configurations;
 
 namespace Genocs.Tracing.Jaeger.Builders;
 
 internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
 {
-    private readonly JaegerSettings _options = new();
+    private readonly JaegerOptions _options = new();
 
     public IJaegerOptionsBuilder Enable(bool enabled)
     {
@@ -18,42 +18,54 @@ internal sealed class JaegerOptionsBuilder : IJaegerOptionsBuilder
         return this;
     }
 
-    public IJaegerOptionsBuilder WithUdpHost(string udpHost)
+    public IJaegerOptionsBuilder WithEndpoint(string endpoint)
     {
-        _options.UdpHost = udpHost;
+        _options.Endpoint = endpoint;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithUdpPort(int udpPort)
+    public IJaegerOptionsBuilder WithProtocol(string protocol)
     {
-        _options.UdpPort = udpPort;
+        _options.Protocol = protocol;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithMaxPacketSize(int maxPacketSize)
+    public IJaegerOptionsBuilder WithProcessorType(string processorType)
     {
-        _options.MaxPacketSize = maxPacketSize;
+        _options.ProcessorType = processorType;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithSampler(string sampler)
+    public IJaegerOptionsBuilder WithMaxQueueSize(int maxQueueSize)
     {
-        _options.Sampler = sampler;
+        _options.MaxQueueSize = maxQueueSize;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithMaxTracesPerSecond(double maxTracesPerSecond)
+    public IJaegerOptionsBuilder MaxQueueSize(int maxQueueSize)
     {
-        _options.MaxTracesPerSecond = maxTracesPerSecond;
+        _options.MaxQueueSize = maxQueueSize;
         return this;
     }
 
-    public IJaegerOptionsBuilder WithSamplingRate(double samplingRate)
+    public IJaegerOptionsBuilder WithScheduledDelayMilliseconds(int scheduledDelayMilliseconds)
     {
-        _options.SamplingRate = samplingRate;
+        _options.ScheduledDelayMilliseconds = scheduledDelayMilliseconds;
         return this;
     }
 
-    public JaegerSettings Build()
+    public IJaegerOptionsBuilder WithExporterTimeoutMilliseconds(int exporterTimeoutMilliseconds)
+    {
+        _options.ExporterTimeoutMilliseconds = exporterTimeoutMilliseconds;
+        return this;
+    }
+
+    public IJaegerOptionsBuilder WithMaxExportBatchSize(int maxExportBatchSize)
+    {
+        _options.MaxExportBatchSize = maxExportBatchSize;
+        return this;
+    }
+
+    public JaegerOptions Build()
         => _options;
 }

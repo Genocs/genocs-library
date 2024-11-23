@@ -1,7 +1,5 @@
 namespace Genocs.Core.Collections.Extensions
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Extension methods for Collections.
@@ -19,9 +17,9 @@ namespace Genocs.Core.Collections.Extensions
         /// <summary>
         /// Adds an item to the collection if it's not already in the collection.
         /// </summary>
-        /// <param name="source">Collection</param>
-        /// <param name="item">Item to check and add</param>
-        /// <typeparam name="T">Type of the items in the collection</typeparam>
+        /// <param name="source">Collection.</param>
+        /// <param name="item">Item to check and add.</param>
+        /// <typeparam name="T">Type of the items in the collection.</typeparam>
         /// <returns>Returns True if added, returns False if not.</returns>
         public static bool AddIfNotContains<T>(this ICollection<T> source, T item)
         {

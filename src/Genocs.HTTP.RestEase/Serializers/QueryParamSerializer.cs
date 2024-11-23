@@ -33,9 +33,9 @@ internal sealed class QueryParamSerializer : RequestQueryParamSerializer
         }
     }
 
-    private Dictionary<string, object> GetPropertiesDeepRecursive(object obj, string name)
+    private Dictionary<string, object?> GetPropertiesDeepRecursive(object? obj, string name)
     {
-        var dict = new Dictionary<string, object>();
+        var dict = new Dictionary<string, object?>();
 
         if (obj is null)
         {
@@ -52,24 +52,27 @@ internal sealed class QueryParamSerializer : RequestQueryParamSerializer
         if (obj is IEnumerable collection)
         {
             int i = 0;
-            foreach (var item in collection)
+            foreach (object? item in collection)
             {
                 dict = dict.Concat(GetPropertiesDeepRecursive(item, $"{name}[{i++}]")).ToDictionary(e => e.Key, e => e.Value);
             }
+
             return dict;
         }
 
         var properties = obj.GetType().GetProperties();
-        //If the prefix won't be empty, then it is needed to specify [Query(null)].
-        //Otherwise, the query string will contain the query name e.g. 'query.page' instead of just 'page'. 
-        //var prefix = string.IsNullOrWhiteSpace(name) ? string.Empty : $"{name}.";
-        var prefix = string.Empty;
+
+        // If the prefix won't be empty, then it is needed to specify [Query(null)].
+        // Otherwise, the query string will contain the query name e.g. 'query.page' instead of just 'page'.
+        // var prefix = string.IsNullOrWhiteSpace(name) ? string.Empty : $"{name}.";
+        string prefix = string.Empty;
         foreach (var prop in properties)
         {
             dict = dict
                 .Concat(GetPropertiesDeepRecursive(prop.GetValue(obj, null), $"{prefix}{prop.Name}"))
                 .ToDictionary(e => e.Key, e => e.Value);
         }
+
         return dict;
     }
 }

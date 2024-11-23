@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.SignalR.WebApi.Options;
+using Genocs.SignalR.WebApi.Configurations;
 
 namespace Genocs.SignalR.WebApi.Framework;
 
@@ -10,7 +10,7 @@ public static class Extensions
 
     public static IGenocsBuilder AddSignalR(this IGenocsBuilder builder)
     {
-        var options = builder.Configuration.GetOptions<SignalRSettings>("signalr");
+        var options = builder.Configuration.GetOptions<SignalROptions>("signalr");
 
         if (options is not null)
         {
@@ -20,15 +20,14 @@ public static class Extensions
         return builder;
     }
 
-
-    public static IApplicationBuilder UseSignalR(this IApplicationBuilder builder)
+    public static IGenocsBuilder UseSignalR(this IGenocsBuilder builder)
     {
-    //    var options = builder.GetOptions<SignalRSettings>("signalr");
+        var options = builder.GetOptions<SignalROptions>("signalr");
 
-    //    if (options is not null)
-    //    {
-    //        builder.Services.AddSingleton(options);
-    //    }
+        if (options is not null)
+        {
+            builder.Services.AddSingleton(options);
+        }
 
         return builder;
     }

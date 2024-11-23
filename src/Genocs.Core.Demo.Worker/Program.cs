@@ -7,50 +7,42 @@ using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
-using Genocs.Monitoring;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Persistence.MongoDb.Repositories;
-using Genocs.ServiceBusAzure.Options;
+using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Genocs.ServiceBusAzure.Topics;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
+using Genocs.Tracing;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
-using Serilog.Events;
 using System.Reflection;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
+StaticLogger.EnsureInitialized();
 
 IHost host = Host.CreateDefaultBuilder(args)
     .UseLogging()
     .ConfigureServices((hostContext, services) =>
     {
-        // Run the hosted service 
+        // Run the hosted service
         services.AddHostedService<MassTransitConsoleHostedService>();
 
         services
             .AddGenocs(hostContext.Configuration)
+            .AddOpenTelemetry()
             .AddMongoFast()
             .RegisterMongoRepositories(Assembly.GetExecutingAssembly()); // It registers the repositories that has been overridden. No need in case of standard repository
 
         ConfigureMassTransit(services, hostContext.Configuration);
 
-        services.AddCustomOpenTelemetry(hostContext.Configuration);
     })
     .Build();
 
 await host.RunAsync();
 
 Log.CloseAndFlush();
-
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
@@ -75,7 +67,7 @@ static IServiceCollection RegisterCustomMongoRepository(IServiceCollection servi
 
 static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryConfigurator configurator)
 {
-    //configurator.UseMessageData(new MongoDbMessageDataRepository("mongodb://127.0.0.1", "attachments"));
+    // configurator.UseMessageData(new MongoDbMessageDataRepository("mongodb://127.0.0.1", "attachments"));
 
     //configurator.ReceiveEndpoint(KebabCaseEndpointNameFormatter.Instance.Consumer<RoutingSlipBatchEventConsumer>(), e =>
     //{
@@ -99,7 +91,7 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
 
 static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<AzureServiceBusTopicSettings>(configuration.GetSection(AzureServiceBusTopicSettings.Position));
+    services.Configure<AzureServiceBusTopicOptions>(configuration.GetSection(AzureServiceBusTopicOptions.Position));
 
     services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
 
@@ -107,12 +99,11 @@ static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfigur
 
     var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
     topicBus.Subscribe<DemoEvent, IEventHandlerLegacy<DemoEvent>>();
-
 }
 
 static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
 {
-    services.Configure<AzureServiceBusQueueSettings>(configuration.GetSection(AzureServiceBusQueueSettings.Position));
+    services.Configure<AzureServiceBusQueueOptions>(configuration.GetSection(AzureServiceBusQueueOptions.Position));
 
     services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
 

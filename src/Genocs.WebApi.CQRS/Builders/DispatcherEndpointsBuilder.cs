@@ -15,20 +15,28 @@ public class DispatcherEndpointsBuilder : IDispatcherEndpointsBuilder
         _builder = builder;
     }
 
-    public IDispatcherEndpointsBuilder Get(string path, Func<HttpContext, Task>? context = null,
-        Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies)
+    public IDispatcherEndpointsBuilder Get(
+                                            string path,
+                                            Func<HttpContext, Task>? context = null,
+                                            Action<IEndpointConventionBuilder>? endpoint = null,
+                                            bool auth = false,
+                                            string? roles = null,
+                                            params string[] policies)
     {
         _builder.Get(path, context, endpoint, auth, roles, policies);
 
         return this;
     }
 
-    public IDispatcherEndpointsBuilder Get<TQuery, TResult>(string path,
-        Func<TQuery, HttpContext, Task>? beforeDispatch = null,
-        Func<TQuery, TResult, HttpContext, Task>? afterDispatch = null,
-        Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies) where TQuery : class, IQuery<TResult>
+    public IDispatcherEndpointsBuilder Get<TQuery, TResult>(
+                                                            string path,
+                                                            Func<TQuery, HttpContext, Task>? beforeDispatch = null,
+                                                            Func<TQuery, TResult?, HttpContext, Task>? afterDispatch = null,
+                                                            Action<IEndpointConventionBuilder>? endpoint = null,
+                                                            bool auth = false,
+                                                            string? roles = null,
+                                                            params string[] policies)
+        where TQuery : class, IQuery<TResult>
     {
         _builder.Get<TQuery, TResult>(path, async (query, ctx) =>
         {

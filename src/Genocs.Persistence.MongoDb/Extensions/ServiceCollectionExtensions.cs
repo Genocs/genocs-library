@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Serializers;
 namespace Genocs.Persistence.MongoDb.Extensions;
 
 /// <summary>
-/// Service Collection Extension for MongoDb Repository setup
+/// Service Collection Extension for MongoDb Repository setup.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
@@ -14,8 +14,14 @@ public static class ServiceCollectionExtensions
     internal static void RegisterConventions()
     {
         BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
-        BsonSerializer.RegisterSerializer(typeof(decimal?),
-            new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
+
+        // Move to standard GuidRepresentation
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.CSharpLegacy));
+
+        BsonSerializer.RegisterSerializer(
+                                            typeof(decimal?),
+                                            new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
+
         ConventionRegistry.Register("genocs", new ConventionPack
         {
             new CamelCaseElementNameConvention(),

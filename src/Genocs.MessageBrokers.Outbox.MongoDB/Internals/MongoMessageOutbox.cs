@@ -1,5 +1,6 @@
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.MessageBrokers.Outbox.Options;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -10,6 +11,8 @@ namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;
 
 internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccessor
 {
+    private const string EmptyJsonObject = "{}";
+
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -18,19 +21,20 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
 
-    private const string EmptyJsonObject = "{}";
     private readonly IMongoSessionFactory _sessionFactory;
-    private readonly IMongoRepository<InboxMessage, string> _inboxRepository;
-    private readonly IMongoRepository<OutboxMessage, string> _outboxRepository;
+    private readonly IMongoDbBaseRepository<InboxMessage, string> _inboxRepository;
+    private readonly IMongoDbBaseRepository<OutboxMessage, string> _outboxRepository;
     private readonly ILogger<MongoMessageOutbox> _logger;
     private readonly bool _transactionsEnabled;
 
     public bool Enabled { get; }
 
-    public MongoMessageOutbox(IMongoSessionFactory sessionFactory,
-        IMongoRepository<InboxMessage, string> inboxRepository,
-        IMongoRepository<OutboxMessage, string> outboxRepository,
-        OutboxSettings options, ILogger<MongoMessageOutbox> logger)
+    public MongoMessageOutbox(
+                                IMongoSessionFactory sessionFactory,
+                                IMongoDbBaseRepository<InboxMessage, string> inboxRepository,
+                                IMongoDbBaseRepository<OutboxMessage, string> outboxRepository,
+                                OutboxOptions options,
+                                ILogger<MongoMessageOutbox> logger)
     {
         _sessionFactory = sessionFactory;
         _inboxRepository = inboxRepository;
@@ -100,9 +104,15 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
         }
     }
 
-    public async Task SendAsync<T>(T message, string originatedMessageId = null, string messageId = null,
-        string correlationId = null, string spanContext = null, object messageContext = null,
-        IDictionary<string, object> headers = null) where T : class
+    public async Task SendAsync<T>(
+                                    T message,
+                                    string? originatedMessageId = null,
+                                    string? messageId = null,
+                                    string? correlationId = null,
+                                    string? spanContext = null,
+                                    object? messageContext = null,
+                                    IDictionary<string, object>? headers = null)
+        where T : class
     {
         if (!Enabled)
         {

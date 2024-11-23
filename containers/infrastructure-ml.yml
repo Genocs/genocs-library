@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   image_labeling:
     image: heartexlabs/label-studio:latest

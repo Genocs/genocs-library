@@ -1,38 +1,36 @@
+// using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
-using Genocs.Monitoring;
 using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Secrets.AzureKeyVault;
+using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
-using Serilog.Events;
+using Genocs.Auth;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
+StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
+        .UseAzureKeyVault()
         .UseLogging();
-//        .UseVault();
 
-
-// add services to DI container
 var services = builder.Services;
 
 services
     .AddGenocs(builder.Configuration)
+    .AddJwt()
+//    .AddOpenIdJwt()
+    .AddOpenTelemetry()
     .AddMongoFast()
-    .RegisterMongoRepositories(Assembly.GetExecutingAssembly());
-
+    .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
+    .AddApplicationServices()
+    .Build();
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
@@ -42,6 +40,11 @@ services.AddControllers().AddJsonOptions(x =>
 });
 
 services.AddHealthChecks();
+
+services.Configure<SecretOptions>(builder.Configuration.GetSection(SecretOptions.Position));
+
+SecretOptions settings = builder.Configuration.GetOptions<SecretOptions>(SecretOptions.Position);
+services.AddSingleton(settings);
 
 services.Configure<HealthCheckPublisherOptions>(options =>
 {
@@ -56,14 +59,9 @@ services.AddSwaggerGen();
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
-
 services.AddOptions();
 
-// Set Custom Open telemetry
-services.AddCustomOpenTelemetry(builder.Configuration);
-
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -72,7 +70,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 // global cors policy
 app.UseCors(x => x
     .SetIsOriginAllowed(origin => true)
@@ -80,16 +77,18 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .AllowCredentials());
 
-
 app.UseHttpsRedirection();
 
 app.UseRouting();
 
 app.UseAuthorization();
 
+// Use it only if you need to authenticate with Firebase
+// app.UseFirebaseAuthentication();
+
 app.MapControllers();
 
-app.MapHealthChecks("/healthz");
+app.MapHealthChecks("/hc");
 
 app.Run();
 

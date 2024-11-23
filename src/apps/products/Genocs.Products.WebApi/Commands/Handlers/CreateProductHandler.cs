@@ -1,35 +1,34 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.Events;
-using OpenTracing;
 
 namespace Genocs.Products.WebApi.Commands.Handlers;
 
 public class CreateProductHandler : ICommandHandler<CreateProduct>
 {
-    private readonly IMongoRepository<Product, Guid> _repository;
+    private readonly IMongoDbBaseRepository<Product, Guid> _repository;
     private readonly IBusPublisher _publisher;
     private readonly IMessageOutbox _outbox;
     private readonly ILogger<CreateProductHandler> _logger;
-    private readonly ITracer _tracer;
 
-    public CreateProductHandler(IMongoRepository<Product, Guid> repository, IBusPublisher publisher,
-        IMessageOutbox outbox, ITracer tracer,
-        ILogger<CreateProductHandler> logger)
+    public CreateProductHandler(
+                                IMongoDbBaseRepository<Product, Guid> repository,
+                                IBusPublisher publisher,
+                                IMessageOutbox outbox,
+                                ILogger<CreateProductHandler> logger)
     {
         _repository = repository;
         _publisher = publisher;
         _outbox = outbox;
-        _tracer = tracer;
         _logger = logger;
     }
 
     public async Task HandleAsync(CreateProduct command, CancellationToken cancellationToken = default)
     {
-        var exists = await _repository.ExistsAsync(o => o.Id == command.ProductId);
+        bool exists = await _repository.ExistsAsync(o => o.Id == command.ProductId);
         if (exists)
         {
             throw new InvalidOperationException($"Product with given id: {command.ProductId} already exists!");
@@ -40,7 +39,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");
 
-        var spanContext = _tracer.ActiveSpan?.Context.ToString();
+        string? spanContext = "TODO: Genocs";
         var @event = new ProductCreated(product.Id);
         if (_outbox.Enabled)
         {

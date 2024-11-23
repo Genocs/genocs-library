@@ -1,5 +1,5 @@
 using Genocs.Core.Builders;
-using Genocs.HTTP.Options;
+using Genocs.HTTP.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace Genocs.HTTP;
 
 /// <summary>
-/// The HTTP client extensions
+/// The HTTP client extensions.
 /// </summary>
 public static class Extensions
 {
@@ -16,10 +16,12 @@ public static class Extensions
     private const string RegistryName = "http.client";
     private const string ClientName = "genocs";
 
-
-    public static IGenocsBuilder AddHttpClient(this IGenocsBuilder builder, string clientName = ClientName,
-        IEnumerable<string>? maskedRequestUrlParts = null, string sectionName = SectionName,
-        Action<IHttpClientBuilder>? httpClientBuilder = null)
+    public static IGenocsBuilder AddHttpClient(
+                                                this IGenocsBuilder builder,
+                                                string clientName = ClientName,
+                                                IEnumerable<string>? maskedRequestUrlParts = null,
+                                                string sectionName = SectionName,
+                                                Action<IHttpClientBuilder>? httpClientBuilder = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -36,7 +38,7 @@ public static class Extensions
             throw new ArgumentException("HTTP client name cannot be empty.", nameof(clientName));
         }
 
-        var options = builder.GetOptions<HttpClientSettings>(sectionName);
+        var options = builder.GetOptions<HttpClientOptions>(sectionName);
         if (maskedRequestUrlParts is not null && options.RequestMasking is not null)
         {
             options.RequestMasking.UrlParts = maskedRequestUrlParts;
@@ -79,7 +81,8 @@ public static class Extensions
     {
         var registryType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
             .SingleOrDefault(t => t.Name == "HttpClientMappingRegistry");
-        var registry = builder.Services.SingleOrDefault(s => s.ServiceType == registryType)?.ImplementationInstance;
+
+        object? registry = builder.Services.SingleOrDefault(s => s.ServiceType == registryType)?.ImplementationInstance;
         var registrations = registry?.GetType().GetProperty("TypedClientRegistrations");
         var clientRegistrations = registrations?.GetValue(registry) as IDictionary<Type, string>;
         clientRegistrations?.Remove(typeof(IHttpClient));

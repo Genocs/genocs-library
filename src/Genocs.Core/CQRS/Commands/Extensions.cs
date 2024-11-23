@@ -6,15 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Genocs.Core.CQRS.Commands;
 
 /// <summary>
-/// Extension method
+/// Extension methods.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// AddCommandHandlers
+    /// Add all the Command handlers to the DI container.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The builder.</param>
+    /// <returns>The builder to be used for chaining pattern.</returns>
     public static IGenocsBuilder AddCommandHandlers(this IGenocsBuilder builder)
     {
         builder.Services.Scan(s =>
@@ -28,14 +28,13 @@ public static class Extensions
     }
 
     /// <summary>
-    /// AddInMemoryCommandDispatcher
+    /// Add the In Memory command dispatcher to the DI container.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The builder.</param>
+    /// <returns>The builder to be used for chaining pattern.</returns>
     public static IGenocsBuilder AddInMemoryCommandDispatcher(this IGenocsBuilder builder)
     {
         builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
         return builder;
-
     }
 }

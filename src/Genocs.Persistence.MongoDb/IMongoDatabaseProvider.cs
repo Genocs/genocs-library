@@ -8,10 +8,9 @@ namespace Genocs.Persistence.MongoDb;
 public interface IMongoDatabaseProvider
 {
     /// <summary>
-    /// Gets the MongoClient
+    /// Gets the MongoClient.
     /// </summary>
     IMongoClient MongoClient { get; }
-
 
     /// <summary>
     /// Gets the <see cref="IMongoDatabase"/>.

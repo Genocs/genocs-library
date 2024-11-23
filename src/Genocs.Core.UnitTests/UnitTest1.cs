@@ -1,6 +1,6 @@
-namespace Genocs.Core.UnitTests;
-
 using Xunit;
+
+namespace Genocs.Core.UnitTests;
 
 public class UnitTest1
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Genocs.Core.Demo.WebApi.Configurations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Core.Demo.WebApi.Controllers;
 
@@ -6,6 +7,13 @@ namespace Genocs.Core.Demo.WebApi.Controllers;
 [Route("")]
 public class HomeController : ControllerBase
 {
+    public readonly SecretOptions _secretSettings;
+
+    public HomeController(SecretOptions secretSettings)
+    {
+        _secretSettings = secretSettings ?? throw new ArgumentNullException(nameof(secretSettings));
+    }
+
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Get()
@@ -15,4 +23,9 @@ public class HomeController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Ping()
         => Ok("pong");
+
+    [HttpGet("secret")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    public IActionResult GetSecret()
+        => Ok($"Read: {_secretSettings.Secret}");
 }

@@ -1,15 +1,15 @@
 using Genocs.Identities.Application.Domain.Entities;
 using Genocs.Identities.Application.Domain.Repositories;
 using Genocs.Identities.Application.Mongo.Documents;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDb.Domain.Repositories;
 
 namespace Genocs.Identities.Application.Mongo.Repositories;
 
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
-    private readonly IMongoRepository<RefreshTokenDocument, Guid> _repository;
+    private readonly IMongoDbBaseRepository<RefreshTokenDocument, Guid> _repository;
 
-    public RefreshTokenRepository(IMongoRepository<RefreshTokenDocument, Guid> repository)
+    public RefreshTokenRepository(IMongoDbBaseRepository<RefreshTokenDocument, Guid> repository)
     {
         _repository = repository;
     }

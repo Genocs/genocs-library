@@ -17,14 +17,15 @@ public class EndpointsBuilder : IEndpointsBuilder
         _definitions = definitions;
     }
 
-    public IEndpointsBuilder Get(string path,
-                                 Func<HttpContext, Task>? context = null,
-                                 Action<IEndpointConventionBuilder>? endpoint = null,
-                                 bool auth = false,
-                                 string? roles = null,
-                                 params string[] policies)
+    public IEndpointsBuilder Get(
+                                    string path,
+                                    Func<HttpContext, Task>? context = null,
+                                    Action<IEndpointConventionBuilder>? endpoint = null,
+                                    bool auth = false,
+                                    string? roles = null,
+                                    params string[] policies)
     {
-        var builder = _routeBuilder.MapGet(path, ctx => context.Invoke(ctx));
+        var builder = _routeBuilder.MapGet(path, ctx => context?.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Get, path);
@@ -46,7 +47,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     public IEndpointsBuilder Get<TRequest, TResult>(string path, Func<TRequest, HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
         where TRequest : class
     {
@@ -59,7 +60,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     public IEndpointsBuilder Post(string path, Func<HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapPost(path, ctx => context?.Invoke(ctx));
@@ -71,7 +72,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     public IEndpointsBuilder Post<T>(string path, Func<T, HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
         where T : class
     {
@@ -84,7 +85,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     public IEndpointsBuilder Put(string path, Func<HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapPut(path, ctx => context?.Invoke(ctx));
@@ -96,7 +97,7 @@ public class EndpointsBuilder : IEndpointsBuilder
     }
 
     public IEndpointsBuilder Put<T>(string path, Func<T, HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
         where T : class
     {
@@ -108,8 +109,8 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Delete(string path, Func<HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+    public IEndpointsBuilder Delete(string path, Func<HttpContext, Task>? context = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapDelete(path, ctx => context?.Invoke(ctx));
@@ -120,8 +121,8 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task> context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
+    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task>? context = null,
+        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
         params string[] policies)
         where T : class
     {
@@ -202,8 +203,8 @@ public class EndpointsBuilder : IEndpointsBuilder
     private void AddEndpointDefinition<T>(string method, string path)
         => AddEndpointDefinition(method, path, typeof(T), null);
 
-    private void AddEndpointDefinition<T, U>(string method, string path)
-        => AddEndpointDefinition(method, path, typeof(T), typeof(U));
+    private void AddEndpointDefinition<Ta, Tu>(string method, string path)
+        => AddEndpointDefinition(method, path, typeof(Ta), typeof(Tu));
 
     private void AddEndpointDefinition(string method, string path, Type input, Type? output)
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Genocs.Metrics.Prometheus.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace Genocs.Metrics.Prometheus.Internals;
 
@@ -6,7 +7,7 @@ internal sealed class PrometheusMiddleware : IMiddleware
 {
     private readonly ISet<string> _allowedHosts;
     private readonly string _endpoint;
-    private readonly string _apiKey;
+    private readonly string? _apiKey;
 
     public PrometheusMiddleware(PrometheusOptions options)
     {
@@ -34,7 +35,7 @@ internal sealed class PrometheusMiddleware : IMiddleware
             return next(context);
         }
 
-        var host = context.Request.Host.Host;
+        string host = context.Request.Host.Host;
         if (_allowedHosts.Contains(host))
         {
             return next(context);

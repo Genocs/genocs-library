@@ -17,9 +17,8 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.MessageBrokers.RabbitMQ;
 
-
 /// <summary>
-/// RabbitMQ support helper
+/// RabbitMQ support helper.
 /// </summary>
 public static class Extensions
 {
@@ -27,18 +26,21 @@ public static class Extensions
     private const string RegistryName = "messageBrokers.rabbitmq";
 
     /// <summary>
-    /// AddRabbitMq extension method
+    /// AddRabbitMq extension method.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="sectionName"></param>
-    /// <param name="plugins"></param>
-    /// <param name="connectionFactoryConfigurator"></param>
-    /// <param name="serializer"></param>
+    /// <param name="builder">The builder.</param>
+    /// <param name="sectionName">the default section name.</param>
+    /// <param name="plugins">The plugin action method.</param>
+    /// <param name="connectionFactoryConfigurator">The configurator.</param>
+    /// <param name="serializer">The serializer.</param>
     /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public static IGenocsBuilder AddRabbitMq(this IGenocsBuilder builder, string sectionName = SectionName,
-        Func<IRabbitMqPluginsRegistry, IRabbitMqPluginsRegistry>? plugins = null,
-        Action<ConnectionFactory>? connectionFactoryConfigurator = null, IRabbitMqSerializer? serializer = null)
+    /// <exception cref="ArgumentException">Raised when configuration is incorrect.</exception>
+    public static IGenocsBuilder AddRabbitMq(
+                                            this IGenocsBuilder builder,
+                                            string sectionName = SectionName,
+                                            Func<IRabbitMqPluginsRegistry, IRabbitMqPluginsRegistry>? plugins = null,
+                                            Action<ConnectionFactory>? connectionFactoryConfigurator = null,
+                                            IRabbitMqSerializer? serializer = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -56,7 +58,6 @@ public static class Extensions
         {
             throw new ArgumentException("RabbitMQ hostnames are not specified.", nameof(options.HostNames));
         }
-
 
         ILogger<IRabbitMQClient> logger;
         using (var serviceProvider = builder.Services.BuildServiceProvider())
@@ -129,8 +130,10 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureSsl(ConnectionFactory connectionFactory, RabbitMQOptions options,
-        ILogger<IRabbitMQClient> logger)
+    private static void ConfigureSsl(
+                                    ConnectionFactory connectionFactory,
+                                    RabbitMQOptions options,
+                                    ILogger<IRabbitMQClient> logger)
     {
         if (options.Ssl is null || string.IsNullOrWhiteSpace(options.Ssl.ServerName))
         {
@@ -138,8 +141,10 @@ public static class Extensions
             return;
         }
 
-        connectionFactory.Ssl = new SslOption(options.Ssl.ServerName, options.Ssl.CertificatePath,
-            options.Ssl.Enabled);
+        connectionFactory.Ssl = new SslOption(
+                                              options.Ssl.ServerName,
+                                              options.Ssl.CertificatePath,
+                                              options.Ssl.Enabled);
 
         logger.LogDebug($"RabbitMQ SSL is: {(options.Ssl.Enabled ? "enabled" : "disabled")}, " +
                         $"server: '{options.Ssl.ServerName}', client certificate: '{options.Ssl.CertificatePath}', " +
@@ -180,12 +185,13 @@ public static class Extensions
             logger.LogDebug("Received X509 certificate chain statuses: " +
                             $"{string.Join(", ", statuses.Select(x => x.Status))}");
 
-            var isValid = statuses.All(chainStatus => chainStatus.Status == X509ChainStatusFlags.NoError
+            bool isValid = statuses.All(chainStatus => chainStatus.Status == X509ChainStatusFlags.NoError
                                                       || ignoredStatuses.Contains(chainStatus.Status));
             if (!isValid)
             {
-                logger.LogError(string.Join(Environment.NewLine,
-                    statuses.Select(s => $"{s.Status} - {s.StatusInformation}")));
+                logger.LogError(string.Join(
+                                            Environment.NewLine,
+                                            statuses.Select(s => $"{s.Status} - {s.StatusInformation}")));
             }
 
             return isValid;

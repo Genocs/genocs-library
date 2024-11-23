@@ -8,7 +8,6 @@ public class PublishNotification : ICommand
     public Guid CustomerId { get; }
     public string Message { get; }
 
-
     public PublishNotification(Guid notificationId, Guid customerId, string message)
     {
         NotificationId = notificationId == Guid.Empty ? Guid.NewGuid() : notificationId;

@@ -1,14 +1,13 @@
 using Genocs.Core.Builders;
 using Genocs.Persistence.Redis.Builders;
-using Genocs.Persistence.Redis.Options;
+using Genocs.Persistence.Redis.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
 namespace Genocs.Persistence.Redis;
 
-
 /// <summary>
-/// The redis extensions
+/// The redis extensions.
 /// </summary>
 public static class Extensions
 {
@@ -20,14 +19,14 @@ public static class Extensions
     /// <param name="builder">The Genocs builder</param>
     /// <param name="sectionName"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisSettings.Position)
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = RedisSettings.Position;
+            sectionName = RedisOptions.Position;
         }
 
-        var options = builder.GetOptions<RedisSettings>(sectionName);
+        var options = builder.GetOptions<RedisOptions>(sectionName);
         return builder.AddRedis(options);
     }
 
@@ -37,10 +36,11 @@ public static class Extensions
     /// <param name="builder">The Genocs builder</param>
     /// <param name="buildOptions"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder,
-        Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
+    public static IGenocsBuilder AddRedis(
+                                            this IGenocsBuilder builder,
+                                            Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
     {
-        var options = buildOptions(new RedisOptionsBuilder()).Build();
+        var options = buildOptions(new RedisSettingsBuilder()).Build();
         return builder.AddRedis(options);
     }
 
@@ -50,7 +50,7 @@ public static class Extensions
     /// <param name="builder">The Genocs builder</param>
     /// <param name="options"></param>
     /// <returns></returns>
-    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisSettings options)
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisOptions options)
     {
         if (!builder.TryRegister(RegistryName))
         {

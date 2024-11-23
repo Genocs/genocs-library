@@ -1,4 +1,4 @@
-﻿using Genocs.Persistence.MongoDb.Options;
+﻿using Genocs.Persistence.MongoDb.Configurations;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,11 +15,11 @@ public class AzureInitializer
     /// Setup  the client
     /// </summary>
     /// <param name="options"></param>
-    public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionSettings> options)
+    public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionOptions> options)
     {
         // Ge settings
-        MongoDbEncryptionSettings settings = options.Value;
-        MongoDbEncryptionSettings.IsValid(settings);
+        MongoDbEncryptionOptions settings = options.Value;
+        MongoDbEncryptionOptions.IsValid(settings);
 
         // start-kmsproviders
         var kmsProviders = new Dictionary<string, IReadOnlyDictionary<string, object>>();
@@ -46,10 +46,12 @@ public class AzureInitializer
                });
             return dataKeyOptions;
         }
+
         // end-datakeyopts
 
         // start-key-vault
         var keyVaultNamespace = CollectionNamespace.FromFullName("encryption.__keyVault");
+
         // end-key-vault
 
         // start-create-index
@@ -58,20 +60,21 @@ public class AzureInitializer
         {
             Unique = true,
             PartialFilterExpression = new BsonDocument
-                    {{"keyAltNames", new BsonDocument {{"$exists", new BsonBoolean(true)}}}}
+                    { { "keyAltNames", new BsonDocument { { "$exists", new BsonBoolean(true) } } } }
         };
 
         var builder = Builders<BsonDocument>.IndexKeys;
         var indexKeysDocument = builder.Ascending("keyAltNames");
         var indexModel = new CreateIndexModel<BsonDocument>(indexKeysDocument, indexOptions);
         var keyVaultDatabase = keyVaultClient.GetDatabase(keyVaultNamespace.DatabaseNamespace.DatabaseName);
+
         // Drop the Key Vault Collection in case you created this collection
         // in a previous run of this application.
         keyVaultDatabase.DropCollection(keyVaultNamespace.CollectionName);
         var keyVaultCollection = keyVaultDatabase.GetCollection<BsonDocument>(keyVaultNamespace.CollectionName);
         keyVaultCollection.Indexes.CreateOne(indexModel);
-        // end-create-index
 
+        // end-create-index
 
         // start-create-dek
         var clientEncryptionOptions = new ClientEncryptionOptions(
@@ -85,7 +88,6 @@ public class AzureInitializer
         var dataKeyOptions3 = GetDataKeyOptions(new List<string> { "dataKey3" });
         var dataKeyOptions4 = GetDataKeyOptions(new List<string> { "dataKey4" });
 
-
         BsonBinaryData CreateKeyGetID(DataKeyOptions options)
         {
             var dateKeyGuid = clientEncryption.CreateDataKey(provider, options, CancellationToken.None);
@@ -96,11 +98,11 @@ public class AzureInitializer
         var dataKeyId2 = CreateKeyGetID(dataKeyOptions2);
         var dataKeyId3 = CreateKeyGetID(dataKeyOptions3);
         var dataKeyId4 = CreateKeyGetID(dataKeyOptions4);
+
         // end-create-dek
 
         // start-create-enc-collection
         var encryptedCollectionNamespace = CollectionNamespace.FromFullName("medicalRecords.patients");
-
 
         var encryptedFieldsMap = new Dictionary<string, BsonDocument>
             {
@@ -112,9 +114,9 @@ public class AzureInitializer
                             {
                                 new BsonDocument
                                 {
-                                    {"keyId", dataKeyId1},
-                                    {"path", new BsonString("patientId")},
-                                    {"bsonType", new BsonString("int")},
+                                    { "keyId", dataKeyId1},
+                                    { "path", new BsonString("patientId")},
+                                    { "bsonType", new BsonString("int")},
                                     {
                                         "queries", new BsonDocument
                                         {
@@ -124,27 +126,27 @@ public class AzureInitializer
                                 },
                                 new BsonDocument
                                 {
-                                    {"keyId", dataKeyId2},
-                                    {"path", new BsonString("medications")},
-                                    {"bsonType", new BsonString("array")},
+                                    { "keyId", dataKeyId2},
+                                    { "path", new BsonString("medications")},
+                                    { "bsonType", new BsonString("array")},
                                 },
                                 new BsonDocument
                                 {
-                                    {"keyId", dataKeyId3},
-                                    {"path", new BsonString("patientRecord.ssn")},
-                                    {"bsonType", new BsonString("string")},
+                                    { "keyId", dataKeyId3},
+                                    { "path", new BsonString("patientRecord.ssn")},
+                                    { "bsonType", new BsonString("string")},
                                     {
                                         "queries", new BsonDocument
                                         {
-                                            {"queryType", new BsonString("equality")}
+                                            { "queryType", new BsonString("equality")}
                                         }
                                     }
                                 },
                                 new BsonDocument
                                 {
-                                    {"keyId", dataKeyId4},
-                                    {"path", new BsonString("patientRecord.billing")},
-                                    {"bsonType", new BsonString("object")},
+                                    { "keyId", dataKeyId4},
+                                    { "path", new BsonString("patientRecord.billing")},
+                                    { "bsonType", new BsonString("object")},
                                 },
                             }
                         }
@@ -154,15 +156,14 @@ public class AzureInitializer
 
         var extraOptions = new Dictionary<string, object>()
             {
-                {"cryptSharedLibPath", settings.LibPath},
-        };
+                { "cryptSharedLibPath", settings.LibPath },
+            };
 
         var autoEncryptionOptions = new AutoEncryptionOptions(
             keyVaultNamespace,
             kmsProviders,
             encryptedFieldsMap: encryptedFieldsMap,
             extraOptions: extraOptions);
-
 
         return autoEncryptionOptions;
 

@@ -1,3 +1,5 @@
+using Genocs.Auth.Configurations;
+
 namespace Genocs.Auth.Builders;
 
 internal sealed class JwtOptionsBuilder : IJwtOptionsBuilder

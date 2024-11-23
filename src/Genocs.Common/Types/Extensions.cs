@@ -5,12 +5,12 @@ using System.Runtime.Serialization;
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// Type extensions
+/// Type extensions.
 /// </summary>
 public static class Extensions
 {
     /// <summary>
-    /// GetDefaultInstance
+    /// GetDefaultInstance.
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
@@ -21,9 +21,9 @@ public static class Extensions
             return string.Empty;
         }
 
-        var defaultValueCache = new Dictionary<Type, object>();
+        var defaultValueCache = new Dictionary<Type, object?>();
 
-        if (TryGetDefaultValue(type, out var instance, defaultValueCache))
+        if (TryGetDefaultValue(type, out object? instance, defaultValueCache))
         {
             return instance;
         }
@@ -32,17 +32,17 @@ public static class Extensions
     }
 
     public static object SetDefaultInstanceProperties(this object instance)
-        => SetDefaultInstanceProperties(instance, new Dictionary<Type, object>());
+        => SetDefaultInstanceProperties(instance, new Dictionary<Type, object?>());
 
-    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object> defaultValueCache)
+    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
     {
-        defaultValueCache ??= new Dictionary<Type, object>();
+        defaultValueCache ??= new Dictionary<Type, object?>();
 
         var type = instance.GetType();
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance))
         {
-            if (TryGetDefaultValue(propertyInfo.PropertyType, out var defaultValue, defaultValueCache))
+            if (TryGetDefaultValue(propertyInfo.PropertyType, out object? defaultValue, defaultValueCache))
             {
                 SetValue(propertyInfo, instance, defaultValue);
             }
@@ -51,7 +51,7 @@ public static class Extensions
         return instance;
     }
 
-    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object> defaultValueCache)
+    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object?> defaultValueCache)
     {
         if (defaultValueCache.TryGetValue(type, out defaultValue))
         {
@@ -116,6 +116,7 @@ public static class Extensions
             return false;
         }
 
+        // TODO: Refactor this to remove the use of FormatterServices
         defaultValue = FormatterServices.GetUninitializedObject(type);
 
         defaultValueCache[type] = defaultValue;
@@ -158,7 +159,7 @@ public static class Extensions
         return true;
     }
 
-    private static void SetValue(PropertyInfo propertyInfo, object instance, object value)
+    private static void SetValue(PropertyInfo propertyInfo, object instance, object? value)
     {
         if (propertyInfo.CanWrite)
         {

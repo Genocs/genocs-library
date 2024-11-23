@@ -1,4 +1,5 @@
 using Genocs.Core.Builders;
+using Genocs.WebApi.Security.Configurations;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +12,17 @@ public static class Extensions
     private const string SectionName = "security";
     private const string RegistryName = "security";
 
-    public static IGenocsBuilder AddCertificateAuthentication(this IGenocsBuilder builder,
-        string sectionName = SectionName, Type permissionValidatorType = null)
+    public static IGenocsBuilder AddCertificateAuthentication(
+                                                                this IGenocsBuilder builder,
+                                                                string sectionName = SectionName,
+                                                                Type? permissionValidatorType = null)
     {
+
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = SectionName;
+        }
+
         var options = builder.GetOptions<SecurityOptions>(sectionName);
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))
@@ -34,10 +43,12 @@ public static class Extensions
         {
             builder.Services.AddSingleton<ICertificatePermissionValidator, DefaultCertificatePermissionValidator>();
         }
-            
+
         builder.Services.AddSingleton<CertificateMiddleware>();
-        builder.Services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+        builder.Services
+            .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
             .AddCertificate();
+
         builder.Services.AddCertificateForwarding(c =>
         {
             c.CertificateHeader = options.Certificate.GetHeaderName();
@@ -66,9 +77,10 @@ public static class Extensions
 
     private static byte[] StringToByteArray(string hex)
     {
-        var numberChars = hex.Length;
-        var bytes = new byte[numberChars / 2];
-        for (var i = 0; i < numberChars; i += 2)
+        int numberChars = hex.Length;
+        byte[] bytes = new byte[numberChars / 2];
+
+        for (int i = 0; i < numberChars; i += 2)
         {
             bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
         }

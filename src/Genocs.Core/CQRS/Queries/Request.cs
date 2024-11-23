@@ -1,16 +1,15 @@
-﻿namespace Genocs.Core.CQRS.Queries
+﻿namespace Genocs.Core.CQRS.Queries;
+
+public interface ISearchRequest
 {
-    public interface ISearchRequest
-    {
-        string q { get; set; }
+    string q { get; set; }
 
-        int MaxItems { get; set; }
-    }
+    int MaxItems { get; set; }
+}
 
-    public class SearchRequest : ISearchRequest
-    {
-        public string q { get; set; } = string.Empty;
+public class SearchRequest : ISearchRequest
+{
+    public string q { get; set; } = string.Empty;
 
-        public int MaxItems { get; set; } = 10;
-    }
+    public int MaxItems { get; set; } = 10;
 }

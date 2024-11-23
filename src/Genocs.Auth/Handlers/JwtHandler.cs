@@ -1,3 +1,4 @@
+using Genocs.Auth.Configurations;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,7 +23,7 @@ internal sealed class JwtHandler : IJwtHandler
     private readonly JwtOptions _options;
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly SigningCredentials _signingCredentials;
-    private readonly string _issuer;
+    private readonly string? _issuer;
 
     public JwtHandler(JwtOptions options, TokenValidationParameters tokenValidationParameters)
     {
@@ -43,7 +44,17 @@ internal sealed class JwtHandler : IJwtHandler
         _issuer = options.Issuer;
     }
 
-    public JsonWebToken CreateToken(string userId,
+    /// <summary>
+    /// Creates a new token.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="role"></param>
+    /// <param name="audience"></param>
+    /// <param name="claims"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">It is thrown when mandatory data is empty.</exception>
+    public JsonWebToken CreateToken(
+                                    string userId,
                                     string? role = null,
                                     string? audience = null,
                                     IDictionary<string, IEnumerable<string>>? claims = null)
@@ -61,6 +72,7 @@ internal sealed class JwtHandler : IJwtHandler
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString()),
         };
+
         if (!string.IsNullOrWhiteSpace(role))
         {
             jwtClaims.Add(new Claim(ClaimTypes.Role, role));
@@ -91,10 +103,9 @@ internal sealed class JwtHandler : IJwtHandler
             claims: jwtClaims,
             notBefore: now,
             expires: expires,
-            signingCredentials: _signingCredentials
-        );
+            signingCredentials: _signingCredentials);
 
-        var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+        string token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
         return new JsonWebToken
         {
@@ -114,8 +125,11 @@ internal sealed class JwtHandler : IJwtHandler
     /// <returns></returns>
     public JsonWebTokenPayload? GetTokenPayload(string accessToken)
     {
-        _jwtSecurityTokenHandler.ValidateToken(accessToken, _tokenValidationParameters,
-            out var validatedSecurityToken);
+        _jwtSecurityTokenHandler.ValidateToken(
+                                               accessToken,
+                                               _tokenValidationParameters,
+                                               out var validatedSecurityToken);
+
         if (validatedSecurityToken is not JwtSecurityToken jwt)
         {
             return null;

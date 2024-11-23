@@ -53,9 +53,7 @@ public class TreeTraverseUnitTests
         c01.ChildNodes = childrenLevel1;
         c02.ChildNodes = childrenLevel2;
 
-
         List<TreeNode> childrenLevel0 = new List<TreeNode> { c01, c02 };
-
 
         TreeNode root = new TreeNode() { Name = "Root", Valid = true, ChildNodes = childrenLevel0 };
 
@@ -86,9 +84,7 @@ public class TreeTraverseUnitTests
         c01.ChildNodes = childrenLevel1;
         c02.ChildNodes = childrenLevel2;
 
-
         List<TreeNode> childrenLevel0 = new List<TreeNode> { c01, c02 };
-
 
         TreeNode root = new TreeNode() { Name = "Root", Valid = true, ChildNodes = childrenLevel0 };
 
@@ -156,7 +152,6 @@ public class TreeTraverseUnitTests
         List<TreeNode> childrenLevel4 = new List<TreeNode> { c17, c18 };
         List<TreeNode> childrenLevel5 = new List<TreeNode> { c19, c20 };
 
-
         c01.ChildNodes = childrenLevel1;
         c02.ChildNodes = childrenLevel2;
 
@@ -166,7 +161,6 @@ public class TreeTraverseUnitTests
         c18.ChildNodes = childrenLevel5;
 
         List<TreeNode> childrenLevel0 = new List<TreeNode> { c01, c02 };
-
 
         TreeNode root = new TreeNode() { Name = "Root", Valid = true, ChildNodes = childrenLevel0 };
 

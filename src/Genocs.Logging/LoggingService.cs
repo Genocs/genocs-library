@@ -6,5 +6,6 @@ public interface ILoggingService
         => Extensions.LoggingLevelSwitch.MinimumLevel = Extensions.GetLogEventLevel(logEventLevel);
 }
 
-
-public class LoggingService : ILoggingService { }
+public class LoggingService : ILoggingService
+{
+}

@@ -1,13 +1,13 @@
+using Genocs.APIGateway.Configurations;
 using Genocs.APIGateway.Framework;
 using Genocs.Auth;
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Tracing;
 using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 
@@ -21,7 +21,7 @@ internal class Startup
     {
         Configuration = configuration;
     }
-    
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<LogContextMiddleware>();
@@ -31,21 +31,20 @@ internal class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICorrelationContextBuilder, CorrelationContextBuilder>();
         services.AddSingleton<RouteMatcher>();
-        services.Configure<MessagingOptions>(Configuration.GetSection("messaging"));
+        services.Configure<MessagingOptions>(Configuration.GetSection(MessagingOptions.Position));
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
         services
             .AddGenocs()
             .AddOpenTelemetry()
-            .AddJaeger()
             .AddJwt()
             .AddPrometheus()
-            .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+            .AddRabbitMq()
             .AddSecurity()
             .AddWebApi()
             .Build();
-        
+
         services.AddAuthorization(options =>
         {
             options.AddPolicy("authenticatedUser", policy =>
@@ -61,6 +60,8 @@ internal class Startup
                     .WithHeaders("Content-Type", "Authorization");
             });
         });
+
+        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -73,7 +74,6 @@ internal class Startup
         app.UseMiddleware<LogContextMiddleware>();
         app.UseCors("cors");
         app.UseGenocs();
-        app.UseJaeger();
         app.UsePrometheus();
         app.UseAccessTokenValidator();
         app.UseAuthentication();
@@ -87,9 +87,11 @@ internal class Startup
         {
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppSettings>()?.Name ?? "Service");
+                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
             });
             endpoints.MapReverseProxy();
+
+            endpoints.MapHealthChecks("/hc");
         });
     }
 }

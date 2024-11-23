@@ -13,11 +13,11 @@ public static class Extensions
         var builder = configurator.Builder;
         var options = configurator.Options;
 
-        var inboxCollection = string.IsNullOrWhiteSpace(options.InboxCollection)
+        string inboxCollection = string.IsNullOrWhiteSpace(options.InboxCollection)
             ? "inbox"
             : options.InboxCollection;
 
-        var outboxCollection = string.IsNullOrWhiteSpace(options.OutboxCollection)
+        string outboxCollection = string.IsNullOrWhiteSpace(options.OutboxCollection)
             ? "outbox"
             : options.OutboxCollection;
 

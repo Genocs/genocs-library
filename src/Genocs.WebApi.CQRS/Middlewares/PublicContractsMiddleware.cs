@@ -27,8 +27,7 @@ public class PublicContractsMiddleware
     private static int _initialized;
     private static string _serializedContracts = "{}";
 
-    public PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType,
-        bool attributeRequired)
+    public PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType, bool attributeRequired)
     {
         _next = next;
         _endpoint = endpoint;
@@ -68,29 +67,36 @@ public class PublicContractsMiddleware
 
         foreach (var command in contracts.Where(t => typeof(ICommand).IsAssignableFrom(t)))
         {
-            var instance = command.GetDefaultInstance();
-            var name = instance.GetType().Name;
+            object? instance = command.GetDefaultInstance();
+            string? name = instance?.GetType().Name;
 
-            if (Contracts.Commands.ContainsKey(name))
+            if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-                throw new InvalidOperationException($"Command: '{name}' already exists.");
+                if (Contracts.Commands.ContainsKey(name))
+                {
+                    throw new InvalidOperationException($"Command: '{name}' already exists.");
+                }
+
+                Contracts.Commands[name] = instance;
             }
 
-            Contracts.Commands[name] = instance;
         }
 
         foreach (var @event in contracts.Where(t => typeof(IEvent).IsAssignableFrom(t) &&
                                                     t != typeof(RejectedEvent)))
         {
-            var instance = @event.GetDefaultInstance();
-            var name = instance.GetType().Name;
+            object? instance = @event.GetDefaultInstance();
+            string? name = instance?.GetType().Name;
 
-            if (Contracts.Events.ContainsKey(name))
+            if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-                throw new InvalidOperationException($"Event: '{name}' already exists.");
-            }
+                if (Contracts.Events.ContainsKey(name))
+                {
+                    throw new InvalidOperationException($"Event: '{name}' already exists.");
+                }
 
-            Contracts.Events[name] = instance;
+                Contracts.Events[name] = instance;
+            }
         }
 
         _serializedContracts = JsonSerializer.Serialize(Contracts, SerializerOptions);

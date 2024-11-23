@@ -1,79 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net6.0;net7.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<PackageId>Genocs.Core</PackageId>
-		<LangVersion>10.0</LangVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.0.0-preview.4.0</Version>
-		<MinClientVersion>5.0.0</MinClientVersion>
-		<Authors>Nocco Giovanni Emanuele</Authors>
-		<Company>Genocs</Company>
-		<Title>The base library useful to build .NET Core projects.</Title>
-		<Description>The base library useful to build .NET Core projects.</Description>
-		<Copyright>Genocs 2023</Copyright>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
-		<PackageIcon>icon.png</PackageIcon>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
-		<AnalysisLevel>latest</AnalysisLevel>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <PackageId>Genocs.Core</PackageId>
+        <RootNamespace>Genocs.Core</RootNamespace>
+        <AssemblyName>Genocs.Core</AssemblyName>
+        <Title>The Genocs Library - Core components.</Title>
+        <Description>The core components to build .NET Core projects along with Genocs Library.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+        <PackageReleaseNotes>Updated to NET8</PackageReleaseNotes>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\icon.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Common" Version="6.4.0" />
+    </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Common" Version="5.0.0-preview.4.*" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-		<PackageReference Include="Figgle" Version="0.5.1" />
-		<PackageReference Include="Scrutor" Version="4.2.2" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="System.Text.Json" Version="7.0.3" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-
+    <ItemGroup>
+        <PackageReference Include="Figgle" Version="0.5.1" />
+        <PackageReference Include="Scrutor" Version="5.0.2" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 
 </Project>

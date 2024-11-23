@@ -1,11 +1,11 @@
+using Genocs.Auth.Configurations;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
 namespace Genocs.Auth;
 
-
 /// <summary>
-/// The access token validator middleware
+/// The access token validator middleware.
 /// </summary>
 public class AccessTokenValidatorMiddleware : IMiddleware
 {
@@ -13,10 +13,10 @@ public class AccessTokenValidatorMiddleware : IMiddleware
     private readonly IEnumerable<string> _endpoints;
 
     /// <summary>
-    /// The AccessTokenValidatorMiddleware constructor
+    /// The AccessTokenValidatorMiddleware constructor.
     /// </summary>
-    /// <param name="accessTokenService">The access token service</param>
-    /// <param name="options">The options</param>
+    /// <param name="accessTokenService">The access token service.</param>
+    /// <param name="options">The options.</param>
     public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtOptions options)
     {
         _accessTokenService = accessTokenService;
@@ -24,14 +24,15 @@ public class AccessTokenValidatorMiddleware : IMiddleware
     }
 
     /// <summary>
-    /// The InvokeAsync method
+    /// The InvokeAsync method.
     /// </summary>
-    /// <param name="context">The http context</param>
-    /// <param name="next">The request delegate</param>
+    /// <param name="context">The http context.</param>
+    /// <param name="next">The request delegate.</param>
     /// <returns></returns>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var path = context.Request.Path.HasValue ? context.Request.Path.Value : string.Empty;
+        string path = context.Request.Path.HasValue ? context.Request.Path.Value : string.Empty;
+
         if (_endpoints.Contains(path))
         {
             await next(context);

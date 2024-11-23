@@ -10,6 +10,7 @@ using Genocs.MessageBrokers.CQRS;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Orders.WebApi;
 using Genocs.Orders.WebApi.Commands;
@@ -21,30 +22,26 @@ using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
-using Genocs.Tracing.Jaeger.RabbitMQ;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
-using Serilog.Events;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
+StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
         .UseLogging()
         .UseVault();
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
 
 var services = builder.Services;
 
@@ -56,7 +53,7 @@ services.AddGenocs()
         .AddConsul()
         .AddFabio()
         .AddOpenTelemetry()
-        .AddJaeger()
+        .AddMetrics()
         .AddMongo()
         .AddMongoRepository<Order, Guid>("orders")
         .AddCommandHandlers()
@@ -67,7 +64,7 @@ services.AddGenocs()
         .AddInMemoryQueryDispatcher()
         .AddPrometheus()
         .AddRedis()
-        .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
+        .AddRabbitMq()
         .AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
@@ -84,12 +81,10 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get("", ctx => ctx.Response.WriteAsync("Orders Service"))
+        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Orders Service"))
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<GetOrder, OrderDto>("orders/{orderId}")
-        .Post<CreateOrder>("orders",
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
-    .UseJaeger()
+        .Post<CreateOrder>("orders",            afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
     .UseSwaggerDocs()
     .UseRabbitMq()
     .SubscribeEvent<DeliveryStarted>();
@@ -97,4 +92,3 @@ app.UseGenocs()
 app.Run();
 
 Log.CloseAndFlush();
-

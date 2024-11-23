@@ -1,13 +1,11 @@
 namespace Genocs.Core.CQRS.Events;
 
-using System.Threading;
-using System.Threading.Tasks;
-
 /// <summary>
-/// Generic interface for CQRS Event handler
+/// Generic interface for CQRS Event handler.
 /// </summary>
 /// <typeparam name="TEvent"></typeparam>
-public interface IEventHandler<in TEvent> where TEvent : class, IEvent
+public interface IEventHandler<in TEvent>
+    where TEvent : class, IEvent
 {
     /// <summary>
     /// Standard Event handler
@@ -18,15 +16,15 @@ public interface IEventHandler<in TEvent> where TEvent : class, IEvent
     Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default);
 }
 
-
 /// <summary>
-/// Legacy Event handler interface definition
+/// Legacy Event handler interface definition.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public interface IEventHandlerLegacy<T> where T : IEvent
+public interface IEventHandlerLegacy<T>
+    where T : IEvent
 {
     /// <summary>
-    /// Legacy event handler place holder
+    /// Legacy event handler place holder.
     /// </summary>
     /// <param name="event"></param>
     /// <returns></returns>

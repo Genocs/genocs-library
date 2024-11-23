@@ -1,0 +1,77 @@
+<Project>
+
+    <!--
+        This Directory.Build.props files sets default properties that apply to all projects found in
+        this folder or subfolders, recursively.
+    -->
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <NoDefaultExcludes>true</NoDefaultExcludes>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+        <Version>6.3.0</Version>        
+        <LangVersion>10.0</LangVersion>
+        <Company>Genocs</Company>
+        <Copyright>Genocs 2024</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/Genocs/genocs-library</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Genocs/genocs-library.git</RepositoryUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryType>git</RepositoryType>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Roslynator.Analyzers" Version="4.12.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="Properties\stylecop.json" />
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig" Link="Properties\.editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="README_NUGET.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Define the global DefaultIdType here. -->
+        <Using Include="System.Guid" Alias="DefaultIdType" />
+    </ItemGroup>
+
+
+    <PropertyGroup>
+        <!-- Enable Build Acceleration in Visual Studio. -->
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+
+        <!--
+          If you target a framework earlier than .NET 5 (including .NET Framework and .NET Standard),
+          you should set ProduceReferenceAssembly to true in order to speed incremental builds.
+          If you multi-target and any target is before .NET 5, you need this.
+          Even if you target .NET 5 or later, having this property is fine.
+        -->
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    </PropertyGroup>
+
+</Project>

@@ -1,8 +1,0 @@
-version: '3.9'
-
-services:
-  servicetemplate.webapi:
-    image: ${DOCKER_REGISTRY-}servicetemplate-webapi
-    build:
-      context: .
-      dockerfile: webapi.dockerfile

@@ -1,10 +1,10 @@
-using Genocs.Discovery.Consul.Options;
+using Genocs.Discovery.Consul.Configurations;
 
 namespace Genocs.Discovery.Consul.Builders;
 
 internal sealed class ConsulOptionsBuilder : IConsulOptionsBuilder
 {
-    private readonly ConsulSettings _options = new();
+    private readonly ConsulOptions _options = new();
 
     public IConsulOptionsBuilder Enable(bool enabled)
     {
@@ -60,5 +60,5 @@ internal sealed class ConsulOptionsBuilder : IConsulOptionsBuilder
         return this;
     }
 
-    public ConsulSettings Build() => _options;
+    public ConsulOptions Build() => _options;
 }

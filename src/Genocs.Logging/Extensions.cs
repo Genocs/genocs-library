@@ -1,6 +1,6 @@
-using Genocs.Common.Options;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Logging.Options;
+using Genocs.Logging.Configurations;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,38 +20,42 @@ public static class Extensions
 {
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
 
-    public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
-                                            Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-                                            string? loggerSectionName = null,
-                                            string? appSectionName = null)
+    public static IHostBuilder UseLogging(
+                                          this IHostBuilder hostBuilder,
+                                          Action<HostBuilderContext, LoggerConfiguration>? configure = null,
+                                          string? loggerSectionName = LoggerOptions.Position,
+                                          string? appSectionName = AppOptions.Position)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
             {
                 if (string.IsNullOrWhiteSpace(loggerSectionName))
                 {
-                    loggerSectionName = LoggerSettings.Position;
+                    loggerSectionName = LoggerOptions.Position;
                 }
 
                 if (string.IsNullOrWhiteSpace(appSectionName))
                 {
-                    appSectionName = AppSettings.Position;
+                    appSectionName = AppOptions.Position;
                 }
 
-                var loggerOptions = context.Configuration.GetOptions<LoggerSettings>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppSettings>(appSectionName);
+                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
+                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
             });
 
-
-    public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder,
-        string endpointRoute = "~/logging/level")
+    public static IEndpointConventionBuilder MapLogLevelHandler(
+                                                                this IEndpointRouteBuilder builder,
+                                                                string endpointRoute = "~/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
-    private static void MapOptions(LoggerSettings loggerOptions, AppSettings appOptions,
-        LoggerConfiguration loggerConfiguration, string environmentName)
+    private static void MapOptions(
+                                   LoggerOptions loggerOptions,
+                                   AppOptions appOptions,
+                                   LoggerConfiguration loggerConfiguration,
+                                   string environmentName)
     {
         LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
 
@@ -82,14 +86,14 @@ public static class Extensions
         Configure(loggerConfiguration, loggerOptions);
     }
 
-    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerSettings options)
+    private static void Configure(LoggerConfiguration loggerConfiguration, LoggerOptions options)
     {
-        var consoleOptions = options.Console ?? new ConsoleSettings();
-        var fileOptions = options.File ?? new LocalFileSettings();
-        var elkOptions = options.Elk ?? new ElkSettings();
-        var seqOptions = options.Seq ?? new SeqSettings();
-        var lokiOptions = options.Loki ?? new LokiSettings();
-        var azureOptions = options.Azure ?? new AzureSettings();
+        var consoleOptions = options.Console ?? new ConsoleOptions();
+        var fileOptions = options.File ?? new LocalFileOptions();
+        var elkOptions = options.Elk ?? new ElkOptions();
+        var seqOptions = options.Seq ?? new SeqOptions();
+        var lokiOptions = options.Loki ?? new LokiOptions();
+        var azureOptions = options.Azure ?? new AzureOptions();
 
         // console
         if (consoleOptions.Enabled)
@@ -100,7 +104,7 @@ public static class Extensions
         // local file system
         if (fileOptions.Enabled)
         {
-            var path = string.IsNullOrWhiteSpace(fileOptions.Path) ? "logs/logs.txt" : fileOptions.Path;
+            string path = string.IsNullOrWhiteSpace(fileOptions.Path) ? "logs/logs.txt" : fileOptions.Path;
             if (!Enum.TryParse<RollingInterval>(fileOptions.Interval, true, out var interval))
             {
                 interval = RollingInterval.Day;
@@ -129,7 +133,7 @@ public static class Extensions
         // seq
         if (seqOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.Seq(seqOptions.Url, apiKey: seqOptions.ApiKey);
+            loggerConfiguration.WriteTo.Seq(seqOptions.Url!, apiKey: seqOptions.ApiKey);
         }
 
         // loki
@@ -163,10 +167,12 @@ public static class Extensions
         // azure application insights
         if (azureOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.ApplicationInsights(new TelemetryConfiguration
-            {
-                ConnectionString = azureOptions.ConnectionString,
-            }, TelemetryConverter.Traces);
+            loggerConfiguration.WriteTo.ApplicationInsights(
+                new TelemetryConfiguration
+                {
+                    ConnectionString = azureOptions.ConnectionString,
+                },
+                TelemetryConverter.Traces);
         }
     }
 
@@ -199,7 +205,7 @@ public static class Extensions
             return;
         }
 
-        var level = context.Request.Query["level"].ToString();
+        string level = context.Request.Query["level"].ToString();
 
         if (string.IsNullOrEmpty(level))
         {

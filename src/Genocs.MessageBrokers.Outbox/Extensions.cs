@@ -1,6 +1,6 @@
 using Genocs.Core.Builders;
+using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Configurators;
-using Genocs.MessageBrokers.Outbox.Options;
 using Genocs.MessageBrokers.Outbox.Outbox;
 using Genocs.MessageBrokers.Outbox.Processors;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +12,10 @@ public static class Extensions
     private const string SectionName = "outbox";
     private const string RegistryName = "messageBrokers.outbox";
 
-    public static IGenocsBuilder AddMessageOutbox(this IGenocsBuilder builder,
-        Action<IMessageOutboxConfigurator> configure = null, string sectionName = SectionName)
+    public static IGenocsBuilder AddMessageOutbox(
+                                                  this IGenocsBuilder builder,
+                                                  Action<IMessageOutboxConfigurator>? configure = null,
+                                                  string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -25,7 +27,7 @@ public static class Extensions
             return builder;
         }
 
-        var options = builder.GetOptions<OutboxSettings>(sectionName);
+        var options = builder.GetOptions<OutboxOptions>(sectionName);
         builder.Services.AddSingleton(options);
         var configurator = new MessageOutboxConfigurator(builder, options);
 
@@ -48,7 +50,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator, string? mongoSectionName = null)
+    public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator)
     {
         configurator.Builder.Services.AddTransient<IMessageOutbox, InMemoryMessageOutbox>();
 

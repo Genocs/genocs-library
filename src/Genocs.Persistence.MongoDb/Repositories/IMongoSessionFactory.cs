@@ -3,13 +3,13 @@ using MongoDB.Driver;
 namespace Genocs.Persistence.MongoDb.Repositories;
 
 /// <summary>
-/// The MongoDb Session Factory
+/// The MongoDb Session Factory.
 /// </summary>
 public interface IMongoSessionFactory
 {
     /// <summary>
-    /// Create a new session
+    /// Create a new session.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The async ClientSessionHandle.</returns>
     Task<IClientSessionHandle> CreateAsync();
 }
