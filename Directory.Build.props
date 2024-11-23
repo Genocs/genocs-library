@@ -14,7 +14,7 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <Version>6.3.0</Version>        
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>12.0</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2024</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>

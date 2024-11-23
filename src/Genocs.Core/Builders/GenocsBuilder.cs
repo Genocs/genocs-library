@@ -1,7 +1,8 @@
+using System.Collections.Concurrent;
 using Genocs.Common.Types;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Concurrent;
 
 namespace Genocs.Core.Builders;
 
@@ -18,15 +19,31 @@ public sealed class GenocsBuilder : IGenocsBuilder
     /// <summary>
     /// The configuration.
     /// </summary>
-    public IConfiguration? Configuration { get; }
+    public IConfiguration? Configuration { get; private set; }
+
+    public WebApplicationBuilder? WebApplicationBuilder { get; private set; }
 
     private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
-        _buildActions = new List<Action<IServiceProvider>>();
         _services = services;
-        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
         Configuration = configuration;
+
+        _buildActions = new List<Action<IServiceProvider>>();
+        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
     }
+
+    private GenocsBuilder(WebApplicationBuilder builder)
+    {
+        WebApplicationBuilder = builder;
+        Configuration = builder.Configuration;
+
+        _services = builder.Services;
+        _buildActions = new List<Action<IServiceProvider>>();
+        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
+    }
+
+    public static IGenocsBuilder Create(WebApplicationBuilder builder)
+        => new GenocsBuilder(builder);
 
     public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.Metrics</PackageId>
         <RootNamespace>Genocs.Metrics</RootNamespace>
         <AssemblyName>Genocs.Metrics</AssemblyName>

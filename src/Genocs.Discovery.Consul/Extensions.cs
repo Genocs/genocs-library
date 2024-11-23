@@ -158,6 +158,6 @@ public static class Extensions
             return DefaultInterval;
         }
 
-        return int.TryParse(value, out var number) ? $"{number}s" : value;
+        return int.TryParse(value, out int number) ? $"{number}s" : value;
     }
 }

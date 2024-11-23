@@ -9,6 +9,7 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using static Genocs.Core.Exceptions.GenocsException;
 
 namespace Genocs.Tracing;
 
@@ -25,20 +26,14 @@ public static class Extensions
     /// <returns>The Genocs builder you can use for chain.</returns>
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
-
-        AppOptions options = builder.GetOptions<AppOptions>(AppOptions.Position);
+        AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
+            ?? throw new InvalidConfigurationException("app config section is missing. AddOpenTelemetry requires those configuration.");
 
         // No OpenTelemetryTracing in case of missing ServiceName
-        if (string.IsNullOrWhiteSpace(options.Service))
+        if (string.IsNullOrWhiteSpace(appOptions.Service))
         {
             return builder;
         }
-
-        //builder.Logging.AddOpenTelemetry(logging =>
-        //{
-        //    logging.IncludeFormattedMessage = true;
-        //    logging.IncludeScopes = true;
-        //});
 
         LoggerOptions loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
 
@@ -47,6 +42,13 @@ public static class Extensions
             return builder;
         }
 
+        // OpenTelemetry Logging
+        builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(logging =>
+        {
+            logging.IncludeFormattedMessage = true;
+            logging.IncludeScopes = true;
+        });
+
         var services = builder.Services;
 
         // Set Custom Open telemetry
@@ -54,7 +56,10 @@ public static class Extensions
             .WithTracing(x =>
             {
                 TracerProviderBuilder provider = x.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                                                            .AddService(serviceName: options.Service, serviceVersion: options.Version, serviceInstanceId: options.Instance)
+                                                            .AddService(
+                                                                        serviceName: appOptions.Service,
+                                                                        serviceVersion: appOptions.Version,
+                                                                        serviceInstanceId: appOptions.Instance)
                                                             .AddTelemetrySdk()
                                                             .AddEnvironmentVariableDetector())
                                                             .AddAspNetCoreInstrumentation()
@@ -62,14 +67,14 @@ public static class Extensions
                                                         .AddSource("*");
 
                 // No OpenTelemetryTracing in case of missing LoggerSettings
-                if (loggerOptions.Mongo != null && loggerOptions.Mongo.Enabled)
+                if (loggerOptions.Mongo?.Enabled == true)
                 {
                     // Check for MongoDB config
                     provider.AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources");
                 }
 
                 // Check for Console config
-                if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+                if (loggerOptions.Console?.Enabled == true && loggerOptions.Console.EnableTracing)
                 {
                     // you should add OpenTelemetry.Exporter.Console NuGet package
                     // Any OTEL supportable exporter can be used here
@@ -77,7 +82,7 @@ public static class Extensions
                 }
 
                 // Check for Azure ApplicationInsights config
-                if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                if (loggerOptions.Azure?.Enabled == true && loggerOptions.Azure.EnableTracing)
                 {
                     provider.AddAzureMonitorTraceExporter(o =>
                     {
@@ -87,7 +92,7 @@ public static class Extensions
 
                 var jaegerOptions = builder.GetOptions<JaegerOptions>(JaegerOptions.Position);
 
-                if (jaegerOptions != null && jaegerOptions.Enabled)
+                if (jaegerOptions?.Enabled == true)
                 {
                     provider.AddOtlpExporter(o =>
                     {
@@ -130,13 +135,12 @@ public static class Extensions
 
                 provider.AddAspNetCoreInstrumentation();
 
-                // provider.AddRuntimeInstrumentation();
+                provider.AddRuntimeInstrumentation();
                 provider.AddHttpClientInstrumentation();
                 provider.AddOtlpExporter();
 
-
                 // Check for Console config
-                if (loggerOptions.Console != null && loggerOptions.Console.Enabled)
+                if (loggerOptions.Console?.Enabled == true && loggerOptions.Console.EnableMetrics)
                 {
                     // you should add OpenTelemetry.Exporter.Console NuGet package
                     // Any OTEL supportable exporter can be used here
@@ -144,7 +148,7 @@ public static class Extensions
                 }
 
                 // Check for Azure ApplicationInsights config
-                if (loggerOptions.Azure != null && loggerOptions.Azure.Enabled)
+                if (loggerOptions.Azure?.Enabled == true)
                 {
                     provider.AddAzureMonitorMetricExporter(o =>
                     {
