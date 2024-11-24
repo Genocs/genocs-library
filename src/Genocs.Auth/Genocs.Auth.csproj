@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.Auth</PackageId>
         <RootNamespace>Genocs.Auth</RootNamespace>
         <AssemblyName>Genocs.Auth</AssemblyName>
@@ -24,9 +24,14 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.4.0" />
-        <PackageReference Include="Genocs.Security" Version="6.4.0" />
+        <PackageReference Include="Genocs.Core" Version="7.0.0" />
+        <PackageReference Include="Genocs.Security" Version="7.0.0" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.*" />
+    </ItemGroup>    
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.*" />

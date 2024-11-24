@@ -1,8 +1,13 @@
+using System.Reflection;
 using Genocs.Common.Configurations;
 using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 
 namespace Genocs.Core.Builders;
 
@@ -11,6 +16,13 @@ namespace Genocs.Core.Builders;
 /// </summary>
 public static class Extensions
 {
+    public static IGenocsBuilder AddGenocs(this WebApplicationBuilder builder)
+    {
+        // Create the builder
+        IGenocsBuilder gnxBuilder = GenocsBuilder.Create(builder);
+        return gnxBuilder;
+    }
+
     /// <summary>
     /// The Builder.
     /// </summary>
@@ -19,12 +31,22 @@ public static class Extensions
     /// <returns>The builder.</returns>
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
-        var builder = GenocsBuilder.Create(services, configuration);
-        var settings = builder.GetOptions<AppOptions>(AppOptions.Position);
-        services.AddSingleton(settings);
+        // Create the builder
+        IGenocsBuilder builder = GenocsBuilder.Create(services, configuration);
+
+        // Get the application options
+        AppOptions settings = builder.GetOptions<AppOptions>(AppOptions.Position);
+        builder.Services.AddSingleton(settings);
+
+        // Add the health checks
+        builder.Services
+            .AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
 
         builder.Services.AddMemoryCache();
-        services.AddSingleton<IServiceId, ServiceId>();
+
+        builder.Services.AddSingleton<IServiceId, ServiceId>();
+
         if (!settings.DisplayBanner || string.IsNullOrWhiteSpace(settings.Name))
         {
             return builder;
@@ -86,5 +108,78 @@ public static class Extensions
         using var serviceProvider = builder.Services.BuildServiceProvider();
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
         return configuration.GetOptions<TModel>(sectionName);
+    }
+
+    /// <summary>
+    /// Map default endpoints to setup health checks.
+    /// </summary>
+    /// <param name="app">The web Application.</param>
+    /// <returns>The WebApplication to be used for chain.</returns>
+    public static IApplicationBuilder MapDefaultEndpoints(this IApplicationBuilder app)
+    {
+        // Adding health checks endpoints to applications in non-development environments has security implications.
+        // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapGet("/", async context =>
+            {
+                // Get the Entry Assembly Name and Version
+                // Check performance implications of calling this method
+                string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+                string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
+                string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+
+                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
+            });
+
+            // All health checks must pass for app to be considered ready to accept traffic after starting
+            endpoints.MapHealthChecks("/health");
+
+            // Only health checks tagged with the "live" tag must pass for app to be considered alive
+            endpoints.MapHealthChecks("/alive", new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains("live")
+            });
+        });
+
+        return app;
+    }
+
+    /// <summary>
+    /// Map default endpoints to setup health checks.
+    /// </summary>
+    /// <param name="app">The web Application.</param>
+    /// <returns>The WebApplication to be used for chain.</returns>
+    public static WebApplication MapDefaultEndpoints(this WebApplication app)
+    {
+        // Adding health checks endpoints to applications in non-development environments has security implications.
+        // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+        if (!app.Environment.IsDevelopment())
+        {
+            return app;
+        }
+
+        app.MapGet("/", async context =>
+        {
+            // Get the Entry Assembly Name and Version
+            // Check performance implications of calling this method
+            string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
+            string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+
+            await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
+        });
+
+        // All health checks must pass for app to be considered ready to accept traffic after starting
+        app.MapHealthChecks("/health");
+
+        // Only health checks tagged with the "live" tag must pass for app to be considered alive
+        app.MapHealthChecks("/alive", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+
+        return app;
     }
 }

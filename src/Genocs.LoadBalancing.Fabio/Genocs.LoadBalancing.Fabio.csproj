@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.LoadBalancing.Fabio</PackageId>
         <RootNamespace>Genocs.LoadBalancing.Fabio</RootNamespace>
         <AssemblyName>Genocs.LoadBalancing.Fabio</AssemblyName>
@@ -24,9 +24,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.4.0" />
-        <PackageReference Include="Genocs.HTTP" Version="6.4.0" />
-        <PackageReference Include="Genocs.Discovery.Consul" Version="6.4.0" />
+        <PackageReference Include="Genocs.Core" Version="7.0.0" />
+        <PackageReference Include="Genocs.HTTP" Version="7.0.0" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Polly" Version="8.5.0" />
     </ItemGroup>
 
 </Project>

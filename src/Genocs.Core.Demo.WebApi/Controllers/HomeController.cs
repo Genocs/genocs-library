@@ -14,16 +14,6 @@ public class HomeController : ControllerBase
         _secretSettings = secretSettings ?? throw new ArgumentNullException(nameof(secretSettings));
     }
 
-    [HttpGet]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public IActionResult Get()
-        => Ok("Genocs Demo WebApi");
-
-    [HttpGet("ping")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public IActionResult Ping()
-        => Ok("pong");
-
     [HttpGet("secret")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult GetSecret()

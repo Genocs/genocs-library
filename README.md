@@ -45,7 +45,7 @@
 
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET8, it is designed and maintained by Genocs. 
+This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET9, it is designed and maintained by Genocs. 
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -74,9 +74,18 @@ You can use **Docker compose** to setup the infrastructure components just by ru
 ``` bash
 cd ./containers
 # Setup the infrastructure
-docker compose -f ./infrastructure-bare.yml --env-file ./.env --project-name genocs up -d
+docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup Redis and Postgres db (no need if you use mongo)
+docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, InfluxDB, Jaeger, Seq)
 docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup scaling infrastructure components (Fabio, Consul)
 docker compose -f ./infrastructure-scaling.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup security infrastructure components (Vault)
 docker compose -f ./infrastructure-security.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup sqlserver database (no need if you use postgres)

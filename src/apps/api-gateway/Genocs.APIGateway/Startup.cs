@@ -1,13 +1,11 @@
 using Genocs.APIGateway.Configurations;
 using Genocs.APIGateway.Framework;
 using Genocs.Auth;
-using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 
@@ -83,15 +81,11 @@ internal class Startup
         app.UseRouting();
         app.UseAuthorization();
 
+        app.MapDefaultEndpoints();
+
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/", async context =>
-            {
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
-            });
             endpoints.MapReverseProxy();
-
-            endpoints.MapHealthChecks("/hc");
         });
     }
 }
