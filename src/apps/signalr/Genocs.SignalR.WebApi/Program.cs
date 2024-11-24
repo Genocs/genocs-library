@@ -16,7 +16,6 @@ using Genocs.SignalR.WebApi.Framework;
 using Genocs.SignalR.WebApi.Hubs;
 using Genocs.SignalR.WebApi.Services;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;

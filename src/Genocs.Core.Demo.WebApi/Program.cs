@@ -39,8 +39,6 @@ services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-services.AddHealthChecks();
-
 services.Configure<SecretOptions>(builder.Configuration.GetSection(SecretOptions.Position));
 
 SecretOptions settings = builder.Configuration.GetOptions<SecretOptions>(SecretOptions.Position);
@@ -86,9 +84,9 @@ app.UseAuthorization();
 // Use it only if you need to authenticate with Firebase
 // app.UseFirebaseAuthentication();
 
-app.MapControllers();
+app.MapDefaultEndpoints();
 
-app.MapHealthChecks("/hc");
+app.MapControllers();
 
 app.Run();
 

@@ -1,4 +1,5 @@
 using Genocs.Common.Types;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,9 @@ public interface IGenocsBuilder
     /// <summary>
     /// Get the configuration.
     /// </summary>
-    IConfiguration Configuration { get; }
+    IConfiguration? Configuration { get; }
+
+    WebApplicationBuilder? WebApplicationBuilder { get; }
 
     /// <summary>
     /// try to register a service by name.

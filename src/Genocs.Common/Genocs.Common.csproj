@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.Common</PackageId>
         <RootNamespace>Genocs.Common</RootNamespace>
         <AssemblyName>Genocs.Common</AssemblyName>
         <Title>The Genocs Library - Common components.</Title>
         <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild> 
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>

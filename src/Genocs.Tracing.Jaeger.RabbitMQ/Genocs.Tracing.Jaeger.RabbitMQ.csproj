@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
 		<PackageId>Genocs.Tracing.Jaeger.RabbitMQ</PackageId>
         <RootNamespace>Genocs.Tracing.Jaeger.RabbitMQ</RootNamespace>
         <AssemblyName>Genocs.Tracing.Jaeger.RabbitMQ</AssemblyName>   		
@@ -23,8 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="6.4.0" />
-		<PackageReference Include="Genocs.Tracing" Version="6.4.0" />
+		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.0.0" />
+		<PackageReference Include="Genocs.Tracing" Version="7.0.0" />
 	</ItemGroup>
 
 </Project>

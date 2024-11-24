@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.ServiceBusAzure</PackageId>
         <RootNamespace>Genocs.ServiceBusAzure</RootNamespace>
         <AssemblyName>Genocs.ServiceBusAzure</AssemblyName>
@@ -22,13 +22,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.4.0" />
+        <PackageReference Include="Genocs.Core" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
     </ItemGroup>
 
 </Project>

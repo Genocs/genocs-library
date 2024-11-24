@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.MessageBrokers.Outbox.MongoDB</PackageId>
         <RootNamespace>Genocs.MessageBrokers.Outbox.MongoDB</RootNamespace>
         <AssemblyName>Genocs.MessageBrokers.Outbox.MongoDB</AssemblyName>
@@ -23,8 +23,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="6.4.0" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="6.4.0" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.0.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

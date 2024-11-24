@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
         <PackageId>Genocs.Logging</PackageId>
         <RootNamespace>Genocs.Logging</RootNamespace>
         <AssemblyName>Genocs.Logging</AssemblyName>
@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="6.4.0" />
+        <PackageReference Include="Genocs.Core" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
