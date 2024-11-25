@@ -20,7 +20,7 @@ internal class Startup
         Configuration = configuration;
     }
 
-    public void ConfigureServices(IServiceCollection services)
+    public async Task ConfigureServicesAsync(IServiceCollection services)
     {
         services.AddScoped<LogContextMiddleware>();
         services.AddScoped<UserMiddleware>();
@@ -33,13 +33,16 @@ internal class Startup
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
-        services
-            .AddGenocs()
-            .AddOpenTelemetry()
-            .AddJwt()
-            .AddPrometheus()
-            .AddRabbitMq()
-            .AddSecurity()
+
+        IGenocsBuilder builder = services
+                                        .AddGenocs()
+                                        .AddOpenTelemetry()
+                                        .AddJwt()
+                                        .AddPrometheus();
+
+        await builder.AddRabbitMQAsync();
+
+        builder.AddSecurity()
             .AddWebApi()
             .Build();
 
@@ -75,7 +78,7 @@ internal class Startup
         app.UsePrometheus();
         app.UseAccessTokenValidator();
         app.UseAuthentication();
-        app.UseRabbitMq();
+        app.UseRabbitMQ();
         app.UseMiddleware<UserMiddleware>();
         app.UseMiddleware<MessagingMiddleware>();
         app.UseRouting();

@@ -18,19 +18,12 @@ builder.Host
         .UseLogging()
         .UseVault();
 
-var services = builder.Services;
+IGenocsBuilder gnxBuilder = await builder
+                                    .AddGenocs()
+                                    .AddWebApi()
+                                    .AddCoreAsync();
 
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-});
-
-services.AddGenocs(builder.Configuration)
-        .AddWebApi()
-        .AddCore()
-        .Build();
-
+gnxBuilder.Build();
 var app = builder.Build();
 
 app.UseCore();

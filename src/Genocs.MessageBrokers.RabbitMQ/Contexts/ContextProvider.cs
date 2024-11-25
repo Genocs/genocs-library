@@ -2,10 +2,10 @@ namespace Genocs.MessageBrokers.RabbitMQ.Contexts;
 
 internal sealed class ContextProvider : IContextProvider
 {
-    private readonly IRabbitMqSerializer _serializer;
+    private readonly IRabbitMQSerializer _serializer;
     public string HeaderName { get; }
 
-    public ContextProvider(IRabbitMqSerializer serializer, RabbitMQOptions options)
+    public ContextProvider(IRabbitMQSerializer serializer, RabbitMQOptions options)
     {
         _serializer = serializer;
         HeaderName = string.IsNullOrWhiteSpace(options.Context?.Header)
@@ -13,14 +13,14 @@ internal sealed class ContextProvider : IContextProvider
             : options.Context.Header;
     }
 
-    public object Get(IDictionary<string, object> headers)
+    public object? Get(IDictionary<string, object>? headers)
     {
         if (headers is null)
         {
             return null;
         }
 
-        if (!headers.TryGetValue(HeaderName, out var context))
+        if (!headers.TryGetValue(HeaderName, out object? context))
         {
             return null;
         }

@@ -30,32 +30,33 @@ builder.Host
         .UseLogging()
         .UseVault();
 
+IGenocsBuilder gnxBuilder = await builder
+                                            .AddGenocs()
+                                            .AddCorrelationContextLogging()
+                                            .AddJwt()
+                                            .AddErrorHandler<ExceptionToResponseMapper>()
+                                            .AddOpenTelemetry()
+                                            .AddMetrics()
+                                            .AddMongo()
+                                            .AddCommandHandlers()
+                                            .AddEventHandlers()
+                                            .AddQueryHandlers()
+                                            .AddInMemoryCommandDispatcher()
+                                            .AddInMemoryEventDispatcher()
+                                            .AddInMemoryQueryDispatcher()
+                                            .AddMessageOutbox(o => o.AddMongo())
+                                            .AddWebApi()
+                                            .AddSwaggerDocs()
+                                            .AddWebApiSwaggerDocs()
+                                            .AddRabbitMQAsync();
+gnxBuilder.Build();
+
 var services = builder.Services;
 
 services.AddSignalR();
 
 services.AddTransient<IHubWrapper, HubWrapper>();
 services.AddTransient<IHubService, HubService>();
-
-services.AddGenocs()
-        .AddCorrelationContextLogging()
-        .AddJwt()
-        .AddErrorHandler<ExceptionToResponseMapper>()
-        .AddOpenTelemetry()
-        .AddMetrics()
-        .AddMongo()
-        .AddCommandHandlers()
-        .AddEventHandlers()
-        .AddQueryHandlers()
-        .AddInMemoryCommandDispatcher()
-        .AddInMemoryEventDispatcher()
-        .AddInMemoryQueryDispatcher()
-        .AddRabbitMq()
-        .AddMessageOutbox(o => o.AddMongo())
-        .AddWebApi()
-        .AddSwaggerDocs()
-        .AddWebApiSwaggerDocs()
-        .Build();
 
 var app = builder.Build();
 
@@ -73,7 +74,7 @@ app.UseGenocs()
         .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
     .UseSwaggerDocs()
-    .UseRabbitMq();
+    .UseRabbitMQ();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -7,8 +7,7 @@ public abstract class RabbitMQPlugin : IRabbitMqPlugin, IRabbitMqPluginAccessor
 {
     private Func<object, object, BasicDeliverEventArgs, Task> _successor;
 
-    public abstract Task HandleAsync(object message, object correlationContext,
-        BasicDeliverEventArgs args);
+    public abstract Task HandleAsync(object message, object correlationContext, BasicDeliverEventArgs args);
 
     public Task Next(object message, object correlationContext, BasicDeliverEventArgs args)
         => _successor(message, correlationContext, args);

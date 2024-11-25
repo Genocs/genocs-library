@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Genocs.MessageBrokers.RabbitMQ.Serializers;
 
-public sealed class NewtonsoftJsonRabbitMqSerializer : IRabbitMqSerializer
+public sealed class NewtonsoftJsonRabbitMQSerializer : IRabbitMQSerializer
 {
     private readonly JsonSerializerSettings _settings;
 
-    public NewtonsoftJsonRabbitMqSerializer(JsonSerializerSettings settings = null)
+    public NewtonsoftJsonRabbitMQSerializer(JsonSerializerSettings? settings = null)
     {
         _settings = settings ?? new JsonSerializerSettings
         {

@@ -35,40 +35,36 @@ builder.Host
         .UseLogging()
         .UseVault();
 
-var services = builder.Services;
+IGenocsBuilder gnxBuilder = await builder
+                                        .AddGenocs()
+                                        .AddErrorHandler<ExceptionToResponseMapper>()
+                                        .AddServices()
+                                        .AddHttpClient()
+                                        .AddCorrelationContextLogging()
+                                        .AddConsul()
+                                        .AddFabio()
+                                        .AddOpenTelemetry()
+                                        .AddMetrics()
+                                        .AddMongo()
+                                        .AddMongoRepository<Product, Guid>("products")
+                                        .AddCommandHandlers()
+                                        .AddEventHandlers()
+                                        .AddQueryHandlers()
+                                        .AddInMemoryCommandDispatcher()
+                                        .AddInMemoryEventDispatcher()
+                                        .AddInMemoryQueryDispatcher()
+                                        .AddPrometheus()
+                                        .AddRedis()
+                                        .AddMessageOutbox(o => o.AddMongo())
+                                        .AddWebApi()
+                                        .AddSwaggerDocs()
+                                        .AddWebApiSwaggerDocs()
+                                        .AddRabbitMQAsync();
 
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-});
+// Build the Genocs builder
+gnxBuilder.Build();
 
-services.AddGenocs()
-        .AddErrorHandler<ExceptionToResponseMapper>()
-        .AddServices()
-        .AddHttpClient()
-        .AddCorrelationContextLogging()
-        .AddConsul()
-        .AddFabio()
-        .AddOpenTelemetry()
-        .AddMetrics()
-        .AddMongo()
-        .AddMongoRepository<Product, Guid>("products")
-        .AddCommandHandlers()
-        .AddEventHandlers()
-        .AddQueryHandlers()
-        .AddInMemoryCommandDispatcher()
-        .AddInMemoryEventDispatcher()
-        .AddInMemoryQueryDispatcher()
-        .AddPrometheus()
-        .AddRedis()
-        .AddRabbitMq()
-        .AddMessageOutbox(o => o.AddMongo())
-        .AddWebApi()
-        .AddSwaggerDocs()
-        .AddWebApiSwaggerDocs()
-        .Build();
-
+// Build the Application 
 var app = builder.Build();
 
 app.UseGenocs()
@@ -85,7 +81,7 @@ app.UseGenocs()
         .Get<GetProduct, ProductDto>("products/{productId}")
         .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
     .UseSwaggerDocs()
-    .UseRabbitMq();
+    .UseRabbitMQ();
 
 app.Run();
 

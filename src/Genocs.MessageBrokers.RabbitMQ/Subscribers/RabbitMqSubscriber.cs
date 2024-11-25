@@ -1,10 +1,10 @@
 ﻿namespace Genocs.MessageBrokers.RabbitMQ.Subscribers;
 
-internal sealed class RabbitMqSubscriber : IBusSubscriber
+internal sealed class RabbitMQSubscriber : IBusSubscriber
 {
     private readonly MessageSubscribersChannel _messageSubscribersChannel;
 
-    public RabbitMqSubscriber(MessageSubscribersChannel messageSubscribersChannel)
+    public RabbitMQSubscriber(MessageSubscribersChannel messageSubscribersChannel)
     {
         _messageSubscribersChannel = messageSubscribersChannel;
     }
@@ -13,8 +13,10 @@ internal sealed class RabbitMqSubscriber : IBusSubscriber
         where T : class
     {
         var type = typeof(T);
-        _messageSubscribersChannel.Writer.TryWrite(MessageSubscriber.Subscribe(type,
-            (serviceProvider, message, context) => handle(serviceProvider, (T)message, context)));
+
+        _messageSubscribersChannel.Writer.TryWrite(MessageSubscriber.Subscribe(type, (serviceProvider, message, context)
+            => handle(serviceProvider, (T)message, context)));
+
         return this;
     }
 
