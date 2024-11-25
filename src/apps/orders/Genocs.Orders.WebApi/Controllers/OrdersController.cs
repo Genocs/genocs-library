@@ -24,12 +24,7 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult<OrderDto>> Get([FromRoute] GetOrder query)
     {
         var order = await _queryDispatcher.QueryAsync(query);
-        if (order is null)
-        {
-            return NotFound();
-        }
-
-        return order;
+        return order is null ? (ActionResult<OrderDto>)NotFound() : (ActionResult<OrderDto>)order;
     }
 
     [HttpPost]

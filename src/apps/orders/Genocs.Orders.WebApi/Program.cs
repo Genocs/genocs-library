@@ -75,13 +75,13 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Orders Service"))
-        .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
     .UseSwaggerDocs()
     .UseRabbitMQ()
     .SubscribeEvent<DeliveryStarted>();
+
+app.MapDefaultEndpoints();
 
 app.Run();
 

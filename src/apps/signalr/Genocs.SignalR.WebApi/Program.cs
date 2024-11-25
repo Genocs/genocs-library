@@ -31,32 +31,31 @@ builder.Host
         .UseVault();
 
 IGenocsBuilder gnxBuilder = await builder
-                                            .AddGenocs()
-                                            .AddCorrelationContextLogging()
-                                            .AddJwt()
-                                            .AddErrorHandler<ExceptionToResponseMapper>()
-                                            .AddOpenTelemetry()
-                                            .AddMetrics()
-                                            .AddMongo()
-                                            .AddCommandHandlers()
-                                            .AddEventHandlers()
-                                            .AddQueryHandlers()
-                                            .AddInMemoryCommandDispatcher()
-                                            .AddInMemoryEventDispatcher()
-                                            .AddInMemoryQueryDispatcher()
-                                            .AddMessageOutbox(o => o.AddMongo())
-                                            .AddWebApi()
-                                            .AddSwaggerDocs()
-                                            .AddWebApiSwaggerDocs()
-                                            .AddRabbitMQAsync();
-gnxBuilder.Build();
+                                        .AddGenocs()
+                                        .AddCorrelationContextLogging()
+                                        .AddJwt()
+                                        .AddErrorHandler<ExceptionToResponseMapper>()
+                                        .AddOpenTelemetry()
+                                        .AddMetrics()
+                                        .AddMongo()
+                                        .AddCommandHandlers()
+                                        .AddEventHandlers()
+                                        .AddQueryHandlers()
+                                        .AddInMemoryCommandDispatcher()
+                                        .AddInMemoryEventDispatcher()
+                                        .AddInMemoryQueryDispatcher()
+                                        .AddMessageOutbox(o => o.AddMongo())
+                                        .AddWebApi()
+                                        .AddSwaggerDocs()
+                                        .AddWebApiSwaggerDocs()
+                                        .AddRabbitMQAsync();
 
 var services = builder.Services;
-
 services.AddSignalR();
-
 services.AddTransient<IHubWrapper, HubWrapper>();
 services.AddTransient<IHubService, HubService>();
+
+gnxBuilder.Build();
 
 var app = builder.Build();
 
@@ -70,11 +69,11 @@ app.UseGenocs()
         r.MapHub<GenocsHub>("/notificationHub");
     })
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get("", ctx => ctx.Response.WriteAsync("SignalR Service"))
-        .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
     .UseSwaggerDocs()
     .UseRabbitMQ();
+
+app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

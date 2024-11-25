@@ -20,7 +20,13 @@ internal class Startup
         Configuration = configuration;
     }
 
-    public async Task ConfigureServicesAsync(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Find a more elegant way to do this
+        Task.Run(async () => await ConfigureServicesAsync(services)).Wait();
+    }
+
+    private async Task ConfigureServicesAsync(IServiceCollection services)
     {
         services.AddScoped<LogContextMiddleware>();
         services.AddScoped<UserMiddleware>();

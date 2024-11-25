@@ -11,8 +11,13 @@ public class CreateUser : ICommand
     public string Role { get; }
     public IEnumerable<string> Permissions { get; }
 
-    public CreateUser(Guid userId, string email, string name, string password, string role,
-        IEnumerable<string> permissions)
+    public CreateUser(
+                        Guid userId,
+                        string email,
+                        string name,
+                        string password,
+                        string role,
+                        IEnumerable<string> permissions)
     {
         UserId = userId == Guid.Empty ? Guid.NewGuid() : userId;
         Email = email;

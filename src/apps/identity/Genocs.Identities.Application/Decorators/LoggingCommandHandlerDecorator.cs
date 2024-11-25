@@ -15,8 +15,10 @@ internal sealed class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler
     private readonly ICorrelationIdFactory _correlationIdFactory;
     private readonly ILogger<ICommandHandler<TCommand>> _logger;
 
-    public LoggingCommandHandlerDecorator(ICommandHandler<TCommand> handler,
-        ICorrelationIdFactory correlationIdFactory, ILogger<ICommandHandler<TCommand>> logger)
+    public LoggingCommandHandlerDecorator(
+                                            ICommandHandler<TCommand> handler,
+                                            ICorrelationIdFactory correlationIdFactory,
+                                            ILogger<ICommandHandler<TCommand>> logger)
     {
         _handler = handler;
         _correlationIdFactory = correlationIdFactory;
@@ -25,10 +27,10 @@ internal sealed class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler
 
     public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {
-        var correlationId = _correlationIdFactory.Create();
+        string? correlationId = _correlationIdFactory.Create();
         using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            var name = command.GetType().Name.Underscore();
+            string? name = command.GetType().Name.Underscore();
             _logger.LogInformation($"Handling a command: '{name}'...");
             await _handler.HandleAsync(command);
         }
