@@ -20,6 +20,7 @@ public static class Extensions
     {
         // Create the builder
         IGenocsBuilder gnxBuilder = GenocsBuilder.Create(builder);
+        Setup(gnxBuilder);
         return gnxBuilder;
     }
 
@@ -33,32 +34,7 @@ public static class Extensions
     {
         // Create the builder
         IGenocsBuilder builder = GenocsBuilder.Create(services, configuration);
-
-        // Get the application options
-        AppOptions settings = builder.GetOptions<AppOptions>(AppOptions.Position);
-        builder.Services.AddSingleton(settings);
-
-        // Add the health checks
-        builder.Services
-            .AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
-
-        builder.Services.AddMemoryCache();
-
-        builder.Services.AddSingleton<IServiceId, ServiceId>();
-
-        if (!settings.DisplayBanner || string.IsNullOrWhiteSpace(settings.Name))
-        {
-            return builder;
-        }
-
-        string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
-        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(settings.Name + version));
-        ConsoleColor current = Console.ForegroundColor;
-        Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
-        Console.ForegroundColor = current;
-
+        Setup(builder);
         return builder;
     }
 
@@ -181,5 +157,33 @@ public static class Extensions
         });
 
         return app;
+    }
+
+    private static void Setup(IGenocsBuilder builder)
+    {
+        // Get the application options
+        AppOptions settings = builder.GetOptions<AppOptions>(AppOptions.Position);
+        builder.Services.AddSingleton(settings);
+
+        // Add the health checks
+        builder.Services
+            .AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
+
+        builder.Services.AddMemoryCache();
+
+        builder.Services.AddSingleton<IServiceId, ServiceId>();
+
+        if (!settings.DisplayBanner || string.IsNullOrWhiteSpace(settings.Name))
+        {
+            return;
+        }
+
+        string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
+        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(settings.Name + version));
+        ConsoleColor current = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
+        Console.ForegroundColor = current;
     }
 }

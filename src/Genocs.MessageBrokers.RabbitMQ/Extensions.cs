@@ -105,7 +105,6 @@ public static class Extensions
             SocketWriteTimeout = options.SocketWriteTimeout,
             RequestedChannelMax = options.RequestedChannelMax,
             RequestedFrameMax = options.RequestedFrameMax,
-            UseBackgroundThreadsForIO = options.UseBackgroundThreadsForIO,
             DispatchConsumersAsync = true,
             ContinuationTimeout = options.ContinuationTimeout,
             HandshakeContinuationTimeout = options.HandshakeContinuationTimeout,

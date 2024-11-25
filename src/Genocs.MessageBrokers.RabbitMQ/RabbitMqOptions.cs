@@ -2,12 +2,12 @@ namespace Genocs.MessageBrokers.RabbitMQ;
 
 public class RabbitMQOptions
 {
-    public string ConnectionName { get; set; }
-    public IEnumerable<string> HostNames { get; set; }
+    public string? ConnectionName { get; set; }
+    public IEnumerable<string>? HostNames { get; set; }
     public int Port { get; set; }
-    public string VirtualHost { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public string VirtualHost { get; set; } = "/";
+    public string Username { get; set; } = "guest";
+    public string Password { get; set; } = "guest";
     public TimeSpan RequestedHeartbeat { get; set; } = TimeSpan.FromSeconds(60);
     public TimeSpan RequestedConnectionTimeout { get; set; } = TimeSpan.FromSeconds(30);
     public TimeSpan SocketReadTimeout { get; set; } = TimeSpan.FromSeconds(30);
@@ -18,20 +18,19 @@ public class RabbitMQOptions
     public TimeSpan? MessageProcessingTimeout { get; set; }
     public ushort RequestedChannelMax { get; set; }
     public uint RequestedFrameMax { get; set; }
-    public bool UseBackgroundThreadsForIO { get; set; }
-    public string ConventionsCasing { get; set; }
+    public string? ConventionsCasing { get; set; }
     public int Retries { get; set; }
     public int RetryInterval { get; set; }
     public bool MessagesPersisted { get; set; }
-    public ContextOptions Context { get; set; }
-    public ExchangeOptions Exchange { get; set; }
-    public LoggerOptions Logger { get; set; }
-    public SslOptions Ssl { get; set; }
-    public QueueOptions Queue { get; set; }
-    public DeadLetterOptions DeadLetter { get; set; }
-    public QosOptions Qos { get; set; }
-    public ConventionsOptions Conventions { get; set; }
-    public string SpanContextHeader { get; set; }
+    public ContextOptions? Context { get; set; }
+    public ExchangeOptions? Exchange { get; set; }
+    public LoggerOptions? Logger { get; set; }
+    public SslOptions? Ssl { get; set; }
+    public QueueOptions? Queue { get; set; }
+    public DeadLetterOptions? DeadLetter { get; set; }
+    public QosOptions? Qos { get; set; }
+    public ConventionsOptions? Conventions { get; set; }
+    public string? SpanContextHeader { get; set; }
     public int MaxProducerChannels { get; set; }
     public bool RequeueFailedMessages { get; set; }
 
@@ -48,13 +47,13 @@ public class RabbitMQOptions
     public class ContextOptions
     {
         public bool Enabled { get; set; }
-        public string Header { get; set; }
+        public string? Header { get; set; }
     }
 
     public class ExchangeOptions
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool AutoDelete { get; set; }
@@ -62,7 +61,7 @@ public class RabbitMQOptions
 
     public class QueueOptions
     {
-        public string Template { get; set; }
+        public string? Template { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool Exclusive { get; set; }
@@ -72,8 +71,8 @@ public class RabbitMQOptions
     public class DeadLetterOptions
     {
         public bool Enabled { get; set; }
-        public string Prefix { get; set; }
-        public string Suffix { get; set; }
+        public string? Prefix { get; set; }
+        public string? Suffix { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool Exclusive { get; set; }
@@ -84,10 +83,10 @@ public class RabbitMQOptions
     public class SslOptions
     {
         public bool Enabled { get; set; }
-        public string ServerName { get; set; }
-        public string CertificatePath { get; set; }
-        public string CaCertificatePath { get; set; }
-        public IEnumerable<string> X509IgnoredStatuses { get; set; }
+        public string? ServerName { get; set; }
+        public string? CertificatePath { get; set; }
+        public string? CaCertificatePath { get; set; }
+        public IEnumerable<string>? X509IgnoredStatuses { get; set; }
     }
 
     public class QosOptions
@@ -99,7 +98,7 @@ public class RabbitMQOptions
 
     public class ConventionsOptions
     {
-        public MessageAttributeOptions MessageAttribute { get; set; }
+        public MessageAttributeOptions? MessageAttribute { get; set; }
 
         public class MessageAttributeOptions
         {
