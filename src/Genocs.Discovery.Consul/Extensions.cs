@@ -80,7 +80,7 @@ public static class Extensions
                 c.GetRequiredService<IConsulServicesRegistry>(),
                 c.GetRequiredService<ConsulOptions>(), serviceName, true));
 
-    private static ServiceRegistration CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
+    private static ServiceRegistration? CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
     {
         bool enabled = options.Enabled;
         string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
