@@ -8,6 +8,7 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
         <ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
@@ -21,6 +22,7 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Auth" Version="7.0.0" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.0.0" />
         <PackageReference Include="Genocs.Persistence.Redis" Version="7.0.0" />
         <PackageReference Include="Genocs.HTTP" Version="7.0.0" />
         <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.0.0" />

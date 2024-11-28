@@ -4,11 +4,13 @@ using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Queries;
 using Genocs.Identities.Application.Services;
+using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
 using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Serilog;
+using Genocs.Discovery.Consul;
 
 StaticLogger.EnsureInitialized();
 
@@ -21,11 +23,17 @@ builder.Host
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
                                     .AddWebApi()
+                                    .AddConsul()
+                                    .AddFabio()
                                     .AddCoreAsync();
 
 gnxBuilder.Build();
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
+
 app.UseCore();
+
 app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
                             {
@@ -48,8 +56,6 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             .Get<BrowseUsers, PagedDto<UserDto>>("users", auth: true)
                             .Put<LockUser>("users/{userId:guid}/lock", auth: true, roles: "admin")
                             .Put<UnlockUser>("users/{userId:guid}/unlock", auth: true, roles: "admin"));
-
-app.MapDefaultEndpoints();
 
 app.Run();
 

@@ -136,6 +136,15 @@ public static class Extensions
             return app;
         }
 
+        // All health checks must pass for app to be considered ready to accept traffic after starting
+        app.MapHealthChecks("/healthz");
+
+        // Only health checks tagged with the "live" tag must pass for app to be considered alive
+        app.MapHealthChecks("/alive", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+
         app.MapGet("/", async context =>
         {
             // Get the Entry Assembly Name and Version
@@ -146,16 +155,6 @@ public static class Extensions
 
             await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
         });
-
-        // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/health");
-
-        // Only health checks tagged with the "live" tag must pass for app to be considered alive
-        app.MapHealthChecks("/alive", new HealthCheckOptions
-        {
-            Predicate = r => r.Tags.Contains("live")
-        });
-
         return app;
     }
 
@@ -164,15 +163,6 @@ public static class Extensions
         // Get the application options
         AppOptions settings = builder.GetOptions<AppOptions>(AppOptions.Position);
         builder.Services.AddSingleton(settings);
-
-        // Add the health checks
-        builder.Services
-            .AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
-
-        builder.Services.AddMemoryCache();
-
-        builder.Services.AddSingleton<IServiceId, ServiceId>();
 
         if (!settings.DisplayBanner || string.IsNullOrWhiteSpace(settings.Name))
         {
@@ -185,5 +175,15 @@ public static class Extensions
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
         Console.ForegroundColor = current;
+
+        // Add the health checks
+        builder.Services
+            .AddHealthChecks();
+
+        //            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
+
+        builder.Services.AddMemoryCache();
+
+        builder.Services.AddSingleton<IServiceId, ServiceId>();
     }
 }
