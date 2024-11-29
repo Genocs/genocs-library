@@ -3,7 +3,6 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
@@ -12,7 +11,7 @@ public interface IMongoDbBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEn
 {
     IMongoCollection<TEntity> Collection { get; }
 
-    IMongoQueryable<TEntity> GetMongoQueryable();
+    IQueryable<TEntity> GetMongoQueryable();
 
     Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
     Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);

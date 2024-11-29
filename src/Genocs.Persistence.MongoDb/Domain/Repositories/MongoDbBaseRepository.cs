@@ -22,7 +22,7 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
     /// It returns the Mongo Collection as Queryable.
     /// </summary>
     /// <returns></returns>
-    public IMongoQueryable<TEntity> GetMongoQueryable()
+    public IQueryable<TEntity> GetMongoQueryable()
     {
         return Collection.AsQueryable();
     }
