@@ -303,7 +303,7 @@ public static class Extensions
         await serializer.SerializeAsync(response.Body, value);
     }
 
-    public static async Task<T> ReadJsonAsync<T>(this HttpContext httpContext)
+    public static async Task<T?> ReadJsonAsync<T>(this HttpContext httpContext)
     {
         var logger = httpContext.RequestServices.GetService<ILogger>();
 
@@ -323,18 +323,31 @@ public static class Extensions
             if (_bindRequestFromRoute && request.HasRouteData())
             {
                 var values = request.HttpContext.GetRouteData().Values;
+
+                if (values is null)
+                {
+                    return payload;
+                }
+
                 foreach (var (key, value) in values)
                 {
-                    var field = payload.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                        .SingleOrDefault(f => f.Name.ToLowerInvariant().StartsWith($"<{key}>",
-                            StringComparison.InvariantCultureIgnoreCase));
+                    var field = payload?.GetType()
+                                                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                                                    .SingleOrDefault(f => f.Name.ToLowerInvariant().StartsWith(
+                                                                                                                $"<{key}>",
+                                                                                                                StringComparison.InvariantCultureIgnoreCase));
 
                     if (field is null)
                     {
                         continue;
                     }
 
-                    var fieldValue = TypeDescriptor.GetConverter(field.FieldType)
+                    if (value is null)
+                    {
+                        continue;
+                    }
+
+                    object? fieldValue = TypeDescriptor.GetConverter(field.FieldType)
                         .ConvertFromInvariantString(value.ToString());
                     field.SetValue(payload, fieldValue);
                 }

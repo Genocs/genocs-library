@@ -32,21 +32,11 @@ public class ProductServiceClient : IProductServiceClient
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
 
+        ArgumentNullException.ThrowIfNull(httpClientOptions);
 
-        if (httpClientOptions is null)
-        {
-            throw new ArgumentNullException(nameof(httpClientOptions));
-        }
+        ArgumentNullException.ThrowIfNull(vaultOptions);
 
-        if (vaultOptions is null)
-        {
-            throw new ArgumentNullException(nameof(vaultOptions));
-        }
-
-        if (securityOptions is null)
-        {
-            throw new ArgumentNullException(nameof(securityOptions));
-        }
+        ArgumentNullException.ThrowIfNull(securityOptions);
 
         string? url = httpClientOptions?.Services?["products"];
 

@@ -15,8 +15,11 @@ internal sealed class OutboxCommandHandlerDecorator<TCommand> : ICommandHandler<
     private readonly string _messageId;
     private readonly bool _enabled;
 
-    public OutboxCommandHandlerDecorator(ICommandHandler<TCommand> handler, IMessageOutbox outbox,
-        OutboxOptions outboxOptions, IMessagePropertiesAccessor messagePropertiesAccessor)
+    public OutboxCommandHandlerDecorator(
+                                            ICommandHandler<TCommand> handler,
+                                            IMessageOutbox outbox,
+                                            OutboxOptions outboxOptions,
+                                            IMessagePropertiesAccessor messagePropertiesAccessor)
     {
         _handler = handler;
         _outbox = outbox;
@@ -24,8 +27,8 @@ internal sealed class OutboxCommandHandlerDecorator<TCommand> : ICommandHandler<
 
         var messageProperties = messagePropertiesAccessor.MessageProperties;
         _messageId = string.IsNullOrWhiteSpace(messageProperties?.MessageId)
-            ? Guid.NewGuid().ToString("N")
-            : messageProperties.MessageId;
+                                                                            ? Guid.NewGuid().ToString("N")
+                                                                            : messageProperties.MessageId;
     }
 
     public Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)

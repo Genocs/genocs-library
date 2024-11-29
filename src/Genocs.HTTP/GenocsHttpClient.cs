@@ -170,7 +170,8 @@ public class GenocsHttpClient : IHttpClient
         }
     }
 
-    public void SetHeaders(Action<HttpRequestHeaders> headers) => headers?.Invoke(_client.DefaultRequestHeaders);
+    public void SetHeaders(Action<HttpRequestHeaders> headers)
+        => headers?.Invoke(_client.DefaultRequestHeaders);
 
     protected virtual async Task<T> SendAsync<T>(string uri, Method method, HttpContent? content = null, IHttpClientSerializer? serializer = null)
     {
@@ -241,7 +242,7 @@ public class GenocsHttpClient : IHttpClient
         return content;
     }
 
-    protected async Task<T> DeserializeJsonFromStream<T>(Stream stream, IHttpClientSerializer? serializer = null)
+    protected async Task<T?> DeserializeJsonFromStream<T>(Stream stream, IHttpClientSerializer? serializer = null)
     {
         if (stream is null || stream.CanRead is false)
         {

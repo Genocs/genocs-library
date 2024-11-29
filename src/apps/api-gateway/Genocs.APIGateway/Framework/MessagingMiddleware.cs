@@ -76,13 +76,16 @@ internal class MessagingMiddleware : IMiddleware
             string content = await new StreamReader(context.Request.Body).ReadToEndAsync();
             object? message = JsonConvert.DeserializeObject(content);
 
-            _rabbitMQClient.Send(
-                                    message,
-                                    conventions,
-                                    messageId,
-                                    correlationId,
-                                    spanContext,
-                                    correlationContext);
+            if (message is not null)
+            {
+                await _rabbitMQClient.SendAsync(
+                                                message,
+                                                conventions,
+                                                messageId,
+                                                correlationId,
+                                                spanContext,
+                                                correlationContext);
+            }
 
             context.Response.StatusCode = StatusCodes.Status202Accepted;
             return;
