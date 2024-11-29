@@ -1,10 +1,10 @@
+using System.Linq.Expressions;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
@@ -144,7 +144,7 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     /// It returns the Mongo Collection as Queryable.
     /// </summary>
     /// <returns></returns>
-    public IMongoQueryable<TEntity> GetMongoQueryable()
+    public IQueryable<TEntity> GetMongoQueryable()
         => Collection.AsQueryable();
 
     public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)

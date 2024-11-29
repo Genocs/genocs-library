@@ -1,18 +1,13 @@
-﻿using Genocs.Persistence.MongoDb.Configurations;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MongoDB.Driver.Encryption;
-
-namespace Genocs.Persistence.MongoDb.Encryptions;
+﻿namespace Genocs.Persistence.MongoDb.Encryptions;
 
 /// <summary>
-/// The initializer 
+/// The initializer.
 /// </summary>
 public class AzureInitializer
 {
+    /*
     /// <summary>
-    /// Setup  the client
+    /// Setup  the client.
     /// </summary>
     /// <param name="options"></param>
     public AutoEncryptionOptions EncryptionOptions(IOptions<MongoDbEncryptionOptions> options)
@@ -179,4 +174,6 @@ public class AzureInitializer
         //Console.WriteLine("Created encrypted collection!");
         // end-create-enc-collection
     }
+
+    */
 }

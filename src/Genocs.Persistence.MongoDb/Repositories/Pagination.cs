@@ -1,14 +1,14 @@
+using System.Linq.Expressions;
 using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Repositories;
 
 public static class Pagination
 {
     public static async Task<PagedResult<T>> PaginateAsync<T>(
-                                                              this IMongoQueryable<T> collection,
+                                                              this IQueryable<T> collection,
                                                               IPagedQuery query)
         => await collection.PaginateAsync(
                                           query.OrderBy,
@@ -17,7 +17,7 @@ public static class Pagination
                                           query.Results);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(
-                                                              this IMongoQueryable<T> collection,
+                                                              this IQueryable<T> collection,
                                                               string? orderBy,
                                                               string? sortOrder,
                                                               int page = 1,
@@ -61,11 +61,11 @@ public static class Pagination
         return PagedResult<T>.Create(data, page, resultsPerPage, totalPages, totalResults);
     }
 
-    public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection, IPagedQuery query)
+    public static IQueryable<T> Limit<T>(this IQueryable<T> collection, IPagedQuery query)
         => collection.Limit(query.Page, query.Results);
 
-    public static IMongoQueryable<T> Limit<T>(
-                                              this IMongoQueryable<T> collection,
+    public static IQueryable<T> Limit<T>(
+                                              this IQueryable<T> collection,
                                               int page = 1,
                                               int resultsPerPage = 10)
     {
