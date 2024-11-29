@@ -20,10 +20,7 @@ builder.Host
         .UseAzureKeyVault()
         .UseLogging();
 
-var services = builder.Services;
-
-services
-    .AddGenocs(builder.Configuration)
+builder.AddGenocs()
     .AddJwt()
 //    .AddOpenIdJwt()
     .AddOpenTelemetry()
@@ -31,6 +28,8 @@ services
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())
     .AddApplicationServices()
     .Build();
+
+var services = builder.Services;
 
 services.AddCors();
 services.AddControllers().AddJsonOptions(x =>

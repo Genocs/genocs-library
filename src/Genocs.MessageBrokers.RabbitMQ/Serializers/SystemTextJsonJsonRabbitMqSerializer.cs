@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace Genocs.MessageBrokers.RabbitMQ.Serializers;
 
-public sealed class SystemTextJsonJsonRabbitMqSerializer : IRabbitMqSerializer
+public sealed class SystemTextJsonJsonRabbitMQSerializer : IRabbitMQSerializer
 {
     private readonly JsonSerializerOptions _options;
 
-    public SystemTextJsonJsonRabbitMqSerializer(JsonSerializerOptions options = null)
+    public SystemTextJsonJsonRabbitMQSerializer(JsonSerializerOptions options = null)
     {
         _options = options ?? new JsonSerializerOptions
         {

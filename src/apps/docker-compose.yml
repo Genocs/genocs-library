@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   api-gateway:
     image: genocs/apigateway:${IMAGE_VERSION}
@@ -22,7 +20,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
-      - 5501:80
+      - 5500:80
     networks:
       - genocs
     # network_mode: bridge
@@ -36,7 +34,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
-      - 5502:80
+      - 5510:80
     #ports:
     networks:
       - genocs
@@ -51,7 +49,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
-      - 5503:80
+      - 5530:80
     #ports:
     networks:
       - genocs
@@ -66,7 +64,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
     ports:
-      - 5504:80
+      - 5540:80
     #ports:
     networks:
       - genocs

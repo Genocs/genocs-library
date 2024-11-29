@@ -1,7 +1,7 @@
+using System.Reflection;
 using Genocs.Common.Types;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
-using System.Reflection;
 
 namespace Genocs.MessageBrokers.RabbitMQ.Initializers;
 
@@ -13,8 +13,10 @@ public class RabbitMqExchangeInitializer : IInitializer
     private readonly ILogger<RabbitMqExchangeInitializer> _logger;
     private readonly bool _loggerEnabled;
 
-    public RabbitMqExchangeInitializer(ProducerConnection connection, RabbitMQOptions options,
-        ILogger<RabbitMqExchangeInitializer> logger)
+    public RabbitMqExchangeInitializer(
+                                        ProducerConnection connection,
+                                        RabbitMQOptions options,
+                                        ILogger<RabbitMqExchangeInitializer> logger)
     {
         _connection = connection.Connection;
         _options = options;
@@ -22,7 +24,7 @@ public class RabbitMqExchangeInitializer : IInitializer
         _loggerEnabled = _options.Logger?.Enabled == true;
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
         var exchanges = AppDomain.CurrentDomain
             .GetAssemblies()
@@ -32,41 +34,41 @@ public class RabbitMqExchangeInitializer : IInitializer
             .Distinct()
             .ToList();
 
-        using var channel = _connection.CreateModel();
+        using var channel = await _connection.CreateChannelAsync();
         if (_options.Exchange?.Declare == true)
         {
             Log(_options.Exchange.Name, _options.Exchange.Type);
 
-            channel.ExchangeDeclare(
-                                    _options.Exchange.Name,
-                                    _options.Exchange.Type,
-                                    _options.Exchange.Durable,
-                                    _options.Exchange.AutoDelete);
+            await channel.ExchangeDeclareAsync(
+                                                _options.Exchange.Name,
+                                                _options.Exchange.Type,
+                                                _options.Exchange.Durable,
+                                                _options.Exchange.AutoDelete);
 
             if (_options.DeadLetter?.Enabled is true && _options.DeadLetter?.Declare is true)
             {
-                channel.ExchangeDeclare(
-                                        $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}",
-                                        ExchangeType.Direct,
-                                        _options.Exchange.Durable,
-                                        _options.Exchange.AutoDelete);
+                await channel.ExchangeDeclareAsync(
+                                                    $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}",
+                                                    ExchangeType.Direct,
+                                                    _options.Exchange.Durable,
+                                                    _options.Exchange.AutoDelete);
             }
         }
 
         foreach (string? exchange in exchanges)
         {
+            if (string.IsNullOrWhiteSpace(exchange)) continue;
+
             if (exchange.Equals(_options.Exchange?.Name, StringComparison.InvariantCultureIgnoreCase))
             {
                 continue;
             }
 
             Log(exchange, DefaultType);
-            channel.ExchangeDeclare(exchange, DefaultType, true);
+            await channel.ExchangeDeclareAsync(exchange, DefaultType, true);
         }
 
-        channel.Close();
-
-        return Task.CompletedTask;
+        await channel.CloseAsync();
     }
 
     private void Log(string exchange, string type)

@@ -14,9 +14,9 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.0.0" />
-        <PackageReference Include="Genocs.Logging" Version="7.0.0" />
-        <PackageReference Include="Genocs.Tracing" Version="7.0.0" />
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.1.0" />
+        <PackageReference Include="Genocs.Logging" Version="7.1.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>

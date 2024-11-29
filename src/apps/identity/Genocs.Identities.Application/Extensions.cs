@@ -1,3 +1,4 @@
+using System.Text;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
@@ -23,7 +24,6 @@ using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Tracing;
-using Genocs.Tracing.Jaeger;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -33,13 +33,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace Genocs.Identities.Application;
 
 public static class Extensions
 {
-    public static IGenocsBuilder AddCore(this IGenocsBuilder builder)
+    public static async Task<IGenocsBuilder> AddCoreAsync(this IGenocsBuilder builder)
     {
         builder.Services
             .AddScoped<LogContextMiddleware>()
@@ -62,12 +61,15 @@ public static class Extensions
             .AddInMemoryEventDispatcher()
             .AddInMemoryQueryDispatcher()
             .AddJwt()
-            .AddHttpClient()
-            .AddRabbitMq()
+            .AddHttpClient();
+
+        await builder.AddRabbitMQAsync();
+
+        builder
+            .AddOpenTelemetry()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
-            .AddOpenTelemetry()
             .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
@@ -98,7 +100,7 @@ public static class Extensions
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
             .UseMetrics()
-            .UseRabbitMq()
+            .UseRabbitMQ()
             .SubscribeCommand<CreateUser>();
 
         return app;

@@ -37,35 +37,29 @@ builder.Host
         .UseLogging()
         .UseVault();
 
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-});
+IGenocsBuilder gnxBuilder = await builder
+                                    .AddGenocs()
+                                    .AddErrorHandler<ExceptionToResponseMapper>()
+                                    .AddServices()
+                                    .AddHttpClient()
+                                    .AddCorrelationContextLogging()
+                                    .AddConsul()
+                                    .AddFabio()
+                                    .AddOpenTelemetry()
+                                    .AddMetrics()
+                                    .AddMongo()
+                                    .AddMongoRepository<Order, Guid>("orders")
+                                    .AddCommandHandlers()
+                                    .AddEventHandlers()
+                                    .AddQueryHandlers()
+                                    .AddInMemoryCommandDispatcher()
+                                    .AddInMemoryEventDispatcher()
+                                    .AddInMemoryQueryDispatcher()
+                                    .AddPrometheus()
+                                    .AddRedis()
+                                    .AddRabbitMQAsync();
 
-var services = builder.Services;
-
-services.AddGenocs()
-        .AddErrorHandler<ExceptionToResponseMapper>()
-        .AddServices()
-        .AddHttpClient()
-        .AddCorrelationContextLogging()
-        .AddConsul()
-        .AddFabio()
-        .AddOpenTelemetry()
-        .AddMetrics()
-        .AddMongo()
-        .AddMongoRepository<Order, Guid>("orders")
-        .AddCommandHandlers()
-        .AddEventHandlers()
-        .AddQueryHandlers()
-        .AddInMemoryCommandDispatcher()
-        .AddInMemoryEventDispatcher()
-        .AddInMemoryQueryDispatcher()
-        .AddPrometheus()
-        .AddRedis()
-        .AddRabbitMq()
-        .AddMessageOutbox(o => o.AddMongo())
+gnxBuilder.AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
         .AddSwaggerDocs()
         .AddWebApiSwaggerDocs()
@@ -81,13 +75,13 @@ app.UseGenocs()
     .UseCertificateAuthentication()
     .UseEndpoints(r => r.MapControllers())
     .UseDispatcherEndpoints(endpoints => endpoints
-        .Get(string.Empty, ctx => ctx.Response.WriteAsync("Orders Service"))
-        .Get("ping", ctx => ctx.Response.WriteAsync("pong"))
         .Get<GetOrder, OrderDto>("orders/{orderId}")
-        .Post<CreateOrder>("orders",            afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
+        .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
     .UseSwaggerDocs()
-    .UseRabbitMq()
+    .UseRabbitMQ()
     .SubscribeEvent<DeliveryStarted>();
+
+app.MapDefaultEndpoints();
 
 app.Run();
 

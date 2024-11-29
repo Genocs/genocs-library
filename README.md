@@ -73,10 +73,10 @@ You can use **Docker compose** to setup the infrastructure components just by ru
 
 ``` bash
 cd ./containers
-# Setup the infrastructure
+# Setup the infrastructure. Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
 docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup Redis and Postgres db (no need if you use mongo)
+# Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
 docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, InfluxDB, Jaeger, Seq)
@@ -88,13 +88,13 @@ docker compose -f ./infrastructure-scaling.yml --env-file ./.env --project-name 
 # Use this file only in case you want to setup security infrastructure components (Vault)
 docker compose -f ./infrastructure-security.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup sqlserver database (no need if you use postgres)
+# Use this file only in case you want to setup sqlserver database (no need if you use PostgreSQL)
 docker compose -f ./infrastructure-sqlserver.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup mySql database (no need if you use postgres)
+# Use this file only in case you want to setup mySql database (no need if you use PostgreSQL)
 docker compose -f ./infrastructure-mysql.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup oracle database (no need if you use postgres)
+# Use this file only in case you want to setup oracle database (no need if you use PostgreSQL)
 docker compose -f ./infrastructure-oracle.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup elk stack
@@ -104,18 +104,24 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
 
-`infrastructure-bare.yml` allows to install the basic infrastructure components. They are:
+`infrastructure.yml` allows to install the basic infrastructure components. They are:
 - [RabbitMQ](https://rabbitmq.com)
 - [Redis](https://redis.io)
 - [MongoDB](https://mongodb.com)
-- [Postgres](https://www.postgresql.org/).
+- [Postgres](https://www.postgresql.org/)
 
-You can run them locally:
+
+`infrastructure-db.yml` allows to install Redis and PostgreSQL
+- [Redis](https://redis.io)
+- [Postgres](https://www.postgresql.org/)
+
+
+You can check them locally:
 
 - [RabbitMQ](http://localhost:15672): `localhost:15672`
-- Redis: `localhost:6379`
-- MongoDB: `localhost:27017`
-- Postgres: `localhost:5432`
+- Redis: `TCP:localhost:6379`
+- MongoDB: `TCP:localhost:27017`
+- Postgres: `TCP:localhost:5432`
 
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
@@ -126,7 +132,7 @@ You can run them locally:
 - [Seq](https://datalust.co/seq)
 
 
-You can run them locally:
+You can find the console locally at:
 
 - [Prometheus](localhost:9090): `localhost:9090`
 - [Grafana](localhost:3000): `localhost:3000`
@@ -135,9 +141,13 @@ You can run them locally:
 - [Seq](localhost:5341): `localhost:5341`
 
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components. They are:
-- Fabio
-- Consul
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by Fabio and Consul.
+
+- [Fabio](https://fabiolb.net/)
+- [Consul](https://www.consul.io/)
+
+
+
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
 
@@ -185,7 +195,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "enabled": false,
     "url": "http://localhost:8500",
     "service": "demo-service",
-    "address": "docker.for.win.localhost",
+    "address": "docker.for.mac.localhost",
     "port": "5070",
     "pingEnabled": true,
     "pingEndpoint": "health",

@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
         <ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
     </ItemGroup>
 

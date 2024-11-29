@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="7.0.0" />
+        <PackageReference Include="Genocs.Core" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">

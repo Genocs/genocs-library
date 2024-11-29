@@ -1,6 +1,6 @@
 namespace Genocs.MessageBrokers.RabbitMQ;
 
-public interface IRabbitMqSerializer
+public interface IRabbitMQSerializer
 {
     ReadOnlySpan<byte> Serialize(object value);
     object? Deserialize(ReadOnlySpan<byte> value, Type type);

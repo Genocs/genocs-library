@@ -86,10 +86,6 @@ public static class Extensions
         }
 
         VaultOptions options = configuration.GetOptions<VaultOptions>(sectionName);
-        if (!options.Enabled)
-        {
-            return services;
-        }
 
         VerifyOptions(options);
         services.AddSingleton(options);

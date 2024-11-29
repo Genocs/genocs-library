@@ -8,6 +8,7 @@ using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -24,7 +25,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         WriteIndented = true
     };
 
-    private readonly ConcurrentDictionary<string, IModel> _channels = new();
+    private readonly ConcurrentDictionary<string, IChannel> _channels = new();
     private readonly EmptyExceptionToMessageMapper _exceptionMapper = new();
     private readonly EmptyExceptionToFailedMessageMapper _exceptionFailedMapper = new();
     private readonly IServiceProvider _serviceProvider;
@@ -32,7 +33,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private readonly IConnection _producerConnection;
     private readonly MessageSubscribersChannel _messageSubscribersChannel;
     private readonly IBusPublisher _publisher;
-    private readonly IRabbitMqSerializer _rabbitMqSerializer;
+    private readonly IRabbitMQSerializer _rabbitMqSerializer;
     private readonly IConventionsProvider _conventionsProvider;
     private readonly IContextProvider _contextProvider;
     private readonly ILogger _logger;
@@ -54,10 +55,10 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _producerConnection = serviceProvider.GetRequiredService<ProducerConnection>().Connection;
         _messageSubscribersChannel = serviceProvider.GetRequiredService<MessageSubscribersChannel>();
         _publisher = _serviceProvider.GetRequiredService<IBusPublisher>();
-        _rabbitMqSerializer = _serviceProvider.GetRequiredService<IRabbitMqSerializer>();
+        _rabbitMqSerializer = _serviceProvider.GetRequiredService<IRabbitMQSerializer>();
         _conventionsProvider = _serviceProvider.GetRequiredService<IConventionsProvider>();
         _contextProvider = _serviceProvider.GetRequiredService<IContextProvider>();
-        _logger = _serviceProvider.GetRequiredService<ILogger<RabbitMqSubscriber>>();
+        _logger = _serviceProvider.GetRequiredService<ILogger<RabbitMQSubscriber>>();
         _exceptionToMessageMapper = _serviceProvider.GetService<IExceptionToMessageMapper>() ?? _exceptionMapper;
         _exceptionToFailedMessageMapper = _serviceProvider.GetService<IExceptionToFailedMessageMapper>() ?? _exceptionFailedMapper;
         _pluginsExecutor = _serviceProvider.GetRequiredService<IRabbitMqPluginsExecutor>();
@@ -78,15 +79,15 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             return;
         }
 
-        _consumerConnection.CallbackException += ConnectionOnCallbackException;
-        _consumerConnection.ConnectionShutdown += ConnectionOnConnectionShutdown;
-        _consumerConnection.ConnectionBlocked += ConnectionOnConnectionBlocked;
-        _consumerConnection.ConnectionUnblocked += ConnectionOnConnectionUnblocked;
+        _consumerConnection.CallbackExceptionAsync += ConnectionOnCallbackExceptionAsync;
+        _consumerConnection.ConnectionShutdownAsync += ConnectionOnConnectionShutdownAsync;
+        _consumerConnection.ConnectionBlockedAsync += ConnectionOnConnectionBlockedAsync;
+        _consumerConnection.ConnectionUnblockedAsync += ConnectionOnConnectionUnblockedAsync;
 
-        _producerConnection.CallbackException += ConnectionOnCallbackException;
-        _producerConnection.ConnectionShutdown += ConnectionOnConnectionShutdown;
-        _producerConnection.ConnectionBlocked += ConnectionOnConnectionBlocked;
-        _producerConnection.ConnectionUnblocked += ConnectionOnConnectionUnblocked;
+        _producerConnection.CallbackExceptionAsync += ConnectionOnCallbackExceptionAsync;
+        _producerConnection.ConnectionShutdownAsync += ConnectionOnConnectionShutdownAsync;
+        _producerConnection.ConnectionBlockedAsync += ConnectionOnConnectionBlockedAsync;
+        _producerConnection.ConnectionUnblockedAsync += ConnectionOnConnectionUnblockedAsync;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -98,7 +99,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 switch (messageSubscriber.Action)
                 {
                     case MessageSubscriberAction.Subscribe:
-                        Subscribe(messageSubscriber);
+                        await SubscribeAsync(messageSubscriber);
                         break;
                     case MessageSubscriberAction.Unsubscribe:
                         Unsubscribe(messageSubscriber);
@@ -115,7 +116,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         }
     }
 
-    private void Subscribe(IMessageSubscriber messageSubscriber)
+    private async Task SubscribeAsync(IMessageSubscriber messageSubscriber)
     {
         var conventions = _conventionsProvider.Get(messageSubscriber.Type);
         var channelKey = GetChannelKey(conventions);
@@ -124,7 +125,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             return;
         }
 
-        var channel = _consumerConnection.CreateModel();
+        var channel = await _consumerConnection.CreateChannelAsync();
         var channelInfoLog = $"exchange: '{conventions.Exchange}', queue: '{conventions.Queue}', " +
                              $"routing key: '{conventions.RoutingKey}'";
 
@@ -137,7 +138,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
         _logger.LogTrace($"Added the channel: {channel.ChannelNumber} for {channelInfoLog}.");
 
-        var declare = _options.Queue?.Declare ?? true;
+        bool declare = _options.Queue?.Declare ?? true;
         var durable = _options.Queue?.Durable ?? true;
         var exclusive = _options.Queue?.Exclusive ?? false;
         var autoDelete = _options.Queue?.AutoDelete ?? false;
@@ -165,11 +166,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                     {"x-dead-letter-routing-key", deadLetterQueue},
                 }
                 : new Dictionary<string, object>();
-            channel.QueueDeclare(conventions.Queue, durable, exclusive, autoDelete, queueArguments);
+
+            await channel.QueueDeclareAsync(conventions.Queue, durable, exclusive, autoDelete, queueArguments);
         }
 
-        channel.QueueBind(conventions.Queue, conventions.Exchange, conventions.RoutingKey);
-        channel.BasicQos(_qosOptions.PrefetchSize, _qosOptions.PrefetchCount, _qosOptions.Global);
+        await channel.QueueBindAsync(conventions.Queue, conventions.Exchange, conventions.RoutingKey);
+        await channel.BasicQosAsync(_qosOptions.PrefetchSize, _qosOptions.PrefetchCount, _qosOptions.Global);
 
         if (_options.DeadLetter?.Enabled is true)
         {
@@ -191,15 +193,19 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 _logger.LogInformation($"Declaring a dead letter queue: '{deadLetterQueue}' " +
                                        $"for an exchange: '{deadLetterExchange}'{(ttl.HasValue ? $", message TTL: {ttl} ms." : ".")}");
 
-                channel.QueueDeclare(deadLetterQueue, _options.DeadLetter.Durable, _options.DeadLetter.Exclusive,
-                    _options.DeadLetter.AutoDelete, deadLetterArgs);
+                await channel.QueueDeclareAsync(
+                                                deadLetterQueue,
+                                                _options.DeadLetter.Durable,
+                                                _options.DeadLetter.Exclusive,
+                                                _options.DeadLetter.AutoDelete,
+                                                deadLetterArgs);
             }
 
-            channel.QueueBind(deadLetterQueue, deadLetterExchange, deadLetterQueue);
+            await channel.QueueBindAsync(deadLetterQueue, deadLetterExchange, deadLetterQueue);
         }
 
         var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.Received += async (_, args) =>
+        consumer.ReceivedAsync += async (_, args) =>
         {
             try
             {
@@ -213,7 +219,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 if (_loggerEnabled)
                 {
                     var messagePayload = _logMessagePayload ? Encoding.UTF8.GetString(args.Body.Span) : string.Empty;
-                    _logger.LogInformation("Received a message with ID: '{MessageId}', " +
+                    _logger.LogInformation(
+                        "Received a message with ID: '{MessageId}', " +
                                            "Correlation ID: '{CorrelationId}', timestamp: {Timestamp}, " +
                                            "queue: {Queue}, routing key: {RoutingKey}, exchange: {Exchange}, payload: {MessagePayload}",
                         messageId, correlationId, timestamp, conventions.Queue, conventions.RoutingKey, conventions.Exchange, messagePayload);
@@ -230,12 +237,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                channel.BasicNack(args.DeliveryTag, false, _requeueFailedMessages);
+                await channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
                 await Task.Yield();
             }
         };
 
-        channel.BasicConsume(conventions.Queue, false, consumer);
+        await channel.BasicConsumeAsync(conventions.Queue, false, consumer);
     }
 
     private object BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
@@ -255,9 +262,15 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         return correlationContext;
     }
 
-    private async Task TryHandleAsync(IModel channel, object message, string messageId, string correlationId,
-        object messageContext, BasicDeliverEventArgs args, Func<IServiceProvider, object, object, Task> handle,
-        bool deadLetterEnabled)
+    private async Task TryHandleAsync(
+                                        IChannel channel,
+                                        object message,
+                                        string messageId,
+                                        string correlationId,
+                                        object messageContext,
+                                        BasicDeliverEventArgs args,
+                                        Func<IServiceProvider, object, object, Task> handle,
+                                        bool deadLetterEnabled)
     {
         var currentRetry = 0;
         var messageName = message.GetType().Name.Underscore();
@@ -290,7 +303,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                     await handle(_serviceProvider, message, messageContext);
                 }
 
-                channel.BasicAck(args.DeliveryTag, false);
+                channel.BasicAckAsync(args.DeliveryTag, false);
                 await Task.Yield();
 
                 if (_loggerEnabled)
@@ -305,7 +318,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 _logger.LogError(ex, ex.Message);
                 if (ex is RabbitMqMessageProcessingTimeoutException)
                 {
-                    channel.BasicNack(args.DeliveryTag, false, _requeueFailedMessages);
+                    channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
                     await Task.Yield();
                     return;
                 }
@@ -340,7 +353,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                     if (!deadLetterEnabled || !failedMessage.MoveToDeadLetter)
                     {
-                        channel.BasicAck(args.DeliveryTag, false);
+                        channel.BasicAckAsync(args.DeliveryTag, false);
                         await Task.Yield();
                         return;
                     }
@@ -364,7 +377,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                 if (failedMessage is not null && !failedMessage.MoveToDeadLetter)
                 {
-                    channel.BasicAck(args.DeliveryTag, false);
+                    channel.BasicAckAsync(args.DeliveryTag, false);
                     await Task.Yield();
                     return;
                 }
@@ -375,7 +388,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                                      "{CorrelationId} will be moved to DLX", messageName, messageId, correlationId);
                 }
 
-                channel.BasicNack(args.DeliveryTag, false, _requeueFailedMessages);
+                channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
                 await Task.Yield();
             }
         });
@@ -404,15 +417,15 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     {
         if (_loggerEnabled && _options.Logger?.LogConnectionStatus is true)
         {
-            _consumerConnection.CallbackException -= ConnectionOnCallbackException;
-            _consumerConnection.ConnectionShutdown -= ConnectionOnConnectionShutdown;
-            _consumerConnection.ConnectionBlocked -= ConnectionOnConnectionBlocked;
-            _consumerConnection.ConnectionUnblocked -= ConnectionOnConnectionUnblocked;
+            _consumerConnection.CallbackExceptionAsync -= ConnectionOnCallbackExceptionAsync;
+            _consumerConnection.ConnectionShutdownAsync -= ConnectionOnConnectionShutdownAsync;
+            _consumerConnection.ConnectionBlockedAsync -= ConnectionOnConnectionBlockedAsync;
+            _consumerConnection.ConnectionUnblockedAsync -= ConnectionOnConnectionUnblockedAsync;
 
-            _producerConnection.CallbackException -= ConnectionOnCallbackException;
-            _producerConnection.ConnectionShutdown -= ConnectionOnConnectionShutdown;
-            _producerConnection.ConnectionBlocked -= ConnectionOnConnectionBlocked;
-            _producerConnection.ConnectionUnblocked -= ConnectionOnConnectionUnblocked;
+            _producerConnection.CallbackExceptionAsync -= ConnectionOnCallbackExceptionAsync;
+            _producerConnection.ConnectionShutdownAsync -= ConnectionOnConnectionShutdownAsync;
+            _producerConnection.ConnectionBlockedAsync -= ConnectionOnConnectionBlockedAsync;
+            _producerConnection.ConnectionUnblockedAsync -= ConnectionOnConnectionUnblockedAsync;
         }
 
         foreach (var (key, channel) in _channels)
@@ -423,8 +436,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
         try
         {
-            _consumerConnection.Close();
-            _producerConnection.Close();
+            _consumerConnection.CloseAsync();
+            _producerConnection.CloseAsync();
         }
         catch
         {
@@ -444,9 +457,9 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         public FailedMessage Map(Exception exception, object message) => null;
     }
 
-    private void ConnectionOnCallbackException(object sender, CallbackExceptionEventArgs eventArgs)
+    private async Task ConnectionOnCallbackExceptionAsync(object sender, CallbackExceptionEventArgs eventArgs)
     {
-        _logger.LogError("RabbitMQ callback exception occured.");
+        _logger.LogError("RabbitMQ callback exception occurred.");
         if (eventArgs.Exception is not null)
         {
             _logger.LogError(eventArgs.Exception, eventArgs.Exception.Message);
@@ -456,21 +469,27 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         {
             _logger.LogError(JsonSerializer.Serialize(eventArgs.Detail, SerializerOptions));
         }
+
+        await Task.CompletedTask;
     }
 
-    private void ConnectionOnConnectionShutdown(object sender, ShutdownEventArgs eventArgs)
+    private async Task ConnectionOnConnectionShutdownAsync(object sender, ShutdownEventArgs eventArgs)
     {
-        _logger.LogError($"RabbitMQ connection shutdown occured. Initiator: '{eventArgs.Initiator}', " +
+        _logger.LogError($"RabbitMQ connection shutdown occurred. Initiator: '{eventArgs.Initiator}', " +
                          $"reply code: '{eventArgs.ReplyCode}', text: '{eventArgs.ReplyText}'.");
+
+        await Task.CompletedTask;
     }
 
-    private void ConnectionOnConnectionBlocked(object sender, ConnectionBlockedEventArgs eventArgs)
+    private async Task ConnectionOnConnectionBlockedAsync(object sender, ConnectionBlockedEventArgs eventArgs)
     {
         _logger.LogError($"RabbitMQ connection has been blocked. {eventArgs.Reason}");
+        await Task.CompletedTask;
     }
 
-    private void ConnectionOnConnectionUnblocked(object sender, EventArgs eventArgs)
+    private async Task ConnectionOnConnectionUnblockedAsync(object sender, AsyncEventArgs eventArgs)
     {
         _logger.LogInformation("RabbitMQ connection has been unblocked.");
+        await Task.CompletedTask;
     }
 }

@@ -20,22 +20,22 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.0.0" />
-        <PackageReference Include="Genocs.Auth" Version="7.0.0" />
-        <PackageReference Include="Genocs.Logging" Version="7.0.0" />
-        <PackageReference Include="Genocs.Tracing" Version="7.0.0" />
-        <PackageReference Include="Genocs.HTTP" Version="7.0.0" />
-        <PackageReference Include="Genocs.Security" Version="7.0.0" />
-        <PackageReference Include="Genocs.WebApi" Version="7.0.0" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="7.0.0" />
-        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.0.0" />
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.1.0" />
+        <PackageReference Include="Genocs.Auth" Version="7.1.0" />
+        <PackageReference Include="Genocs.Logging" Version="7.1.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.1.0" />
+        <PackageReference Include="Genocs.HTTP" Version="7.1.0" />
+        <PackageReference Include="Genocs.Security" Version="7.1.0" />
+        <PackageReference Include="Genocs.WebApi" Version="7.1.0" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="7.1.0" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="9.0.0" />
         <PackageReference Include="Polly" Version="8.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>

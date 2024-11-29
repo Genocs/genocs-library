@@ -22,6 +22,12 @@ internal class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Find a more elegant way to do this
+        Task.Run(async () => await ConfigureServicesAsync(services)).Wait();
+    }
+
+    private async Task ConfigureServicesAsync(IServiceCollection services)
+    {
         services.AddScoped<LogContextMiddleware>();
         services.AddScoped<UserMiddleware>();
         services.AddScoped<MessagingMiddleware>();
@@ -33,13 +39,16 @@ internal class Startup
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
-        services
-            .AddGenocs()
-            .AddOpenTelemetry()
-            .AddJwt()
-            .AddPrometheus()
-            .AddRabbitMq()
-            .AddSecurity()
+
+        IGenocsBuilder builder = services
+                                        .AddGenocs()
+                                        .AddOpenTelemetry()
+                                        .AddJwt()
+                                        .AddPrometheus();
+
+        await builder.AddRabbitMQAsync();
+
+        builder.AddSecurity()
             .AddWebApi()
             .Build();
 
@@ -75,7 +84,7 @@ internal class Startup
         app.UsePrometheus();
         app.UseAccessTokenValidator();
         app.UseAuthentication();
-        app.UseRabbitMq();
+        app.UseRabbitMQ();
         app.UseMiddleware<UserMiddleware>();
         app.UseMiddleware<MessagingMiddleware>();
         app.UseRouting();

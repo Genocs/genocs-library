@@ -35,12 +35,12 @@ public static class Extensions
     /// <param name="serializer">The serializer.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">Raised when configuration is incorrect.</exception>
-    public static IGenocsBuilder AddRabbitMq(
+    public static async Task<IGenocsBuilder> AddRabbitMQAsync(
                                             this IGenocsBuilder builder,
                                             string sectionName = SectionName,
                                             Func<IRabbitMqPluginsRegistry, IRabbitMqPluginsRegistry>? plugins = null,
                                             Action<ConnectionFactory>? connectionFactoryConfigurator = null,
-                                            IRabbitMqSerializer? serializer = null)
+                                            IRabbitMQSerializer? serializer = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -51,7 +51,7 @@ public static class Extensions
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))
         {
-            return builder;
+            return await Task.FromResult(builder);
         }
 
         if (options.HostNames is null || !options.HostNames.Any())
@@ -72,8 +72,8 @@ public static class Extensions
         builder.Services.AddSingleton<IConventionsProvider, ConventionsProvider>();
         builder.Services.AddSingleton<IConventionsRegistry, ConventionsRegistry>();
         builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
-        builder.Services.AddSingleton<IBusPublisher, RabbitMqPublisher>();
-        builder.Services.AddSingleton<IBusSubscriber, RabbitMqSubscriber>();
+        builder.Services.AddSingleton<IBusPublisher, RabbitMQPublisher>();
+        builder.Services.AddSingleton<IBusSubscriber, RabbitMQSubscriber>();
         builder.Services.AddSingleton<MessageSubscribersChannel>();
         builder.Services.AddTransient<RabbitMqExchangeInitializer>();
         builder.Services.AddHostedService<RabbitMqBackgroundService>();
@@ -85,7 +85,7 @@ public static class Extensions
         }
         else
         {
-            builder.Services.AddSingleton<IRabbitMqSerializer, SystemTextJsonJsonRabbitMqSerializer>();
+            builder.Services.AddSingleton<IRabbitMQSerializer, SystemTextJsonJsonRabbitMQSerializer>();
         }
 
         var pluginsRegistry = new RabbitMqPluginsRegistry();
@@ -105,8 +105,6 @@ public static class Extensions
             SocketWriteTimeout = options.SocketWriteTimeout,
             RequestedChannelMax = options.RequestedChannelMax,
             RequestedFrameMax = options.RequestedFrameMax,
-            UseBackgroundThreadsForIO = options.UseBackgroundThreadsForIO,
-            DispatchConsumersAsync = true,
             ContinuationTimeout = options.ContinuationTimeout,
             HandshakeContinuationTimeout = options.HandshakeContinuationTimeout,
             NetworkRecoveryInterval = options.NetworkRecoveryInterval,
@@ -118,8 +116,8 @@ public static class Extensions
         connectionFactoryConfigurator?.Invoke(connectionFactory);
 
         logger.LogDebug($"Connecting to RabbitMQ: '{string.Join(", ", options.HostNames)}'...");
-        var consumerConnection = connectionFactory.CreateConnection(options.HostNames.ToList(), $"{options.ConnectionName}_consumer");
-        var producerConnection = connectionFactory.CreateConnection(options.HostNames.ToList(), $"{options.ConnectionName}_producer");
+        var consumerConnection = await connectionFactory.CreateConnectionAsync(options.HostNames.ToList(), $"{options.ConnectionName}_consumer");
+        var producerConnection = await connectionFactory.CreateConnectionAsync(options.HostNames.ToList(), $"{options.ConnectionName}_producer");
         logger.LogDebug($"Connected to RabbitMQ: '{string.Join(", ", options.HostNames)}'.");
         builder.Services.AddSingleton(new ConsumerConnection(consumerConnection));
         builder.Services.AddSingleton(new ProducerConnection(producerConnection));
@@ -212,6 +210,6 @@ public static class Extensions
         return builder;
     }
 
-    public static IBusSubscriber UseRabbitMq(this IApplicationBuilder app)
-        => new RabbitMqSubscriber(app.ApplicationServices.GetRequiredService<MessageSubscribersChannel>());
+    public static IBusSubscriber UseRabbitMQ(this IApplicationBuilder app)
+        => new RabbitMQSubscriber(app.ApplicationServices.GetRequiredService<MessageSubscribersChannel>());
 }

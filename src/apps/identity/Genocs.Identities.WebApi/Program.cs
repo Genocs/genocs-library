@@ -4,11 +4,13 @@ using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Queries;
 using Genocs.Identities.Application.Services;
+using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
 using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Serilog;
+using Genocs.Discovery.Consul;
 
 StaticLogger.EnsureInitialized();
 
@@ -18,24 +20,21 @@ builder.Host
         .UseLogging()
         .UseVault();
 
-var services = builder.Services;
+IGenocsBuilder gnxBuilder = await builder
+                                    .AddGenocs()
+                                    .AddWebApi()
+                                    .AddConsul()
+                                    .AddFabio()
+                                    .AddCoreAsync();
 
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.IncludeFormattedMessage = true;
-    logging.IncludeScopes = true;
-});
-
-services.AddGenocs(builder.Configuration)
-        .AddWebApi()
-        .AddCore()
-        .Build();
-
+gnxBuilder.Build();
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
+
 app.UseCore();
+
 app.UseDispatcherEndpoints(endpoints => endpoints
-                            .Get(string.Empty, ctx => ctx.GetAppName())
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
                             {
                                 var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);

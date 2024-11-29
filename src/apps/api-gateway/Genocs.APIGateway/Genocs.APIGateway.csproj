@@ -19,15 +19,15 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="7.0.0" />
-        <PackageReference Include="Genocs.Logging" Version="7.0.0" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="7.0.0" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.0.0" />
-        <PackageReference Include="Genocs.Metrics" Version="7.0.0" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="7.0.0" />
-        <PackageReference Include="Genocs.Security" Version="7.0.0" />
-        <PackageReference Include="Genocs.Tracing" Version="7.0.0" />
-        <PackageReference Include="Genocs.WebApi" Version="7.0.0" />
+        <PackageReference Include="Genocs.Auth" Version="7.1.0" />
+        <PackageReference Include="Genocs.Logging" Version="7.1.0" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="7.1.0" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.1.0" />
+        <PackageReference Include="Genocs.Metrics" Version="7.1.0" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="7.1.0" />
+        <PackageReference Include="Genocs.Security" Version="7.1.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.1.0" />
+        <PackageReference Include="Genocs.WebApi" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
