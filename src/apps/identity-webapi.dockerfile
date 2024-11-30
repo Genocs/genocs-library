@@ -9,6 +9,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /src
 COPY ["identity/Genocs.Identities.WebApi", "Genocs.Identities.WebApi/"]
 COPY ["identity/Genocs.Identities.Application", "Genocs.Identities.Application/"]
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["NuGet.config", "NuGet.config"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["stylecop.json", "stylecop.json"]
 
 WORKDIR "/src/Genocs.Identities.WebApi"
 

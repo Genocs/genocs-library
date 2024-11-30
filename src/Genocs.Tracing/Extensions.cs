@@ -53,7 +53,7 @@ public static class Extensions
 
         // Set Custom Open telemetry
         services.AddOpenTelemetry()
-            .WithTracing(x =>
+            .WithTracing((TracerProviderBuilder x) =>
             {
                 TracerProviderBuilder provider = x.SetResourceBuilder(ResourceBuilder.CreateDefault()
                                                             .AddService(

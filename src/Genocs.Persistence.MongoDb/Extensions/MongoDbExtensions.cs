@@ -1,6 +1,6 @@
+using System.Reflection;
 using Genocs.Core.Builders;
 using Genocs.Core.Domain.Entities;
-using Genocs.Persistence.MongoDb.Builders;
 using Genocs.Persistence.MongoDb.Configurations;
 using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Factories;
@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
-using System.Reflection;
 
 namespace Genocs.Persistence.MongoDb.Extensions;
 
@@ -29,7 +28,7 @@ public static class MongoDbExtensions
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="sectionName">The section name.</param>
     /// <param name="seederType">The seeder name.</param>
-    /// <param name="registerConventions">Defines if setup the MongoDB Conventions.</param>
+    /// <param name="registerConventions">Defines if setup the MongoDB standard Conventions.</param>
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddMongo(
                                           this IGenocsBuilder builder,
@@ -43,25 +42,6 @@ public static class MongoDbExtensions
         }
 
         var mongoOptions = builder.GetOptions<MongoDbOptions>(sectionName);
-        return builder.AddMongo(mongoOptions, seederType, registerConventions);
-    }
-
-    /// <summary>
-    /// It allows to add support for MongoDb.
-    /// </summary>
-    /// <param name="builder">The Genocs builder.</param>
-    /// <param name="buildOptions">The Genocs builder.</param>
-    /// <param name="seederType">The seeder name.</param>
-    /// <param name="registerConventions">Defines if setup the MongoDB Conventions.</param>
-    /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongo(
-                                          this IGenocsBuilder builder,
-                                          Func<IMongoDbOptionsBuilder,
-                                          IMongoDbOptionsBuilder> buildOptions,
-                                          Type? seederType = null,
-                                          bool registerConventions = true)
-    {
-        var mongoOptions = buildOptions(new MongoDbOptionsBuilder()).Build();
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
 
@@ -130,6 +110,7 @@ public static class MongoDbExtensions
         // Setup conventions
         if (registerConventions && !_conventionsRegistered)
         {
+            _conventionsRegistered = true;
             ServiceCollectionExtensions.RegisterConventions();
         }
 
@@ -185,11 +166,17 @@ public static class MongoDbExtensions
 
         builder.Services.Configure<MongoDbOptions>(section);
 
+        builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
+        builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();
+
         builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
         builder.Services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
 
+        builder.AddInitializer<IMongoDbInitializer>();
+
         if (registerConventions && !_conventionsRegistered)
         {
+            _conventionsRegistered = true;
             ServiceCollectionExtensions.RegisterConventions();
         }
 

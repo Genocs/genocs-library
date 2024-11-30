@@ -21,13 +21,12 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
     /// </summary>
     public IMongoDatabase Database { get; private set; }
 
-
     /// <summary>
     /// Default Constructor.
     /// </summary>
     /// <param name="options"></param>
     /// <param name="encrypOptions"></param>
-    /// <exception cref="NullReferenceException">This exception happend in case mandatory data is missing.</exception>
+    /// <exception cref="NullReferenceException">This exception happens in case mandatory data is missing.</exception>
     public MongoDatabaseProvider(IOptions<MongoDbOptions> options, IOptions<MongoDbEncryptionOptions> encrypOptions)
     {
         if (options == null) throw new NullReferenceException(nameof(options));

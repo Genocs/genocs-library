@@ -8,6 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /src
 COPY ["orders/Genocs.Orders.WebApi", "Genocs.Orders.WebApi/"]
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["NuGet.config", "NuGet.config"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["stylecop.json", "stylecop.json"]
 
 WORKDIR "/src/Genocs.Orders.WebApi"
 
