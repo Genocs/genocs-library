@@ -87,7 +87,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Map default endpoints to setup health checks.
+    /// Map default endpoints to setup root endpoint and health checks.
     /// </summary>
     /// <param name="app">The web Application.</param>
     /// <returns>The WebApplication to be used for chain.</returns>
@@ -110,7 +110,7 @@ public static class Extensions
             });
 
             // All health checks must pass for app to be considered ready to accept traffic after starting
-            endpoints.MapHealthChecks("/health");
+            endpoints.MapHealthChecks("/healthz");
 
             // Only health checks tagged with the "live" tag must pass for app to be considered alive
             endpoints.MapHealthChecks("/alive", new HealthCheckOptions
@@ -136,15 +136,6 @@ public static class Extensions
             return app;
         }
 
-        // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/healthz");
-
-        // Only health checks tagged with the "live" tag must pass for app to be considered alive
-        app.MapHealthChecks("/alive", new HealthCheckOptions
-        {
-            Predicate = r => r.Tags.Contains("live")
-        });
-
         app.MapGet("/", async context =>
         {
             // Get the Entry Assembly Name and Version
@@ -155,6 +146,16 @@ public static class Extensions
 
             await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
         });
+
+        // All health checks must pass for app to be considered ready to accept traffic after starting
+        app.MapHealthChecks("/healthz");
+
+        // Only health checks tagged with the "live" tag must pass for app to be considered alive
+        app.MapHealthChecks("/alive", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+
         return app;
     }
 
@@ -177,11 +178,27 @@ public static class Extensions
         Console.ForegroundColor = current;
 
         // Add the health checks
+        // Add health checks to the application
+        // Since the health checks is item potent, we can add it multiple times
+        // Add a default liveness check to ensure app is responsive
         builder.Services
-            .AddHealthChecks();
+            .AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-        //            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]); // Add a default liveness check to ensure app is responsive
+            /*
+             * This is an example of how to add a MongoDB health check.
+             * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDb
+             * 
+            .AddMongoDb(
+                builder.Configuration.GetSection("DBSettings:HealthConnectionString").Value!,
+                builder.Configuration.GetSection("DBSettings:Database").Value!,
+                name: "mongodb",
+                timeout: TimeSpan.FromSeconds(10),
+                tags: ["live"]);
 
+            */
+
+        // Set the memory cache as default.
         builder.Services.AddMemoryCache();
 
         builder.Services.AddSingleton<IServiceId, ServiceId>();

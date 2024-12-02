@@ -10,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Exceptions;
 using Serilog.Filters;
+using Serilog.Formatting.Compact;
 using Serilog.Sinks.Elasticsearch;
 using Serilog.Sinks.Grafana.Loki;
 
@@ -64,7 +66,11 @@ public static class Extensions
             .Enrich.WithProperty("Environment", environmentName)
             .Enrich.WithProperty("Application", appOptions.Service)
             .Enrich.WithProperty("Instance", appOptions.Instance)
-            .Enrich.WithProperty("Version", appOptions.Version);
+            .Enrich.WithProperty("Version", appOptions.Version)
+            .Enrich.WithExceptionDetails()
+            .Enrich.WithMachineName()
+            .Enrich.WithProcessId()
+            .Enrich.WithThreadId();
 
         foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
         {
@@ -98,7 +104,14 @@ public static class Extensions
         // console
         if (consoleOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.Console();
+            if (consoleOptions.StructuredConsoleLogging)
+            {
+                loggerConfiguration.WriteTo.Console(new RenderedCompactJsonFormatter());
+            }
+            else
+            {
+                loggerConfiguration.WriteTo.Async(wt => wt.Console());
+            }
         }
 
         // local file system

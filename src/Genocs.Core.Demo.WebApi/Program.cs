@@ -22,7 +22,6 @@ builder.Host
 
 builder.AddGenocs()
     .AddJwt()
-//    .AddOpenIdJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
     .RegisterMongoRepositories(Assembly.GetExecutingAssembly())

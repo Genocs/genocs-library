@@ -65,6 +65,7 @@ public class JwtOptions
     /// Defaults to true.
     /// </summary>
     public bool IncludeErrorDetails { get; set; } = true;
+
     public string? AuthenticationType { get; set; }
     public string? NameClaimType { get; set; }
 
@@ -76,8 +77,19 @@ public class JwtOptions
 
     public class CertificateOptions
     {
+        /// <summary>
+        /// The location of the certificate.
+        /// </summary>
         public string? Location { get; set; }
+
+        /// <summary>
+        /// The certificate as a byte array.
+        /// </summary>
         public string? RawData { get; set; }
+
+        /// <summary>
+        /// The certificate password.
+        /// </summary>
         public string? Password { get; set; }
     }
 }

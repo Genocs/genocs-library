@@ -16,7 +16,7 @@
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
-    
+
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
     </ItemGroup>
@@ -28,7 +28,13 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+        <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+        <PackageReference Include="Serilog.Expressions" Version="5.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
         <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.3.0" />

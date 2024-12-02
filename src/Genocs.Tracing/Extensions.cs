@@ -20,7 +20,7 @@ public static class Extensions
 {
 
     /// <summary>
-    /// Custom settings for OpenTelemetry.
+    /// It allows to insert OpenTelemetry into the build pipeline.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <returns>The Genocs builder you can use for chain.</returns>
