@@ -31,8 +31,8 @@ public class JwtOptions
     public bool RequireHttpsMetadata { get; set; }
     public bool RequireExpirationTime { get; set; } = true;
     public bool RequireSignedTokens { get; set; } = true;
-    public int ExpiryMinutes { get; set; }
-    public TimeSpan? Expiry { get; set; }
+    public int ExpiryMinutes { get; set; } = 60;
+    public TimeSpan Expiry { get; set; } = TimeSpan.FromMinutes(60);
     public string? ValidAudience { get; set; }
     public IEnumerable<string>? ValidAudiences { get; set; }
     public string? ValidIssuer { get; set; }

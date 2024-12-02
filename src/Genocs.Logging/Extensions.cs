@@ -104,7 +104,7 @@ public static class Extensions
         // console
         if (consoleOptions.Enabled)
         {
-            if (consoleOptions.StructuredConsoleLogging)
+            if (consoleOptions.EnableStructured)
             {
                 loggerConfiguration.WriteTo.Console(new RenderedCompactJsonFormatter());
             }
