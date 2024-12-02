@@ -5,14 +5,14 @@
         <PackageId>Genocs.Logging</PackageId>
         <RootNamespace>Genocs.Logging</RootNamespace>
         <AssemblyName>Genocs.Logging</AssemblyName>
-        <Title>The logging library useful to build .NET Core projects.</Title>
-        <Description>The logging library useful to build .NET Core projects.</Description>
+        <Title>The logging library.</Title>
+        <Description>The logging library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

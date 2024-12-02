@@ -5,14 +5,14 @@
         <PackageId>Genocs.HTTP.RestEase</PackageId>
         <RootNamespace>Genocs.HTTP.RestEase</RootNamespace>
         <AssemblyName>Genocs.HTTP.RestEase</AssemblyName>
-        <Title>The http support library useful to build .NET Core projects.</Title>
-        <Description>The http support library useful to build .NET Core projects.</Description>
+        <Title>The http support library.</Title>
+        <Description>The http support library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageTags>aggregate dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

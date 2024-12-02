@@ -5,14 +5,14 @@
         <PackageId>Genocs.HTTP</PackageId>
         <RootNamespace>Genocs.HTTP</RootNamespace>
         <AssemblyName>Genocs.HTTP</AssemblyName>
-        <Title>The http support library useful to build .NET Core projects.</Title>
-        <Description>The http support library useful to build .NET Core projects.</Description>
+        <Title>The http client library.</Title>
+        <Description>The http client library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>microservice microservices solid solid-principles genocs http-client</PackageTags>
+        <PackageTags>http http-client genocs microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

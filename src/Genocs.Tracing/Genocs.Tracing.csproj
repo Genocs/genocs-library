@@ -5,12 +5,12 @@
         <PackageId>Genocs.Tracing</PackageId>
         <RootNamespace>Genocs.Tracing</RootNamespace>
         <AssemblyName>Genocs.Tracing</AssemblyName>
-        <Title>The tracing library to use Azure Service Bus.</Title>
-        <Description>The tracing library to use Azure Service Bus.</Description>
+        <Title>The tracing library to setup OpenTelemetry.</Title>
+        <Description>The tracing library to setup OpenTelemetry.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageTags>telemetry opentelemetry genocs dotnet dotnetcore dotnet-core microservice microservices</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
         <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
@@ -37,7 +37,6 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
-        <PackageReference Include="Polly" Version="8.5.0" />
     </ItemGroup>
 
 </Project>

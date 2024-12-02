@@ -6,13 +6,13 @@
         <RootNamespace>Genocs.Persistence.MongoDb</RootNamespace>
         <AssemblyName>Genocs.Persistence.MongoDb</AssemblyName>
         <Title>The Persistence MongoDB Library.</Title>
-        <Description>The Genocs Library .NET Core to be used with MongoDB as persistence datalayer..</Description>
+        <Description>The Genocs Library .NET Core to be used with MongoDB as persistence datalayer.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>mongodb aggregate architecture boilerplate repository-patterns domain-driven-design dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Moved to NET8.0</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
