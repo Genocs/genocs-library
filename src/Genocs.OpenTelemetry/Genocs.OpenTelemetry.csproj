@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
+        <PackageId>Genocs.OpenTelemetry</PackageId>
+        <RootNamespace>Genocs.OpenTelemetry</RootNamespace>
+        <AssemblyName>Genocs.OpenTelemetry</AssemblyName>
+        <Title>The Open Telemetry support library.</Title>
+        <Description>The Open Telemetry support library.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <PackageTags>open telemetry dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>        
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
+        <ProjectReference Include="..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
+        <ProjectReference Include="..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="7.1.0" />
+        <PackageReference Include="Genocs.HTTP" Version="7.1.0" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.1.0" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.10.0" />
+      <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
+      <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+      <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
+    </ItemGroup>
+    
+</Project>

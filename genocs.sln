@@ -123,13 +123,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 		src\apps\docker-compose.override.yml = src\apps\docker-compose.override.yml
 		src\apps\docker-compose.yml = src\apps\docker-compose.yml
 		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
-		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
 		src\apps\local.env = src\apps\local.env
+		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
 		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
 		src\apps\signalr-webapi.dockerfile = src\apps\signalr-webapi.dockerfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.AzureKeyVault", "src\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj", "{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.OpenTelemetry", "src\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj", "{62380657-23D0-0ECD-8FFE-0B1DA5461D37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -297,6 +299,10 @@ Global
 		{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
