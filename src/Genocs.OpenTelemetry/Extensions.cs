@@ -1,6 +1,7 @@
 ﻿using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
+using Genocs.Core.Exceptions;
 using Genocs.GnxOpenTelemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,6 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using static Genocs.Core.Exceptions.GenocsException;
 
 namespace Genocs.GnxOpenTelemetry;
 
@@ -19,7 +19,7 @@ public static class OpenTelemetryExtensions
                                             this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
-            ?? throw new InvalidConfigurationException("app config section is missing. AddOpenTelemetry requires those configuration.");
+            ?? throw new GenocsException.InvalidConfigurationException("app config section is missing. AddOpenTelemetry requires those configuration.");
 
         // No OpenTelemetryTracing in case of missing ServiceName
         if (string.IsNullOrWhiteSpace(appOptions.Service))
@@ -139,7 +139,6 @@ public static class OpenTelemetryExtensions
         {
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
-
 
             // Setup the exporter
             if (openTelemetryOptions.Exporter?.Enabled == true)

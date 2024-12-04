@@ -103,10 +103,14 @@ public static class Extensions
         var lokiOptions = options.Loki ?? new LokiOptions();
         var azureOptions = options.Azure ?? new AzureOptions();
 
-        loggerConfiguration.WriteTo.OpenTelemetry(wt =>
+        // OpenTelemetry setup
+        if (!string.IsNullOrWhiteSpace(options.OtlpEndpoint))
         {
-            wt.Endpoint = "http://localhost:4318";
-        });
+            loggerConfiguration.WriteTo.OpenTelemetry(wt =>
+            {
+                wt.Endpoint = options.OtlpEndpoint;
+            });
+        }
 
         // console
         if (consoleOptions.Enabled)
