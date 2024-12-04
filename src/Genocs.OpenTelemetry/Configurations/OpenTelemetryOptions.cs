@@ -22,4 +22,9 @@ public class OpenTelemetryOptions
     public string? OtlpEndpoint { get; set; }
 
     public OtlpExportOptions? Exporter { get; set; }
+
+    /// <summary>
+    /// Console OpenTelemetry settings.
+    /// </summary>
+    public ConsoleOptions? Console { get; set; }
 }

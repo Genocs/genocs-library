@@ -70,6 +70,12 @@ public static class OpenTelemetryExtensions
                         });
                 }
 
+                // Setup Console exporter
+                if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableMetrics)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    metrics.AddConsoleExporter();
+                }
             })
             .WithTracing(tracing =>
             {
@@ -103,6 +109,13 @@ public static class OpenTelemetryExtensions
                             }
                         });
                 }
+
+                // Setup Console exporter
+                if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableTracing)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    tracing.AddConsoleExporter();
+                }
             });
 
         // Add the OpenTelemetry logging provider
@@ -135,6 +148,13 @@ public static class OpenTelemetryExtensions
                         };
                     }
                 });
+            }
+
+            // Setup Console exporter
+            if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableLogging)
+            {
+                // you should add OpenTelemetry.Exporter.Console NuGet package
+                logging.AddConsoleExporter();
             }
         });
 
