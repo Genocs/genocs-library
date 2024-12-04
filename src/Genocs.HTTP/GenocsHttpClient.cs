@@ -124,9 +124,14 @@ public class GenocsHttpClient : IHttpClient
             .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(async () =>
             {
+                // Send the HTTP request
                 var response = await _client.SendAsync(request);
+
+                // Check if the response indicates a successful status code
                 if (!response.IsSuccessStatusCode)
                 {
+                    throw new HttpRequestException($"The HTTP request failed with status code {response.StatusCode}.");
+                    // If not successful, return the default value for the type
                     return default!;
                 }
 
@@ -207,11 +212,18 @@ public class GenocsHttpClient : IHttpClient
     protected virtual Task<HttpResponseMessage> SendAsync(string uri, Method method, HttpContent? content = null)
         => Policy.Handle<Exception>()
             .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
-            .ExecuteAsync(() =>
+            .ExecuteAsync(async () =>
             {
                 string requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
 
-                return GetResponseAsync(requestUri, method, content);
+                var result = await GetResponseAsync(requestUri, method, content) ?? throw new HttpRequestException("The HTTP request failed.");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new Exception($"The HTTP request failed with status code {result.StatusCode}.");
+                }
+
+                return result;
             });
 
     protected virtual Task<HttpResponseMessage> GetResponseAsync(string uri, Method method, HttpContent? content = null)

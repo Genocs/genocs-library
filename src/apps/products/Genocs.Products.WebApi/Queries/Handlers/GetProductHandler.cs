@@ -17,14 +17,14 @@ public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
 
     public async Task<ProductDto?> HandleAsync(GetProduct query, CancellationToken cancellationToken = default)
     {
-        var product = await _repository.GetAsync(query.ProductId);
+        int currentValue = _random.Next(0, 100);
 
-        int currentValue = _random.Next(1, 10);
-
-        if (currentValue > 6)
+        if (currentValue < 20)
         {
             throw new Exception("Random exception");
         }
+
+        var product = await _repository.GetAsync(query.ProductId);
 
         return product is null
             ? null

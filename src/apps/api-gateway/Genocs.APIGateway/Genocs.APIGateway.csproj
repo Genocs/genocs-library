@@ -14,7 +14,7 @@
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Security\Genocs.Security.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
 
@@ -26,7 +26,7 @@
         <PackageReference Include="Genocs.Metrics" Version="7.1.0" />
         <PackageReference Include="Genocs.Secrets.Vault" Version="7.1.0" />
         <PackageReference Include="Genocs.Security" Version="7.1.0" />
-        <PackageReference Include="Genocs.OpenTelemetry" Version="7.1.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.1.0" />
         <PackageReference Include="Genocs.WebApi" Version="7.1.0" />
     </ItemGroup>
 
