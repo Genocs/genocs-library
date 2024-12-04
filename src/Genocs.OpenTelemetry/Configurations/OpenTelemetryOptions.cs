@@ -16,15 +16,15 @@ public class OpenTelemetryOptions
     ///
     public bool Enabled { get; set; }
 
-    /// <summary>
-    /// The Otlp Exporter endpoint.
-    /// </summary>
-    public string? OtlpEndpoint { get; set; }
-
     public OtlpExportOptions? Exporter { get; set; }
 
     /// <summary>
     /// Console OpenTelemetry settings.
     /// </summary>
     public ConsoleOptions? Console { get; set; }
+
+    /// <summary>
+    /// Azure OpenTelemetry settings.
+    /// </summary>
+    public AzureOptions? Azure { get; set; }
 }

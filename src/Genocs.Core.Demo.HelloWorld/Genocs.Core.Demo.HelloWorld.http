@@ -1,0 +1,6 @@
+@Genocs.Core.Demo.HelloWorld_HostAddress = http://localhost:5267
+
+GET {{Genocs.Core.Demo.HelloWorld_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

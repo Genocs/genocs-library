@@ -11,6 +11,11 @@ public class OtlpExportOptions
     public bool Enabled { get; set; }
 
     /// <summary>
+    /// The Otlp Exporter endpoint.
+    /// </summary>
+    public string? OtlpEndpoint { get; set; }
+
+    /// <summary>
     /// The used OtlpExportProtocol.
     /// IT could be [Grpc|HttpProtobuf].
     /// </summary>

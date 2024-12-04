@@ -1,4 +1,5 @@
-﻿using Genocs.Common.Configurations;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.GnxOpenTelemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,28 +29,23 @@ public static class OpenTelemetryExtensions
 
         OpenTelemetryOptions? openTelemetryOptions = builder.GetOptions<OpenTelemetryOptions>(OpenTelemetryOptions.Position);
 
-        //LoggerOptions loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
-
-        //if (loggerOptions is null)
-        //{
-        //    return builder;
-        //}
-
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource => resource.AddService(serviceName: appOptions.Service))
             .WithMetrics(metrics =>
             {
+                // Setup standard instrumentations
                 metrics
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation();
 
                 // Setup the exporter
-                if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+                if (openTelemetryOptions.Exporter?.Enabled == true)
                 {
                     metrics
                         .AddOtlpExporter(otlpOptions =>
                         {
-                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
 
                             // Check if Jaeger is enabled
                             if (openTelemetryOptions.Exporter?.Enabled == true)
@@ -76,6 +72,16 @@ public static class OpenTelemetryExtensions
                     // you should add OpenTelemetry.Exporter.Console NuGet package
                     metrics.AddConsoleExporter();
                 }
+
+                // Setup Azure exporter
+                if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableMetrics)
+                {
+                    // you should add OpenTelemetry.Exporter.Console NuGet package
+                    metrics.AddAzureMonitorMetricExporter(o =>
+                    {
+                        o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
+                    });
+                }
             })
             .WithTracing(tracing =>
             {
@@ -84,12 +90,12 @@ public static class OpenTelemetryExtensions
                     .AddHttpClientInstrumentation();
 
                 // Setup the exporter
-                if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+                if (openTelemetryOptions.Exporter?.Enabled == true)
                 {
                     tracing
                         .AddOtlpExporter(otlpOptions =>
                         {
-                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
 
                             // Check if Jaeger is enabled
                             if (openTelemetryOptions.Exporter?.Enabled == true)
@@ -116,6 +122,16 @@ public static class OpenTelemetryExtensions
                     // you should add OpenTelemetry.Exporter.Console NuGet package
                     tracing.AddConsoleExporter();
                 }
+
+                // Setup Azure exporter
+                if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableTracing)
+                {
+                    // you should add Azure.Monitor.OpenTelemetry.Exporter NuGet package
+                    tracing.AddAzureMonitorTraceExporter(o =>
+                    {
+                        o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
+                    });
+                }
             });
 
         // Add the OpenTelemetry logging provider
@@ -124,12 +140,13 @@ public static class OpenTelemetryExtensions
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
 
+
             // Setup the exporter
-            if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+            if (openTelemetryOptions.Exporter?.Enabled == true)
             {
                 logging.AddOtlpExporter(otlpOptions =>
                 {
-                    otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+                    otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
 
                     // Check if Jaeger is enabled
                     if (openTelemetryOptions.Exporter?.Enabled == true)
@@ -155,6 +172,16 @@ public static class OpenTelemetryExtensions
             {
                 // you should add OpenTelemetry.Exporter.Console NuGet package
                 logging.AddConsoleExporter();
+            }
+
+            // Setup Azure exporter
+            if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableLogging)
+            {
+                // you should add Azure.Monitor.OpenTelemetry.Exporter NuGet package
+                logging.AddAzureMonitorLogExporter(o =>
+                {
+                    o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
+                });
             }
         });
 

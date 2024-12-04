@@ -1,4 +1,19 @@
 services:
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    hostname: aspire_dashboard
+    container_name: aspire_dashboard
+    ports:
+      - 18888:18888
+      - 4318:18889
+
+    environment:
+      - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
+
+    networks:
+      - genocs
+    # network_mode: host
+
   grafana:
     image: grafana/grafana
     hostname: grafana

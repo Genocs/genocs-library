@@ -133,6 +133,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.AzureKeyVaul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.OpenTelemetry", "src\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj", "{62380657-23D0-0ECD-8FFE-0B1DA5461D37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.HelloWorld", "src\Genocs.Core.Demo.HelloWorld\Genocs.Core.Demo.HelloWorld.csproj", "{D7C394CF-487D-470D-B05C-CC2DD7EC290B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -303,6 +305,10 @@ Global
 		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62380657-23D0-0ECD-8FFE-0B1DA5461D37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -331,6 +337,7 @@ Global
 		{B2028A73-6C94-4166-A0BB-22080805E351} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{6CE8740F-8561-481B-AC9F-D1E73C449235} = {B2028A73-6C94-4166-A0BB-22080805E351}
 		{B184733D-2415-4517-BC65-26ED22EEB2C2} = {51A2E158-4686-4764-91D5-3CDDD06280D4}
+		{D7C394CF-487D-470D-B05C-CC2DD7EC290B} = {220036E9-322D-4D4A-BA98-21DCF111C50A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF634A51-3CA4-4FB3-A8ED-71C403516166}
