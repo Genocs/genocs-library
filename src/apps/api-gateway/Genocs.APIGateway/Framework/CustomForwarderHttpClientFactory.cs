@@ -11,7 +11,7 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
     {
         _correlationIdFactory = correlationIdFactory;
     }
-    
+
     public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
     {
         if (context.OldClient != null && context.NewConfig == context.OldConfig)
@@ -34,7 +34,7 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
             handler.SslOptions.EnabledSslProtocols = newClientOptions.SslProtocols.Value;
         }
 
-        // TODO: Enable this  
+        // TODO: Enable this
         //if (newClientOptions.ClientCertificate != null)
         //{
         //    handler.SslOptions.ClientCertificates = new X509CertificateCollection
@@ -53,12 +53,9 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
             handler.SslOptions.RemoteCertificateValidationCallback =
                 (sender, cert, chain, errors) => cert.Subject == "demo.io";
         }
-        
-        var httpMessageInvoker =  new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);
 
-        return httpMessageInvoker;
+        return new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);
     }
-
 
     private class CustomHttpMessageInvoker : HttpMessageInvoker
     {

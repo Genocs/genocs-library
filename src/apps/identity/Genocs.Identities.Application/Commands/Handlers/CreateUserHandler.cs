@@ -52,10 +52,9 @@ internal sealed class CreateUserHandler : ICommandHandler<CreateUser>
             throw new NameInUseException(command.Name);
         }
 
-        var role = string.IsNullOrWhiteSpace(command.Role) ? "user" : command.Role.ToLowerInvariant();
-        var password = _passwordService.Hash(command.Password);
-        user = new User(command.UserId, command.Email, command.Name, password, role, DateTime.UtcNow,
-            command.Permissions);
+        string role = string.IsNullOrWhiteSpace(command.Role) ? "user" : command.Role.ToLowerInvariant();
+        string password = _passwordService.Hash(command.Password);
+        user = new User(command.UserId, command.Email, command.Name, password, role, DateTime.UtcNow, command.Permissions);
         await _userRepository.AddAsync(user);
         _logger.LogInformation($"Created an account for the user with ID: '{user.Id}'.");
         await _messageBroker.PublishAsync(new UserCreated(user.Id, user.Name, user.Role));

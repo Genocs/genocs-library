@@ -65,19 +65,26 @@ public class DispatcherEndpointsBuilder : IDispatcherEndpointsBuilder
         return this;
     }
 
-    public IDispatcherEndpointsBuilder Post(string path, Func<HttpContext, Task>? context = null,
-        Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies)
+    public IDispatcherEndpointsBuilder Post(
+                                            string path,
+                                            Func<HttpContext, Task>? context = null,
+                                            Action<IEndpointConventionBuilder>? endpoint = null,
+                                            bool auth = false,
+                                            string? roles = null,
+                                            params string[] policies)
     {
         _builder.Post(path, context, endpoint, auth, roles, policies);
-
         return this;
     }
 
-    public IDispatcherEndpointsBuilder Post<T>(string path, Func<T, HttpContext, Task>? beforeDispatch = null,
-        Func<T, HttpContext, Task>? afterDispatch = null, Action<IEndpointConventionBuilder>? endpoint = null,
-        bool auth = false, string? roles = null,
-        params string[] policies)
+    public IDispatcherEndpointsBuilder Post<T>(
+                                                string path,
+                                                Func<T, HttpContext, Task>? beforeDispatch = null,
+                                                Func<T, HttpContext, Task>? afterDispatch = null,
+                                                Action<IEndpointConventionBuilder>? endpoint = null,
+                                                bool auth = false,
+                                                string? roles = null,
+                                                params string[] policies)
         where T : class, ICommand
     {
         _builder.Post<T>(path, (cmd, ctx) => BuildCommandContext(cmd, ctx, beforeDispatch, afterDispatch),
@@ -128,9 +135,12 @@ public class DispatcherEndpointsBuilder : IDispatcherEndpointsBuilder
         return this;
     }
 
-    private static async Task BuildCommandContext<T>(T command, HttpContext context,
-        Func<T, HttpContext, Task>? beforeDispatch = null,
-        Func<T, HttpContext, Task>? afterDispatch = null) where T : class, ICommand
+    private static async Task BuildCommandContext<T>(
+                                                        T command,
+                                                        HttpContext context,
+                                                        Func<T, HttpContext, Task>? beforeDispatch = null,
+                                                        Func<T, HttpContext, Task>? afterDispatch = null)
+        where T : class, ICommand
     {
         if (beforeDispatch is not null)
         {

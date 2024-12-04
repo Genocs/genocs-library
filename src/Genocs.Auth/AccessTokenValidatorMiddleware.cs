@@ -10,7 +10,7 @@ namespace Genocs.Auth;
 public class AccessTokenValidatorMiddleware : IMiddleware
 {
     private readonly IAccessTokenService _accessTokenService;
-    private readonly IEnumerable<string> _endpoints;
+    private readonly IEnumerable<string> _allowAnonymousEndpoints;
 
     /// <summary>
     /// The AccessTokenValidatorMiddleware constructor.
@@ -20,7 +20,7 @@ public class AccessTokenValidatorMiddleware : IMiddleware
     public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtOptions options)
     {
         _accessTokenService = accessTokenService;
-        _endpoints = options.AllowAnonymousEndpoints ?? Enumerable.Empty<string>();
+        _allowAnonymousEndpoints = options.AllowAnonymousEndpoints ?? Enumerable.Empty<string>();
     }
 
     /// <summary>
@@ -33,10 +33,10 @@ public class AccessTokenValidatorMiddleware : IMiddleware
     {
         string path = context.Request.Path.HasValue ? context.Request.Path.Value : string.Empty;
 
-        if (_endpoints.Contains(path))
+        // Skip check on AnonymousEndpoints
+        if (_allowAnonymousEndpoints.Contains(path))
         {
             await next(context);
-
             return;
         }
 

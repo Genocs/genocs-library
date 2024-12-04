@@ -47,11 +47,11 @@ internal class Startup(IConfiguration configuration)
             .AddWebApi()
             .Build();
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("authenticatedUser", policy =>
-                policy.RequireAuthenticatedUser());
-        });
+        //services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("authenticatedUser", policy =>
+        //        policy.RequireAuthenticatedUser());
+        //});
 
         services.AddCors(cors =>
         {

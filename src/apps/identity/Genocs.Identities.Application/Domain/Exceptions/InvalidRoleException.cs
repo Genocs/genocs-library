@@ -1,8 +1,6 @@
 namespace Genocs.Identities.Application.Domain.Exceptions;
 
-public class InvalidRoleException : DomainException
+public class InvalidRoleException(string role)
+    : DomainException($"Invalid role: {role}.")
 {
-    public InvalidRoleException(string role) : base($"Invalid role: {role}.")
-    {
-    }
 }

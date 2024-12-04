@@ -22,10 +22,10 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
     }
 
     public Task<bool> IsCurrentActiveToken()
-        => IsActiveAsync(GetCurrentAsync());
+        => IsActiveAsync(GetCurrent());
 
     public Task DeactivateCurrentAsync()
-        => DeactivateAsync(GetCurrentAsync());
+        => DeactivateAsync(GetCurrent());
 
     public Task<bool> IsActiveAsync(string token)
         => Task.FromResult(string.IsNullOrWhiteSpace(_cache.Get<string>(GetKey(token))));
@@ -40,7 +40,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
         return Task.CompletedTask;
     }
 
-    private string GetCurrentAsync()
+    private string GetCurrent()
     {
         var authorizationHeader = _httpContextAccessor
             .HttpContext?.Request.Headers["authorization"];

@@ -20,7 +20,8 @@ builder.Host
         .UseAzureKeyVault()
         .UseLogging();
 
-builder.AddGenocs()
+builder
+    .AddGenocs()
     .AddJwt()
     .AddOpenTelemetry()
     .AddMongoFast()
@@ -58,6 +59,8 @@ services.AddCustomMassTransit(builder.Configuration);
 services.AddOptions();
 
 var app = builder.Build();
+
+app.UseGenocs();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

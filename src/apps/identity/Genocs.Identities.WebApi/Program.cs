@@ -9,6 +9,7 @@ using Genocs.Logging;
 using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
+using Genocs.Auth;
 using Serilog;
 using Genocs.Discovery.Consul;
 
@@ -22,6 +23,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
+                                    .AddJwt()
                                     .AddWebApi()
                                     .AddConsul()
                                     .AddFabio()

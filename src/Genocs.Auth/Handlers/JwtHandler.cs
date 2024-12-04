@@ -27,12 +27,8 @@ internal sealed class JwtHandler : IJwtHandler
 
     public JwtHandler(JwtOptions options, TokenValidationParameters tokenValidationParameters)
     {
-        var issuerSigningKey = tokenValidationParameters.IssuerSigningKey;
-        if (issuerSigningKey is null)
-        {
-            throw new InvalidOperationException("Issuer signing key not set.");
-        }
-
+        var issuerSigningKey = tokenValidationParameters.IssuerSigningKey
+            ?? throw new InvalidOperationException("Issuer signing key not set.");
         if (string.IsNullOrWhiteSpace(options.Algorithm))
         {
             throw new InvalidOperationException("Security algorithm not set.");
