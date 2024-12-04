@@ -5,7 +5,7 @@ using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
-using Genocs.Tracing;
+using Genocs.GnxOpenTelemetry;
 using Genocs.WebApi;
 using Yarp.ReverseProxy.Forwarder;
 

@@ -1,15 +1,16 @@
 ﻿using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.OpenTelemetry.Configurations;
+using Genocs.GnxOpenTelemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using static Genocs.Core.Exceptions.GenocsException;
 
-namespace Genocs.OpenTelemetry;
+namespace Genocs.GnxOpenTelemetry;
 
 public static class OpenTelemetryExtensions
 {
@@ -42,11 +43,33 @@ public static class OpenTelemetryExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
 
-                metrics
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
-                    });
+                // Setup the exporter
+                if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+                {
+                    metrics
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+
+                            // Check if Jaeger is enabled
+                            if (openTelemetryOptions.Exporter?.Enabled == true)
+                            {
+                                // Parse enum
+                                otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
+                                otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
+
+                                // Check if Batch Exporter before setting options
+                                otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
+                                {
+                                    MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
+                                    ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
+                                    ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
+                                    MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
+                                };
+                            }
+                        });
+                }
+
             })
             .WithTracing(tracing =>
             {
@@ -54,22 +77,91 @@ public static class OpenTelemetryExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
 
-                tracing
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
-                    });
+                // Setup the exporter
+                if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+                {
+                    tracing
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+
+                            // Check if Jaeger is enabled
+                            if (openTelemetryOptions.Exporter?.Enabled == true)
+                            {
+                                // Parse enum
+                                otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
+                                otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
+
+                                // Check if Batch Exporter before setting options
+                                otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
+                                {
+                                    MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
+                                    ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
+                                    ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
+                                    MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
+                                };
+                            }
+                        });
+                }
             });
 
+        // Add the OpenTelemetry logging provider
         builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(logging =>
         {
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
 
-            logging.AddOtlpExporter();
+            // Setup the exporter
+            if (!string.IsNullOrWhiteSpace(openTelemetryOptions.OtlpEndpoint))
+            {
+                logging.AddOtlpExporter(otlpOptions =>
+                {
+                    otlpOptions.Endpoint = new Uri(openTelemetryOptions.OtlpEndpoint!);
+
+                    // Check if Jaeger is enabled
+                    if (openTelemetryOptions.Exporter?.Enabled == true)
+                    {
+                        // Parse enum
+                        otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
+                        otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
+
+                        // Check if Batch Exporter before setting options
+                        otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
+                        {
+                            MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
+                            ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
+                            ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
+                            MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
+                        };
+                    }
+                });
+            }
         });
 
         return builder;
     }
+
+    /*
+    private static void SetupJaegerExporter(OpenTelemetry.Exporter.OtlpExporterOptions provider)
+    {
+        provider.AddOtlpExporter(o =>
+        {
+            o.Endpoint = new Uri(jaegerOptions.Endpoint);
+
+            // Parse enum
+            o.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(jaegerOptions.Protocol);
+            o.ExportProcessorType = Enum.Parse<ExportProcessorType>(jaegerOptions.ProcessorType);
+
+            // Check if Batch Exporter before setting options
+            o.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
+            {
+                MaxQueueSize = jaegerOptions.MaxQueueSize,
+                ScheduledDelayMilliseconds = jaegerOptions.ScheduledDelayMilliseconds,
+                ExporterTimeoutMilliseconds = jaegerOptions.ExporterTimeoutMilliseconds,
+                MaxExportBatchSize = jaegerOptions.MaxExportBatchSize
+            };
+        });
+    }
+    */
 
 }
