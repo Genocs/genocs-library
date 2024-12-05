@@ -154,7 +154,11 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         if (auth || hasRoles)
         {
             builder.RequireAuthorization(authorize);
+            return;
         }
+
+        // I don't like this, but it is the only way to allow anonymous access
+        builder.AllowAnonymous();
     }
 
     private static async Task BuildRequestContext<T>(

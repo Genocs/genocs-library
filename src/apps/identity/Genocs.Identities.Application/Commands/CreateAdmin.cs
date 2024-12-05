@@ -2,7 +2,7 @@ using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Identities.Application.Commands;
 
-public class CreateUser(string email, string name, string password, IEnumerable<string> permissions) : ICommand
+public class CreateAdmin(string email, string name, string password, IEnumerable<string> permissions) : ICommand
 {
     public Guid UserId { get; } = Guid.NewGuid();
     public string Email { get; } = email;

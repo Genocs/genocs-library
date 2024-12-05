@@ -94,15 +94,15 @@ public static class Extensions
 
         builder.Services.AddAuthorizationBuilder()
                             .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .Build())
-                            .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
-                                => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
-                            .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
-                                => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
-                            .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
-                                => context.User.HasClaim(ClaimTypes.Role, Roles.User)
-                                    || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
+                            .RequireAuthenticatedUser()
+                            .Build())
+                                .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
+                                    => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
+                                .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
+                                    => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
+                                .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
+                                    => context.User.HasClaim(ClaimTypes.Role, Roles.User)
+                                        || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
 
         return builder;
     }
@@ -114,16 +114,17 @@ public static class Extensions
     {
         app.UseMiddleware<LogContextMiddleware>()
             .UseErrorHandler()
-            //.UseJaeger()
             .UseSwaggerDocs()
             .UseGenocs()
             .UseAccessTokenValidator()
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
+            .UseAuthorization()
             .UseMetrics()
             .UseRabbitMQ()
-            .SubscribeCommand<CreateUser>();
+            .SubscribeCommand<CreateUser>()
+            .SubscribeCommand<CreateAdmin>();
 
         return app;
     }
@@ -143,7 +144,7 @@ public static class Extensions
             return string.Empty;
         }
 
-        if (messageProperties.Headers.TryGetValue(header, out var span) && span is byte[] spanBytes)
+        if (messageProperties.Headers.TryGetValue(header, out object? span) && span is byte[] spanBytes)
         {
             return Encoding.UTF8.GetString(spanBytes);
         }

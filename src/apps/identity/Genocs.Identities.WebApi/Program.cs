@@ -48,6 +48,11 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                                 ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                 return Task.CompletedTask;
                             })
+                            .Post<CreateAdmin>("onboarding", auth: true, policies: [Policies.AdminOnly], afterDispatch: (cmd, ctx) =>
+                            {
+                                ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
+                                return Task.CompletedTask;
+                            })
                             .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, policies: [Policies.AdminOnly])
                             .Post<UseRefreshToken>("refresh-tokens/use", afterDispatch: (cmd, ctx) =>
                             {
