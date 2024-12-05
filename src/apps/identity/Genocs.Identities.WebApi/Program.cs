@@ -1,6 +1,9 @@
+using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Discovery.Consul;
 using Genocs.Identities.Application;
 using Genocs.Identities.Application.Commands;
+using Genocs.Identities.Application.Domain.Constants;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Queries;
 using Genocs.Identities.Application.Services;
@@ -9,9 +12,7 @@ using Genocs.Logging;
 using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.Auth;
 using Serilog;
-using Genocs.Discovery.Consul;
 
 StaticLogger.EnsureInitialized();
 
@@ -47,17 +48,17 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                                 ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                 return Task.CompletedTask;
                             })
-                            .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, roles: "admin")
+                            .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, policies: [Policies.AdminOnly])
                             .Post<UseRefreshToken>("refresh-tokens/use", afterDispatch: (cmd, ctx) =>
                             {
                                 var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
                                 return ctx.Response.WriteJsonAsync(auth);
                             })
-                            .Post<RevokeRefreshToken>("refresh-tokens/revoke", auth: true, roles: "admin")
+                            .Post<RevokeRefreshToken>("refresh-tokens/revoke", auth: true, policies: [Policies.AdminOnly])
                             .Get<GetUser, UserDetailsDto>("users/{userId:guid}", auth: true)
                             .Get<BrowseUsers, PagedDto<UserDto>>("users", auth: true)
-                            .Put<LockUser>("users/{userId:guid}/lock", auth: true, roles: "admin")
-                            .Put<UnlockUser>("users/{userId:guid}/unlock", auth: true, roles: "admin"));
+                            .Put<LockUser>("users/{userId:guid}/lock", auth: true, policies: [Policies.AdminOnly])
+                            .Put<UnlockUser>("users/{userId:guid}/unlock", auth: true, policies: [Policies.AdminOnly]));
 
 app.Run();
 

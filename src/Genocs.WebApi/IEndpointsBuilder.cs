@@ -58,7 +58,7 @@ public interface IEndpointsBuilder
 
     IEndpointsBuilder Put<T>(
                                 string path,
-                                Func<T, HttpContext, Task>? context = null,
+                                Func<T, HttpContext?, Task>? context = null,
                                 Action<IEndpointConventionBuilder>? endpoint = null,
                                 bool auth = false,
                                 string? roles = null,
@@ -67,7 +67,7 @@ public interface IEndpointsBuilder
 
     IEndpointsBuilder Delete(
                                 string path,
-                                Func<HttpContext, Task>? context = null,
+                                Func<HttpContext?, Task>? context = null,
                                 Action<IEndpointConventionBuilder>? endpoint = null,
                                 bool auth = false,
                                 string? roles = null,
@@ -75,7 +75,7 @@ public interface IEndpointsBuilder
 
     IEndpointsBuilder Delete<T>(
                                 string path,
-                                Func<T, HttpContext, Task>? context = null,
+                                Func<T, HttpContext?, Task>? context = null,
                                 Action<IEndpointConventionBuilder>? endpoint = null,
                                 bool auth = false,
                                 string? roles = null,

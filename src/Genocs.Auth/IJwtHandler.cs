@@ -9,13 +9,13 @@ public interface IJwtHandler
     /// It allows to create a new JsonWebToken.
     /// </summary>
     /// <param name="userId">The userId.</param>
-    /// <param name="role">The role.</param>
+    /// <param name="roles">The list of roles.</param>
     /// <param name="audience">The audience.</param>
     /// <param name="claims">The claims.</param>
     /// <returns>The JsonWebToken just created.</returns>
     JsonWebToken CreateToken(
                                 string userId,
-                                string? role = null,
+                                IEnumerable<string>? roles = null,
                                 string? audience = null,
                                 IDictionary<string, IEnumerable<string>>? claims = null);
 

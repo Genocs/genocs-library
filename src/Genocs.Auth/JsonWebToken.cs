@@ -28,7 +28,7 @@ public class JsonWebToken
     /// <summary>
     /// Gets or sets the access token role.
     /// </summary>
-    public string? Role { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 
     /// <summary>
     /// The claims.

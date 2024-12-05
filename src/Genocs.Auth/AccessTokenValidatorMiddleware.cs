@@ -40,10 +40,9 @@ public class AccessTokenValidatorMiddleware : IMiddleware
             return;
         }
 
-        if (await _accessTokenService.IsCurrentActiveToken())
+        if (_accessTokenService.IsCurrentActiveToken())
         {
             await next(context);
-
             return;
         }
 

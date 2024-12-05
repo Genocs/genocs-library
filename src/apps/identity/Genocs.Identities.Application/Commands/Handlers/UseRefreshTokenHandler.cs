@@ -47,7 +47,7 @@ internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
                 ["permissions"] = user.Permissions
             }
             : null;
-        var auth = _jwtProvider.Create(token.UserId, user.Name, user.Role, claims: claims);
+        var auth = _jwtProvider.Create(token.UserId, user.Name, user.Roles, claims: claims);
         auth.RefreshToken = command.RefreshToken;
         _storage.Set(command.Id, auth);
     }

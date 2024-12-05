@@ -5,6 +5,10 @@ using Microsoft.Extensions.Primitives;
 
 namespace Genocs.Auth.Services;
 
+/// <summary>
+/// This service allows to validate JWT Token in real-time.
+/// In this way tokens can be invalidated and the effect shall be immediate.
+/// </summary>
 internal sealed class InMemoryAccessTokenService : IAccessTokenService
 {
     private readonly IMemoryCache _cache;
@@ -21,23 +25,21 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
         _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
     }
 
-    public Task<bool> IsCurrentActiveToken()
-        => IsActiveAsync(GetCurrent());
+    public bool IsCurrentActiveToken()
+        => IsActive(GetCurrent());
 
-    public Task DeactivateCurrentAsync()
-        => DeactivateAsync(GetCurrent());
+    public void DeactivateCurrent()
+        => Deactivate(GetCurrent());
 
-    public Task<bool> IsActiveAsync(string token)
-        => Task.FromResult(string.IsNullOrWhiteSpace(_cache.Get<string>(GetKey(token))));
+    public bool IsActive(string token)
+        => string.IsNullOrWhiteSpace(_cache.Get<string>(GetKey(token)));
 
-    public Task DeactivateAsync(string token)
+    public void Deactivate(string token)
     {
         _cache.Set(GetKey(token), "revoked", new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = _expires
         });
-
-        return Task.CompletedTask;
     }
 
     private string GetCurrent()
@@ -52,7 +54,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
 
         return authorizationHeader.Value == StringValues.Empty
             ? string.Empty
-            : authorizationHeader.Value.Single().Split(' ').Last();
+            : authorizationHeader.Value.Single()?.Split(' ').Last();
     }
 
     private static string GetKey(string token) => $"blacklisted-tokens:{token}";

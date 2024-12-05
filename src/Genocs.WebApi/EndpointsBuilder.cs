@@ -6,16 +6,10 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Genocs.WebApi;
 
-public class EndpointsBuilder : IEndpointsBuilder
+public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpointDefinitions definitions) : IEndpointsBuilder
 {
-    private readonly WebApiEndpointDefinitions _definitions;
-    private readonly IEndpointRouteBuilder _routeBuilder;
-
-    public EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpointDefinitions definitions)
-    {
-        _routeBuilder = routeBuilder;
-        _definitions = definitions;
-    }
+    private readonly WebApiEndpointDefinitions _definitions = definitions;
+    private readonly IEndpointRouteBuilder _routeBuilder = routeBuilder;
 
     public IEndpointsBuilder Get(
                                     string path,
@@ -33,9 +27,13 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    public IEndpointsBuilder Get<T>(string path, Func<T, HttpContext, Task>? context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string roles = null,
-        params string[] policies)
+    public IEndpointsBuilder Get<T>(
+                                    string path,
+                                    Func<T, HttpContext, Task>? context = null,
+                                    Action<IEndpointConventionBuilder> endpoint = null,
+                                    bool auth = false,
+                                    string? roles = null,
+                                    params string[] policies)
         where T : class
     {
         var builder = _routeBuilder.MapGet(path, ctx => BuildQueryContext(ctx, context));
@@ -134,18 +132,19 @@ public class EndpointsBuilder : IEndpointsBuilder
         return this;
     }
 
-    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder,
-                                                  bool auth,
-                                                  string? roles,
-                                                  params string[] policies)
+    private static void ApplyAuthRolesAndPolicies(
+                                                    IEndpointConventionBuilder builder,
+                                                    bool auth,
+                                                    string? roles,
+                                                    params string[] policies)
     {
-        if (policies is not null && policies.Any())
+        if (policies?.Any() == true)
         {
             builder.RequireAuthorization(policies);
             return;
         }
 
-        var hasRoles = !string.IsNullOrWhiteSpace(roles);
+        bool hasRoles = !string.IsNullOrWhiteSpace(roles);
         var authorize = new AuthorizeAttribute();
         if (hasRoles)
         {
@@ -158,8 +157,9 @@ public class EndpointsBuilder : IEndpointsBuilder
         }
     }
 
-    private static async Task BuildRequestContext<T>(HttpContext httpContext,
-        Func<T, HttpContext, Task>? context = null)
+    private static async Task BuildRequestContext<T>(
+                                                        HttpContext httpContext,
+                                                        Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = await httpContext.ReadJsonAsync<T>();
@@ -171,8 +171,9 @@ public class EndpointsBuilder : IEndpointsBuilder
         await context.Invoke(request, httpContext);
     }
 
-    private static async Task BuildQueryContext<T>(HttpContext httpContext,
-        Func<T, HttpContext, Task>? context = null)
+    private static async Task BuildQueryContext<T>(
+                                                    HttpContext httpContext,
+                                                    Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = httpContext.ReadQuery<T>();

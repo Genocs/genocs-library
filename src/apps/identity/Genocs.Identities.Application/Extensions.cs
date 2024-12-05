@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
@@ -8,6 +9,7 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.HTTP;
 using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.Decorators;
+using Genocs.Identities.Application.Domain.Constants;
 using Genocs.Identities.Application.Domain.Repositories;
 using Genocs.Identities.Application.Exceptions;
 using Genocs.Identities.Application.Logging;
@@ -28,6 +30,7 @@ using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -81,6 +84,25 @@ public static class Extensions
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(LoggingEventHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
+
+        // Authorization: Split on a separate method
+        //builder.Services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("HasAdminRole", policy => policy.RequireRole("admin"));
+        //    options.AddPolicy("HasUserRole", policy => policy.RequireRole("user"));
+        //});
+
+        builder.Services.AddAuthorizationBuilder()
+                            .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build())
+                            .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
+                                => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
+                            .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
+                                => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
+                            .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
+                                => context.User.HasClaim(ClaimTypes.Role, Roles.User)
+                                    || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
 
         return builder;
     }

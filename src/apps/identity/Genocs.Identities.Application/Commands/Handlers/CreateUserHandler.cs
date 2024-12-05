@@ -54,9 +54,9 @@ internal sealed class CreateUserHandler : ICommandHandler<CreateUser>
 
         string role = string.IsNullOrWhiteSpace(command.Role) ? "user" : command.Role.ToLowerInvariant();
         string password = _passwordService.Hash(command.Password);
-        user = new User(command.UserId, command.Email, command.Name, password, role, DateTime.UtcNow, command.Permissions);
+        user = new User(command.UserId, command.Email, command.Name, password, new List<string> { role }, DateTime.UtcNow, command.Permissions);
         await _userRepository.AddAsync(user);
         _logger.LogInformation($"Created an account for the user with ID: '{user.Id}'.");
-        await _messageBroker.PublishAsync(new UserCreated(user.Id, user.Name, user.Role));
+        await _messageBroker.PublishAsync(new UserCreated(user.Id, user.Name, user.Roles));
     }
 }

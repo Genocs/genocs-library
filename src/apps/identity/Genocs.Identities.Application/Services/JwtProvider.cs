@@ -15,18 +15,18 @@ public class JwtProvider : IJwtProvider
     public AuthDto Create(
                             Guid userId,
                             string username,
-                            string role,
+                            IEnumerable<string> roles,
                             string? audience = null,
                             IDictionary<string, IEnumerable<string>>? claims = null)
     {
-        var jwt = _jwtHandler.CreateToken(userId.ToString("N"), role, audience, claims);
+        var jwt = _jwtHandler.CreateToken(userId.ToString("N"), roles, audience, claims);
 
         return new AuthDto
         {
             UserId = userId,
             Username = username,
             AccessToken = jwt.AccessToken,
-            Role = jwt.Role,
+            Roles = jwt.Roles,
             Expires = jwt.Expires
         };
     }

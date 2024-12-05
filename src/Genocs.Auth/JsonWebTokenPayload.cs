@@ -13,7 +13,7 @@ public class JsonWebTokenPayload
     /// <summary>
     /// The Identity Role.
     /// </summary>
-    public string? Role { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 
     /// <summary>
     /// The expiration ticks.

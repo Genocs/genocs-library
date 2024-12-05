@@ -1,7 +1,8 @@
-using Genocs.Auth.Configurations;
-using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Genocs.Auth.Configurations;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Genocs.Auth.Handlers;
 
@@ -29,6 +30,7 @@ internal sealed class JwtHandler : IJwtHandler
     {
         var issuerSigningKey = tokenValidationParameters.IssuerSigningKey
             ?? throw new InvalidOperationException("Issuer signing key not set.");
+
         if (string.IsNullOrWhiteSpace(options.Algorithm))
         {
             throw new InvalidOperationException("Security algorithm not set.");
@@ -43,15 +45,15 @@ internal sealed class JwtHandler : IJwtHandler
     /// <summary>
     /// Creates a new token.
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="role"></param>
+    /// <param name="userId">The UserId.</param>
+    /// <param name="roles">The User Role.</param>
     /// <param name="audience"></param>
     /// <param name="claims"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">It is thrown when mandatory data is empty.</exception>
     public JsonWebToken CreateToken(
                                     string userId,
-                                    string? role = null,
+                                    IEnumerable<string>? roles = null,
                                     string? audience = null,
                                     IDictionary<string, IEnumerable<string>>? claims = null)
     {
@@ -69,9 +71,12 @@ internal sealed class JwtHandler : IJwtHandler
             new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString()),
         };
 
-        if (!string.IsNullOrWhiteSpace(role))
+        if (roles is not null)
         {
-            jwtClaims.Add(new Claim(ClaimTypes.Role, role));
+            foreach (string item in roles.Where(x => !string.IsNullOrEmpty(x)))
+            {
+                jwtClaims.Add(new Claim(ClaimTypes.Role, item));
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(audience))
@@ -109,7 +114,7 @@ internal sealed class JwtHandler : IJwtHandler
             RefreshToken = string.Empty,
             Expires = expires.ToTimestamp(),
             Id = userId,
-            Role = role ?? string.Empty,
+            Roles = roles,
             Claims = claims ?? EmptyClaims
         };
     }
@@ -118,7 +123,7 @@ internal sealed class JwtHandler : IJwtHandler
     /// Gets the token payload.
     /// </summary>
     /// <param name="accessToken"></param>
-    /// <returns></returns>
+    /// <returns>The JWT Token payload.</returns>
     public JsonWebTokenPayload? GetTokenPayload(string accessToken)
     {
         _jwtSecurityTokenHandler.ValidateToken(
@@ -134,7 +139,7 @@ internal sealed class JwtHandler : IJwtHandler
         return new JsonWebTokenPayload
         {
             Subject = jwt.Subject,
-            Role = jwt.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
+            Roles = jwt.Claims.Where(x => x.Type == ClaimTypes.Role)?.Select(c => c.Value),
             Expires = jwt.ValidTo.ToTimestamp(),
             Claims = jwt.Claims.Where(x => !DefaultClaims.Contains(x.Type))
                 .GroupBy(c => c.Type)

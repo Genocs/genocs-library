@@ -2,8 +2,8 @@ namespace Genocs.Auth;
 
 public interface IAccessTokenService
 {
-    Task<bool> IsCurrentActiveToken();
-    Task DeactivateCurrentAsync();
-    Task<bool> IsActiveAsync(string token);
-    Task DeactivateAsync(string token);
+    bool IsCurrentActiveToken();
+    void DeactivateCurrent();
+    bool IsActive(string token);
+    void Deactivate(string token);
 }
