@@ -150,9 +150,7 @@ public static class Extensions
     public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         => builder.UseMiddleware<ErrorHandlerMiddleware>();
 
-    public static IApplicationBuilder UseAllForwardedHeaders(
-                                                                this IApplicationBuilder builder,
-                                                                bool resetKnownNetworksAndProxies = true)
+    public static IApplicationBuilder UseAllForwardedHeaders(this IApplicationBuilder builder, bool resetKnownNetworksAndProxies = true)
     {
         ForwardedHeadersOptions forwardingOptions = new ForwardedHeadersOptions
         {
@@ -420,9 +418,9 @@ public static class Extensions
     public static string Args(this HttpContext context, string key)
         => context.Args<string>(key);
 
-    public static T Args<T>(this HttpContext context, string key)
+    public static T? Args<T>(this HttpContext context, string key)
     {
-        if (!context.GetRouteData().Values.TryGetValue(key, out var value))
+        if (!context.GetRouteData().Values.TryGetValue(key, out object? value))
         {
             return default;
         }
@@ -432,7 +430,7 @@ public static class Extensions
             return (T)value;
         }
 
-        var data = value?.ToString();
+        string? data = value?.ToString();
         if (string.IsNullOrWhiteSpace(data))
         {
             return default;
@@ -443,6 +441,6 @@ public static class Extensions
 
     private class EmptyExceptionToResponseMapper : IExceptionToResponseMapper
     {
-        public ExceptionResponse Map(Exception exception) => null;
+        public ExceptionResponse? Map(Exception exception) => null;
     }
 }

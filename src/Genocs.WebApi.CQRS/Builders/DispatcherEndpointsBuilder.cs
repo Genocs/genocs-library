@@ -154,23 +154,21 @@ public class DispatcherEndpointsBuilder(IEndpointsBuilder builder) : IDispatcher
             await beforeDispatch(command, context);
         }
 
-        var dispatcher = context?.RequestServices.GetRequiredService<ICommandDispatcher>();
+        ICommandDispatcher? dispatcher = context?.RequestServices.GetRequiredService<ICommandDispatcher>();
 
         if (dispatcher != null)
         {
             await dispatcher.SendAsync(command);
         }
 
-        if (afterDispatch is null)
+        if (afterDispatch is not null)
         {
-            if (context != null)
-            {
-                context.Response.StatusCode = 200;
-            }
-
-            return;
+            await afterDispatch(command, context);
         }
 
-        await afterDispatch(command, context);
+        if (context != null)
+        {
+            context.Response.StatusCode = 200;
+        }
     }
 }

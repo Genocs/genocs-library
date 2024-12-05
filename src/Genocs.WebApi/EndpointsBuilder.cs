@@ -132,11 +132,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         return this;
     }
 
-    private static void ApplyAuthRolesAndPolicies(
-                                                    IEndpointConventionBuilder builder,
-                                                    bool auth,
-                                                    string? roles,
-                                                    params string[] policies)
+    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder, bool auth, string? roles, params string[] policies)
     {
         if (policies?.Any() == true)
         {
@@ -161,9 +157,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         builder.AllowAnonymous();
     }
 
-    private static async Task BuildRequestContext<T>(
-                                                        HttpContext httpContext,
-                                                        Func<T, HttpContext, Task>? context = null)
+    private static async Task BuildRequestContext<T>(HttpContext httpContext, Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = await httpContext.ReadJsonAsync<T>();
@@ -175,9 +169,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         await context.Invoke(request, httpContext);
     }
 
-    private static async Task BuildQueryContext<T>(
-                                                    HttpContext httpContext,
-                                                    Func<T, HttpContext, Task>? context = null)
+    private static async Task BuildQueryContext<T>(HttpContext httpContext, Func<T, HttpContext, Task>? context = null)
         where T : class
     {
         var request = httpContext.ReadQuery<T>();
