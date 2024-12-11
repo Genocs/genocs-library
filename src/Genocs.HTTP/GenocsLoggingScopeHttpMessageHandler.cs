@@ -14,8 +14,9 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _ = settings ?? throw new ArgumentNullException(nameof(settings));
-        _maskedRequestUrlParts =
-            new HashSet<string>(settings.RequestMasking?.UrlParts ?? Enumerable.Empty<string>());
+
+        _maskedRequestUrlParts = [.. settings.RequestMasking?.UrlParts ?? []];
+
         _maskTemplate = string.IsNullOrWhiteSpace(settings.RequestMasking?.MaskTemplate)
             ? "*****"
             : settings.RequestMasking.MaskTemplate;
@@ -23,10 +24,7 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         using (Log.BeginRequestPipelineScope(_logger, request, _maskedRequestUrlParts, _maskTemplate))
         {

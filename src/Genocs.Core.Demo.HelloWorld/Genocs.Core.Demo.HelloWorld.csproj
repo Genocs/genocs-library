@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
 </Project>

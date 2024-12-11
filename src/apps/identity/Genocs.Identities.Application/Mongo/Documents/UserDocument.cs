@@ -1,4 +1,3 @@
-using Genocs.Common.Types;
 using Genocs.Core.Domain.Entities;
 using Genocs.Identities.Application.Domain.Entities;
 
@@ -31,7 +30,7 @@ public class UserDocument : IEntity<Guid>
         Locked = user.Locked;
     }
 
-    public User ToEntity() => new User(Id, Email, Name, Password, Roles, CreatedAt, Permissions, Locked);
+    public User ToEntity() => new(Id, Email, Name, Password, Roles, CreatedAt, Permissions, Locked);
 
     public bool IsTransient()
     {

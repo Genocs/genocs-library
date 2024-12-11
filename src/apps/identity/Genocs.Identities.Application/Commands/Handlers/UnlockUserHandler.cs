@@ -16,6 +16,7 @@ internal sealed class UnlockUserHandler(IUserRepository userRepository, IMessage
     {
         var user = await _userRepository.GetAsync(command.UserId)
             ?? throw new UserNotFoundException(command.UserId);
+
         if (user.Unlock())
         {
             await _userRepository.UpdateAsync(user);

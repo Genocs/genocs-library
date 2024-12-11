@@ -35,8 +35,6 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-app.UseCore();
-
 app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
                             {
@@ -64,6 +62,8 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             .Get<BrowseUsers, PagedDto<UserDto>>("users", auth: true)
                             .Put<LockUser>("users/{userId:guid}/lock", auth: true, policies: [Policies.AdminOnly])
                             .Put<UnlockUser>("users/{userId:guid}/unlock", auth: true, policies: [Policies.AdminOnly]));
+
+app.UseCore();
 
 app.Run();
 

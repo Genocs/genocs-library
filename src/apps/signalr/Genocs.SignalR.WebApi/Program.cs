@@ -76,7 +76,7 @@ app.UseGenocs()
 app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.MapStaticAssets();
 
 app.Run();
 

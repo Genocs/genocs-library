@@ -1,6 +1,6 @@
 namespace Genocs.Identities.Application;
 
-// Marker
-public class ContractAttribute : Attribute
-{
-}
+/// <summary>
+/// 
+/// </summary>
+public class ContractAttribute : Attribute;

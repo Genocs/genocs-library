@@ -8,14 +8,9 @@ using MongoDB.Driver.Linq;
 
 namespace Genocs.Identities.Application.Mongo.Queries.Handlers;
 
-public class BrowseUsersHandler : IQueryHandler<BrowseUsers, PagedDto<UserDto>>
+public class BrowseUsersHandler(IMongoDatabase database) : IQueryHandler<BrowseUsers, PagedDto<UserDto>>
 {
-    private readonly IMongoDatabase _database;
-
-    public BrowseUsersHandler(IMongoDatabase database)
-    {
-        _database = database;
-    }
+    private readonly IMongoDatabase _database = database;
 
     public async Task<PagedDto<UserDto>> HandleAsync(BrowseUsers query, CancellationToken cancellationToken = default)
     {
@@ -25,6 +20,7 @@ public class BrowseUsersHandler : IQueryHandler<BrowseUsers, PagedDto<UserDto>>
             .PaginateAsync(query);
 
         var pagedResult = PagedResult<UserDto>.From(result, result.Items.Select(x => Map(x)));
+
         return new PagedDto<UserDto>
         {
             CurrentPage = pagedResult.CurrentPage,
@@ -36,7 +32,7 @@ public class BrowseUsersHandler : IQueryHandler<BrowseUsers, PagedDto<UserDto>>
     }
 
     private static UserDto Map(UserDocument user)
-        => new UserDto
+        => new()
         {
             Id = user.Id,
             Name = user.Name,

@@ -7,21 +7,15 @@ namespace Genocs.Auth;
 /// <summary>
 /// The access token validator middleware.
 /// </summary>
-public class AccessTokenValidatorMiddleware : IMiddleware
+/// <remarks>
+/// The AccessTokenValidatorMiddleware constructor.
+/// </remarks>
+/// <param name="accessTokenService">The access token service.</param>
+/// <param name="options">The options.</param>
+public class AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtOptions options) : IMiddleware
 {
-    private readonly IAccessTokenService _accessTokenService;
-    private readonly IEnumerable<string> _allowAnonymousEndpoints;
-
-    /// <summary>
-    /// The AccessTokenValidatorMiddleware constructor.
-    /// </summary>
-    /// <param name="accessTokenService">The access token service.</param>
-    /// <param name="options">The options.</param>
-    public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService, JwtOptions options)
-    {
-        _accessTokenService = accessTokenService;
-        _allowAnonymousEndpoints = options.AllowAnonymousEndpoints ?? Enumerable.Empty<string>();
-    }
+    private readonly IAccessTokenService _accessTokenService = accessTokenService;
+    private readonly IEnumerable<string> _allowAnonymousEndpoints = options.AllowAnonymousEndpoints ?? [];
 
     /// <summary>
     /// The InvokeAsync method.

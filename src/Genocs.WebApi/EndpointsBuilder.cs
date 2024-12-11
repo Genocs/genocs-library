@@ -119,9 +119,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         return this;
     }
 
-    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task>? context = null,
-        Action<IEndpointConventionBuilder> endpoint = null, bool auth = false, string? roles = null,
-        params string[] policies)
+    public IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext, Task>? context = null, Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null, params string[] policies)
         where T : class
     {
         var builder = _routeBuilder.MapDelete(path, ctx => BuildQueryContext(ctx, context));

@@ -24,7 +24,7 @@ public class RefreshTokenDocument : IEntity<Guid>
         RevokedAt = refreshToken.RevokedAt;
     }
 
-    public RefreshToken ToEntity() => new RefreshToken(Id, UserId, Token, CreatedAt, RevokedAt);
+    public RefreshToken ToEntity() => new(Id, UserId, Token, CreatedAt, RevokedAt);
 
     public bool IsTransient()
     {

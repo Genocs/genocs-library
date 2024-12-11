@@ -51,4 +51,8 @@
     <ItemGroup>
         <Content Include="certs\**" CopyToPublishDirectory="Always" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="logs\" />
+    </ItemGroup>
 </Project>

@@ -116,11 +116,10 @@ public static class Extensions
             .UseErrorHandler()
             .UseSwaggerDocs()
             .UseGenocs()
-            .UseAccessTokenValidator()
+            .UseAccessTokenValidator() // Implement the Authorization.
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
-            .UseAuthorization()
             .UseMetrics()
             .UseRabbitMQ()
             .SubscribeCommand<CreateUser>()

@@ -3,14 +3,9 @@ using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway.Framework;
 
-internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
+internal class CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory) : IForwarderHttpClientFactory
 {
-    private readonly CorrelationIdFactory _correlationIdFactory;
-
-    public CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory)
-    {
-        _correlationIdFactory = correlationIdFactory;
-    }
+    private readonly CorrelationIdFactory _correlationIdFactory = correlationIdFactory;
 
     public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
     {
@@ -57,20 +52,14 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
         return new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);
     }
 
-    private class CustomHttpMessageInvoker : HttpMessageInvoker
+    private class CustomHttpMessageInvoker(CorrelationIdFactory correlationIdFactory, HttpMessageHandler handler, bool disposeHandler)
+        : HttpMessageInvoker(handler, disposeHandler)
     {
-        private readonly CorrelationIdFactory _correlationIdFactory;
+        private readonly CorrelationIdFactory _correlationIdFactory = correlationIdFactory;
 
-        public CustomHttpMessageInvoker(CorrelationIdFactory correlationIdFactory, HttpMessageHandler handler,
-            bool disposeHandler) : base(handler, disposeHandler)
+        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            _correlationIdFactory = correlationIdFactory;
-        }
-
-        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            var correlationId = _correlationIdFactory.Create();
+            string correlationId = _correlationIdFactory.Create();
             request.Headers.TryAddWithoutValidation("x-correlation-id", correlationId);
             return await base.SendAsync(request, cancellationToken);
         }

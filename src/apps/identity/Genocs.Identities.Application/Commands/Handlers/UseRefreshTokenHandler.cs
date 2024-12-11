@@ -13,8 +13,7 @@ internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
     private readonly IJwtProvider _jwtProvider;
     private readonly ITokenStorage _storage;
 
-    public UseRefreshTokenHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository,
-        IJwtProvider jwtProvider, ITokenStorage storage)
+    public UseRefreshTokenHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository, IJwtProvider jwtProvider, ITokenStorage storage)
     {
         _refreshTokenRepository = refreshTokenRepository;
         _userRepository = userRepository;
@@ -24,22 +23,13 @@ internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
 
     public async Task HandleAsync(UseRefreshToken command, CancellationToken cancellationToken = default)
     {
-        var token = await _refreshTokenRepository.GetAsync(command.RefreshToken);
-        if (token is null)
-        {
-            throw new InvalidRefreshTokenException();
-        }
-
+        var token = await _refreshTokenRepository.GetAsync(command.RefreshToken) ?? throw new InvalidRefreshTokenException();
         if (token.Revoked)
         {
             throw new RevokedRefreshTokenException();
         }
 
-        var user = await _userRepository.GetAsync(token.UserId);
-        if (user is null)
-        {
-            throw new UserNotFoundException(token.UserId);
-        }
+        var user = await _userRepository.GetAsync(token.UserId) ?? throw new UserNotFoundException(token.UserId);
 
         var claims = user.Permissions.Any()
             ? new Dictionary<string, IEnumerable<string>>
@@ -47,6 +37,7 @@ internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
                 ["permissions"] = user.Permissions
             }
             : null;
+
         var auth = _jwtProvider.Create(token.UserId, user.Name, user.Roles, claims: claims);
         auth.RefreshToken = command.RefreshToken;
         _storage.Set(command.Id, auth);
