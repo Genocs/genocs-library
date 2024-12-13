@@ -13,16 +13,12 @@ public interface IJwtHandler
     /// <param name="audience">The audience.</param>
     /// <param name="claims">The claims.</param>
     /// <returns>The JsonWebToken just created.</returns>
-    JsonWebToken CreateToken(
-                                string userId,
-                                IEnumerable<string>? roles = null,
-                                string? audience = null,
-                                IDictionary<string, IEnumerable<string>>? claims = null);
+    JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null);
 
     /// <summary>
     /// Get the JsonWebTokenPayload from the accessToken.
     /// </summary>
-    /// <param name="accessToken">The access token string value.</param>
+    /// <param name="token">The access token string value.</param>
     /// <returns>The JsonWebTokenPayload.</returns>
-    JsonWebTokenPayload? GetTokenPayload(string accessToken);
+    JsonWebTokenPayload? GetTokenPayload(string token);
 }

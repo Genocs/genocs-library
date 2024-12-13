@@ -1,6 +1,7 @@
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Genocs.Auth.Configurations;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,9 +9,6 @@ namespace Genocs.Auth.Handlers;
 
 internal sealed class JwtHandler : IJwtHandler
 {
-    private static readonly IDictionary<string, IEnumerable<string>> EmptyClaims =
-        new Dictionary<string, IEnumerable<string>>();
-
     private static readonly ISet<string> DefaultClaims = new HashSet<string>
     {
         JwtRegisteredClaimNames.Sub,
@@ -24,7 +22,6 @@ internal sealed class JwtHandler : IJwtHandler
     private readonly JwtOptions _options;
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly SigningCredentials _signingCredentials;
-    private readonly string? _issuer;
 
     public JwtHandler(JwtOptions options, TokenValidationParameters tokenValidationParameters)
     {
@@ -33,13 +30,14 @@ internal sealed class JwtHandler : IJwtHandler
 
         if (string.IsNullOrWhiteSpace(options.Algorithm))
         {
-            throw new InvalidOperationException("Security algorithm not set.");
+            options.Algorithm = issuerSigningKey is SymmetricSecurityKey
+                ? SecurityAlgorithms.HmacSha256
+                : SecurityAlgorithms.RsaSha256;
         }
 
         _options = options;
         _tokenValidationParameters = tokenValidationParameters;
         _signingCredentials = new SigningCredentials(issuerSigningKey, _options.Algorithm);
-        _issuer = options.Issuer;
     }
 
     /// <summary>
@@ -47,15 +45,11 @@ internal sealed class JwtHandler : IJwtHandler
     /// </summary>
     /// <param name="userId">The UserId.</param>
     /// <param name="roles">The User Role.</param>
-    /// <param name="audience"></param>
-    /// <param name="claims"></param>
+    /// <param name="audience">The audience.</param>
+    /// <param name="claims">The list of claims.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">It is thrown when mandatory data is empty.</exception>
-    public JsonWebToken CreateToken(
-                                    string userId,
-                                    IEnumerable<string>? roles = null,
-                                    string? audience = null,
-                                    IDictionary<string, IEnumerable<string>>? claims = null)
+    public JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
     {
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -100,36 +94,33 @@ internal sealed class JwtHandler : IJwtHandler
             : now.AddMinutes(_options.ExpiryMinutes);
 
         var jwt = new JwtSecurityToken(
-            _issuer,
+            issuer: _options.Issuer,
             claims: jwtClaims,
             notBefore: now,
             expires: expires,
             signingCredentials: _signingCredentials);
 
-        string token = new JwtSecurityTokenHandler().WriteToken(jwt);
+        string token = _jwtSecurityTokenHandler.WriteToken(jwt);
 
         return new JsonWebToken
         {
+            Id = userId,
             AccessToken = token,
             RefreshToken = string.Empty,
             Expires = expires.ToTimestamp(),
-            Id = userId,
             Roles = roles,
-            Claims = claims ?? EmptyClaims
+            Claims = claims
         };
     }
 
     /// <summary>
     /// Gets the token payload.
     /// </summary>
-    /// <param name="accessToken"></param>
+    /// <param name="token">The string describing the access token.</param>
     /// <returns>The JWT Token payload.</returns>
-    public JsonWebTokenPayload? GetTokenPayload(string accessToken)
+    public JsonWebTokenPayload? GetTokenPayload(string token)
     {
-        _jwtSecurityTokenHandler.ValidateToken(
-                                               accessToken,
-                                               _tokenValidationParameters,
-                                               out var validatedSecurityToken);
+        _jwtSecurityTokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedSecurityToken);
 
         if (validatedSecurityToken is not JwtSecurityToken jwt)
         {
@@ -145,5 +136,52 @@ internal sealed class JwtHandler : IJwtHandler
                 .GroupBy(c => c.Type)
                 .ToDictionary(k => k.Key, v => v.Select(c => c.Value))
         };
+    }
+
+    /// <summary>
+    /// This method creates a token using the JwtSecurityTokenHandler class.
+    /// </summary>
+    /// <returns></returns>
+    public string CreateToken()
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        byte[] key = Encoding.ASCII.GetBytes(_options.IssuerSigningKey!);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "username"),
+                new Claim(ClaimTypes.Role, "role")
+            }),
+            Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    /// <summary>
+    /// This method creates a token using the JsonWebTokenHandler class.
+    /// </summary>
+    /// <returns></returns>
+    public string CreateTokenWithJsonWebTokenHandler()
+    {
+        var tokenHandler = new Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler();
+        byte[] key = Encoding.ASCII.GetBytes(_options.IssuerSigningKey!);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "username"),
+                new Claim(ClaimTypes.Role, "role")
+            }),
+            Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+        };
+
+        string token = tokenHandler.CreateToken(tokenDescriptor);
+        return token;
     }
 }
