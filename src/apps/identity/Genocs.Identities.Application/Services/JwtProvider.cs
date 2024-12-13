@@ -3,14 +3,9 @@ using Genocs.Identities.Application.DTO;
 
 namespace Genocs.Identities.Application.Services;
 
-public class JwtProvider : IJwtProvider
+public class JwtProvider(IJwtHandler jwtHandler) : IJwtProvider
 {
-    private readonly IJwtHandler _jwtHandler;
-
-    public JwtProvider(IJwtHandler jwtHandler)
-    {
-        _jwtHandler = jwtHandler;
-    }
+    private readonly IJwtHandler _jwtHandler = jwtHandler;
 
     public AuthDto Create(
                             Guid userId,

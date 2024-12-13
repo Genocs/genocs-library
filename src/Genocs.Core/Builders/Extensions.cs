@@ -145,16 +145,16 @@ public static class Extensions
             string message = $"Service {serviceVersion ?? assemblyVersion} is running";
 
             await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
-        });
+        }).AllowAnonymous();
 
         // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/healthz");
+        app.MapHealthChecks("/healthz").AllowAnonymous();
 
         // Only health checks tagged with the "live" tag must pass for app to be considered alive
         app.MapHealthChecks("/alive", new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("live")
-        });
+        }).AllowAnonymous();
 
         return app;
     }

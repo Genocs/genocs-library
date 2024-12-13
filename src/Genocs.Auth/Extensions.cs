@@ -34,10 +34,7 @@ public static class Extensions
         return builder.AddJwt(options, optionsFactory);
     }
 
-    private static IGenocsBuilder AddJwt(
-                                        this IGenocsBuilder builder,
-                                        JwtOptions options,
-                                        Action<JwtBearerOptions>? optionsFactory = null)
+    private static IGenocsBuilder AddJwt(this IGenocsBuilder builder, JwtOptions options, Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
         {
