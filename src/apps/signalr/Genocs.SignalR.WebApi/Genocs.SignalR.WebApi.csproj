@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-    
+
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>_Genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -53,6 +53,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Polly" Version="8.5.0" />
+      <Folder Include="logs\" />
     </ItemGroup>
 </Project>

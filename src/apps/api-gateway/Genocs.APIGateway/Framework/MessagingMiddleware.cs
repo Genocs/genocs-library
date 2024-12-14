@@ -23,10 +23,7 @@ internal class MessagingMiddleware : IMiddleware
                                 CorrelationIdFactory correlationIdFactory,
                                 IOptions<MessagingOptions> messagingOptions)
     {
-        if (messagingOptions is null)
-        {
-            throw new ArgumentNullException(nameof(messagingOptions));
-        }
+        ArgumentNullException.ThrowIfNull(messagingOptions);
 
         _rabbitMQClient = rabbitMQClient ?? throw new ArgumentNullException(nameof(rabbitMQClient));
         _routeMatcher = routeMatcher ?? throw new ArgumentNullException(nameof(routeMatcher));
@@ -54,7 +51,7 @@ internal class MessagingMiddleware : IMiddleware
                 continue;
             }
 
-            var key = $"{endpoint.Exchange}:{endpoint.RoutingKey}";
+            string key = $"{endpoint.Exchange}:{endpoint.RoutingKey}";
             if (!Conventions.TryGetValue(key, out var conventions))
             {
                 conventions = new MessageConventions(typeof(object), endpoint.RoutingKey, endpoint.Exchange, null);

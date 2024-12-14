@@ -39,12 +39,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
         }
 
         _logger.LogInformation($"Fetching the product for order with id: {command.OrderId}...");
-        var productDto = await _productServiceClient.GetAsync(command.ProductId);
-        if (productDto is null)
-        {
-            throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.OrderId}'");
-        }
-
+        var productDto = await _productServiceClient.GetAsync(command.ProductId) ?? throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.OrderId}'");
         _logger.LogInformation($"Order '{command.OrderId}' will cost '{productDto.UnitPrice}'$.");
 
         var order = new Order(command.OrderId, command.CustomerId, productDto.UnitPrice);
@@ -52,7 +47,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        string? spanContext = "TODO: Genocs";
+        string? spanContext = $"Genocs: CreateOrder-{command.OrderId}";
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {

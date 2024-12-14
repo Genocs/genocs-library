@@ -6,19 +6,19 @@ public class User : AggregateRoot
 {
     public string Email { get; private set; }
     public string Name { get; private set; }
-    public string Role { get; private set; }
+    public IEnumerable<string> Roles { get; private set; }
     public string Password { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public IEnumerable<string>? Permissions { get; private set; }
     public bool Locked { get; private set; }
 
     public User(
-                Guid id,
+                in Guid id,
                 string email,
                 string name,
                 string password,
-                string role,
-                DateTime createdAt,
+                IEnumerable<string> roles,
+                in DateTime createdAt,
                 IEnumerable<string>? permissions = null,
                 bool locked = false)
         : base(id)
@@ -38,16 +38,16 @@ public class User : AggregateRoot
             throw new InvalidPasswordException();
         }
 
-        if (!Entities.Role.IsValid(role))
+        if (!Role.IsValid(roles))
         {
-            throw new InvalidRoleException(role);
+            throw new InvalidRoleException(string.Join(",", roles));
         }
 
         Id = id;
         Email = email.ToLowerInvariant();
         Name = name.Trim();
         Password = password;
-        Role = role.ToLowerInvariant();
+        Roles = roles.Select(c => c.ToLowerInvariant());
         CreatedAt = createdAt;
         Permissions = permissions ?? Enumerable.Empty<string>();
         Locked = locked;

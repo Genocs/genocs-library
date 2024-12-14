@@ -6,25 +6,14 @@ using Genocs.Identities.Application.Services;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class LockUserHandler : ICommandHandler<LockUser>
+internal sealed class LockUserHandler(IUserRepository userRepository, IMessageBroker messageBroker) : ICommandHandler<LockUser>
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IMessageBroker _messageBroker;
-
-    public LockUserHandler(IUserRepository userRepository, IMessageBroker messageBroker)
-    {
-        _userRepository = userRepository;
-        _messageBroker = messageBroker;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMessageBroker _messageBroker = messageBroker;
 
     public async Task HandleAsync(LockUser command, CancellationToken cancellationToken = default)
     {
-        var user = await _userRepository.GetAsync(command.UserId);
-        if (user is null)
-        {
-            throw new UserNotFoundException(command.UserId);
-        }
-
+        var user = await _userRepository.GetAsync(command.UserId) ?? throw new UserNotFoundException(command.UserId);
         if (user.Lock())
         {
             await _userRepository.UpdateAsync(user);

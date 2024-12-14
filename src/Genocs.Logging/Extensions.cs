@@ -9,8 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
+using Serilog.Exceptions;
 using Serilog.Filters;
+using Serilog.Formatting.Compact;
 using Serilog.Sinks.Elasticsearch;
 using Serilog.Sinks.Grafana.Loki;
 
@@ -28,23 +31,23 @@ public static class Extensions
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
-            {
-                if (string.IsNullOrWhiteSpace(loggerSectionName))
                 {
-                    loggerSectionName = LoggerOptions.Position;
-                }
+                    if (string.IsNullOrWhiteSpace(loggerSectionName))
+                    {
+                        loggerSectionName = LoggerOptions.Position;
+                    }
 
-                if (string.IsNullOrWhiteSpace(appSectionName))
-                {
-                    appSectionName = AppOptions.Position;
-                }
+                    if (string.IsNullOrWhiteSpace(appSectionName))
+                    {
+                        appSectionName = AppOptions.Position;
+                    }
 
-                var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
-                var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
+                    var loggerOptions = context.Configuration.GetOptions<LoggerOptions>(loggerSectionName);
+                    var appOptions = context.Configuration.GetOptions<AppOptions>(appSectionName);
 
-                MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
-                configure?.Invoke(context, loggerConfiguration);
-            });
+                    MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
+                    configure?.Invoke(context, loggerConfiguration);
+                });
 
     public static IEndpointConventionBuilder MapLogLevelHandler(
                                                                 this IEndpointRouteBuilder builder,
@@ -64,7 +67,12 @@ public static class Extensions
             .Enrich.WithProperty("Environment", environmentName)
             .Enrich.WithProperty("Application", appOptions.Service)
             .Enrich.WithProperty("Instance", appOptions.Instance)
-            .Enrich.WithProperty("Version", appOptions.Version);
+            .Enrich.WithProperty("Version", appOptions.Version)
+            .Enrich.WithExceptionDetails()
+            .Enrich.WithMachineName()
+            .Enrich.WithProcessId()
+            .Enrich.WithThreadId()
+            .Enrich.WithSpan();
 
         foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
         {
@@ -95,10 +103,26 @@ public static class Extensions
         var lokiOptions = options.Loki ?? new LokiOptions();
         var azureOptions = options.Azure ?? new AzureOptions();
 
+        // OpenTelemetry setup
+        if (!string.IsNullOrWhiteSpace(options.OtlpEndpoint))
+        {
+            loggerConfiguration.WriteTo.OpenTelemetry(wt =>
+            {
+                wt.Endpoint = options.OtlpEndpoint;
+            });
+        }
+
         // console
         if (consoleOptions.Enabled)
         {
-            loggerConfiguration.WriteTo.Console();
+            if (consoleOptions.EnableStructured)
+            {
+                loggerConfiguration.WriteTo.Console(new RenderedCompactJsonFormatter());
+            }
+            else
+            {
+                loggerConfiguration.WriteTo.Async(wt => wt.Console());
+            }
         }
 
         // local file system

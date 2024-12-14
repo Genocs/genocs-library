@@ -31,10 +31,7 @@ internal class MessageBroker : IMessageBroker
                             RabbitMQOptions options,
                             ILogger<IMessageBroker> logger)
     {
-        if (options is null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ArgumentNullException.ThrowIfNull(options);
 
         _busPublisher = busPublisher ?? throw new ArgumentNullException(nameof(busPublisher));
         _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
@@ -61,8 +58,7 @@ internal class MessageBroker : IMessageBroker
         string? originatedMessageId = messageProperties?.MessageId;
         string? correlationId = _correlationIdFactory.Create();
         string? spanContext = messageProperties?.GetSpanContext(_spanContextHeader);
-        object correlationContext = _contextAccessor.CorrelationContext ??
-                                 _httpContextAccessor.GetCorrelationContext();
+        object correlationContext = _contextAccessor.CorrelationContext ?? _httpContextAccessor.GetCorrelationContext();
 
         var headers = new Dictionary<string, object>();
 
@@ -77,24 +73,11 @@ internal class MessageBroker : IMessageBroker
             _logger.LogTrace($"Publishing integration event: {@event.GetType().Name.Underscore()} [ID: '{messageId}'].");
             if (_outbox.Enabled)
             {
-                await _outbox.SendAsync(
-                                        @event,
-                                        originatedMessageId,
-                                        messageId,
-                                        correlationId,
-                                        spanContext,
-                                        correlationContext,
-                                        headers);
+                await _outbox.SendAsync(@event, originatedMessageId, messageId, correlationId, spanContext, correlationContext, headers);
                 continue;
             }
 
-            await _busPublisher.PublishAsync(
-                                                @event,
-                                                messageId,
-                                                correlationId,
-                                                spanContext,
-                                                correlationContext,
-                                                headers);
+            await _busPublisher.PublishAsync(@event, messageId, correlationId, spanContext, correlationContext, headers);
         }
     }
 }

@@ -19,20 +19,18 @@ namespace Genocs.Metrics.AppMetrics;
 
 public static class Extensions
 {
-    private const string MetricsSectionName = "metrics";
-    private const string AppSectionName = "app";
     private const string RegistryName = "metrics.metrics";
     private static bool _initialized;
 
     [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
-                                            string metricsSectionName = MetricsSectionName,
-                                            string appSectionName = AppSectionName)
+                                            string metricsSectionName = Configurations.MetricsOptions.Position,
+                                            string appSectionName = AppOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(metricsSectionName))
         {
-            metricsSectionName = MetricsSectionName;
+            metricsSectionName = Configurations.MetricsOptions.Position;
         }
 
         if (string.IsNullOrWhiteSpace(appSectionName))
@@ -50,11 +48,11 @@ public static class Extensions
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
                                             Func<IMetricsOptionsBuilder, IMetricsOptionsBuilder> buildOptions,
-                                            string appSectionName = AppSectionName)
+                                            string appSectionName = AppOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(appSectionName))
         {
-            appSectionName = AppSectionName;
+            appSectionName = AppOptions.Position;
         }
 
         var metricsOptions = buildOptions(new MetricsOptionsBuilder()).Build();

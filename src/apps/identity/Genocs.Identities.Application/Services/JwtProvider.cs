@@ -3,30 +3,20 @@ using Genocs.Identities.Application.DTO;
 
 namespace Genocs.Identities.Application.Services;
 
-public class JwtProvider : IJwtProvider
+public class JwtProvider(IJwtHandler jwtHandler) : IJwtProvider
 {
-    private readonly IJwtHandler _jwtHandler;
+    private readonly IJwtHandler _jwtHandler = jwtHandler;
 
-    public JwtProvider(IJwtHandler jwtHandler)
+    public AuthDto Create(Guid userId, string username, IEnumerable<string> roles, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
     {
-        _jwtHandler = jwtHandler;
-    }
-
-    public AuthDto Create(
-                            Guid userId,
-                            string username,
-                            string role,
-                            string? audience = null,
-                            IDictionary<string, IEnumerable<string>>? claims = null)
-    {
-        var jwt = _jwtHandler.CreateToken(userId.ToString("N"), role, audience, claims);
+        var jwt = _jwtHandler.CreateToken(userId.ToString("N"), roles, audience, claims);
 
         return new AuthDto
         {
             UserId = userId,
             Username = username,
             AccessToken = jwt.AccessToken,
-            Role = jwt.Role,
+            Roles = jwt.Roles,
             Expires = jwt.Expires
         };
     }

@@ -9,17 +9,16 @@ internal sealed class GenocsFormatterResolver : IJsonFormatterResolver
     public static readonly IJsonFormatterResolver Instance = new GenocsFormatterResolver();
 
     private static readonly IJsonFormatterResolver[] Resolvers =
-    {
-        StandardResolver.AllowPrivateCamelCase,
-
-    };
+    [
+        StandardResolver.AllowPrivateCamelCase
+    ];
 
     public IJsonFormatter<T> GetFormatter<T>()
     {
         return FormatterCache<T>.Formatter;
     }
 
-    public static List<IJsonFormatter> Formatters { get; } = new();
+    public static List<IJsonFormatter> Formatters { get; } = [];
 
     private static class FormatterCache<T>
     {

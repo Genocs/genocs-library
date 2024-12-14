@@ -4,7 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>_Genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -21,9 +21,8 @@
 
     <ItemGroup>
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.2" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.3" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-        <PackageReference Include="Polly" Version="8.5.0" />
         <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     </ItemGroup>
 

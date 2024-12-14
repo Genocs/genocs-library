@@ -1,8 +1,6 @@
 namespace Genocs.WebApi;
 
-public class WebApiEndpointDefinitions : List<WebApiEndpointDefinition>
-{
-}
+public class WebApiEndpointDefinitions : List<WebApiEndpointDefinition>;
 
 public class WebApiEndpointDefinition
 {

@@ -93,7 +93,7 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     /// <summary>
     /// First Or Default entity.
     /// </summary>
-    /// <param name="id">The domain objjet id.</param>
+    /// <param name="id">The domain object id.</param>
     /// <returns>The entity if found otherwise null.</returns>
     public override TEntity FirstOrDefault(TKey id)
     {

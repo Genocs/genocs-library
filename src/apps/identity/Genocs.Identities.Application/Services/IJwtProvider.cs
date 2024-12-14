@@ -7,11 +7,5 @@ namespace Genocs.Identities.Application.Services;
 /// </summary>
 public interface IJwtProvider
 {
-    AuthDto Create(
-                    Guid userId,
-                    string username,
-                    string role,
-                    string? audience = null,
-                    IDictionary<string,
-                    IEnumerable<string>>? claims = null);
+    AuthDto Create(Guid userId, string username, IEnumerable<string> roles, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null);
 }
