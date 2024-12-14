@@ -19,7 +19,7 @@ public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
     {
         int currentValue = _random.Next(0, 100);
 
-        if (currentValue < 20)
+        if (currentValue < 90)
         {
             throw new Exception("Random exception");
         }
