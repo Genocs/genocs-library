@@ -83,18 +83,10 @@ public static class Extensions
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
 
-        // Authorization: Split on a separate method
-        //builder.Services.AddAuthorization(options =>
-        //{
-        //    options.AddPolicy("HasAdminRole", policy => policy.RequireRole("admin"));
-        //    options.AddPolicy("HasUserRole", policy => policy.RequireRole("user"));
-        //});
-
         builder.Services.AddAuthorizationBuilder()
-                        .AddPolicy(Policies.UserOnly, policy =>
-                            policy
-                                .RequireClaim(ClaimTypes.Role, Roles.User)
-                                .Build());
+                        .AddPolicy(Policies.AdminOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.Admin).Build())
+                        .AddPolicy(Policies.UserOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User).Build())
+                        .AddPolicy(Policies.UserOrAdmin, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User, Roles.Admin).Build());
 
         //builder.Services.AddAuthorizationBuilder()
         //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()

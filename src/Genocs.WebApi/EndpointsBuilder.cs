@@ -139,15 +139,17 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         }
 
         bool hasRoles = !string.IsNullOrWhiteSpace(roles);
-        var authorize = new AuthorizeAttribute();
         if (hasRoles)
         {
+            var authorize = new AuthorizeAttribute();
             authorize.Roles = roles;
+            builder.RequireAuthorization(authorize);
+            return;
         }
 
-        if (auth || hasRoles)
+        if (auth)
         {
-            builder.RequireAuthorization(authorize);
+            builder.RequireAuthorization();
             return;
         }
 

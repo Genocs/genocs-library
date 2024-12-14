@@ -20,6 +20,13 @@ public static class Extensions
 {
     private const string RegistryName = "auth";
 
+    /// <summary>
+    /// Add JWT authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The JWT configuration section in case you want to change the default name.</param>
+    /// <param name="optionsFactory">The option builder action in case option requires custom action to be done.</param>
+    /// <returns>The Genocs builder you can use for chain.</returns>
     public static IGenocsBuilder AddJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position, Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
@@ -31,6 +38,13 @@ public static class Extensions
         return builder.AddJwt(options, optionsFactory);
     }
 
+    /// <summary>
+    /// Add JWT authentication. Internal function.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="options">The JWT options.</param>
+    /// <param name="optionsFactory">The option builder action in case option requires custom action to be done.</param>
+    /// <returns>The Genocs builder you can use for chain.</returns>
     private static IGenocsBuilder AddJwt(this IGenocsBuilder builder, JwtOptions options, Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
@@ -251,6 +265,11 @@ public static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// This middleware validates the access token in real-time.
+    /// </summary>
+    /// <param name="app">The app builder.</param>
+    /// <returns>The app builder you can use for chaining.</returns>
     public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
         => app.UseMiddleware<AccessTokenValidatorMiddleware>();
 }

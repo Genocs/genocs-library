@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 StaticLogger.EnsureInitialized();
 
@@ -16,7 +19,6 @@ builder.AddGenocs()
     .Build();
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -32,31 +34,27 @@ builder.Services.AddCors(options =>
     });
 });
 
-/*
-// Authorization settings
-builder.Services.AddAuthorization();
+// Override the default authorization policy
+builder.Services.AddAuthorizationBuilder()
+                .AddPolicy("Reader", builder => builder.RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user")))
+                .AddPolicy("Reader2", builder => builder.RequireClaim(ClaimTypes.Role, "user"))
+                .AddPolicy("Reader3", builder => builder.RequireRole(["user"]))
+                .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))))
+                ;
 
-// Authentication settings
-builder.Services.AddSingleton<TokenProvider>();
+//builder.Services.AddAuthorizationBuilder()
+//                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+//                    .RequireAuthenticatedUser()
+//                    .Build())
+//                        .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
+//                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
+//                        .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
+//                            => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
+//                        .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
+//                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)
+//                                || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-    {
-        builder.Configuration.Bind("JwtSettings", options);
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = false,
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = false,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
-        };
-    });
-*/
+
 
 var app = builder.Build();
 
@@ -79,6 +77,11 @@ app.UseAccessTokenValidator();
 
 app.MapControllers();
 
+// Minimal API with authorization
 app.MapGet("/", () => "ok").RequireAuthorization();
+
+// Minimal API with authorization policy
+app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
+app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
 
 app.Run();

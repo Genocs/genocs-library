@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
@@ -12,6 +13,7 @@ using Genocs.Logging;
 using Genocs.Secrets.Vault;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Serilog;
 
 StaticLogger.EnsureInitialized();
@@ -19,21 +21,29 @@ StaticLogger.EnsureInitialized();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-        .UseLogging()
-        .UseVault();
+        .UseLogging();
 
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
                                     .AddJwt()
                                     .AddWebApi()
-                                    .AddConsul()
-                                    .AddFabio()
                                     .AddCoreAsync();
 
 gnxBuilder.Build();
+
+//// Override the default authorization policy
+//builder.Services.AddAuthorizationBuilder()
+//                .AddPolicy("Reader", builder => builder.RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user")))
+//                .AddPolicy("Reader2", builder => builder.RequireClaim(ClaimTypes.Role, "user"))
+//                .AddPolicy("Reader3", builder => builder.RequireRole(["user"]))
+//                .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))))
+//                ;
+
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+// app.MapDefaultEndpoints();
+
+app.UseCore();
 
 app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<SignIn>("sign-in", afterDispatch: (cmd, ctx) =>
@@ -62,8 +72,6 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             .Get<BrowseUsers, PagedDto<UserDto>>("users", auth: true)
                             .Put<LockUser>("users/{userId:guid}/lock", auth: true, policies: [Policies.AdminOnly])
                             .Put<UnlockUser>("users/{userId:guid}/unlock", auth: true, policies: [Policies.AdminOnly]));
-
-app.UseCore();
 
 app.Run();
 
