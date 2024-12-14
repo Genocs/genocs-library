@@ -5,14 +5,14 @@
         <PackageId>Genocs.Discovery.Consul</PackageId>
         <RootNamespace>Genocs.Discovery.Consul</RootNamespace>
         <AssemblyName>Genocs.Discovery.Consul</AssemblyName>
-        <Title>The service discovery by Consul library useful to build .NET Core projects.</Title>
-        <Description>The service discovery by Consul library useful to build .NET Core projects.</Description>
+        <Title>The service discovery library powered by Consul.</Title>
+        <Description>The service discovery library powered by Consul.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>microservice microservices solid solid-principles genocs service-discovery</PackageTags>
+        <PackageTags>service discovery service-discovery genocs microservice microservices solid solid-principles </PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

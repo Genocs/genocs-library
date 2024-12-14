@@ -5,14 +5,14 @@
         <PackageId>Genocs.Auth</PackageId>
         <RootNamespace>Genocs.Auth</RootNamespace>
         <AssemblyName>Genocs.Auth</AssemblyName>
-        <Title>The authorization library useful to build .NET Core projects.</Title>
-        <Description>The authorization library useful to build .NET Core projects.</Description>
+        <Title>The Genocs authorization library.</Title>
+        <Description>The authorization library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>microservice microservices solid solid-principles authentication genocs</PackageTags>
+        <PackageTags>authentication jwt genocs microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
@@ -20,7 +20,6 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
-
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
@@ -29,22 +28,18 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.*" />
-    </ItemGroup>    
+    </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.*" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.*" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.*" />
     </ItemGroup>
 </Project>

@@ -5,14 +5,14 @@
         <PackageId>Genocs.Common</PackageId>
         <RootNamespace>Genocs.Common</RootNamespace>
         <AssemblyName>Genocs.Common</AssemblyName>
-        <Title>The Genocs Library - Common components.</Title>
+        <Title>The Genocs common components.</Title>
         <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <MinClientVersion>5.0.0</MinClientVersion>
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

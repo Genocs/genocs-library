@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
@@ -8,6 +9,7 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.HTTP;
 using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.Decorators;
+using Genocs.Identities.Application.Domain.Constants;
 using Genocs.Identities.Application.Domain.Repositories;
 using Genocs.Identities.Application.Exceptions;
 using Genocs.Identities.Application.Logging;
@@ -60,7 +62,6 @@ public static class Extensions
             .AddInMemoryCommandDispatcher()
             .AddInMemoryEventDispatcher()
             .AddInMemoryQueryDispatcher()
-            .AddJwt()
             .AddHttpClient();
 
         await builder.AddRabbitMQAsync();
@@ -82,6 +83,23 @@ public static class Extensions
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
 
+        builder.Services.AddAuthorizationBuilder()
+                        .AddPolicy(Policies.AdminOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.Admin).Build())
+                        .AddPolicy(Policies.UserOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User).Build())
+                        .AddPolicy(Policies.UserOrAdmin, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User, Roles.Admin).Build());
+
+        //builder.Services.AddAuthorizationBuilder()
+        //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+        //                    .RequireAuthenticatedUser()
+        //                    .Build())
+        //                        .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
+        //                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
+        //                        .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
+        //                            => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
+        //                        .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
+        //                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)
+        //                                || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
+
         return builder;
     }
 
@@ -92,16 +110,16 @@ public static class Extensions
     {
         app.UseMiddleware<LogContextMiddleware>()
             .UseErrorHandler()
-            //.UseJaeger()
             .UseSwaggerDocs()
             .UseGenocs()
-            .UseAccessTokenValidator()
+            .UseAccessTokenValidator() // Implement the Authorization.
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
             .UseMetrics()
             .UseRabbitMQ()
-            .SubscribeCommand<CreateUser>();
+            .SubscribeCommand<CreateUser>()
+            .SubscribeCommand<CreateAdmin>();
 
         return app;
     }
@@ -121,7 +139,7 @@ public static class Extensions
             return string.Empty;
         }
 
-        if (messageProperties.Headers.TryGetValue(header, out var span) && span is byte[] spanBytes)
+        if (messageProperties.Headers.TryGetValue(header, out object? span) && span is byte[] spanBytes)
         {
             return Encoding.UTF8.GetString(spanBytes);
         }

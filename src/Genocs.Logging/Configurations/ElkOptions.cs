@@ -6,12 +6,12 @@ namespace Genocs.Logging.Configurations;
 public class ElkOptions
 {
     /// <summary>
-    /// It define whether the Elasticsearch logger and tracing are enabled or not.
+    /// It defines whether the Elasticsearch logger and tracing are enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// It define whether the Elasticsearch authentication is enabled or not.
+    /// It defines whether the Elasticsearch authentication is enabled or not.
     /// </summary>
     public bool BasicAuthEnabled { get; set; }
 

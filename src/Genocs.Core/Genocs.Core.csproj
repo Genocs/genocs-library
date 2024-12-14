@@ -12,7 +12,7 @@
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Updated to NET8</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

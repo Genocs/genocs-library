@@ -1,11 +1,7 @@
 namespace Genocs.Auth;
 
-public class JwtAuthAttribute : AuthAttribute
+public class JwtAuthAttribute(string policy = "")
+    : AuthAttribute(AuthenticationScheme, policy)
 {
     public const string AuthenticationScheme = "Bearer";
-
-    public JwtAuthAttribute(string policy = "")
-        : base(AuthenticationScheme, policy)
-    {
-    }
 }

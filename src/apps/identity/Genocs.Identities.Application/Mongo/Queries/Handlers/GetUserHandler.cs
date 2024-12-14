@@ -26,7 +26,7 @@ public class GetUserHandler : IQueryHandler<GetUser, UserDetailsDto>
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name,
-                Role = user.Role,
+                Roles = user.Roles,
                 CreatedAt = user.CreatedAt,
                 Locked = user.Locked,
                 Permissions = user.Permissions,

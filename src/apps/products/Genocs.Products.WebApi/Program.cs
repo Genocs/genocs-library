@@ -64,7 +64,7 @@ IGenocsBuilder gnxBuilder = await builder
 // Build the Genocs builder
 gnxBuilder.Build();
 
-// Build the Application 
+// Build the Application
 var app = builder.Build();
 
 app.UseGenocs()

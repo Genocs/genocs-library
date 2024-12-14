@@ -3,12 +3,9 @@ using MongoDB.Driver;
 
 namespace Genocs.Persistence.MongoDb.Factories;
 
-internal sealed class MongoSessionFactory : IMongoSessionFactory
+internal sealed class MongoSessionFactory(IMongoClient client) : IMongoSessionFactory
 {
-    private readonly IMongoClient _client;
-
-    public MongoSessionFactory(IMongoClient client)
-        => _client = client;
+    private readonly IMongoClient _client = client;
 
     public Task<IClientSessionHandle> CreateAsync()
         => _client.StartSessionAsync();

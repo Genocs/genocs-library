@@ -6,7 +6,7 @@ namespace Genocs.Logging.Configurations;
 public class SeqOptions
 {
     /// <summary>
-    /// It define whether the Seq logger and tracing are enabled or not.
+    /// It defines whether the Seq logger and tracing are enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
 

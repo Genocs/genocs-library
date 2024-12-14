@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Genocs.Auth.Configurations;
 using Genocs.Auth.Handlers;
 using Genocs.Auth.Services;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace Genocs.Auth;
 
@@ -20,10 +20,14 @@ public static class Extensions
 {
     private const string RegistryName = "auth";
 
-    public static IGenocsBuilder AddJwt(
-                                        this IGenocsBuilder builder,
-                                        string sectionName = JwtOptions.Position,
-                                        Action<JwtBearerOptions>? optionsFactory = null)
+    /// <summary>
+    /// Add JWT authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The JWT configuration section in case you want to change the default name.</param>
+    /// <param name="optionsFactory">The option builder action in case option requires custom action to be done.</param>
+    /// <returns>The Genocs builder you can use for chain.</returns>
+    public static IGenocsBuilder AddJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position, Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -34,25 +38,31 @@ public static class Extensions
         return builder.AddJwt(options, optionsFactory);
     }
 
-    private static IGenocsBuilder AddJwt(
-                                        this IGenocsBuilder builder,
-                                        JwtOptions options,
-                                        Action<JwtBearerOptions>? optionsFactory = null)
+    /// <summary>
+    /// Add JWT authentication. Internal function.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="options">The JWT options.</param>
+    /// <param name="optionsFactory">The option builder action in case option requires custom action to be done.</param>
+    /// <returns>The Genocs builder you can use for chain.</returns>
+    private static IGenocsBuilder AddJwt(this IGenocsBuilder builder, JwtOptions options, Action<JwtBearerOptions>? optionsFactory = null)
     {
         if (!builder.TryRegister(RegistryName))
         {
             return builder;
         }
 
-        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        builder.Services.AddSingleton<IJwtHandler, JwtHandler>();
-        builder.Services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
-        builder.Services.AddTransient<AccessTokenValidatorMiddleware>();
-
         if (!options.Enabled)
         {
             builder.Services.AddSingleton<IPolicyEvaluator, DisabledAuthenticationPolicyEvaluator>();
         }
+
+        // To be able to access the HttpContext in the InMemoryAccessTokenService
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        builder.Services.AddSingleton<IJwtHandler, JwtHandler>();
+        builder.Services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
+        builder.Services.AddTransient<AccessTokenValidatorMiddleware>();
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -121,13 +131,8 @@ public static class Extensions
         // If no certificate is provided, use symmetric encryption.
         if (!string.IsNullOrWhiteSpace(options.IssuerSigningKey) && !hasCertificate)
         {
-            if (string.IsNullOrWhiteSpace(options.Algorithm) || hasCertificate)
-            {
-                options.Algorithm = SecurityAlgorithms.HmacSha256;
-            }
-
-            byte[] rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
-            tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(rawKey);
+            byte[] key = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
+            tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(key);
             Console.WriteLine("Using symmetric encryption for issuing tokens.");
         }
 
@@ -140,6 +145,9 @@ public static class Extensions
         {
             tokenValidationParameters.RoleClaimType = options.RoleClaimType;
         }
+
+        // Authorization settings
+        builder.Services.AddAuthorization();
 
         builder.Services
             .AddAuthentication(o =>
@@ -179,12 +187,14 @@ public static class Extensions
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="sectionName">The configuration section name.</param>
     /// <returns>The Genocs builder you can use for chain.</returns>
-    public static IGenocsBuilder AddOpenIdJwt(
-                                                this IGenocsBuilder builder,
-                                                string sectionName = JwtOptions.Position)
+    public static IGenocsBuilder AddOpenIdJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
     {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = JwtOptions.Position;
+        }
 
-        JwtOptions options = builder.Configuration.GetOptions<JwtOptions>(sectionName);
+        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
 
         string metadataAddress = $"{options.Issuer}{options.MetadataAddress}";
         var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
@@ -215,16 +225,14 @@ public static class Extensions
     /// <param name="sectionName">The optional section name. Default name: 'jwt'.</param>
     /// <returns>The Genocs builder you can use for chaining.</returns>
     /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
-    public static IGenocsBuilder AddPrivateKeyJwt(
-                                    this IGenocsBuilder builder,
-                                    string sectionName = JwtOptions.Position)
+    public static IGenocsBuilder AddPrivateKeyJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
             sectionName = JwtOptions.Position;
         }
 
-        JwtOptions options = builder.Configuration.GetOptions<JwtOptions>(sectionName);
+        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
 
         if (string.IsNullOrWhiteSpace(options.IssuerSigningKey))
         {
@@ -257,6 +265,11 @@ public static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// This middleware validates the access token in real-time.
+    /// </summary>
+    /// <param name="app">The app builder.</param>
+    /// <returns>The app builder you can use for chaining.</returns>
     public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
         => app.UseMiddleware<AccessTokenValidatorMiddleware>();
 }
@@ -271,5 +284,5 @@ internal static class DateExtensions
     /// </summary>
     /// <param name="dateTime"></param>
     /// <returns></returns>
-    public static long ToTimestamp(this DateTime dateTime) => new DateTimeOffset(dateTime).ToUnixTimeSeconds();
+    public static long ToTimestamp(this in DateTime dateTime) => new DateTimeOffset(dateTime).ToUnixTimeSeconds();
 }

@@ -18,10 +18,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
                                 IHttpContextAccessor httpContextAccessor,
                                 HttpClientOptions httpClientOptions)
     {
-        if (httpClientOptions is null)
-        {
-            throw new ArgumentNullException(nameof(httpClientOptions));
-        }
+        ArgumentNullException.ThrowIfNull(httpClientOptions);
 
         _messagePropertiesAccessor = messagePropertiesAccessor ?? throw new ArgumentNullException(nameof(messagePropertiesAccessor));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));

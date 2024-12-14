@@ -18,6 +18,11 @@ public class LoggerOptions
     public string? Level { get; set; }
 
     /// <summary>
+    /// It defines the OpenTelemetry exporter endpoint. In case you are using Serilog with OpenTelemetry.
+    /// </summary>
+    public string? OtlpEndpoint { get; set; }
+
+    /// <summary>
     /// The Console Logging and tracing Settings.
     /// </summary>
     public ConsoleOptions? Console { get; set; }

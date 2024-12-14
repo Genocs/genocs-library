@@ -1,3 +1,5 @@
+using Microsoft.IdentityModel.Tokens;
+
 namespace Genocs.Auth.Configurations;
 
 public class JwtOptions
@@ -14,7 +16,12 @@ public class JwtOptions
 
     public IEnumerable<string>? AllowAnonymousEndpoints { get; set; }
     public CertificateOptions? Certificate { get; set; }
-    public string? Algorithm { get; set; }
+
+    /// <summary>
+    /// The algorithm used to sign the token.
+    /// Defaults to SecurityAlgorithms.HmacSha256 'HS256'.
+    /// </summary>
+    public string Algorithm { get; set; } = SecurityAlgorithms.HmacSha256;
     public string? Issuer { get; set; }
     public string? IssuerSigningKey { get; set; }
     public string? Authority { get; set; }
@@ -31,7 +38,12 @@ public class JwtOptions
     public bool RequireHttpsMetadata { get; set; }
     public bool RequireExpirationTime { get; set; } = true;
     public bool RequireSignedTokens { get; set; } = true;
-    public int ExpiryMinutes { get; set; }
+
+    /// <summary>
+    /// The expiration time of the token in minutes.
+    /// Defaults to 60 minutes.
+    /// </summary>
+    public int ExpiryMinutes { get; set; } = 60;
     public TimeSpan? Expiry { get; set; }
     public string? ValidAudience { get; set; }
     public IEnumerable<string>? ValidAudiences { get; set; }
@@ -65,19 +77,31 @@ public class JwtOptions
     /// Defaults to true.
     /// </summary>
     public bool IncludeErrorDetails { get; set; } = true;
+
     public string? AuthenticationType { get; set; }
     public string? NameClaimType { get; set; }
 
     /// <summary>
     /// The claim type that will be used to determine the user's roles.
-    /// Defaults to "Role".
+    /// Default is "Role".
     /// </summary>
     public string RoleClaimType { get; set; } = "Role";
 
     public class CertificateOptions
     {
+        /// <summary>
+        /// The location of the certificate.
+        /// </summary>
         public string? Location { get; set; }
+
+        /// <summary>
+        /// The certificate as a byte array.
+        /// </summary>
         public string? RawData { get; set; }
+
+        /// <summary>
+        /// The certificate password.
+        /// </summary>
         public string? Password { get; set; }
     }
 }

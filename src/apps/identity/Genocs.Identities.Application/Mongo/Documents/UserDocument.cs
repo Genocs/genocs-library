@@ -1,4 +1,3 @@
-using Genocs.Common.Types;
 using Genocs.Core.Domain.Entities;
 using Genocs.Identities.Application.Domain.Entities;
 
@@ -9,7 +8,7 @@ public class UserDocument : IEntity<Guid>
     public Guid Id { get; set; }
     public string Email { get; set; }
     public string Name { get; set; }
-    public string Role { get; set; }
+    public IEnumerable<string> Roles { get; set; }
     public string Password { get; set; }
     public DateTime CreatedAt { get; set; }
     public IEnumerable<string>? Permissions { get; set; }
@@ -24,14 +23,14 @@ public class UserDocument : IEntity<Guid>
         Id = user.Id;
         Email = user.Email;
         Name = user.Name;
-        Role = user.Role;
+        Roles = user.Roles;
         Password = user.Password;
         CreatedAt = user.CreatedAt;
         Permissions = user.Permissions;
         Locked = user.Locked;
     }
 
-    public User ToEntity() => new User(Id, Email, Name, Password, Role, CreatedAt, Permissions, Locked);
+    public User ToEntity() => new(Id, Email, Name, Password, Roles, CreatedAt, Permissions, Locked);
 
     public bool IsTransient()
     {

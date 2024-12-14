@@ -11,14 +11,9 @@ using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway;
 
-internal class Startup
+internal class Startup(IConfiguration configuration)
 {
-    public IConfiguration Configuration { get; }
-
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    public IConfiguration Configuration { get; } = configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -52,11 +47,11 @@ internal class Startup
             .AddWebApi()
             .Build();
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("authenticatedUser", policy =>
-                policy.RequireAuthenticatedUser());
-        });
+        //services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("authenticatedUser", policy =>
+        //        policy.RequireAuthenticatedUser());
+        //});
 
         services.AddCors(cors =>
         {

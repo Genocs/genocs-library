@@ -3,15 +3,10 @@ using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway.Framework;
 
-internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
+internal class CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory) : IForwarderHttpClientFactory
 {
-    private readonly CorrelationIdFactory _correlationIdFactory;
+    private readonly CorrelationIdFactory _correlationIdFactory = correlationIdFactory;
 
-    public CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory)
-    {
-        _correlationIdFactory = correlationIdFactory;
-    }
-    
     public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
     {
         if (context.OldClient != null && context.NewConfig == context.OldConfig)
@@ -34,7 +29,7 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
             handler.SslOptions.EnabledSslProtocols = newClientOptions.SslProtocols.Value;
         }
 
-        // TODO: Enable this  
+        // TODO: Enable this
         //if (newClientOptions.ClientCertificate != null)
         //{
         //    handler.SslOptions.ClientCertificates = new X509CertificateCollection
@@ -53,27 +48,18 @@ internal class CustomForwarderHttpClientFactory : IForwarderHttpClientFactory
             handler.SslOptions.RemoteCertificateValidationCallback =
                 (sender, cert, chain, errors) => cert.Subject == "demo.io";
         }
-        
-        var httpMessageInvoker =  new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);
 
-        return httpMessageInvoker;
+        return new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);
     }
 
-
-    private class CustomHttpMessageInvoker : HttpMessageInvoker
+    private class CustomHttpMessageInvoker(CorrelationIdFactory correlationIdFactory, HttpMessageHandler handler, bool disposeHandler)
+        : HttpMessageInvoker(handler, disposeHandler)
     {
-        private readonly CorrelationIdFactory _correlationIdFactory;
+        private readonly CorrelationIdFactory _correlationIdFactory = correlationIdFactory;
 
-        public CustomHttpMessageInvoker(CorrelationIdFactory correlationIdFactory, HttpMessageHandler handler,
-            bool disposeHandler) : base(handler, disposeHandler)
+        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            _correlationIdFactory = correlationIdFactory;
-        }
-
-        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            var correlationId = _correlationIdFactory.Create();
+            string correlationId = _correlationIdFactory.Create();
             request.Headers.TryAddWithoutValidation("x-correlation-id", correlationId);
             return await base.SendAsync(request, cancellationToken);
         }

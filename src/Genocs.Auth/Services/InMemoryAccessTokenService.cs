@@ -5,45 +5,36 @@ using Microsoft.Extensions.Primitives;
 
 namespace Genocs.Auth.Services;
 
-internal sealed class InMemoryAccessTokenService : IAccessTokenService
+/// <summary>
+/// This service allows to validate JWT Token in real-time.
+/// In this way tokens can be invalidated and the effect shall be immediate.
+/// </summary>
+internal sealed class InMemoryAccessTokenService(IMemoryCache cache, IHttpContextAccessor httpContextAccessor, JwtOptions jwtOptions) : IAccessTokenService
 {
-    private readonly IMemoryCache _cache;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly TimeSpan _expires;
+    private readonly IMemoryCache _cache = cache;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly TimeSpan _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
 
-    public InMemoryAccessTokenService(
-                                        IMemoryCache cache,
-                                        IHttpContextAccessor httpContextAccessor,
-                                        JwtOptions jwtOptions)
-    {
-        _cache = cache;
-        _httpContextAccessor = httpContextAccessor;
-        _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
-    }
+    public bool IsCurrentActiveToken()
+        => IsActive(GetCurrent());
 
-    public Task<bool> IsCurrentActiveToken()
-        => IsActiveAsync(GetCurrentAsync());
+    public void DeactivateCurrent()
+        => Deactivate(GetCurrent());
 
-    public Task DeactivateCurrentAsync()
-        => DeactivateAsync(GetCurrentAsync());
+    public bool IsActive(string token)
+        => string.IsNullOrWhiteSpace(_cache.Get<string>(GetKey(token)));
 
-    public Task<bool> IsActiveAsync(string token)
-        => Task.FromResult(string.IsNullOrWhiteSpace(_cache.Get<string>(GetKey(token))));
-
-    public Task DeactivateAsync(string token)
+    public void Deactivate(string token)
     {
         _cache.Set(GetKey(token), "revoked", new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = _expires
         });
-
-        return Task.CompletedTask;
     }
 
-    private string GetCurrentAsync()
+    private string GetCurrent()
     {
-        var authorizationHeader = _httpContextAccessor
-            .HttpContext?.Request.Headers["authorization"];
+        var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers.Authorization;
 
         if (authorizationHeader is null)
         {
@@ -52,7 +43,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
 
         return authorizationHeader.Value == StringValues.Empty
             ? string.Empty
-            : authorizationHeader.Value.Single().Split(' ').Last();
+            : authorizationHeader.Value.Single()?.Split(' ').Last();
     }
 
     private static string GetKey(string token) => $"blacklisted-tokens:{token}";

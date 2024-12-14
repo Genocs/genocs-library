@@ -4,13 +4,18 @@
         <TargetFramework>net9.0</TargetFramework>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>_genocs</UserSecretsId>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..</DockerfileContext>
+        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Identities.Application\Genocs.Identities.Application.csproj" />
     </ItemGroup>
 
@@ -20,10 +25,6 @@
 
     <ItemGroup>
         <Folder Include="logs\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Polly" Version="8.5.0" />
     </ItemGroup>
 
 </Project>

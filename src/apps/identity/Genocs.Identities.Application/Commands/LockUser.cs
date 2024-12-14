@@ -2,12 +2,7 @@ using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Identities.Application.Commands;
 
-public class LockUser : ICommand
+public class LockUser(Guid userId) : ICommand
 {
-    public Guid UserId { get; }
-
-    public LockUser(Guid userId)
-    {
-        UserId = userId;
-    }
+    public Guid UserId { get; } = userId;
 }

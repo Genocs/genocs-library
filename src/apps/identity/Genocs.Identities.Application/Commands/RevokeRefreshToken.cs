@@ -2,12 +2,7 @@ using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Identities.Application.Commands;
 
-public class RevokeRefreshToken : ICommand
+public class RevokeRefreshToken(string refreshToken) : ICommand
 {
-    public string RefreshToken { get; }
-
-    public RevokeRefreshToken(string refreshToken)
-    {
-        RefreshToken = refreshToken;
-    }
+    public string RefreshToken { get; } = refreshToken;
 }

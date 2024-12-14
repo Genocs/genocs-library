@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Genocs.SignalR.WebApi.Hubs;
 
-public class GenocsHub : Hub
+public class GenocsHub(IJwtHandler jwtHandler) : Hub
 {
-    private readonly IJwtHandler _jwtHandler;
-
-    public GenocsHub(IJwtHandler jwtHandler)
-        => _jwtHandler = jwtHandler ?? throw new ArgumentNullException(nameof(jwtHandler));
+    private readonly IJwtHandler _jwtHandler = jwtHandler ?? throw new ArgumentNullException(nameof(jwtHandler));
 
     public async Task InitializeAsync(string token)
     {

@@ -6,6 +6,11 @@ namespace Genocs.Auth;
 public class JsonWebToken
 {
     /// <summary>
+     /// Gets or sets the access token unique identifier.
+     /// </summary>
+    public string? Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the access token.
     /// </summary>
     public string? AccessToken { get; set; }
@@ -21,14 +26,9 @@ public class JsonWebToken
     public long Expires { get; set; }
 
     /// <summary>
-    /// Gets or sets the access token unique identifier.
-    /// </summary>
-    public string? Id { get; set; }
-
-    /// <summary>
     /// Gets or sets the access token role.
     /// </summary>
-    public string? Role { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 
     /// <summary>
     /// The claims.

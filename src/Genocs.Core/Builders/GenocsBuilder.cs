@@ -21,14 +21,22 @@ public sealed class GenocsBuilder : IGenocsBuilder
     /// </summary>
     public IConfiguration? Configuration { get; private set; }
 
+    /// <summary>
+    /// The web application builder.
+    /// </summary>
     public WebApplicationBuilder? WebApplicationBuilder { get; private set; }
 
+    /// <summary>
+    /// The Genocs builder constructor.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The IConfiguration.</param>
     private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
         _services = services;
         Configuration = configuration;
 
-        _buildActions = new List<Action<IServiceProvider>>();
+        _buildActions = [];
         _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
     }
 
@@ -38,7 +46,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
         Configuration = builder.Configuration;
 
         _services = builder.Services;
-        _buildActions = new List<Action<IServiceProvider>>();
+        _buildActions = [];
         _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
     }
 
@@ -70,6 +78,13 @@ public sealed class GenocsBuilder : IGenocsBuilder
             startupInitializer.AddInitializer(initializer);
         });
 
+    /// <summary>
+    /// Build the Genocs application.
+    /// </summary>
+    /// <remarks>
+    /// Remember to call the Build on the application builder.
+    /// </remarks>
+    /// <returns>The Service Provider to be used for chaining.</returns>
     public IServiceProvider Build()
     {
         var serviceProvider = _services.BuildServiceProvider();

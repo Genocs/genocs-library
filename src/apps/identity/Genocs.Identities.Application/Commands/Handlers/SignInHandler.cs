@@ -19,9 +19,15 @@ internal sealed class SignInHandler : ICommandHandler<SignIn>
     private readonly IMessageBroker _messageBroker;
     private readonly ILogger<SignInHandler> _logger;
 
-    public SignInHandler(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository,
-        IPasswordService passwordService, IJwtProvider jwtProvider, IRng rng, ITokenStorage storage,
-        IMessageBroker messageBroker, ILogger<SignInHandler> logger)
+    public SignInHandler(
+                            IUserRepository userRepository,
+                            IRefreshTokenRepository refreshTokenRepository,
+                            IPasswordService passwordService,
+                            IJwtProvider jwtProvider,
+                            IRng rng,
+                            ITokenStorage storage,
+                            IMessageBroker messageBroker,
+                            ILogger<SignInHandler> logger)
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
@@ -53,7 +59,8 @@ internal sealed class SignInHandler : ICommandHandler<SignIn>
                 ["permissions"] = user.Permissions
             }
             : null;
-        var auth = _jwtProvider.Create(user.Id, user.Name, user.Role, claims: claims);
+
+        var auth = _jwtProvider.Create(user.Id, user.Name, user.Roles, claims: claims);
         auth.RefreshToken = await CreateRefreshTokenAsync(user.Id);
         _storage.Set(command.Id, auth);
         _logger.LogInformation($"User with id: {user.Id} has been authenticated.");
@@ -62,7 +69,7 @@ internal sealed class SignInHandler : ICommandHandler<SignIn>
 
     private async Task<string> CreateRefreshTokenAsync(Guid userId)
     {
-        var token = _rng.Generate(30, true);
+        string token = _rng.Generate(30, true);
         var refreshToken = new RefreshToken(new AggregateId(), userId, token, DateTime.UtcNow);
         await _refreshTokenRepository.AddAsync(refreshToken);
 
