@@ -141,23 +141,12 @@ internal sealed class JwtHandler : IJwtHandler
     /// <summary>
     /// This method creates a token using the JwtSecurityTokenHandler class.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The JWT token string.</returns>
     public string CreateToken()
     {
+        SecurityTokenDescriptor tokenDescriptor = CreateSecurityTokenDescriptor();
+
         var tokenHandler = new JwtSecurityTokenHandler();
-        byte[] key = Encoding.ASCII.GetBytes(_options.IssuerSigningKey!);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.Role, "role")
-            }),
-            Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-        };
-
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
@@ -165,12 +154,24 @@ internal sealed class JwtHandler : IJwtHandler
     /// <summary>
     /// This method creates a token using the JsonWebTokenHandler class.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The JWT token string.</returns>
     public string CreateTokenWithJsonWebTokenHandler()
     {
+        SecurityTokenDescriptor tokenDescriptor = CreateSecurityTokenDescriptor();
+
         var tokenHandler = new Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler();
+        string token = tokenHandler.CreateToken(tokenDescriptor);
+        return token;
+    }
+
+    /// <summary>
+    /// Internal method to create a SecurityTokenDescriptor.
+    /// </summary>
+    /// <returns>The created SecurityTokenDescriptor.</returns>
+    private SecurityTokenDescriptor CreateSecurityTokenDescriptor()
+    {
         byte[] key = Encoding.ASCII.GetBytes(_options.IssuerSigningKey!);
-        var tokenDescriptor = new SecurityTokenDescriptor
+        return new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
@@ -178,10 +179,7 @@ internal sealed class JwtHandler : IJwtHandler
                 new Claim(ClaimTypes.Role, "role")
             }),
             Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), _options.Algorithm)
         };
-
-        string token = tokenHandler.CreateToken(tokenDescriptor);
-        return token;
     }
 }

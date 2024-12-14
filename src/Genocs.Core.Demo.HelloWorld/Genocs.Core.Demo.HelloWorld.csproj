@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Genocs.Auth\Genocs.Auth.csproj" />
     <ProjectReference Include="..\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj" />
     <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
     <ProjectReference Include="..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />

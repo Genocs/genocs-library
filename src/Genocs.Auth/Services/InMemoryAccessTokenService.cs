@@ -9,21 +9,11 @@ namespace Genocs.Auth.Services;
 /// This service allows to validate JWT Token in real-time.
 /// In this way tokens can be invalidated and the effect shall be immediate.
 /// </summary>
-internal sealed class InMemoryAccessTokenService : IAccessTokenService
+internal sealed class InMemoryAccessTokenService(IMemoryCache cache, IHttpContextAccessor httpContextAccessor, JwtOptions jwtOptions) : IAccessTokenService
 {
-    private readonly IMemoryCache _cache;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly TimeSpan _expires;
-
-    public InMemoryAccessTokenService(
-                                        IMemoryCache cache,
-                                        IHttpContextAccessor httpContextAccessor,
-                                        JwtOptions jwtOptions)
-    {
-        _cache = cache;
-        _httpContextAccessor = httpContextAccessor;
-        _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
-    }
+    private readonly IMemoryCache _cache = cache;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly TimeSpan _expires = jwtOptions.Expiry ?? TimeSpan.FromMinutes(jwtOptions.ExpiryMinutes);
 
     public bool IsCurrentActiveToken()
         => IsActive(GetCurrent());
@@ -44,8 +34,7 @@ internal sealed class InMemoryAccessTokenService : IAccessTokenService
 
     private string GetCurrent()
     {
-        var authorizationHeader = _httpContextAccessor
-            .HttpContext?.Request.Headers["authorization"];
+        var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers.Authorization;
 
         if (authorizationHeader is null)
         {

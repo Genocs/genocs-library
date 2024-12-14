@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Genocs.Auth.Configurations;
 using Genocs.Auth.Handlers;
 using Genocs.Auth.Services;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace Genocs.Auth;
 
@@ -38,15 +38,17 @@ public static class Extensions
             return builder;
         }
 
-        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        builder.Services.AddSingleton<IJwtHandler, JwtHandler>();
-        builder.Services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
-        builder.Services.AddTransient<AccessTokenValidatorMiddleware>();
-
         if (!options.Enabled)
         {
             builder.Services.AddSingleton<IPolicyEvaluator, DisabledAuthenticationPolicyEvaluator>();
         }
+
+        // To be able to access the HttpContext in the InMemoryAccessTokenService
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        builder.Services.AddSingleton<IJwtHandler, JwtHandler>();
+        builder.Services.AddSingleton<IAccessTokenService, InMemoryAccessTokenService>();
+        builder.Services.AddTransient<AccessTokenValidatorMiddleware>();
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -115,13 +117,8 @@ public static class Extensions
         // If no certificate is provided, use symmetric encryption.
         if (!string.IsNullOrWhiteSpace(options.IssuerSigningKey) && !hasCertificate)
         {
-            if (string.IsNullOrWhiteSpace(options.Algorithm) || hasCertificate)
-            {
-                options.Algorithm = SecurityAlgorithms.HmacSha256;
-            }
-
-            byte[] rawKey = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
-            tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(rawKey);
+            byte[] key = Encoding.UTF8.GetBytes(options.IssuerSigningKey);
+            tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(key);
             Console.WriteLine("Using symmetric encryption for issuing tokens.");
         }
 

@@ -22,7 +22,7 @@ public class AccessTokenValidatorMiddleware(IAccessTokenService accessTokenServi
     /// </summary>
     /// <param name="context">The http context.</param>
     /// <param name="next">The request delegate.</param>
-    /// <returns></returns>
+    /// <returns>The task.</returns>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         string path = context.Request.Path.HasValue ? context.Request.Path.Value : string.Empty;

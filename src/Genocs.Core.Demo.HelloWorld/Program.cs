@@ -1,11 +1,7 @@
-using System.Text;
+using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.Core.Demo.Infrastructure.SecurityAuthentication;
 using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 StaticLogger.EnsureInitialized();
 
@@ -16,6 +12,7 @@ builder.Host
 
 builder.AddGenocs()
     .AddOpenTelemetry()
+    .AddJwt("simmetric_jwt")
     .Build();
 
 // Add services to the container.
@@ -35,6 +32,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+/*
 // Authorization settings
 builder.Services.AddAuthorization();
 
@@ -58,6 +56,7 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
         };
     });
+*/
 
 var app = builder.Build();
 
@@ -73,6 +72,10 @@ app.UseCors();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Used to validate the access token
+// In RealTime
+app.UseAccessTokenValidator();
 
 app.MapControllers();
 

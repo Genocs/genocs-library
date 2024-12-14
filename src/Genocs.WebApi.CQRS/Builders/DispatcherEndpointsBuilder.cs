@@ -161,15 +161,14 @@ public class DispatcherEndpointsBuilder(IEndpointsBuilder builder) : IDispatcher
             await dispatcher.SendAsync(command);
         }
 
-        if (afterDispatch is not null)
-        {
-            await afterDispatch(command, context);
-        }
-
         if (context != null)
         {
             context.Response.StatusCode = 200;
         }
 
+        if (afterDispatch is not null)
+        {
+            await afterDispatch(command, context);
+        }
     }
 }
