@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.MessageBrokers" Version="7.1.0" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="7.2.1" />
     </ItemGroup>
 
 </Project>
