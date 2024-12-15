@@ -22,15 +22,15 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.WebApi" Version="7.1.0" />
+        <PackageReference Include="Genocs.WebApi" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
     </ItemGroup>
 
 </Project>

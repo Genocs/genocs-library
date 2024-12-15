@@ -29,22 +29,22 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.HTTP" Version="7.1.0" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.1.0" />
-        <PackageReference Include="Genocs.Logging" Version="7.1.0" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="7.1.0" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.1.0" />       
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.1.0" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.1.0" />
-        <PackageReference Include="Genocs.Metrics" Version="7.1.0" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.1.0" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="7.1.0" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="7.1.0" />
-        <PackageReference Include="Genocs.Tracing" Version="7.1.0" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.1.0" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="7.1.0" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.1.0" />
-        <PackageReference Include="Genocs.WebApi" Version="7.1.0" />
+        <PackageReference Include="Genocs.HTTP" Version="7.2.0" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.0" />
+        <PackageReference Include="Genocs.Logging" Version="7.2.0" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="7.2.0" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.0" />       
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.2.0" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.0" />
+        <PackageReference Include="Genocs.Metrics" Version="7.2.0" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.0" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="7.2.0" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="7.2.0" />
+        <PackageReference Include="Genocs.Tracing" Version="7.2.0" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.2.0" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="7.2.0" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.2.0" />
+        <PackageReference Include="Genocs.WebApi" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
