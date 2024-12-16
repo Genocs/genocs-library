@@ -7,23 +7,20 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /src
-COPY ["products/Genocs.Products.WebApi", "Genocs.Products.WebApi/"]
+COPY ["orders/Genocs.Orders.WebApi", "Genocs.Orders.WebApi/"]
 COPY ["Directory.Build.props", "Directory.Build.props"]
 COPY ["Directory.Build.targets", "Directory.Build.targets"]
 COPY ["NuGet.config", "NuGet.config"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["stylecop.json", "stylecop.json"]
 
-WORKDIR "/src/Genocs.Products.WebApi"
-
-RUN dotnet restore "Genocs.Products.WebApi.csproj"
-
-RUN dotnet build "Genocs.Products.WebApi.csproj" -c Release -o /app/build
+WORKDIR "/src/Genocs.Orders.WebApi"
 
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Products.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet build "Genocs.Orders.WebApi.csproj" -c Release -o /app/build
+# RUN dotnet publish "Genocs.Orders.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Products.WebApi.dll"]
+COPY --from=publish /app/build .
+ENTRYPOINT ["dotnet", "Genocs.Orders.WebApi.dll"]

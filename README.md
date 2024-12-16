@@ -474,13 +474,13 @@ The build and run process can be done by using docker-compose
 cd src/apps
 
 # Build with docker compose
-docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs-app build
+docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs build
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs-app up -d
+docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs up -d
 
 # Clean Docker cache
 docker builder prune
@@ -496,16 +496,16 @@ cd src/apps
 docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
 
 # Build the identity service
-docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity-webapi.dockerfile .
+docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity.dockerfile .
 
 # Build the order service
-docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order-webapi.dockerfile .
+docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order.dockerfile .
 
 # Build the product service
-docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product-webapi.dockerfile .
+docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product.dockerfile .
 
 # Build the signalr service
-docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr-webapi.dockerfile .
+docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr.dockerfile .
 
 
 # Push on Dockerhub

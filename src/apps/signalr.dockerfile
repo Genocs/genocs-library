@@ -31,14 +31,11 @@ COPY ["stylecop.json", "stylecop.json"]
 
 WORKDIR "/src/Genocs.SignalR.WebApi"
 
-RUN dotnet restore "Genocs.SignalR.WebApi.csproj"
-
-RUN dotnet build "Genocs.SignalR.WebApi.csproj" -c Release -o /app/build
-
 FROM build-env AS publish
-RUN dotnet publish "Genocs.SignalR.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet build "Genocs.SignalR.WebApi.csproj" -c Release -o /app/build
+# RUN dotnet publish "Genocs.SignalR.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app/build .
 ENTRYPOINT ["dotnet", "Genocs.SignalR.WebApi.dll"]

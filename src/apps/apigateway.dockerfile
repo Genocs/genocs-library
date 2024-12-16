@@ -17,12 +17,11 @@ COPY ["stylecop.json", "stylecop.json"]
 
 WORKDIR "/src/Genocs.APIGateway"
 
-RUN dotnet build "Genocs.APIGateway.csproj" -c Release -o /app/build
-
 FROM build-env AS publish
-RUN dotnet publish "Genocs.APIGateway.csproj" -c Release -o /app/publish
+RUN dotnet build "Genocs.APIGateway.csproj" -c Release -o /app/build
+# RUN dotnet publish "Genocs.APIGateway.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app/build .
 ENTRYPOINT ["dotnet", "Genocs.APIGateway.dll"]
