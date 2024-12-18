@@ -1,5 +1,6 @@
 using Genocs.APIGateway.Configurations;
 using Genocs.APIGateway.Framework;
+using Genocs.APIGateway.Providers;
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
@@ -7,6 +8,7 @@ using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Tracing;
 using Genocs.WebApi;
+using Genocs.Persistence.MongoDb.Extensions;
 using Yarp.ReverseProxy.Forwarder;
 
 namespace Genocs.APIGateway;
@@ -31,13 +33,14 @@ internal class Startup(IConfiguration configuration)
         services.AddSingleton<ICorrelationContextBuilder, CorrelationContextBuilder>();
         services.AddSingleton<RouteMatcher>();
         services.Configure<MessagingOptions>(Configuration.GetSection(MessagingOptions.Position));
-        services.AddReverseProxy()
-            .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
 
         IGenocsBuilder builder = services
-                                        .AddGenocs()
+                                        .AddGenocs(Configuration)
                                         .AddOpenTelemetry()
+                                        .AddMongo()
+                                        .AddMongoFast()
                                         .AddJwt()
                                         .AddPrometheus();
 
@@ -46,6 +49,9 @@ internal class Startup(IConfiguration configuration)
         builder.AddSecurity()
             .AddWebApi()
             .Build();
+
+        services.AddReverseProxy()
+                .LoadFromDatabase(Configuration);
 
         //services.AddAuthorization(options =>
         //{

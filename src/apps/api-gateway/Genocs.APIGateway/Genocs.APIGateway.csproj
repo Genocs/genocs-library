@@ -11,6 +11,7 @@
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Security\Genocs.Security.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
@@ -23,6 +24,7 @@
         <PackageReference Include="Genocs.MessageBrokers" Version="7.2.1" />
         <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.1" />
         <PackageReference Include="Genocs.Metrics" Version="7.2.1" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.1" />        
         <PackageReference Include="Genocs.Secrets.Vault" Version="7.2.1" />
         <PackageReference Include="Genocs.Security" Version="7.2.1" />
         <PackageReference Include="Genocs.Tracing" Version="7.2.1" />
@@ -46,6 +48,9 @@
 
     <ItemGroup>
         <Folder Include="logs\" />
+    </ItemGroup>
+
+    <ItemGroup>
     </ItemGroup>
 
 </Project>
