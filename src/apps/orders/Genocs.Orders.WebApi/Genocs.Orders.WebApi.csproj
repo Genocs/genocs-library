@@ -2,9 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>_genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
     </PropertyGroup>

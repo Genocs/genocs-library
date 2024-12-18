@@ -19,14 +19,14 @@ public class ProductServiceClient : IProductServiceClient
     /// The standard constructor.
     /// </summary>
     /// <param name="client">The http client.</param>
+    /// <param name="httpClientOptions">The client Options.</param>
     /// <param name="certificatesService">The certification service.</param>
-    /// <param name="httpClientOptions"></param>
-    /// <param name="vaultOptions"></param>
-    /// <param name="securityOptions"></param>
+    /// <param name="vaultOptions">The Key Vault Options.</param>
+    /// <param name="securityOptions">The Security Options like Certificates.</param>
     public ProductServiceClient(
                                 IHttpClient client,
-                                ICertificatesService certificatesService,
                                 HttpClientOptions httpClientOptions,
+                                ICertificatesService certificatesService,
                                 VaultOptions vaultOptions,
                                 SecurityOptions securityOptions)
     {
