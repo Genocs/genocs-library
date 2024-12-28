@@ -455,6 +455,9 @@ docker push genocs/demo-worker:latest
 
 ## Enterprise Application
 
+### Application Components
+
+
 Inside **./src/apps** folder you can find a full-fledged application composed by:
 - ApiGateway
 - Identity Service
@@ -464,7 +467,16 @@ Inside **./src/apps** folder you can find a full-fledged application composed by
 
 In that way you can test the entire flow.
 
-**TODO**: Add a architecture diagram to show the components and how they interact with each other.
+| Component         | Description                       | Container Port | Visibility                   |
+|-------------------|-----------------------------------|----------------|------------------------------|
+| ApiGateway        | Handles API requests              |         5500   | Public                       |
+| Identity Service  | Manages user identities           |         5510*  | Private through API Gateway  |
+| Product Service   | Manages product information       |         5520*  | Private through API Gateway  |
+| Order Service     | Processes orders                  |         5530*  | Private through API Gateway  |
+| SignalR Service   | Handles real-time communication   |         5540*  | Private through API Gateway  |
+
+
+![Architecture](./assets/architecture_01.png)
 
 ### How to BUILD & RUN the application
 
