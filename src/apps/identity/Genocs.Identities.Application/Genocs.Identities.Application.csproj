@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.Identities.Application</PackageId>
+        <RootNamespace>Genocs.Identities.Application</RootNamespace>
+        <AssemblyName>Genocs.Identities.Application</AssemblyName>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

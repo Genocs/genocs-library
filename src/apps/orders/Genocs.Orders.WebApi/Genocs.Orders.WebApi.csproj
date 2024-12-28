@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.Orders.WebApi</PackageId>
+        <RootNamespace>Genocs.Orders.WebApi</RootNamespace>
+        <AssemblyName>Genocs.Orders.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -32,7 +35,7 @@
         <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.1" />
         <PackageReference Include="Genocs.Logging" Version="7.2.1" />
         <PackageReference Include="Genocs.MessageBrokers" Version="7.2.1" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.1" />       
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.1" />
         <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.2.1" />
         <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.1" />
         <PackageReference Include="Genocs.Metrics" Version="7.2.1" />
@@ -47,11 +50,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Polly" Version="8.5.0" />
+        <PackageReference Include="Polly" Version="8.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="logs\" />
+        <Folder Include="logs\" />
     </ItemGroup>
 
 </Project>

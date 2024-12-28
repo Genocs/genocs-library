@@ -34,7 +34,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
             throw new InvalidOperationException($"Product with given id: {command.ProductId} already exists!");
         }
 
-        var product = new Product(command.ProductId, command.SKU, command.UnitPrice);
+        var product = new Product(command.ProductId, command.SKU, command.UnitPrice, command.Name, command.Description);
         await _repository.AddAsync(product);
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");

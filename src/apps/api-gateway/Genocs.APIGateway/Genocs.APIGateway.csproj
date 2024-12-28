@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.APIGateway</PackageId>
+        <RootNamespace>Genocs.APIGateway</RootNamespace>
+        <AssemblyName>Genocs.APIGateway</AssemblyName>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -48,9 +51,6 @@
 
     <ItemGroup>
         <Folder Include="logs\" />
-    </ItemGroup>
-
-    <ItemGroup>
     </ItemGroup>
 
 </Project>

@@ -38,11 +38,17 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
             throw new InvalidOperationException($"Order with given id: {command.OrderId} already exists!");
         }
 
-        _logger.LogInformation($"Fetching the product for order with id: {command.OrderId}...");
-        var productDto = await _productServiceClient.GetAsync(command.ProductId) ?? throw new InvalidOperationException($"Product '{command.ProductId}' was not found. Requested for order '{command.OrderId}'");
-        _logger.LogInformation($"Order '{command.OrderId}' will cost '{productDto.UnitPrice}'$.");
+        _logger.LogInformation($"Fetching products for order with id: {command.OrderId}...");
 
-        var order = new Order(command.OrderId, command.CustomerId, productDto.UnitPrice);
+        List<OrderItem> productItems = [];
+
+        foreach (var productId in command.Products)
+        {
+            var productDto = await _productServiceClient.GetAsync(productId) ?? throw new InvalidOperationException($"Product '{productId}' was not found. Requested for order '{command.OrderId}'");
+            productItems.Add(new OrderItem(productId, productDto.UnitPrice, 1));
+        }
+
+        var order = new Order(command.OrderId, command.CustomerId, productItems);
         await _repository.AddAsync(order);
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");

@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.Identities.WebApi</PackageId>
+        <RootNamespace>Genocs.Identities.WebApi</RootNamespace>
+        <AssemblyName>Genocs.Identities.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>

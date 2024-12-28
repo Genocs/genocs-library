@@ -2,16 +2,11 @@ using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Products.WebApi.Commands;
 
-public class CreateProduct : ICommand
+public class CreateProduct(Guid productId, string sku, decimal unitPrice, string? name, string? description) : ICommand
 {
-    public Guid ProductId { get; }
-    public string SKU { get; }
-    public decimal UnitPrice { get; }
-
-    public CreateProduct(Guid productId, string sku, decimal unitPrice)
-    {
-        ProductId = productId == Guid.Empty ? Guid.NewGuid() : productId;
-        SKU = sku;
-        UnitPrice = unitPrice;
-    }
+    public Guid ProductId { get; } = productId == Guid.Empty ? Guid.NewGuid() : productId;
+    public string SKU { get; } = sku;
+    public decimal UnitPrice { get; } = unitPrice;
+    public string? Name { get; } = name;
+    public string? Description { get; } = description;
 }

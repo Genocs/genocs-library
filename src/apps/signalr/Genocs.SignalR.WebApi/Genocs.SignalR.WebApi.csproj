@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.SignalR.WebApi</PackageId>
+        <RootNamespace>Genocs.SignalR.WebApi</RootNamespace>
+        <AssemblyName>Genocs.SignalR.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
@@ -52,6 +55,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="logs\" />
+        <Folder Include="logs\" />
     </ItemGroup>
 </Project>

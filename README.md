@@ -468,7 +468,11 @@ In that way you can test the entire flow.
 
 ### How to BUILD & RUN the application
 
-The build and run process can be done by using docker-compose
+The build and run process can be done by using docker-compose. 
+
+Pre-requisites:
+- Docker
+
 
 ``` bash
 cd src/apps
