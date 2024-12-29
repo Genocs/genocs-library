@@ -37,8 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP", "src\Genocs.H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Auth", "src\Genocs.Auth\Genocs.Auth.csproj", "{63DFA0D8-D60E-4985-BD46-E6A2F253E2D5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.WebApi", "src\Genocs.WebApi\Genocs.WebApi.csproj", "{612DA557-6D26-485A-A998-AAABEC1F796B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.WebApi.Swagger", "src\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj", "{E01C11ED-A212-4B57-A94B-0B4CA097AB49}"
@@ -67,15 +65,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Persistence.Redis", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.Vault", "src\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj", "{3AC0521F-192D-4B1F-8741-64D4505A5AA5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIGateway", "APIGateway", "{E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{140B7191-88E9-4EEE-9D86-9A70839F8507}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.APIGateway", "src\apps\api-gateway\Genocs.APIGateway\Genocs.APIGateway.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-gateway", "api-gateway", "{E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Identities.Application", "src\apps\identity\Genocs.Identities.Application\Genocs.Identities.Application.csproj", "{D1BE29BD-9518-42DA-9A34-C86D4287BAB5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity", "identity", "{6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Identities.WebApi", "src\apps\identity\Genocs.Identities.WebApi\Genocs.Identities.WebApi.csproj", "{CA411C82-9B2F-45B2-AF3F-8650C971E49D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "orders", "orders", "{80862789-8B42-4878-AC10-9CFF06A7313C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification", "notification", "{160F94A8-C119-4C0F-94FA-E03673269AC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification-signalr", "notification-signalr", "{75D24F85-48AC-4058-AF8D-461FC6A360AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wallet", "wallet", "{9344A71B-D7EA-4C91-B303-2F8E8841B521}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "products", "products", "{B2028A73-6C94-4166-A0BB-22080805E351}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "src\apps\api-gateway\APIGateway.WebApi\APIGateway.WebApi.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identities.Application", "src\apps\identity\Identities.Application\Identities.Application.csproj", "{D1BE29BD-9518-42DA-9A34-C86D4287BAB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identities.WebApi", "src\apps\identity\Identities.WebApi\Identities.WebApi.csproj", "{CA411C82-9B2F-45B2-AF3F-8650C971E49D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Common", "src\Genocs.Common\Genocs.Common.csproj", "{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}"
 EndProject
@@ -95,9 +105,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrdersService", "OrdersService", "{80862789-8B42-4878-AC10-9CFF06A7313C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Orders.WebApi", "src\apps\orders\Genocs.Orders.WebApi\Genocs.Orders.WebApi.csproj", "{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.WebApi", "src\apps\orders\Orders.WebApi\Orders.WebApi.csproj", "{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Discovery.Consul", "src\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj", "{C42D741B-EBCC-4770-907C-C8B980D22A65}"
 EndProject
@@ -105,17 +114,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.LoadBalancing.Fabio"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP.RestEase", "src\Genocs.HTTP.RestEase\Genocs.HTTP.RestEase.csproj", "{C2CC0D45-CB64-4E0C-B875-6DB1667141E3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationsService", "NotificationsService", "{160F94A8-C119-4C0F-94FA-E03673269AC8}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR.WebApi", "src\apps\signalr\SignalR.WebApi\SignalR.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SignalR", "SignalR", "{75D24F85-48AC-4058-AF8D-461FC6A360AD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WalletsService", "WalletsService", "{9344A71B-D7EA-4C91-B303-2F8E8841B521}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.SignalR.WebApi", "src\apps\signalr\Genocs.SignalR.WebApi\Genocs.SignalR.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductsService", "ProductsService", "{B2028A73-6C94-4166-A0BB-22080805E351}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Products.WebApi", "src\apps\products\Genocs.Products.WebApi\Genocs.Products.WebApi.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.WebApi", "src\apps\products\Products.WebApi\Products.WebApi.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B184733D-2415-4517-BC65-26ED22EEB2C2}"
 	ProjectSection(SolutionItems) = preProject

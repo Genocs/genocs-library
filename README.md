@@ -73,7 +73,9 @@ You can use **Docker compose** to setup the infrastructure components just by ru
 
 ``` bash
 cd ./containers
-# Setup the infrastructure. Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
+
+# Setup the infrastructure.
+#Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
 docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
@@ -106,9 +108,7 @@ docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genoc
 
 `infrastructure.yml` allows to install the basic infrastructure components. They are:
 - [RabbitMQ](https://rabbitmq.com)
-- [Redis](https://redis.io)
 - [MongoDB](https://mongodb.com)
-- [Postgres](https://www.postgresql.org/)
 
 
 `infrastructure-db.yml` allows to install Redis and PostgreSQL
@@ -125,6 +125,7 @@ You can check them locally:
 
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
+- [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
 - [Prometheus](https://prometheus.io/)
 - [Grafana](https://grafana.com/)
 - [InfluxDB](https://www.influxdata.com/)
@@ -133,7 +134,7 @@ You can check them locally:
 
 
 You can find the console locally at:
-
+- [Aspire](localhost:18888): `localhost:18888`
 - [Prometheus](localhost:9090): `localhost:9090`
 - [Grafana](localhost:3000): `localhost:3000`
 - [InfluxDB](localhost:8086): `localhost:8086`
@@ -141,12 +142,9 @@ You can find the console locally at:
 - [Seq](localhost:5341): `localhost:5341`
 
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by Fabio and Consul.
-
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
-
-
 
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
@@ -155,15 +153,32 @@ Inside the file you can find:
 
 - vault (Hashicorp)
 
-The script below allows to setup the infrastructure components. This means that you can find all the containers inside the same network.
-
-The network is called `genocs`.
+> ** NOTE**
+> The commands above allows to setup infrastructure components, this means you can find all the containers inside the same network `genocs`.
+> Whenever possible the data are persisted on the host machine by means of volumens, so you can restart the containers without losing data.
+ 
 
 ``` yml 
 networks:
   genocs:
     name: genocs-network
     driver: bridge
+
+volumes:
+  rabbitmq-data:
+  mongo-data:
+  redis-data:
+  postgres-data:
+  influx-data:
+  grafana-data:
+  jaeger-data:
+  seq-data:
+  vault-data:
+  elk-data:
+  fabio-data:
+  consul-data:
+  prometheus-data:
+  ml-data:
 ```
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
@@ -198,7 +213,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "address": "docker.for.mac.localhost",
     "port": "5070",
     "pingEnabled": true,
-    "pingEndpoint": "health",
+    "pingEndpoint": "healthz",
     "pingInterval": 3,
     "removeAfterInterval": 3
   },
@@ -469,11 +484,11 @@ In that way you can test the entire flow.
 
 | Component         | Description                       | Container Port | Visibility                   |
 |-------------------|-----------------------------------|----------------|------------------------------|
-| ApiGateway        | Handles API requests              |         5500   | Public                       |
-| Identity Service  | Manages user identities           |         5510*  | Private through API Gateway  |
-| Product Service   | Manages product information       |         5520*  | Private through API Gateway  |
-| Order Service     | Processes orders                  |         5530*  | Private through API Gateway  |
-| SignalR Service   | Handles real-time communication   |         5540*  | Private through API Gateway  |
+| ApiGateway        | Handles API requests              |         :5500   | Public                       |
+| Identity Service  | Manages user identities           |         :5510*  | Private through API Gateway  |
+| Product Service   | Manages product information       |         :5520*  | Private through API Gateway  |
+| Order Service     | Processes orders                  |         :5530*  | Private through API Gateway  |
+| SignalR Service   | Handles real-time communication   |         :5540*  | Private through API Gateway  |
 
 
 ![Architecture](./assets/architecture_01.png)
