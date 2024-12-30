@@ -49,9 +49,7 @@ public static class Extensions
                     configure?.Invoke(context, loggerConfiguration);
                 });
 
-    public static IEndpointConventionBuilder MapLogLevelHandler(
-                                                                this IEndpointRouteBuilder builder,
-                                                                string endpointRoute = "~/logging/level")
+    public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder, string endpointRoute = "~/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
     private static void MapOptions(

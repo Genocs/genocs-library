@@ -15,8 +15,7 @@ namespace Genocs.GnxOpenTelemetry;
 
 public static class OpenTelemetryExtensions
 {
-    public static IGenocsBuilder AddOpenTelemetry(
-                                            this IGenocsBuilder builder)
+    public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
             ?? throw new GenocsException.InvalidConfigurationException("app config section is missing. AddOpenTelemetry requires those configuration.");

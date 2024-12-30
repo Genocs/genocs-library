@@ -51,7 +51,8 @@ internal class Startup(IConfiguration configuration)
             .Build();
 
         services.AddReverseProxy()
-                .LoadFromDatabase(Configuration);
+                .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+                //.LoadFromDatabase(Configuration);
 
         //services.AddAuthorization(options =>
         //{

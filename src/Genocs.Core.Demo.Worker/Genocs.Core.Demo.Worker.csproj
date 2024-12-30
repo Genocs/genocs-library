@@ -29,6 +29,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj" />
         <ProjectReference Include="..\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj" />
+        <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
     </ItemGroup>
 
 </Project>

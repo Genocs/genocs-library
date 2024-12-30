@@ -28,12 +28,12 @@ public static class Extensions
 
         handlers.ForEach(ch => GetExtensionMethods()
             .FirstOrDefault(mi => !mi.IsGenericMethod && mi.Name == "TryDecorate")?
-            .Invoke(builder.Services, new object[]
-            {
+            .Invoke(builder.Services,
+            [
                 builder.Services,
                 ch.GetInterfaces().FirstOrDefault(),
                 decoratorType.MakeGenericType(ch.GetInterfaces().FirstOrDefault()?.GenericTypeArguments.First())
-            }));
+            ]));
 
         return builder;
     }
@@ -48,6 +48,7 @@ public static class Extensions
                     where method.IsDefined(typeof(ExtensionAttribute), false)
                     where method.GetParameters()[0].ParameterType == typeof(IServiceCollection)
                     select method;
+
         return query;
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Genocs.GnxOpenTelemetry.Configurations;
 
 /// <summary>
-/// ConsoleOptions Settings.
+/// Console Section Settings.
 /// </summary>
 public class ConsoleOptions
 {

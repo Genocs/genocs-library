@@ -18,13 +18,10 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
-
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="7.2.1" />
         <PackageReference Include="Genocs.HTTP" Version="7.2.1" />
     </ItemGroup>
 
