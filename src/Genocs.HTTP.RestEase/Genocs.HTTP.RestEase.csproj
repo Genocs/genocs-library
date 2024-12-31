@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.1" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.*" />
     </ItemGroup>
 
     <ItemGroup>
