@@ -16,8 +16,8 @@
 [license-url]: https://github.com/Genocs/genocs-library/blob/main/LICENSE
 [build-shield]: https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg?branch=main
 [build-url]: https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml
-[downloads-shield]: https://img.shields.io/nuget/dt/Genocs.Microservice.Template.svg?color=2da44e&label=downloads&logo=nuget
-[downloads-url]: https://www.nuget.org/packages/Genocs.Microservice.Template
+[downloads-shield]: https://img.shields.io/nuget/dt/Genocs.Core.svg?color=2da44e&label=Genocs.Core-download&logo=nuget
+[downloads-url]: https://www.nuget.org/packages/Genocs.Core
 [contributors-shield]: https://img.shields.io/github/contributors/Genocs/genocs-library.svg?style=flat-square
 [contributors-url]: https://github.com/Genocs/genocs-library/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Genocs/genocs-library?style=flat-square
@@ -41,6 +41,17 @@
 <p align="center">
     <img src="./assets/genocs-library-logo.png" alt="icon">
 </p>
+
+## Downloads
+
+[![Downloads][downloads-shield-1]][downloads-url-1]
+[![Downloads][downloads-shield-2]][downloads-url-2]
+
+[downloads-shield-1]: https://img.shields.io/nuget/dt/Genocs.Core.svg?color=2da44e&label=Genocs.Core&logo=nuget
+[downloads-url-1]: https://www.nuget.org/packages/Genocs.Core
+
+[downloads-shield-2]: https://img.shields.io/nuget/dt/Genocs.Tracing.svg?color=2da44e&label=Genocs.Tracing&logo=nuget
+[downloads-url-2]: https://www.nuget.org/packages/Genocs.Tracing
 
 
 # Genocs .NET library
@@ -142,23 +153,23 @@ You can find the console locally at:
 - [Seq](localhost:5341): `localhost:5341`
 
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Load balancer (Fabio) Service Discovery (Consul):
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
 
 
-`infrastructure-security.yml` allows to install the security infrastructure components.
-
-Inside the file you can find:
+`infrastructure-security.yml` allows to install the security infrastructure components. You can store sensitive data in a secure way. 
+The library contains a package that allows to use Azure Key Vault as secret store.
 
 - vault (Hashicorp)
 
 > **NOTE**
 >
-> The commands above allows to setup infrastructure components, this means you can find all the containers inside the same network `genocs`.
+> The commands above allows to setup infrastructure components. Beside all the containers are inside the `genocs` network.
 >
-> Whenever possible the data are persisted on the host machine by means of volumens, so you can restart the containers without losing data.
+> Whenever possible the data persisted on the host machine by means of volumes, so you can restart the containers without losing data.
  
+
 
 ``` yml 
 networks:
@@ -503,7 +514,7 @@ In that way you can test the entire flow.
 | SignalR Service   | Handles real-time communication   |         :5540*  | Private through API Gateway  |
 
 
-![Architecture](./assets/architecture_01.png)
+![Architecture](./assets/gnx-architecture.png)
 
 ### How to BUILD & RUN the application
 

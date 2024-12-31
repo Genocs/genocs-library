@@ -1,6 +1,6 @@
 # .NET Core Auth client library
 
-This package contains a set of functionalities to handling authorization logic as JWT.
+This package contains a set of functionalities to handle authorization logic as JWT.
 First of all I have to say thanks to devmentors.
 
 The libraries are built using .NET9, .NET8, .NET7, .NET6.

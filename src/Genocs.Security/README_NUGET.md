@@ -1,8 +1,8 @@
 # Genocs Security library
 
 This package contains the functionalities to be used to handle standard security concerns.
-The libraries can be used on .NET6, .NET7, .NET8.
 
+The libraries are built using .NET9, .NET8, .NET7, .NET6.
 ## Description
 
 Following an example of how the key should be.
