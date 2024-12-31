@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.Identities.Application</PackageId>
+        <RootNamespace>Genocs.Identities.Application</RootNamespace>
+        <AssemblyName>Genocs.Identities.Application</AssemblyName>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Auth" Version="7.2.*" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.*" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="7.2.*" />
+        <PackageReference Include="Genocs.HTTP" Version="7.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.2.*" />
+        <PackageReference Include="Genocs.Metrics" Version="7.2.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.*" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="7.2.*" />
+        <PackageReference Include="Genocs.Tracing" Version="7.2.*" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.2.*" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.2.*" />
+    </ItemGroup>
+
+</Project>

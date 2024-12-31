@@ -18,14 +18,10 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-        <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="7.2.1" />
-        <PackageReference Include="Genocs.HTTP" Version="7.2.1" />
-        <PackageReference Include="Genocs.Discovery.Consul" Version="7.2.1" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.2.*" />
     </ItemGroup>
 </Project>

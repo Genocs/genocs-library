@@ -73,7 +73,9 @@ You can use **Docker compose** to setup the infrastructure components just by ru
 
 ``` bash
 cd ./containers
-# Setup the infrastructure. Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
+
+# Setup the infrastructure.
+#Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
 docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
@@ -106,9 +108,7 @@ docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genoc
 
 `infrastructure.yml` allows to install the basic infrastructure components. They are:
 - [RabbitMQ](https://rabbitmq.com)
-- [Redis](https://redis.io)
 - [MongoDB](https://mongodb.com)
-- [Postgres](https://www.postgresql.org/)
 
 
 `infrastructure-db.yml` allows to install Redis and PostgreSQL
@@ -125,6 +125,7 @@ You can check them locally:
 
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
+- [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
 - [Prometheus](https://prometheus.io/)
 - [Grafana](https://grafana.com/)
 - [InfluxDB](https://www.influxdata.com/)
@@ -133,7 +134,7 @@ You can check them locally:
 
 
 You can find the console locally at:
-
+- [Aspire](localhost:18888): `localhost:18888`
 - [Prometheus](localhost:9090): `localhost:9090`
 - [Grafana](localhost:3000): `localhost:3000`
 - [InfluxDB](localhost:8086): `localhost:8086`
@@ -141,12 +142,9 @@ You can find the console locally at:
 - [Seq](localhost:5341): `localhost:5341`
 
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by Fabio and Consul.
-
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
-
-
 
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
@@ -155,15 +153,34 @@ Inside the file you can find:
 
 - vault (Hashicorp)
 
-The script below allows to setup the infrastructure components. This means that you can find all the containers inside the same network.
-
-The network is called `genocs`.
+> **NOTE**
+>
+> The commands above allows to setup infrastructure components, this means you can find all the containers inside the same network `genocs`.
+>
+> Whenever possible the data are persisted on the host machine by means of volumens, so you can restart the containers without losing data.
+ 
 
 ``` yml 
 networks:
   genocs:
     name: genocs-network
     driver: bridge
+
+volumes:
+  rabbitmq-data:
+  mongo-data:
+  redis-data:
+  postgres-data:
+  influx-data:
+  grafana-data:
+  jaeger-data:
+  seq-data:
+  vault-data:
+  elk-data:
+  fabio-data:
+  consul-data:
+  prometheus-data:
+  ml-data:
 ```
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
@@ -175,6 +192,11 @@ You can setup the application inside a Kubernetes cluster.
 
 Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster. 
 There you can find scripts, configuration files and documentation to setup a cluster from scratch.
+
+## ***Aspire Integration***
+
+SOON :rocket:
+
 
 ## Support
 
@@ -198,7 +220,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "address": "docker.for.mac.localhost",
     "port": "5070",
     "pingEnabled": true,
-    "pingEndpoint": "health",
+    "pingEndpoint": "healthz",
     "pingInterval": 3,
     "removeAfterInterval": 3
   },
@@ -219,7 +241,12 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
   },
   "logger": {
     "level": "information",
-    "excludePaths": [ "/", "/ping", "/metrics" ],
+    "excludePaths": [
+      "/",
+      "/healthz",
+      "/alive",
+      "/metrics"
+    ],
     "excludeProperties": [
       "api_key",
       "access_key",
@@ -453,7 +480,10 @@ docker push genocs/demo-worker:latest
 ```
 ---
 
-## Enterprise Application
+## **Enterprise Application**
+
+### Application Components
+
 
 Inside **./src/apps** folder you can find a full-fledged application composed by:
 - ApiGateway
@@ -464,30 +494,43 @@ Inside **./src/apps** folder you can find a full-fledged application composed by
 
 In that way you can test the entire flow.
 
-**TODO**: Add a architecture diagram to show the components and how they interact with each other.
+| Component         | Description                       | Container Port | Visibility                   |
+|-------------------|-----------------------------------|----------------|------------------------------|
+| ApiGateway        | Handles API requests              |         :5500   | Public                       |
+| Identity Service  | Manages user identities           |         :5510*  | Private through API Gateway  |
+| Product Service   | Manages product information       |         :5520*  | Private through API Gateway  |
+| Order Service     | Processes orders                  |         :5530*  | Private through API Gateway  |
+| SignalR Service   | Handles real-time communication   |         :5540*  | Private through API Gateway  |
+
+
+![Architecture](./assets/architecture_01.png)
 
 ### How to BUILD & RUN the application
 
-The build and run process can be done by using docker-compose
+The build and run process can be done by using docker-compose. 
+
+Pre-requisites:
+- Docker
+
 
 ``` bash
 cd src/apps
 
 # Build with docker compose
-docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs-app build
+docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs build
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs-app up -d
+docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs up -d
 
 # Clean Docker cache
 docker builder prune
 ```
 
 
-Following commands are useful to build and push the images one by one
+Use following to build and push the images one by one
 
 ``` bash
 cd src/apps
@@ -496,16 +539,16 @@ cd src/apps
 docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
 
 # Build the identity service
-docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity-webapi.dockerfile .
+docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity.dockerfile .
 
 # Build the order service
-docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order-webapi.dockerfile .
+docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order.dockerfile .
 
 # Build the product service
-docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product-webapi.dockerfile .
+docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product.dockerfile .
 
 # Build the signalr service
-docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr-webapi.dockerfile .
+docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr.dockerfile .
 
 
 # Push on Dockerhub
@@ -556,13 +599,13 @@ Here are a few ways by which you can support.
 - ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
   
 
-[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/blazor-template/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
+[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
 ## Code Contributors
 
 This project exists thanks to all the people who contribute. [Submit your PR and join the team!](CONTRIBUTING.md)
 
-[![genocs contributors](https://contrib.rocks/image?repo=Genocs/blazor-template "genocs contributors")](https://github.com/genocs/blazor-template/graphs/contributors)
+[![genocs contributors](https://contrib.rocks/image?repo=Genocs/genocs-library "genocs contributors")](https://github.com/genocs/genocs-library/graphs/contributors)
 
 ## Financial Contributors
 

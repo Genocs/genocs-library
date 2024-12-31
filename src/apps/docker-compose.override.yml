@@ -7,19 +7,19 @@ services:
   identity-service:
     build:
       context: .
-      dockerfile: identity-webapi.dockerfile
+      dockerfile: identity.dockerfile
 
   products-service:
     build:
       context: .
-      dockerfile: product-webapi.dockerfile
+      dockerfile: products.dockerfile
 
   orders-service:
     build:
       context: .
-      dockerfile: order-webapi.dockerfile
+      dockerfile: orders.dockerfile
 
   signalr-service:
     build:
       context: .
-      dockerfile: signalr-webapi.dockerfile
+      dockerfile: signalr.dockerfile

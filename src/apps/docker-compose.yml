@@ -4,9 +4,20 @@ services:
     hostname: api-gateway
     container_name: api-gateway
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
+      - consul__url=http://consul:8500
+      - consul__address=api-gateway
+      - consul__port=8080
+      - fabio__url=http://fabio:9999
+      - jaeger__udpHost=http://jaeger:4317
+      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - mongodb__connectionString=mongodb://mongodb:27017
+      - reverseProxy__clusters__identity-cluster__destinations__destination1__address=http://identity-service:8080
+      - reverseProxy__clusters__products-cluster__destinations__destination1__address=http://products-service:8080
+      - reverseProxy__clusters__orders-cluster__destinations__destination1__address=http://orders-service:8080
+
     ports:
-      - 5500:80
+      - 5500:8080
     networks:
       - genocs
     # network_mode: bridge
@@ -18,9 +29,17 @@ services:
     hostname: identity-service
     container_name: identity-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
+      - consul__url=http://consul:8500
+      - consul__address=identity-service
+      - consul__port=8080
+      - fabio__url=http://fabio:9999
+      - jaeger__udpHost=http://jaeger:4317
+      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - mongodb__connectionString=mongodb://mongodb:27017
+
     ports:
-      - 5500:80
+      - 5510:8080
     networks:
       - genocs
     # network_mode: bridge
@@ -32,9 +51,17 @@ services:
     hostname: products-service
     container_name: products-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
+      - consul__url=http://consul:8500
+      - consul__address=products-service
+      - consul__port=8080
+      - fabio__url=http://fabio:9999
+      - jaeger__udpHost=http://jaeger:4317
+      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - mongodb__connectionString=mongodb://mongodb:27017
+
     ports:
-      - 5510:80
+      - 5520:8080
     #ports:
     networks:
       - genocs
@@ -47,9 +74,17 @@ services:
     hostname: orders-service
     container_name: orders-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
+      - consul__url=http://consul:8500
+      - consul__address=orders-service
+      - consul__port=8080
+      - fabio__url=http://fabio:9999
+      - jaeger__udpHost=http://jaeger:4317
+      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - mongodb__connectionString=mongodb://mongodb:27017
+
     ports:
-      - 5530:80
+      - 5530:8080
     #ports:
     networks:
       - genocs
@@ -62,9 +97,16 @@ services:
     hostname: signalr-service
     container_name: signalr-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=Development
+      - consul__url=http://consul:8500
+      - consul__address=signalr-service
+      - consul__port=8080
+      - fabio__url=http://fabio:9999
+      - jaeger__udpHost=http://jaeger:4317
+      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - mongodb__connectionString=mongodb://mongodb:27017
     ports:
-      - 5540:80
+      - 5540:8080
     #ports:
     networks:
       - genocs

@@ -2,23 +2,24 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
+
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /src
 
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Build.targets", "."]
+COPY ["NuGet.config", "."]
+COPY ["dotnet.ruleset", "."]
+COPY ["stylecop.json", "."]
+
 COPY ["api-gateway/Genocs.APIGateway", "Genocs.APIGateway/"]
-COPY ["Directory.Build.props", "Directory.Build.props"]
-COPY ["Directory.Build.targets", "Directory.Build.targets"]
-COPY ["NuGet.config", "NuGet.config"]
-COPY ["dotnet.ruleset", "dotnet.ruleset"]
-COPY ["stylecop.json", "stylecop.json"]
 
 WORKDIR "/src/Genocs.APIGateway"
 
 RUN dotnet build "Genocs.APIGateway.csproj" -c Release -o /app/build
-
 FROM build-env AS publish
 RUN dotnet publish "Genocs.APIGateway.csproj" -c Release -o /app/publish
 

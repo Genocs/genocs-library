@@ -1,7 +1,7 @@
 ﻿namespace Genocs.GnxOpenTelemetry.Configurations;
 
 /// <summary>
-/// ConsoleOptions Settings.
+/// Azure configuration Settings.
 /// </summary>
 public class AzureOptions
 {

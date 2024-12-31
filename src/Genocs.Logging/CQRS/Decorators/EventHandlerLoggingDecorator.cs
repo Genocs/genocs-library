@@ -6,20 +6,13 @@ using SmartFormat;
 
 namespace Genocs.Logging.CQRS.Decorators;
 
-[DecoratorAttribute]
-internal sealed class EventHandlerLoggingDecorator<TEvent> : IEventHandler<TEvent> where TEvent : class, IEvent
+[Decorator]
+internal sealed class EventHandlerLoggingDecorator<TEvent>(IEventHandler<TEvent> handler, ILogger<EventHandlerLoggingDecorator<TEvent>> logger, IServiceProvider serviceProvider) : IEventHandler<TEvent>
+    where TEvent : class, IEvent
 {
-    private readonly IEventHandler<TEvent> _handler;
-    private readonly ILogger<EventHandlerLoggingDecorator<TEvent>> _logger;
-    private readonly IMessageToLogTemplateMapper _mapper;
-
-    public EventHandlerLoggingDecorator(IEventHandler<TEvent> handler,
-        ILogger<EventHandlerLoggingDecorator<TEvent>> logger, IServiceProvider serviceProvider)
-    {
-        _handler = handler;
-        _logger = logger;
-        _mapper = serviceProvider.GetService<IMessageToLogTemplateMapper>() ?? new EmptyMessageToLogTemplateMapper();
-    }
+    private readonly IEventHandler<TEvent> _handler = handler;
+    private readonly ILogger<EventHandlerLoggingDecorator<TEvent>> _logger = logger;
+    private readonly IMessageToLogTemplateMapper _mapper = serviceProvider.GetService<IMessageToLogTemplateMapper>() ?? new EmptyMessageToLogTemplateMapper();
 
     public async Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
     {
@@ -39,14 +32,14 @@ internal sealed class EventHandlerLoggingDecorator<TEvent> : IEventHandler<TEven
         }
         catch (Exception ex)
         {
-            var exceptionTemplate = template.GetExceptionTemplate(ex);
+            string? exceptionTemplate = template.GetExceptionTemplate(ex);
 
             Log(@event, exceptionTemplate, isError: true);
             throw;
         }
     }
 
-    private void Log(TEvent @event, string message, bool isError = false)
+    private void Log(TEvent @event, string? message, bool isError = false)
     {
         if (string.IsNullOrEmpty(message))
         {
@@ -64,10 +57,11 @@ internal sealed class EventHandlerLoggingDecorator<TEvent> : IEventHandler<TEven
     }
 
     /// <summary>
-    /// Null Message to log template
+    /// Null Message to log template.
     /// </summary>
     private class EmptyMessageToLogTemplateMapper : IMessageToLogTemplateMapper
     {
-        public HandlerLogTemplate? Map<TMessage>(TMessage message) where TMessage : class => null;
+        public HandlerLogTemplate? Map<TMessage>(TMessage message)
+            where TMessage : class => null;
     }
 }

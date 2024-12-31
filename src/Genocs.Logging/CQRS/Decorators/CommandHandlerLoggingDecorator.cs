@@ -6,21 +6,13 @@ using SmartFormat;
 
 namespace Genocs.Logging.CQRS.Decorators;
 
-[DecoratorAttribute]
-internal sealed class CommandHandlerLoggingDecorator<TCommand> : ICommandHandler<TCommand>
+[Decorator]
+internal sealed class CommandHandlerLoggingDecorator<TCommand>(ICommandHandler<TCommand> handler, ILogger<CommandHandlerLoggingDecorator<TCommand>> logger, IServiceProvider serviceProvider) : ICommandHandler<TCommand>
     where TCommand : class, ICommand
 {
-    private readonly ICommandHandler<TCommand> _handler;
-    private readonly ILogger<CommandHandlerLoggingDecorator<TCommand>> _logger;
-    private readonly IMessageToLogTemplateMapper _mapper;
-
-    public CommandHandlerLoggingDecorator(ICommandHandler<TCommand> handler,
-        ILogger<CommandHandlerLoggingDecorator<TCommand>> logger, IServiceProvider serviceProvider)
-    {
-        _handler = handler;
-        _logger = logger;
-        _mapper = serviceProvider.GetService<IMessageToLogTemplateMapper>() ?? new EmptyMessageToLogTemplateMapper();
-    }
+    private readonly ICommandHandler<TCommand> _handler = handler;
+    private readonly ILogger<CommandHandlerLoggingDecorator<TCommand>> _logger = logger;
+    private readonly IMessageToLogTemplateMapper _mapper = serviceProvider.GetService<IMessageToLogTemplateMapper>() ?? new EmptyMessageToLogTemplateMapper();
 
     public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {
@@ -40,14 +32,14 @@ internal sealed class CommandHandlerLoggingDecorator<TCommand> : ICommandHandler
         }
         catch (Exception ex)
         {
-            var exceptionTemplate = template.GetExceptionTemplate(ex);
+            string? exceptionTemplate = template.GetExceptionTemplate(ex);
 
             Log(command, exceptionTemplate, isError: true);
             throw;
         }
     }
 
-    private void Log(TCommand command, string message, bool isError = false)
+    private void Log(TCommand command, string? message, bool isError = false)
     {
         if (string.IsNullOrEmpty(message))
         {
