@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.HTTP" Version="7.2.2" />
+        <PackageReference Include="Genocs.HTTP" Version="7.2.3" />
     </ItemGroup>
 
     <ItemGroup>

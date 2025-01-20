@@ -33,16 +33,14 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
 
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="7.2.1" />
-        <PackageReference Include="Genocs.Logging" Version="7.2.1" />
-        <PackageReference Include="Genocs.Tracing" Version="7.2.1" />
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.Logging" Version="7.2.3" />
+        <PackageReference Include="Genocs.Tracing" Version="7.2.3" />
     </ItemGroup>
 
     <ItemGroup>
