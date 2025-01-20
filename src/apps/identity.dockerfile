@@ -14,14 +14,14 @@ COPY ["NuGet.config", "."]
 COPY ["dotnet.ruleset", "."]
 COPY ["stylecop.json", "."]
 
-COPY ["identity/Genocs.Identities.WebApi", "Genocs.Identities.WebApi/"]
-COPY ["identity/Genocs.Identities.Application", "Genocs.Identities.Application/"]
+COPY ["identity/Identities.WebApi", "Identities.WebApi/"]
+COPY ["identity/Identities.Application", "Identities.Application/"]
 
-WORKDIR "/src/Genocs.Identities.WebApi"
+WORKDIR "/src/Identities.WebApi"
 
-RUN dotnet build "Genocs.Identities.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Identities.WebApi.csproj" -c Release -o /app/build
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Identities.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Identities.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

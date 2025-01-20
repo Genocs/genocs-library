@@ -1,6 +1,6 @@
-using Genocs.SignalR.WebApi.Messages.Events;
+using Genocs.Notifications.WebApi.Messages.Events;
 
-namespace Genocs.SignalR.WebApi.Services;
+namespace Genocs.Notifications.WebApi.Services;
 
 public class HubService : IHubService
 {

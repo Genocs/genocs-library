@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <PackageId>Genocs.SignalR.WebApi</PackageId>
-        <RootNamespace>Genocs.SignalR.WebApi</RootNamespace>
-        <AssemblyName>Genocs.SignalR.WebApi</AssemblyName>
+        <PackageId>Genocs.Notifications.WebApi</PackageId>
+        <RootNamespace>Genocs.Notifications.WebApi</RootNamespace>
+        <AssemblyName>Genocs.Notifications.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
@@ -13,6 +13,7 @@
         <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
@@ -29,23 +30,24 @@
     </ItemGroup>
 
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="7.2.1" />
-        <PackageReference Include="Genocs.HTTP" Version="7.2.1" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.1" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="7.2.1" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.2.1" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.1" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.1" />
-        <PackageReference Include="Genocs.Metrics" Version="7.2.1" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.1" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="7.2.1" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="7.2.1" />
-        <PackageReference Include="Genocs.Tracing" Version="7.2.1" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.2.1" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="7.2.1" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.2.1" />
-        <PackageReference Include="Genocs.WebApi" Version="7.2.1" />
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.Auth" Version="7.2.2" />
+        <PackageReference Include="Genocs.HTTP" Version="7.2.2" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="7.2.2" />
+        <PackageReference Include="Genocs.Logging" Version="7.2.2" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="7.2.2" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="7.2.2" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.2" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.2" />
+        <PackageReference Include="Genocs.Metrics" Version="7.2.2" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.2" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="7.2.2" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="7.2.2" />
+        <PackageReference Include="Genocs.Tracing" Version="7.2.2" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="7.2.2" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="7.2.2" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.2.2" />
+        <PackageReference Include="Genocs.WebApi" Version="7.2.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -54,9 +56,5 @@
 
     <ItemGroup>
         <Folder Include="logs\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
     </ItemGroup>
 </Project>

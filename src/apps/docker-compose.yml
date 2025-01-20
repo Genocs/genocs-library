@@ -1,20 +1,21 @@
 services:
-  api-gateway:
+  apigateway:
     image: genocs/apigateway:${IMAGE_VERSION}
     hostname: api-gateway
     container_name: api-gateway
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - consul__url=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - consul__url=${CONSUL_URL}
       - consul__address=api-gateway
       - consul__port=8080
-      - fabio__url=http://fabio:9999
-      - jaeger__udpHost=http://jaeger:4317
-      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - fabio__url=${FABIO_URL}
+      - jaeger__udpHost=${JAEGER_URL}
+      - openTelemetry__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=mongodb://mongodb:27017
       - reverseProxy__clusters__identity-cluster__destinations__destination1__address=http://identity-service:8080
       - reverseProxy__clusters__products-cluster__destinations__destination1__address=http://products-service:8080
       - reverseProxy__clusters__orders-cluster__destinations__destination1__address=http://orders-service:8080
+      - reverseProxy__clusters__notifications-cluster__destinations__destination1__address=http://notifications-service:8080
 
     ports:
       - 5500:8080
@@ -29,13 +30,13 @@ services:
     hostname: identity-service
     container_name: identity-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - consul__url=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - consul__url=${CONSUL_URL}
       - consul__address=identity-service
       - consul__port=8080
-      - fabio__url=http://fabio:9999
-      - jaeger__udpHost=http://jaeger:4317
-      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - fabio__url=${FABIO_URL}
+      - jaeger__udpHost=${JAEGER_URL}
+      - openTelemetry__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=mongodb://mongodb:27017
 
     ports:
@@ -51,13 +52,13 @@ services:
     hostname: products-service
     container_name: products-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - consul__url=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - consul__url=${CONSUL_URL}
       - consul__address=products-service
       - consul__port=8080
-      - fabio__url=http://fabio:9999
-      - jaeger__udpHost=http://jaeger:4317
-      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - fabio__url=${FABIO_URL}
+      - jaeger__udpHost=${JAEGER_URL}
+      - openTelemetry__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=mongodb://mongodb:27017
 
     ports:
@@ -74,13 +75,13 @@ services:
     hostname: orders-service
     container_name: orders-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - consul__url=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - consul__url=${CONSUL_URL}
       - consul__address=orders-service
       - consul__port=8080
-      - fabio__url=http://fabio:9999
-      - jaeger__udpHost=http://jaeger:4317
-      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - fabio__url=${FABIO_URL}
+      - jaeger__udpHost=${JAEGER_URL}
+      - openTelemetry__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=mongodb://mongodb:27017
 
     ports:
@@ -92,19 +93,20 @@ services:
     volumes:
       - orders:/root/.aspnet/DataProtection-Keys
 
-  signalr-service:
-    image: genocs/signalr-webapi:${IMAGE_VERSION}
-    hostname: signalr-service
-    container_name: signalr-service
+  notifications-service:
+    image: genocs/notifications-webapi:${IMAGE_VERSION}
+    hostname: notifications-service
+    container_name: notifications-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - consul__url=http://consul:8500
-      - consul__address=signalr-service
+      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=notifications-service
       - consul__port=8080
-      - fabio__url=http://fabio:9999
-      - jaeger__udpHost=http://jaeger:4317
-      - openTelemetry__otlpEndpoint=http://jaeger:4317
+      - fabio__url=${FABIO_URL}
+      - jaeger__udpHost=${JAEGER_URL}
+      - openTelemetry__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=mongodb://mongodb:27017
+
     ports:
       - 5540:8080
     #ports:
@@ -129,5 +131,5 @@ volumes:
     driver: local
   orders:
     driver: local
-  signalr:
+  notifications:
     driver: local

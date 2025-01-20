@@ -1,6 +1,6 @@
 ﻿using Genocs.Core.CQRS.Commands;
 
-namespace Genocs.SignalR.WebApi.Commands;
+namespace Genocs.Notifications.WebApi.Commands;
 
 public class PublishNotification : ICommand
 {

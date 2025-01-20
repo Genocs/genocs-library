@@ -23,7 +23,7 @@ spec:
           image:  genocs/apigateway:1.0.0
           env:
             - name: ASPNETCORE_ENVIRONMENT
-              value: "Docker"
+              value: "Containers"
           imagePullPolicy: Always
           resources:
             requests:

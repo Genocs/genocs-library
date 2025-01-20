@@ -2,13 +2,13 @@ using Genocs.Common.Types;
 using Genocs.Core.CQRS.Events;
 using Newtonsoft.Json;
 
-namespace Genocs.SignalR.WebApi.Messages.Events;
+namespace Genocs.Notifications.WebApi.Messages.Events;
 
 [Message("operations")]
 public class OperationRejected : IEvent
 {
-    public Guid Id { get; }
-    public Guid UserId { get; }
+    public DefaultIdType Id { get; }
+    public DefaultIdType UserId { get; }
     public string Name { get; }
     public string Resource { get; }
     public string Code { get; }
@@ -16,8 +16,8 @@ public class OperationRejected : IEvent
 
     [JsonConstructor]
     public OperationRejected(
-                            Guid id,
-                            Guid userId,
+                            DefaultIdType id,
+                            DefaultIdType userId,
                             string name,
                             string resource,
                             string code,

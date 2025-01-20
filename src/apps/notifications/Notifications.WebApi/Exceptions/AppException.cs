@@ -1,4 +1,4 @@
-﻿namespace Genocs.SignalR.WebApi.Exceptions;
+﻿namespace Genocs.Notifications.WebApi.Exceptions;
 
 public abstract class AppException : Exception
 {

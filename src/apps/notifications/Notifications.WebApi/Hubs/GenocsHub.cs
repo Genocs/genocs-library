@@ -1,8 +1,8 @@
 using Genocs.Auth;
-using Genocs.SignalR.WebApi.Framework;
+using Genocs.Notifications.WebApi.Framework;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Genocs.SignalR.WebApi.Hubs;
+namespace Genocs.Notifications.WebApi.Hubs;
 
 public class GenocsHub(IJwtHandler jwtHandler) : Hub
 {
@@ -24,7 +24,7 @@ public class GenocsHub(IJwtHandler jwtHandler) : Hub
                 return;
             }
 
-            string group = Guid.Parse(payload.Subject).ToUserGroup();
+            string group = DefaultIdType.Parse(payload.Subject).ToUserGroup();
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
             await ConnectAsync();
         }

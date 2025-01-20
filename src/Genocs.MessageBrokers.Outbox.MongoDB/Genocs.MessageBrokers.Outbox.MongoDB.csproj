@@ -22,9 +22,9 @@
         <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.1" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.1" />
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.2" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.2" />
     </ItemGroup>
 
 </Project>

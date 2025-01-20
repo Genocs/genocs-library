@@ -1,10 +1,10 @@
-﻿namespace Genocs.SignalR.WebApi.Events;
+﻿namespace Genocs.Notifications.WebApi.Events;
 
 public class NotificationPosted
 {
-    public Guid NotificationId { get; }
+    public DefaultIdType NotificationId { get; }
 
-    public NotificationPosted(Guid notificationId)
+    public NotificationPosted(DefaultIdType notificationId)
     {
         NotificationId = notificationId;
     }

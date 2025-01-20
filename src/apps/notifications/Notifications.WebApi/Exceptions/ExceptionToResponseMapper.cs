@@ -3,7 +3,7 @@ using Genocs.WebApi.Exceptions;
 using System.Collections.Concurrent;
 using System.Net;
 
-namespace Genocs.SignalR.WebApi.Exceptions;
+namespace Genocs.Notifications.WebApi.Exceptions;
 
 public class ExceptionToResponseMapper : IExceptionToResponseMapper
 {

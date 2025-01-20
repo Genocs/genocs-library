@@ -1,11 +1,11 @@
 using Genocs.Core.Builders;
-using Genocs.SignalR.WebApi.Configurations;
+using Genocs.Notifications.WebApi.Configurations;
 
-namespace Genocs.SignalR.WebApi.Framework;
+namespace Genocs.Notifications.WebApi.Framework;
 
 public static class Extensions
 {
-    public static string ToUserGroup(this Guid userId)
+    public static string ToUserGroup(this DefaultIdType userId)
         => $"users:{userId}";
 
     public static IGenocsBuilder AddSignalR(this IGenocsBuilder builder)

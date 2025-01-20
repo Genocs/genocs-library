@@ -118,13 +118,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B184733D-2415-4517-BC65-26ED22EEB2C2}"
 	ProjectSection(SolutionItems) = preProject
 		src\apps\apigateway.dockerfile = src\apps\apigateway.dockerfile
-		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
-		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
-		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
-		src\apps\notifications-webapi.dockerfile = src\apps\notifications-webapi.dockerfile
 		src\apps\docker-compose.override.yml = src\apps\docker-compose.override.yml
 		src\apps\docker-compose.yml = src\apps\docker-compose.yml
+		src\apps\identity.dockerfile = src\apps\identity.dockerfile
 		src\apps\local.env = src\apps\local.env
+		src\apps\notifications.dockerfile = src\apps\notifications.dockerfile
+		src\apps\orders.dockerfile = src\apps\orders.dockerfile
+		src\apps\products.dockerfile = src\apps\products.dockerfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.AzureKeyVault", "src\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj", "{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}"

@@ -21,8 +21,8 @@
         <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.WebApi" Version="7.2.1" />
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.WebApi" Version="7.2.2" />
     </ItemGroup>
 
     <ItemGroup>

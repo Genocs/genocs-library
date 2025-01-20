@@ -1,5 +1,5 @@
 services:
-  api-gateway:
+  apigateway:
     build:
       context: .
       dockerfile: apigateway.dockerfile
@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: orders.dockerfile
 
-  signalr-service:
+  notifications-service:
     build:
       context: .
-      dockerfile: signalr.dockerfile
+      dockerfile: notifications.dockerfile

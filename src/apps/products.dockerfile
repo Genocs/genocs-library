@@ -14,15 +14,15 @@ COPY ["NuGet.config", "."]
 COPY ["dotnet.ruleset", "."]
 COPY ["stylecop.json", "."]
 
-COPY ["products/Genocs.Products.WebApi", "Genocs.Products.WebApi/"]
+COPY ["products/Products.WebApi", "Products.WebApi/"]
 
-WORKDIR "/src/Genocs.Products.WebApi"
+WORKDIR "/src/Products.WebApi"
 
-RUN dotnet build "Genocs.Products.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Products.WebApi.csproj" -c Release -o /app/build
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Products.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Products.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Products.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Products.WebApi.dll"]

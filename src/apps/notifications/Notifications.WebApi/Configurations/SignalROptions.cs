@@ -1,4 +1,4 @@
-namespace Genocs.SignalR.WebApi.Configurations;
+namespace Genocs.Notifications.WebApi.Configurations;
 
 /// <summary>
 /// The signalR settings definition.

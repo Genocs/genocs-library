@@ -6,7 +6,7 @@
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
@@ -23,12 +23,12 @@
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.1" />
-    </ItemGroup>
-
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.2" />
     </ItemGroup>
 
 </Project>

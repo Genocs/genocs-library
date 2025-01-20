@@ -5,7 +5,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /src
 
@@ -15,15 +14,15 @@ COPY ["NuGet.config", "."]
 COPY ["dotnet.ruleset", "."]
 COPY ["stylecop.json", "."]
 
-COPY ["api-gateway/Genocs.APIGateway", "Genocs.APIGateway/"]
+COPY ["apigateway/APIGateway.WebApi", "APIGateway.WebApi/"]
 
-WORKDIR "/src/Genocs.APIGateway"
+WORKDIR "/src/APIGateway.WebApi"
 
-RUN dotnet build "Genocs.APIGateway.csproj" -c Release -o /app/build
+RUN dotnet build "APIGateway.WebApi.csproj" -c Release -o /app/build
 FROM build-env AS publish
-RUN dotnet publish "Genocs.APIGateway.csproj" -c Release -o /app/publish
+RUN dotnet publish "APIGateway.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.APIGateway.dll"]
+ENTRYPOINT ["dotnet", "APIGateway.WebApi.dll"]
