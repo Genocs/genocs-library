@@ -1,6 +1,6 @@
 using Serilog.Context;
 
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 internal class LogContextMiddleware(CorrelationIdFactory correlationIdFactory) : IMiddleware
 {

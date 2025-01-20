@@ -1,4 +1,4 @@
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 internal class CorrelationIdFactory
 {
@@ -10,14 +10,14 @@ internal class CorrelationIdFactory
         set
         {
             var holder = Holder.Value;
-            if (holder is {})
+            if (holder is { })
             {
                 holder.Id = null;
             }
 
-            if (value is {})
+            if (value is { })
             {
-                Holder.Value = new CorrelationIdHolder {Id = value};
+                Holder.Value = new CorrelationIdHolder { Id = value };
             }
         }
     }
@@ -34,7 +34,7 @@ internal class CorrelationIdFactory
             return CorrelationId;
         }
 
-        CorrelationId = Guid.NewGuid().ToString("N");
+        CorrelationId = DefaultIdType.NewGuid().ToString("N");
         return CorrelationId;
     }
 }

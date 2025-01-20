@@ -14,13 +14,13 @@ COPY ["NuGet.config", "."]
 COPY ["dotnet.ruleset", "."]
 COPY ["stylecop.json", "."]
 
-COPY ["orders/Genocs.Orders.WebApi", "Genocs.Orders.WebApi/"]
+COPY ["orders/Orders.WebApi", "Orders.WebApi/"]
 
-WORKDIR "/src/Genocs.Orders.WebApi"
+WORKDIR "/src/Orders.WebApi"
 
-RUN dotnet build "Genocs.Orders.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Orders.WebApi.csproj" -c Release -o /app/build
 FROM build-env AS publish
-RUN dotnet publish "Genocs.Orders.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Orders.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

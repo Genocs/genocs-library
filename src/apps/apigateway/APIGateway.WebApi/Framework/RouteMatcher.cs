@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Routing.Template;
 
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 public class RouteMatcher
 {

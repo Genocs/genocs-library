@@ -1,10 +1,10 @@
-﻿using Genocs.APIGateway.Configurations;
+﻿using Genocs.APIGateway.WebApi.Configurations;
 using Genocs.Persistence.MongoDb;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Driver;
 using Yarp.ReverseProxy.Configuration;
 
-namespace Genocs.APIGateway.Providers;
+namespace Genocs.APIGateway.WebApi.Providers;
 
 /// <summary>
 /// Provides an implementation of IProxyConfigProvider to support config read from MongoDB.
@@ -24,14 +24,14 @@ public class MongodbConfigProvider : IMongodbConfigProvider
         _mongoDbDatabase = mongoDbDatabase;
         var routes = _mongoDbDatabase.Database.GetCollection<RouteConfig>(options.RoutesCollection).Find(c => true).ToList();
         var clusters = _mongoDbDatabase.Database.GetCollection<ClusterConfig>(options.ClustersCollection).Find(c => true).ToList();
-        _config = new InMemoryConfig(routes, clusters, Guid.NewGuid().ToString());
+        _config = new InMemoryConfig(routes, clusters, DefaultIdType.NewGuid().ToString());
     }
 
     /// <summary>
     /// Creates a new instance.
     /// </summary>
     public MongodbConfigProvider(IReadOnlyList<RouteConfig> routes, IReadOnlyList<ClusterConfig> clusters)
-        : this(routes, clusters, Guid.NewGuid().ToString())
+        : this(routes, clusters, DefaultIdType.NewGuid().ToString())
     {
     }
 
@@ -83,7 +83,7 @@ public class MongodbConfigProvider : IMongodbConfigProvider
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
         public InMemoryConfig(IReadOnlyList<RouteConfig> routes, IReadOnlyList<ClusterConfig> clusters)
-            : this(routes, clusters, Guid.NewGuid().ToString())
+            : this(routes, clusters, DefaultIdType.NewGuid().ToString())
         {
         }
 

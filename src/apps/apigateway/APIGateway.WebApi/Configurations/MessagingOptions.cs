@@ -1,4 +1,4 @@
-namespace Genocs.APIGateway.Configurations;
+namespace Genocs.APIGateway.WebApi.Configurations;
 
 internal class MessagingOptions
 {

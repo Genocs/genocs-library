@@ -1,7 +1,7 @@
 using Genocs.Logging;
 using Genocs.Secrets.Vault;
 
-namespace Genocs.APIGateway;
+namespace Genocs.APIGateway.WebApi;
 
 internal static class Program
 {

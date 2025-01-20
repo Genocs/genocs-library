@@ -1,7 +1,7 @@
 using System.Net;
 using Yarp.ReverseProxy.Forwarder;
 
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 internal class CustomForwarderHttpClientFactory(CorrelationIdFactory correlationIdFactory) : IForwarderHttpClientFactory
 {

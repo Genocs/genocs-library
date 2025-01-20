@@ -1,11 +1,11 @@
 using System.Collections.Concurrent;
-using Genocs.APIGateway.Configurations;
+using Genocs.APIGateway.WebApi.Configurations;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.MessageBrokers.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 internal class MessagingMiddleware : IMiddleware
 {
@@ -59,9 +59,9 @@ internal class MessagingMiddleware : IMiddleware
             }
 
             string? spanContext = "TODO: Genocs";
-            string messageId = Guid.NewGuid().ToString("N");
+            string messageId = DefaultIdType.NewGuid().ToString("N");
             string correlationId = _correlationIdFactory.Create();
-            string resourceId = Guid.NewGuid().ToString("N");
+            string resourceId = DefaultIdType.NewGuid().ToString("N");
 
             var correlationContext = _correlationContextBuilder.Build(
                                                                         context,

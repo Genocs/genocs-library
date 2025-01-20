@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <PackageId>Genocs.APIGateway</PackageId>
-        <RootNamespace>Genocs.APIGateway</RootNamespace>
-        <AssemblyName>Genocs.APIGateway</AssemblyName>
+        <PackageId>Genocs.APIGateway.WebApi</PackageId>
+        <RootNamespace>Genocs.APIGateway.WebApi</RootNamespace>
+        <AssemblyName>Genocs.APIGateway.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

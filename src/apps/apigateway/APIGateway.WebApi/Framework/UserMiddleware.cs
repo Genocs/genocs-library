@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace Genocs.APIGateway.Framework;
+namespace Genocs.APIGateway.WebApi.Framework;
 
 public class UserMiddleware : IMiddleware
 {
@@ -62,7 +62,7 @@ public class UserMiddleware : IMiddleware
             return;
         }
 
-        payload["userId"] = Guid.Parse(context.User.Identity.Name);
+        payload["userId"] = DefaultIdType.Parse(context.User.Identity.Name);
         string json = JsonSerializer.Serialize(payload);
         await using var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
         context.Request.Body = memoryStream;

@@ -8,7 +8,6 @@
 # FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 # FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
@@ -28,15 +27,15 @@ COPY ["NuGet.config", "."]
 COPY ["dotnet.ruleset", "."]
 COPY ["stylecop.json", "."]
 
-COPY ["signalr/Genocs.SignalR.WebApi", "Genocs.SignalR.WebApi/"]
+COPY ["notifications/Notifications.WebApi", "Notifications.WebApi/"]
 
-WORKDIR "/src/Genocs.SignalR.WebApi"
+WORKDIR "/src/Notifications.WebApi"
 
-RUN dotnet build "Genocs.SignalR.WebApi.csproj" -c Release -o /app/build
+RUN dotnet build "Notifications.WebApi.csproj" -c Release -o /app/build
 FROM build-env AS publish
-RUN dotnet publish "Genocs.SignalR.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "Notifications.WebApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.SignalR.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Notifications.WebApi.dll"]

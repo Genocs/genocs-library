@@ -25,4 +25,4 @@ RUN dotnet publish "Products.WebApi.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Products.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Products.WebApi.dll"]

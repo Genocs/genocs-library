@@ -484,11 +484,11 @@ In that way you can test the entire flow.
 
 | Component         | Description                       | Container Port | Visibility                   |
 |-------------------|-----------------------------------|----------------|------------------------------|
-| ApiGateway        | Handles API requests              |         :5500   | Public                       |
-| Identity Service  | Manages user identities           |         :5510*  | Private through API Gateway  |
-| Product Service   | Manages product information       |         :5520*  | Private through API Gateway  |
-| Order Service     | Processes orders                  |         :5530*  | Private through API Gateway  |
-| SignalR Service   | Handles real-time communication   |         :5540*  | Private through API Gateway  |
+| ApiGateway        | Handles API requests              |        :5500   | Public                       |
+| Identity Service  | Manages user identities           |        :5510*  | Private through API Gateway  |
+| Product Service   | Manages product information       |        :5520*  | Private through API Gateway  |
+| Order Service     | Processes orders                  |        :5530*  | Private through API Gateway  |
+| SignalR Service   | Handles real-time communication   |        :5540*  | Private through API Gateway  |
 
 
 ![Architecture](./assets/architecture_01.png)
@@ -502,7 +502,7 @@ Pre-requisites:
 
 
 ``` bash
-cd src/apps
+cd ./src/apps
 
 # Build with docker compose
 docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs build

@@ -114,7 +114,7 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - signalr:/root/.aspnet/DataProtection-Keys
+      - notifications:/root/.aspnet/DataProtection-Keys
 
 networks:
   genocs:
