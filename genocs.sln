@@ -67,21 +67,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.Vault", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{140B7191-88E9-4EEE-9D86-9A70839F8507}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-gateway", "api-gateway", "{E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigateway", "apigateway", "{E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity", "identity", "{6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "orders", "orders", "{80862789-8B42-4878-AC10-9CFF06A7313C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification", "notification", "{160F94A8-C119-4C0F-94FA-E03673269AC8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification-signalr", "notification-signalr", "{75D24F85-48AC-4058-AF8D-461FC6A360AD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notifications", "notifications", "{75D24F85-48AC-4058-AF8D-461FC6A360AD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wallet", "wallet", "{9344A71B-D7EA-4C91-B303-2F8E8841B521}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "products", "products", "{B2028A73-6C94-4166-A0BB-22080805E351}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "src\apps\api-gateway\APIGateway.WebApi\APIGateway.WebApi.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway.WebApi", "src\apps\apigateway\APIGateway.WebApi\APIGateway.WebApi.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identities.Application", "src\apps\identity\Identities.Application\Identities.Application.csproj", "{D1BE29BD-9518-42DA-9A34-C86D4287BAB5}"
 EndProject
@@ -105,7 +103,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.WebApi", "src\apps\orders\Orders.WebApi\Orders.WebApi.csproj", "{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Discovery.Consul", "src\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj", "{C42D741B-EBCC-4770-907C-C8B980D22A65}"
@@ -114,21 +111,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.LoadBalancing.Fabio"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP.RestEase", "src\Genocs.HTTP.RestEase\Genocs.HTTP.RestEase.csproj", "{C2CC0D45-CB64-4E0C-B875-6DB1667141E3}"
 EndProject
-
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR.WebApi", "src\apps\signalr\SignalR.WebApi\SignalR.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.WebApi", "src\apps\notifications\Notifications.WebApi\Notifications.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.WebApi", "src\apps\products\Products.WebApi\Products.WebApi.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B184733D-2415-4517-BC65-26ED22EEB2C2}"
 	ProjectSection(SolutionItems) = preProject
 		src\apps\apigateway.dockerfile = src\apps\apigateway.dockerfile
+		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
+		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
+		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
+		src\apps\notifications-webapi.dockerfile = src\apps\notifications-webapi.dockerfile
 		src\apps\docker-compose.override.yml = src\apps\docker-compose.override.yml
 		src\apps\docker-compose.yml = src\apps\docker-compose.yml
-		src\apps\identity-webapi.dockerfile = src\apps\identity-webapi.dockerfile
 		src\apps\local.env = src\apps\local.env
-		src\apps\order-webapi.dockerfile = src\apps\order-webapi.dockerfile
-		src\apps\product-webapi.dockerfile = src\apps\product-webapi.dockerfile
-		src\apps\signalr-webapi.dockerfile = src\apps\signalr-webapi.dockerfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.AzureKeyVault", "src\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj", "{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}"
@@ -325,18 +321,17 @@ Global
 		{3F6C140E-EA64-424D-9214-53A677157E10} = {220036E9-322D-4D4A-BA98-21DCF111C50A}
 		{FA01671E-9778-4581-9CD3-4A0651DBC7D7} = {220036E9-322D-4D4A-BA98-21DCF111C50A}
 		{23B5DC61-F78E-42A5-9AA8-AB96DB7C89EC} = {51AC5A23-37B9-447B-8A18-2AFF171FA253}
-		{6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
+		{6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
+		{80862789-8B42-4878-AC10-9CFF06A7313C} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
+		{75D24F85-48AC-4058-AF8D-461FC6A360AD} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
+		{9344A71B-D7EA-4C91-B303-2F8E8841B521} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
+		{B2028A73-6C94-4166-A0BB-22080805E351} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{C9E31675-9AD7-4EBC-9986-B64CCE869454} = {E2C01E9C-032C-4CD2-A0DE-C1A7AB8A9C7B}
 		{D1BE29BD-9518-42DA-9A34-C86D4287BAB5} = {6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849}
 		{CA411C82-9B2F-45B2-AF3F-8650C971E49D} = {6E25EB9D-CA55-4DF1-8A2A-5A8A20C4B849}
-		{80862789-8B42-4878-AC10-9CFF06A7313C} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22} = {80862789-8B42-4878-AC10-9CFF06A7313C}
-		{160F94A8-C119-4C0F-94FA-E03673269AC8} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
-		{75D24F85-48AC-4058-AF8D-461FC6A360AD} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
-		{9344A71B-D7EA-4C91-B303-2F8E8841B521} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2} = {75D24F85-48AC-4058-AF8D-461FC6A360AD}
-		{B2028A73-6C94-4166-A0BB-22080805E351} = {140B7191-88E9-4EEE-9D86-9A70839F8507}
 		{6CE8740F-8561-481B-AC9F-D1E73C449235} = {B2028A73-6C94-4166-A0BB-22080805E351}
 		{B184733D-2415-4517-BC65-26ED22EEB2C2} = {51A2E158-4686-4764-91D5-3CDDD06280D4}
 		{D7C394CF-487D-470D-B05C-CC2DD7EC290B} = {220036E9-322D-4D4A-BA98-21DCF111C50A}
