@@ -521,40 +521,11 @@ docker builder prune
 Following commands are useful to build and push the images one by one
 
 ``` bash
-cd src/apps
+# Build images
+./src/apps/scripts/build-images.sh
 
-# Build the api gateway
-docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
-
-# Build the identity service
-docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identities.dockerfile .
-
-# Build the product service
-docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product.dockerfile .
-
-# Build the order service
-docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./order.dockerfile .
-
-# Build the notifications service
-docker build -t genocs/notifications:1.0.0 -t genocs/notifications:latest -f ./notifications.dockerfile .
-
-
-# Push on Dockerhub
-docker push genocs/apigateway:1.0.4
-docker tag genocs/apigateway:1.0.4 genocs/apigateway:latest
-docker push genocs/apigateway:latest
-docker push genocs/identities-webapi:1.0.4
-docker tag genocs/identities-webapi:1.0.4 genocs/identities-webapi:latest
-docker push genocs/identities-webapi:latest
-docker push genocs/products-webapi:1.0.4
-docker tag genocs/products-webapi:1.0.4 genocs/products-webapi:latest
-docker push genocs/products-webapi:latest
-docker push genocs/orders-webapi:1.0.4
-docker tag genocs/orders-webapi:1.0.4 genocs/orders-webapi:latest
-docker push genocs/orders-webapi:latest
-docker push genocs/notifications-webapi:1.0.4
-docker tag genocs/notifications-webapi:1.0.4 genocs/notifications-webapi:latest
-docker push genocs/notifications:latest
+# Push images
+./src/apps/scripts/push-images.sh
 ```
 
 
