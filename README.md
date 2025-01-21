@@ -540,15 +540,20 @@ docker build -t genocs/notifications:1.0.0 -t genocs/notifications:latest -f ./n
 
 
 # Push on Dockerhub
-docker push genocs/apigateway:1.0.0
+docker push genocs/apigateway:1.0.4
+docker tag genocs/apigateway:1.0.4 genocs/apigateway:latest
 docker push genocs/apigateway:latest
-docker push genocs/identities:1.0.0
-docker push genocs/identities:latest
-docker push genocs/products:1.0.0
-docker push genocs/products:latest
-docker push genocs/orders:1.0.0
-docker push genocs/orders:latest
-docker push genocs/notifications:1.0.0
+docker push genocs/identities-webapi:1.0.4
+docker tag genocs/identities-webapi:1.0.4 genocs/identities-webapi:latest
+docker push genocs/identities-webapi:latest
+docker push genocs/products-webapi:1.0.4
+docker tag genocs/products-webapi:1.0.4 genocs/products-webapi:latest
+docker push genocs/products-webapi:latest
+docker push genocs/orders-webapi:1.0.4
+docker tag genocs/orders-webapi:1.0.4 genocs/orders-webapi:latest
+docker push genocs/orders-webapi:latest
+docker push genocs/notifications-webapi:1.0.4
+docker tag genocs/notifications-webapi:1.0.4 genocs/notifications-webapi:latest
 docker push genocs/notifications:latest
 ```
 

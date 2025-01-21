@@ -1,7 +1,7 @@
-# apigateway.yaml
+# apigateway.yml
 apiVersion: apps/v1
 kind: Deployment
-# apigateway-deployment.yaml
+# apigateway-deployment.yml
 metadata:
   namespace: gnx-apps-ns
   name: apigateway
@@ -17,22 +17,20 @@ spec:
     spec:
       containers:
         - name: apigateway-container
-          image: genocs/apigateway:1.0.3 # Replace with your image
+          image: genocs/apigateway:1.0.4 # Replace with your image
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
+            - name: logger__level
+              value: "Debug"
 
             # RabbitMQ
+            - name: rabbitmq__hostname
+              value: "flamingo.rmq.cloudamqp.com"
             - name: rabbitmq__hostnames__0
-              valueFrom:
-                secretKeyRef:
-                  name: gnx-app-secrets
-                  key: RABBITMQ_HOST_NAME
+              value: "flamingo.rmq.cloudamqp.com"
             - name: rabbitmq__virtualhost
-              valueFrom:
-                secretKeyRef:
-                  name: gnx-app-secrets
-                  key: RABBITMQ_VIRTUAL_HOST
+              value: "zcoqmbte"
             - name: rabbitmq__username
               valueFrom:
                 secretKeyRef:
@@ -43,7 +41,6 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: RABBITMQ_PASSWORD
-
             # MongoDB
             - name: mongodb__connectionString
               valueFrom:
@@ -62,7 +59,7 @@ spec:
               memory: 400Mi
 
 ---
-# apigateway-service.yaml
+# apigateway-service.yml
 apiVersion: v1
 kind: Service
 metadata:

@@ -16,17 +16,17 @@ spec:
         app: orders # Label for the pods
     spec:
       containers:
-      - name: orders-container
-        image: genocs/orders-webapi:1.0.3 # Replace with your image
-        ports:
-        - containerPort: 8080 # Port the container exposes
-        resources: # Optional resource requests and limits
-          requests:
-            cpu: 100m
-            memory: 200Mi
-          limits:
-            cpu: 200m
-            memory: 400Mi
+        - name: orders-container
+          image: genocs/orders-webapi:1.0.4 # Replace with your image
+          ports:
+            - containerPort: 8080 # Port the container exposes
+          resources: # Optional resource requests and limits
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 400Mi
 
 ---
 # orders-service.yaml
@@ -39,7 +39,7 @@ spec:
   selector:
     app: orders # Select pods with this label
   ports:
-  - protocol: TCP
-    port: 80 # Port the service exposes
-    targetPort: 8080 # Port the container exposes
+    - protocol: TCP
+      port: 80 # Port the service exposes
+      targetPort: 8080 # Port the container exposes
   type: ClusterIP # Expose the service internally
