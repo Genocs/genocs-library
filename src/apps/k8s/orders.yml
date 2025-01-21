@@ -1,7 +1,7 @@
-# orders.yaml
+# orders.yml
 apiVersion: apps/v1
 kind: Deployment
-# orders-deployment.yaml
+# orders-deployment.yml
 metadata:
   namespace: gnx-apps-ns
   name: orders
@@ -18,6 +18,36 @@ spec:
       containers:
         - name: orders-container
           image: genocs/orders-webapi:1.0.4 # Replace with your image
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: logger__level
+              value: "Debug"
+
+            # RabbitMQ
+            - name: rabbitmq__hostname
+              value: "flamingo.rmq.cloudamqp.com"
+            - name: rabbitmq__hostnames__0
+              value: "flamingo.rmq.cloudamqp.com"
+            - name: rabbitmq__virtualhost
+              value: "zcoqmbte"
+            - name: rabbitmq__username
+              valueFrom:
+                secretKeyRef:
+                  name: gnx-app-secrets
+                  key: RABBITMQ_USER_NAME
+            - name: rabbitmq__password
+              valueFrom:
+                secretKeyRef:
+                  name: gnx-app-secrets
+                  key: RABBITMQ_PASSWORD
+            # MongoDB
+            - name: mongodb__connectionString
+              valueFrom:
+                secretKeyRef:
+                  name: gnx-app-secrets
+                  key: MONGODB_CONNECTION_STRING
+
           ports:
             - containerPort: 8080 # Port the container exposes
           resources: # Optional resource requests and limits
@@ -29,7 +59,7 @@ spec:
               memory: 400Mi
 
 ---
-# orders-service.yaml
+# orders-service.yml
 apiVersion: v1
 kind: Service
 metadata:
