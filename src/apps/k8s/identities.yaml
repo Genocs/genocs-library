@@ -1,0 +1,45 @@
+# identities.yaml
+apiVersion: apps/v1
+kind: Deployment
+# identities-deployment.yaml
+metadata:
+  namespace: gnx-apps-ns
+  name: identities
+spec:
+  replicas: 1 # Number of pods to run
+  selector:
+    matchLabels:
+      app: identities # Select pods with this label
+  template:
+    metadata:
+      labels:
+        app: identities # Label for the pods
+    spec:
+      containers:
+      - name: identities-container
+        image: genocs/identities-webapi:1.0.3 # Replace with your image
+        ports:
+        - containerPort: 8080 # Port the container exposes
+        resources: # Optional resource requests and limits
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 200m
+            memory: 400Mi
+
+---
+# identities-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gnx-apps-ns
+  name: identities-svc
+spec:
+  selector:
+    app: identities # Select pods with this label
+  ports:
+  - protocol: TCP
+    port: 80 # Port the service exposes
+    targetPort: 8080 # Port the container exposes
+  type: ClusterIP # Expose the service internally

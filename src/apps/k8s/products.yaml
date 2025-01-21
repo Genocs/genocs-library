@@ -1,0 +1,45 @@
+# products.yaml
+apiVersion: apps/v1
+kind: Deployment
+# products-deployment.yaml
+metadata:
+  namespace: gnx-apps-ns
+  name: products
+spec:
+  replicas: 1 # Number of pods to run
+  selector:
+    matchLabels:
+      app: products # Select pods with this label
+  template:
+    metadata:
+      labels:
+        app: products # Label for the pods
+    spec:
+      containers:
+      - name: products-container
+        image: genocs/products-webapi:1.0.3 # Replace with your image
+        ports:
+        - containerPort: 8080 # Port the container exposes
+        resources: # Optional resource requests and limits
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 200m
+            memory: 400Mi
+
+---
+# products-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gnx-apps-ns
+  name: products-svc
+spec:
+  selector:
+    app: products # Select pods with this label
+  ports:
+  - protocol: TCP
+    port: 80 # Port the service exposes
+    targetPort: 8080 # Port the container exposes
+  type: ClusterIP # Expose the service internally

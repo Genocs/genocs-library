@@ -289,8 +289,8 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "password": "test",
       "rawData": ""
     },
-    "issuer": "genocs-identity-service",
-    "validIssuer": "genocs-identity-service",
+    "issuer": "genocs-identities-service",
+    "validIssuer": "genocs-identities-service",
     "validateAudience": false,
     "validateIssuer": true,
     "validateLifetime": true,
@@ -527,16 +527,16 @@ cd src/apps
 docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
 
 # Build the identity service
-docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity.dockerfile .
-
-# Build the order service
-docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order.dockerfile .
+docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identities.dockerfile .
 
 # Build the product service
 docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product.dockerfile .
 
-# Build the signalr service
-docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr.dockerfile .
+# Build the order service
+docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./order.dockerfile .
+
+# Build the notifications service
+docker build -t genocs/notifications:1.0.0 -t genocs/notifications:latest -f ./notifications.dockerfile .
 
 
 # Push on Dockerhub
@@ -544,12 +544,12 @@ docker push genocs/apigateway:1.0.0
 docker push genocs/apigateway:latest
 docker push genocs/identities:1.0.0
 docker push genocs/identities:latest
-docker push genocs/orders:1.0.0
-docker push genocs/orders:latest
 docker push genocs/products:1.0.0
 docker push genocs/products:latest
-docker push genocs/signalr:1.0.0
-docker push genocs/signalr:latest
+docker push genocs/orders:1.0.0
+docker push genocs/orders:latest
+docker push genocs/notifications:1.0.0
+docker push genocs/notifications:latest
 ```
 
 
