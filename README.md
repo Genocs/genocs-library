@@ -528,6 +528,15 @@ Following commands are useful to build and push the images one by one
 ./src/apps/scripts/push-images.sh
 ```
 
+### How to deploy the application on Kubernetes
+
+You can deploy the application on Kubernetes cluster.
+
+``` bash
+# Build images
+./src/apps/scripts/deploy-k8s.sh
+```
+
 
 ### Deploy in a cloud instance
 

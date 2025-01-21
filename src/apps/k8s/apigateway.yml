@@ -47,6 +47,15 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
+            # Reverse Proxy
+            - name: reverseProxy__clusters__identities-cluster__destinations__destination1__address
+              value: http://identities-svc
+            - name: reverseProxy__clusters__products-cluster__destinations__destination1__address
+              value: http://products-svc
+            - name: reverseProxy__clusters__orders-cluster__destinations__destination1__address
+              value: http://orders-svc
+            - name: reverseProxy__clusters__notifications-cluster__destinations__destination1__address
+              value: http://notifications-svc
 
           ports:
             - containerPort: 8080 # Port the container exposes

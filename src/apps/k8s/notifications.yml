@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: notifications-container
-          image: genocs/notifications-webapi:1.0.3 # Replace with your image
+          image: genocs/notifications-webapi:1.0.4 # Replace with your image
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
@@ -52,11 +52,11 @@ spec:
             - containerPort: 8080 # Port the container exposes
           resources: # Optional resource requests and limits
             requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
               cpu: 100m
               memory: 200Mi
-            limits:
-              cpu: 200m
-              memory: 400Mi
 
 ---
 # notifications-service.yml

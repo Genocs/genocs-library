@@ -47,16 +47,18 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
+            - name: httpclient__services__products
+              value: "http://products-svc"
 
           ports:
             - containerPort: 8080 # Port the container exposes
           resources: # Optional resource requests and limits
             requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
               cpu: 100m
               memory: 200Mi
-            limits:
-              cpu: 200m
-              memory: 400Mi
 
 ---
 # orders-service.yml
