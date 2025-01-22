@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: products-container
-          image: genocs/products-webapi:1.0.4 # Replace with your image
+          image: "genocs/products-webapi:{{ .Values.imageTag.products }}"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"

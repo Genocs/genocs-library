@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: notifications-container
-          image: genocs/notifications-webapi:1.0.4 # Replace with your image
+          image: "genocs/notifications-webapi:{{ .Values.imageTag.notifications }}"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"

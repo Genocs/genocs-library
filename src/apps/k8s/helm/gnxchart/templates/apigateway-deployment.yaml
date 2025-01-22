@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: apigateway-container
-          image: genocs/apigateway:1.0.4 # Replace with your image
+          image: "genocs/apigateway:{{ .Values.imageTag.apigateway }}"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"

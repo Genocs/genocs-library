@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: identities-container
-          image: genocs/identities-webapi:1.0.4 # Replace with your image
+          image: "genocs/identities-webapi:{{ .Values.imageTag.identities }}"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"

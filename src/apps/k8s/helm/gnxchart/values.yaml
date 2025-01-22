@@ -105,3 +105,11 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# imageTag is a map of image tags for each of the services
+imageTag:  
+  apigateway: "1.0.4"
+  identities: "1.0.4"
+  products: "1.0.4"
+  orders: "1.0.4"
+  notifications: "1.0.4" 

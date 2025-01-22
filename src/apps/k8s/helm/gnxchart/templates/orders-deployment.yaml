@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: orders-container
-          image: genocs/orders-webapi:1.0.4 # Replace with your image
+          image: "genocs/orders-webapi:{{ .Values.imageTag.orders }}"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"

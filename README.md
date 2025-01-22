@@ -568,6 +568,15 @@ make build
 ```
 
 
+### How to use Helm chart
+
+Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to deploy the application on Kubernetes.
+
+``` bash
+cd ./src/apps/k8s/helm
+microk8s helm install genocs ./gnxchart
+```
+
 
 ### Deploy in a cloud instance
 
