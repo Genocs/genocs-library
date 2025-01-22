@@ -1,23 +1,22 @@
-# orders.yml
+# notifications-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
-# orders-deployment.yml
 metadata:
   namespace: gnx-apps-ns
-  name: orders
+  name: notifications
 spec:
   replicas: 1 # Number of pods to run
   selector:
     matchLabels:
-      app: orders # Select pods with this label
+      app: notifications # Select pods with this label
   template:
     metadata:
       labels:
-        app: orders # Label for the pods
+        app: notifications # Label for the pods
     spec:
       containers:
-        - name: orders-container
-          image: genocs/orders-webapi:1.0.4 # Replace with your image
+        - name: notifications-container
+          image: genocs/notifications-webapi:1.0.4 # Replace with your image
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
@@ -47,8 +46,6 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
-            - name: httpclient__services__products
-              value: "http://products-svc"
 
           ports:
             - containerPort: 8080 # Port the container exposes
@@ -59,19 +56,3 @@ spec:
             limits:
               cpu: 100m
               memory: 200Mi
-
----
-# orders-service.yml
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: gnx-apps-ns
-  name: orders-svc
-spec:
-  selector:
-    app: orders # Select pods with this label
-  ports:
-    - protocol: TCP
-      port: 80 # Port the service exposes
-      targetPort: 8080 # Port the container exposes
-  type: ClusterIP # Expose the service internally

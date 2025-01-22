@@ -1,23 +1,22 @@
-# apigateway.yml
+# products-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
-# apigateway-deployment.yml
 metadata:
   namespace: gnx-apps-ns
-  name: apigateway
+  name: products
 spec:
   replicas: 1 # Number of pods to run
   selector:
     matchLabels:
-      app: apigateway # Select pods with this label
+      app: products # Select pods with this label
   template:
     metadata:
       labels:
-        app: apigateway # Label for the pods
+        app: products # Label for the pods
     spec:
       containers:
-        - name: apigateway-container
-          image: genocs/apigateway:1.0.4 # Replace with your image
+        - name: products-container
+          image: genocs/products-webapi:1.0.4 # Replace with your image
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
@@ -47,38 +46,13 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
-            # Reverse Proxy
-            - name: reverseProxy__clusters__identities-cluster__destinations__destination1__address
-              value: http://identities-svc
-            - name: reverseProxy__clusters__products-cluster__destinations__destination1__address
-              value: http://products-svc
-            - name: reverseProxy__clusters__orders-cluster__destinations__destination1__address
-              value: http://orders-svc
-            - name: reverseProxy__clusters__notifications-cluster__destinations__destination1__address
-              value: http://notifications-svc
 
           ports:
             - containerPort: 8080 # Port the container exposes
           resources: # Optional resource requests and limits
             requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
               cpu: 100m
               memory: 200Mi
-            limits:
-              cpu: 200m
-              memory: 400Mi
-
----
-# apigateway-service.yml
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: gnx-apps-ns
-  name: apigateway-svc
-spec:
-  selector:
-    app: apigateway # Select pods with this label
-  ports:
-    - protocol: TCP
-      port: 80 # Port the service exposes
-      targetPort: 8080 # Port the container exposes
-  type: ClusterIP # Expose the service internally

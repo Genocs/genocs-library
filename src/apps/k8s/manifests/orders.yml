@@ -1,23 +1,23 @@
-# products.yml
+# orders.yml
 apiVersion: apps/v1
 kind: Deployment
-# products-deployment.yml
+# orders-deployment.yml
 metadata:
   namespace: gnx-apps-ns
-  name: products
+  name: orders
 spec:
   replicas: 1 # Number of pods to run
   selector:
     matchLabels:
-      app: products # Select pods with this label
+      app: orders # Select pods with this label
   template:
     metadata:
       labels:
-        app: products # Label for the pods
+        app: orders # Label for the pods
     spec:
       containers:
-        - name: products-container
-          image: genocs/products-webapi:1.0.4 # Replace with your image
+        - name: orders-container
+          image: genocs/orders-webapi:1.0.4 # Replace with your image
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
@@ -47,6 +47,9 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
+            # HTTP CLIENT                   
+            - name: httpclient__services__products
+              value: "http://products-svc"
 
           ports:
             - containerPort: 8080 # Port the container exposes
@@ -59,15 +62,15 @@ spec:
               memory: 200Mi
 
 ---
-# products-service.yml
+# orders-service.yml
 apiVersion: v1
 kind: Service
 metadata:
   namespace: gnx-apps-ns
-  name: products-svc
+  name: orders-svc
 spec:
   selector:
-    app: products # Select pods with this label
+    app: orders # Select pods with this label
   ports:
     - protocol: TCP
       port: 80 # Port the service exposes

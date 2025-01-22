@@ -1,7 +1,6 @@
-# orders.yml
+# orders-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
-# orders-deployment.yml
 metadata:
   namespace: gnx-apps-ns
   name: orders
@@ -59,19 +58,3 @@ spec:
             limits:
               cpu: 100m
               memory: 200Mi
-
----
-# orders-service.yml
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: gnx-apps-ns
-  name: orders-svc
-spec:
-  selector:
-    app: orders # Select pods with this label
-  ports:
-    - protocol: TCP
-      port: 80 # Port the service exposes
-      targetPort: 8080 # Port the container exposes
-  type: ClusterIP # Expose the service internally
