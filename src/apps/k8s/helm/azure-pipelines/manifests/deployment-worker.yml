@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: voucher-worker
+  namespace: utu-taxfree
+  labels:
+    app: voucher-worker
+    run: voucher-worker
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: voucher-worker
+
+  template:
+    metadata:
+      labels:
+        app: voucher-worker
+        run: voucher-worker
+
+    spec:
+      containers:
+        - name: voucher-worker
+          image: uturegistry.azurecr.io/voucher.worker
+          env:
+            - name: DOTNET_ENVIRONMENT
+              value: "Development"
+          resources:
+            requests:
+              cpu: "100m" #10% of a core
+              memory: "100Mi"
+            limits:
+              cpu: "100m" #10% of a core
+              memory: "100Mi"
+          imagePullPolicy: Always
+
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst

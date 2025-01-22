@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: voucher-webapi
+  namespace: utu-taxfree
+  labels:
+    app: voucher-webapi
+    run: voucher-webapi
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: voucher-webapi
+
+  template:
+    metadata:
+      labels:
+        app: voucher-webapi
+        run: voucher-webapi
+
+    spec:
+      containers:
+        - name: voucher-webapi
+          image: uturegistry.azurecr.io/voucher.webapi
+          livenessProbe:
+            httpGet:
+              path: /hc
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 15
+            failureThreshold: 10
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: KeyVaultName
+              value: "UTU-KV-AppSettings-Dev"
+            - name: KeyVaultUserIdentityId
+              value: "b1470371-ef6e-42e7-8288-1bb5f61f3728"
+            - name: Blob__VoucherContainer
+              value: "dev-vouchers"
+            - name: Blob__TaxfreeFolder
+              value: "taxfree"
+            - name: Blob__ReceiptFolder
+              value: "receipt"
+            - name: Blob__MemberPicturesContainer
+              value: "dev-memberpictures"
+            - name: ApplicationsInsights__ConnectionString
+              value: "InstrumentationKey=d7ec8ebc-ba2a-4f7f-90bb-a6ac05e1fe88"
+            - name: DBSettings__HealthConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: HEALTH_CONNECTION_STRING
+            - name: DBSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: MONGODB_CONNECTION_STRING
+            - name: DBSettings__Database
+              value: "UTU-PromotionEngine-Dev"
+            - name: DBSettings__GenericDB
+              value: "UTU-Generic-Dev"
+            - name: JWT__ValidIssuer
+              value: "https://utuapi-auth-dev.azurewebsites.net"
+            - name: JWT__ValidAudience
+              value: "https://utuapi-auth-dev.azurewebsites.net"
+            - name: JWT__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: JWT_SECRET
+            - name: MassTransitSettings__HostName
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: RABBITMQ_HOST_NAME
+            - name: MassTransitSettings__VirtualHost
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: RABBITMQ_VIRTUAL_HOST
+            - name: MassTransitSettings__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: RABBITMQ_USER_NAME
+            - name: MassTransitSettings__Password
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: RABBITMQ_PASSWORD
+            - name: AzureServiceBusSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: AZURE_SERVICE_BUS_CONNECTION_STRING
+            - name: SendGridSettings__ApiKey
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: SENDGRID_API_KEY
+            - name: SendGridSettings__FromEmail
+              value: "noreply@utu.global"
+            - name: AzureCognitiveServices__Endpoint
+              value: "https://utu-cognitive-services-dev.cognitiveservices.azure.com"
+            - name: AzureCognitiveServices__SubscriptionKey
+              value: "da95a31f4d98448b9d0a605f04b6152b"
+            - name: AzureCognitiveServices__TaxfreeClassifyUrl
+              value: "/customvision/v3.0/Prediction/df759587-1b45-4e13-90b6-dc0db8625b7b/classify/iterations/Iteration8/url"
+            - name: BlobStorageSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: BLOB_STORAGE_CONNECTION_STRING
+            - name: BlobStorageSettings__BaseURI
+              value: "https://utustorage.blob.core.windows.net"
+            - name: APIClientSettings__AuthApiUrl
+              value: "https://utuapi-auth-dev.azurewebsites.net"
+            - name: APIClientSettings__CMSApiUrl
+              value: "https://utuapi-cms-dev.azurewebsites.net"
+            - name: APIClientSettings__ExchangeApiUrl
+              value: "https://utuapi-exchange-dev.azurewebsites.net"
+            - name: APIClientSettings__APIKey
+              valueFrom:
+                secretKeyRef:
+                  name: taxfree-app-secret
+                  key: UTU_API_KEY
+            - name: EPPlus__ExcelPackage__LicenseContext
+              value: "NonCommercial"
+            - name: utuLogoUrl
+              value: "https://utuwsimages.blob.core.windows.net/websiteimages/211004%20-%20utu%20logo%20-%20512x512%20JPG.jpg"
+            - name: VoucherDailyTransactionReportTemplateId
+              value: "d-de2bde74209241c8b5e9d66b50dc395e"
+            - name: AllowedHosts
+              value: "*"
+            - name: DomainPath
+              value: "http://utuaksapi-dev.westeurope.cloudapp.azure.com/"
+
+          resources:
+            requests:
+              cpu: "200m" #20% of a core
+              memory: "200Mi"
+            limits:
+              cpu: "200m" #20% of a core
+              memory: "200Mi"
+          imagePullPolicy: Always
+
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst

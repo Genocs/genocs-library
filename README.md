@@ -537,6 +537,37 @@ You can deploy the application on Kubernetes cluster.
 ./src/apps/scripts/deploy-k8s.sh
 ```
 
+### How to use makefile
+
+Prerequisites:
+- make
+
+To install make on MacOS you can use brew
+
+``` bash
+brew install make
+```
+
+To install make on Ubuntu you can use apt
+
+``` bash
+sudo apt install make
+```
+
+To install make on Windows you can use [choco](https://chocolatey.org/)
+
+``` bash
+choco install make
+```
+
+Upon installation you can use the makefile to build, run, deploy the application.
+
+``` bash
+# Build the solution
+make build
+```
+
+
 
 ### Deploy in a cloud instance
 
