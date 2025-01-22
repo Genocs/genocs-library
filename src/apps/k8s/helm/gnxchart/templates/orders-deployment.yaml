@@ -2,8 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: gnx-apps-ns
   name: orders
+  namespace: {{ .Release.Namespace }}
+
 spec:
   replicas: 1 # Number of pods to run
   selector:
