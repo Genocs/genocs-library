@@ -15,4 +15,4 @@ Please check the GitHub repository getting more info.
 
 ## Release notes
 
-### [2024-06-12] 5.0.6
+### [2025-04-17] 7.2.4 Fix Key Vault Setup

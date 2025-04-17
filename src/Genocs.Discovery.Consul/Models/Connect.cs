@@ -5,5 +5,5 @@ namespace Genocs.Discovery.Consul.Models;
 public class Connect
 {
     [JsonPropertyName("sidecar_service")]
-    public SidecarService SidecarService { get; set; }
+    public SidecarService? SidecarService { get; set; }
 }
