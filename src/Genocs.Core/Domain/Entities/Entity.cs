@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace Genocs.Core.Domain.Entities;
 
@@ -23,6 +24,10 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// Unique identifier for this entity.
     /// </summary>
     public virtual TPrimaryKey Id { get; set; } = default!;
+
+
+    [NotMapped]
+    public List<DomainEvent> DomainEvents { get; } = new();
 
     /// <summary>
     /// Checks if this entity is transient (it has not an Id).

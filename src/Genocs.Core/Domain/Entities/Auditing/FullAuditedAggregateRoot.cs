@@ -26,7 +26,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRo
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeletedBy { get; set; }
+    public virtual DefaultIdType? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
@@ -41,7 +41,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRo
 /// <typeparam name="TUser">Type of the user.</typeparam>
 [Serializable]
 public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggregateRoot<TPrimaryKey, TUser>, IFullAudited<TUser>
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// It defines whether this entity is deleted or not.
@@ -52,12 +52,12 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggr
     /// Reference to the deleter user of this entity.
     /// </summary>
     [ForeignKey("DeleterUserId")]
-    public virtual TUser DeletedByUser { get; set; }
+    public virtual TUser? DeletedByUser { get; set; }
 
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeletedBy { get; set; }
+    public virtual DefaultIdType? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.

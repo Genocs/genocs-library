@@ -26,7 +26,7 @@ public abstract class AuditedAggregateRoot<TPrimaryKey> : CreationAuditedAggrega
     /// <summary>
     /// Last modifier user of this entity.
     /// </summary>
-    public virtual long? UpdatedBy { get; set; }
+    public virtual DefaultIdType? UpdatedBy { get; set; }
 }
 
 /// <summary>
@@ -36,7 +36,7 @@ public abstract class AuditedAggregateRoot<TPrimaryKey> : CreationAuditedAggrega
 /// <typeparam name="TUser">Type of the user.</typeparam>
 [Serializable]
 public abstract class AuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggregateRoot<TPrimaryKey>, IAudited<TUser>
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the creator user of this entity.

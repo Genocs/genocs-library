@@ -9,15 +9,15 @@ public interface IModificationAudited : IHasModificationTime
     /// <summary>
     /// Last modifier user for this entity.
     /// </summary>
-    long? UpdatedBy { get; set; }
+    DefaultIdType? UpdatedBy { get; set; }
 }
 
 /// <summary>
 /// Adds navigation properties to <see cref="IModificationAudited"/> interface for user.
 /// </summary>
-/// <typeparam name="TUser">Type of the user</typeparam>
+/// <typeparam name="TUser">Type of the user.</typeparam>
 public interface IModificationAudited<TUser> : IModificationAudited
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the last modifier user of this entity.

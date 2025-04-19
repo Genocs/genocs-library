@@ -26,8 +26,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Figgle" Version="0.5.1" />
         <PackageReference Include="Scrutor" Version="5.0.2" />
+        <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 

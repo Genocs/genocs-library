@@ -6,10 +6,7 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class AuditedEntity : AuditedEntity<Guid>, IEntity
-{
-
-}
+public abstract class AuditedEntity : AuditedEntity<DefaultIdType>, IEntity;
 
 /// <summary>
 /// This class can be used to simplify implementing <see cref="IAudited"/>.
@@ -26,7 +23,7 @@ public abstract class AuditedEntity<TPrimaryKey> : CreationAuditedEntity<TPrimar
     /// <summary>
     /// Last modifier user of this entity.
     /// </summary>
-    public virtual long? UpdatedBy { get; set; }
+    public virtual DefaultIdType? UpdatedBy { get; set; }
 }
 
 /// <summary>
@@ -36,7 +33,7 @@ public abstract class AuditedEntity<TPrimaryKey> : CreationAuditedEntity<TPrimar
 /// <typeparam name="TUser">Type of the user.</typeparam>
 [Serializable]
 public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey>, IAudited<TUser>
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the creator user of this entity.

@@ -9,7 +9,7 @@ public interface ICreationAudited : IHasCreationTime
     /// <summary>
     /// Id of the creator user of this entity.
     /// </summary>
-    long CreatorUserId { get; set; }
+    DefaultIdType CreatorUserId { get; set; }
 }
 
 /// <summary>
@@ -17,7 +17,7 @@ public interface ICreationAudited : IHasCreationTime
 /// </summary>
 /// <typeparam name="TUser">Type of the user</typeparam>
 public interface ICreationAudited<TUser> : ICreationAudited
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the creator user of this entity.
