@@ -1,18 +1,18 @@
 services:
   apigateway:
     image: genocs/apigateway:${IMAGE_VERSION}
-    hostname: api-gateway
-    container_name: api-gateway
+    hostname: apigateway
+    container_name: apigateway
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
       - consul__url=${CONSUL_URL}
-      - consul__address=api-gateway
+      - consul__address=apigateway
       - consul__port=8080
       - fabio__url=${FABIO_URL}
       - jaeger__udpHost=${JAEGER_URL}
       - openTelemetry__otlpEndpoint=${JAEGER_URL}
-      - mongodb__connectionString=mongodb://mongodb:27017
-      - reverseProxy__clusters__identity-cluster__destinations__destination1__address=http://identity-service:8080
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - reverseProxy__clusters__identity-cluster__destinations__destination1__address=http://identities-service:8080
       - reverseProxy__clusters__products-cluster__destinations__destination1__address=http://products-service:8080
       - reverseProxy__clusters__orders-cluster__destinations__destination1__address=http://orders-service:8080
       - reverseProxy__clusters__notifications-cluster__destinations__destination1__address=http://notifications-service:8080
@@ -25,19 +25,19 @@ services:
     volumes:
       - apigateway:/root/.aspnet/DataProtection-Keys
 
-  identity-service:
-    image: genocs/identity-webapi:${IMAGE_VERSION}
-    hostname: identity-service
-    container_name: identity-service
+  identities-service:
+    image: genocs/identities-webapi:${IMAGE_VERSION}
+    hostname: identities-service
+    container_name: identities-service
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
       - consul__url=${CONSUL_URL}
-      - consul__address=identity-service
+      - consul__address=identities-service
       - consul__port=8080
       - fabio__url=${FABIO_URL}
       - jaeger__udpHost=${JAEGER_URL}
       - openTelemetry__otlpEndpoint=${JAEGER_URL}
-      - mongodb__connectionString=mongodb://mongodb:27017
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
 
     ports:
       - 5510:8080
@@ -45,10 +45,10 @@ services:
       - genocs
     # network_mode: bridge
     volumes:
-      - identity:/root/.aspnet/DataProtection-Keys
+      - identities:/root/.aspnet/DataProtection-Keys
 
   products-service:
-    image: genocs/product-webapi:${IMAGE_VERSION}
+    image: genocs/products-webapi:${IMAGE_VERSION}
     hostname: products-service
     container_name: products-service
     environment:
@@ -59,7 +59,7 @@ services:
       - fabio__url=${FABIO_URL}
       - jaeger__udpHost=${JAEGER_URL}
       - openTelemetry__otlpEndpoint=${JAEGER_URL}
-      - mongodb__connectionString=mongodb://mongodb:27017
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
 
     ports:
       - 5520:8080
@@ -71,7 +71,7 @@ services:
       - products:/root/.aspnet/DataProtection-Keys
 
   orders-service:
-    image: genocs/order-webapi:${IMAGE_VERSION}
+    image: genocs/orders-webapi:${IMAGE_VERSION}
     hostname: orders-service
     container_name: orders-service
     environment:
@@ -82,7 +82,7 @@ services:
       - fabio__url=${FABIO_URL}
       - jaeger__udpHost=${JAEGER_URL}
       - openTelemetry__otlpEndpoint=${JAEGER_URL}
-      - mongodb__connectionString=mongodb://mongodb:27017
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
 
     ports:
       - 5530:8080
@@ -105,7 +105,7 @@ services:
       - fabio__url=${FABIO_URL}
       - jaeger__udpHost=${JAEGER_URL}
       - openTelemetry__otlpEndpoint=${JAEGER_URL}
-      - mongodb__connectionString=mongodb://mongodb:27017
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
 
     ports:
       - 5540:8080
@@ -125,7 +125,7 @@ networks:
 volumes:
   apigateway:
     driver: local
-  identity:
+  identities:
     driver: local
   products:
     driver: local

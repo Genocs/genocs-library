@@ -20,10 +20,27 @@ spec:
     spec:
       containers:
         - name: apigateway
-          image:  genocs/apigateway:1.0.0
+          image: genocs/apigateway:1.0.0
           env:
             - name: ASPNETCORE_ENVIRONMENT
-              value: "Containers"
+              value: "Development"
+            - name: RABBITMQ_HOST_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret-file
+                  key: RABBITMQ_HOST_NAME
+            - name: RABBITMQ_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret-file
+                  key: RABBITMQ_USER_NAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-file
+                  key: RABBITMQ_PASSWORD
+            - name: RABBITMQ_BATCH_SIZE
+              value: "50"
           imagePullPolicy: Always
           resources:
             requests:

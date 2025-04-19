@@ -1,7 +1,7 @@
 build:
 	dotnet build
 start:
-	dotnet run --project ./src/Genocs.TelegramIntegration.WebApi
+	dotnet run --project ./src/apps/Genocs.TelegramIntegration.WebApi
 nuget:
 	nuget pack -NoDefaultExcludes -OutputDirectory nupkgs
 publish:
@@ -24,3 +24,11 @@ gw: # git docker workflow to push docker image to the repository based on the ma
 	@echo triggering github workflow to push docker image to container
 	@echo ensure that you have the gh-cli installed and authenticated.
 	gh workflow run dockerhub-publish -f push_to_docker=true
+
+d-build: # docker build images
+	@echo building docker images
+	@echo you should have docker installed and running
+	bash ./src/apps/scripts/build-images.sh
+d-push: # docker tag and push images
+	@echo tag images as latest and publish
+	bash ./src/apps/scripts/push-images.sh
