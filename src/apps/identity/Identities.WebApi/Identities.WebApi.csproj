@@ -15,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Discovery.Consul" Version="7.2.3" />
-        <PackageReference Include="Genocs.Logging" Version="7.2.3" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.2.4" />
+        <PackageReference Include="Genocs.Logging" Version="7.2.4" />
     </ItemGroup>
 
     <ItemGroup>

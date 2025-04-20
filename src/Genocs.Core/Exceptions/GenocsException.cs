@@ -43,17 +43,12 @@ public class GenocsException : Exception
     public GenocsException(string message, Exception? innerException)
         : base(message, innerException)
     {
-
     }
-
 
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
     /// <param name="message"></param>
     public class InvalidConfigurationException(string message)
-        : GenocsException(message)
-    {
-
-    }
+        : GenocsException(message);
 }

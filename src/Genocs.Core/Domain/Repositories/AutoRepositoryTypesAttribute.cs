@@ -5,27 +5,19 @@ namespace Genocs.Core.Domain.Repositories;
 /// This can be used for DbContext types.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class AutoRepositoryTypesAttribute : Attribute
+public class AutoRepositoryTypesAttribute(
+                                    Type repositoryInterface,
+                                    Type repositoryInterfaceWithPrimaryKey,
+                                    Type repositoryImplementation,
+                                    Type repositoryImplementationWithPrimaryKey) : Attribute
 {
-    public Type RepositoryInterface { get; }
+    public Type RepositoryInterface { get; } = repositoryInterface;
 
-    public Type RepositoryInterfaceWithPrimaryKey { get; }
+    public Type RepositoryInterfaceWithPrimaryKey { get; } = repositoryInterfaceWithPrimaryKey;
 
-    public Type RepositoryImplementation { get; }
+    public Type RepositoryImplementation { get; } = repositoryImplementation;
 
-    public Type RepositoryImplementationWithPrimaryKey { get; }
+    public Type RepositoryImplementationWithPrimaryKey { get; } = repositoryImplementationWithPrimaryKey;
 
     public bool WithDefaultRepositoryInterfaces { get; set; }
-
-    public AutoRepositoryTypesAttribute(
-                                        Type repositoryInterface,
-                                        Type repositoryInterfaceWithPrimaryKey,
-                                        Type repositoryImplementation,
-                                        Type repositoryImplementationWithPrimaryKey)
-    {
-        RepositoryInterface = repositoryInterface;
-        RepositoryInterfaceWithPrimaryKey = repositoryInterfaceWithPrimaryKey;
-        RepositoryImplementation = repositoryImplementation;
-        RepositoryImplementationWithPrimaryKey = repositoryImplementationWithPrimaryKey;
-    }
 }

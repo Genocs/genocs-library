@@ -6,7 +6,6 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// </summary>
 public interface IAudited : ICreationAudited, IModificationAudited;
 
-
 /// <summary>
 /// Adds navigation properties to <see cref="IAudited"/> interface for user.
 /// </summary>

@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Genocs.Core.Domain.Entities;
 
 /// <summary>
-/// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
+/// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (<see cref="DefaultIdType"/>).
 /// </summary>
 [Serializable]
-public abstract class Entity : Entity<Guid>
-{
-
-}
+public abstract class Entity : Entity<DefaultIdType>;
 
 /// <summary>
 /// Basic implementation of IEntity interface.
@@ -24,10 +20,6 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     /// Unique identifier for this entity.
     /// </summary>
     public virtual TPrimaryKey Id { get; set; } = default!;
-
-
-    [NotMapped]
-    public List<DomainEvent> DomainEvents { get; } = new();
 
     /// <summary>
     /// Checks if this entity is transient (it has not an Id).

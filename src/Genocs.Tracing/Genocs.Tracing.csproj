@@ -12,7 +12,6 @@
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>telemetry opentelemetry genocs dotnet dotnetcore dotnet-core microservice microservices</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Aligned to the ecosystem</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>

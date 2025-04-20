@@ -31,13 +31,21 @@ internal class ConnectionStringValidator : IConnectionStringValidator
         {
             switch (dbProvider?.ToLowerInvariant())
             {
-                case DbProviderKeys.Npgsql:
-                    var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);
-                    break;
+                //case DbProviderKeys.MongoDB:
+                //    var mongoDBcs = new MongoDBConnectionStringBuilder(connectionString);
+                //    break;
 
                 case DbProviderKeys.MySql:
                     var mysqlcs = new MySqlConnectionStringBuilder(connectionString);
                     break;
+
+                case DbProviderKeys.Npgsql:
+                    var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);
+                    break;
+
+                //case DbProviderKeys.Oracle:
+                //    var oralclecs = new OracleConnectionStringBuilder(connectionString);
+                //    break;
 
                 case DbProviderKeys.SqlServer:
                     var mssqlcs = new SqlConnectionStringBuilder(connectionString);

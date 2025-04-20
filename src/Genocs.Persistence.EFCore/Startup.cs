@@ -1,18 +1,13 @@
-using Genocs.Common.Persistence.Initialization;
-using Genocs.Core.Domain.ConnectionString;
-using Genocs.Core.Domain.Entities;
-using Genocs.Persistence.EFCore;
 using Genocs.Persistence.EFCore.Common;
-using Genocs.Persistence.EFCore.Configurations;
-using Genocs.Persistence.EFCore.Initialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 
-namespace Genocs.Microservice.Template.Infrastructure.Persistence;
+using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.EFCore.Repositories;
+
+namespace Genocs.Persistence.EFCore;
 
 internal static class Startup
 {
@@ -20,7 +15,7 @@ internal static class Startup
 
     internal static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        /*
+
         services
             .AddOptions<DatabaseSettings>()
             .BindConfiguration(nameof(DatabaseSettings))
@@ -30,7 +25,7 @@ internal static class Startup
             })
             .ValidateDataAnnotations()
             .ValidateOnStart();
-
+        /*
         return services
             .AddDbContext<MultitenantApplicationDbContext>((p, m) =>
             {
@@ -61,7 +56,7 @@ internal static class Startup
                                  e.MigrationsAssembly("Migrators.PostgreSQL")),
             DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.MSSQL")),
-            DbProviderKeys.MySql => builder.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(connectionString), e =>
+            DbProviderKeys.MySql => builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
                                  e.MigrationsAssembly("Migrators.MySQL")
                                   .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
             DbProviderKeys.Oracle => builder.UseOracle(connectionString, e =>
@@ -74,10 +69,11 @@ internal static class Startup
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        /*
-        // Add Repositories
-        services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
 
+        // Add Repositories
+        services.AddScoped(typeof(IRepository<,>), typeof(ApplicationDbRepository<>));
+
+        /*
         foreach (var aggregateRootType in
             typeof(IAggregateRoot).Assembly.GetExportedTypes()
                 .Where(t => typeof(IAggregateRoot).IsAssignableFrom(t) && t.IsClass)
@@ -95,6 +91,7 @@ internal static class Startup
                 ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
         }
         */
+
         return services;
     }
 }

@@ -12,9 +12,12 @@
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/genocs-library/releases
+        </PackageReleaseNotes>        
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

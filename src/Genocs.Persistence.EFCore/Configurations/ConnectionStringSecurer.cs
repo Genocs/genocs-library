@@ -29,7 +29,6 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
             dbProvider = _dbSettings.DBProvider;
         }
 
-
         return dbProvider?.ToLower() switch
         {
             DbProviderKeys.MongoDB => MakeSecureMongoDBConnectionString(connectionString),

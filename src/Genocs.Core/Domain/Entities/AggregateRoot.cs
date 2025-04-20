@@ -1,25 +1,18 @@
-// using System.Collections.Generic;
-// using System.Collections.ObjectModel;
-// using System.ComponentModel.DataAnnotations.Schema;
-// using Genocs.Events.Bus;
+using System.ComponentModel.DataAnnotations.Schema;
+using Genocs.Core.CQRS.Events;
 
 namespace Genocs.Core.Domain.Entities;
 
-public class AggregateRoot : AggregateRoot<Guid>, IAggregateRoot
-{
-
-}
+public class AggregateRoot : AggregateRoot<DefaultIdType>, IAggregateRoot;
 
 public class AggregateRoot<TPrimaryKey>
     : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
 {
-    /*
     [NotMapped]
-    public virtual ICollection<IEventData> DomainEvents { get; }
+    public virtual List<IEvent>? DomainEvents { get; }
 
     public AggregateRoot()
     {
-        DomainEvents = new Collection<IEventData>();
+        DomainEvents = [];
     }
-    */
 }
