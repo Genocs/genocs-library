@@ -9,8 +9,6 @@ namespace Genocs.Core.Domain.Repositories;
 public interface IRepository<TEntity, in TKey>
        where TEntity : IEntity<TKey>;
 
-
-
 // The Repository for the Application Db
 // I(Read)RepositoryBase<T> is from Ardalis.Specification
 

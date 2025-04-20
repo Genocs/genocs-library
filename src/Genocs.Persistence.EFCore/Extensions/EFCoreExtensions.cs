@@ -1,22 +1,31 @@
+using Genocs.Common.Interfaces;
+using Genocs.Common.Persistence.Initialization;
+using Genocs.Core.Builders;
+using Genocs.Core.Domain.ConnectionString;
+using Genocs.Core.Domain.Entities;
+using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.EFCore.Common;
+using Genocs.Persistence.EFCore.Configurations;
+using Genocs.Persistence.EFCore.Context;
+using Genocs.Persistence.EFCore.Initialization;
+using Genocs.Persistence.EFCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 
-using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.EFCore.Repositories;
+namespace Genocs.Persistence.EFCore.Extensions;
 
-namespace Genocs.Persistence.EFCore;
-
-internal static class Startup
+public static class EFCoreExtensions
 {
-    private static readonly ILogger _logger = Log.ForContext(typeof(Startup));
+    private static readonly ILogger _logger = Log.ForContext(typeof(EFCoreExtensions));
 
-    internal static IServiceCollection AddPersistence(this IServiceCollection services)
+    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder)
     {
-
-        services
+        // Bind the configuration section to the DatabaseSettings class
+        // and validate it
+        builder.Services
             .AddOptions<DatabaseSettings>()
             .BindConfiguration(nameof(DatabaseSettings))
             .PostConfigure(databaseSettings =>
@@ -25,9 +34,10 @@ internal static class Startup
             })
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        /*
-        return services
-            .AddDbContext<MultitenantApplicationDbContext>((p, m) =>
+
+        // Add the DbContext and other services
+        builder.Services
+            .AddDbContext<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
@@ -41,10 +51,45 @@ internal static class Startup
             .AddTransient<IConnectionStringValidator, ConnectionStringValidator>()
             .AddRepositories();
 
-        */
+        return builder;
+    }
+
+    internal static IServiceCollection AddServices(this IServiceCollection services) =>
+        services
+            .AddServices(typeof(ITransientService), ServiceLifetime.Transient)
+            .AddServices(typeof(IScopedService), ServiceLifetime.Scoped);
+
+    internal static IServiceCollection AddServices(this IServiceCollection services, Type interfaceType, ServiceLifetime lifetime)
+    {
+        var interfaceTypes =
+            AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(t => interfaceType.IsAssignableFrom(t)
+                            && t.IsClass && !t.IsAbstract)
+                .Select(t => new
+                {
+                    Service = t.GetInterfaces().FirstOrDefault(),
+                    Implementation = t
+                })
+                .Where(t => t.Service is not null
+                            && interfaceType.IsAssignableFrom(t.Service));
+
+        foreach (var type in interfaceTypes)
+        {
+            services.AddService(type.Service!, type.Implementation, lifetime);
+        }
 
         return services;
     }
+
+    internal static IServiceCollection AddService(this IServiceCollection services, Type serviceType, Type implementationType, ServiceLifetime lifetime) =>
+        lifetime switch
+        {
+            ServiceLifetime.Transient => services.AddTransient(serviceType, implementationType),
+            ServiceLifetime.Scoped => services.AddScoped(serviceType, implementationType),
+            ServiceLifetime.Singleton => services.AddSingleton(serviceType, implementationType),
+            _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
+        };
 
     internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
     {
@@ -69,11 +114,9 @@ internal static class Startup
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-
         // Add Repositories
-        services.AddScoped(typeof(IRepository<,>), typeof(ApplicationDbRepository<>));
+        services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
 
-        /*
         foreach (var aggregateRootType in
             typeof(IAggregateRoot).Assembly.GetExportedTypes()
                 .Where(t => typeof(IAggregateRoot).IsAssignableFrom(t) && t.IsClass)
@@ -84,13 +127,12 @@ internal static class Startup
                 sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)));
 
             // Decorate the repositories with EventAddingRepositoryDecorators and expose them as IRepositoryWithEvents.
-            services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
-                Activator.CreateInstance(
-                    typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
-                    sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
-                ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            //services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
+            //    Activator.CreateInstance(
+            //        typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
+            //        sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
+            //    ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
         }
-        */
 
         return services;
     }

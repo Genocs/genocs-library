@@ -22,7 +22,7 @@ internal class ApplicationDbInitializer
     {
         if (_dbContext.Database.GetMigrations().Any())
         {
-
+            _logger.LogInformation("Applying migrations to the database.");
         }
 
         await Task.CompletedTask;

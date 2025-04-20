@@ -157,7 +157,7 @@ public static class MongoDbExtensions
             sectionName = MongoDbOptions.Position;
         }
 
-        var section = builder.Configuration.GetSection(sectionName);
+        var section = builder.Configuration?.GetSection(sectionName);
 
         if (!section.Exists())
         {

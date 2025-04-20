@@ -3,11 +3,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Genocs.Persistence.EFCore.Initialization;
 
-internal class ApplicationDbSeeder{
+internal class ApplicationDbSeeder
+{
 
+    private readonly CustomSeederRunner _seederRunner;
     private readonly ILogger<ApplicationDbSeeder> _logger;
 
-    public ApplicationDbSeeder(ILogger<ApplicationDbSeeder> logger)
+    public ApplicationDbSeeder(CustomSeederRunner seederRunner, ILogger<ApplicationDbSeeder> logger)
     {
         //if (multiTenantContextAccessor is null)
         //{
@@ -27,7 +29,7 @@ internal class ApplicationDbSeeder{
         //_currentTenant = multiTenantContextAccessor.MultiTenantContext.TenantInfo;
         //_roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         //_userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        //_seederRunner = seederRunner ?? throw new ArgumentNullException(nameof(seederRunner));
+        _seederRunner = seederRunner ?? throw new ArgumentNullException(nameof(seederRunner));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -35,7 +37,7 @@ internal class ApplicationDbSeeder{
     {
         await SeedRolesAsync(dbContext);
         await SeedAdminUserAsync();
-        //await _seederRunner.RunSeedersAsync(cancellationToken);
+        await _seederRunner.RunSeedersAsync(cancellationToken);
     }
 
     private async Task SeedRolesAsync(ApplicationDbContext dbContext)

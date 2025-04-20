@@ -58,8 +58,4 @@
         <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Extensions\" />
-    </ItemGroup>
-
 </Project>

@@ -3,12 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Persistence.EFCore.Initialization;
 
-internal class CustomSeederRunner
+internal class CustomSeederRunner(IServiceProvider serviceProvider)
 {
-    private readonly ICustomSeeder[] _seeders;
-
-    public CustomSeederRunner(IServiceProvider serviceProvider) =>
-        _seeders = serviceProvider.GetServices<ICustomSeeder>().ToArray();
+    private readonly ICustomSeeder[] _seeders = [.. serviceProvider.GetServices<ICustomSeeder>()];
 
     public async Task RunSeedersAsync(CancellationToken cancellationToken)
     {

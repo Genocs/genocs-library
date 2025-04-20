@@ -5,7 +5,7 @@
 /// </summary>
 internal class DbProviderKeys
 {
-    public const string MongoDB = "MongoDB";
+    public const string MongoDB = "mongodb";
     public const string MySql = "mysql";
     public const string Npgsql = "postgresql";
     public const string Oracle = "oracle";
