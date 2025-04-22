@@ -65,6 +65,7 @@ var app = builder.Build();
 
 app.UseGenocs();
 
+// Use it only  in case you are using EF Core
 await app.Services.InitializeDatabasesAsync();
 
 // Configure the HTTP request pipeline.

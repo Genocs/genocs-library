@@ -127,11 +127,11 @@ public static class EFCoreExtensions
                 sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)));
 
             // Decorate the repositories with EventAddingRepositoryDecorators and expose them as IRepositoryWithEvents.
-            //services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
-            //    Activator.CreateInstance(
-            //        typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
-            //        sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
-            //    ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
+                Activator.CreateInstance(
+                    typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
+                    sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
+                ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
         }
 
         return services;
