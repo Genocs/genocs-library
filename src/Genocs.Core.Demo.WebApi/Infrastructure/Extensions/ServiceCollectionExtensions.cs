@@ -1,4 +1,5 @@
-﻿using Genocs.Core.Demo.WebApi.Configurations;
+﻿using Genocs.Common.Persistence.Initialization;
+using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
@@ -84,5 +85,20 @@ public static class ServiceCollectionExtensions
     public static IApplicationBuilder UseFirebaseAuthentication(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<FirebaseAuthenticationMiddleware>();
+    }
+
+    /// <summary>
+    /// Initialize the databases.
+    /// </summary>
+    /// <param name="services">The Service Provider.</param>
+    /// <param name="cancellationToken">The cancellation Token.</param>
+    /// <returns></returns>
+    public static async Task InitializeDatabasesAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        // Create a new scope to retrieve scoped services
+        using var scope = services.CreateScope();
+
+        await scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>()
+            .InitializeDatabasesAsync(cancellationToken);
     }
 }

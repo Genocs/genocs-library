@@ -10,9 +10,11 @@ This package contains a support function to read secret variable from Azure Key 
 
 ## Support
 
-Please check the GitHub repository getting more info.
+Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
 
 ## Release notes
 
-### [2024-06-12] 5.0.6
+The change log and breaking changes are listed here.
+
+- [releases](https://github.com/Genocs/genocs-library/releases)

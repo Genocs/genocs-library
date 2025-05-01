@@ -289,8 +289,8 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "password": "test",
       "rawData": ""
     },
-    "issuer": "genocs-identity-service",
-    "validIssuer": "genocs-identity-service",
+    "issuer": "genocs-identities-service",
+    "validIssuer": "genocs-identities-service",
     "validateAudience": false,
     "validateIssuer": true,
     "validateLifetime": true,
@@ -521,35 +521,60 @@ docker builder prune
 Following commands are useful to build and push the images one by one
 
 ``` bash
-cd src/apps
+# Build images
+./src/apps/scripts/build-images.sh
 
-# Build the api gateway
-docker build -t genocs/apigateway:1.0.0 -t genocs/apigateway:latest -f ./apigateway.dockerfile .
+# Push images
+./src/apps/scripts/push-images.sh
+```
 
-# Build the identity service
-docker build -t genocs/identities:1.0.0 -t genocs/identities:latest -f ./identity.dockerfile .
+### How to deploy the application on Kubernetes
 
-# Build the order service
-docker build -t genocs/orders:1.0.0 -t genocs/orders:latest -f ./containers/order.dockerfile .
+You can deploy the application on Kubernetes cluster.
 
-# Build the product service
-docker build -t genocs/products:1.0.0 -t genocs/products:latest -f ./product.dockerfile .
+``` bash
+# Build images
+./src/apps/scripts/deploy-k8s.sh
+```
 
-# Build the signalr service
-docker build -t genocs/signalr:1.0.0 -t genocs/signalr:latest -f ./signalr.dockerfile .
+### How to use makefile
+
+Prerequisites:
+- make
+
+To install make on MacOS you can use brew
+
+``` bash
+brew install make
+```
+
+To install make on Ubuntu you can use apt
+
+``` bash
+sudo apt install make
+```
+
+To install make on Windows you can use [choco](https://chocolatey.org/)
+
+``` bash
+choco install make
+```
+
+Upon installation you can use the makefile to build, run, deploy the application.
+
+``` bash
+# Build the solution
+make build
+```
 
 
-# Push on Dockerhub
-docker push genocs/apigateway:1.0.0
-docker push genocs/apigateway:latest
-docker push genocs/identities:1.0.0
-docker push genocs/identities:latest
-docker push genocs/orders:1.0.0
-docker push genocs/orders:latest
-docker push genocs/products:1.0.0
-docker push genocs/products:latest
-docker push genocs/signalr:1.0.0
-docker push genocs/signalr:latest
+### How to use Helm chart
+
+Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to deploy the application on Kubernetes.
+
+``` bash
+cd ./src/apps/k8s/helm
+microk8s helm install genocs ./gnxchart
 ```
 
 

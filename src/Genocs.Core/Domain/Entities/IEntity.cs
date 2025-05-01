@@ -9,6 +9,6 @@ public interface IEntity
     /// <summary>
     /// Checks if this entity is transient (not persisted to database) />).
     /// </summary>
-    /// <returns>True, if this entity is transient, otherwise false.</returns>
+    /// <returns>True, if this entity is transient, otherwise False.</returns>
     bool IsTransient();
 }

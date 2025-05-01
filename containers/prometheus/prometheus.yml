@@ -7,13 +7,13 @@ scrape_configs:
     static_configs:
       - targets: ["prometheus:9090"]
 
-  - job_name: "api-gateway"
+  - job_name: "apigateway"
     static_configs:
-      - targets: ["api-gateway"]
+      - targets: ["apigateway"]
 
-  - job_name: "identity-service"
+  - job_name: "identities-service"
     static_configs:
-      - targets: ["identity-service"]
+      - targets: ["identities-service"]
  
   - job_name: "products-service"
     static_configs:
@@ -23,6 +23,6 @@ scrape_configs:
     static_configs:
       - targets: ["orders-service"]
  
-  - job_name: "signalr-service"
+  - job_name: "notifications-service"
     static_configs:
-      - targets: ["signalr-service"]
+      - targets: ["notifications-service"]

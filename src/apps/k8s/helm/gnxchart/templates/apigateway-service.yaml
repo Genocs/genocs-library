@@ -1,0 +1,14 @@
+# apigateway-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway-svc
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: apigateway # Select pods with this label
+  ports:
+    - protocol: TCP
+      port: 80 # Port the service exposes
+      targetPort: 8080 # Port the container exposes
+  type: ClusterIP # Expose the service internally

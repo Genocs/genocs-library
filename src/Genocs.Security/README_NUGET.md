@@ -25,12 +25,12 @@ Following an example of how the key should be.
 
 ## Support
 
-Please check the GitHub repository getting more info.
+Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
 
 ## Release notes
 
-### [2024-06-15] 5.0.6
-- Refactory Settings
+The change log and breaking changes are listed here.
 
+- [releases](https://github.com/Genocs/genocs-library/releases)
 

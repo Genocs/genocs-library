@@ -8,7 +8,7 @@ public interface IDeletionAudited : IHasDeletionTime
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    long? DeletedBy { get; set; }
+    DefaultIdType? DeletedBy { get; set; }
 }
 
 /// <summary>
@@ -16,7 +16,7 @@ public interface IDeletionAudited : IHasDeletionTime
 /// </summary>
 /// <typeparam name="TUser">Type of the user.</typeparam>
 public interface IDeletionAudited<TUser> : IDeletionAudited
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the deleter user of this entity.

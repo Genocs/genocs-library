@@ -1,7 +1,7 @@
 # .NET Core Common library
 
 This package contains a set of base functionalities designed by Genocs.
-The libraries are built using .NET standard 2.1.
+The library is built to be used with NET6, NET7 NET8 and NET9.
 
 
 ## Description
@@ -10,10 +10,11 @@ Core Common NuGet package contains general types, interfaces and classes to be u
 
 ## Support
 
-Please check the GitHub repository getting more info.
+Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
 
 ## Release notes
 
-Release notes can be found in the [CHANGELOG](https://github.com/Genocs/genocs-library/blob/b98629b4001aad7a2123190cfd4cc63ae7b6f292/CHANGELOG.md) file.
+The change log and breaking changes are listed here.
 
+- [releases](https://github.com/Genocs/genocs-library/releases)

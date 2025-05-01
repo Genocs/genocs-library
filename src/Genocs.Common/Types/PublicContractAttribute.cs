@@ -1,9 +1,7 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// PublicContractAttribute class.
+/// Indicates that a class is a public contract.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class PublicContractAttribute : Attribute
-{
-}
+public class PublicContractAttribute : Attribute;

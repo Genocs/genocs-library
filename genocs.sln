@@ -120,7 +120,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 		src\apps\apigateway.dockerfile = src\apps\apigateway.dockerfile
 		src\apps\docker-compose.override.yml = src\apps\docker-compose.override.yml
 		src\apps\docker-compose.yml = src\apps\docker-compose.yml
-		src\apps\identity.dockerfile = src\apps\identity.dockerfile
+		src\apps\identities.dockerfile = src\apps\identities.dockerfile
 		src\apps\local.env = src\apps\local.env
 		src\apps\notifications.dockerfile = src\apps\notifications.dockerfile
 		src\apps\orders.dockerfile = src\apps\orders.dockerfile
@@ -132,6 +132,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.OpenTelemetry", "src\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj", "{62380657-23D0-0ECD-8FFE-0B1DA5461D37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.HelloWorld", "src\Genocs.Core.Demo.HelloWorld\Genocs.Core.Demo.HelloWorld.csproj", "{D7C394CF-487D-470D-B05C-CC2DD7EC290B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Persistence.EFCore", "src\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj", "{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -307,6 +309,10 @@ Global
 		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7C394CF-487D-470D-B05C-CC2DD7EC290B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

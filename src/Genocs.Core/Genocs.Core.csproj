@@ -12,9 +12,12 @@
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/genocs-library/releases
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -22,12 +25,17 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Common" Version="7.2.3" />
+        <PackageReference Include="Genocs.Common" Version="7.2.*" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ardalis.Specification" Version="9.1.0" />
         <PackageReference Include="Figgle" Version="0.5.1" />
-        <PackageReference Include="Scrutor" Version="5.0.2" />
+        <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+        <PackageReference Include="Scrutor" Version="6.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 

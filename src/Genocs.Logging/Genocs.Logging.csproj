@@ -12,9 +12,12 @@
         <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
         <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <PackageReleaseNotes>Upgraded to NET9.0</PackageReleaseNotes>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/genocs-library/releases
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -22,11 +25,11 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Core" Version="7.2.3" />
+        <PackageReference Include="Genocs.Core" Version="7.2.*" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
@@ -43,7 +46,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SmartFormat.NET" Version="3.5.3" />
+        <PackageReference Include="SmartFormat.NET" Version="3.6.0" />
     </ItemGroup>
 
 </Project>

@@ -30,6 +30,7 @@ public static class Extensions
                 {
                     sectionName = AzureKeyVaultOptions.Position;
                 }
+
                 var config = cfg.Build();
                 var settings = config.GetOptions<AzureKeyVaultOptions>(sectionName);
                 if (!settings.Enabled)

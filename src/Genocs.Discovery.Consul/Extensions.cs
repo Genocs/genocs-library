@@ -129,7 +129,7 @@ public static class Extensions
             return registration;
         }
 
-        var pingEndpoint = string.IsNullOrWhiteSpace(options.PingEndpoint) ? string.Empty :
+        string pingEndpoint = string.IsNullOrWhiteSpace(options.PingEndpoint) ? string.Empty :
             options.PingEndpoint.StartsWith("/") ? options.PingEndpoint : $"/{options.PingEndpoint}";
         if (pingEndpoint.EndsWith("/"))
         {

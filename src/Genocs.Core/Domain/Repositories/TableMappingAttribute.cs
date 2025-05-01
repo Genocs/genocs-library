@@ -1,18 +1,12 @@
 ﻿namespace Genocs.Core.Domain.Repositories;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public class TableMappingAttribute : Attribute
+public class TableMappingAttribute(string tableName) : Attribute
 {
     /// <summary>
     /// The Collection/Table name.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = tableName;
 
-    public readonly double Version;
-
-    public TableMappingAttribute(string tableName)
-    {
-        Name = tableName;
-        Version = 1.0;
-    }
+    public readonly double Version = 1.0;
 }

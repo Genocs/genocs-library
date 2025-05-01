@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: apigateway
-          image:  genocs/apigateway:1.0.0
+          image: genocs/apigateway:1.0.0
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
