@@ -17,7 +17,7 @@
         <PackageReleaseNotes>
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>        
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -29,10 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
+        <PackageReference Include="Ardalis.Specification" Version="9.1.0" />
         <PackageReference Include="Figgle" Version="0.5.1" />
-        <PackageReference Include="Scrutor" Version="5.0.2" />
         <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+        <PackageReference Include="Scrutor" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>

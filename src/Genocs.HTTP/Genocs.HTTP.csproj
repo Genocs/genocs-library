@@ -18,7 +18,7 @@
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
         </PackageReleaseNotes>
-                
+
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
