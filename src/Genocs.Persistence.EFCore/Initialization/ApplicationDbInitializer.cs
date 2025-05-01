@@ -35,6 +35,12 @@ internal class ApplicationDbInitializer
     /// <returns>The task.</returns>
     public virtual async Task InitializeAsync(CancellationToken cancellationToken)
     {
+        // Skip the initialization if the DB provider is Mongodb
+        if (_dbContext.Database.ProviderName == "MongoDB.EntityFrameworkCore")
+        {
+            return;
+        }
+
         if (_dbContext.Database.GetMigrations().Any())
         {
             _logger.LogInformation("Find migrations that need to be apply. Applying migrations to the database.");

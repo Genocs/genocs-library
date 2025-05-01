@@ -22,8 +22,6 @@ internal class DatabaseInitializer : IDatabaseInitializer
 
         _logger.LogInformation("For documentations and guides, visit https://genocs-blog.netlify.app");
         _logger.LogInformation("To Sponsor this project, visit https://opencollective.com/genocs");
-
-        await Task.CompletedTask;
     }
 
     public async Task InitializeApplicationDbAsync(CancellationToken cancellationToken)
