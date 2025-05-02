@@ -203,6 +203,12 @@ public static class Extensions
             ? logLevel
             : LogEventLevel.Information;
 
+    /// <summary>
+    /// Adds the CorrelationContextLoggingMiddleware to the pipeline.
+    /// Remember to add the UseCorrelationContextLogging() method to configure the middleware in the pipeline.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddCorrelationContextLogging(this IGenocsBuilder builder)
     {
         builder.Services.AddTransient<CorrelationContextLoggingMiddleware>();
@@ -210,10 +216,15 @@ public static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// Adds the CorrelationContextLoggingMiddleware to the pipeline.
+    /// Be sure to add the AddCorrelationContextLogging() method to register the middleware.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <returns>The application builder.</returns>
     public static IApplicationBuilder UserCorrelationContextLogging(this IApplicationBuilder app)
     {
         app.UseMiddleware<CorrelationContextLoggingMiddleware>();
-
         return app;
     }
 

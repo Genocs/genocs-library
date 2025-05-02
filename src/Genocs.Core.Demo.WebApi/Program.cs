@@ -1,4 +1,6 @@
 // using Genocs.Auth;
+using System.Text.Json.Serialization;
+using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
@@ -8,10 +10,7 @@ using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
-using Genocs.Auth;
-using System.Reflection;
-using System.Text.Json.Serialization;
-using Genocs.Persistence.EFCore.Extensions;
+//using Genocs.Persistence.EFCore.Extensions;
 
 StaticLogger.EnsureInitialized();
 
@@ -25,10 +24,8 @@ builder
     .AddGenocs()
     .AddJwt()
     .AddOpenTelemetry()
-    //.AddMongo()
-    //.AddMongoFast()
-    //.RegisterMongoRepositories(Assembly.GetExecutingAssembly())
-    .AddEFCorePersistence()
+    .AddMongoWithRegistration()
+    //.AddEFCorePersistence()
     .AddApplicationServices()
     .Build();
 
@@ -66,7 +63,7 @@ var app = builder.Build();
 app.UseGenocs();
 
 // Use it only  in case you are using EF Core
-await app.Services.InitializeDatabasesAsync();
+//await app.Services.InitializeDatabasesAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

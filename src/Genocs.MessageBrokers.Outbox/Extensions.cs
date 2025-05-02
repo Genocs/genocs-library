@@ -12,6 +12,13 @@ public static class Extensions
     private const string SectionName = "outbox";
     private const string RegistryName = "messageBrokers.outbox";
 
+    /// <summary>
+    /// Add the message outbox to the service collection.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="configure">The action method to setup the IMessageOutboxConfigurator.</param>
+    /// <param name="sectionName">The secton name. Default is 'outbox'.</param>
+    /// <returns>The Genocs builder, to be used for chain pattern.</returns>
     public static IGenocsBuilder AddMessageOutbox(
                                                   this IGenocsBuilder builder,
                                                   Action<IMessageOutboxConfigurator>? configure = null,
@@ -50,6 +57,11 @@ public static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// Add the in memory message outbox to the service collection.
+    /// </summary>
+    /// <param name="configurator">The IMessageOutboxConfigurator configurator.</param>
+    /// <returns>The IMessageOutboxConfigurator configurator, to be used for chain pattern.</returns>
     public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator)
     {
         configurator.Builder.Services.AddTransient<IMessageOutbox, InMemoryMessageOutbox>();

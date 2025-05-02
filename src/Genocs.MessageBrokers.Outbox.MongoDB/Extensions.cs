@@ -8,6 +8,11 @@ namespace Genocs.MessageBrokers.Outbox.MongoDB;
 
 public static class Extensions
 {
+    /// <summary>
+    /// Add the MongoDB outbox to the service collection.
+    /// </summary>
+    /// <param name="configurator">The IMessageOutboxConfigurator configurator.</param>
+    /// <returns>The IMessageOutboxConfigurator configurator, to be used for chain pattern.</returns>
     public static IMessageOutboxConfigurator AddMongo(this IMessageOutboxConfigurator configurator)
     {
         var builder = configurator.Builder;
@@ -23,6 +28,7 @@ public static class Extensions
 
         builder.AddMongoRepository<InboxMessage, string>(inboxCollection);
         builder.AddMongoRepository<OutboxMessage, string>(outboxCollection);
+
         builder.AddInitializer<MongoOutboxInitializer>();
         builder.Services.AddTransient<IMessageOutbox, MongoMessageOutbox>();
         builder.Services.AddTransient<IMessageOutboxAccessor, MongoMessageOutbox>();
