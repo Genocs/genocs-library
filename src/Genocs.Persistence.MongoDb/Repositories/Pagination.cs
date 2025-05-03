@@ -7,14 +7,8 @@ namespace Genocs.Persistence.MongoDb.Repositories;
 
 public static class Pagination
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(
-                                                              this IQueryable<T> collection,
-                                                              IPagedQuery query)
-        => await collection.PaginateAsync(
-                                          query.OrderBy,
-                                          query.SortOrder,
-                                          query.Page,
-                                          query.Results);
+    public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> collection, IPagedQuery query)
+        => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(
                                                               this IQueryable<T> collection,
@@ -64,10 +58,7 @@ public static class Pagination
     public static IQueryable<T> Limit<T>(this IQueryable<T> collection, IPagedQuery query)
         => collection.Limit(query.Page, query.Results);
 
-    public static IQueryable<T> Limit<T>(
-                                              this IQueryable<T> collection,
-                                              int page = 1,
-                                              int resultsPerPage = 10)
+    public static IQueryable<T> Limit<T>(this IQueryable<T> collection, int page = 1, int resultsPerPage = 10)
     {
         if (page <= 0)
         {

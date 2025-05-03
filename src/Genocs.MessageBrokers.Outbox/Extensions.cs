@@ -18,7 +18,7 @@ public static class Extensions
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="configure">The action method to setup the IMessageOutboxConfigurator.</param>
     /// <param name="sectionName">The secton name. Default is 'outbox'.</param>
-    /// <returns>The Genocs builder, to be used for chain pattern.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddMessageOutbox(
                                                   this IGenocsBuilder builder,
                                                   Action<IMessageOutboxConfigurator>? configure = null,
@@ -61,7 +61,7 @@ public static class Extensions
     /// Add the in memory message outbox to the service collection.
     /// </summary>
     /// <param name="configurator">The IMessageOutboxConfigurator configurator.</param>
-    /// <returns>The IMessageOutboxConfigurator configurator, to be used for chain pattern.</returns>
+    /// <returns>The IMessageOutboxConfigurator configurator. You can use it for chain commands.</returns>
     public static IMessageOutboxConfigurator AddInMemory(this IMessageOutboxConfigurator configurator)
     {
         configurator.Builder.Services.AddTransient<IMessageOutbox, InMemoryMessageOutbox>();

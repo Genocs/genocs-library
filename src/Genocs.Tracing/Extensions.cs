@@ -23,7 +23,7 @@ public static class Extensions
     /// It allows to insert OpenTelemetry into the build pipeline.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <returns>The Genocs builder you can use for chain.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)

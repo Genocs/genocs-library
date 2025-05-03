@@ -125,7 +125,6 @@ public static class MongoDbExtensions
 
         builder.AddInitializer<IMongoDbInitializer>();
 
-
         // Setup conventions
         if (registerConventions && !_conventionsRegistered)
         {

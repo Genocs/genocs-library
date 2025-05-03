@@ -1,7 +1,7 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// Initializer interface definition.
+/// The Genocs Initializer interface definition.
 /// </summary>
 public interface IInitializer
 {

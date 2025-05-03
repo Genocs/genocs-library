@@ -13,6 +13,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
 {
     private const string EmptyJsonObject = "{}";
 
+    // TODO: Integrate id with the RegisterConventions
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,

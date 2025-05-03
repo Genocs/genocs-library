@@ -14,11 +14,11 @@ public static class Extensions
     private const string RegistryName = "persistence.redis";
 
     /// <summary>
-    /// Add Redis
+    /// Add Redis support by means of Genocs builder.
     /// </summary>
-    /// <param name="builder">The Genocs builder</param>
-    /// <param name="sectionName"></param>
-    /// <returns></returns>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The configuration section name.</param>
+    /// <returns>The Genocs builder. You can use it to chain commands.</returns>
     public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, string sectionName = RedisOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
@@ -31,11 +31,11 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Add Redis
+    /// Add Redis support by means of Genocs builder.
     /// </summary>
-    /// <param name="builder">The Genocs builder</param>
+    /// <param name="builder">The Genocs builder.</param>
     /// <param name="buildOptions"></param>
-    /// <returns></returns>
+    /// <returns>The Genocs builder. You can use it to chain commands.</returns>
     public static IGenocsBuilder AddRedis(
                                             this IGenocsBuilder builder,
                                             Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
@@ -45,11 +45,11 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Add Redis
+    /// Add Redis support by means of Genocs builder.
     /// </summary>
-    /// <param name="builder">The Genocs builder</param>
+    /// <param name="builder">The Genocs builder.</param>
     /// <param name="options"></param>
-    /// <returns></returns>
+    /// <returns>The Genocs builder. You can use it to chain commands.</returns>
     public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisOptions options)
     {
         if (!builder.TryRegister(RegistryName))

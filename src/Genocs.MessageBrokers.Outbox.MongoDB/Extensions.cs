@@ -12,7 +12,7 @@ public static class Extensions
     /// Add the MongoDB outbox to the service collection.
     /// </summary>
     /// <param name="configurator">The IMessageOutboxConfigurator configurator.</param>
-    /// <returns>The IMessageOutboxConfigurator configurator, to be used for chain pattern.</returns>
+    /// <returns>The IMessageOutboxConfigurator configurator. You can use it for chain commands.</returns>
     public static IMessageOutboxConfigurator AddMongo(this IMessageOutboxConfigurator configurator)
     {
         var builder = configurator.Builder;

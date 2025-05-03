@@ -4,19 +4,16 @@ using Open.Serialization.Json;
 
 namespace Genocs.WebApi.Formatters;
 
-internal class JsonOutputFormatter : IOutputFormatter
+/// <summary>
+/// JsonOutputFormatter.
+/// </summary>
+/// <param name="serializer">The json serializer.</param>
+internal class JsonOutputFormatter(IJsonSerializer serializer) : IOutputFormatter
 {
-    private readonly IJsonSerializer _serializer;
-
-    public JsonOutputFormatter(IJsonSerializer serializer)
-    {
-        _serializer = serializer;
-    }
+    private readonly IJsonSerializer _serializer = serializer;
 
     public bool CanWriteResult(OutputFormatterCanWriteContext context)
-    {
-        return true;
-    }
+        => true;
 
     public async Task WriteAsync(OutputFormatterWriteContext context)
     {

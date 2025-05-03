@@ -186,7 +186,7 @@ public static class Extensions
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="sectionName">The configuration section name.</param>
-    /// <returns>The Genocs builder you can use for chain.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddOpenIdJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
@@ -223,7 +223,7 @@ public static class Extensions
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="sectionName">The optional section name. Default name: 'jwt'.</param>
-    /// <returns>The Genocs builder you can use for chaining.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
     public static IGenocsBuilder AddPrivateKeyJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
     {
@@ -269,7 +269,7 @@ public static class Extensions
     /// This middleware validates the access token in real-time.
     /// </summary>
     /// <param name="app">The app builder.</param>
-    /// <returns>The app builder you can use for chaining.</returns>
+    /// <returns>The app builder. You can use it for chain commands.</returns>
     public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
         => app.UseMiddleware<AccessTokenValidatorMiddleware>();
 }

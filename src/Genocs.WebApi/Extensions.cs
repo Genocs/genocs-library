@@ -159,7 +159,7 @@ public static class Extensions
     /// Call this methid after UseAddErrorHandler() in the pipeline.
     /// </summary>
     /// <param name="builder">The application builder.</param>
-    /// <returns>The application builder for chaining purpose.</returns>
+    /// <returns>The application builder. You can use it for chain commands.</returns>
     public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         => builder.UseMiddleware<ErrorHandlerMiddleware>();
 

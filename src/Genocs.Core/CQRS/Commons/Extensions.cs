@@ -51,7 +51,7 @@ public static class Extensions
     /// AddDispatchers Implementation.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <returns>The service collection to be used for chaining pattern.</returns>
+    /// <returns>The service collection. You can use it for chain commands.</returns>
     public static IServiceCollection AddDispatchers(this IServiceCollection services)
         => services
             .AddSingleton<IDispatcher, InMemoryDispatcher>()
