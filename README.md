@@ -612,13 +612,13 @@ Here are a few ways by which you can support.
 - ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
   
 
-[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/blazor-template/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
+[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
 ## Code Contributors
 
 This project exists thanks to all the people who contribute. [Submit your PR and join the team!](CONTRIBUTING.md)
 
-[![genocs contributors](https://contrib.rocks/image?repo=Genocs/blazor-template "genocs contributors")](https://github.com/genocs/blazor-template/graphs/contributors)
+[![genocs contributors](https://contrib.rocks/image?repo=Genocs/genocs-library "genocs contributors")](https://github.com/genocs/genocs-library/graphs/contributors)
 
 ## Financial Contributors
 
