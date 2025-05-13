@@ -7,6 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Genocs.Core.Demo.Infrastructure.SecurityAuthentication;
 
+/// <summary>
+/// Provides JWT token generation functionality using both JwtSecurityTokenHandler and JsonWebTokenHandler.
+/// This class handles the creation of JSON Web Tokens with configurable settings for issuer, audience, 
+/// key, and expiration time retrieved from configuration.
+/// </summary>
 public sealed class TokenProvider(IConfiguration configuration)
 {
     public string Issuer => configuration["JwtSettings:Issuer"];
