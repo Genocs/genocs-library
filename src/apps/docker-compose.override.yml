@@ -4,10 +4,10 @@ services:
       context: .
       dockerfile: apigateway.dockerfile
 
-  identity-service:
+  identities-service:
     build:
       context: .
-      dockerfile: identity.dockerfile
+      dockerfile: identities.dockerfile
 
   products-service:
     build:

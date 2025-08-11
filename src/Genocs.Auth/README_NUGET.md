@@ -26,8 +26,8 @@ Following are the project settings needed to enable monitoring
       "password": "test",
       "rawData": ""
     },
-    "issuer": "genocs-identity-service",
-    "validIssuer": "genocs-identity-service",
+    "issuer": "genocs-identities-service",
+    "validIssuer": "genocs-identities-service",
     "validateAudience": false,
     "validateIssuer": true,
     "validateLifetime": true,

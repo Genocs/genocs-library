@@ -6,6 +6,7 @@
         <RootNamespace>Genocs.APIGateway.WebApi</RootNamespace>
         <AssemblyName>Genocs.APIGateway.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
+        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
