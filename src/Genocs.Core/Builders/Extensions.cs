@@ -55,8 +55,8 @@ public static class Extensions
     /// Get option helper method.
     /// </summary>
     /// <typeparam name="TModel">The option type parameter.</typeparam>
-    /// <param name="configuration"></param>
-    /// <param name="sectionName"></param>
+    /// <param name="configuration">The Configuration.</param>
+    /// <param name="sectionName">The name of the section.</param>
     /// <returns>The option model or the default options.</returns>
     public static TModel GetOptions<TModel>(this IConfiguration configuration, string sectionName)
         where TModel : new()
@@ -171,7 +171,7 @@ public static class Extensions
         }
 
         string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
-        Console.WriteLine(Figgle.FiggleFonts.Doom.Render(settings.Name + version));
+        Console.WriteLine(Figgle.Fonts.FiggleFonts.Standard.Render(settings.Name + version));
         ConsoleColor current = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());

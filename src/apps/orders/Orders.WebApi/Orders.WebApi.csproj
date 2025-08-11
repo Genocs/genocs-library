@@ -50,10 +50,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Polly" Version="8.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Folder Include="logs\" />
     </ItemGroup>
 
