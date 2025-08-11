@@ -153,8 +153,10 @@ Inside the file you can find:
 
 - vault (Hashicorp)
 
-> ** NOTE**
+> **NOTE**
+>
 > The commands above allows to setup infrastructure components, this means you can find all the containers inside the same network `genocs`.
+>
 > Whenever possible the data are persisted on the host machine by means of volumens, so you can restart the containers without losing data.
  
 
@@ -190,6 +192,11 @@ You can setup the application inside a Kubernetes cluster.
 
 Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster. 
 There you can find scripts, configuration files and documentation to setup a cluster from scratch.
+
+## ***Aspire Integration***
+
+SOON :rocket:
+
 
 ## Support
 
@@ -234,7 +241,12 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
   },
   "logger": {
     "level": "information",
-    "excludePaths": [ "/", "/ping", "/metrics" ],
+    "excludePaths": [
+      "/",
+      "/healthz",
+      "/alive",
+      "/metrics"
+    ],
     "excludeProperties": [
       "api_key",
       "access_key",
@@ -468,7 +480,7 @@ docker push genocs/demo-worker:latest
 ```
 ---
 
-## Enterprise Application
+## **Enterprise Application**
 
 ### Application Components
 
@@ -518,7 +530,7 @@ docker builder prune
 ```
 
 
-Following commands are useful to build and push the images one by one
+Use following to build and push the images one by one
 
 ``` bash
 # Build images
@@ -612,13 +624,13 @@ Here are a few ways by which you can support.
 - ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
   
 
-[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/blazor-template/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
+[![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
 ## Code Contributors
 
 This project exists thanks to all the people who contribute. [Submit your PR and join the team!](CONTRIBUTING.md)
 
-[![genocs contributors](https://contrib.rocks/image?repo=Genocs/blazor-template "genocs contributors")](https://github.com/genocs/blazor-template/graphs/contributors)
+[![genocs contributors](https://contrib.rocks/image?repo=Genocs/genocs-library "genocs contributors")](https://github.com/genocs/genocs-library/graphs/contributors)
 
 ## Financial Contributors
 

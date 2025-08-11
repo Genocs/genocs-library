@@ -19,8 +19,15 @@ public static class StaticLogger
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+                .MinimumLevel.Override("MassTransit", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Debug)
+                .MinimumLevel.Override("System", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Http", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Debug)                
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
