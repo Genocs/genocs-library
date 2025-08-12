@@ -27,7 +27,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     /// <summary>
     /// Creator of this entity.
     /// </summary>
-    public virtual long CreatorUserId { get; set; }
+    public virtual DefaultIdType CreatorUserId { get; set; }
 
     /// <summary>
     /// Constructor.
@@ -46,7 +46,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
 /// <typeparam name="TUser">Type of the user.</typeparam>
 [Serializable]
 public abstract class CreationAuditedAggregateRoot<TPrimaryKey, TUser> : CreationAuditedAggregateRoot<TPrimaryKey>, ICreationAudited<TUser>
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// Reference to the creator user of this entity.

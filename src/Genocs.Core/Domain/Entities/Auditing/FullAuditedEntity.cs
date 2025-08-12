@@ -27,7 +27,7 @@ public abstract class FullAuditedEntity<TPrimaryKey> : AuditedEntity<TPrimaryKey
     /// <summary>
     /// It determines the user who deleted this entity.
     /// </summary>
-    public virtual long? DeletedBy { get; set; }
+    public virtual DefaultIdType? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.
@@ -42,7 +42,7 @@ public abstract class FullAuditedEntity<TPrimaryKey> : AuditedEntity<TPrimaryKey
 /// <typeparam name="TUser">Type of the user.</typeparam>
 [Serializable]
 public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey, TUser>, IFullAudited<TUser>
-    where TUser : IEntity<long>
+    where TUser : IEntity<DefaultIdType>
 {
     /// <summary>
     /// It determines if the entity is deleted.
@@ -58,7 +58,7 @@ public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPri
     /// <summary>
     /// Which user deleted this entity.
     /// </summary>
-    public virtual long? DeletedBy { get; set; }
+    public virtual DefaultIdType? DeletedBy { get; set; }
 
     /// <summary>
     /// Deletion time of this entity.

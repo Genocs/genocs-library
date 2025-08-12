@@ -31,9 +31,7 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
         }
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(
-                                                                    HttpRequestMessage request,
-                                                                    CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var uri = GetUri(request);
         string serviceName = string.IsNullOrWhiteSpace(_serviceName) ? uri.Host : _serviceName;

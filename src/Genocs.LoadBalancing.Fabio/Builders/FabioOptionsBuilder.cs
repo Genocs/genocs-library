@@ -13,7 +13,7 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
     /// Enable or disable the Fabio load balancer.
     /// </summary>
     /// <param name="enabled"></param>
-    /// <returns>The option builder to be used for chain the build.</returns>
+    /// <returns>The option builder. You can use it for chain commands.</returns>
     public IFabioOptionsBuilder Enable(bool enabled)
     {
         _settings.Enabled = enabled;
@@ -24,7 +24,7 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
     /// Set the Fabio url.
     /// </summary>
     /// <param name="url">The url.</param>
-    /// <returns>The option builder to be used for chain the build.</returns>
+    /// <returns>The option builder. You can use it for chain commands.</returns>
     public IFabioOptionsBuilder WithUrl(string url)
     {
         _settings.Url = url;
@@ -34,8 +34,8 @@ public class FabioOptionsBuilder : IFabioOptionsBuilder
     /// <summary>
     /// Set the Fabio service name.
     /// </summary>
-    /// <param name="service">The service name</param>
-    /// <returns>The option builder to be used for chain the build.</returns>
+    /// <param name="service">The service name.</param>
+    /// <returns>The option builder. You can use it for chain commands.</returns>
     public IFabioOptionsBuilder WithService(string service)
     {
         _settings.Service = service;

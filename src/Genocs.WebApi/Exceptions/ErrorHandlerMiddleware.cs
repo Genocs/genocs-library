@@ -5,12 +5,21 @@ using System.Net;
 
 namespace Genocs.WebApi.Exceptions;
 
+/// <summary>
+/// Middleware for handling exceptions in the ASP.NET Core pipeline.
+/// </summary>
 internal sealed class ErrorHandlerMiddleware : IMiddleware
 {
     private readonly IExceptionToResponseMapper _exceptionToResponseMapper;
     private readonly IJsonSerializer _jsonSerializer;
     private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ErrorHandlerMiddleware"/> class.
+    /// </summary>
+    /// <param name="exceptionToResponseMapper">The exception to Response Mapper.</param>
+    /// <param name="jsonSerializer">The Json initializer.</param>
+    /// <param name="logger">The logger.</param>
     public ErrorHandlerMiddleware(
                                     IExceptionToResponseMapper exceptionToResponseMapper,
                                     IJsonSerializer jsonSerializer,
@@ -21,6 +30,12 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Invokes the middleware to handle exceptions in the ASP.NET Core pipeline.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="next">the next step into for the pipeline.</param>
+    /// <returns>the Task.</returns>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -34,6 +49,12 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
         }
     }
 
+    /// <summary>
+    /// Handles the error by mapping the exception to an HTTP response and writing it to the response body.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="next">the next step into for the pipeline.</param>
+    /// <returns>the Task.</returns>
     private async Task HandleErrorAsync(HttpContext context, Exception exception)
     {
         var exceptionResponse = _exceptionToResponseMapper.Map(exception);
@@ -46,6 +67,6 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
         }
 
         context.Response.ContentType = "application/json";
-        await _jsonSerializer.SerializeAsync(context.Response.Body, exceptionResponse.Response);
+        await _jsonSerializer.SerializeAsync(context.Response.Body, exceptionResponse!.Response);
     }
 }

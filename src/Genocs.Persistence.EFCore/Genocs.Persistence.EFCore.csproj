@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.EFCore</PackageId>
+        <RootNamespace>Genocs.Persistence.EFCore</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore</AssemblyName>
+        <Title>The Persistence EFCore Library.</Title>
+        <Description>The Genocs Library .NET Core to be used with EFCore as persistence datalayer.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <PackageTags>Entity Framework EF aggregate architecture boilerplate repository-patterns domain-driven-design dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/genocs-library/releases
+        </PackageReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+        <PackageReference Include="Genocs.Core" Version="7.2.*" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.1" />
+        <PackageReference Include="Mapster" Version="7.4.0" />
+        <PackageReference Include="MediatR" Version="12.5.0" />
+
+        <!--MS SQL plus SQLite-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
+
+        <!--PostgreSQL-->
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+
+        <!--Oracle-->
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.80" />
+
+        <!--Mysql-->
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
+
+        <!--Serilog-->
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.0" />
+    </ItemGroup>
+
+</Project>

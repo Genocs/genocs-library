@@ -41,6 +41,15 @@ public static class MongoDbExtensions
             sectionName = MongoDbOptions.Position;
         }
 
+        var section = builder.Configuration?.GetSection(sectionName);
+
+        if (!section.Exists())
+        {
+            return builder;
+        }
+
+        builder.Services.Configure<MongoDbOptions>(section);
+
         var mongoOptions = builder.GetOptions<MongoDbOptions>(sectionName);
         return builder.AddMongo(mongoOptions, seederType, registerConventions);
     }
@@ -50,8 +59,8 @@ public static class MongoDbExtensions
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="options">The settings.</param>
-    /// <param name="seederType"></param>
-    /// <param name="registerConventions"></param>
+    /// <param name="seederType">The sender type.</param>
+    /// <param name="registerConventions">Enable default mongoDB Conventions. Default value is 'true'.</param>
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddMongo(
                                           this IGenocsBuilder builder,
@@ -61,6 +70,13 @@ public static class MongoDbExtensions
     {
         if (!builder.TryRegister(MongoDbOptions.Position))
         {
+            Console.WriteLine($"Try to register {nameof(MongoDbOptions)} failed!");
+            return builder;
+        }
+
+        if (!MongoDbOptions.IsValid(options))
+        {
+            Console.WriteLine($"MongoDbOptions is not valid! {nameof(options.ConnectionString)} or {nameof(options.Database)} is empty.");
             return builder;
         }
 
@@ -95,6 +111,8 @@ public static class MongoDbExtensions
 
         builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
         builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();
+
+        builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
 
         if (seederType is null)
         {
@@ -140,24 +158,21 @@ public static class MongoDbExtensions
     }
 
     /// <summary>
-    /// Add MongoDb support.
+    /// Add MongoDb support along with the default MongoDb repository registration.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="sectionName">The Genocs builder.</param>
     /// <param name="registerConventions">The Genocs builder.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongoFast(
+    public static IGenocsBuilder AddMongoWithRegistration(
                                               this IGenocsBuilder builder,
                                               string sectionName = MongoDbOptions.Position,
                                               bool registerConventions = true)
     {
+        AddMongo(builder, sectionName, null, registerConventions);
 
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = MongoDbOptions.Position;
-        }
 
-        var section = builder.Configuration.GetSection(sectionName);
+        var section = builder.Configuration?.GetSection(sectionName);
 
         if (!section.Exists())
         {
@@ -166,19 +181,7 @@ public static class MongoDbExtensions
 
         builder.Services.Configure<MongoDbOptions>(section);
 
-        builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
-        builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();
-
-        builder.Services.AddSingleton<IMongoDatabaseProvider, MongoDatabaseProvider>();
         builder.Services.AddScoped(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
-
-        builder.AddInitializer<IMongoDbInitializer>();
-
-        if (registerConventions && !_conventionsRegistered)
-        {
-            _conventionsRegistered = true;
-            ServiceCollectionExtensions.RegisterConventions();
-        }
 
         return builder;
     }

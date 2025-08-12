@@ -1,63 +1,37 @@
-# .NET Core library
+# The Genocs Library - Core components 
 
-This package contains a set of base functionalities designed by Genocs.
-The library is built to be used on .NET standard 2.1 and NET6, NET7 NET8.
+Genocs Enterprise Library - Genocs.Core. This package contains a set of base functionalities to be used across the framework.
+The library is built to be used with NET6, NET7 NET8 and NET9.
 
 ## Description
 
 Core NuGet package contains general purpose functionalities to be used on DDD services.
 
 
+## Dependencies
+
+- **Genocs.Common**: 7.2.*
+- **Ardalis.Specification**: 9.1.0
+- **Figgle**: 0.5.1
+- **MediatR.Contracts:** 2.0.1
+- **Scrutor:** 6.0.1
+
+### Framework references
+- **Microsoft.AspNetCore.App**
+
 ## Support
 
-Please check the GitHub repository getting more info.
+Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+
+## Documentation
+
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 
 ## Release notes
 
-### [2024-06-22] 6.0.0-preview.1.0
-- Upgrade toward Version 6.0.0
-- 
+The change log and breaking changes are listed here.
 
-### [2024-01-23] 5.0.6
-- Refactory Settings
-- Updated nuget packages
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 
-### [2023-11-25] 5.0.5
-- Moved to NET8
-
-### [yyyy-mm-dd] 5.0.4
-- 
-
-### [yyyy-mm-dd] 5.0.3
-- 
-
-### [yyyy-mm-dd] 5.0.2
-- 
-
-### [yyyy-mm-dd] 5.0.1
-- 
-
-### [2023-11-25] 5.0.0
-- Moved to NET8
-
-### [2023-10-13] 5.0.0-preview.5.0
-- Added [editorconfig](https://editorconfig.org/)
-- Added StyleCop
-- Updated logo
-- Updated readme
-
-### [2023-03-12] 5.0.0-preview.4.0
-- Implemented MongoDB repository interfaces
-
-### [2023-03-12] 5.0.0
-- New Architecture
-
-### [2023-03-12] 3.1.0
-- Added Builders
-
-### [2023-03-12] 3.0.0
-- Refactory to implement CQRS pattern
-
-### [2023-03-04] 2.4.1
-- Updated System.Text.Json
+- [releases](https://github.com/Genocs/genocs-library/releases)

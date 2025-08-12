@@ -18,7 +18,5 @@ internal class MongoDbSeeder : IMongoDbSeeder
         {
             return;
         }
-
-        await Task.CompletedTask;
     }
 }

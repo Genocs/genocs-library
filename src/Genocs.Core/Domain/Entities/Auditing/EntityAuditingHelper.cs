@@ -10,9 +10,9 @@ public static class EntityAuditingHelper
     public static void SetCreationAuditProperties(
 
         // IMultiTenancyConfig multiTenancyConfig,
-        object entityAsObj, 
+        object entityAsObj,
         int? tenantId,
-        long? userId)
+        DefaultIdType? userId)
     {
         var entityWithCreationTime = entityAsObj as IHasCreationTime;
         if (entityWithCreationTime == null)
@@ -71,7 +71,7 @@ public static class EntityAuditingHelper
         // IMultiTenancyConfig multiTenancyConfig,
         object entityAsObj,
         int? tenantId,
-        long? userId)
+        DefaultIdType? userId)
     {
         if (entityAsObj is IHasModificationTime)
         {

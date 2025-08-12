@@ -14,7 +14,7 @@ public static class Extensions
     /// The Signer service  <see cref="ISigner"/>.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <returns>The builder to be used for chain.</returns>
+    /// <returns>The builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddSecurity(this IGenocsBuilder builder)
     {
         builder.Services

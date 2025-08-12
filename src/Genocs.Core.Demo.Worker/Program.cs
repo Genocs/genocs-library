@@ -2,12 +2,10 @@ using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
 using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues;
@@ -18,7 +16,6 @@ using Genocs.Tracing;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
-using System.Reflection;
 
 StaticLogger.EnsureInitialized();
 
@@ -32,8 +29,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services
             .AddGenocs(hostContext.Configuration)
             .AddOpenTelemetry()
-            .AddMongoFast()
-            .RegisterMongoRepositories(Assembly.GetExecutingAssembly()); // It registers the repositories that has been overridden. No need in case of standard repository
+            .AddMongoWithRegistration();
 
         ConfigureMassTransit(services, hostContext.Configuration);
 
@@ -56,12 +52,6 @@ static IServiceCollection ConfigureMassTransit(IServiceCollection services, ICon
         cfg.UsingRabbitMq(ConfigureBus);
     });
 
-    return services;
-}
-
-static IServiceCollection RegisterCustomMongoRepository(IServiceCollection services, IConfiguration configuration)
-{
-    services.AddScoped<IMongoDbRepository<User>, MongoDbRepository<User>>();
     return services;
 }
 

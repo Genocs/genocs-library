@@ -90,7 +90,7 @@ public static class Extensions
     /// Map default endpoints to setup root endpoint and health checks.
     /// </summary>
     /// <param name="app">The web Application.</param>
-    /// <returns>The WebApplication to be used for chain.</returns>
+    /// <returns>The WebApplication builder. You can use it for chain commands.</returns>
     public static IApplicationBuilder MapDefaultEndpoints(this IApplicationBuilder app)
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
@@ -126,7 +126,7 @@ public static class Extensions
     /// Map default endpoints to setup health checks.
     /// </summary>
     /// <param name="app">The web Application.</param>
-    /// <returns>The WebApplication to be used for chain.</returns>
+    /// <returns>The WebApplication builder. You can use it for chain commands.</returns>
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.

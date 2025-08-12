@@ -45,7 +45,7 @@ internal class JsonInputFormatter : IInputFormatter
             json = EmptyJson;
         }
 
-        object? result = method.Invoke(_serializer, new object[] { json });
+        object? result = method.Invoke(_serializer, [json]);
 
         return await InputFormatterResult.SuccessAsync(result);
     }
