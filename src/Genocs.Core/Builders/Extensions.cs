@@ -171,7 +171,7 @@ public static class Extensions
         }
 
         string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
-        Console.WriteLine(Figgle.Fonts.FiggleFonts.Standard.Render(settings.Name + version));
+        Console.WriteLine(Figgle.Fonts.FiggleFonts.Doom.Render(settings.Name + version));
         ConsoleColor current = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
