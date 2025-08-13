@@ -156,7 +156,7 @@ public static class Extensions
 
     /// <summary>
     /// Adds the error handler middleware to the pipeline.
-    /// Call this methid after UseAddErrorHandler() in the pipeline.
+    /// Call this method after UseAddErrorHandler() in the pipeline.
     /// </summary>
     /// <param name="builder">The application builder.</param>
     /// <returns>The application builder. You can use it for chain commands.</returns>
