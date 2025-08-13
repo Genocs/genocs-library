@@ -27,7 +27,7 @@ The library is built to be used with NET6, NET7 NET8 and NET9.
 
 ## Description
 
-Common NuGet package contains common types with no other depenndecies.
+Common NuGet package contains common types with no other dependencies.
 
 
 ## Dependencies
