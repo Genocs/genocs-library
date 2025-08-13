@@ -117,6 +117,13 @@ public static class Extensions
         return builder;
     }
 
+    /// <summary>
+    /// Adds the error handler middleware to the pipeline.
+    /// Remember to use the middleware in the pipeline, by calling UseErrorHandler().
+    /// </summary>
+    /// <typeparam name="T">The Exception to Response mapper type used for mapping.</typeparam>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddErrorHandler<T>(this IGenocsBuilder builder)
         where T : class, IExceptionToResponseMapper
     {
@@ -147,6 +154,12 @@ public static class Extensions
         return app;
     }
 
+    /// <summary>
+    /// Adds the error handler middleware to the pipeline.
+    /// Call this method after UseAddErrorHandler() in the pipeline.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder. You can use it for chain commands.</returns>
     public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         => builder.UseMiddleware<ErrorHandlerMiddleware>();
 

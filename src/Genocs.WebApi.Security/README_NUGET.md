@@ -19,3 +19,4 @@ Please check the [GitHub repository](https://github.com/Genocs/genocs-library) t
 The change log and breaking changes are listed here.
 
 - [releases](https://github.com/Genocs/genocs-library/releases)
+

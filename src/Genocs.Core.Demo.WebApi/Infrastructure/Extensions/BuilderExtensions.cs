@@ -13,7 +13,7 @@ public static class BuilderExtensions
     /// Extension method to add application services to the DI container.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <returns>The Genocs builder to be used for chain.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddApplicationServices(this IGenocsBuilder builder)
     {
         // Add the Security services

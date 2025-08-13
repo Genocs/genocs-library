@@ -19,7 +19,7 @@ public class MongodbConfigProvider : IMongodbConfigProvider
     /// <summary>
     /// Creates a new instance.
     /// </summary>
-    public MongodbConfigProvider(ILogger<MongodbConfigProvider> logger, IMongoDatabaseProvider mongoDbDatabase, MongoDbOptions options)
+    public MongodbConfigProvider(ILogger<MongodbConfigProvider> logger, IMongoDatabaseProvider mongoDbDatabase, YarpMongoDbOptions options)
     {
         _mongoDbDatabase = mongoDbDatabase;
         var routes = _mongoDbDatabase.Database.GetCollection<RouteConfig>(options.RoutesCollection).Find(c => true).ToList();

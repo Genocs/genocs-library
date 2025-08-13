@@ -36,12 +36,11 @@ internal class Startup(IConfiguration configuration)
         services.AddSingleton<IForwarderHttpClientFactory, CustomForwarderHttpClientFactory>();
 
         var builder = services
-                                        .AddGenocs(Configuration)
-                                        .AddOpenTelemetry()
-                                        .AddMongo()
-                                        .AddMongoFast()
-                                        .AddJwt()
-                                        .AddPrometheus();
+                            .AddGenocs(Configuration)
+                            .AddOpenTelemetry()
+                            .AddMongoWithRegistration()
+                            .AddJwt()
+                            .AddPrometheus();
 
         await builder.AddRabbitMQAsync();
 

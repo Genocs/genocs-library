@@ -14,9 +14,9 @@ public static class MongoDbConfigProviderExtensions
     {
         var config = configuration ?? throw new ArgumentNullException("config");
 
-        var options = new MongoDbOptions();
+        var options = new YarpMongoDbOptions();
 
-        config.Bind(MongoDbOptions.Position, options);
+        config.Bind(YarpMongoDbOptions.Position, options);
 
         builder.Services.AddSingleton((Func<IServiceProvider, IProxyConfigProvider>)((sp)
             => new MongodbConfigProvider(sp.GetRequiredService<ILogger<MongodbConfigProvider>>(), sp.GetRequiredService<IMongoDatabaseProvider>(), options)));

@@ -8,16 +8,6 @@ The libraries are built using .NET7.
 
 Core NuGet package contains Open Telemetry and logging useful for DDD service.
 
-## Support
-
-Please check the GitHub repository getting more info.
-
-
-## Support
-
-Please check the GitHub repository getting more info.
-
-
 ### DataProvider Settings
 Following are the project settings needed to enable monitoring
 
@@ -33,47 +23,16 @@ Following are the project settings needed to enable monitoring
   }
 ```
 
+## Support
+
+Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+
+
 ## Release notes
 
-### [2024-01-23] 5.0.6
-- Refactory Settings
-- Updated nuget packages
+The change log and breaking changes are listed here.
 
-### [2023-11-25] 5.0.5
-- Moved to NET8
-
-### [yyyy-mm-dd] 5.0.4
-- 
-
-### [yyyy-mm-dd] 5.0.3
-- 
-
-### [yyyy-mm-dd] 5.0.2
-- 
-
-### [yyyy-mm-dd] 5.0.1
-- 
-
-### [2023-11-25] 5.0.0
-- Moved to NET8
-
-### [2023-03-04] 2.0.1
-- Updated NuGet packages
-
-### [2023-03-04] 2.0.0
-- Revisited
-
-### [2023-02-06] 1.0.0-rc4.0
-- Updated Masstransit
-
-### [2023-01-01] 1.0.0-rc3.1
-- Updated Masstransit
-
-### [2023-01-01] 1.0.0-rc3.0
-- Moved to netstandart
-
-### [2023-01-01] 1.0.0-rc2.0
-- Refactor and standardization
+- [releases](https://github.com/Genocs/genocs-library/releases)
 
 
 

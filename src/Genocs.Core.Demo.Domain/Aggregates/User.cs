@@ -3,18 +3,10 @@
 namespace Genocs.Core.Demo.Domain.Aggregates;
 
 [TableMapping("Users")]
-public class User : BaseAggregate
+public class User(string userId, string username, decimal age, string country) : BaseAggregate
 {
-    public string UserId { get; set; } = default!;
-    public string Username { get; set; } = default!;
-    public decimal Age { get; set; }
-    public string Country { get; set; } = default!;
-
-    public User(string userId, string username, decimal age, string country)
-    {
-        UserId = userId;
-        Username = username;
-        Age = age;
-        Country = country;
-    }
+    public string UserId { get; set; } = userId;
+    public string Username { get; set; } = username;
+    public decimal Age { get; set; } = age;
+    public string Country { get; set; } = country;
 }

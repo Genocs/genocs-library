@@ -14,7 +14,7 @@ public static class Extensions
     /// Add all the Command handlers to the DI container.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <returns>The builder to be used for chaining pattern.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddCommandHandlers(this IGenocsBuilder builder)
     {
         builder.Services.Scan(s =>
@@ -31,7 +31,7 @@ public static class Extensions
     /// Add the In Memory command dispatcher to the DI container.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <returns>The builder to be used for chaining pattern.</returns>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddInMemoryCommandDispatcher(this IGenocsBuilder builder)
     {
         builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
