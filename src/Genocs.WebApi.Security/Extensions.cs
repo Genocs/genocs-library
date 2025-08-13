@@ -35,7 +35,10 @@ public static class Extensions
         builder.Services.AddSingleton(options);
         if (!builder.TryRegister(RegistryName))
         {
-            Console.WriteLine("{RegistryName} registration failed.", RegistryName, ConsoleColor.Red);
+            var previousColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{RegistryName} registration failed.");
+            Console.ForegroundColor = previousColor;
             return builder;
         }
 
