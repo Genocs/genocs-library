@@ -6,7 +6,7 @@ namespace Genocs.WebApi.Exceptions;
 /// Represents an exception response.
 /// </summary>
 /// <param name="response">The response.</param>
-/// <param name="statusCode">The http statu code.</param>
+/// <param name="statusCode">The http status code.</param>
 public class ExceptionResponse(object response, HttpStatusCode statusCode)
 {
     /// <summary>
