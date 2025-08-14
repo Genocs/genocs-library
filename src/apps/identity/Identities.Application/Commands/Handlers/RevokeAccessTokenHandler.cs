@@ -3,7 +3,7 @@ using Genocs.Core.CQRS.Commands;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class RevokeAccessTokenHandler(IAccessTokenService accessTokenService)
+public sealed class RevokeAccessTokenHandler(IAccessTokenService accessTokenService)
     : ICommandHandler<RevokeAccessToken>
 {
     private readonly IAccessTokenService _accessTokenService = accessTokenService

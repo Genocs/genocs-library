@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class CreateUserHandler(IUserRepository userRepository, IPasswordService passwordService,
+public sealed class CreateUserHandler(IUserRepository userRepository, IPasswordService passwordService,
     IMessageBroker messageBroker, ILogger<CreateUserHandler> logger) : ICommandHandler<CreateUser>
 {
     private readonly IUserRepository _userRepository = userRepository;

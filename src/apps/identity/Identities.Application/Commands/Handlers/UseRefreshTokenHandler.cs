@@ -6,7 +6,7 @@ using Genocs.Identities.Application.Services;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
+public sealed class UseRefreshTokenHandler : ICommandHandler<UseRefreshToken>
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;

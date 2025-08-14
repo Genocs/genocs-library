@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class SignInHandler : ICommandHandler<SignIn>
+public sealed class SignInHandler : ICommandHandler<SignIn>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;

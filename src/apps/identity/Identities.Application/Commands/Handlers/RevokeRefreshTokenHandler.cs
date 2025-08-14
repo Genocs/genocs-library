@@ -4,7 +4,7 @@ using Genocs.Identities.Application.Domain.Repositories;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class RevokeRefreshTokenHandler : ICommandHandler<RevokeRefreshToken>
+public sealed class RevokeRefreshTokenHandler : ICommandHandler<RevokeRefreshToken>
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 

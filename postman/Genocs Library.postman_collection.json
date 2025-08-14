@@ -1064,9 +1064,9 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Body is correct\", function () {\r",
-									"    // This test check the Identity Service response on the home\r",
-									"    // The response must contains a string \"Identity Service\"  \r",
-									"    pm.response.to.have.body(\"Identity Service\");\r",
+									"    // This test check the Identities Service response on the home\r",
+									"    // The response must contains a string \"Identities Service\"  \r",
+									"    pm.response.to.have.body(\"Identities Service\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1571,9 +1571,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{gnx-lib-url-products}}",
+							"raw": "{{products}}",
 							"host": [
-								"{{gnx-lib-url-products}}"
+								"{{products}}"
 							]
 						}
 					},
@@ -1636,13 +1636,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{products}}/products/6bdbca11-54a2-469c-b212-0a4f315ae306",
+							"raw": "{{products}}/{{product_location}}",
 							"host": [
 								"{{products}}"
 							],
 							"path": [
-								"products",
-								"6bdbca11-54a2-469c-b212-0a4f315ae306"
+								"{{product_location}}"
 							]
 						}
 					},
@@ -1658,10 +1657,24 @@
 									"pm.test(\"Status code is 201 - Created\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
-									""
+									"\r",
+									"pm.test(\"Response time is less than 400ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Product Location\", function () {\r",
+									"    pm.environment.set(\"product_location\", pm.response.headers.get(\"Location\"));\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -1717,9 +1730,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{gnx-lib-url-orders}}",
+							"raw": "{{orders}}",
 							"host": [
-								"{{gnx-lib-url-orders}}"
+								"{{orders}}"
 							]
 						}
 					},
@@ -1746,7 +1759,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"CustomerId\": \"98ec44ff-d6ce-40cf-9ab0-83f3db3009d0\",\r\n    \"ProductId\": \"9759c776-809f-4538-a382-bc1a51a404ab\"\r\n}",
+							"raw": "{\r\n    \"CustomerId\": \"98ec44ff-d6ce-40cf-9ab0-83f3db3009d0\",\r\n    \"Products\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1754,9 +1767,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{gnx-lib-url-orders}}/orders",
+							"raw": "{{orders}}/orders",
 							"host": [
-								"{{gnx-lib-url-orders}}"
+								"{{orders}}"
 							],
 							"path": [
 								"orders"
@@ -1793,9 +1806,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{gnx-lib-url-signalr}}",
+							"raw": "{{signalr}}",
 							"host": [
-								"{{gnx-lib-url-signalr}}"
+								"{{signalr}}"
 							]
 						}
 					},

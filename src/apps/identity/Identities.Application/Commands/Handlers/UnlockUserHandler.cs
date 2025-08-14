@@ -6,7 +6,7 @@ using Genocs.Identities.Application.Services;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class UnlockUserHandler(IUserRepository userRepository, IMessageBroker messageBroker)
+public sealed class UnlockUserHandler(IUserRepository userRepository, IMessageBroker messageBroker)
     : ICommandHandler<UnlockUser>
 {
     private readonly IUserRepository _userRepository = userRepository;

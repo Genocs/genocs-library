@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 
-internal sealed class CreateAdminHandler(IUserRepository userRepository, IPasswordService passwordService,
+public sealed class CreateAdminHandler(IUserRepository userRepository, IPasswordService passwordService,
     IMessageBroker messageBroker, ILogger<CreateAdminHandler> logger) : ICommandHandler<CreateAdmin>
 {
     private readonly IUserRepository _userRepository = userRepository;
