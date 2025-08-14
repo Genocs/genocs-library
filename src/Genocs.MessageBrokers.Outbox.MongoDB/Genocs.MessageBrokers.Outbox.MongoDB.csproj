@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.2.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.2.*" />
+        <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="7.3.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.3.*" />
     </ItemGroup>
 
 </Project>

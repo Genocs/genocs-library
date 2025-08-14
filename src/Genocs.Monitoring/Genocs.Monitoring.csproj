@@ -42,8 +42,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Logging" Version="7.2.*" />
-        <PackageReference Include="Genocs.Tracing" Version="7.2.*" />
+        <PackageReference Include="Genocs.Logging" Version="7.3.*" />
+        <PackageReference Include="Genocs.Tracing" Version="7.3.*" />
     </ItemGroup>
 
     <ItemGroup>

@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Logging" Version="7.2.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.2.*" />
+        <PackageReference Include="Genocs.Logging" Version="7.3.*" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="7.3.*" />
     </ItemGroup>
 
     <ItemGroup>

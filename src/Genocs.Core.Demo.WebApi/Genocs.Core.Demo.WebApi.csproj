@@ -21,16 +21,16 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.2.*" />
-        <PackageReference Include="Genocs.Auth" Version="7.2.*" />
-        <PackageReference Include="Genocs.Logging" Version="7.2.*" />
-        <PackageReference Include="Genocs.Tracing" Version="7.2.*" />
-        <PackageReference Include="Genocs.HTTP" Version="7.2.*" />
-        <PackageReference Include="Genocs.Security" Version="7.2.*" />
-        <PackageReference Include="Genocs.WebApi" Version="7.2.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="7.2.*" />
-        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.2.*" />
-        <ProjectReference Include="Genocs.Metrics" Version="7.2.*"/>
+        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.3.*" />
+        <PackageReference Include="Genocs.Auth" Version="7.3.*" />
+        <PackageReference Include="Genocs.Logging" Version="7.3.*" />
+        <PackageReference Include="Genocs.Tracing" Version="7.3.*" />
+        <PackageReference Include="Genocs.HTTP" Version="7.3.*" />
+        <PackageReference Include="Genocs.Security" Version="7.3.*" />
+        <PackageReference Include="Genocs.WebApi" Version="7.3.*" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="7.3.*" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.3.*" />
+        <ProjectReference Include="Genocs.Metrics" Version="7.3.*"/>
     </ItemGroup>
 
     <ItemGroup>
