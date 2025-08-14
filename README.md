@@ -1,4 +1,5 @@
 <!-- PROJECT SHIELDS -->
+
 [![License][license-shield]][license-url]
 [![Build][build-shield]][build-url]
 [![Downloads][downloads-shield]][downloads-url]
@@ -37,31 +38,29 @@
 [twitterx-shield]: https://img.shields.io/twitter/url/https/twitter.com/genocs.svg?style=social
 [twitterx-url]: https://twitter.com/genocs
 
-
 <p align="center">
     <img src="./assets/genocs-library-logo.png" alt="icon">
 </p>
 
-
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET9, it is designed and maintained by Genocs. 
+This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET9, it is designed and maintained by Genocs.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
 ## The idea
 
-***Build a software library to be cloud agnostic***
+**_Build a software library to be cloud agnostic_**
 
-Building a software library to be cloud agnostic has several advantages. First, it allows developers to create applications that can be deployed on any cloud platform without having to rewrite code or make major changes. This makes it easier for developers to quickly deploy their applications across multiple cloud providers. Additionally, it reduces the cost of development and maintenance since developers don’t have to write separate code for each cloud provider. Finally, it increases the scalability of applications since they can be easily deployed on different cloud platforms with minimal effort. 
+Building a software library to be cloud agnostic has several advantages. First, it allows developers to create applications that can be deployed on any cloud platform without having to rewrite code or make major changes. This makes it easier for developers to quickly deploy their applications across multiple cloud providers. Additionally, it reduces the cost of development and maintenance since developers don’t have to write separate code for each cloud provider. Finally, it increases the scalability of applications since they can be easily deployed on different cloud platforms with minimal effort.
 
-***Cloud agnostic by use of Containers***
+**_Cloud agnostic by use of Containers_**
 
 The advantages of using containers are numerous. Containers provide a lightweight, portable, and isolated environment for applications to run in, allowing them to be easily moved between different systems. This makes it easier to deploy applications quickly and reliably across different environments. Additionally, containers can help reduce resource consumption by running multiple applications on the same host, as each container is isolated from the others. This helps to improve efficiency and scalability. Finally, containers provide an additional layer of security, as they are isolated from the underlying operating system and other applications.
 
 ## Documentation
 
-You can find a useful documentation about how to use the library. The documentation contains the complete set of libraries, template, CLI that altogether make the *genocs ecosystem* a comprensive set of tools to build enterprise solutions.
+You can find a useful documentation about how to use the library. The documentation contains the complete set of libraries, template, CLI that altogether make the _genocs ecosystem_ a comprensive set of tools to build enterprise solutions.
 
 Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
 
@@ -70,8 +69,7 @@ Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library
 In this section you can find the infrastructure components you need to execute the solution. Infrastucture components are the database, the enterprice servise bus, the distributed logging, monitoring, tracing systems along with database and many more.
 You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
-
-``` bash
+```bash
 cd ./containers
 
 # Setup the infrastructure.
@@ -107,14 +105,14 @@ docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genoc
 ```
 
 `infrastructure.yml` allows to install the basic infrastructure components. They are:
+
 - [RabbitMQ](https://rabbitmq.com)
 - [MongoDB](https://mongodb.com)
 
-
 `infrastructure-db.yml` allows to install Redis and PostgreSQL
+
 - [Redis](https://redis.io)
 - [Postgres](https://www.postgresql.org/)
-
 
 You can check them locally:
 
@@ -123,8 +121,8 @@ You can check them locally:
 - MongoDB: `TCP:localhost:27017`
 - Postgres: `TCP:localhost:5432`
 
-
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
+
 - [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
 - [Prometheus](https://prometheus.io/)
 - [Grafana](https://grafana.com/)
@@ -132,8 +130,8 @@ You can check them locally:
 - [Jaeger](https://www.jaegertracing.io/)
 - [Seq](https://datalust.co/seq)
 
-
 You can find the console locally at:
+
 - [Aspire](localhost:18888): `localhost:18888`
 - [Prometheus](localhost:9090): `localhost:9090`
 - [Grafana](localhost:3000): `localhost:3000`
@@ -141,11 +139,10 @@ You can find the console locally at:
 - [Jaeger](localhost:16686): `localhost:16686`
 - [Seq](localhost:5341): `localhost:5341`
 
-
 `infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
+
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
-
 
 `infrastructure-security.yml` allows to install the security infrastructure components.
 
@@ -158,9 +155,8 @@ Inside the file you can find:
 > The commands above allows to setup infrastructure components, this means you can find all the containers inside the same network `genocs`.
 >
 > Whenever possible the data are persisted on the host machine by means of volumens, so you can restart the containers without losing data.
- 
 
-``` yml 
+```yml
 networks:
   genocs:
     name: genocs-network
@@ -185,26 +181,24 @@ volumes:
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
 
-
-## ***Kubernetes cluster***
+## **_Kubernetes cluster_**
 
 You can setup the application inside a Kubernetes cluster.
 
-Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster. 
+Check the repo [enterprise-containers](https://github.com/Genocs/enterprise-containers) to setup a Kubernetes cluster.
 There you can find scripts, configuration files and documentation to setup a cluster from scratch.
 
-## ***Aspire Integration***
+## **_Aspire Integration_**
 
 SOON :rocket:
 
-
 ## Support
 
-Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin 
+Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin
 
 ## Configuration
 
-``` json
+```json
    "app": {
     "name": "Demo WebApi",
     "service": "demo-service",
@@ -432,15 +426,17 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     }
   }
 ```
+
 ---
 
 ## Demo Application
-Inside the library there is a simple demo application you can use to test the library. 
+
+Inside the library there is a simple demo application you can use to test the library.
 
 Following are the commands to build and run the demo application.
 
-``` bash
-# Build the solution 
+```bash
+# Build the solution
 dotnet build
 
 # Pack the projects
@@ -451,7 +447,7 @@ dotnet run --project ./src/Genocs.Core.Demo.WebApi
 dotnet run --project ./src/Genocs.Core.Demo.Worker
 ```
 
-``` bash
+```bash
 # To pack the project with nuspec file
 cd src/Genocs.Core
 dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
@@ -463,7 +459,7 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 
 ### How to build Docker Demo images
 
-``` bash
+```bash
 # Build webapi
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
 
@@ -478,14 +474,15 @@ docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-
 docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
+
 ---
 
 ## **Enterprise Application**
 
 ### Application Components
 
-
 Inside **./src/apps** folder you can find a full-fledged application composed by:
+
 - ApiGateway
 - Identity Service
 - Order Service
@@ -494,26 +491,25 @@ Inside **./src/apps** folder you can find a full-fledged application composed by
 
 In that way you can test the entire flow.
 
-| Component         | Description                       | Container Port | Visibility                   |
-|-------------------|-----------------------------------|----------------|------------------------------|
-| ApiGateway        | Handles API requests              |        :5500   | Public                       |
-| Identity Service  | Manages user identities           |        :5510*  | Private through API Gateway  |
-| Product Service   | Manages product information       |        :5520*  | Private through API Gateway  |
-| Order Service     | Processes orders                  |        :5530*  | Private through API Gateway  |
-| SignalR Service   | Handles real-time communication   |        :5540*  | Private through API Gateway  |
-
+| Component        | Description                     | Container Port | Visibility                  |
+| ---------------- | ------------------------------- | -------------- | --------------------------- |
+| ApiGateway       | Handles API requests            | :5500          | Public                      |
+| Identity Service | Manages user identities         | :5510\*        | Private through API Gateway |
+| Product Service  | Manages product information     | :5520\*        | Private through API Gateway |
+| Order Service    | Processes orders                | :5530\*        | Private through API Gateway |
+| SignalR Service  | Handles real-time communication | :5540\*        | Private through API Gateway |
 
 ![Architecture](./assets/architecture_01.png)
 
 ### How to BUILD & RUN the application
 
-The build and run process can be done by using docker-compose. 
+The build and run process can be done by using docker-compose.
 
 Pre-requisites:
+
 - Docker
 
-
-``` bash
+```bash
 cd ./src/apps
 
 # Build with docker compose
@@ -529,10 +525,9 @@ docker compose -f ./docker-compose.yml --env-file ./local.env --project-name gen
 docker builder prune
 ```
 
-
 Use following to build and push the images one by one
 
-``` bash
+```bash
 # Build images
 ./src/apps/scripts/build-images.sh
 
@@ -544,7 +539,7 @@ Use following to build and push the images one by one
 
 You can deploy the application on Kubernetes cluster.
 
-``` bash
+```bash
 # Build images
 ./src/apps/scripts/deploy-k8s.sh
 ```
@@ -552,47 +547,46 @@ You can deploy the application on Kubernetes cluster.
 ### How to use makefile
 
 Prerequisites:
+
 - make
 
 To install make on MacOS you can use brew
 
-``` bash
+```bash
 brew install make
 ```
 
 To install make on Ubuntu you can use apt
 
-``` bash
+```bash
 sudo apt install make
 ```
 
 To install make on Windows you can use [choco](https://chocolatey.org/)
 
-``` bash
+```bash
 choco install make
 ```
 
 Upon installation you can use the makefile to build, run, deploy the application.
 
-``` bash
+```bash
 # Build the solution
 make build
 ```
-
 
 ### How to use Helm chart
 
 Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to deploy the application on Kubernetes.
 
-``` bash
+```bash
 cd ./src/apps/k8s/helm
 microk8s helm install genocs ./gnxchart
 ```
 
-
 ### Deploy in a cloud instance
 
-You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Google Cloud Platform: 
+You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Google Cloud Platform:
 
 [<img src="https://www.herokucdn.com/deploy/button.svg" height="30px">](https://heroku.com/deploy?template=https://github.com/heartexlabs/label-studio/tree/heroku-persistent-pg)
 [<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
@@ -612,17 +606,15 @@ View Complete [Changelog](https://github.com/Genocs/microservice-template/blob/m
 - Facebook Page [@genocs](https://facebook.com/Genocs)
 - Youtube Channel [@genocs](https://youtube.com/c/genocs)
 
-
 ## Support
 
 Has this Project helped you learn something New? or Helped you at work?
 Here are a few ways by which you can support.
 
-- ⭐ Leave a star! 
+- ⭐ Leave a star!
 - 🥇 Recommend this project to your colleagues.
-- 🦸 Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/) 
+- 🦸 Do consider endorsing me on LinkedIn for ASP.NET Core - [Connect via LinkedIn](https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/)
 - ☕ If you want to support this project in the long run, [consider buying me a coffee](https://www.buymeacoffee.com/genocs)!
-  
 
 [![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
@@ -638,7 +630,7 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 
 <a href="https://opencollective.com/genocs"><img src="https://opencollective.com/genocs/individuals.svg?width=890"></a>
 
-
 ## Acknowledgements
+
 - [devmentors](https://github.com/devmentors)
 - [abp](https://github.com/abpframework)

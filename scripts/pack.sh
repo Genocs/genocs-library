@@ -8,7 +8,7 @@ dotnet pack -p:NuspecFile=Genocs.Persistence.MongoDb.nuspec --no-restore -o . -p
 echo Uploading Genocs.Core package to NuGet using branch $TRAVIS_BRANCH
 
 case "$TRAVIS_BRANCH" in
-  "master")
+  "main")
     dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
     ;;  
 esac

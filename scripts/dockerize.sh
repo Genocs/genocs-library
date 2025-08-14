@@ -3,7 +3,7 @@ TAG=''
 VERSION_TAG=
 
 case "$TRAVIS_BRANCH" in
-  "master")
+  "main")
     TAG=latest
     VERSION_TAG=$TRAVIS_BUILD_NUMBER
     ;;

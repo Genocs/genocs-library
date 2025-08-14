@@ -1,7 +1,7 @@
 #!/bin/bash
 MYGET_ENV=""
 case "$TRAVIS_BRANCH" in
-  "master")
+  "main")
     MYGET_ENV="-dev"
     ;;
 esac
