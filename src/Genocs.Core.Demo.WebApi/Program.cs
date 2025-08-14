@@ -10,6 +10,8 @@ using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using Genocs.Metrics.AppMetrics;
+using Genocs.Metrics.Prometheus;
 //using Genocs.Persistence.EFCore.Extensions;
 
 StaticLogger.EnsureInitialized();
@@ -25,6 +27,8 @@ builder
     .AddJwt()
     .AddOpenTelemetry()
     .AddMongoWithRegistration()
+    .AddMetrics()
+    .AddPrometheus()
     //.AddEFCorePersistence()
     .AddApplicationServices()
     .Build();
@@ -84,6 +88,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseMetrics()
+    .UsePrometheus();
 
 // Use it only if you need to authenticate with Firebase
 // app.UseFirebaseAuthentication();

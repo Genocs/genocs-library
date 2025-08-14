@@ -25,9 +25,6 @@ Following are the project settings needed to enable monitoring
   },
   "ConnectionStrings": {
     "ApplicationInsights": ""
-  },
-  "Monitoring": {
-    "Jaeger": "localhost",
   }
 ```
 

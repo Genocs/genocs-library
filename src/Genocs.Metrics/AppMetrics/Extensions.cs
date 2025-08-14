@@ -22,7 +22,6 @@ public static class Extensions
     private const string RegistryName = "metrics.metrics";
     private static bool _initialized;
 
-    [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
                                             string metricsSectionName = Configurations.MetricsOptions.Position,
@@ -44,7 +43,6 @@ public static class Extensions
         return builder.AddMetrics(metricsOptions, appOptions);
     }
 
-    [Description("For the time being it sets Kestrel's AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
                                             Func<IMetricsOptionsBuilder, IMetricsOptionsBuilder> buildOptions,
@@ -61,7 +59,6 @@ public static class Extensions
         return builder.AddMetrics(metricsOptions, appOptions);
     }
 
-    [Description("For the time being it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true, see https://github.com/AppMetrics/AppMetrics/issues/396")]
     public static IGenocsBuilder AddMetrics(
                                             this IGenocsBuilder builder,
                                             Configurations.MetricsOptions metricsSettings,

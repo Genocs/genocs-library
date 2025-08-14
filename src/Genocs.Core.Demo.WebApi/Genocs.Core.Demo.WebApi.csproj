@@ -17,6 +17,7 @@
         <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
         <ProjectReference Include="..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
         <ProjectReference Include="..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
+        <ProjectReference Include="..\Genocs.Metrics\Genocs.Metrics.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
@@ -29,6 +30,7 @@
         <PackageReference Include="Genocs.WebApi" Version="7.2.*" />
         <PackageReference Include="Genocs.WebApi.Security" Version="7.2.*" />
         <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.2.*" />
+        <ProjectReference Include="Genocs.Metrics" Version="7.2.*"/>
     </ItemGroup>
 
     <ItemGroup>
