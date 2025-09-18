@@ -30,32 +30,32 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.1" />
+        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="MediatR" Version="12.5.0" />
+        <PackageReference Include="MediatR" Version="13.0.0" />
 
         <!--MS SQL plus SQLite-->
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
 
         <!--PostgreSQL-->
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 
         <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.80" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.90" />
 
         <!--Mysql-->
-        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
 
         <!--Serilog-->
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
-        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="MongoDB.Driver" Version="3.5.0" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.1" />
     </ItemGroup>
 
 </Project>

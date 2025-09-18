@@ -5,6 +5,9 @@ using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Genocs.WebApi;
+using Genocs.WebApi.Swagger;
+using Genocs.WebApi.Swagger.Docs;
 
 StaticLogger.EnsureInitialized();
 
@@ -16,6 +19,9 @@ builder.Host
 builder.AddGenocs()
     .AddOpenTelemetry()
     .AddJwt("simmetric_jwt")
+    .AddWebApi()
+    .AddSwaggerDocs()
+    .AddWebApiSwaggerDocs()
     .Build();
 
 // Add services to the container.
@@ -54,15 +60,10 @@ builder.Services.AddAuthorizationBuilder()
 //                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)
 //                                || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
 
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseGenocs()
+    .UseSwaggerDocs();
 
 app.UseHttpsRedirection();
 

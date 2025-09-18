@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj" />
     <ProjectReference Include="..\Genocs.Logging\Genocs.Logging.csproj" />
     <ProjectReference Include="..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
+    <ProjectReference Include="..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
   </ItemGroup>
 
   <ItemGroup>

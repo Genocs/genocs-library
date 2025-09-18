@@ -67,6 +67,4 @@ internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
     }
 
     public SwaggerOptions Build() => _options;
-
-
 }

@@ -18,6 +18,7 @@
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
         </PackageReleaseNotes>
+        <UserSecretsId>2b3e4572-90ec-422e-969c-ad4c83f66d67</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

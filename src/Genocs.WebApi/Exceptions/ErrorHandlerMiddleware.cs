@@ -8,27 +8,20 @@ namespace Genocs.WebApi.Exceptions;
 /// <summary>
 /// Middleware for handling exceptions in the ASP.NET Core pipeline.
 /// </summary>
-internal sealed class ErrorHandlerMiddleware : IMiddleware
+/// <remarks>
+/// Initializes a new instance of the <see cref="ErrorHandlerMiddleware"/> class.
+/// </remarks>
+/// <param name="exceptionToResponseMapper">The exception to Response Mapper.</param>
+/// <param name="jsonSerializer">The Json initializer.</param>
+/// <param name="logger">The logger.</param>
+internal sealed class ErrorHandlerMiddleware(
+                                IExceptionToResponseMapper exceptionToResponseMapper,
+                                IJsonSerializer jsonSerializer,
+                                ILogger<ErrorHandlerMiddleware> logger) : IMiddleware
 {
-    private readonly IExceptionToResponseMapper _exceptionToResponseMapper;
-    private readonly IJsonSerializer _jsonSerializer;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorHandlerMiddleware"/> class.
-    /// </summary>
-    /// <param name="exceptionToResponseMapper">The exception to Response Mapper.</param>
-    /// <param name="jsonSerializer">The Json initializer.</param>
-    /// <param name="logger">The logger.</param>
-    public ErrorHandlerMiddleware(
-                                    IExceptionToResponseMapper exceptionToResponseMapper,
-                                    IJsonSerializer jsonSerializer,
-                                    ILogger<ErrorHandlerMiddleware> logger)
-    {
-        _exceptionToResponseMapper = exceptionToResponseMapper;
-        _jsonSerializer = jsonSerializer;
-        _logger = logger;
-    }
+    private readonly IExceptionToResponseMapper _exceptionToResponseMapper = exceptionToResponseMapper;
+    private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
+    private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
 
     /// <summary>
     /// Invokes the middleware to handle exceptions in the ASP.NET Core pipeline.
