@@ -19,15 +19,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{220036E9-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.ServiceBusAzure.UnitTests", "src\Genocs.ServiceBusAzure.UnitTests\Genocs.ServiceBusAzure.UnitTests.csproj", "{893C21F8-7581-4BFA-8ECB-49A685CA937C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.WebApi", "src\Genocs.Core.Demo.WebApi\Genocs.Core.Demo.WebApi.csproj", "{A753BE9B-3E49-468E-84E8-A5E603DED02C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.WebApi", "src\demo\Genocs.Core.Demo.WebApi\Genocs.Core.Demo.WebApi.csproj", "{A753BE9B-3E49-468E-84E8-A5E603DED02C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Worker", "src\Genocs.Core.Demo.Worker\Genocs.Core.Demo.Worker.csproj", "{CB5689EF-527A-4765-909E-C3E247B31F83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Worker", "src\demo\Genocs.Core.Demo.Worker\Genocs.Core.Demo.Worker.csproj", "{CB5689EF-527A-4765-909E-C3E247B31F83}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Contracts", "src\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj", "{B8585557-034E-4028-BFE9-80B6ABA287F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Contracts", "src\demo\Genocs.Core.Demo.Contracts\Genocs.Core.Demo.Contracts.csproj", "{B8585557-034E-4028-BFE9-80B6ABA287F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Domain", "src\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj", "{3F6C140E-EA64-424D-9214-53A677157E10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Domain", "src\demo\Genocs.Core.Demo.Domain\Genocs.Core.Demo.Domain.csproj", "{3F6C140E-EA64-424D-9214-53A677157E10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Infrastructure", "src\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj", "{FA01671E-9778-4581-9CD3-4A0651DBC7D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Core.Demo.Infrastructure", "src\demo\Genocs.Core.Demo.Infrastructure\Genocs.Core.Demo.Infrastructure.csproj", "{FA01671E-9778-4581-9CD3-4A0651DBC7D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.HelloWorld", "src\demo\Genocs.Core.Demo.HelloWorld\Genocs.Core.Demo.HelloWorld.csproj", "{D7C394CF-487D-470D-B05C-CC2DD7EC290B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.QueryBuilder", "src\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj", "{2F9F9EF1-031D-433A-816D-49372AAAAC66}"
 EndProject
@@ -130,8 +132,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Secrets.AzureKeyVault", "src\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj", "{ECBF1AEE-AE3A-4F81-9943-5675169DEFA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.OpenTelemetry", "src\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj", "{62380657-23D0-0ECD-8FFE-0B1DA5461D37}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Core.Demo.HelloWorld", "src\Genocs.Core.Demo.HelloWorld\Genocs.Core.Demo.HelloWorld.csproj", "{D7C394CF-487D-470D-B05C-CC2DD7EC290B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genocs.Persistence.EFCore", "src\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj", "{69A6FE21-8FB1-4D4D-8C6B-B18C06EFF2CF}"
 EndProject
