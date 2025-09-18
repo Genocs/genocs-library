@@ -3,11 +3,10 @@ using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Genocs.WebApi;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 StaticLogger.EnsureInitialized();
 
@@ -26,9 +25,6 @@ builder.AddGenocs()
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
@@ -78,8 +74,18 @@ app.UseAccessTokenValidator();
 
 app.MapControllers();
 
-// Minimal API with authorization
-app.MapGet("/", () => "ok").RequireAuthorization();
+// Minimal API with authorization and OpenAPI definition
+app.MapGet("/", () => "ok")
+    .RequireAuthorization()
+    .WithTags("Home")
+    .WithOpenApi(op =>
+    {
+        op.OperationId = "_home_default";
+        op.Summary = "Get a single todo";
+        op.Description = "Returns a todo by its ID.";
+        op.Tags = new[] { new Microsoft.OpenApi.Models.OpenApiTag { Name = "Home" } };
+        return op;
+    });
 
 // Minimal API with authorization policy
 app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
