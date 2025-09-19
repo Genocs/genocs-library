@@ -72,13 +72,6 @@ public class SwaggerOptions
     /// </summary>
     public bool IncludeSecurity { get; set; }
 
-#if NET6_0 || NET7_0 || NET8_0
-    /// <summary>
-    /// The flag to serialize the Swagger document as OpenAPI version 2.0.
-    /// </summary>
-    public bool SerializeAsOpenApiV2 { get; set; }
-#endif
-
     /// <summary>
     /// List of servers that support this API.
     /// </summary>

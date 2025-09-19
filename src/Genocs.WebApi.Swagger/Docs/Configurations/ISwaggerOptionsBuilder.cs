@@ -10,9 +10,5 @@ public interface ISwaggerOptionsBuilder
     ISwaggerOptionsBuilder WithRoutePrefix(string routePrefix);
     ISwaggerOptionsBuilder WithContactName(string contactName);
     ISwaggerOptionsBuilder IncludeSecurity(bool includeSecurity);
-
-#if NET6_0 || NET7_0 || NET8_0
-    ISwaggerOptionsBuilder SerializeAsOpenApiV2(bool serializeAsOpenApiV2);
-#endif
     SwaggerOptions Build();
 }
