@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.3.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.4.*" />
     </ItemGroup>
 
 </Project>
