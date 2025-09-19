@@ -59,12 +59,13 @@ internal sealed class SwaggerOptionsBuilder : ISwaggerOptionsBuilder
         _options.ContactName = contactName;
         return this;
     }
-
+#if NET6_0 || NET7_0 || NET8_0
     public ISwaggerOptionsBuilder SerializeAsOpenApiV2(bool serializeAsOpenApiV2)
     {
         _options.SerializeAsOpenApiV2 = serializeAsOpenApiV2;
         return this;
     }
+#endif
 
     public SwaggerOptions Build() => _options;
 }

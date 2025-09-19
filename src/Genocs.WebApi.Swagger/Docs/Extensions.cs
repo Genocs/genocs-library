@@ -160,7 +160,10 @@ public static class Extensions
             .UseSwagger(c =>
             {
                 c.RouteTemplate = string.Concat(routePrefix, "/{documentName}/swagger.json");
+
+#if NET6_0 || NET7_0 || NET8_0
                 c.SerializeAsV2 = options.SerializeAsOpenApiV2;
+#endif
             });
 
         return options.ReDocEnabled
