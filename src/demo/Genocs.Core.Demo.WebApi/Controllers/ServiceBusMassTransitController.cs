@@ -56,7 +56,6 @@ public class ServiceBusMassTransitController : ControllerBase
         return Ok("Sent");
     }
 
-
     //[HttpPost("SubmitOrder")]
     //public async Task<IActionResult> PostSubmitOrder()
     //{

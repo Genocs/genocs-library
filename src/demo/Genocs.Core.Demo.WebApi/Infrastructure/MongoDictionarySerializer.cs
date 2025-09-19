@@ -12,20 +12,19 @@ public class MongoDictionarySerializer : SerializerBase<IDictionary<string, obje
 
         var serializer = BsonSerializer.LookupSerializer(typeof(BsonDocument));
 
-        var document = serializer.Deserialize(context, args);
+        object document = serializer.Deserialize(context, args);
 
         var bsonDocument = document.ToBsonDocument();
 
-        var result = BsonExtensionMethods.ToJson(bsonDocument);
+        string result = bsonDocument.ToJson();
 
         return JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
     }
 
-
     public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, IDictionary<string, object> value)
     {
 
-        var jsonDocument = JsonConvert.SerializeObject(value);
+        string jsonDocument = JsonConvert.SerializeObject(value);
 
         var bsonDocument = BsonSerializer.Deserialize<BsonDocument>(jsonDocument);
 

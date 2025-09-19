@@ -8,13 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.3.*" />
         <PackageReference Include="Genocs.Logging" Version="7.3.*" />
         <PackageReference Include="Genocs.Tracing" Version="7.3.*" />
     </ItemGroup>

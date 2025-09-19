@@ -34,10 +34,7 @@ public class ExternalServiceClient : IExternalServiceClient
         _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
         _externalServiceOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
 
-        if (httpClientSettings is null)
-        {
-            throw new ArgumentNullException(nameof(httpClientSettings));
-        }
+        ArgumentNullException.ThrowIfNull(httpClientSettings);
 
         string? url = httpClientSettings?.Services?["ca_issuer"];
 

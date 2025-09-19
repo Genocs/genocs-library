@@ -2,16 +2,18 @@
 using System.Text.Json.Serialization;
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.Core.Demo.WebApi.Configurations;
 using Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
+using Genocs.Metrics.AppMetrics;
+using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Tracing;
+using Genocs.WebApi;
+using Genocs.WebApi.Swagger;
+using Genocs.WebApi.Swagger.Docs;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
-using Genocs.Metrics.AppMetrics;
-using Genocs.Metrics.Prometheus;
 //using Genocs.Persistence.EFCore.Extensions;
 
 StaticLogger.EnsureInitialized();
@@ -31,21 +33,20 @@ builder
     .AddPrometheus()
     //.AddEFCorePersistence()
     .AddApplicationServices()
+    .AddWebApi()
+    .AddSwaggerDocs()
+    .AddWebApiSwaggerDocs()
     .Build();
 
 var services = builder.Services;
 
-services.AddCors();
 services.AddControllers().AddJsonOptions(x =>
 {
     // serialize Enums as strings in api responses (e.g. Role)
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-services.Configure<SecretOptions>(builder.Configuration.GetSection(SecretOptions.Position));
-
-SecretOptions settings = builder.Configuration.GetOptions<SecretOptions>(SecretOptions.Position);
-services.AddSingleton(settings);
+services.AddCors();
 
 services.Configure<HealthCheckPublisherOptions>(options =>
 {
@@ -53,28 +54,18 @@ services.Configure<HealthCheckPublisherOptions>(options =>
     options.Predicate = check => check.Tags.Contains("ready");
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
-
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
-services.AddOptions();
-
 var app = builder.Build();
-
-app.UseGenocs();
 
 // Use it only  in case you are using EF Core
 //await app.Services.InitializeDatabasesAsync();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseGenocs()
+    .UseSwaggerDocs();
+
+app.UseHttpsRedirection();
 
 // global cors policy
 app.UseCors(x => x
@@ -83,10 +74,8 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .AllowCredentials());
 
-app.UseHttpsRedirection();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMetrics()
@@ -94,8 +83,6 @@ app.UseMetrics()
 
 // Use it only if you need to authenticate with Firebase
 // app.UseFirebaseAuthentication();
-
-app.MapDefaultEndpoints();
 
 app.MapControllers();
 

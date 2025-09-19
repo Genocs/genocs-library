@@ -2,40 +2,39 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>genocs</UserSecretsId>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\Genocs.ServiceBusAzure\Genocs.ServiceBusAzure.csproj" />
         <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
         <ProjectReference Include="..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\..\Genocs.Security\Genocs.Security.csproj" />
-        <ProjectReference Include="..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
+        <ProjectReference Include="..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
         <ProjectReference Include="..\..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
         <ProjectReference Include="..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.ServiceBusAzure" Version="7.3.*" />
         <PackageReference Include="Genocs.Auth" Version="7.3.*" />
         <PackageReference Include="Genocs.Logging" Version="7.3.*" />
         <PackageReference Include="Genocs.Tracing" Version="7.3.*" />
         <PackageReference Include="Genocs.HTTP" Version="7.3.*" />
         <PackageReference Include="Genocs.Security" Version="7.3.*" />
-        <PackageReference Include="Genocs.WebApi" Version="7.3.*" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.3.*" />
         <PackageReference Include="Genocs.WebApi.Security" Version="7.3.*" />
         <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.3.*" />
         <ProjectReference Include="Genocs.Metrics" Version="7.3.*"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -44,7 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="logs\" />
+        <Folder Include="logs\" />
     </ItemGroup>
 
 </Project>

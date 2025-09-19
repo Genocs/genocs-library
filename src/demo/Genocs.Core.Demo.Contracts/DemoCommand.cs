@@ -2,9 +2,7 @@
 
 namespace Genocs.Core.Demo.Contracts;
 
-public class DemoCommand : ICommand
+public class DemoCommand(string payload) : ICommand
 {
-    public string Payload { get; }
-
-    public DemoCommand(string payload) => Payload = payload;
+    public string Payload { get; } = payload;
 }

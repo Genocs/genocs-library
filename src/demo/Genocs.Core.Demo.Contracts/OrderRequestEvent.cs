@@ -13,16 +13,9 @@ public class OrderRequest : IEvent
     public List<Product> Basket { get; set; } = default!;
 }
 
-public class Product
+public class Product(string sKU, int count, decimal price)
 {
-    public string SKU { get; private set; }
-    public int Count { get; private set; }
-    public decimal Price { get; private set; }
-
-    public Product(string sKU, int count, decimal price)
-    {
-        SKU = sKU;
-        Count = count;
-        Price = price;
-    }
+    public string SKU { get; private set; } = sKU;
+    public int Count { get; private set; } = count;
+    public decimal Price { get; private set; } = price;
 }

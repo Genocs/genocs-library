@@ -1,17 +1,8 @@
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Events;
-using Genocs.Core.Demo.Contracts;
 using Genocs.Core.Demo.Worker;
 using Genocs.Core.Demo.Worker.Consumers;
-using Genocs.Core.Demo.Worker.Handlers;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.ServiceBusAzure.Configurations;
-using Genocs.ServiceBusAzure.Queues;
-using Genocs.ServiceBusAzure.Queues.Interfaces;
-using Genocs.ServiceBusAzure.Topics;
-using Genocs.ServiceBusAzure.Topics.Interfaces;
 using Genocs.Tracing;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -79,26 +70,4 @@ static void ConfigureBus(IBusRegistrationContext context, IRabbitMqBusFactoryCon
     configurator.ConfigureEndpoints(context);
 }
 
-static void ConfigureAzureServiceBusTopic(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<AzureServiceBusTopicOptions>(configuration.GetSection(AzureServiceBusTopicOptions.Position));
 
-    services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
-
-    services.AddScoped<IEventHandler<DemoEvent>, DemoEventHandler>();
-
-    var topicBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusTopic>();
-    topicBus.Subscribe<DemoEvent, IEventHandlerLegacy<DemoEvent>>();
-}
-
-static void ConfigureAzureServiceBusQueue(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<AzureServiceBusQueueOptions>(configuration.GetSection(AzureServiceBusQueueOptions.Position));
-
-    services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
-
-    services.AddScoped<ICommandHandler<DemoCommand>, DemoCommandHandler>();
-
-    var queueBus = services.BuildServiceProvider().GetRequiredService<IAzureServiceBusQueue>();
-    queueBus.Consume<DemoCommand, ICommandHandlerLegacy<DemoCommand>>();
-}

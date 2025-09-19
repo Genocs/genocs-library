@@ -7,6 +7,7 @@ using Genocs.WebApi;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Serilog;
 
 StaticLogger.EnsureInitialized();
 
@@ -15,9 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host
     .UseLogging();
 
-builder.AddGenocs()
-    .AddOpenTelemetry()
+builder
+    .AddGenocs()
     .AddJwt("simmetric_jwt")
+    .AddOpenTelemetry()
     .AddWebApi()
     .AddSwaggerDocs()
     .AddWebApiSwaggerDocs()
@@ -92,3 +94,5 @@ app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
 app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
 
 app.Run();
+
+Log.CloseAndFlush();

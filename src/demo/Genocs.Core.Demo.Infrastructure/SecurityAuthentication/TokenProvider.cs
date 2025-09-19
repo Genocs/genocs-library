@@ -14,10 +14,10 @@ namespace Genocs.Core.Demo.Infrastructure.SecurityAuthentication;
 /// </summary>
 public sealed class TokenProvider(IConfiguration configuration)
 {
-    public string Issuer => configuration["JwtSettings:Issuer"];
-    public string Audience => configuration["JwtSettings:Audience"];
-    public string Key => configuration["JwtSettings:Key"];
-    public int Expiration => int.Parse(configuration["JwtSettings:Expiration"]);
+    public string? Issuer => configuration["JwtSettings:Issuer"];
+    public string? Audience => configuration["JwtSettings:Audience"];
+    public string? Key => configuration["JwtSettings:Key"];
+    public int Expiration => int.Parse(configuration["JwtSettings:Expiration"] ?? "0");
 
     /// <summary>
     /// This method creates a token using the JwtSecurityTokenHandler class.
@@ -32,8 +32,8 @@ public sealed class TokenProvider(IConfiguration configuration)
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.Role, "role")
+                new(ClaimTypes.Name, "username"),
+                new(ClaimTypes.Role, "role")
             }),
             Expires = DateTime.UtcNow.AddMinutes(Expiration),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -55,8 +55,8 @@ public sealed class TokenProvider(IConfiguration configuration)
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.Role, "role")
+                new(ClaimTypes.Name, "username"),
+                new(ClaimTypes.Role, "role")
             }),
             Expires = DateTime.UtcNow.AddMinutes(Expiration),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
