@@ -29,6 +29,7 @@ public static class Extensions
     private static IGenocsBuilder AddWebApiSwaggerDocs(this IGenocsBuilder builder, Action<IGenocsBuilder> registerSwagger)
     {
         registerSwagger(builder);
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c => c.DocumentFilter<WebApiDocumentFilter>());
         return builder;
     }

@@ -46,8 +46,8 @@ internal sealed class ErrorHandlerMiddleware(
     /// Handles the error by mapping the exception to an HTTP response and writing it to the response body.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <param name="next">the next step into for the pipeline.</param>
-    /// <returns>the Task.</returns>
+    /// <param name="exception">The exception.</param>
+    /// <returns>The Task.</returns>
     private async Task HandleErrorAsync(HttpContext context, Exception exception)
     {
         var exceptionResponse = _exceptionToResponseMapper.Map(exception);

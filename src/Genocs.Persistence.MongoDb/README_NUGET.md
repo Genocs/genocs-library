@@ -1,17 +1,20 @@
-# .NET Core Persistence MongoDB library
+# The Genocs Library - Persistence MongoDB components
 
-This package contains a repository pattern implementation using MongoDB. The library is designed by Genocs.
-The library is built to be used with NET6, NET7 NET8 and NET9.
-
+Genocs Enterprise Library - Genocs.Persistence.MongoDb. This package contains a repository pattern implementation using MongoDB.
+The library is built to be used with NET6, NET7, NET8 and NET9.
 
 ## Description
 
-Persistence MongoDB Core NuGet package contains general purpose functionalities to be used on DDD service.
+Persistence MongoDB NuGet package contains general purpose functionalities to be used on DDD services with MongoDB as the persistence data layer.
 
+## Dependencies
 
-## Support
+- **Genocs.Core**: 7.4.*
+- **MongoDB.Driver**: 3.5.0
+- **MongoDB.Driver.Core.Extensions.DiagnosticSources**: 2.1.0
 
-Please check the GitHub repository getting more info.
+### Framework references
+- **NONE**
 
 ## MongoDb Convention
 
@@ -34,9 +37,14 @@ Following is about how to setup **MongoDb**
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
+## Documentation
+
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 
 The change log and breaking changes are listed here.
+
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 
 - [releases](https://github.com/Genocs/genocs-library/releases)

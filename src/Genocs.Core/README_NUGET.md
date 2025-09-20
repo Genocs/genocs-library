@@ -1,20 +1,19 @@
 # The Genocs Library - Core components 
 
 Genocs Enterprise Library - Genocs.Core. This package contains a set of base functionalities to be used across the framework.
-The library is built to be used with NET6, NET7 NET8 and NET9.
+The library is built to be used with NET6, NET7, NET8 and NET9.
 
 ## Description
 
 Core NuGet package contains general purpose functionalities to be used on DDD services.
 
-
 ## Dependencies
 
-- **Genocs.Common**: 7.2.*
-- **Ardalis.Specification**: 9.1.0
-- **Figgle**: 0.5.1
-- **MediatR.Contracts:** 2.0.1
-- **Scrutor:** 6.0.1
+- **Genocs.Common**: 7.4.*
+- **Ardalis.Specification**: 9.3.1
+- **Figgle.Fonts**: 0.6.5
+- **MediatR.Contracts**: 2.0.1
+- **Scrutor**: 6.1.0
 
 ### Framework references
 - **Microsoft.AspNetCore.App**

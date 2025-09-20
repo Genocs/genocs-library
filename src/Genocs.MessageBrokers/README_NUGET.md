@@ -1,41 +1,32 @@
-# .NET Logging library
+# The Genocs Library - MessageBrokers components
 
-This package contains a set of functionalities to use http client for microservice, the library is designed by Genocs even thought a lot of insight came from community.
-First of all I have to say thanks to devmentors
-
-The libraries are built using .NET7.
-
+Genocs Enterprise Library - Genocs.MessageBrokers. This package contains message broker interfaces and abstractions.
+The library is built to be used with NET6, NET7, NET8 and NET9.
 
 ## Description
 
-Core NuGet package contains Open Telemetry and logging useful for DDD service.
+MessageBrokers NuGet package contains interfaces and abstractions for message broker implementations to be used in DDD services.
 
+## Dependencies
 
-## Support
+- **Genocs.Core**: 7.4.*
 
-Please check the GitHub repository getting more info.
-
-
-### DataProvider Settings
-Following are the project settings needed to enable monitoring
-
-``` json
-  "AppSettings": {
-    "ServiceName": "Demo WebApi",
-  },
-  "ConnectionStrings": {
-    "ApplicationInsights": ""
-  }
-```
+### Framework references
+- **NONE**
 
 ## Support
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
+## Documentation
+
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 
 The change log and breaking changes are listed here.
+
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 
 - [releases](https://github.com/Genocs/genocs-library/releases)
 

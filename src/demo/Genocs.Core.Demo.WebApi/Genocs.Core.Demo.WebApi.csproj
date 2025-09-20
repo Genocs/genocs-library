@@ -34,7 +34,7 @@
         <PackageReference Include="Genocs.WebApi.Swagger" Version="7.4.*" />
         <PackageReference Include="Genocs.WebApi.Security" Version="7.4.*" />
         <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.4.*" />
-        <ProjectReference Include="Genocs.Metrics" Version="7.4.*"/>
+        <PackageReference Include="Genocs.Metrics" Version="7.4.*" />
     </ItemGroup>
 
     <ItemGroup>

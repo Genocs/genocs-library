@@ -43,6 +43,13 @@ public static class Extensions
         return builder.AddSwaggerDocs(settings);
     }
 
+    /// <summary>
+    /// Use this method to add and configure Swagger documentation.
+    /// Remove in case you are not using AddWebApiSwaggerDocs.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="settings">The Settings.</param>
+    /// <returns>The Genocs builder to be used for chain.</returns>
     public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions settings)
     {
         if (!settings.Enabled || !builder.TryRegister(RegistryName))
@@ -52,6 +59,8 @@ public static class Extensions
 
         // TODO: Double-check if this is necessary
         builder.Services.AddSingleton(settings);
+
+        builder.Services.AddEndpointsApiExplorer();
 
         // Register the Swagger generator, defining 1 or more Swagger documents
         builder.Services.AddSwaggerGen(c =>
@@ -135,10 +144,6 @@ public static class Extensions
                 }
             }
 
-            // c.AddServer(new OpenApiServer() { Url = "http://localhost:5300", Description = "Local version to be used for development" });
-            // c.AddServer(new OpenApiServer() { Url = "http://fiscanner-api", Description = "Containerized version to be used into with docker or k8s" });
-            // c.AddServer(new OpenApiServer() { Url = "https://fiscanner-api.azurewebsites.net", Description = "Production deployed on Azure" });
-
             string documentationFile = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml");
             c.IncludeXmlComments(documentationFile);
         });
@@ -179,7 +184,7 @@ public static class Extensions
     /// <summary>
     /// Replaces leading double forward slash caused by an empty route prefix.
     /// </summary>
-    /// <param name="route"></param>
+    /// <param name="route">The string to parse.</param>
     /// <returns></returns>
     private static string FormatEmptyRoutePrefix(this string route)
     {

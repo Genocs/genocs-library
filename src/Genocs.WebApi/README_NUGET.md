@@ -1,21 +1,33 @@
-# .NET Core Base library
+# The Genocs Library - WebApi components
 
-This package contains a set of base functionalities designed by Genocs.
-The library is built to be used with NET6, NET7 NET8 and NET9.
-
+Genocs Enterprise Library - Genocs.WebApi. This package contains a set of web API functionalities designed by Genocs.
+The library is built to be used with NET6, NET7, NET8 and NET9.
 
 ## Description
 
-Core NuGet package contains general purpose functionalities to be used on DDD services.
+WebApi NuGet package contains general purpose functionalities to be used on DDD web API services.
 
+## Dependencies
+
+- **Genocs.Core**: 7.4.*
+- **Open.Serialization.Json.System**: 3.0.0
+- **Open.Serialization.Json.Utf8Json**: 3.0.0
+
+### Framework references
+- **Microsoft.AspNetCore.App**
 
 ## Support
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
+## Documentation
+
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 
 The change log and breaking changes are listed here.
+
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 
 - [releases](https://github.com/Genocs/genocs-library/releases)

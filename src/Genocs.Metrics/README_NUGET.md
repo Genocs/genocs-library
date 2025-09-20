@@ -1,7 +1,7 @@
-# .NET Core Base library
+# .NET Core Metrics library
 
-This package contains a set of base functionalities designed by Genocs.
-The libraries can be used on .NET6, .NET7, .NET8.
+This package contains a set of support method to use Metrics.
+The libraries can be used on .NET6, .NET7, .NET8, .NET9.
 
 
 ## Description
