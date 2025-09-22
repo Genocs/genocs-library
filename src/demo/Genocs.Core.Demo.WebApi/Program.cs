@@ -1,4 +1,3 @@
-// using Genocs.Auth;
 using System.Text.Json.Serialization;
 using Genocs.Auth;
 using Genocs.Core.Builders;
@@ -14,7 +13,8 @@ using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
-//using Genocs.Persistence.EFCore.Extensions;
+
+// using Genocs.Persistence.EFCore.Extensions;
 
 StaticLogger.EnsureInitialized();
 
@@ -26,7 +26,8 @@ builder.Host
 
 builder
     .AddGenocs()
-    .AddJwt()
+    // Comment out AddOpenIdJwt since we're using custom Firebase auth
+    // .AddOpenIdJwt()
     .AddOpenTelemetry()
     .AddMongoWithRegistration()
     .AddMetrics()
@@ -57,6 +58,9 @@ services.Configure<HealthCheckPublisherOptions>(options =>
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
+// Add Firebase authorization configuration
+services.AddFirebaseAuthorization(builder.Configuration);
+
 var app = builder.Build();
 
 // Use it only  in case you are using EF Core
@@ -75,14 +79,15 @@ app.UseCors(x => x
     .AllowCredentials());
 
 app.UseRouting();
+
+// IMPORTANT: Use your custom Firebase authorization middleware BEFORE UseAuthentication and UseAuthorization
+app.UseFirebaseAuthorization();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMetrics()
     .UsePrometheus();
-
-// Use it only if you need to authenticate with Firebase
-// app.UseFirebaseAuthentication();
 
 app.MapControllers();
 

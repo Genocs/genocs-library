@@ -39,9 +39,20 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection AddFirebaseAuthorization(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<FirebaseAuthorizationOptions>(configuration.GetSection(FirebaseAuthorizationOptions.Position));
+        return services;
+    }
+
     public static IApplicationBuilder UseFirebaseAuthentication(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<FirebaseAuthenticationMiddleware>();
+    }
+
+    public static IApplicationBuilder UseFirebaseAuthorization(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<FirebaseAuthorizationMiddleware>();
     }
 
     /// <summary>

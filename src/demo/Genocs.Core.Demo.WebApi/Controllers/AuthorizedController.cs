@@ -1,26 +1,90 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Security.Claims;
 
 namespace Genocs.Core.Demo.WebApi.Controllers;
 
+/// <summary>
+/// Controller for demonstrating Firebase authorization functionality.
+/// This controller requires Firebase authentication for all endpoints.
+/// </summary>
+/// <remarks>
+/// This controller serves as a demonstration of how to implement Firebase-based authorization
+/// in ASP.NET Core Web API. All endpoints require a valid Firebase JWT token in the Authorization header.
+/// </remarks>
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class AuthorizedController : ControllerBase
+[Produces(MediaTypeNames.Application.Json)]
+[Tags("Firebase Authorization Demo")]
+public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> logger) : ControllerBase
 {
-    private readonly ILogger<AuthorizedController> _logger;
+    private readonly ILogger<FirebaseAuthorizedController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public AuthorizedController(ILogger<AuthorizedController> logger)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    [HttpGet("GetAuthorized")]
+    /// <summary>
+    /// Retrieves authorization information for the authenticated user.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint demonstrates Firebase authorization by returning the authorization header
+    /// from the authenticated request. It serves as a simple test to verify that Firebase
+    /// authentication is working correctly.
+    /// 
+    /// Sample request:
+    /// 
+    ///     GET /FirebaseAuthorized/GetAuthorized
+    ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// 
+    /// </remarks>
+    /// <returns>A string containing the authorization header value from the request.</returns>
+    /// <response code="200">Returns the authorization header information successfully.</response>
+    /// <response code="401">Unauthorized - Invalid or missing Firebase JWT token.</response>
+    /// <response code="403">Forbidden - Valid token but insufficient permissions.</response>
+    [HttpGet("")]
+    [Authorize(Roles = "Editor")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<IActionResult> PostSubmitDemoCommand()
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetAuthorizedAsync()
     {
-        return await Task.Run(() => Ok($"Done! Authorization is: {HttpContext.Request.Headers["Authorization"]}"));
+        _logger.LogInformation("Processing authorized request for user");
+
+        return await Task.Run(() => Ok($"Done! Authorization is: {HttpContext.Request.Headers.Authorization}"));
+    }
+
+    /// <summary>
+    /// Retrieves detailed user information and roles for debugging purposes.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint returns detailed information about the authenticated user including
+    /// all claims and roles assigned by the Firebase middleware. Useful for debugging
+    /// authentication and authorization issues.
+    /// </remarks>
+    /// <returns>An object containing user details and assigned roles.</returns>
+    /// <response code="200">Returns user information successfully.</response>
+    /// <response code="401">Unauthorized - Invalid or missing Firebase JWT token.</response>
+    [HttpGet("user-info")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult GetUserInfo()
+    {
+        var user = HttpContext.User;
+        
+        var userInfo = new
+        {
+            IsAuthenticated = user.Identity?.IsAuthenticated ?? false,
+            AuthenticationType = user.Identity?.AuthenticationType,
+            Name = user.Identity?.Name,
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+            Email = user.FindFirst(ClaimTypes.Email)?.Value,
+            EmailVerified = user.FindFirst("email_verified")?.Value,
+            Roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList(),
+            AllClaims = user.Claims.Select(c => new { c.Type, c.Value }).ToList()
+        };
+
+        _logger.LogInformation("User info requested for user {UserId}", userInfo.UserId);
+
+        return Ok(userInfo);
     }
 }
