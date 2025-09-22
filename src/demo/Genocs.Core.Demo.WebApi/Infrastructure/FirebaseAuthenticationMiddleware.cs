@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Genocs.Core.Domain.Entities.Auditing;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure;
 

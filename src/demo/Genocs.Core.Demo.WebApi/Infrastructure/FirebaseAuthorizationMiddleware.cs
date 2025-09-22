@@ -10,21 +10,14 @@ namespace Genocs.Core.Demo.WebApi.Infrastructure;
 /// Enhanced Firebase authentication and authorization middleware.
 /// Handles JWT token validation and role-based authorization with configurable options.
 /// </summary>
-public class FirebaseAuthorizationMiddleware
+public class FirebaseAuthorizationMiddleware(
+    RequestDelegate next,
+    ILogger<FirebaseAuthorizationMiddleware> logger,
+    IOptions<FirebaseAuthorizationOptions> options)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<FirebaseAuthorizationMiddleware> _logger;
-    private readonly FirebaseAuthorizationOptions _options;
-
-    public FirebaseAuthorizationMiddleware(
-        RequestDelegate next, 
-        ILogger<FirebaseAuthorizationMiddleware> logger,
-        IOptions<FirebaseAuthorizationOptions> options)
-    {
-        _next = next;
-        _logger = logger;
-        _options = options.Value;
-    }
+    private readonly RequestDelegate _next = next;
+    private readonly ILogger<FirebaseAuthorizationMiddleware> _logger = logger;
+    private readonly FirebaseAuthorizationOptions _options = options.Value;
 
     public async Task Invoke(HttpContext context)
     {
@@ -64,7 +57,7 @@ public class FirebaseAuthorizationMiddleware
         try
         {
             var handler = new JwtSecurityTokenHandler();
-            
+
             // Validate token format
             if (!handler.CanReadToken(token))
             {
@@ -86,7 +79,7 @@ public class FirebaseAuthorizationMiddleware
             var userId = payload.TryGetValue("user_id", out var userIdObj) ? userIdObj?.ToString() : string.Empty;
             var name = payload.TryGetValue("name", out var nameObj) ? nameObj?.ToString() : string.Empty;
             var email = payload.TryGetValue("email", out var emailObj) ? emailObj?.ToString() : string.Empty;
-            var emailVerified = payload.TryGetValue("email_verified", out var emailVerifiedObj) && 
+            var emailVerified = payload.TryGetValue("email_verified", out var emailVerifiedObj) &&
                               emailVerifiedObj is bool verified && verified;
 
             if (string.IsNullOrEmpty(userId))
@@ -98,16 +91,16 @@ public class FirebaseAuthorizationMiddleware
             // Check email verification requirement
             if (_options.RequireEmailVerification && !emailVerified)
             {
-                _logger.LogWarning("User {UserId} with email {Email} attempted access with unverified email", 
+                _logger.LogWarning("User {UserId} with email {Email} attempted access with unverified email",
                     userId, email);
-                
+
                 // In demo mode, we'll allow unverified emails but log a warning
                 if (!_options.DemoMode)
                 {
                     await UnauthorizedResponse(context, "Email not verified");
                     return;
                 }
-                
+
                 _logger.LogInformation("Demo mode: Allowing unverified email for user {UserId}", userId);
             }
 
@@ -134,7 +127,7 @@ public class FirebaseAuthorizationMiddleware
             var identity = new ClaimsIdentity(claims, "Firebase");
             context.User = new ClaimsPrincipal(identity);
 
-            _logger.LogInformation("Successfully authenticated user {UserId} ({Email}, verified: {EmailVerified}) with roles: {Roles}", 
+            _logger.LogInformation("Successfully authenticated user {UserId} ({Email}, verified: {EmailVerified}) with roles: {Roles}",
                 userId, email, emailVerified, string.Join(", ", userRoles));
         }
         catch (Exception ex)
@@ -173,7 +166,8 @@ public class FirebaseAuthorizationMiddleware
                 {
                     roles.Add(role);
                 }
-                _logger.LogDebug("Added email-specific roles for {Email}: {Roles}", 
+
+                _logger.LogDebug("Added email-specific roles for {Email}: {Roles}",
                     email, string.Join(", ", emailRoles));
             }
             else
@@ -191,16 +185,17 @@ public class FirebaseAuthorizationMiddleware
                 {
                     if (emailVerified || _options.DemoMode)
                     {
-                        foreach (var role in domainMapping.Value)
+                        foreach (string role in domainMapping.Value)
                         {
                             roles.Add(role);
                         }
-                        _logger.LogDebug("Added domain-specific roles for {Email} (domain: {Domain}): {Roles}", 
+
+                        _logger.LogDebug("Added domain-specific roles for {Email} (domain: {Domain}): {Roles}",
                             email, domainMapping.Key, string.Join(", ", domainMapping.Value));
                     }
                     else
                     {
-                        _logger.LogWarning("User {Email} matches domain {Domain} but email is not verified", 
+                        _logger.LogWarning("User {Email} matches domain {Domain} but email is not verified",
                             email, domainMapping.Key);
                     }
                 }
@@ -224,13 +219,14 @@ public class FirebaseAuthorizationMiddleware
                             {
                                 if (roleElement.ValueKind == JsonValueKind.String)
                                 {
-                                    var role = roleElement.GetString();
+                                    string? role = roleElement.GetString();
                                     if (!string.IsNullOrEmpty(role))
                                     {
                                         roles.Add(role);
                                     }
                                 }
                             }
+
                             _logger.LogDebug("Added custom claims roles for user {UserId}", userId);
                         }
                     }
@@ -248,22 +244,22 @@ public class FirebaseAuthorizationMiddleware
     /// <summary>
     /// Adds additional custom claims based on the Firebase token payload.
     /// </summary>
-    private void AddCustomClaims(List<Claim> claims, IDictionary<string, object> payload)
+    private static void AddCustomClaims(List<Claim> claims, IDictionary<string, object> payload)
     {
         // Add issuer information
-        if (payload.TryGetValue("iss", out var issuer))
+        if (payload.TryGetValue("iss", out object? issuer))
         {
             claims.Add(new Claim("firebase_issuer", issuer?.ToString() ?? string.Empty));
         }
 
         // Add audience information
-        if (payload.TryGetValue("aud", out var audience))
+        if (payload.TryGetValue("aud", out object? audience))
         {
             claims.Add(new Claim("firebase_audience", audience?.ToString() ?? string.Empty));
         }
 
         // Add auth time
-        if (payload.TryGetValue("auth_time", out var authTime))
+        if (payload.TryGetValue("auth_time", out object? authTime))
         {
             claims.Add(new Claim("auth_time", authTime?.ToString() ?? string.Empty));
         }
@@ -274,10 +270,10 @@ public class FirebaseAuthorizationMiddleware
         _logger.LogWarning("Authentication failed: {Message}", message);
         context.Response.StatusCode = 401;
         context.Response.ContentType = "application/json";
-        
+
         var response = new { error = "Unauthorized", message };
-        var jsonResponse = JsonSerializer.Serialize(response);
-        
+        string jsonResponse = JsonSerializer.Serialize(response);
+
         await context.Response.WriteAsync(jsonResponse);
     }
 }

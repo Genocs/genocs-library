@@ -1,6 +1,7 @@
 ﻿using Genocs.Common.Persistence.Initialization;
 using Genocs.Core.Demo.WebApi.Configurations;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Genocs.Core.Demo.WebApi.Infrastructure.Extensions;
 
@@ -42,6 +43,10 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddFirebaseAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<FirebaseAuthorizationOptions>(configuration.GetSection(FirebaseAuthorizationOptions.Position));
+
+        // Register the claims transformation service
+        services.AddScoped<IClaimsTransformation, FirebaseClaimsTransformation>();
+
         return services;
     }
 

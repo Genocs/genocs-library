@@ -26,8 +26,7 @@ builder.Host
 
 builder
     .AddGenocs()
-    // Comment out AddOpenIdJwt since we're using custom Firebase auth
-    // .AddOpenIdJwt()
+    .AddOpenIdJwt()
     .AddOpenTelemetry()
     .AddMongoWithRegistration()
     .AddMetrics()
@@ -58,7 +57,7 @@ services.Configure<HealthCheckPublisherOptions>(options =>
 // Add Masstransit bus configuration
 services.AddCustomMassTransit(builder.Configuration);
 
-// Add Firebase authorization configuration
+// Add Firebase authorization configuration with claims transformation
 services.AddFirebaseAuthorization(builder.Configuration);
 
 var app = builder.Build();
@@ -79,10 +78,6 @@ app.UseCors(x => x
     .AllowCredentials());
 
 app.UseRouting();
-
-// IMPORTANT: Use your custom Firebase authorization middleware BEFORE UseAuthentication and UseAuthorization
-app.UseFirebaseAuthorization();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

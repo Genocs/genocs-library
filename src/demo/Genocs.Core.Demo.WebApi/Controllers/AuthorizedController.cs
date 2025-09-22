@@ -30,19 +30,20 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// from the authenticated request. It serves as a simple test to verify that Firebase
     /// authentication is working correctly.
     /// 
+    /// **Important:** This endpoint requires the user to have the 'Editor' role.
+    /// 
     /// Sample request:
     /// 
-    ///     GET /FirebaseAuthorized/GetAuthorized
+    ///     GET /FirebaseAuthorized
     ///     Authorization: Bearer your-firebase-jwt-token-here
     /// 
     /// </remarks>
     /// <returns>A string containing the authorization header value from the request.</returns>
     /// <response code="200">Returns the authorization header information successfully.</response>
     /// <response code="401">Unauthorized - Invalid or missing Firebase JWT token.</response>
-    /// <response code="403">Forbidden - Valid token but insufficient permissions.</response>
+    /// <response code="403">Forbidden - Valid token but user lacks the required 'Editor' role.</response>
     [HttpGet("")]
     [Authorize(Roles = "Editor")]
-    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -60,6 +61,19 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// This endpoint returns detailed information about the authenticated user including
     /// all claims and roles assigned by the Firebase middleware. Useful for debugging
     /// authentication and authorization issues.
+    /// 
+    /// Returns information such as:
+    /// - Authentication status
+    /// - User ID and email
+    /// - Email verification status
+    /// - Assigned roles
+    /// - All JWT claims
+    /// 
+    /// Sample request:
+    /// 
+    ///     GET /FirebaseAuthorized/user-info
+    ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// 
     /// </remarks>
     /// <returns>An object containing user details and assigned roles.</returns>
     /// <response code="200">Returns user information successfully.</response>
@@ -70,7 +84,7 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     public IActionResult GetUserInfo()
     {
         var user = HttpContext.User;
-        
+
         var userInfo = new
         {
             IsAuthenticated = user.Identity?.IsAuthenticated ?? false,
@@ -80,11 +94,39 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
             Email = user.FindFirst(ClaimTypes.Email)?.Value,
             EmailVerified = user.FindFirst("email_verified")?.Value,
             Roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList(),
-            AllClaims = user.Claims.Select(c => new { c.Type, c.Value }).ToList()
+            AllClaims = user.Claims.Select(c => new { c.Type, c.Value }).ToList(),
+            Clearance = false // Implement and check custom logic for clearance
         };
 
         _logger.LogInformation("User info requested for user {UserId}", userInfo.UserId);
 
         return Ok(userInfo);
+    }
+
+    /// <summary>
+    /// Submits a request to join a team.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint allows authenticated users to submit a request to join a team.
+    /// The request is logged and can be processed by team administrators.
+    /// 
+    /// Sample request:
+    /// 
+    ///     GET /FirebaseAuthorized/join-request
+    ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// 
+    /// </remarks>
+    /// <returns>A confirmation message indicating the join request was submitted.</returns>
+    /// <response code="200">Returns confirmation that the join request was submitted successfully.</response>
+    /// <response code="401">Unauthorized - Invalid or missing Firebase JWT token.</response>
+    [HttpGet("join-request")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult PostJoinRequest()
+    {
+        // Sent a request to the team admin to join the team
+        var user = HttpContext.User;
+        _logger.LogInformation("Join request made by user {UserId}", user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        return Ok("PostJoinRequest");
     }
 }
