@@ -26,16 +26,17 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// Retrieves authorization information for the authenticated user.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// This endpoint demonstrates Firebase authorization by returning the authorization header
     /// from the authenticated request. It serves as a simple test to verify that Firebase
     /// authentication is working correctly.
-    /// 
-    /// **Important:** This endpoint requires the user to have the 'Editor' role.
-    /// 
-    /// Sample request:
-    /// 
+    /// </para>
+    /// <para>**Important:** This endpoint requires the user to have the 'Editor' role.</para>
+    /// <para>Sample request:</para>
+    /// <para>
     ///     GET /FirebaseAuthorized
     ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// </para>
     /// 
     /// </remarks>
     /// <returns>A string containing the authorization header value from the request.</returns>
@@ -58,21 +59,24 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// Retrieves detailed user information and roles for debugging purposes.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// This endpoint returns detailed information about the authenticated user including
     /// all claims and roles assigned by the Firebase middleware. Useful for debugging
     /// authentication and authorization issues.
-    /// 
+    /// </para>
+    /// <para>
     /// Returns information such as:
     /// - Authentication status
     /// - User ID and email
     /// - Email verification status
     /// - Assigned roles
     /// - All JWT claims
-    /// 
-    /// Sample request:
-    /// 
+    /// </para>
+    /// <para>Sample request:</para>
+    /// <para>
     ///     GET /FirebaseAuthorized/user-info
     ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// </para>
     /// 
     /// </remarks>
     /// <returns>An object containing user details and assigned roles.</returns>
@@ -107,13 +111,15 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// Submits a request to join a team.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// This endpoint allows authenticated users to submit a request to join a team.
     /// The request is logged and can be processed by team administrators.
-    /// 
-    /// Sample request:
-    /// 
+    /// </para>
+    /// <para>Sample request:</para>
+    /// <para>
     ///     GET /FirebaseAuthorized/join-request
     ///     Authorization: Bearer your-firebase-jwt-token-here
+    /// </para>
     /// 
     /// </remarks>
     /// <returns>A confirmation message indicating the join request was submitted.</returns>

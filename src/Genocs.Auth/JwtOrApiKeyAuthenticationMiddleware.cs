@@ -10,12 +10,20 @@ namespace Genocs.Auth;
 /// Middleware for handling JWT authentication and API key authentication.
 /// </summary>
 /// <remarks>
+/// <para>
 /// This middleware supports dual authentication modes:
+/// </para>
+/// <para>
 /// 1. API Key authentication via x-gnx-apikey header for system-to-system communication
+/// </para>
+/// <para>
 /// 2. JWT Bearer token authentication for user authentication
+/// </para>
+/// <para>
 /// When API key is provided, it bypasses JWT validation and sets up API key-based claims.
+/// </para>
 /// </remarks>
-public class JWTOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfiguration configuration)
+public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfiguration configuration)
 {
     private readonly RequestDelegate _next = next;
     private readonly IConfiguration _configuration = configuration;

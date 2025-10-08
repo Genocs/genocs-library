@@ -81,6 +81,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Custom middleware to allow both Jwt and ApiKey authentication
+app.UseMiddleware<JwtOrApiKeyAuthenticationMiddleware>();
+
 app.UseMetrics()
     .UsePrometheus();
 

@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
-        <PackageReference Include="Polly" Version="8.6.2" />
+        <PackageReference Include="Polly" Version="8.6.4" />
     </ItemGroup>
 
 </Project>
