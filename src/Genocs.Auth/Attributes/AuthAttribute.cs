@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Genocs.Auth;
+namespace Genocs.Auth.Attributes;
 
 /// <summary>
 /// The authorization Attribute.

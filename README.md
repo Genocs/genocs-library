@@ -64,6 +64,65 @@ You can find a useful documentation about how to use the library. The documentat
 
 Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
 
+
+## Folders structure
+
+```text
+## Repository structure for .NET Solution
+
+root-project/
+├── .cursor/
+│   ├── rules/
+│   │   └── ...
+├── .git/
+│   └── ...
+├── .github/
+│   ├── chatmodes
+│   │   ├── Code Reviewer.chatmode.md
+│   │   ├── Documentation Writer.chatmode.md
+│   │   └── ...
+│   ├── copilot-instructions.md
+│   ├── workflows/
+│   │   ├── ...
+├── devops/
+│   ├── azure
+│   │   ├── ci-publish_on_acr.yml
+│   │   ├── ci-publish_on_nuget.yml
+│   │   └── ...
+├── infrastructure/
+│   ├── bicep/
+│   │   └── ...
+│   ├── docker-compose/
+│   │   └── ...
+│   ├── k8s/
+│   │   └── ...
+│   ├── terraform/
+│   │   └── ...
+│   ├── ...
+├── scripts/
+│   └── ...
+├── src/
+│   └── ...
+├── .dockerignore
+├── .editconfig
+├── .env
+├── .gitattributes
+├── .gitignore
+├── Directory.Build.props
+├── Directory.Build.targets
+├── dotnet.ruleset
+├── global.json
+├── icon.png
+├── stylecop.json
+├── nuget.config
+├── [project].sln
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── api-workbench.rest
+└── ...
+
 ## Infrastructure
 
 In this section you can find the infrastructure components you need to execute the solution. Infrastucture components are the database, the enterprice servise bus, the distributed logging, monitoring, tracing systems along with database and many more.
