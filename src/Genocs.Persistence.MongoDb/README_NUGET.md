@@ -9,11 +9,12 @@ Persistence MongoDB NuGet package contains general purpose functionalities to be
 
 ## Dependencies
 
-- **Genocs.Core**: 7.4.*
+- **Genocs.Core**: 7.5.\*
 - **MongoDB.Driver**: 3.5.0
 - **MongoDB.Driver.Core.Extensions.DiagnosticSources**: 2.1.0
 
 ### Framework references
+
 - **NONE**
 
 ## MongoDb Convention
@@ -23,9 +24,10 @@ Persistence MongoDB NuGet package contains general purpose functionalities to be
 - EnumRepresentationConvention(BsonType.String)
 
 ### DataProvider Settings
+
 Following is about how to setup **MongoDb**
 
-``` json
+```json
   "mongoDb": {
     "ConnectionString": "mongodb://localhost",
     "Database": "demo_database",

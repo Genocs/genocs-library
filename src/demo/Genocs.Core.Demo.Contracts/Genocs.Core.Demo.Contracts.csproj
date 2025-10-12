@@ -6,12 +6,11 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Core" Version="7.4.*" />
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="7.5.*" />
     </ItemGroup>
-
 </Project>

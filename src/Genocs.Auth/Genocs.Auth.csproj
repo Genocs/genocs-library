@@ -24,8 +24,8 @@
         <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Security" Version="7.4.*" />
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Security" Version="7.5.*" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">

@@ -20,8 +20,8 @@
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Core" Version="7.4.*" />
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="7.5.*" />
     </ItemGroup>
 
     <ItemGroup>

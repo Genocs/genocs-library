@@ -11,8 +11,9 @@
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.4.*" />
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="7.5.*" />
+        <PackageReference Include="Genocs.Persistence.EFCore" Version="7.5.*" />
     </ItemGroup>
 
 </Project>

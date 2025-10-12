@@ -24,7 +24,7 @@
         <ProjectReference Include="..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' != 'Debug'">
-        <PackageReference Include="Genocs.Discovery.Consul" Version="7.4.*" />
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Discovery.Consul" Version="7.5.*" />
     </ItemGroup>
 </Project>

@@ -9,9 +9,10 @@ MessageBrokers NuGet package contains interfaces and abstractions for message br
 
 ## Dependencies
 
-- **Genocs.Core**: 7.4.*
+- **Genocs.Core**: 7.5.\*
 
 ### Framework references
+
 - **NONE**
 
 ## Support
@@ -29,6 +30,3 @@ The change log and breaking changes are listed here.
 - [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 
 - [releases](https://github.com/Genocs/genocs-library/releases)
-
-
-
