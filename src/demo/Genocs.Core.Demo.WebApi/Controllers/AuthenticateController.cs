@@ -92,7 +92,7 @@ public class AuthenticateController : ControllerBase
     public IActionResult GetUserInfo()
     {
         var user = HttpContext.User;
-        string? authType = user.Identity.AuthenticationType;
+        string? authType = user.Identity?.AuthenticationType;
 
         // Only allow JWT authentication for this endpoint
         if (authType != "AuthenticationTypes.Federation")

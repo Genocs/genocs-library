@@ -30,8 +30,22 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
 
     public async Task Invoke(HttpContext context)
     {
-        // Check for API key authentication first
+        // Get the apiKey if any
         string? apiKey = context.Request.Headers["x-gnx-apikey"];
+
+        // Get JWT authentication if any
+        string? jwt = context.Request.Headers.Authorization;
+
+        // Check if both authentication are in place
+        if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(jwt))
+        {
+            // Invalid API key
+            context.Response.StatusCode = 409;
+            await context.Response.WriteAsync("Invalid Configuration! ApiKey and JWT token cannot be on the same time!");
+            return;
+        }
+
+        // Check for API key authentication first
         if (!string.IsNullOrEmpty(apiKey))
         {
             if (await ValidateApiKeyAsync(apiKey))
@@ -60,11 +74,10 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
             }
         }
 
-        // Check for Firebase JWT authentication
-        string? authHeader = context.Request.Headers.Authorization;
-        if (authHeader?.StartsWith("Bearer ") == true)
+        // Check for JWT authentication
+        if (jwt?.StartsWith("Bearer ") == true)
         {
-            string token = authHeader["Bearer ".Length..].Trim();
+            string token = jwt["Bearer ".Length..].Trim();
 
             try
             {
@@ -100,11 +113,18 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
     /// <returns>True if the API key is valid, false otherwise.</returns>
     private async Task<bool> ValidateApiKeyAsync(string apiKey)
     {
+        // Check if enabled
+        bool isEnabled = _configuration.GetValue<bool>("Authorization:Enabled");
+        if (!isEnabled)
+        {
+            return await Task.FromResult(false);
+        }
+
         // Get valid API keys from configuration
-        string[] validApiKeys = _configuration.GetSection("Authentication:ApiKeys").Get<string[]>() ?? [];
+        string[] validApiKeys = _configuration.GetSection("Authorization:ApiKeys").Get<string[]>() ?? [];
 
         // For development/testing
-        string? devApiKey = _configuration["Authentication:DevApiKey"];
+        string? devApiKey = _configuration["Authorization:DevApiKey"];
 
         bool isOk = validApiKeys.Contains(apiKey) || (!string.IsNullOrWhiteSpace(devApiKey) && devApiKey == apiKey);
 
