@@ -1,5 +1,5 @@
-using Genocs.Core.Domain.Entities;
 using System.Linq.Expressions;
+using Genocs.Core.Domain.Entities;
 
 // using Genocs.Core.Dependency;
 // using Genocs.Core.Domain.Uow;
@@ -46,10 +46,10 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual List<TEntity> GetAllList()
     {
-        return GetAll().ToList();
+        return [.. GetAll()];
     }
 
-    public virtual Task<List<TEntity>> GetAllListAsync()
+    public virtual Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult(GetAllList());
     }
@@ -59,7 +59,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().Where(predicate).ToList();
     }
 
-    public virtual Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(GetAllList(predicate));
     }
@@ -75,9 +75,9 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
-    public virtual async Task<TEntity> GetAsync(TKey id)
+    public virtual async Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default)
     {
-        var entity = await FirstOrDefaultAsync(id);
+        var entity = await FirstOrDefaultAsync(id, cancellationToken);
         return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
@@ -86,7 +86,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().Single(predicate);
     }
 
-    public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Single(predicate));
     }
@@ -96,7 +96,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
     }
 
-    public virtual Task<TEntity?> FirstOrDefaultAsync(TKey id)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(FirstOrDefault(id));
     }
@@ -106,7 +106,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().FirstOrDefault(predicate);
     }
 
-    public virtual Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(FirstOrDefault(predicate));
     }
@@ -118,7 +118,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public abstract TEntity Insert(TEntity entity);
 
-    public virtual Task<TEntity> InsertAsync(TEntity entity)
+    public virtual Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Insert(entity));
     }
@@ -128,7 +128,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return Insert(entity).Id;
     }
 
-    public virtual Task<TKey> InsertAndGetIdAsync(TEntity entity)
+    public virtual Task<TKey> InsertAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(InsertAndGetId(entity));
     }
@@ -140,11 +140,11 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
             : Update(entity);
     }
 
-    public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+    public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         return entity.IsTransient()
-            ? await InsertAsync(entity)
-            : await UpdateAsync(entity);
+            ? await InsertAsync(entity, cancellationToken)
+            : await UpdateAsync(entity, cancellationToken);
     }
 
     public virtual TKey InsertOrUpdateAndGetId(TEntity entity)
@@ -152,14 +152,14 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return InsertOrUpdate(entity).Id;
     }
 
-    public virtual Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+    public virtual Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(InsertOrUpdateAndGetId(entity));
     }
 
     public abstract TEntity Update(TEntity entity);
 
-    public virtual Task<TEntity> UpdateAsync(TEntity entity)
+    public virtual Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Update(entity));
     }
@@ -171,16 +171,16 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return entity;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction)
+    public virtual async Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction, CancellationToken cancellationToken = default)
     {
-        var entity = await GetAsync(id);
+        var entity = await GetAsync(id, cancellationToken);
         await updateAction(entity);
         return entity;
     }
 
     public abstract void Delete(TEntity entity);
 
-    public virtual Task DeleteAsync(TEntity entity)
+    public virtual Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         Delete(entity);
         return Task.FromResult(0);
@@ -188,7 +188,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public abstract void Delete(TKey id);
 
-    public virtual Task DeleteAsync(TKey id)
+    public virtual Task DeleteAsync(TKey id, CancellationToken cancellationToken = default)
     {
         Delete(id);
         return Task.FromResult(0);
@@ -202,7 +202,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         }
     }
 
-    public virtual Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         Delete(predicate);
         return Task.FromResult(0);
@@ -213,7 +213,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().Count();
     }
 
-    public virtual Task<int> CountAsync()
+    public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Count());
     }
@@ -223,7 +223,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().Where(predicate).Count();
     }
 
-    public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Count(predicate));
     }
@@ -233,7 +233,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().LongCount();
     }
 
-    public virtual Task<long> LongCountAsync()
+    public virtual Task<long> LongCountAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult(LongCount());
     }
@@ -243,7 +243,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         return GetAll().Where(predicate).LongCount();
     }
 
-    public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+    public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(LongCount(predicate));
     }

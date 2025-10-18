@@ -13,15 +13,16 @@ public interface IMongoDbBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEn
 
     IQueryable<TEntity> GetMongoQueryable();
 
-    Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
-    Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+    Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IPagedQuery;
 
-    Task AddAsync(TEntity entity);
+    Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate);
+    Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
-    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }

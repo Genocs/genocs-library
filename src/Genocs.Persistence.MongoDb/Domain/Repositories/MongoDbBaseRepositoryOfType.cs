@@ -13,20 +13,15 @@ namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Primary key of the entity.</typeparam>
-public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
+/// <remarks>
+/// Standard constructor.
+/// </remarks>
+/// <param name="databaseProvider"></param>
+public class MongoDbBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider databaseProvider) : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
-    private readonly IMongoDatabaseProvider _databaseProvider;
+    private readonly IMongoDatabaseProvider _databaseProvider = databaseProvider;
     protected IMongoCollection<TEntity>? _collection;
-
-    /// <summary>
-    /// Standard constructor.
-    /// </summary>
-    /// <param name="databaseProvider"></param>
-    public MongoDbBaseRepositoryOfType(IMongoDatabaseProvider databaseProvider)
-    {
-        _databaseProvider = databaseProvider;
-    }
 
     /// <summary>
     /// Get the MongoDB database.
@@ -78,8 +73,8 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     /// <summary>
     /// Get single entity.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">The Key.</param>
+    /// <returns>The Entity.</returns>
     /// <exception cref="EntityNotFoundException">It is thrown if the entity is not found.</exception>
     public override TEntity Get(TKey id)
     {
@@ -147,11 +142,11 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     public IQueryable<TEntity> GetMongoQueryable()
         => Collection.AsQueryable();
 
-    public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().Where(predicate).FirstAsync();
 
-    public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-        => await Collection.AsQueryable().Where(predicate).ToListAsync();
+    public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await Collection.AsQueryable().Where(predicate).ToListAsync(cancellationToken);
 
     /// <summary>
     /// Query data from the Mongo Collection and convert it to a PagedResult.
@@ -159,17 +154,18 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey> : RepositoryBase<TEntity
     /// <typeparam name="TQuery">The query type.</typeparam>
     /// <param name="predicate">The predicate.</param>
     /// <param name="query">The query.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The paged result.</returns>
-    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IPagedQuery
         => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
-    public async Task AddAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         => await Collection.InsertOneAsync(entity);
 
-    public async Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
-        => await Collection.ReplaceOneAsync(predicate, entity);
+    public async Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await Collection.ReplaceOneAsync(predicate, entity, cancellationToken: cancellationToken);
 
-    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
-        => await Collection.AsQueryable().Where(predicate).AnyAsync();
+    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await Collection.AsQueryable().Where(predicate).AnyAsync(cancellationToken);
 }

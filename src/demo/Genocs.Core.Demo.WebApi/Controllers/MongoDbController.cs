@@ -23,13 +23,21 @@ public class MongoDbRepositoryController : ControllerBase
     public IActionResult Get()
         => Ok("MongoDbRepositoryController");
 
-    [HttpPost("dummy")]
+    [HttpPost("user")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<IActionResult> PostDummy()
+    public async Task<IActionResult> PostUserAsync()
     {
         User user = new User(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), 21, "ITA");
 
         User objectId = await _userRepository.InsertAsync(user);
         return Ok(objectId.ToString());
+    }
+
+    [HttpGet("user")]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUserAsync()
+    {
+        User user = await _userRepository.GetAsync(c => true);
+        return Ok(user);
     }
 }

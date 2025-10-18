@@ -1,4 +1,6 @@
-﻿namespace Genocs.Core.CQRS.Queries;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
 /// The page result base class.
@@ -24,6 +26,16 @@ public abstract class PagedResultBase
     /// Total number of results.
     /// </summary>
     public long TotalResults { get; }
+
+    /// <summary>
+    /// Gets whether there are more pages.
+    /// </summary>
+    public bool HasNextPage => CurrentPage < (TotalPages - 1);
+
+    /// <summary>
+    /// Gets whether there are previous pages.
+    /// </summary>
+    public bool HasPreviousPage => CurrentPage > 0;
 
     /// <summary>
     /// Default constructor.

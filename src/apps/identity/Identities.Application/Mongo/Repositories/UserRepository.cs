@@ -46,5 +46,5 @@ public class UserRepository : IUserRepository
         => _repository.AddAsync(new UserDocument(user));
 
     public Task UpdateAsync(User user)
-        => _repository.UpdateAsync(new UserDocument(user));
+        => _repository.UpdateAsync(new UserDocument(user), CancellationToken.None);
 }
