@@ -1,4 +1,12 @@
-# .NET query builder library
+# Genocs.HTTP.RestEase
+
+[![NuGet](https://img.shields.io/nuget/v/Genocs.HTTP.RestEase.svg)](https://www.nuget.org/packages/Genocs.HTTP.RestEase/)
+[![NuGet](https://img.shields.io/nuget/dt/Genocs.HTTP.RestEase.svg)](https://www.nuget.org/packages/Genocs.HTTP.RestEase/)
+
+Genocs Enterprise Library - Genocs.HTTP.RestEase.
+
+
+## Overview
 
 This package contains a query builder that is agnostic about the persistence layer. The library is designed by Genocs.
 The library is built to be used with NET6, NET7 NET8 and NET9.
@@ -12,6 +20,8 @@ Persistence agnostic query builder service.
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
+## Documentation
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 

@@ -1,45 +1,25 @@
-# .NET Core Auth client library
+# The Genocs Library - Authentication components
 
-This package contains a set of functionalities to handling authorization logic as JWT.
-
-The libraries are built using .NET9, .NET8, .NET7, .NET6.
+[![NuGet](https://img.shields.io/nuget/v/Genocs.Auth.svg)](https://www.nuget.org/packages/Genocs.Auth/)
+[![NuGet](https://img.shields.io/nuget/dt/Genocs.Auth.svg)](https://www.nuget.org/packages/Genocs.Auth/)
 
 ## Description
+**Genocs.Auth** is a comprehensive authentication library that provides secure user authentication and authorization mechanisms for .NET applications targeting NET6, NET7, NET8 and NET9.
 
-This package contains a set of functionalities to handling authorization logic as JWT.
+## Dependencies
+- **Microsoft.AspNetCore.Authentication.JwtBearer** (9.0.0)
+- **Microsoft.AspNetCore.Identity** (9.0.0)
+- **Microsoft.Extensions.DependencyInjection.Abstractions** (9.0.0)
+- **System.IdentityModel.Tokens.Jwt** (8.1.2)
 
-
-## Support
-
-Please check the GitHub repository getting more info.
-
-
-### DataProvider Settings
-Following are the project settings needed to enable monitoring
-
-``` json
-  "jwt": {
-    "certificate": {
-      "location": "certs/localhost.pfx",
-      "password": "test",
-      "rawData": ""
-    },
-    "issuer": "genocs-identities-service",
-    "validIssuer": "genocs-identities-service",
-    "validateAudience": false,
-    "validateIssuer": true,
-    "validateLifetime": true,
-    "expiry": "01:00:00"  
-  }
-```
+### Framework references
+- Microsoft.AspNetCore.App
 
 ## Support
+Browse documentation at [GitHub](https://github.com/Genocs/genocs-library)
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
-
+## Documentation
+For more details and usage examples, visit our [documentation website](https://genocs.github.io/genocs-library/).
 
 ## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+See the [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md) for release history and [Releases](https://github.com/Genocs/genocs-library/releases) for detailed release notes.
