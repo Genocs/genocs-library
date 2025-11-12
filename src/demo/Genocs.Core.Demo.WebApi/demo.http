@@ -1,0 +1,194 @@
+### Demo Web API HTTP Requests
+### Base URL Configuration
+@baseUrl = https://localhost:5070
+@apiKey = your-api-key-here
+@jwtToken = eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMjEzMGZlZjAyNTg3ZmQ4ODYxODg2OTgyMjczNGVmNzZhMTExNjUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2lvdmFubmkgRW1hbnVlbGUgTm9jY28iLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmlzY2FubmVyLXdlYiIsImF1ZCI6ImZpc2Nhbm5lci13ZWIiLCJhdXRoX3RpbWUiOjE3NjA5ODI1NDgsInVzZXJfaWQiOiI3dGxXSEFPZDhJZm9xUndiaXdFdkQ1T3V6SEoyIiwic3ViIjoiN3RsV0hBT2Q4SWZvcVJ3Yml3RXZENU91ekhKMiIsImlhdCI6MTc2MDk4MjU0OCwiZXhwIjoxNzYwOTg2MTQ4LCJlbWFpbCI6Imdpb3Zhbm5pLm5vY2NvQGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImdpb3Zhbm5pLm5vY2NvQGhvdG1haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.GIE0fLpyAKGZCRwT7nvP2bO0_rfc5eC1ul8QaQmZ2HH6LNQFpJZHm86AcFjmRQRyi1zadfcTepPgMnB-p__vB-qOz7LJZ-7_u7AHR-eR3CaLxJ-NWBONG7P5XfQWAI_D87jBPHLyt2untpzYLgWu1mZEu4NQ7itWw1iKFjSEf1q-oS_FSrSPZbnuGO21EQtcR5bRiC-wjYfGY23izy1pYEjZrC1NGw5w_APcO7LN-nYiz0fkaqkTZnMUyZQid4tjlGwa7y186SSqq0toRLBXpZ6am7PbC9ArPuI0XX5acayz0e3p8CU1HxsJme7JxzFkzFc5N2jUCPlMNNfbGdSAoA
+@firebaseToken = eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMjEzMGZlZjAyNTg3ZmQ4ODYxODg2OTgyMjczNGVmNzZhMTExNjUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2lvdmFubmkgRW1hbnVlbGUgTm9jY28iLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmlzY2FubmVyLXdlYiIsImF1ZCI6ImZpc2Nhbm5lci13ZWIiLCJhdXRoX3RpbWUiOjE3NjA5ODI1NDgsInVzZXJfaWQiOiI3dGxXSEFPZDhJZm9xUndiaXdFdkQ1T3V6SEoyIiwic3ViIjoiN3RsV0hBT2Q4SWZvcVJ3Yml3RXZENU91ekhKMiIsImlhdCI6MTc2MDk4MjU0OCwiZXhwIjoxNzYwOTg2MTQ4LCJlbWFpbCI6Imdpb3Zhbm5pLm5vY2NvQGhvdG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImdpb3Zhbm5pLm5vY2NvQGhvdG1haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.GIE0fLpyAKGZCRwT7nvP2bO0_rfc5eC1ul8QaQmZ2HH6LNQFpJZHm86AcFjmRQRyi1zadfcTepPgMnB-p__vB-qOz7LJZ-7_u7AHR-eR3CaLxJ-NWBONG7P5XfQWAI_D87jBPHLyt2untpzYLgWu1mZEu4NQ7itWw1iKFjSEf1q-oS_FSrSPZbnuGO21EQtcR5bRiC-wjYfGY23izy1pYEjZrC1NGw5w_APcO7LN-nYiz0fkaqkTZnMUyZQid4tjlGwa7y186SSqq0toRLBXpZ6am7PbC9ArPuI0XX5acayz0e3p8CU1HxsJme7JxzFkzFc5N2jUCPlMNNfbGdSAoA
+
+### ===========================
+### HOME CONTROLLER REQUESTS
+### ===========================
+
+### Get Secret from Home Controller
+GET {{baseUrl}}/secret
+Accept: application/json
+
+### ===========================
+### DEMO CONTROLLER REQUESTS
+### ===========================
+
+### Submit Demo Command
+POST {{baseUrl}}/Demo/SubmitDemoCommand
+Content-Type: application/json
+Accept: application/json
+
+### Submit Demo Event
+POST {{baseUrl}}/Demo/SubmitDemoEvent
+Content-Type: application/json
+Accept: application/json
+
+### ===========================
+### AUTHENTICATE CONTROLLER REQUESTS
+### ===========================
+
+### Authenticate with API Key
+GET {{baseUrl}}/Authenticate
+x-gnx-apikey: {{apiKey}}
+Accept: application/json
+
+### Authenticate with JWT Token
+GET {{baseUrl}}/Authenticate
+Authorization: Bearer {{jwtToken}}
+Accept: application/json
+
+### Get User Info (requires JWT with gnx-operator role)
+GET {{baseUrl}}/Authenticate/me
+Authorization: Bearer {{jwtToken}}
+Accept: application/json
+
+### ===========================
+### EXTERNAL API CONTROLLER REQUESTS
+### ===========================
+
+### External API Home
+GET {{baseUrl}}/ExternalApi
+Content-Type: application/json
+Accept: application/json
+
+### External API Post Issue
+POST {{baseUrl}}/ExternalApi
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "12345",
+  "description": "Sample issue description",
+  "priority": "High"
+}
+
+### ===========================
+### FIREBASE AUTHORIZED CONTROLLER REQUESTS
+### ===========================
+
+### Get Authorized (requires Firebase JWT with Editor role)
+GET {{baseUrl}}/FirebaseAuthorized
+Authorization: Bearer {{firebaseToken}}
+Accept: application/json
+
+### Get User Info (Firebase Auth)
+GET {{baseUrl}}/FirebaseAuthorized/user-info
+Authorization: Bearer {{firebaseToken}}
+Accept: application/json
+
+### Join Request
+GET {{baseUrl}}/FirebaseAuthorized/join-request
+Authorization: Bearer {{firebaseToken}}
+Accept: application/json
+
+### ===========================
+### HEALTH AND STATUS ENDPOINTS
+### ===========================
+
+### Health Check (if available)
+GET {{baseUrl}}/health
+Accept: application/json
+
+### Application Info (if available)
+GET {{baseUrl}}/info
+Accept: application/json
+
+### ===========================
+### SAMPLE REQUESTS WITH DIFFERENT CONFIGURATIONS
+### ===========================
+
+### Home Controller with different base URL (Development)
+# @name getSecretDev
+GET https://localhost:5000/secret
+Accept: application/json
+
+### Home Controller with different base URL (Production-like)
+# @name getSecretProd
+GET https://api.yourdomain.com/secret
+Accept: application/json
+
+### ===========================
+### TESTING WITH INVALID TOKENS
+### ===========================
+
+### Test with Invalid JWT Token
+GET {{baseUrl}}/Authenticate/me
+Authorization: Bearer invalid-token
+Accept: application/json
+
+### Test with Missing API Key
+GET {{baseUrl}}/Authenticate
+Accept: application/json
+
+### Test Firebase Endpoint without Authorization
+GET {{baseUrl}}/FirebaseAuthorized
+Accept: application/json
+
+### ===========================
+### TESTING SPECIFIC SCENARIOS
+### ===========================
+
+### Test CORS (if needed)
+OPTIONS {{baseUrl}}/Demo/SubmitDemoCommand
+Origin: https://localhost:3000
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type
+
+### Test with Custom Headers
+GET {{baseUrl}}/secret
+Accept: application/json
+X-Custom-Header: test-value
+User-Agent: Demo-HTTP-Client/1.0
+
+### ===========================
+### BATCH REQUESTS
+### ===========================
+
+### Multiple requests in sequence
+# @name submitCommand
+POST {{baseUrl}}/Demo/SubmitDemoCommand
+Content-Type: application/json
+
+###
+
+# @name submitEvent  
+POST {{baseUrl}}/Demo/SubmitDemoEvent
+Content-Type: application/json
+
+###
+
+# @name getSecret
+GET {{baseUrl}}/secret
+
+### ===========================
+### REQUEST TEMPLATES FOR DIFFERENT ENVIRONMENTS
+### ===========================
+
+### Development Environment
+# @name devRequests
+@dev_baseUrl = https://localhost:7000
+@dev_apiKey = dev-api-key
+
+GET {{dev_baseUrl}}/secret
+x-gnx-apikey: {{dev_apiKey}}
+
+### Staging Environment  
+# @name stagingRequests
+@staging_baseUrl = https://staging-api.yourdomain.com
+@staging_apiKey = staging-api-key
+
+GET {{staging_baseUrl}}/secret
+x-gnx-apikey: {{staging_apiKey}}
+
+### Production Environment
+# @name prodRequests
+@prod_baseUrl = https://api.yourdomain.com
+@prod_apiKey = prod-api-key
+
+GET {{prod_baseUrl}}/secret
+x-gnx-apikey: {{prod_apiKey}}
+

@@ -109,4 +109,43 @@ public class AuthenticateController : ControllerBase
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Get current user information (requires standard JWT authentication).
+    /// </summary>
+    /// <remarks>
+    /// Get user information with standard JWT authentication requirement.
+    /// This endpoint requires valid JWT Bearer token authentication and does not accept API key authentication.
+    /// Returns detailed user information from the JWT token claims.
+    /// Used for user profile access and authenticated user operations.
+    /// Demonstrates standard authorization requirements compared to the flexible authenticate endpoint.
+    /// </remarks>
+    /// <response code="200">User information retrieved successfully.</response>
+    /// <response code="401">JWT authentication required.</response>
+    /// <response code="404">Authorization fail. </response>
+    /// <returns>Current user information from JWT token.</returns>
+    [Authorize(Roles = "gnx-users")]
+    [HttpGet("gnx-user")]
+    [ProducesResponseType(typeof(UserInfoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult GetUserInRoleInfo()
+    {
+        var user = HttpContext.User;
+        string? authType = user.Identity?.AuthenticationType;
+
+        // Only allow JWT authentication for this endpoint
+        if (authType != "AuthenticationTypes.Federation")
+        {
+            return Unauthorized("JWT Bearer token authentication required");
+        }
+
+        var response = new UserInfoResponse
+        {
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+            UserName = user.FindFirst(ClaimTypes.Name)?.Value,
+            AuthenticationType = authType
+        };
+
+        return Ok(response);
+    }
 }

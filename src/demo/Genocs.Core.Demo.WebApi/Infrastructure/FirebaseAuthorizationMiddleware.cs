@@ -10,10 +10,7 @@ namespace Genocs.Core.Demo.WebApi.Infrastructure;
 /// Enhanced Firebase authentication and authorization middleware.
 /// Handles JWT token validation and role-based authorization with configurable options.
 /// </summary>
-public class FirebaseAuthorizationMiddleware(
-    RequestDelegate next,
-    ILogger<FirebaseAuthorizationMiddleware> logger,
-    IOptions<FirebaseAuthorizationOptions> options)
+public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<FirebaseAuthorizationMiddleware> logger, IOptions<FirebaseAuthorizationOptions> options)
 {
     private readonly RequestDelegate _next = next;
     private readonly ILogger<FirebaseAuthorizationMiddleware> _logger = logger;
@@ -76,10 +73,10 @@ public class FirebaseAuthorizationMiddleware(
             }
 
             // Extract user information from token
-            var userId = payload.TryGetValue("user_id", out var userIdObj) ? userIdObj?.ToString() : string.Empty;
-            var name = payload.TryGetValue("name", out var nameObj) ? nameObj?.ToString() : string.Empty;
-            var email = payload.TryGetValue("email", out var emailObj) ? emailObj?.ToString() : string.Empty;
-            var emailVerified = payload.TryGetValue("email_verified", out var emailVerifiedObj) &&
+            string? userId = payload.TryGetValue("user_id", out object? userIdObj) ? userIdObj?.ToString() : string.Empty;
+            string? name = payload.TryGetValue("name", out object? nameObj) ? nameObj?.ToString() : string.Empty;
+            string? email = payload.TryGetValue("email", out object? emailObj) ? emailObj?.ToString() : string.Empty;
+            bool emailVerified = payload.TryGetValue("email_verified", out object? emailVerifiedObj) &&
                               emailVerifiedObj is bool verified && verified;
 
             if (string.IsNullOrEmpty(userId))
@@ -91,8 +88,7 @@ public class FirebaseAuthorizationMiddleware(
             // Check email verification requirement
             if (_options.RequireEmailVerification && !emailVerified)
             {
-                _logger.LogWarning("User {UserId} with email {Email} attempted access with unverified email",
-                    userId, email);
+                _logger.LogWarning("User {UserId} with email {Email} attempted access with unverified email", userId, email);
 
                 // In demo mode, we'll allow unverified emails but log a warning
                 if (!_options.DemoMode)
@@ -116,7 +112,7 @@ public class FirebaseAuthorizationMiddleware(
 
             // Add roles based on configuration
             var userRoles = GetUserRoles(userId, email, emailVerified, payload);
-            foreach (var role in userRoles)
+            foreach (string role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
@@ -127,8 +123,12 @@ public class FirebaseAuthorizationMiddleware(
             var identity = new ClaimsIdentity(claims, "Firebase");
             context.User = new ClaimsPrincipal(identity);
 
-            _logger.LogInformation("Successfully authenticated user {UserId} ({Email}, verified: {EmailVerified}) with roles: {Roles}",
-                userId, email, emailVerified, string.Join(", ", userRoles));
+            _logger.LogInformation(
+                        "Successfully authenticated user {UserId} ({Email}, verified: {EmailVerified}) with roles: {Roles}",
+                        userId,
+                        email,
+                        emailVerified,
+                        string.Join(", ", userRoles));
         }
         catch (Exception ex)
         {
@@ -145,7 +145,7 @@ public class FirebaseAuthorizationMiddleware(
         var roles = new HashSet<string>();
 
         // Add default roles
-        foreach (var defaultRole in _options.DefaultRoles)
+        foreach (string defaultRole in _options.DefaultRoles)
         {
             roles.Add(defaultRole);
         }
@@ -162,13 +162,15 @@ public class FirebaseAuthorizationMiddleware(
         {
             if (emailVerified || _options.DemoMode)
             {
-                foreach (var role in emailRoles)
+                foreach (string role in emailRoles)
                 {
                     roles.Add(role);
                 }
 
-                _logger.LogDebug("Added email-specific roles for {Email}: {Roles}",
-                    email, string.Join(", ", emailRoles));
+                _logger.LogDebug(
+                            "Added email-specific roles for {Email}: {Roles}",
+                            email,
+                            string.Join(", ", emailRoles));
             }
             else
             {
@@ -190,13 +192,18 @@ public class FirebaseAuthorizationMiddleware(
                             roles.Add(role);
                         }
 
-                        _logger.LogDebug("Added domain-specific roles for {Email} (domain: {Domain}): {Roles}",
-                            email, domainMapping.Key, string.Join(", ", domainMapping.Value));
+                        _logger.LogDebug(
+                                    "Added domain-specific roles for {Email} (domain: {Domain}): {Roles}",
+                                    email,
+                                    domainMapping.Key,
+                                    string.Join(", ", domainMapping.Value));
                     }
                     else
                     {
-                        _logger.LogWarning("User {Email} matches domain {Domain} but email is not verified",
-                            email, domainMapping.Key);
+                        _logger.LogWarning(
+                                    "User {Email} matches domain {Domain} but email is not verified",
+                                    email,
+                                    domainMapping.Key);
                     }
                 }
             }

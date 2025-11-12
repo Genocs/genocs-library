@@ -5,12 +5,12 @@ namespace Genocs.Core.Demo.WebApi.Configurations;
 /// </summary>
 public class FirebaseAuthorizationOptions
 {
-    public const string Position = "firebaseAuthorization";
+    public const string Position = "FirebaseAuthorization";
 
     /// <summary>
     /// Default roles to assign to authenticated users.
     /// </summary>
-    public List<string> DefaultRoles { get; set; } = new() { "User" };
+    public List<string> DefaultRoles { get; set; } = ["User"];
 
     /// <summary>
     /// Email domain to role mappings.
@@ -30,5 +30,5 @@ public class FirebaseAuthorizationOptions
     /// <summary>
     /// Whether to enable demo mode (assigns Editor role to all users).
     /// </summary>
-    public bool DemoMode { get; set; } = false;
+    public bool DemoMode { get; set; }
 }
