@@ -1,34 +1,51 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+# Use the official .NET runtime as base image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER app
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+# Use the official .NET SDK for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Demo/Worker", "src/Worker/"]
-COPY ["src/Demo/Contracts", "src/Contracts/"]
-COPY ["src/Demo/Domain", "src/Domain/"]
-COPY ["src/Genocs.Persistence.MongoDb", "src/Genocs.Persistence.MongoDb/"]
-COPY ["src/Genocs.Monitoring", "src/Genocs.Monitoring/"]
-COPY ["src/Genocs.Logging", "src/Genocs.Logging/"]
-COPY ["src/Genocs.ServiceBusAzure", "src/Genocs.ServiceBusAzure/"]
-COPY ["src/Genocs.Core", "src/Genocs.Core/"]
-COPY ["src/Genocs.Common", "src/Genocs.Common/"]
 
+# Copy global build configuration files first for better layer caching
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["stylecop.json", "stylecop.json"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["global.json", "global.json"]
+
+# Copy project files and restore dependencies
+COPY ["src/demo/Contracts/Contracts.csproj", "src/Contracts/"]
+COPY ["src/demo/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/demo/Worker/Host.csproj", "src/Worker/"]
+
+# Restore dependencies in a separate layer for better caching
+RUN dotnet restore "src/Worker/Host.csproj"
+# Copy source code
+COPY ["src/demo/Contracts/", "src/Contracts/"]
+COPY ["src/demo/Domain/", "src/Domain/"]
+COPY ["src/demo/Worker/", "src/Worker/"]
+
+# Copy additional files needed for build
 COPY ["LICENSE", "LICENSE"]
 COPY ["icon.png", "icon.png"]
 
+# Build the application
 WORKDIR "/src/src/Worker"
+RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-RUN dotnet restore "Host.csproj"
+# Publish the application
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-RUN dotnet build "Host.csproj" -c Release -o /app/build
-FROM build-env AS publish
-RUN dotnet publish "Host.csproj" -c Release -o /app/publish
-
+# Create final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Core.Demo.Worker.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Library.Demo.Worker.dll"]

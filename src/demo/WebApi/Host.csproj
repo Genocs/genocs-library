@@ -8,8 +8,10 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>genocs</UserSecretsId>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
     <ItemGroup>

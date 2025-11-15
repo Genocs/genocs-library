@@ -516,8 +516,9 @@ dotnet build
 dotnet pack
 
 # Run project with console
-dotnet run --project ./src/Genocs.Core.Demo.WebApi
-dotnet run --project ./src/Genocs.Core.Demo.Worker
+dotnet run --project ./src/demo/WebApi
+dotnet run --project ./src/demo/Worker
+dotnet run --project ./src/demo/HelloWorld.WebApi
 ```
 
 ```bash
@@ -534,14 +535,14 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 
 ```bash
 # Build webapi
-docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/ .
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
 
 # Build worker
-docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./demo-worker.dockerfile .
+docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
 
 # Push on Dockerhub
 docker push genocs/demo-worker:2.0.0
