@@ -1,14 +1,10 @@
 #!/bin/bash
 
-cd ./src/apps
-
 # Build with docker compose
-docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs build
+docker compose -f ./src/apps/docker-compose.yml -f ./src/apps/docker-compose.override.yml --env-file ./local.env --project-name genocs build
 
 # Set environment variables coming from  Read variables from .env file
 export $(grep -v '^#' ./local.env | xargs)
-
-
 
 # Push on Dockerhub
 
@@ -19,7 +15,3 @@ do
     docker tag genocs/$image:$IMAGE_VERSION genocs/$image:latest
     docker push genocs/$image:latest
 done
-
-cd ..
-cd ..
-

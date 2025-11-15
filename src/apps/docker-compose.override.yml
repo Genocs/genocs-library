@@ -1,25 +1,25 @@
 services:
   apigateway:
     build:
-      context: .
-      dockerfile: apigateway.dockerfile
+      context: ../../
+      dockerfile: ./src/apps/apigateway/WebApi/Dockerfile
 
   identities-service:
     build:
-      context: .
-      dockerfile: identities.dockerfile
+      context: ../../
+      dockerfile: ./src/apps/identity/WebApi/Dockerfile
 
   products-service:
     build:
-      context: .
-      dockerfile: products.dockerfile
+      context: ../../
+      dockerfile: ./src/apps/products/WebApi/Dockerfile
 
   orders-service:
     build:
-      context: .
-      dockerfile: orders.dockerfile
+      context: ../../
+      dockerfile: ./src/apps/orders/WebApi/Dockerfile
 
   notifications-service:
     build:
-      context: .
-      dockerfile: notifications.dockerfile
+      context: ../../
+      dockerfile: ./src/apps/notifications/WebApi/Dockerfile
