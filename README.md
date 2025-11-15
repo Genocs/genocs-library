@@ -44,7 +44,7 @@
 
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET9, it is designed and maintained by Genocs.
+This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET 9, it is designed and maintained by Genocs.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -64,12 +64,128 @@ You can find a useful documentation about how to use the library. The documentat
 
 Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Features](#features)
+- [Folders structure](#folders-structure)
+- [Infrastructure](#infrastructure)
+- [Kubernetes cluster](#kubernetes-cluster)
+- [Aspire Integration](#aspire-integration)
+- [Support](#support)
+- [Configuration](#configuration)
+- [Demo Application](#demo-application)
+- [Enterprise Application](#enterprise-application)
+- [Development Tools](#development-tools)
+- [Cloud Deployment](#cloud-deployment)
+- [License](#license)
+- [Changelog](#changelog)
+- [Community](#community)
+- [Support](#support-1)
+- [Code Contributors](#code-contributors)
+- [Financial Contributors](#financial-contributors)
+- [Acknowledgements](#acknowledgements)
+
+## Quick Start
+
+### Prerequisites
+
+- Install [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- Install [Docker](https://www.docker.com/get-started)
+- Install [Docker Compose](https://docs.docker.com/compose/install/)
+- Install [Visual Studio Code](https://code.visualstudio.com/) with the following extensions:
+  - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
+  - [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
+  - [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+
+### Setup
+
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/Genocs/genocs-library.git
+   cd genocs-library
+   ```
+
+2. Build the solution
+
+   ```bash
+   dotnet build
+   ```
+
+3. Pack the projects
+
+   ```bash
+   dotnet pack
+   ```
+
+4. Run project with console
+
+   ```bash
+   dotnet run --project ./src/demo/WebApi
+   dotnet run --project ./src/demo/Worker
+   dotnet run --project ./src/demo/HelloWorld.WebApi
+   ```
+
+5. To pack the project with nuspec file
+
+   ```bash
+   cd src/Genocs.Core
+   dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
+   ```
+
+6. To push on nuget
+
+   ```bash
+   dotnet nuget push
+   dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
+   ```
+
+7. Build webapi Docker image
+
+   ```bash
+   docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
+   ```
+
+8. Push webapi Docker image to Dockerhub
+
+   ```bash
+   docker push genocs/demo-webapi:2.0.0
+   docker push genocs/demo-webapi:latest
+   ```
+
+9. Build worker Docker image
+
+   ```bash
+   docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
+   ```
+
+10. Push worker Docker image to Dockerhub
+
+    ```bash
+    docker push genocs/demo-worker:2.0.0
+    docker push genocs/demo-worker:latest
+    ```
+
+## Features
+
+- **Cloud Agnostic:** Build applications that can run on any cloud platform without code changes.
+- **Containerized:** Lightweight and portable applications using container technology.
+- **Microservices Ready:** Easily create and manage microservices architectures.
+- **Enterprise Integration:** Built-in support for enterprise services like databases, messaging, and caching.
+- **Monitoring and Logging:** Integrated solutions for application monitoring and logging.
+- **Security:** Robust security features including API management and access control.
+- **Scalability:** Effortlessly scale applications horizontally or vertically.
+- **Flexibility:** Supports multiple programming models and architectures.
+- **Developer Friendly:** Easy to use and well-documented libraries and tools.
+- **Open Source:** Fully open source with a permissive license.
 
 ## Folders structure
 
-```text
-## Repository structure for .NET Solution
+The repository is structured as follows:
 
+```plaintext
 root-project/
 ├── .azure/
 │   ├── pipelines/
@@ -86,10 +202,6 @@ root-project/
 │   ├── agents/
 │   │   ├── code_reviewer.agent.md
 │   │   ├── documentation_writer.agent.md
-│   │   └── ...
-│   ├── chatmodes (obsolete, use .agents/)/
-│   │   ├── Code Reviewer.chatmode.md
-│   │   ├── Documentation Writer.chatmode.md
 │   │   └── ...
 │   ├── copilot-instructions.md
 │   ├── workflows/
@@ -136,10 +248,11 @@ root-project/
 ├── CONTRIBUTING.md
 ├── api-workbench.rest
 └── ...
+```
 
 ## Infrastructure
 
-In this section you can find the infrastructure components you need to execute the solution. Infrastucture components are the database, the enterprice servise bus, the distributed logging, monitoring, tracing systems along with database and many more.
+In this section you can find the infrastructure components you need to execute the solution. Infrastructure components are the database, the enterprise service bus, the distributed logging, monitoring, tracing systems along with database and many more.
 You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
 ```bash
@@ -659,7 +772,8 @@ microk8s helm install genocs ./gnxchart
 ```
 
 ### MCP Servers
-This repository contains support for MCP servers to be used along with VS Code. 
+
+This repository contains support for MCP servers to be used along with VS Code.
 You can find the MCP servers inside the folder `./.vscode/mcp.json`.
 
 This approach allows to have a set of configured servers to be used along with VS Code and to share them with the team.
@@ -668,11 +782,11 @@ As you can immagine the drawback of this approach is that in case to be used acr
 
 For windows you can create a file named `mcp.json` inside the folder `%USERPROFILE%/.vscode/` and add the content of the file.
 
+> NOTE:
 >
-> NOTE: PLEASE DOUBLE CHECK THE PATH ON MACOS AND LINUX AS IT MAY CHANGE BASED ON THE INSTALLATION TYPE
+> PLEASE DOUBLE CHECK THE PATH ON MACOS AND LINUX AS IT MAY CHANGE BASED ON THE INSTALLATION TYPE
+>
 > For MacOS and Linux you can create a file named `mcp.json` inside the folder `~/.config/Code/User/` and add the content of the file.
->
-
 
 ### Deploy in a cloud instance
 
