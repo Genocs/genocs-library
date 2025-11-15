@@ -71,24 +71,38 @@ Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library
 ## Repository structure for .NET Solution
 
 root-project/
+├── .azure/
+│   ├── pipelines/
+│   │   ├── ci-build.yml
+│   │   ├── ci-release.yml
+│   │   └── ...
 ├── .cursor/
 │   ├── rules/
+│   │   ├── solution_architect.mdc
 │   │   └── ...
 ├── .git/
 │   └── ...
 ├── .github/
-│   ├── chatmodes
+│   ├── agents/
+│   │   ├── code_reviewer.agent.md
+│   │   ├── documentation_writer.agent.md
+│   │   └── ...
+│   ├── chatmodes (obsolete, use .agents/)/
 │   │   ├── Code Reviewer.chatmode.md
 │   │   ├── Documentation Writer.chatmode.md
 │   │   └── ...
 │   ├── copilot-instructions.md
 │   ├── workflows/
 │   │   ├── ...
+├── .vscode/
+│   └── mcp.json
 ├── devops/
 │   ├── azure
 │   │   ├── ci-publish_on_acr.yml
 │   │   ├── ci-publish_on_nuget.yml
 │   │   └── ...
+├── docs/
+│   └── ...
 ├── infrastructure/
 │   ├── bicep/
 │   │   └── ...
@@ -520,7 +534,7 @@ dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 
 ```bash
 # Build webapi
-docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./demo-webapi.dockerfile .
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/ .
 
 # Push on Dockerhub
 docker push genocs/demo-webapi:2.0.0
@@ -642,6 +656,22 @@ Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to deploy 
 cd ./src/apps/k8s/helm
 microk8s helm install genocs ./gnxchart
 ```
+
+### MCP Servers
+This repository contains support for MCP servers to be used along with VS Code. 
+You can find the MCP servers inside the folder `./.vscode/mcp.json`.
+
+This approach allows to have a set of configured servers to be used along with VS Code and to share them with the team.
+
+As you can immagine the drawback of this approach is that in case to be used across multiple repositories you need to copy the file in each repository. Alternative approach copy the file in a common location and configure VS Code to use that file.
+
+For windows you can create a file named `mcp.json` inside the folder `%USERPROFILE%/.vscode/` and add the content of the file.
+
+>
+> NOTE: PLEASE DOUBLE CHECK THE PATH ON MACOS AND LINUX AS IT MAY CHANGE BASED ON THE INSTALLATION TYPE
+> For MacOS and Linux you can create a file named `mcp.json` inside the folder `~/.config/Code/User/` and add the content of the file.
+>
+
 
 ### Deploy in a cloud instance
 

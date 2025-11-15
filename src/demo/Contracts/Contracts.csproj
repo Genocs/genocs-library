@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Genocs.Library.Demo.Contracts</PackageId>
+        <RootNamespace>Genocs.Library.Demo.Contracts</RootNamespace>
+        <AssemblyName>Genocs.Library.Demo.Contracts</AssemblyName>
+        <IsPublishable>false</IsPublishable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="7.5.*" />
+    </ItemGroup>
+</Project>

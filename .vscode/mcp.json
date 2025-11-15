@@ -1,0 +1,33 @@
+{
+	"servers": {
+		"genocs-mcp-server-local": {
+			"type": "stdio",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/Genocs.MCP.Server.Local/Host.csproj",
+				"--configuration",
+				"Debug",
+				"--verbosity",
+				"quiet"
+			]
+		},
+		"genocs-mcp-server-remote": {
+			"type": "http",
+			"url": "http://localhost:3001"
+		},
+		"genocs-mcp-server-container": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"genocs/mcp"
+			],
+			"env": {}
+		}
+	},
+	"inputs": []
+}
