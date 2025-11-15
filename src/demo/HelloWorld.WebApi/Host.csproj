@@ -7,7 +7,7 @@
         <AssemblyName>Genocs.Library.Demo.HelloWorld.WebApi</AssemblyName>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>

@@ -77,11 +77,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wallet", "wallet", "{9344A7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "products", "products", "{B2028A73-6C94-4166-A0BB-22080805E351}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway.WebApi", "src\apps\apigateway\APIGateway.WebApi\APIGateway.WebApi.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\apps\apigateway\WebApi\Host.csproj", "{C9E31675-9AD7-4EBC-9986-B64CCE869454}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identities.Application", "src\apps\identity\Identities.Application\Identities.Application.csproj", "{D1BE29BD-9518-42DA-9A34-C86D4287BAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\apps\identity\Application\Application.csproj", "{D1BE29BD-9518-42DA-9A34-C86D4287BAB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identities.WebApi", "src\apps\identity\Identities.WebApi\Identities.WebApi.csproj", "{CA411C82-9B2F-45B2-AF3F-8650C971E49D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\apps\identity\WebApi\Host.csproj", "{CA411C82-9B2F-45B2-AF3F-8650C971E49D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Common", "src\Genocs.Common\Genocs.Common.csproj", "{2B25640E-3141-4AD1-AFDE-AFE4ADDBA45F}"
 EndProject
@@ -99,7 +99,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.WebApi", "src\apps\orders\Orders.WebApi\Orders.WebApi.csproj", "{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.WebApi", "src\apps\orders\WebApi\Host.csproj", "{F9F54FEC-23B0-4A83-B5E9-75CD476D4B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.Discovery.Consul", "src\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj", "{C42D741B-EBCC-4770-907C-C8B980D22A65}"
 EndProject
@@ -107,9 +107,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.LoadBalancing.Fabio"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genocs.HTTP.RestEase", "src\Genocs.HTTP.RestEase\Genocs.HTTP.RestEase.csproj", "{C2CC0D45-CB64-4E0C-B875-6DB1667141E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.WebApi", "src\apps\notifications\Notifications.WebApi\Notifications.WebApi.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.WebApi", "src\apps\notifications\WebApi\Host.csproj", "{6846DCBA-4D72-49DA-B4FE-70AAF5542AB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.WebApi", "src\apps\products\Products.WebApi\Products.WebApi.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.WebApi", "src\apps\products\WebApi\Host.csproj", "{6CE8740F-8561-481B-AC9F-D1E73C449235}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B184733D-2415-4517-BC65-26ED22EEB2C2}"
 	ProjectSection(SolutionItems) = preProject

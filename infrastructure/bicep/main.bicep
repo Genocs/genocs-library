@@ -1,12 +1,18 @@
+// Think of this as Infrastructure as Code (IaC) for deploying resources
+// Bicep file to create a storage account and a web app in Azure
+
 // Get the resource group location
-param location string = 'East US'
+@description('Location for all resources.')
+param location string = 'italia north'
 
 @description('The name of you Web Site.')
-param webSiteName string = 'gnx-website'
+param webSiteName string = 'demo-website'
 
+@description('A unique string to ensure resource names are globally unique.')
 param uniqueString string = '{uniqueString(resourceGroup().id)}'
 
 // Generate a unique storage account name
+@description('The name of the Storage Account.')
 param storageAccountName string = 'helloworldstorage${uniqueString}'
 
 // Create a storage account
