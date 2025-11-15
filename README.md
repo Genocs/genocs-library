@@ -674,7 +674,7 @@ Inside **./src/apps** folder you can find a full-fledged application composed by
 - Identity Service
 - Order Service
 - Product Service
-- SignalR Service
+- Notification Service
 
 In that way you can test the entire flow.
 
@@ -684,7 +684,7 @@ In that way you can test the entire flow.
 | Identity Service | Manages user identities         | :5510\*        | Private through API Gateway |
 | Product Service  | Manages product information     | :5520\*        | Private through API Gateway |
 | Order Service    | Processes orders                | :5530\*        | Private through API Gateway |
-| SignalR Service  | Handles real-time communication | :5540\*        | Private through API Gateway |
+| Notification Service  | Handles real-time communication | :5540\*        | Private through API Gateway |
 
 ![Architecture](./assets/architecture_01.png)
 
@@ -697,44 +697,53 @@ Pre-requisites:
 - Docker
 
 ```bash
-cd ./src/apps
 
 # Build with docker compose
-docker compose -f ./docker-compose.yml -f ./docker-compose.override.yml --env-file ./local.env --project-name genocs build
+./src/apps/scripts/build-images-docker-compose.sh
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker compose -f ./docker-compose.yml --env-file ./local.env --project-name genocs up -d
+docker compose -f ./src/apps/docker-compose.yml --env-file ./local.env --project-name genocs up -d
 
-# Clean Docker cache
+# Clean Docker cache (optional)
 docker builder prune
 ```
 
-Use following to build and push the images one by one
+Some useful commands to manage the application:
 
 ```bash
-# Build images
+# Build docker image one by one
 ./src/apps/scripts/build-images.sh
 
-# Push images
-./src/apps/scripts/push-images.sh
+# Build the images with docker compose and push to Dockerhub
+./src/apps/scripts/build-and-push-images.sh
 ```
 
-### How to deploy the application on Kubernetes
+## **Kubernetes**
 
-You can deploy the application on Kubernetes cluster.
+You can deploy the application on Kubernetes cluster by using kubectl.
 
 ```bash
 # Build images
 ./src/apps/scripts/deploy-k8s.sh
 ```
 
-### How to use makefile
+Or by using Helm.
+
+Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
+
+The command below allows to install the Helm chart by using MicroK8s.
+
+```bash
+cd ./src/apps/k8s/helm
+microk8s helm install genocs ./gnxchart
+```
+
+## **makefile**
 
 Prerequisites:
-
 - make
 
 To install make on MacOS you can use brew
@@ -762,16 +771,7 @@ Upon installation you can use the makefile to build, run, deploy the application
 make build
 ```
 
-### How to use Helm chart
-
-Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to deploy the application on Kubernetes.
-
-```bash
-cd ./src/apps/k8s/helm
-microk8s helm install genocs ./gnxchart
-```
-
-### MCP Servers
+## **MCP Servers**
 
 This repository contains support for MCP servers to be used along with VS Code.
 You can find the MCP servers inside the folder `./.vscode/mcp.json`.
