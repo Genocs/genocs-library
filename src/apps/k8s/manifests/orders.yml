@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 # orders-deployment.yml
 metadata:
-  namespace: gnx-apps-ns
+  namespace: gnx-apps
   name: orders
 spec:
   replicas: 1 # Number of pods to run
@@ -47,7 +47,7 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
-            # HTTP CLIENT                   
+            # HTTP CLIENT
             - name: httpclient__services__products
               value: "http://products-svc"
 
@@ -66,7 +66,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: gnx-apps-ns
+  namespace: gnx-apps
   name: orders-svc
 spec:
   selector:

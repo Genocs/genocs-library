@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: gnx-apps-ns
+  namespace: gnx-apps
   name: http-ingress
 spec:
   rules:
