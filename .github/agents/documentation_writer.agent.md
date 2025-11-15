@@ -1,6 +1,7 @@
 ---
-description: 'Document code and its functionality.'
-tools: ['search']
+name: documentation_writer
+description: Document code and its functionality.
+tools: [search]
 ---
 
 # Documentation Writer Mode
