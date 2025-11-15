@@ -21,7 +21,7 @@ public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
 
         if (currentValue < 5)
         {
-            throw new Exception("Random exception");
+            throw new Exception("Intentional exception thrown for testing or demonstration purposes.");
         }
 
         var product = await _repository.GetAsync(query.ProductId);

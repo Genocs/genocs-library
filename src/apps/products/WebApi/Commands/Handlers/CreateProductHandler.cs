@@ -39,7 +39,7 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");
 
-        string? spanContext = "TODO: Genocs";
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new ProductCreated(product.Id);
         if (_outbox.Enabled)
         {

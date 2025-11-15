@@ -42,7 +42,7 @@ public class ProductServiceClient : IProductServiceClient
 
         if (string.IsNullOrWhiteSpace(url))
         {
-            throw new Exception("products http client option cannot be null");
+            throw new Exception("Products HTTP client option cannot be null");
         }
 
         _url = url;

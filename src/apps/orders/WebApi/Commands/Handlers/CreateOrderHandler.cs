@@ -53,7 +53,8 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        string? spanContext = $"Genocs: CreateOrder-{command.OrderId}";
+        // TODO: Standardize span context generation across all command handlers
+        string? spanContext = null; // Placeholder for span context, to be generated consistently
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {
