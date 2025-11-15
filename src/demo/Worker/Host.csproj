@@ -5,9 +5,11 @@
         <PackageId>Genocs.Library.Demo.Worker</PackageId>
         <RootNamespace>Genocs.Library.Demo.Worker</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Worker</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

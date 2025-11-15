@@ -1,11 +1,9 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Use the official .NET runtime as base image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+# Use the official .NET runtime as base image (Worker services don't need ASP.NET)
+FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -26,6 +24,7 @@ COPY ["src/demo/Worker/Host.csproj", "src/Worker/"]
 
 # Restore dependencies in a separate layer for better caching
 RUN dotnet restore "src/Worker/Host.csproj"
+
 # Copy source code
 COPY ["src/demo/Contracts/", "src/Contracts/"]
 COPY ["src/demo/Domain/", "src/Domain/"]
