@@ -7,7 +7,7 @@ export $(grep -v '^#' ./local.env | xargs)
 docker build -t genocs/apigateway:$IMAGE_VERSION -t genocs/apigateway:latest -f ./src/apps/apigateway/WebApi/Dockerfile .
 
 # Build the identities service
-docker build -t genocs/identities-webapi:$IMAGE_VERSION -t genocs/identities-webapi:latest -f ./src/apps/identities/WebApi/Dockerfile .
+docker build -t genocs/identities-webapi:$IMAGE_VERSION -t genocs/identities-webapi:latest -f ./src/apps/identity/WebApi/Dockerfile .
 
 # Build the products service
 docker build -t genocs/products-webapi:$IMAGE_VERSION -t genocs/products-webapi:latest -f ./src/apps/products/WebApi/Dockerfile .

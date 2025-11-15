@@ -19,13 +19,9 @@ COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
 
-# Copy project files and restore dependencies
-COPY ["src/apps/orders/WebApi/Host.csproj", "src/WebApi/"]
-# Restore dependencies in a separate layer for better caching
+# Copy files and restore dependencies
+COPY ["src/apps/orders/WebApi", "src/WebApi/"]
 RUN dotnet restore "src/WebApi/Host.csproj"
-
-# Copy source code
-COPY ["src/apps/orders/", "src/WebApi/"]
 
 # Build the application
 WORKDIR "/src/src/WebApi"
