@@ -27,12 +27,16 @@ RUN dotnet restore "src/WebApi/Host.csproj"
 # Copy source code
 COPY ["src/apps/apigateway/", "src/WebApi/"]
 
-WORKDIR "/src/WebApi"
+# Build the application
+WORKDIR "/src/src/WebApi"
+RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-RUN dotnet build "Host.csproj" -c Release -o /app/build
-FROM build-env AS publish
-RUN dotnet publish "Host.csproj" -c Release -o /app/publish
+# Publish the application
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Create final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

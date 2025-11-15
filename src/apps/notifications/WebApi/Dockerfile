@@ -1,40 +1,42 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-
-# FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
-# FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim
-# FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim
-# FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
-# FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
-# FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Use the official .NET runtime as base image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-# FROM mcr.microsoft.com/dotnet/core/sdk:3.0  AS build-env
-# FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build-env
-# FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build-env
-# FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
-# FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-# FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+# Use the official .NET SDK for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["Directory.Build.props", "."]
-COPY ["Directory.Build.targets", "."]
-COPY ["NuGet.config", "."]
-COPY ["dotnet.ruleset", "."]
-COPY ["stylecop.json", "."]
+# Copy global build configuration files first for better layer caching
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["stylecop.json", "stylecop.json"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["global.json", "global.json"]
 
-COPY ["notifications/Notifications.WebApi", "Notifications.WebApi/"]
+# Copy project files and restore dependencies
+COPY ["src/apps/notifications/WebApi/Host.csproj", "src/WebApi/"]
+# Restore dependencies in a separate layer for better caching
+RUN dotnet restore "src/WebApi/Host.csproj"
 
-WORKDIR "/src/Notifications.WebApi"
+# Copy source code
+COPY ["src/apps/notifications/", "src/WebApi/"]
 
-RUN dotnet build "Notifications.WebApi.csproj" -c Release -o /app/build
-FROM build-env AS publish
-RUN dotnet publish "Notifications.WebApi.csproj" -c Release -o /app/publish
+# Build the application
+WORKDIR "/src/src/WebApi"
+RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# Publish the application
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Create final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

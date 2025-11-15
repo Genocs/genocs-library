@@ -1,27 +1,42 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+# Use the official .NET runtime as base image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+# Use the official .NET SDK for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["Directory.Build.props", "."]
-COPY ["Directory.Build.targets", "."]
-COPY ["NuGet.config", "."]
-COPY ["dotnet.ruleset", "."]
-COPY ["stylecop.json", "."]
+# Copy global build configuration files first for better layer caching
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Build.targets", "Directory.Build.targets"]
+COPY ["stylecop.json", "stylecop.json"]
+COPY ["dotnet.ruleset", "dotnet.ruleset"]
+COPY ["global.json", "global.json"]
 
-COPY ["orders/Orders.WebApi", "Orders.WebApi/"]
+# Copy project files and restore dependencies
+COPY ["src/apps/orders/WebApi/Host.csproj", "src/WebApi/"]
+# Restore dependencies in a separate layer for better caching
+RUN dotnet restore "src/WebApi/Host.csproj"
 
-WORKDIR "/src/Orders.WebApi"
+# Copy source code
+COPY ["src/apps/orders/", "src/WebApi/"]
 
-RUN dotnet build "Orders.WebApi.csproj" -c Release -o /app/build
-FROM build-env AS publish
-RUN dotnet publish "Orders.WebApi.csproj" -c Release -o /app/publish
+# Build the application
+WORKDIR "/src/src/WebApi"
+RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# Publish the application
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Create final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
