@@ -107,7 +107,7 @@ tolerations: []
 affinity: {}
 
 # imageTag is a map of image tags for each of the services
-imageTag:  
+imageTag:
   apigateway: "1.0.4"
   identities: "1.0.4"
   products: "1.0.4"

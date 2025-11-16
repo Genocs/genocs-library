@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: identities-svc
   namespace: {{ .Release.Namespace }}
+
 spec:
   selector:
     app: identities # Select pods with this label
