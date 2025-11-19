@@ -18,6 +18,9 @@ COPY ["Directory.Build.targets", "Directory.Build.targets"]
 COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
+# Copy additional files needed for build
+COPY ["LICENSE", "LICENSE"]
+COPY ["icon.png", "icon.png"]
 
 # Copy project files and restore dependencies
 COPY ["src/demo/Contracts/Contracts.csproj", "src/Contracts/"]
@@ -30,10 +33,6 @@ RUN dotnet restore "src/WebApi/Host.csproj"
 COPY ["src/demo/Contracts/", "src/Contracts/"]
 COPY ["src/demo/Domain/", "src/Domain/"]
 COPY ["src/demo/WebApi/", "src/WebApi/"]
-
-# Copy additional files needed for build
-COPY ["LICENSE", "LICENSE"]
-COPY ["icon.png", "icon.png"]
 
 # Build the application
 WORKDIR "/src/src/WebApi"
