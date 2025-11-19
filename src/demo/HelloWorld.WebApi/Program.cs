@@ -93,6 +93,6 @@ app.MapGet("/", () => "ok")
 app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
 app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
 
-app.Run();
+await app.RunAsync();
 
-Log.CloseAndFlush();
+await Log.CloseAndFlushAsync();

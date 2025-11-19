@@ -1923,7 +1923,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzUxMiIsImtpZCI6InN2YiJ9.eyJzdWIiOjEsImlhdCI6MTcyMjk1NDk2MSwiZXhwIjoxNzIzMDQxMzYxLCJlbWFpbCI6ImFkbWluQHV0dS5nbG9iYWwiLCJnaXZlbl9uYW1lIjoiQWRtaW4iLCJmYW1pbHlfbmFtZSI6IkFkbWluIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6WyJBZG1pbiIsIk1hbmFnZXIiLCJNZW1iZXIiXSwiZG9tYWluX2lkIjoiYWRtaW4ifQ.Ao01DGLz__hS4gopP72JM-kChvm5fdgqpnyxInR0aKluatH9JIw3cceqRJdhmBqUdkfape6E65psYhe44MJgNG7gxYDmc90QYR2Gw0M8iiQd_EI8zloVA-7PO8Myem7lWZdcqcy2wJQa0UAfvba-3d1nI3XVvezub6_YCbg0qWA",
+											"value": "",
 											"type": "string"
 										}
 									]
@@ -1953,7 +1953,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Imdpb3ZhIiwic3ViIjoiZ2lvdmEiLCJqdGkiOiI0MGRiOTBhNCIsInNjb3BlIjoiZ3JlZXRpbmdzX2FwaSIsInJvbGUiOiJhZG1pbiIsImF1ZCI6WyJodHRwczovL2xvY2FsaG9zdDo3MDkyIiwiaHR0cDovL2xvY2FsaG9zdDo1MDAxIl0sIm5iZiI6MTczMzU5NzA5OSwiZXhwIjoxNzQxMzczMDk5LCJpYXQiOjE3MzM1OTcxMDAsImlzcyI6ImRvdG5ldC11c2VyLWp3dHMifQ.jXExVFoYvYU4KPUnTLz0kH63ZaGJEzKcsY_AIHJnGtk",
+											"value": "",
 											"type": "string"
 										}
 									]

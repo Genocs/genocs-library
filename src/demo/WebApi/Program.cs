@@ -89,6 +89,6 @@ app.UseMetrics()
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
-Log.CloseAndFlush();
+await Log.CloseAndFlushAsync();

@@ -9,7 +9,7 @@ export $(grep -v '^#' ./local.env | xargs)
 # Read service list file
 SERVICE_LIST_FILE="./src/apps/scripts/service-list.txt"
 
-if [ ! -f "$SERVICE_LIST_FILE" ]; then
+if [[ ! -f "$SERVICE_LIST_FILE" ]]; then
     echo "Error: Service list file not found: $SERVICE_LIST_FILE"
     exit 1
 fi
@@ -18,7 +18,7 @@ fi
 echo "Starting to push Docker images..."
 
 # Read each service from the file and push the Docker image
-while IFS= read -r service_name || [ -n "$service_name" ]; do
+while IFS= read -r service_name || [[ -n "$service_name" ]]; do
     # Skip empty lines and comments
     if [[ -z "$service_name" || "$service_name" =~ ^[[:space:]]*# ]]; then
         continue
@@ -30,7 +30,7 @@ while IFS= read -r service_name || [ -n "$service_name" ]; do
     
     # Push versioned image
     docker push genocs/$image_name:$IMAGE_VERSION
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "Error: Failed to push genocs/$image_name:$IMAGE_VERSION"
         exit 1
     fi
@@ -38,7 +38,7 @@ while IFS= read -r service_name || [ -n "$service_name" ]; do
     # Tag and push latest
     docker tag genocs/$image_name:$IMAGE_VERSION genocs/$image_name:latest
     docker push genocs/$image_name:latest
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "Error: Failed to push genocs/$image_name:latest"
         exit 1
     fi

@@ -1,7 +1,7 @@
 #!/bin/bash
 REPOSITORIES=(genocs-library) 
 
-if [ "$1" = "-p" ]
+if [[ "$1" = "-p" ]]
   then
     echo ${REPOSITORIES[@]} | sed -E -e 's/[[:blank:]]+/\n/g' | xargs -I {} -n 1 -P 0 sh -c 'printf "========================================================\nPush and commit repository: {}\n========================================================\n"; git add .; git commit -a -m "Updated Packages";git push;'
   else

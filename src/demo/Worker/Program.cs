@@ -29,7 +29,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 
 await host.RunAsync();
 
-Log.CloseAndFlush();
+await Log.CloseAndFlushAsync();
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
