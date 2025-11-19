@@ -723,6 +723,9 @@ Some useful commands to manage the application:
 
 ## **Kubernetes**
 
+
+### KubeCtl
+
 You can deploy the application on Kubernetes cluster by using kubectl.
 
 ```bash
@@ -730,7 +733,9 @@ You can deploy the application on Kubernetes cluster by using kubectl.
 ./src/apps/scripts/deploy-k8s.sh
 ```
 
-Or by using Helm.
+### Helm chart
+
+You can deploy the application on Kubernetes cluster by using Helm chart.
 
 Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
 

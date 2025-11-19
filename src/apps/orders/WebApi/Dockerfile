@@ -19,15 +19,22 @@ COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
 
-# Copy files and restore dependencies
-COPY ["src/apps/orders/WebApi", "src/WebApi/"]
+# COPY .csproj and restore as distinct layers
+# This is CRITICAL: If code changes but .csproj doesn't, Docker reuses this cached layer
+COPY ["src/apps/orders/WebApi/Host.csproj", "src/WebApi/"]
 RUN dotnet restore "src/WebApi/Host.csproj"
 
-# Build the application
+# Copy the rest of the source code
+COPY ["src/apps/orders/WebApi", "src/WebApi/"]
+
 WORKDIR "/src/src/WebApi"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Publish the application
+
+# Build and Publish
+# -c Release: Optimizes code
+# /p:UseAppHost=false: Disables creating a native exe (we just need the dll)
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
