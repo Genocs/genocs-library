@@ -5,14 +5,9 @@ namespace Genocs.Library.Demo.WebApi.Controllers;
 
 [ApiController]
 [Route("")]
-public class HomeController : ControllerBase
+public class HomeController(SecretOptions secretSettings) : ControllerBase
 {
-    public readonly SecretOptions _secretSettings;
-
-    public HomeController(SecretOptions secretSettings)
-    {
-        _secretSettings = secretSettings ?? throw new ArgumentNullException(nameof(secretSettings));
-    }
+    public readonly SecretOptions _secretSettings = secretSettings ?? throw new ArgumentNullException(nameof(secretSettings));
 
     [HttpGet("secret")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

@@ -43,14 +43,14 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 
         <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.90" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26000" />
 
         <!--Mysql-->
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
 
         <!--Serilog-->
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.2" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.2" />
     </ItemGroup>
 
     <ItemGroup>

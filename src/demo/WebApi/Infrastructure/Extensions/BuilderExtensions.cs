@@ -1,4 +1,5 @@
-﻿using Genocs.Core.Builders;
+﻿using System.Configuration;
+using Genocs.Core.Builders;
 using Genocs.HTTP;
 using Genocs.Library.Demo.WebApi.Configurations;
 using Genocs.Library.Demo.WebApi.Infrastructure.Services;
@@ -45,6 +46,11 @@ public static class BuilderExtensions
         builder.Services.AddTransient<IExternalServiceClient, ExternalServiceClient>();
 
         // builder.Services.Configure<ExternalServiceSettings>(builder.Configuration.GetSection(ExternalServiceSettings.Position));
+
+        var secretOptions = builder.Configuration.GetOptions<SecretOptions>(SecretOptions.Position);
+        builder.Services.AddSingleton(secretOptions);
+
+        // Add other application options and services here
 
         return builder;
     }
