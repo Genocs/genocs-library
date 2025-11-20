@@ -59,6 +59,11 @@ public class UserInfoResponse
     /// The authentication method used.
     /// </summary>
     public string? AuthenticationType { get; set; }
+
+    /// <summary>
+    /// List of all claims associated with the authenticated user.
+    /// </summary>
+    public List<ClaimInfo> Claims { get; set; } = [];
 }
 
 /// <summary>

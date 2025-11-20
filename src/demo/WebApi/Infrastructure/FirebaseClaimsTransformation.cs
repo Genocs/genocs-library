@@ -45,14 +45,16 @@ public class FirebaseClaimsTransformation(
         if (userRoles.Count != 0)
         {
             // Create a new identity with the additional role claims
-            var identity = (ClaimsIdentity)principal.Identity;
 
-            foreach (string role in userRoles)
+            if (principal.Identity is ClaimsIdentity identity)
             {
-                identity.AddClaim(new Claim(ClaimTypes.Role, role));
-            }
+                foreach (string role in userRoles)
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                }
 
-            _logger.LogInformation("Added roles {Roles} to user {UserId}", string.Join(", ", userRoles), userId);
+                _logger.LogInformation("Added roles {Roles} to user {UserId}", string.Join(", ", userRoles), userId);
+            }
         }
 
         return Task.FromResult(principal);

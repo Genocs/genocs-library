@@ -124,7 +124,7 @@ public class AuthenticateController : ControllerBase
     /// <response code="401">JWT authentication required.</response>
     /// <response code="404">Authorization fail. </response>
     /// <returns>Current user information from JWT token.</returns>
-    [Authorize(Roles = "gnx-users")]
+    [Authorize(Roles = "Editor")]
     [HttpGet("gnx-user")]
     [ProducesResponseType(typeof(UserInfoResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -143,7 +143,12 @@ public class AuthenticateController : ControllerBase
         {
             UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
             UserName = user.FindFirst(ClaimTypes.Name)?.Value,
-            AuthenticationType = authType
+            AuthenticationType = authType,
+            Claims = [.. user.Claims.Select(c => new ClaimInfo
+            {
+                Type = c.Type,
+                Value = c.Value
+            })]
         };
 
         return Ok(response);
