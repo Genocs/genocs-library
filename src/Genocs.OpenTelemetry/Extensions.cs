@@ -15,6 +15,15 @@ namespace Genocs.GnxOpenTelemetry;
 
 public static class OpenTelemetryExtensions
 {
+    /// <summary>
+    /// Adds OpenTelemetry services to the Genocs application.
+    /// </summary>
+    /// <remarks>
+    /// This method adds OpenTelemetry services to the Genocs application.
+    /// </remarks>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The updated Genocs builder.</returns>
+
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)

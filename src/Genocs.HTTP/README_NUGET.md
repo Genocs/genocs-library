@@ -8,7 +8,7 @@ This package is part of the Genocs Enterprise Library - Genocs.HTTP.
 
 This package contains a set of functionalities to use http client for microservice, the library is designed by Genocs even thought a lot of insight came from community.
 
-The libraries are built using .NET9.
+The libraries are built using .NET10.
 
 ## Description
 

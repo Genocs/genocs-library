@@ -1,5 +1,4 @@
 ---
-name: code_reviewer
 target: vscode
 description: Review code for quality and adherence to best practices.
 argument-hint: The user will provide code snippets or files to review.

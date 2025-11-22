@@ -1,7 +1,7 @@
 # .NET Core Telemetry and Tracing library
 
 This package contains a set of functionalities for telemetry and tracing, designed by Genocs.
-The libraries are built using .NET7.
+The libraries are built using .NET10, .NET9, .NET8.
 
 
 ## Description

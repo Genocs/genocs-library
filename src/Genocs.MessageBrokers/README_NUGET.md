@@ -1,7 +1,7 @@
 # The Genocs Library - MessageBrokers components
 
 Genocs Enterprise Library - Genocs.MessageBrokers. This package contains message broker interfaces and abstractions.
-The library is built to be used with NET6, NET7, NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 

@@ -5,7 +5,7 @@
 
 
 ## Description
-**Genocs.MessageBrokers.AzureServiceBus** provides Azure Service Bus integration for reliable message queuing, pub/sub patterns, and enterprise messaging scenarios targeting NET6, NET7, NET8 and NET9.
+**Genocs.MessageBrokers.AzureServiceBus** provides Azure Service Bus integration for reliable message queuing, pub/sub patterns, and enterprise messaging scenarios targeting .NET10, .NET9, .NET8.
 
 ## Dependencies
 - **Genocs.Core** (5.0.9)

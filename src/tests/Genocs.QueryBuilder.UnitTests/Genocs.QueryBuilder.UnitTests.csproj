@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
-        <ProjectReference Include="..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">

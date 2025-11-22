@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>Genocs.Library.Demo.Worker</PackageId>
         <RootNamespace>Genocs.Library.Demo.Worker</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Worker</AssemblyName>

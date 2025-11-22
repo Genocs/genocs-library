@@ -16,6 +16,11 @@ namespace Genocs.Core.Builders;
 /// </summary>
 public static class Extensions
 {
+    /// <summary>
+    /// Scaffold the builder and add Genocs services to the application.
+    /// </summary>
+    /// <param name="builder">The web application builder.</param>
+    /// <returns>The updated Genocs builder. To be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this WebApplicationBuilder builder)
     {
         // Create the builder
@@ -25,11 +30,11 @@ public static class Extensions
     }
 
     /// <summary>
-    /// The Builder.
+    /// Scaffold the builder and add Genocs services to the application.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">The configuration.</param>
-    /// <returns>The builder.</returns>
+    /// <returns>The builder to be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
         // Create the builder
@@ -188,7 +193,7 @@ public static class Extensions
             /*
              * This is an example of how to add a MongoDB health check.
              * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDb
-             * 
+             *
             .AddMongoDb(
                 builder.Configuration.GetSection("DBSettings:HealthConnectionString").Value!,
                 builder.Configuration.GetSection("DBSettings:Database").Value!,

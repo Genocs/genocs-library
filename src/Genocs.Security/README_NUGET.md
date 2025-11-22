@@ -1,7 +1,7 @@
 # The Genocs Library - Security components
 
 Genocs Enterprise Library - Genocs.Security. This package contains functionalities to handle standard security concerns.
-The library is built to be used with NET6, NET7, NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 
@@ -11,10 +11,9 @@ Security NuGet package contains encryption, hashing, and JWT authentication func
 
 - **Genocs.Core**: 7.5.\*
 - **Microsoft.AspNetCore.Authentication.JwtBearer**: Version varies by target framework
+  - NET10.0: 10.0.15
   - NET9.0: 9.0.9
   - NET8.0: 8.0.\*
-  - NET7.0: 7.0.\*
-  - NET6.0: 6.0.\*
 
 ### Framework references
 

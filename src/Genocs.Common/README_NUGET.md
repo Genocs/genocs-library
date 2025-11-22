@@ -8,13 +8,13 @@
 This package contains a set of core common functionalities designed by Genocs.
 
 Genocs Enterprise Library - Genocs.Common. This package contains a set of common types used across the framework.
-The library is built to be used with NET6, NET7 NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 
 Core Common NuGet package contains general types, interfaces and classes to be used on DDD services.
 
-The library is built to be used with NET6, NET7 NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Support
 

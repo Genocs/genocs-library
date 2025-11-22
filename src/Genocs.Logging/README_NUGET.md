@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/dt/Genocs.Logging.svg)](https://www.nuget.org/packages/Genocs.Logging/)
 
 ## Description
-**Genocs.Logging** provides structured logging capabilities with Serilog integration, supporting multiple sinks and advanced formatting for production-ready applications targeting NET6, NET7, NET8 and NET9.
+**Genocs.Logging** provides structured logging capabilities with Serilog integration, supporting multiple sinks and advanced formatting for production-ready applications targeting .NET10, .NET9, .NET8.
 
 ## Dependencies
 - **Genocs.Core** (5.0.9)

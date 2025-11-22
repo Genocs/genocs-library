@@ -1,7 +1,7 @@
 # The Genocs Library - WebApi components
 
 Genocs Enterprise Library - Genocs.WebApi. This package contains a set of web API functionalities designed by Genocs.
-The library is built to be used with NET6, NET7, NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 

@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/dt/Genocs.Persistence.Redis.svg)](https://www.nuget.org/packages/Genocs.Persistence.Redis/)
 
 ## Description
-**Genocs.Persistence.Redis** provides Redis-based distributed caching implementation with advanced features for high-performance applications targeting NET6, NET7, NET8 and NET9.
+**Genocs.Persistence.Redis** provides Redis-based distributed caching implementation with advanced features for high-performance applications targeting .NET10, .NET9, .NET8.
 
 ## Dependencies
 - **Genocs.Core** (5.0.9)

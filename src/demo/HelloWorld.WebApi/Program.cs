@@ -76,20 +76,28 @@ app.UseAccessTokenValidator();
 
 app.MapControllers();
 
-// Minimal API with authorization and OpenAPI definition
-app.MapGet("/", () => "ok")
-    .RequireAuthorization()
-    .WithTags("Home")
-    .WithOpenApi(op =>
-    {
-        op.OperationId = "_home_default";
-        op.Summary = "Get a single todo";
-        op.Description = "Returns a todo by its ID.";
-        op.Tags = new[] { new Microsoft.OpenApi.Models.OpenApiTag { Name = "Home" } };
-        return op;
-    });
+// Minimal API
 
-// Minimal API with authorization policy
+// welcome endpoint
+app.MapGet(string.Empty, () => "welcome");
+
+// free endpoint
+app.MapGet("/free", () => "this is a free endpoint");
+
+// protected endpoint
+app.MapGet("/protected", () => "this is a protected endpoint")
+    .RequireAuthorization()
+    .WithTags("Home");
+//.WithOpenApi(op =>
+//{
+//    op.OperationId = "_home_default";
+//    op.Summary = "Get a single todo";
+//    op.Description = "Returns a todo by its ID.";
+//    op.Tags = new[] { new Microsoft.OpenApi.Models.OpenApiTag { Name = "Home" } };
+//    return op;
+//});
+
+// with authorization policy
 app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
 app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
 

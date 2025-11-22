@@ -1,7 +1,7 @@
 # The Genocs Library - Persistence MongoDB components
 
 Genocs Enterprise Library - Genocs.Persistence.MongoDb. This package contains a repository pattern implementation using MongoDB.
-The library is built to be used with NET6, NET7, NET8 and NET9.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 

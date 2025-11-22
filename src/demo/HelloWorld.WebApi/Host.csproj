@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>Genocs.Library.Demo.HelloWorld.WebApi</PackageId>
         <RootNamespace>Genocs.Library.Demo.HelloWorld.WebApi</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.HelloWorld.WebApi</AssemblyName>
@@ -11,10 +11,6 @@
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
-    </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />

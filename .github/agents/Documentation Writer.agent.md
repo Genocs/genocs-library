@@ -1,5 +1,4 @@
 ---
-name: documentation_writer
 description: Document code and its functionality.
 tools: [search]
 ---

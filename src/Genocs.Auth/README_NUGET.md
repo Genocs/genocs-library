@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/dt/Genocs.Auth.svg)](https://www.nuget.org/packages/Genocs.Auth/)
 
 ## Description
-**Genocs.Auth** is a comprehensive authentication library that provides secure user authentication and authorization mechanisms for .NET applications targeting NET6, NET7, NET8 and NET9.
+**Genocs.Auth** is a comprehensive authentication library that provides secure user authentication and authorization mechanisms for .NET applications targeting .NET10, .NET9, .NET8.
 
 ## Dependencies
 - **Microsoft.AspNetCore.Authentication.JwtBearer** (9.0.0)

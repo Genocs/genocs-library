@@ -38,13 +38,29 @@
 [twitterx-shield]: https://img.shields.io/twitter/url/https/twitter.com/genocs.svg?style=social
 [twitterx-url]: https://twitter.com/genocs
 
+<!-- PROJECT LOGO -->
 <p align="center">
-    <img src="./assets/genocs-library-logo.png" alt="icon">
+  <a href="https://github.com/genocs/genocs-library">
+    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-logo.png" alt=".NET Microservice Template">
+  </a>
+  <h3 align="center">.NET CLI</h3>
+  <p align="center">
+    Open Source Library For .NET10 Microservice
+    <br />
+    <a href="https://learn.fiscanner.net"><strong>Read the Documentation »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/genocs/genocs-library/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/genocs/genocs-library/issues">Request Feature</a>
+    .
+    <a href="https://github.com/genocs/genocs-library/issues">Request Documentation</a>
+  </p>
 </p>
 
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET 9, it is designed and maintained by Genocs.
+This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET10, it is designed and maintained by Genocs.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -90,7 +106,7 @@ Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library
 
 ### Prerequisites
 
-- Install [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Install [Docker](https://www.docker.com/get-started)
 - Install [Docker Compose](https://docs.docker.com/compose/install/)
 - Install [Visual Studio Code](https://code.visualstudio.com/) with the following extensions:

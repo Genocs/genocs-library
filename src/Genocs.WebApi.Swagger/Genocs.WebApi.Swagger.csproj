@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.WebApi.Swagger</PackageId>
         <RootNamespace>Genocs.WebApi.Swagger</RootNamespace>
         <AssemblyName>Genocs.WebApi.Swagger</AssemblyName>
@@ -28,6 +28,12 @@
         <PackageReference Include="Genocs.WebApi" Version="7.5.*" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.*" />
+    </ItemGroup>    
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.*" />
         <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="9.0.*" />
@@ -42,21 +48,5 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.*" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.*" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.*" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.0.*" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.0.*" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.0.*" />
     </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>Genocs.Products.WebApi</PackageId>
         <RootNamespace>Genocs.Products.WebApi</RootNamespace>
         <AssemblyName>Genocs.Products.WebApi</AssemblyName>
