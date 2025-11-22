@@ -9,13 +9,12 @@ This package is part of the Genocs Enterprise Library - Genocs.Discovery.Consul.
 
 Genocs Enterprise Library - Genocs.Discovery.Consul.
 
-
-This package contains a query builder that is agnostic about the persistence layer. The library is designed by Genocs.
+This package provides service discovery and configuration management using HashiCorp Consul. The library is designed by Genocs.
 The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
 
-Discovery Consul NuGet package contains general purpose functionalities to be used on DDD services with Consul as the service discovery mechanism.
+Discovery Consul NuGet package contains service discovery and health check functionalities to be used on DDD services with Consul as the service discovery mechanism.
 
 
 ## Support
@@ -23,11 +22,12 @@ Discovery Consul NuGet package contains general purpose functionalities to be us
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
 ## Documentation
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 
 The change log and breaking changes are listed here.
 
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 - [releases](https://github.com/Genocs/genocs-library/releases)

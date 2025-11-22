@@ -1,6 +1,10 @@
-# Open Telemetry library
+# The Genocs Library - OpenTelemetry components
 
-This package contains the component you can use to setup OpenTelementry.
+[![NuGet](https://img.shields.io/nuget/v/Genocs.OpenTelemetry.svg)](https://www.nuget.org/packages/Genocs.OpenTelemetry/)
+[![NuGet](https://img.shields.io/nuget/dt/Genocs.OpenTelemetry.svg)](https://www.nuget.org/packages/Genocs.OpenTelemetry/)
+
+This package contains the components you can use to setup OpenTelemetry.
+The library is built to be used with .NET10, .NET9, .NET8.
 
 
 ## Description
@@ -27,9 +31,13 @@ To get started, you need to install the package and configure the settings.
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
+## Documentation
+
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
 
 ## Release notes
 
 The change log and breaking changes are listed here.
 
+- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
 - [releases](https://github.com/Genocs/genocs-library/releases)
