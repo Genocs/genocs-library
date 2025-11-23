@@ -15,6 +15,8 @@ concurrency:
 jobs:
   analyze:
     name: Analyze code with CodeQL
+    runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
@@ -23,10 +25,8 @@ jobs:
     permissions:
       security-events: write
 
-      runs-on: ubuntu-24.04
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v5
         with:
           lfs: true
