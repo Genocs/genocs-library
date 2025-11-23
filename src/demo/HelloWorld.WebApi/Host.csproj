@@ -20,10 +20,10 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="7.5.*" />
-        <PackageReference Include="Genocs.Logging" Version="7.5.*" />
-        <PackageReference Include="Genocs.OpenTelemetry" Version="7.5.*" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.5.*" />
+        <PackageReference Include="Genocs.Auth" Version="8.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="8.0.*" />
+        <PackageReference Include="Genocs.OpenTelemetry" Version="8.0.*" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="8.0.*" />
     </ItemGroup>
 
     <ItemGroup>

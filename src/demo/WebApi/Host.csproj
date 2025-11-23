@@ -31,15 +31,15 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="7.5.*" />
-        <PackageReference Include="Genocs.Logging" Version="7.5.*" />
-        <PackageReference Include="Genocs.Tracing" Version="7.5.*" />
-        <PackageReference Include="Genocs.HTTP" Version="7.5.*" />
-        <PackageReference Include="Genocs.Security" Version="7.5.*" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="7.5.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="7.5.*" />
-        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="7.5.*" />
-        <PackageReference Include="Genocs.Metrics" Version="7.5.*" />
+        <PackageReference Include="Genocs.Auth" Version="8.0.*" />
+        <PackageReference Include="Genocs.Logging" Version="8.0.*" />
+        <PackageReference Include="Genocs.Tracing" Version="8.0.*" />
+        <PackageReference Include="Genocs.HTTP" Version="8.0.*" />
+        <PackageReference Include="Genocs.Security" Version="8.0.*" />
+        <PackageReference Include="Genocs.WebApi.Swagger" Version="8.0.*" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="8.0.*" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="8.0.*" />
+        <PackageReference Include="Genocs.Metrics" Version="8.0.*" />
     </ItemGroup>
 
     <ItemGroup>
