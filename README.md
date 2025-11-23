@@ -2,6 +2,7 @@
 
 [![License][license-shield]][license-url]
 [![Build][build-shield]][build-url]
+[![CodeQL][codeql-shield]][codeql-url]
 [![Downloads][downloads-shield]][downloads-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -37,6 +38,8 @@
 [linkedin-url]: https://www.linkedin.com/in/giovanni-emanuele-nocco-b31a5169/
 [twitterx-shield]: https://img.shields.io/twitter/url/https/twitter.com/genocs.svg?style=social
 [twitterx-url]: https://twitter.com/genocs
+[codeql-shield]: https://github.com/Genocs/genocs-library/actions/workflows/codeql-analysis.yml/badge.svg
+[codeql-url]: https://github.com/Genocs/genocs-library/actions/workflows/codeql-analysis.yml
 
 <!-- PROJECT LOGO -->
 <p align="center">
@@ -694,13 +697,13 @@ Inside **./src/apps** folder you can find a full-fledged application composed by
 
 In that way you can test the entire flow.
 
-| Component        | Description                     | Container Port | Visibility                  |
-| ---------------- | ------------------------------- | -------------- | --------------------------- |
-| ApiGateway       | Handles API requests            | :5500          | Public                      |
-| Identity Service | Manages user identities         | :5510\*        | Private through API Gateway |
-| Product Service  | Manages product information     | :5520\*        | Private through API Gateway |
-| Order Service    | Processes orders                | :5530\*        | Private through API Gateway |
-| Notification Service  | Handles real-time communication | :5540\*        | Private through API Gateway |
+| Component            | Description                     | Container Port | Visibility                  |
+| -------------------- | ------------------------------- | -------------- | --------------------------- |
+| ApiGateway           | Handles API requests            | :5500          | Public                      |
+| Identity Service     | Manages user identities         | :5510\*        | Private through API Gateway |
+| Product Service      | Manages product information     | :5520\*        | Private through API Gateway |
+| Order Service        | Processes orders                | :5530\*        | Private through API Gateway |
+| Notification Service | Handles real-time communication | :5540\*        | Private through API Gateway |
 
 ![Architecture](./assets/architecture_01.png)
 
@@ -739,7 +742,6 @@ Some useful commands to manage the application:
 
 ## **Kubernetes**
 
-
 ### KubeCtl
 
 You can deploy the application on Kubernetes cluster by using kubectl.
@@ -765,6 +767,7 @@ microk8s helm install genocs ./gnxchart
 ## **makefile**
 
 Prerequisites:
+
 - make
 
 To install make on MacOS you can use brew
