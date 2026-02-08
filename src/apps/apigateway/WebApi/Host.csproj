@@ -22,15 +22,15 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="8.0.*" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="8.0.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="8.0.*" />
-        <PackageReference Include="Genocs.Metrics" Version="8.0.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.0.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="8.0.*" />
-        <PackageReference Include="Genocs.Security" Version="8.0.*" />
-        <PackageReference Include="Genocs.Tracing" Version="8.0.*" />
-        <PackageReference Include="Genocs.WebApi" Version="8.0.*" />
+        <PackageReference Include="Genocs.Auth" Version="8.1.*" />
+        <PackageReference Include="Genocs.MessageBrokers" Version="8.1.*" />
+        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="8.1.*" />
+        <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
+        <PackageReference Include="Genocs.Secrets.Vault" Version="8.1.*" />
+        <PackageReference Include="Genocs.Security" Version="8.1.*" />
+        <PackageReference Include="Genocs.Tracing" Version="8.1.*" />
+        <PackageReference Include="Genocs.WebApi" Version="8.1.*" />
     </ItemGroup>
 
     <ItemGroup>
