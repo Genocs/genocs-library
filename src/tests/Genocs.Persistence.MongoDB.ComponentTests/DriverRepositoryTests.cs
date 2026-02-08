@@ -1,30 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Testcontainers.MsSql;
+﻿using Testcontainers.MsSql;
 
 namespace Genocs.Persistence.MongoDB.ComponentTests;
 
 // 1. Implement IAsyncLifetime to handle Docker container startup/shutdown
 public class DriverRepositoryTests : IAsyncLifetime
 {
-    // Define the container (Real SQL Server 2022)
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+    // Define the container (Real SQL Server 2025)
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2025-latest")
         .Build();
 
-    public async Task InitializeAsync()
+    [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
+    public async ValueTask InitializeAsync()
     {
         // This creates the Docker container on the fly
-        await _dbContainer.StartAsync();
+        await _dbContainer.StartAsync(CancellationToken.None);
     }
 
-    public async Task DisposeAsync()
+    [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
+    public async ValueTask DisposeAsync()
     {
         // This kills the container after tests finish (Cleanup)
         await _dbContainer.DisposeAsync();
     }
 
     [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
-    public async Task SaveDriver_ShouldPersistToDatabase()
+    public async ValueTask SaveDriver_ShouldPersistToDatabase()
     {
         // Arrange: Get the connection string from the running container
         string connectionString = _dbContainer.GetConnectionString();

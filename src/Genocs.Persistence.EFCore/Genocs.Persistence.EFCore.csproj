@@ -32,30 +32,56 @@
     <ItemGroup>
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="MediatR" Version="13.1.0" />
+        <PackageReference Include="MediatR" Version="14.0.0" />
 
-        <!--MS SQL plus SQLite-->
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
-
-        <!--PostgreSQL-->
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-
-        <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26000" />
 
         <!--Mysql-->
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
 
         <!--Serilog-->
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.2" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
-        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.3" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <!--MS SQL plus SQLite-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+        <!-- Mongodb -->
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="10.0.0" />
+        <!--PostgreSQL-->
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+        <!--Oracle-->
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="10.23.26000" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+        <!--MS SQL plus SQLite-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+        <!-- Mongodb -->
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.3" />
+        <!--PostgreSQL-->
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <!--Oracle-->
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26000" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <!--MS SQL plus SQLite-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+        <!-- Mongodb -->
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.3" />
+        <!--PostgreSQL-->
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <!--Oracle-->
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26000" />
+    </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@
         <PackageReleaseNotes>
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>        
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.2" />
     </ItemGroup>
 
 </Project>
