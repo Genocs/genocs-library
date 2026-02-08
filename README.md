@@ -278,7 +278,7 @@ You can use **Docker compose** to setup the infrastructure components just by ru
 cd ./containers
 
 # Setup the infrastructure.
-#Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
+# Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
 docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
