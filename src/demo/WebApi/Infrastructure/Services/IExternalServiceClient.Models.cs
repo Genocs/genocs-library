@@ -23,11 +23,13 @@ public class IssuingRequest
 /// <summary>
 /// The request object for the redemption endpoint.
 /// </summary>
-public class RedemptionRequest
-{
+public class RedemptionRequest;
 
-}
-
+/// <summary>
+/// The metadata object for the issuing endpoint.
+/// It contains additional information about the request,
+/// such as the member ID, request ID, and email address of the recipient.
+/// </summary>
 public class Metadata
 {
     [JsonProperty("memberId")]
@@ -100,21 +102,30 @@ public class CodeResponse
     public string? RedemptionStatus { get; set; }
 }
 
-public class CustomSettingsData
-{
-}
+public class CustomSettingsData;
 
 public class GiftCard
 {
     [JsonProperty("barcode_format")]
     public string? BarcodeFormat { get; set; }
 
-    public List<string> countries { get; set; }
-    public string currency { get; set; }
-    public CustomSettingsData custom_settings_data { get; set; }
-    public string denomination_type { get; set; }
-    public List<string> denominations { get; set; }
-    public string description { get; set; }
+    [JsonProperty("countries")]
+    public List<string>? Countries { get; set; }
+
+    [JsonProperty("currency")]
+    public string? Currency { get; set; }
+
+    [JsonProperty("custom_settings_data")]
+    public CustomSettingsData? CustomSettingsData { get; set; }
+
+    [JsonProperty("denomination_type")]
+    public string? DenominationType { get; set; }
+
+    [JsonProperty("denominations")]
+    public List<string>? Denominations { get; set; }
+
+    [JsonProperty("description")]
+    public string? Description { get; set; }
 
     // public int discount_value { get; set; }
     public string expiration_policy { get; set; }

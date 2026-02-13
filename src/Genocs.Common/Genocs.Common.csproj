@@ -21,4 +21,9 @@
         </PackageReleaseNotes>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Remove="CQRS\Commands\2mgtqhpm.w1p~" />
+      <None Remove="Domain\ConnectionString\IConnectionStringSecurer.cs~RFf0e0bbe.TMP" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,4 @@
+using Genocs.Common.Builders;
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul.Builders;
 using Genocs.Discovery.Consul.Configurations;

@@ -1,4 +1,4 @@
-﻿using Genocs.Core.CQRS.Commands;
+﻿using Genocs.Common.CQRS.Commands;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
 using Microsoft.Azure.ServiceBus;

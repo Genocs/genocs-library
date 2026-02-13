@@ -5,26 +5,19 @@
 
 ## Overview
 
-This package contains a set of core common functionalities designed by Genocs.
+Genocs Enterprise Library - Genocs.Common.
 
-Genocs Enterprise Library - Genocs.Common. This package contains a set of common types used across the framework.
-The library is built to be used with .NET10, .NET9, .NET8.
+This package contains a set of core common functionalities and types used across the framework.
 
 ## Description
 
-Core Common NuGet package contains general types, interfaces and classes to be used on DDD services.
+Core Common NuGet package contains general types, interfaces and classes to be used on DDD services. It includes definitions for Entities, Aggregates, Commands, Queries, Events, and common infrastructure interfaces.
 
 The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Support
 
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
 
 ## Dependencies
 
@@ -43,5 +36,4 @@ The documentation is available at [Genocs - Open-Source Framework for Enterprise
 The change log and breaking changes are listed here.
 
 - [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
 - [releases](https://github.com/Genocs/genocs-library/releases)

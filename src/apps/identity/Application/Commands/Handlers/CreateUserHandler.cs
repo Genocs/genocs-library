@@ -1,4 +1,4 @@
-using Genocs.Core.CQRS.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.Identities.Application.Domain.Constants;
 using Genocs.Identities.Application.Domain.Entities;
 using Genocs.Identities.Application.Domain.Exceptions;

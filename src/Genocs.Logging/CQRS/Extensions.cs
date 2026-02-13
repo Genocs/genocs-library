@@ -1,5 +1,5 @@
+using Genocs.Common.CQRS.Commands;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Logging.CQRS.Decorators;
 using Microsoft.Extensions.DependencyInjection;

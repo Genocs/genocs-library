@@ -88,8 +88,6 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
             // Check email verification requirement
             if (_options.RequireEmailVerification && !emailVerified)
             {
-                _logger.LogWarning("User {UserId} with email {Email} attempted access with unverified email", userId, email);
-
                 // In demo mode, we'll allow unverified emails but log a warning
                 if (!_options.DemoMode)
                 {
@@ -97,7 +95,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                     return;
                 }
 
-                _logger.LogInformation("Demo mode: Allowing unverified email for user {UserId}", userId);
+                _logger.LogWarning("Demo mode: Allowing unverified email for user {UserId}", userId);
             }
 
             // Create claims
@@ -122,13 +120,6 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
 
             var identity = new ClaimsIdentity(claims, "Firebase");
             context.User = new ClaimsPrincipal(identity);
-
-            _logger.LogInformation(
-                        "Successfully authenticated user {UserId} ({Email}, verified: {EmailVerified}) with roles: {Roles}",
-                        userId,
-                        email,
-                        emailVerified,
-                        string.Join(", ", userRoles));
         }
         catch (Exception ex)
         {
@@ -166,11 +157,6 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                 {
                     roles.Add(role);
                 }
-
-                _logger.LogDebug(
-                            "Added email-specific roles for {Email}: {Roles}",
-                            email,
-                            string.Join(", ", emailRoles));
             }
             else
             {
@@ -191,19 +177,6 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                         {
                             roles.Add(role);
                         }
-
-                        _logger.LogDebug(
-                                    "Added domain-specific roles for {Email} (domain: {Domain}): {Roles}",
-                                    email,
-                                    domainMapping.Key,
-                                    string.Join(", ", domainMapping.Value));
-                    }
-                    else
-                    {
-                        _logger.LogWarning(
-                                    "User {Email} matches domain {Domain} but email is not verified",
-                                    email,
-                                    domainMapping.Key);
                     }
                 }
             }
@@ -214,7 +187,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
         {
             try
             {
-                var customClaimsJson = customClaimsObj.ToString();
+                string? customClaimsJson = customClaimsObj.ToString();
                 if (!string.IsNullOrEmpty(customClaimsJson))
                 {
                     var customClaims = JsonSerializer.Deserialize<Dictionary<string, object>>(customClaimsJson);
@@ -233,8 +206,6 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                                     }
                                 }
                             }
-
-                            _logger.LogDebug("Added custom claims roles for user {UserId}", userId);
                         }
                     }
                 }

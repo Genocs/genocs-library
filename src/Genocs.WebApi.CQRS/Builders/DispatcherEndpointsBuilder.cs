@@ -1,5 +1,5 @@
-using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Queries;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

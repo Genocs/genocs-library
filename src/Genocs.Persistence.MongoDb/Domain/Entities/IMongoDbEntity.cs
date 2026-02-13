@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Domain.Entities;
+﻿using Genocs.Common.Domain.Entities;
 using MongoDB.Bson;
 
 namespace Genocs.Persistence.MongoDb.Domain.Entities;

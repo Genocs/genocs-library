@@ -19,15 +19,6 @@ public class GenocsException : Exception
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
-    public GenocsException(SerializationInfo serializationInfo, StreamingContext context)
-        : base(serializationInfo, context)
-    {
-
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="GenocsException"/> object.
-    /// </summary>
     /// <param name="message">Exception message.</param>
     public GenocsException(string message)
         : base(message)
@@ -48,7 +39,7 @@ public class GenocsException : Exception
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">Exception message.</param>
     public class InvalidConfigurationException(string message)
         : GenocsException(message);
 }

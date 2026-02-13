@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace Genocs.Common.Types;
@@ -116,8 +117,8 @@ public static class Extensions
             return false;
         }
 
-        // TODO: Refactor this to remove the use of FormatterServices
-        defaultValue = FormatterServices.GetUninitializedObject(type);
+        // Create instance without calling constructor
+        defaultValue = RuntimeHelpers.GetUninitializedObject(type);
 
         defaultValueCache[type] = defaultValue;
 

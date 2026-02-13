@@ -36,22 +36,8 @@ public class FirebaseAuthenticationMiddleware(RequestDelegate next)
 
                 var claims = new[]
                 {
-                    // Available claims in the Firebase token payload:
-                    // ["name"]    "Giovanni Emanuele Nocco"   System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["iss"] "https://securetoken.google.com/fiscanner-web"  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["aud"] "fiscanner-web" System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["auth_time"]   1758541465  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["user_id"] "7tlWHAOd8IfoqRwbiwEvD5OuzHJ2"  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["sub"] "7tlWHAOd8IfoqRwbiwEvD5OuzHJ2"  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["iat"] 1758541465  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["exp"] 1758545065  System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["email"]   "giovanni.nocco@hotmail.com"    System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["email_verified"]  false   System.Collections.Generic.DebugViewDictionaryItem<string, object>
-                    // ["firebase"]    ValueKind = Object : "{"identities":{"email":["giovanni.nocco @hotmail.com"]},"sign_in_provider":"password"}"    System.Collections.Generic.DebugViewDictionaryItem<string, object>
-
                     new Claim(ClaimTypes.NameIdentifier, payload["user_id"].ToString()),
                     new Claim(ClaimTypes.Name, payload["name"].ToString()),
-
                     // Add more claims as needed
                 };
 

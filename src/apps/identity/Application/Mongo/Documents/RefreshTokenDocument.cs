@@ -1,4 +1,4 @@
-using Genocs.Core.Domain.Entities;
+using Genocs.Common.Domain.Entities;
 using Genocs.Identities.Application.Domain.Entities;
 
 namespace Genocs.Identities.Application.Mongo.Documents;

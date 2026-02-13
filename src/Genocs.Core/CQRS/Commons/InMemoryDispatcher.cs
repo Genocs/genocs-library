@@ -1,6 +1,8 @@
-﻿using Genocs.Core.CQRS.Commands;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Commons;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Core.CQRS.Events;
-using Genocs.Core.CQRS.Queries;
 
 namespace Genocs.Core.CQRS.Commons;
 
@@ -31,6 +33,6 @@ internal sealed class InMemoryDispatcher : IDispatcher
         where T : class, IEvent
         => _eventDispatcher.PublishAsync(@event, cancellationToken);
 
-    public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+    public Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         => _queryDispatcher.QueryAsync(query, cancellationToken);
 }

@@ -1,3 +1,4 @@
+using Genocs.Common.CQRS.Queries;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Mongo.Documents;

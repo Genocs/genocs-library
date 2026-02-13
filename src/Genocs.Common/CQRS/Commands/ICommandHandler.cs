@@ -1,4 +1,4 @@
-namespace Genocs.Core.CQRS.Commands;
+namespace Genocs.Common.CQRS.Commands;
 
 /// <summary>
 /// CQRS command handler interface.
@@ -10,7 +10,7 @@ public interface ICommandHandler<in TCommand>
     /// <summary>
     /// HandleAsync.
     /// </summary>
-    /// <param name="command">The command</param>
+    /// <param name="command">The command.</param>
     /// <param name="cancellationToken">The Cancellation token.</param>
     /// <returns>Async Task.</returns>
     Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);

@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.CQRS.Queries;
+﻿namespace Genocs.Common.CQRS.Queries;
 
 /// <summary>
 /// Paged query extension with Filter.

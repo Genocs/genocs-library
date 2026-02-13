@@ -1,4 +1,4 @@
-using Genocs.Core.CQRS.Events;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.Extensions;
 using Genocs.HTTP;
 using Genocs.MessageBrokers;

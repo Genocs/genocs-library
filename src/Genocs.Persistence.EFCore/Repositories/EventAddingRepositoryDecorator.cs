@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification;
-using Genocs.Core.Domain.Entities;
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Events;
 using Genocs.Core.Domain.Repositories;
 

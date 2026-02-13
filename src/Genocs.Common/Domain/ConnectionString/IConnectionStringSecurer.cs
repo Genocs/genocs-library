@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.Domain.ConnectionString;
+﻿namespace Genocs.Common.Domain.ConnectionString;
 
 /// <summary>
 /// Interface for securing connection strings.
@@ -10,6 +10,6 @@ public interface IConnectionStringSecurer
     /// </summary>
     /// <param name="connectionString">The Connection string.</param>
     /// <param name="dbProvider">The Database provider name.</param>
-    /// <returns></returns>
+    /// <returns>The secured connection string.</returns>
     string? MakeSecure(string? connectionString, string? dbProvider = null);
 }

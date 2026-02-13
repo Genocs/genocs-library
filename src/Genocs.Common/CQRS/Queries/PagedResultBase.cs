@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace Genocs.Core.CQRS.Queries;
+﻿namespace Genocs.Common.CQRS.Queries;
 
 /// <summary>
 /// The page result base class.
@@ -47,10 +45,10 @@ public abstract class PagedResultBase
     /// <summary>
     /// Standard constructor.
     /// </summary>
-    /// <param name="currentPage"></param>
-    /// <param name="resultsPerPage"></param>
-    /// <param name="totalPages"></param>
-    /// <param name="totalResults"></param>
+    /// <param name="currentPage">The current page index (zero-based).</param>
+    /// <param name="resultsPerPage">The number of results per page.</param>
+    /// <param name="totalPages">The total number of pages.</param>
+    /// <param name="totalResults">The total number of results.</param>
     protected PagedResultBase(int currentPage, int resultsPerPage, int totalPages, long totalResults)
     {
         CurrentPage = currentPage > totalPages ? totalPages : currentPage;

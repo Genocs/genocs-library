@@ -1,4 +1,4 @@
-using Genocs.Core.Domain.Entities;
+using Genocs.Common.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace Genocs.Core.Domain.Repositories;

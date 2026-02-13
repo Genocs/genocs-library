@@ -1,4 +1,4 @@
-﻿using Genocs.Core.Demo.Contracts;
+﻿using Genocs.Library.Demo.Contracts;
 using Genocs.Library.Demo.WebApi.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;

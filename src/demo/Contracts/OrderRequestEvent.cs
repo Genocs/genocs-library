@@ -1,6 +1,6 @@
-﻿using Genocs.Core.CQRS.Events;
+﻿using Genocs.Common.CQRS.Events;
 
-namespace Genocs.Core.Demo.Contracts;
+namespace Genocs.Library.Demo.Contracts;
 
 public class OrderRequest : IEvent
 {

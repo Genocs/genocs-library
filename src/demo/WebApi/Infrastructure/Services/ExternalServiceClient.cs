@@ -57,23 +57,23 @@ public class ExternalServiceClient : IExternalServiceClient
     /// Send a request for gift card issuing.
     /// </summary>
     /// <param name="request">The issuing Request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The issuing Response containing the gift card details.</returns>
-    public async Task<IssuingResponse> IssueAsync(IssuingRequest request)
+    public async Task<IssuingResponse?> IssueAsync(IssuingRequest request, CancellationToken cancellationToken = default)
     {
         string serializedRequest = JsonConvert.SerializeObject(request);
         SetHeaders(serializedRequest);
-        using (var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json"))
-        {
-            return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceOptions.Caller}/direct-issue", content);
-        }
+        using var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json");
+        return await _client.PostAsync<IssuingResponse>($"{_url}/redemptions/gift-cards/{_externalServiceOptions.Caller}/direct-issue", content);
     }
 
     /// <summary>
     /// Get the product based on the productId.
     /// </summary>
     /// <param name="request">The redemption request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The redemption Response.</returns>
-    public async Task<string> RedeemAsync(RedemptionRequest request)
+    public async Task<string?> RedeemAsync(RedemptionRequest request, CancellationToken cancellationToken = default)
     {
         // SetHeaders(callerId);
         return await _client.PostAsync<string>($"{_url}/redemptions/gift-cards/custom/redeem", request);

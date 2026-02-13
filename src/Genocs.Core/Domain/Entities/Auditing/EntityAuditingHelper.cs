@@ -21,7 +21,7 @@ public static class EntityAuditingHelper
             return;
         }
 
-        if (entityWithCreationTime.CreatedAt == default(DateTime))
+        if (entityWithCreationTime.CreatedAt == default)
         {
             // entityWithCreationTime.CreationTime = Clock.Now;
             // entityWithCreationTime.CreatedAt = DateTime.Now;

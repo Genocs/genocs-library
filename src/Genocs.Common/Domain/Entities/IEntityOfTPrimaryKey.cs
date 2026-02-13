@@ -1,6 +1,6 @@
 ﻿using Genocs.Common.Types;
 
-namespace Genocs.Core.Domain.Entities;
+namespace Genocs.Common.Domain.Entities;
 
 /// <summary>
 /// Defines interface for base entity type. All the domain object must implement this interface.

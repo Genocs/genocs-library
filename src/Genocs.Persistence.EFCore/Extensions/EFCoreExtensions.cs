@@ -1,8 +1,8 @@
+using Genocs.Common.Domain.ConnectionString;
+using Genocs.Common.Domain.Entities;
 using Genocs.Common.Interfaces;
 using Genocs.Common.Persistence.Initialization;
 using Genocs.Core.Builders;
-using Genocs.Core.Domain.ConnectionString;
-using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.EFCore.Common;
 using Genocs.Persistence.EFCore.Configurations;

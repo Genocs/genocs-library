@@ -1,5 +1,5 @@
 ﻿using Genocs.Core.CQRS.Events;
-using Genocs.Core.Demo.Contracts;
+using Genocs.Library.Demo.Contracts;
 
 namespace Genocs.Library.Demo.Worker.Handlers;
 

@@ -1,3 +1,4 @@
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Entities;
 
 namespace Genocs.Core.Domain.Events;

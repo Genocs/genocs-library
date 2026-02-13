@@ -1,5 +1,5 @@
+using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Commands;
 using Genocs.Core.Extensions;
 using Genocs.HTTP;
 using Microsoft.Extensions.Logging;

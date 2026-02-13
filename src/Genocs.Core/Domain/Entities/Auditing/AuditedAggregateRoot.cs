@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Genocs.Common.Domain.Entities;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
 
@@ -14,7 +15,7 @@ public abstract class AuditedAggregateRoot : AuditedAggregateRoot<int>
 /// <summary>
 /// This class can be used to simplify implementing <see cref="IAudited"/> for aggregate roots.
 /// </summary>
-/// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+/// <typeparam name="TPrimaryKey">Type of the primary key of the entity.</typeparam>
 [Serializable]
 public abstract class AuditedAggregateRoot<TPrimaryKey> : CreationAuditedAggregateRoot<TPrimaryKey>, IAudited
 {

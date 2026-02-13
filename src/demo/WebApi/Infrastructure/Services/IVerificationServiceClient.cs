@@ -10,6 +10,7 @@ public interface IVerificationServiceClient
     /// Send a request To verify the user.
     /// </summary>
     /// <param name="request">The request with the user data.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The user verification response.</returns>
-    Task<VerificationApiResponse> VerifyAsync(VerificationApiRequest request);
+    Task<VerificationApiResponse?> VerifyAsync(VerificationApiRequest request, CancellationToken cancellationToken = default);
 }

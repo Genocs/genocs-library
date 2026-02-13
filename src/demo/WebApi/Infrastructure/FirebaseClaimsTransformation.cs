@@ -92,8 +92,6 @@ public class FirebaseClaimsTransformation(
                 {
                     roles.Add(role);
                 }
-
-                _logger.LogDebug("Added email-specific roles for {Email}: {Roles}", email, string.Join(", ", emailRoles));
             }
         }
 
@@ -110,8 +108,6 @@ public class FirebaseClaimsTransformation(
                         {
                             roles.Add(role);
                         }
-
-                        _logger.LogDebug("Added domain-specific roles for {Email} (domain: {Domain}): {Roles}", email, domainMapping.Key, string.Join(", ", domainMapping.Value));
                     }
                 }
             }

@@ -9,7 +9,7 @@ namespace Genocs.Core.Extensions;
 /// <summary>
 /// Extension methods for String class.
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
@@ -326,11 +326,7 @@ public static class StringExtensions
             return str;
         }
 
-        return Regex.Replace(
-            str,
-            "[a-z][A-Z]",
-            m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
-        );
+        return MyRegex().Replace(str, m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1])));
     }
 
     /// <summary>
@@ -346,7 +342,7 @@ public static class StringExtensions
             return str;
         }
 
-        return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
+        return MyRegex().Replace(str, m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
     }
 
     /// <summary>
@@ -510,4 +506,7 @@ public static class StringExtensions
         return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
             .ToLowerInvariant();
     }
+
+    [GeneratedRegex("[a-z][A-Z]")]
+    private static partial Regex MyRegex();
 }

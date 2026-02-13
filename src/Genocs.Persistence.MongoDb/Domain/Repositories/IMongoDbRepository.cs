@@ -9,7 +9,4 @@ namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
 public interface IMongoDbRepository<TEntity> : IMongoDbBaseRepository<TEntity, ObjectId>
-    where TEntity : IMongoDbEntity
-{
-
-}
+    where TEntity : IMongoDbEntity;

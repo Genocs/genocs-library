@@ -10,10 +10,10 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\..\Genocs.Common\Genocs.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="8.1.*" />
+        <PackageReference Include="Genocs.Common" Version="8.1.*" />
     </ItemGroup>
 </Project>

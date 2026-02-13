@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Demo.Contracts;
-using Genocs.Core.Demo.Domain.Aggregates;
+﻿using Genocs.Core.Demo.Domain.Aggregates;
+using Genocs.Library.Demo.Contracts;
 using Genocs.Persistence.MongoDb.Domain.Repositories;
 using MassTransit;
 

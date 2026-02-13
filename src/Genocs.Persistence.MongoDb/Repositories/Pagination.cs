@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

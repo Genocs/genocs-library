@@ -30,15 +30,6 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(SerializationInfo serializationInfo, StreamingContext context)
-        : base(serializationInfo, context)
-    {
-
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="EntityNotFoundException"/> object.
-    /// </summary>
     public EntityNotFoundException(Type entityType, object id)
         : this(entityType, id, null)
     {

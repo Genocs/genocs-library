@@ -1,4 +1,4 @@
-namespace Genocs.Core.Builders;
+namespace Genocs.Common.Builders;
 
 /// <summary>
 /// The ServiceId interface definition.

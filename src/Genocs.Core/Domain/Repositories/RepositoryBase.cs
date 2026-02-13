@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Entities;
 
 // using Genocs.Core.Dependency;

@@ -35,9 +35,8 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// <para>Sample request:</para>
     /// <para>
     ///     GET /FirebaseAuthorized
-    ///     Authorization: Bearer your-firebase-jwt-token-here
+    ///     Authorization: Bearer your-firebase-jwt-token-here.
     /// </para>
-    /// 
     /// </remarks>
     /// <returns>A string containing the authorization header value from the request.</returns>
     /// <response code="200">Returns the authorization header information successfully.</response>
@@ -75,7 +74,7 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// <para>Sample request:</para>
     /// <para>
     ///     GET /FirebaseAuthorized/user-info
-    ///     Authorization: Bearer your-firebase-jwt-token-here
+    ///     Authorization: Bearer your-firebase-jwt-token-here.
     /// </para>
     /// 
     /// </remarks>

@@ -1,4 +1,4 @@
-using Genocs.Core.CQRS.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.MessageBrokers;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.Notifications.WebApi.Events;

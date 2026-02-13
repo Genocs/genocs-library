@@ -1,4 +1,5 @@
-﻿using Genocs.Core.CQRS.Events;
+﻿using Genocs.Common.CQRS.Events;
+using Genocs.Core.CQRS.Events;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
 using Microsoft.Azure.ServiceBus;

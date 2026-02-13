@@ -1,11 +1,3 @@
-﻿using System;
+﻿namespace Genocs.Library.Demo.Contracts;
 
-namespace Genocs.Core.Demo.Contracts
-{
-    public interface SubmitOrder
-    {
-        Guid Id { get; }
-        public string OrderId { get; }
-        public string UserId { get; }
-    }
-}
+public record SubmitOrder(Guid Id, string OrderId, string UserId);

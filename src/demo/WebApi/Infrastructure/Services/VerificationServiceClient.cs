@@ -28,10 +28,7 @@ public class VerificationServiceClient : IVerificationServiceClient
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _externalServiceSettings = externalServiceSettings ?? throw new ArgumentNullException(nameof(externalServiceSettings));
 
-        if (httpClientSettings is null)
-        {
-            throw new ArgumentNullException(nameof(httpClientSettings));
-        }
+        ArgumentNullException.ThrowIfNull(httpClientSettings);
 
         string? url = httpClientSettings?.Services?["user_verifier"];
 
@@ -52,14 +49,13 @@ public class VerificationServiceClient : IVerificationServiceClient
     /// The method to verify the user.
     /// </summary>
     /// <param name="request">The verification api request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The response.</returns>
-    public async Task<VerificationApiResponse> VerifyAsync(VerificationApiRequest request)
+    public async Task<VerificationApiResponse?> VerifyAsync(VerificationApiRequest request, CancellationToken cancellationToken = default)
     {
         SetHeaders();
         string serializedRequest = JsonConvert.SerializeObject(request);
-        using (var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json"))
-        {
-            return await _client.PostAsync<VerificationApiResponse>($"{_url}/clients", request);
-        }
+        using var content = new StringContent(serializedRequest, System.Text.Encoding.UTF8, "application/json");
+        return await _client.PostAsync<VerificationApiResponse>($"{_url}/clients", request);
     }
 }

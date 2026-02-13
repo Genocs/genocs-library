@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.Domain.Entities;
+﻿namespace Genocs.Common.Domain.Entities;
 
 /// <summary>
 /// Used to standardize soft deleting entities.

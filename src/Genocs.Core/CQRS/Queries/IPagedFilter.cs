@@ -1,18 +1,20 @@
+using Genocs.Common.CQRS.Queries;
+
 namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
 /// The paged filter interface.
 /// </summary>
-/// <typeparam name="TResult"></typeparam>
-/// <typeparam name="TQuery"></typeparam>
+/// <typeparam name="TResult">The type of the result.</typeparam>
+/// <typeparam name="TQuery">The type of the query.</typeparam>
 public interface IPagedFilter<TResult, in TQuery>
     where TQuery : IQuery
 {
     /// <summary>
-    /// Filter.
+    /// Filters the given values based on the specified query.
     /// </summary>
-    /// <param name="values"></param>
-    /// <param name="query"></param>
-    /// <returns></returns>
+    /// <param name="values">The values to filter.</param>
+    /// <param name="query">The query to apply.</param>
+    /// <returns>A paged result containing the filtered values.</returns>
     PagedResult<TResult> Filter(IEnumerable<TResult> values, TQuery query);
 }

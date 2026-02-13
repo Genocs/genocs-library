@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Genocs.Common.CQRS.Queries;
 
 namespace Genocs.Core.CQRS.Queries;
 
@@ -61,9 +62,9 @@ public class PagedResult<T> : PagedResultBase
     /// <summary>
     /// From helper.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="items"></param>
-    /// <returns></returns>
+    /// <param name="result">The base paged result.</param>
+    /// <param name="items">The list of items.</param>
+    /// <returns>The paged result with the specified items.</returns>
     public static PagedResult<T> From(
                                       PagedResultBase result,
                                       IEnumerable<T> items)
@@ -75,7 +76,7 @@ public class PagedResult<T> : PagedResultBase
                 result.TotalResults);
 
     /// <summary>
-    /// Static helper to get Empty result.
+    /// Static helper to get an empty result.
     /// </summary>
     public static PagedResult<T> Empty
         => new();

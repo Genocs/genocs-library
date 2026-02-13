@@ -1,5 +1,5 @@
-﻿using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Queries;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Orders.WebApi.Commands;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Orders.WebApi.Queries;

@@ -142,6 +142,11 @@ public static class Extensions
 
     public static IApplicationBuilder UseMetrics(this IApplicationBuilder app)
     {
+        if (!_initialized)
+        {
+            return app;
+        }
+
         App.Metrics.MetricsOptions options;
         using (var scope = app.ApplicationServices.CreateScope())
         {
@@ -171,17 +176,11 @@ public static class Extensions
 
         options.EndpointOptions = endpointOptions =>
         {
-            switch (metricsOptions.PrometheusFormatter?.ToLowerInvariant() ?? string.Empty)
+            endpointOptions.MetricsEndpointOutputFormatter = (metricsOptions.PrometheusFormatter?.ToLowerInvariant() ?? string.Empty) switch
             {
-                case "protobuf":
-                    endpointOptions.MetricsEndpointOutputFormatter =
-                        new MetricsPrometheusProtobufOutputFormatter();
-                    break;
-                default:
-                    endpointOptions.MetricsEndpointOutputFormatter =
-                        new MetricsPrometheusTextOutputFormatter();
-                    break;
-            }
+                "protobuf" => new MetricsPrometheusProtobufOutputFormatter(),
+                _ => new MetricsPrometheusTextOutputFormatter(),
+            };
         };
 
         return options;

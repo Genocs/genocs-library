@@ -1,3 +1,4 @@
+using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands.Dispatchers;

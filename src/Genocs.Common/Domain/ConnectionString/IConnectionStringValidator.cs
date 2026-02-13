@@ -1,4 +1,4 @@
-﻿namespace Genocs.Core.Domain.ConnectionString;
+﻿namespace Genocs.Common.Domain.ConnectionString;
 
 /// <summary>
 /// Interface for validating connection strings.

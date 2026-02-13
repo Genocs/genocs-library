@@ -1,6 +1,6 @@
 using System.Reflection;
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Builders;
-using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDb.Configurations;
 using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Factories;

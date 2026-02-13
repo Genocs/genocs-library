@@ -1,4 +1,4 @@
-using Genocs.Core.CQRS.Events;
+using Genocs.Common.CQRS.Events;
 
 namespace Genocs.Identities.Application.Events;
 

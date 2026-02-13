@@ -1,4 +1,5 @@
-using Genocs.Core.CQRS.Commands;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.CQRS.Events;
 using Genocs.WebApi.Helpers;
 using Microsoft.AspNetCore.Http;
