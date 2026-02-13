@@ -1,6 +1,6 @@
 using Genocs.Common.Domain.Entities;
 
-namespace Genocs.Core.Domain.Entities.Auditing;
+namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
 /// This interface ads <see cref="IDeletionAudited"/> to <see cref="IAudited"/> for a fully audited entity.

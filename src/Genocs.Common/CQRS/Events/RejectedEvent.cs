@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Genocs.Core.CQRS.Events;
+namespace Genocs.Common.CQRS.Events;
 
 /// <summary>
 /// Represents an event that indicates a rejection or failure in processing a command or event.

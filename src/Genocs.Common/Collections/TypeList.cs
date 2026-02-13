@@ -1,14 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 
-namespace Genocs.Core.Collections;
+namespace Genocs.Common.Collections;
 
 /// <summary>
 /// A shortcut for <see cref="TypeList{TBaseType}"/> to use object as base type.
 /// </summary>
-public class TypeList : TypeList<object>, ITypeList
-{
-}
+public class TypeList : TypeList<object>, ITypeList;
 
 /// <summary>
 /// Extends <see cref="List{Type}"/> to add restriction a specific base type.

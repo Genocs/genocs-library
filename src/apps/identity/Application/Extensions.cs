@@ -3,6 +3,7 @@ using System.Text;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
 using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;

@@ -1,6 +1,6 @@
 using Genocs.Common.Domain.Entities;
 
-namespace Genocs.Core.Domain.Entities.Auditing;
+namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
 /// This interface is implemented by entities that is wanted to store modification information (who and when modified lastly).

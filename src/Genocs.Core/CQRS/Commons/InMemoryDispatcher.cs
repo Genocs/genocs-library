@@ -2,7 +2,6 @@
 using Genocs.Common.CQRS.Commons;
 using Genocs.Common.CQRS.Events;
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Events;
 
 namespace Genocs.Core.CQRS.Commons;
 

@@ -1,4 +1,4 @@
-namespace Genocs.Core.Domain.Repositories;
+namespace Genocs.Common.Domain.Repositories;
 
 /// <summary>
 /// Represents a unit of work that can be used to save changes to the database.

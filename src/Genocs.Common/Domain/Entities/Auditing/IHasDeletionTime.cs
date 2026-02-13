@@ -1,6 +1,6 @@
 using Genocs.Common.Domain.Entities;
 
-namespace Genocs.Core.Domain.Entities.Auditing;
+namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
 /// An entity can implement this interface if <see cref="DeletedAt"/> of this entity must be stored.

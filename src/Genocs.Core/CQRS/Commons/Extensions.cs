@@ -1,9 +1,9 @@
 ﻿using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Commons;
+using Genocs.Common.CQRS.Events;
 using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Types;
 using Genocs.Core.CQRS.Commands.Dispatchers;
-using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Events.Dispatchers;
 using Genocs.Core.CQRS.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;

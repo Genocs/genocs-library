@@ -1,4 +1,5 @@
-﻿using Genocs.Core.Builders;
+﻿using Genocs.Common.CQRS.Queries;
+using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;

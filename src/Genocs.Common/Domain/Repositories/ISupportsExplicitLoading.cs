@@ -1,7 +1,7 @@
 using Genocs.Common.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace Genocs.Core.Domain.Repositories;
+namespace Genocs.Common.Domain.Repositories;
 
 public interface ISupportsExplicitLoading<TEntity, TPrimaryKey>
     where TEntity : class, IEntity<TPrimaryKey>

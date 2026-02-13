@@ -1,6 +1,7 @@
 ﻿// using Genocs.Timing;
 // using Genocs.Core.Configuration.Startup;
 // using Genocs.Core.MultiTenancy;
+using Genocs.Common.Domain.Entities.Auditing;
 using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
@@ -14,8 +15,7 @@ public static class EntityAuditingHelper
         int? tenantId,
         DefaultIdType? userId)
     {
-        var entityWithCreationTime = entityAsObj as IHasCreationTime;
-        if (entityWithCreationTime == null)
+        if (entityAsObj is not IHasCreationTime entityWithCreationTime)
         {
             // Object does not implement IHasCreationTime
             return;

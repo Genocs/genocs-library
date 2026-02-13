@@ -1,6 +1,4 @@
-using Genocs.Common.CQRS.Queries;
-
-namespace Genocs.Core.CQRS.Queries;
+namespace Genocs.Common.CQRS.Queries;
 
 /// <summary>
 /// The paged filter interface.

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Genocs.Common.Domain.Entities;
+using Genocs.Common.Domain.Entities.Auditing;
 
 // using Genocs.Timing;
 

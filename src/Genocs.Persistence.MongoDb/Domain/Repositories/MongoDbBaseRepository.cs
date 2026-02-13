@@ -1,11 +1,10 @@
+using System.Linq.Expressions;
 using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Domain.Entities;
-using Genocs.Core.CQRS.Queries;
-using Genocs.Core.Domain.Repositories;
+using Genocs.Common.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
 
 namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 
@@ -22,20 +21,27 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
     /// <summary>
     /// It returns the Mongo Collection as Queryable.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The Mongo Collection as Queryable.</returns>
     public IQueryable<TEntity> GetMongoQueryable()
     {
         return Collection.AsQueryable();
     }
 
+    /// <summary>
+    /// This method retrieves an entity from the Mongo Collection based on the provided ID.
+    /// It uses the GetAsync method with a predicate to find the entity where the ID matches the provided ID. If no entity is found, it returns null.
+    /// </summary>
+    /// <param name="id">The ID of the entity to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The entity if found; otherwise, null.</returns>
     public Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default)
-        => GetAsync(e => e.Id.Equals(id));
+        => GetAsync(e => e.Id.Equals(id), cancellationToken);
 
     public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Collection.Find(predicate).SingleOrDefaultAsync();
+        => Collection.Find(predicate).SingleOrDefaultAsync(cancellationToken);
 
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => await Collection.Find(predicate).ToListAsync();
+        => await Collection.Find(predicate).ToListAsync(cancellationToken);
 
     public Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IPagedQuery
@@ -44,15 +50,17 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
     /// <summary>
     /// It adds an entity to the Mongo Collection.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to add.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => Collection.InsertOneAsync(entity);
+        => Collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
 
     /// <summary>
     /// It updates an entity in the Mongo Collection.
     /// </summary>
     /// <param name="entity">The entity.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The updated entity.</returns>
     public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
@@ -65,6 +73,7 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
     /// </summary>
     /// <param name="entity">The entity.</param>
     /// <param name="predicate">The predicate.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The updated entity.</returns>
     public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => Collection.ReplaceOneAsync(predicate, entity, cancellationToken: cancellationToken);
@@ -72,8 +81,9 @@ internal class MongoDbBaseRepository<TEntity, TKey> : IMongoDbBaseRepository<TEn
     /// <summary>
     /// It deletes an entity from the Mongo Collection in async mode.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">The ID of the entity to delete.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public Task DeleteAsync(TKey id, CancellationToken cancellationToken = default)
         => DeleteAsync(e => e.Id.Equals(id));
 

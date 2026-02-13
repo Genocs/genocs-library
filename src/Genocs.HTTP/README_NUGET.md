@@ -33,7 +33,7 @@ Following are the project settings needed to enable monitoring
 
 ## Documentation
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
 
 ## Support
 
