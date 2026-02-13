@@ -171,7 +171,6 @@ public static class MongoDbExtensions
     {
         AddMongo(builder, sectionName, null, registerConventions);
 
-
         var section = builder.Configuration?.GetSection(sectionName);
 
         if (!section.Exists())

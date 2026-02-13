@@ -81,7 +81,7 @@ The advantages of using containers are numerous. Containers provide a lightweigh
 
 You can find a useful documentation about how to use the library. The documentation contains the complete set of libraries, template, CLI that altogether make the _genocs ecosystem_ a comprensive set of tools to build enterprise solutions.
 
-Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
+Documentation available at [Genocs Blog](https://learn.fiscanner.net/library/)
 
 ## Table of Contents
 
@@ -482,17 +482,6 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "connectionString": ""
     },
     "tags": {}
-  },
-  "jaeger": {
-    "enabled": true,
-    "serviceName": "orders",
-    "endpoint": "http://localhost:4317",
-    "protocol": "Grpc",
-    "processorType": "Batch",
-    "maxQueueSize": 2048,
-    "scheduledDelayMilliseconds": 5000,
-    "exporterTimeoutMilliseconds": 30000,
-    "maxExportBatchSize": 512
   },
   "jwt": {
     "certificate": {

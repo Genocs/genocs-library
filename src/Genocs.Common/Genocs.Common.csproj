@@ -8,22 +8,7 @@
         <Title>The Genocs common components.</Title>
         <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
         <Summary>The common components to build .NET Core projects along with Genocs Library.</Summary>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
     </PropertyGroup>
-
-    <ItemGroup>
-      <None Remove="CQRS\Commands\2mgtqhpm.w1p~" />
-      <None Remove="Domain\ConnectionString\IConnectionStringSecurer.cs~RFf0e0bbe.TMP" />
-    </ItemGroup>
 
 </Project>

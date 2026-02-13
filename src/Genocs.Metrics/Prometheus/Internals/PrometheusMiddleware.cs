@@ -12,8 +12,10 @@ internal sealed class PrometheusMiddleware : IMiddleware
     public PrometheusMiddleware(PrometheusOptions options)
     {
         _allowedHosts = new HashSet<string>(options.AllowedHosts ?? Array.Empty<string>());
+
         _endpoint = string.IsNullOrWhiteSpace(options.Endpoint) ? "/metrics" :
             options.Endpoint.StartsWith("/") ? options.Endpoint : $"/{options.Endpoint}";
+
         _apiKey = options.ApiKey;
     }
 

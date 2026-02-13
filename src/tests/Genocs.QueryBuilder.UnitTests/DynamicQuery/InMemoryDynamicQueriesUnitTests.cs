@@ -114,7 +114,6 @@ public class InMemoryDynamicQueriesUnitTests
         Assert.Empty(result);
     }
 
-
     [Fact]
     public async Task ApplyBoolCamelCaseOperatorReturnItemsTest()
     {
@@ -156,7 +155,7 @@ public class InMemoryDynamicQueriesUnitTests
 
         var result = usersQuery.ToList();
         Assert.NotEmpty(result);
-        Assert.False(result.First().IsActive);
+        Assert.False(result[0].IsActive);
     }
 
     [Fact]
@@ -171,7 +170,7 @@ public class InMemoryDynamicQueriesUnitTests
 
         var result = usersQuery.ToList();
         Assert.NotEmpty(result);
-        Assert.Equal(4, result.First().Id);
+        Assert.Equal(4, result[0].Id);
     }
 
     [Fact]
@@ -186,7 +185,7 @@ public class InMemoryDynamicQueriesUnitTests
 
         var result = usersQuery.ToList();
         Assert.NotEmpty(result);
-        Assert.Equal(4, result.First().Id);
+        Assert.Equal(4, result[0].Id);
     }
 
     [Fact]
@@ -230,7 +229,6 @@ public class InMemoryDynamicQueriesUnitTests
         var result = usersQuery.ToList();
         Assert.NotEmpty(result);
     }
-
 
     [Fact]
     public async Task ApplyGreaterThanOperatorToNullableIntGetItemTest()
@@ -326,7 +324,7 @@ public class InMemoryDynamicQueriesUnitTests
 
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItemList, "User"));
 
-        int value = usersQuery.Sum(c => (int)c["Age"]);
+        int value = usersQuery.Sum(static c => (int)c["Age"]);
         var result = usersQuery.ToList();
 
         Assert.Equal(72, value);

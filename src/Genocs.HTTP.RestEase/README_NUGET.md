@@ -21,7 +21,7 @@ Persistence agnostic query builder service.
 Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
 
 ## Documentation
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
+The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
 
 ## Release notes
 

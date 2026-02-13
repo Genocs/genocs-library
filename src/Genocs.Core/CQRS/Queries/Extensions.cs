@@ -14,14 +14,14 @@ public static class Extensions
     /// <summary>
     /// AddQueryHandlers.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddQueryHandlers(this IGenocsBuilder builder)
     {
         builder.Services.Scan(s =>
             s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>))
-                    .WithoutAttribute(typeof(DecoratorAttribute)))
+                    .WithoutAttribute<DecoratorAttribute>())
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
@@ -31,8 +31,8 @@ public static class Extensions
     /// <summary>
     /// AddInMemoryQueryDispatcher.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddInMemoryQueryDispatcher(this IGenocsBuilder builder)
     {
         builder.Services.AddSingleton<IQueryDispatcher, QueryDispatcher>();

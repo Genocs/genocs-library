@@ -2,6 +2,4 @@ using Genocs.HTTP;
 
 namespace Genocs.Discovery.Consul;
 
-public interface IConsulHttpClient : IHttpClient
-{
-}
+public interface IConsulHttpClient : IHttpClient;

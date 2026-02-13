@@ -1,5 +1,6 @@
 ﻿using Genocs.Common.Persistence.Initialization;
 using Genocs.Library.Demo.WebApi.Configurations;
+using Genocs.MessageBrokers.RabbitMQ;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 
@@ -27,11 +28,11 @@ public static class ServiceCollectionExtensions
 
                 // cfg.UseHealthCheck(context);
                 cfg.Host(
-                            rabbitMQSettings.HostName,
+                            rabbitMQSettings.HostNames!.First(),
                             rabbitMQSettings.VirtualHost,
                             h =>
                             {
-                                h.Username(rabbitMQSettings.UserName);
+                                h.Username(rabbitMQSettings.Username);
                                 h.Password(rabbitMQSettings.Password);
                             });
             });

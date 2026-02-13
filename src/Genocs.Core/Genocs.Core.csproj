@@ -7,17 +7,7 @@
         <AssemblyName>Genocs.Core</AssemblyName>
         <Title>The Genocs Library - Core components.</Title>
         <Description>The core components to build .NET Core projects along with Genocs Library.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -29,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Figgle.Fonts" Version="0.6.5" />
+        <PackageReference Include="Spectre.Console" Version="0.54.0" />
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
         <PackageReference Include="Scrutor" Version="7.0.0" />

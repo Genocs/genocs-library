@@ -7,7 +7,7 @@ using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
-using Genocs.Tracing;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
@@ -27,7 +27,7 @@ builder.Host
 builder
     .AddGenocs()
     .AddOpenIdJwt()
-    .AddOpenTelemetry()
+    .AddTelemetry()
     .AddMongoWithRegistration()
     .AddMetrics()
     .AddPrometheus()

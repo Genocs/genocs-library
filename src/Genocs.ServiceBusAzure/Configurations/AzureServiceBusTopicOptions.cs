@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
 
 namespace Genocs.ServiceBusAzure.Configurations;
 
@@ -18,8 +18,7 @@ public class AzureServiceBusTopicOptions
     public string? SubscriptionName { get; set; }
     public int MaxConcurrentCalls { get; set; } = 20;
     public int PrefetchCount { get; set; } = 100;
-    public ReceiveMode ReceiveMode { get; set; } = ReceiveMode.PeekLock;
-    public RetryPolicy RetryPolicy { get; set; } = RetryPolicy.Default;
+    public ServiceBusReceiveMode ReceiveMode { get; set; } = ServiceBusReceiveMode.PeekLock;
     public bool AutoComplete { get; set; } = true;
 }
 

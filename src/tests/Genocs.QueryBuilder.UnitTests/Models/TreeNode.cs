@@ -9,7 +9,7 @@ internal class TreeNode
 
     public bool FindDescendant()
     {
-        if (ChildNodes != null && ChildNodes.Any())
+        if (ChildNodes?.Any() == true)
         {
 
             foreach (TreeNode node in ChildNodes)
@@ -18,7 +18,7 @@ internal class TreeNode
                 {
                     return false;
                 }
-                else if (node.ChildNodes != null && node.ChildNodes.Any())
+                else if (node.ChildNodes?.Any() == true)
                 {
                     bool tmp = node.FindDescendant();
 

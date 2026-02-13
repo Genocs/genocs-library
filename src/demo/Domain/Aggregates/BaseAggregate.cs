@@ -1,5 +1,5 @@
-﻿using Genocs.Core.Domain.Entities;
-using Genocs.Core.Domain.Entities.Auditing;
+﻿using Genocs.Common.Domain.Entities.Auditing;
+using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDb.Domain.Entities;
 using MongoDB.Bson;
 

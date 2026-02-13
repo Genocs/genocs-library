@@ -2,12 +2,16 @@
 using Genocs.Common.CQRS.Commons;
 using Genocs.Common.CQRS.Events;
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Events;
 
 namespace Genocs.Core.CQRS.Commons;
 
 /// <summary>
-/// The class name will be renamed.
+/// The InMemoryDispatcher class is an implementation of the IDispatcher interface
+/// that uses in-memory dispatching for commands, events, and queries.
+/// It serves as a central point for sending commands, publishing events,
+/// and executing queries within the application.
+/// This implementation is suitable for scenarios where you want to keep the dispatching logic simple
+/// and do not require external messaging systems or infrastructure.
 /// </summary>
 internal sealed class InMemoryDispatcher : IDispatcher
 {
@@ -15,10 +19,7 @@ internal sealed class InMemoryDispatcher : IDispatcher
     private readonly IEventDispatcher _eventDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
 
-    public InMemoryDispatcher(
-                                ICommandDispatcher commandDispatcher,
-                                IEventDispatcher eventDispatcher,
-                                IQueryDispatcher queryDispatcher)
+    public InMemoryDispatcher(ICommandDispatcher commandDispatcher, IEventDispatcher eventDispatcher, IQueryDispatcher queryDispatcher)
     {
         _commandDispatcher = commandDispatcher ?? throw new ArgumentNullException(nameof(commandDispatcher));
         _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));

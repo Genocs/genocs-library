@@ -4,7 +4,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+#if !NET10_0_OR_GREATER
 using MySqlConnector;
+#endif
 using Npgsql;
 
 namespace Genocs.Persistence.EFCore.Configurations;
@@ -35,9 +37,11 @@ internal class ConnectionStringValidator : IConnectionStringValidator
                 //    var mongoDBcs = new MongoDBConnectionStringBuilder(connectionString);
                 //    break;
 
+#if !NET10_0_OR_GREATER
                 case DbProviderKeys.MySql:
                     var mysqlcs = new MySqlConnectionStringBuilder(connectionString);
                     break;
+#endif
 
                 case DbProviderKeys.Npgsql:
                     var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);

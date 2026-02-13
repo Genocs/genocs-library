@@ -123,14 +123,14 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider d
     /// <summary>
     /// Delete entity, passing the entire object.
     /// </summary>
-    /// <param name="entity"></param>
+    /// <param name="entity">The entity to delete.</param>
     public override void Delete(TEntity entity)
         => Delete(entity.Id);
 
     /// <summary>
     /// Delete entity by primary key.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">The primary key of the entity to delete.</param>
     public override void Delete(TKey id)
     {
         var query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
@@ -140,7 +140,7 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider d
     /// <summary>
     /// It returns the Mongo Collection as Queryable.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The Mongo Collection as Queryable.</returns>
     public IQueryable<TEntity> GetMongoQueryable()
         => Collection.AsQueryable();
 
@@ -156,7 +156,7 @@ public class MongoDbBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider d
     /// <typeparam name="TQuery">The query type.</typeparam>
     /// <param name="predicate">The predicate.</param>
     /// <param name="query">The query.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The paged result.</returns>
     public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IPagedQuery

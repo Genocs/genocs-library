@@ -11,6 +11,7 @@ public interface IMongoDbSeeder
     /// Database Seed.
     /// </summary>
     /// <param name="database">The database.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The async Task.</returns>
-    Task SeedAsync(IMongoDatabase database);
+    Task SeedAsync(IMongoDatabase database, CancellationToken cancellationToken = default);
 }

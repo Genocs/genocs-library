@@ -8,11 +8,11 @@ namespace Genocs.Library.Demo.WebApi.Controllers;
 [Route("[controller]")]
 public class ExternalApiController : ControllerBase
 {
-    private readonly ILogger<DemoController> _logger;
+    private readonly ILogger<MassTransitController> _logger;
     private readonly IExternalServiceClient _externalServiceClient;
 
     public ExternalApiController(
-                                    ILogger<DemoController> logger,
+                                    ILogger<MassTransitController> logger,
                                     IExternalServiceClient externalServiceClient)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

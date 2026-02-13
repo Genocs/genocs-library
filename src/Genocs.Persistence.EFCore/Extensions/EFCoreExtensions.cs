@@ -12,7 +12,9 @@ using Genocs.Persistence.EFCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+#if !NET10_0_OR_GREATER
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+#endif
 using Serilog;
 
 namespace Genocs.Persistence.EFCore.Extensions;
@@ -101,9 +103,14 @@ public static class EFCoreExtensions
                                  e.MigrationsAssembly("Migrators.PostgreSQL")),
             DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.MSSQL")),
+#if !NET10_0_OR_GREATER
             DbProviderKeys.MySql => builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
                                  e.MigrationsAssembly("Migrators.MySQL")
                                   .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
+#else
+            // TODO: Re-enable when Pomelo supports .NET 10
+            DbProviderKeys.MySql => throw new NotSupportedException("MySQL is not yet supported on .NET 10. Awaiting Pomelo.EntityFrameworkCore.MySql update."),
+#endif
             DbProviderKeys.Oracle => builder.UseOracle(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.Oracle")),
             DbProviderKeys.SqLite => builder.UseSqlite(connectionString, e =>

@@ -1,3 +1,5 @@
-﻿namespace Genocs.Library.Demo.Contracts;
+﻿using Genocs.Common.CQRS.Commands;
 
-public record SubmitOrder(Guid Id, string OrderId, string UserId);
+namespace Genocs.Library.Demo.Contracts;
+
+public record SubmitOrder(Guid Id, string OrderId, string UserId) : ICommand;

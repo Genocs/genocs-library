@@ -14,7 +14,7 @@ using Genocs.Notifications.WebApi.Hubs;
 using Genocs.Notifications.WebApi.Services;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.Vault;
-using Genocs.Tracing;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -31,7 +31,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
-                                        .AddOpenTelemetry()
+                                        .AddTelemetry()
                                         .AddMetrics()
                                         .AddJwt()
                                         .AddCorrelationContextLogging()

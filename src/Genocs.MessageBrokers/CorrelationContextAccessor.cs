@@ -25,6 +25,6 @@ public class CorrelationContextAccessor : ICorrelationContextAccessor
 
     private class CorrelationContextHolder
     {
-        public object Context;
+        public object? Context;
     }
 }

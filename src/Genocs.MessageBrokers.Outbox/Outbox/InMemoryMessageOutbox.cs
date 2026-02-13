@@ -1,7 +1,7 @@
+using System.Collections.Concurrent;
 using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
 
 namespace Genocs.MessageBrokers.Outbox.Outbox;
 
@@ -101,6 +101,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
         {
             message.ProcessedAt = DateTime.UtcNow;
         }
+
         RemoveExpiredMessages();
 
         return Task.CompletedTask;

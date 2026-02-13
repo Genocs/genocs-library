@@ -1,5 +1,5 @@
 ﻿using Genocs.Common.Domain.Entities;
-using Genocs.Core.Domain.Entities.Auditing;
+using Genocs.Common.Domain.Entities.Auditing;
 using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities;

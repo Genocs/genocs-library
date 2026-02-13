@@ -22,13 +22,13 @@ internal sealed class MongoDbInitializer(IMongoDatabase database, IMongoDbSeeder
     /// Initialize the database.
     /// </summary>
     /// <returns>The Task.</returns>
-    public Task InitializeAsync()
+    public Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         if (Interlocked.Exchange(ref _initialized, 1) == 1)
         {
             return Task.CompletedTask;
         }
 
-        return _seed ? _seeder.SeedAsync(_database) : Task.CompletedTask;
+        return _seed ? _seeder.SeedAsync(_database, cancellationToken) : Task.CompletedTask;
     }
 }

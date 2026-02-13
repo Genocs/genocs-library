@@ -1,11 +1,11 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
 using Genocs.Persistence.MongoDb.Domain.Repositories;
 using Genocs.Persistence.MongoDb.Repositories;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Genocs.MessageBrokers.Outbox.MongoDB.Internals;
 

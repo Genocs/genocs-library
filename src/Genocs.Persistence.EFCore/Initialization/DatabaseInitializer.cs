@@ -20,7 +20,7 @@ internal class DatabaseInitializer : IDatabaseInitializer
         // Initialize the application database
         await InitializeApplicationDbAsync(cancellationToken);
 
-        _logger.LogInformation("For documentations and guides, visit https://genocs-blog.netlify.app");
+        _logger.LogInformation("For documentations and guides, visit https://learn.fiscanner.net");
         _logger.LogInformation("To Sponsor this project, visit https://opencollective.com/genocs");
     }
 

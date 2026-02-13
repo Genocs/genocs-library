@@ -7,13 +7,7 @@
         <AssemblyName>Genocs.ServiceBusAzure</AssemblyName>
         <Title>The low level library to use Azure Service Bus.</Title>
         <Description>The low level library to use Azure Service Bus.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
         <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -25,9 +19,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.2" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
     </ItemGroup>
 
 </Project>

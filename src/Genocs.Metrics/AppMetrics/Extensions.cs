@@ -1,17 +1,9 @@
 using App.Metrics;
-using App.Metrics.AspNetCore;
-using App.Metrics.AspNetCore.Endpoints;
-using App.Metrics.AspNetCore.Health.Endpoints;
-using App.Metrics.AspNetCore.Tracking;
-using App.Metrics.Formatters.Prometheus;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.AppMetrics.Builders;
 using Genocs.Metrics.AppMetrics.Configurations;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Metrics.AppMetrics;
@@ -120,23 +112,6 @@ public static class Extensions
             });
         }
 
-        var metrics = metricsBuilder.Build();
-        var metricsWebHostOptions = GetMetricsWebHostOptions(metricsSettings);
-
-        using var serviceProvider = builder.Services.BuildServiceProvider();
-        var configuration = builder.Configuration ?? serviceProvider.GetRequiredService<IConfiguration>();
-        builder.Services.AddHealth();
-        builder.Services.AddHealthEndpoints(configuration);
-        builder.Services.AddMetricsTrackingMiddleware(configuration);
-        builder.Services.AddMetricsEndpoints(configuration);
-        builder.Services.AddSingleton<IStartupFilter>(new DefaultMetricsEndpointsStartupFilter());
-        builder.Services.AddSingleton<IStartupFilter>(new DefaultHealthEndpointsStartupFilter());
-        builder.Services.AddSingleton<IStartupFilter>(new DefaultMetricsTrackingStartupFilter());
-        builder.Services.AddMetricsReportingHostedService(metricsWebHostOptions.UnobservedTaskExceptionHandler);
-        builder.Services.AddMetricsEndpoints(metricsWebHostOptions.EndpointOptions, configuration);
-        builder.Services.AddMetricsTrackingMiddleware(metricsWebHostOptions.TrackingMiddlewareOptions, configuration);
-        builder.Services.AddMetrics(metrics);
-
         return builder;
     }
 
@@ -153,36 +128,6 @@ public static class Extensions
             options = scope.ServiceProvider.GetRequiredService<App.Metrics.MetricsOptions>();
         }
 
-        return !options.Enabled
-            ? app
-            : app.UseHealthAllEndpoints()
-                .UseMetricsAllEndpoints()
-                .UseMetricsAllMiddleware();
-    }
-
-    private static MetricsWebHostOptions GetMetricsWebHostOptions(Configurations.MetricsOptions metricsOptions)
-    {
-        var options = new MetricsWebHostOptions();
-
-        if (!metricsOptions.Enabled)
-        {
-            return options;
-        }
-
-        if (!metricsOptions.PrometheusEnabled)
-        {
-            return options;
-        }
-
-        options.EndpointOptions = endpointOptions =>
-        {
-            endpointOptions.MetricsEndpointOutputFormatter = (metricsOptions.PrometheusFormatter?.ToLowerInvariant() ?? string.Empty) switch
-            {
-                "protobuf" => new MetricsPrometheusProtobufOutputFormatter(),
-                _ => new MetricsPrometheusTextOutputFormatter(),
-            };
-        };
-
-        return options;
+        return app;
     }
 }

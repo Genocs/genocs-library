@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Azure.Identity;
 using Genocs.Core.Builders;
 using Genocs.Secrets.AzureKeyVault.Configurations;
@@ -5,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.Secrets.AzureKeyVault;
 
@@ -79,36 +79,38 @@ public static class ExtensionsCertificate
                     sectionName = AzureKeyVaultOptions.Position;
                 }
 
-
                 AzureKeyVaultOptions settings = ctx.Configuration.GetOptions<AzureKeyVaultOptions>(sectionName);
                 if (!settings.Enabled)
                 {
                     return;
                 }
 
-                using (var x509Store = new X509Store(StoreLocation.CurrentUser))
-                {
-                    x509Store.Open(OpenFlags.ReadOnly);
+                using var x509Store = new X509Store(StoreLocation.CurrentUser);
+                x509Store.Open(OpenFlags.ReadOnly);
 
-                    var x509Certificate = x509Store.Certificates
-                        .Find(
-                                X509FindType.FindByThumbprint,
-                                settings.AzureADCertThumbprint!,
-                                validOnly: false)
-                        .OfType<X509Certificate2>()
-                        .Single();
+                var x509Certificate = x509Store.Certificates
+                    .Find(
+                            X509FindType.FindByThumbprint,
+                            settings.AzureADCertThumbprint!,
+                            validOnly: false)
+                    .OfType<X509Certificate2>()
+                    .Single();
 
-                    cfg.AddAzureKeyVault(
-                                            new Uri($"https://{settings.Name}.vault.azure.net/"),
-                                            new ClientCertificateCredential(
-                                                                            settings.AzureADDirectoryId,
-                                                                            settings.AzureADApplicationId,
-                                                                            x509Certificate));
+                cfg.AddAzureKeyVault(
+                                        new Uri($"https://{settings.Name}.vault.azure.net/"),
+                                        new ClientCertificateCredential(
+                                                                        settings.AzureADDirectoryId,
+                                                                        settings.AzureADApplicationId,
+                                                                        x509Certificate));
 
-                    x509Store?.Close();
-                }
+                x509Store?.Close();
             });
 
+    /// <summary>
+    /// This method is used to add the Azure Key Vault to the Web Application builder.
+    /// </summary>
+    /// <param name="builder">The Web Application builder.</param>
+    /// <returns>The Web Application builder.</returns>
     public static WebApplicationBuilder UseAzureKeyVaultWithCertificates(this WebApplicationBuilder builder)
     {
 

@@ -1,173 +1,179 @@
-﻿using Genocs.Common.CQRS.Events;
-using Genocs.Core.CQRS.Events;
+﻿using System.Text.Json;
+using Azure.Messaging.ServiceBus;
+using Genocs.Common.CQRS.Events;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Topics.Interfaces;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace Genocs.ServiceBusAzure.Topics;
 
-public class AzureServiceBusTopic : IAzureServiceBusTopic
+/// <summary>
+/// Azure Service Bus Topic implementation using Azure.Messaging.ServiceBus SDK.
+/// </summary>
+public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
 {
-    private readonly TopicClient _topicClient;
+    private readonly ServiceBusClient _client;
+    private readonly ServiceBusSender _sender;
+    private readonly ServiceBusProcessor? _processor;
     private readonly AzureServiceBusTopicOptions _options;
     private readonly ILogger<AzureServiceBusTopic> _logger;
     private readonly IServiceProvider _serviceProvider;
     private const string EVENT_SUFFIX = "Event";
     private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
-    private readonly SubscriptionClient _subscriptionClient;
     private readonly List<Type> _eventTypes;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="AzureServiceBusTopic"/> using <see cref="IOptions{T}"/>.
+    /// </summary>
+    /// <param name="options">The topic configuration options.</param>
+    /// <param name="serviceProvider">The service provider for resolving handlers.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
     public AzureServiceBusTopic(
-                                IOptions<AzureServiceBusTopicOptions> options,
-                                IServiceProvider serviceProvider,
-                                ILogger<AzureServiceBusTopic> logger)
+        IOptions<AzureServiceBusTopicOptions> options,
+        IServiceProvider serviceProvider,
+        ILogger<AzureServiceBusTopic> logger)
+        : this(options?.Value ?? throw new ArgumentNullException(nameof(options)), serviceProvider, logger)
     {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-        _options = options.Value;
-
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
-        ServiceBusConnectionStringBuilder serviceBusConnectionStringBuilder = new ServiceBusConnectionStringBuilder(_options.ConnectionString);
-        serviceBusConnectionStringBuilder.EntityPath = _options.TopicName;
-        _topicClient = new TopicClient(serviceBusConnectionStringBuilder, _options.RetryPolicy);
-        _handlers = new Dictionary<string, List<SubscriptionInfo>>();
-        _eventTypes = new List<Type>();
-        if (!string.IsNullOrEmpty(_options.SubscriptionName))
-        {
-            _subscriptionClient = new SubscriptionClient(serviceBusConnectionStringBuilder, _options.SubscriptionName);
-            RegisterSubscriptionClientMessageHandler();
-        }
-    }
-    public AzureServiceBusTopic(
-                                AzureServiceBusTopicOptions options,
-                                IServiceProvider serviceProvider,
-                                ILogger<AzureServiceBusTopic> logger)
-    {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-        _options = options;
-
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
-        ServiceBusConnectionStringBuilder serviceBusConnectionStringBuilder = new ServiceBusConnectionStringBuilder(_options.ConnectionString);
-        serviceBusConnectionStringBuilder.EntityPath = _options.TopicName;
-        _topicClient = new TopicClient(serviceBusConnectionStringBuilder, _options.RetryPolicy);
-        _handlers = new Dictionary<string, List<SubscriptionInfo>>();
-        _eventTypes = new List<Type>();
-        if (!string.IsNullOrEmpty(_options.SubscriptionName))
-        {
-            _subscriptionClient = new SubscriptionClient(serviceBusConnectionStringBuilder, _options.SubscriptionName);
-            RegisterSubscriptionClientMessageHandler();
-        }
-    }
-
-    public async Task PublishAsync(IEvent @event)
-    {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
-        string jsonMessage = JsonConvert.SerializeObject(@event);
-        byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
-
-        var message = new Message
-        {
-            MessageId = Guid.NewGuid().ToString(),
-            Body = body,
-            Label = eventName,
-        };
-
-        await _topicClient.SendAsync(message);
-
-    }
-
-    public async Task PublishAsync(IEvent @event, Dictionary<string, object> filters)
-    {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
-        string jsonMessage = JsonConvert.SerializeObject(@event);
-        byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
-
-        var message = new Message
-        {
-            MessageId = Guid.NewGuid().ToString(),
-            Body = body,
-            Label = eventName,
-        };
-
-        foreach (KeyValuePair<string, object> filter in filters)
-        {
-            message.UserProperties.Add(filter);
-        }
-
-        await _topicClient.SendAsync(message);
-    }
-
-    public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset)
-    {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
-        string jsonMessage = JsonConvert.SerializeObject(@event);
-        byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
-
-        var message = new Message
-        {
-            MessageId = Guid.NewGuid().ToString(),
-            Body = body,
-            Label = eventName,
-        };
-        await _topicClient.ScheduleMessageAsync(message, offset);
-    }
-
-    public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters)
-    {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
-        string jsonMessage = JsonConvert.SerializeObject(@event);
-        byte[] body = Encoding.UTF8.GetBytes(jsonMessage);
-
-        var message = new Message
-        {
-            MessageId = Guid.NewGuid().ToString(),
-            Body = body,
-            Label = eventName,
-        };
-
-        foreach (KeyValuePair<string, object> filter in filters)
-        {
-            message.UserProperties.Add(filter);
-        }
-
-        await _topicClient.ScheduleMessageAsync(message, offset);
     }
 
     /// <summary>
-    /// Todo
+    /// Initializes a new instance of <see cref="AzureServiceBusTopic"/> using direct options.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TH"></typeparam>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="options">The topic configuration options.</param>
+    /// <param name="serviceProvider">The service provider for resolving handlers.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
+    public AzureServiceBusTopic(
+        AzureServiceBusTopicOptions options,
+        IServiceProvider serviceProvider,
+        ILogger<AzureServiceBusTopic> logger)
+    {
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+        _client = new ServiceBusClient(_options.ConnectionString);
+        _sender = _client.CreateSender(_options.TopicName);
+        _handlers = new Dictionary<string, List<SubscriptionInfo>>();
+        _eventTypes = new List<Type>();
+
+        if (!string.IsNullOrEmpty(_options.SubscriptionName))
+        {
+            _processor = _client.CreateProcessor(_options.TopicName, _options.SubscriptionName, new ServiceBusProcessorOptions
+            {
+                MaxConcurrentCalls = _options.MaxConcurrentCalls,
+                PrefetchCount = _options.PrefetchCount,
+                ReceiveMode = _options.ReceiveMode,
+                AutoCompleteMessages = false
+            });
+
+            RegisterSubscriptionClientMessageHandler();
+        }
+    }
+
+    /// <summary>
+    /// Publishes an event to the topic.
+    /// </summary>
+    /// <param name="event">The event to publish.</param>
+    public async Task PublishAsync(IEvent @event)
+    {
+        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
+
+        var message = new ServiceBusMessage(jsonMessage)
+        {
+            MessageId = Guid.NewGuid().ToString(),
+            Subject = eventName,
+        };
+
+        await _sender.SendMessageAsync(message);
+    }
+
+    /// <summary>
+    /// Publishes an event to the topic with custom application properties for filtering.
+    /// </summary>
+    /// <param name="event">The event to publish.</param>
+    /// <param name="filters">Application properties to attach to the message for subscription filtering.</param>
+    public async Task PublishAsync(IEvent @event, Dictionary<string, object> filters)
+    {
+        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
+
+        var message = new ServiceBusMessage(jsonMessage)
+        {
+            MessageId = Guid.NewGuid().ToString(),
+            Subject = eventName,
+        };
+
+        foreach (KeyValuePair<string, object> filter in filters)
+        {
+            message.ApplicationProperties.Add(filter);
+        }
+
+        await _sender.SendMessageAsync(message);
+    }
+
+    /// <summary>
+    /// Schedules an event to be published at a specified time.
+    /// </summary>
+    /// <param name="event">The event to schedule.</param>
+    /// <param name="offset">The time at which the message should be enqueued.</param>
+    public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset)
+    {
+        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
+
+        var message = new ServiceBusMessage(jsonMessage)
+        {
+            MessageId = Guid.NewGuid().ToString(),
+            Subject = eventName,
+        };
+
+        await _sender.ScheduleMessageAsync(message, offset);
+    }
+
+    /// <summary>
+    /// Schedules an event to be published at a specified time with custom application properties.
+    /// </summary>
+    /// <param name="event">The event to schedule.</param>
+    /// <param name="offset">The time at which the message should be enqueued.</param>
+    /// <param name="filters">Application properties to attach to the message for subscription filtering.</param>
+    public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters)
+    {
+        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
+
+        var message = new ServiceBusMessage(jsonMessage)
+        {
+            MessageId = Guid.NewGuid().ToString(),
+            Subject = eventName,
+        };
+
+        foreach (KeyValuePair<string, object> filter in filters)
+        {
+            message.ApplicationProperties.Add(filter);
+        }
+
+        await _sender.ScheduleMessageAsync(message, offset);
+    }
+
+    /// <summary>
+    /// Subscribes to events on the topic with a specified handler.
+    /// </summary>
+    /// <typeparam name="T">The event type.</typeparam>
+    /// <typeparam name="TH">The event handler type.</typeparam>
+    /// <exception cref="ArgumentException">Thrown when the handler is already registered for the event.</exception>
     public void Subscribe<T, TH>()
         where T : IEvent
         where TH : IEventHandlerLegacy<T>
     {
-        string eventName = typeof(T).Name.Replace(EVENT_SUFFIX, "");
         string key = typeof(T).Name;
         if (!_handlers.ContainsKey(key))
         {
-            _handlers.Add(key, new List<SubscriptionInfo>());
-
-            //_subscriptionClient.AddRuleAsync(new RuleDescription
-            //{
-            //    Filter = new CorrelationFilter { Label = eventName.ToLower() },
-            //    Name = eventName
-            //}).GetAwaiter().GetResult();
+            _handlers.Add(key, []);
         }
 
         Type handlerType = typeof(TH);
@@ -188,28 +194,27 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic
 
     private void RegisterSubscriptionClientMessageHandler()
     {
-        _subscriptionClient.RegisterMessageHandler(
-            async (message, token) =>
-            {
-                string eventName = $"{message.Label}{EVENT_SUFFIX}";
-                string messageData = Encoding.UTF8.GetString(message.Body);
+        _processor!.ProcessMessageAsync += async (args) =>
+        {
+            string eventName = $"{args.Message.Subject}{EVENT_SUFFIX}";
+            string messageData = args.Message.Body.ToString();
 
-                // Complete the message so that it is not received again.
-                if (await ProcessEvent(eventName, messageData))
-                {
-                    await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
-                }
-            },
-            new MessageHandlerOptions(ExceptionReceivedHandler) { MaxConcurrentCalls = _options.MaxConcurrentCalls, AutoComplete = false });
+            // Complete the message so that it is not received again.
+            if (await ProcessEvent(eventName, messageData))
+            {
+                await args.CompleteMessageAsync(args.Message);
+            }
+        };
+
+        _processor.ProcessErrorAsync += ExceptionReceivedHandler;
+
+        _processor.StartProcessingAsync().GetAwaiter().GetResult();
     }
 
-    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+    private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)
     {
-        var ex = exceptionReceivedEventArgs.Exception;
-        var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
-
-        _logger.LogError(ex, "ERROR handling message: {ExceptionMessage} - Context: {@ExceptionContext}", ex.Message, context);
-
+        _logger.LogError(args.Exception, "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
+            args.Exception.Message, args.ErrorSource);
         return Task.CompletedTask;
     }
 
@@ -228,9 +233,9 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic
                     if (handler != null)
                     {
                         var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-                        object command = JsonConvert.DeserializeObject(message, eventType);
-                        var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                        await (Task)concreteType.GetMethod("HandleEvent").Invoke(handler, new object[] { command });
+                        object? command = JsonSerializer.Deserialize(message, eventType!);
+                        var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType!);
+                        await (Task)concreteType.GetMethod("HandleEvent")!.Invoke(handler, new object[] { command! })!;
                     }
                 }
             }
@@ -239,9 +244,25 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic
         }
         else
         {
-            _logger.LogError($"Event '{eventName}' do not contains handlers. Check whether Subscribe is set");
+            _logger.LogError("Event '{EventName}' does not have any handlers. Check whether Subscribe is set", eventName);
         }
 
         return processed;
+    }
+
+    /// <summary>
+    /// Disposes the Service Bus client, sender, and processor.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        if (_processor != null)
+        {
+            await _processor.StopProcessingAsync();
+            await _processor.DisposeAsync();
+        }
+
+        await _sender.DisposeAsync();
+        await _client.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }

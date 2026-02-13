@@ -3,6 +3,7 @@ using System.Text;
 using Genocs.Auth;
 using Genocs.Common.Configurations;
 using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
@@ -26,7 +27,6 @@ using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
-using Genocs.Tracing;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Genocs.Telemetry;
 
 namespace Genocs.Identities.Application;
 
@@ -68,7 +69,7 @@ public static class Extensions
         await builder.AddRabbitMQAsync();
 
         builder
-            .AddOpenTelemetry()
+            .AddTelemetry()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
@@ -89,7 +90,7 @@ public static class Extensions
                         .AddPolicy(Policies.UserOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User).Build())
                         .AddPolicy(Policies.UserOrAdmin, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User, Roles.Admin).Build());
 
-        //builder.Services.AddAuthorizationBuilder()
+        // builder.Services.AddAuthorizationBuilder()
         //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         //                    .RequireAuthenticatedUser()
         //                    .Build())
