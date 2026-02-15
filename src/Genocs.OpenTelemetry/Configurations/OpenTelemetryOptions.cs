@@ -27,4 +27,9 @@ public class OpenTelemetryOptions
     /// Azure OpenTelemetry settings.
     /// </summary>
     public AzureOptions? Azure { get; set; }
+
+    /// <summary>
+    /// MongoDB OpenTelemetry settings.
+    /// </summary>
+    public MongoDbOptions? MongoDb { get; set; }
 }

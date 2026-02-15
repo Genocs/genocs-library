@@ -483,17 +483,6 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     },
     "tags": {}
   },
-  "jaeger": {
-    "enabled": true,
-    "serviceName": "orders",
-    "endpoint": "http://localhost:4317",
-    "protocol": "Grpc",
-    "processorType": "Batch",
-    "maxQueueSize": 2048,
-    "scheduledDelayMilliseconds": 5000,
-    "exporterTimeoutMilliseconds": 30000,
-    "maxExportBatchSize": 512
-  },
   "jwt": {
     "certificate": {
       "location": "certs/localhost.pfx",

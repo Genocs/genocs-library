@@ -31,7 +31,7 @@
 ### NuGet Packages
 
 - **Genocs.Common**: Core abstractions and interfaces
-- **Figgle.Fonts**: ASCII art generation for application branding
+- **Spectre.Console**: ASCII art generation for application branding
 - **Ardalis.Specification**: Specification pattern implementation
 - **MediatR.Contracts**: Mediator pattern contracts
 - **Scrutor**: Assembly scanning and decoration

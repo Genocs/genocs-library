@@ -7,7 +7,7 @@
         <AssemblyName>Genocs.Library.Demo.WebApi</AssemblyName>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>Genocs</UserSecretsId>
+        <UserSecretsId>_Genocs</UserSecretsId>
         <IsPackable>false</IsPackable>
         <!-- Disable web.config transformation for Docker builds -->
         <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
@@ -21,7 +21,7 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
+        <ProjectReference Include="..\..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
         <ProjectReference Include="..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\..\Genocs.Security\Genocs.Security.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
@@ -33,7 +33,7 @@
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Auth" Version="8.1.*" />
         <PackageReference Include="Genocs.Logging" Version="8.1.*" />
-        <PackageReference Include="Genocs.Tracing" Version="8.1.*" />
+        <PackageReference Include="Genocs.OpenTelementry" Version="8.1.*" />
         <PackageReference Include="Genocs.HTTP" Version="8.1.*" />
         <PackageReference Include="Genocs.Security" Version="8.1.*" />
         <PackageReference Include="Genocs.WebApi.Swagger" Version="8.1.*" />
@@ -43,6 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
         <ProjectReference Include="..\Contracts\Contracts.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>

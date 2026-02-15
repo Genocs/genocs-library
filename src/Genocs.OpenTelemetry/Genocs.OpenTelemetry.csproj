@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
         <PackageId>Genocs.OpenTelemetry</PackageId>
-        <RootNamespace>Genocs.OpenTelemetry</RootNamespace>
+        <RootNamespace>Genocs.GnxOpenTelemetry</RootNamespace>
         <AssemblyName>Genocs.OpenTelemetry</AssemblyName>
         <Title>The Open Telemetry support library.</Title>
         <Description>The Open Telemetry support library.</Description>
@@ -20,12 +20,18 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.6.0" />
+        <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Builders\" />
     </ItemGroup>
 
 </Project>

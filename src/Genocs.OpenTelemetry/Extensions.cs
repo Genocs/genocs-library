@@ -1,10 +1,14 @@
-﻿using Azure.Monitor.OpenTelemetry.Exporter;
+﻿using System.Runtime;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Core.Exceptions;
+using Genocs.GnxOpenTelemetry;
 using Genocs.GnxOpenTelemetry.Configurations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -23,7 +27,6 @@ public static class OpenTelemetryExtensions
     /// </remarks>
     /// <param name="builder">The Genocs builder.</param>
     /// <returns>The updated Genocs builder.</returns>
-
     public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
@@ -38,14 +41,22 @@ public static class OpenTelemetryExtensions
         OpenTelemetryOptions? openTelemetryOptions = builder.GetOptions<OpenTelemetryOptions>(OpenTelemetryOptions.Position);
 
         builder.Services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService(serviceName: appOptions.Service))
+            .ConfigureResource(resource =>
+            {
+                resource.AddService(serviceName: appOptions.Service)
+                    .AddTelemetrySdk()
+                    .AddEnvironmentVariableDetector();
+
+            })
             .WithMetrics(metrics =>
             {
                 // Setup standard instrumentations
-                metrics
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                MeterProviderBuilder provider = metrics.SetResourceBuilder(ResourceBuilder.CreateDefault());
+
+                provider.AddAspNetCoreInstrumentation();
+                provider.AddRuntimeInstrumentation();
+                provider.AddHttpClientInstrumentation();
+                provider.AddOtlpExporter();
 
                 // Setup the exporter
                 if (openTelemetryOptions.Exporter?.Enabled == true)
@@ -74,14 +85,15 @@ public static class OpenTelemetryExtensions
                         });
                 }
 
-                // Setup Console exporter
+                // Check for Console config
                 if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableMetrics)
                 {
                     // you should add OpenTelemetry.Exporter.Console NuGet package
+                    // Any OTEL supportable exporter can be used here
                     metrics.AddConsoleExporter();
                 }
 
-                // Setup Azure exporter
+                // Check for Azure ApplicationInsights config
                 if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableMetrics)
                 {
                     // you should add OpenTelemetry.Exporter.Console NuGet package
@@ -140,6 +152,33 @@ public static class OpenTelemetryExtensions
                         o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
                     });
                 }
+
+                // Setup MongoDB exporter
+                if (openTelemetryOptions.MongoDb?.Enabled == true && openTelemetryOptions.MongoDb.EnableTracing)
+                {
+                    // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
+                    tracing.AddMongoDBInstrumentation();
+                }
+
+                // TODO: Add more instrumentations as needed, e.g., Redis, gRPC, etc.
+                tracing.AddSource("*");
+
+                /*
+    Action<ResourceBuilder> appResourceBuilder =
+        resource => resource
+            .AddDetector(new ContainerResourceDetector());
+
+                builder.Services.AddOpenTelemetry()
+                    .ConfigureResource(appResourceBuilder)
+                    .WithTracing(tracerBuilder => tracerBuilder
+                        .AddRedisInstrumentation(
+                            cartStore.GetConnection(),
+                            options => options.SetVerboseDatabaseStatements = true)
+                        .AddGrpcClientInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddOtlpExporter())
+
+*/
             });
 
         // Add the OpenTelemetry logging provider
@@ -217,5 +256,4 @@ public static class OpenTelemetryExtensions
         });
     }
     */
-
 }

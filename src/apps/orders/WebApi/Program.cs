@@ -21,7 +21,7 @@ using Genocs.Orders.WebApi.Queries;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
-using Genocs.Tracing;
+using Genocs.GnxOpenTelemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;

@@ -27,7 +27,7 @@ using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
-using Genocs.Tracing;
+using Genocs.GnxOpenTelemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;

@@ -3,10 +3,11 @@ using Genocs.Library.Demo.Worker;
 using Genocs.Library.Demo.Worker.Consumers;
 using Genocs.Logging;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Tracing;
+using Genocs.GnxOpenTelemetry;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
+using Genocs.MessageBrokers.RabbitMQ;
 
 StaticLogger.EnsureInitialized();
 
@@ -14,9 +15,6 @@ IHost host = Host.CreateDefaultBuilder(args)
     .UseLogging()
     .ConfigureServices((hostContext, services) =>
     {
-        // Run the hosted service
-        services.AddHostedService<MassTransitConsoleHostedService>();
-
         services
             .AddGenocs(hostContext.Configuration)
             .AddOpenTelemetry()
@@ -33,6 +31,9 @@ await Log.CloseAndFlushAsync();
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
+    var rabbitMQSettings = new RabbitMQOptions();
+    configuration.GetSection(RabbitMQOptions.Position).Bind(rabbitMQSettings);
+
     services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
     services.AddMassTransit(cfg =>
     {
@@ -40,7 +41,20 @@ static IServiceCollection ConfigureMassTransit(IServiceCollection services, ICon
         cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
 
         // Set the transport
-        cfg.UsingRabbitMq(ConfigureBus);
+        cfg.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.ConfigureEndpoints(context);
+
+            // cfg.UseHealthCheck(context);
+            cfg.Host(
+                        rabbitMQSettings.HostNames!.First(),
+                        rabbitMQSettings.VirtualHost,
+                        h =>
+                        {
+                            h.Username(rabbitMQSettings.Username);
+                            h.Password(rabbitMQSettings.Password);
+                        });
+        });
     });
 
     return services;

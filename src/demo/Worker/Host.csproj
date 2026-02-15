@@ -6,7 +6,7 @@
         <RootNamespace>Genocs.Library.Demo.Worker</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Worker</AssemblyName>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>Genocs</UserSecretsId>
+        <UserSecretsId>_Genocs</UserSecretsId>
         <!-- Disable web.config transformation for Docker builds -->
         <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
@@ -14,12 +14,12 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\Genocs.Tracing\Genocs.Tracing.csproj" />
+        <ProjectReference Include="..\..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Logging" Version="8.1.*" />
-        <PackageReference Include="Genocs.Tracing" Version="8.1.*" />
+        <PackageReference Include="Genocs.OpenTelemetry" Version="8.1.*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
         <ProjectReference Include="..\Contracts\Contracts.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>

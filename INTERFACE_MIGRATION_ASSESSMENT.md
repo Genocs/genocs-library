@@ -22,7 +22,7 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
   - `Ardalis.Specification` v9.3.1
   - `MediatR.Contracts` v2.0.1
   - `Scrutor` v7.0.0
-  - `Figgle.Fonts` v0.6.5
+  - `Spectre.Console` v0.54.0
   - `Microsoft.AspNetCore.App` (Framework Reference)
 - **Purpose**: Core components with richer functionality
 - **Contains**: 56 interface files across Collections, CQRS, Domain, and Repositories

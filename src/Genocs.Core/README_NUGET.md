@@ -14,7 +14,7 @@ Core NuGet package contains general purpose functionalities to be used on DDD se
 
 - **Genocs.Common**: 7.5.\*
 - **Ardalis.Specification**: 9.3.1
-- **Figgle.Fonts**: 0.6.5
+- **Spectre.Console**: 0.54.0
 - **MediatR.Contracts**: 2.0.1
 - **Scrutor**: 6.1.0
 
