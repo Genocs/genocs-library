@@ -26,7 +26,7 @@ public class FirebaseAuthenticationMiddleware(RequestDelegate next)
                 var payload = jwtToken.Payload;
 
                 // Only account with email_verified = true are allowed
-                if (payload.TryGetValue("email_verified", out var emailVerifiedObj) &&
+                if (payload.TryGetValue("email_verified", out object? emailVerifiedObj) &&
                     emailVerifiedObj is bool emailVerified && !emailVerified)
                 {
                     context.Response.StatusCode = 401;
@@ -38,6 +38,7 @@ public class FirebaseAuthenticationMiddleware(RequestDelegate next)
                 {
                     new Claim(ClaimTypes.NameIdentifier, payload["user_id"].ToString()),
                     new Claim(ClaimTypes.Name, payload["name"].ToString()),
+
                     // Add more claims as needed
                 };
 

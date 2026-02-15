@@ -1,7 +1,6 @@
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Events;
 using Genocs.MessageBrokers.CQRS.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 

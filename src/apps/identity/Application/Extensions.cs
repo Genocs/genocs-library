@@ -90,7 +90,7 @@ public static class Extensions
                         .AddPolicy(Policies.UserOnly, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User).Build())
                         .AddPolicy(Policies.UserOrAdmin, builder => builder.RequireClaim(ClaimTypes.Role, Roles.User, Roles.Admin).Build());
 
-        //builder.Services.AddAuthorizationBuilder()
+        // builder.Services.AddAuthorizationBuilder()
         //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         //                    .RequireAuthenticatedUser()
         //                    .Build())

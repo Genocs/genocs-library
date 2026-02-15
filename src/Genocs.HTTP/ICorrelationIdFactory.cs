@@ -8,6 +8,6 @@ public interface ICorrelationIdFactory
     /// <summary>
     /// Create a correlationId.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A string representing the correlation ID, or null if not available.</returns>
     string? Create();
 }

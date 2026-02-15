@@ -10,10 +10,7 @@ public class MessagePropertiesAccessor : IMessagePropertiesAccessor
         set
         {
             var holder = Holder.Value;
-            if (holder != null)
-            {
-                holder.Properties = null;
-            }
+            holder?.Properties = null;
 
             if (value != null)
             {

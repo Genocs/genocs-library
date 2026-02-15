@@ -1,3 +1,7 @@
+using System.Collections.Concurrent;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Genocs.Core.Extensions;
 using Genocs.MessageBrokers.RabbitMQ.Plugins;
 using Genocs.MessageBrokers.RabbitMQ.Subscribers;
@@ -7,11 +11,6 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Genocs.MessageBrokers.RabbitMQ.Internals;
 

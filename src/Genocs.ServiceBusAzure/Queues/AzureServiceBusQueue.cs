@@ -1,136 +1,115 @@
-﻿using Genocs.Common.CQRS.Commands;
+﻿using Azure.Messaging.ServiceBus;
+using Genocs.Common.CQRS.Commands;
 using Genocs.ServiceBusAzure.Configurations;
 using Genocs.ServiceBusAzure.Queues.Interfaces;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System.Text;
+using System.Text.Json;
 
 namespace Genocs.ServiceBusAzure.Queues;
 
 /// <summary>
-/// Todo
+/// Azure Service Bus Queue implementation using Azure.Messaging.ServiceBus SDK.
 /// </summary>
-public class AzureServiceBusQueue : IAzureServiceBusQueue
+public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
 {
-    private readonly IQueueClient _queueClient;
+    private readonly ServiceBusClient _client;
+    private readonly ServiceBusSender _sender;
+    private readonly ServiceBusProcessor _processor;
     private readonly AzureServiceBusQueueOptions _options;
     private readonly ILogger<AzureServiceBusQueue> _logger;
-    private Dictionary<string, KeyValuePair<Type, Type>> _handlers = new Dictionary<string, KeyValuePair<Type, Type>>();
+    private readonly Dictionary<string, KeyValuePair<Type, Type>> _handlers = new();
     private const string COMMAND_SUFFIX = "Command";
     private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
-    /// Todo
+    /// Initializes a new instance of <see cref="AzureServiceBusQueue"/> using <see cref="IOptions{T}"/>.
     /// </summary>
-    /// <param name="options"></param>
-    /// <param name="serviceProvider"></param>
-    /// <param name="logger"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public AzureServiceBusQueue(IOptions<AzureServiceBusQueueOptions> options,
-                                IServiceProvider serviceProvider, 
-                                ILogger<AzureServiceBusQueue> logger)
+    /// <param name="options">The queue configuration options.</param>
+    /// <param name="serviceProvider">The service provider for resolving handlers.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
+    public AzureServiceBusQueue(
+        IOptions<AzureServiceBusQueueOptions> options,
+        IServiceProvider serviceProvider,
+        ILogger<AzureServiceBusQueue> logger)
+        : this(options?.Value ?? throw new ArgumentNullException(nameof(options)), serviceProvider, logger)
     {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-        _options = options.Value;
+    }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="AzureServiceBusQueue"/> using direct options.
+    /// </summary>
+    /// <param name="options">The queue configuration options.</param>
+    /// <param name="serviceProvider">The service provider for resolving handlers.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
+    public AzureServiceBusQueue(
+        AzureServiceBusQueueOptions options,
+        IServiceProvider serviceProvider,
+        ILogger<AzureServiceBusQueue> logger)
+    {
+        _options = options ?? throw new ArgumentNullException(nameof(options));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-        ServiceBusConnectionStringBuilder serviceBusConnectionStringBuilder = new ServiceBusConnectionStringBuilder(_options.ConnectionString);
-        serviceBusConnectionStringBuilder.EntityPath = _options.QueueName;
-        _queueClient = new QueueClient(serviceBusConnectionStringBuilder, _options.ReceiveMode, _options.RetryPolicy)
+        _client = new ServiceBusClient(_options.ConnectionString);
+        _sender = _client.CreateSender(_options.QueueName);
+        _processor = _client.CreateProcessor(_options.QueueName, new ServiceBusProcessorOptions
         {
-            PrefetchCount = _options.PrefetchCount
-        };
+            MaxConcurrentCalls = _options.MaxConcurrentCalls,
+            PrefetchCount = _options.PrefetchCount,
+            ReceiveMode = _options.ReceiveMode,
+            AutoCompleteMessages = false
+        });
 
         RegisterQueueMessageHandlerAndProcess();
     }
 
     /// <summary>
-    /// Todo
+    /// Sends a command to the queue.
     /// </summary>
-    /// <param name="options"></param>
-    /// <param name="serviceProvider"></param>
-    /// <param name="logger"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public AzureServiceBusQueue(AzureServiceBusQueueOptions options,
-                                   IServiceProvider serviceProvider, 
-                                   ILogger<AzureServiceBusQueue> logger)
-    {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-
-        _options = options;
-
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
-        ServiceBusConnectionStringBuilder serviceBusConnectionStringBuilder = new ServiceBusConnectionStringBuilder(_options.ConnectionString);
-        serviceBusConnectionStringBuilder.EntityPath = _options.QueueName;
-        _queueClient = new QueueClient(serviceBusConnectionStringBuilder, _options.ReceiveMode, _options.RetryPolicy)
-        {
-            PrefetchCount = _options.PrefetchCount
-        };
-
-        RegisterQueueMessageHandlerAndProcess();
-    }
-
-    /// <summary>
-    /// Todo
-    /// </summary>
-    /// <param name="command"></param>
-    /// <returns></returns>
+    /// <param name="command">The command to send.</param>
     public async Task SendAsync(ICommand command)
     {
-        var jsonMessage = JsonConvert.SerializeObject(command);
-        var body = Encoding.UTF8.GetBytes(jsonMessage);
-        var commandName = command.GetType().Name.Replace(COMMAND_SUFFIX, "");
-        var message = new Message
+        string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
+        string commandName = command.GetType().Name.Replace(COMMAND_SUFFIX, "");
+
+        var message = new ServiceBusMessage(jsonMessage)
         {
             MessageId = Guid.NewGuid().ToString(),
-            Body = body,
-            Label = commandName
+            Subject = commandName
         };
 
-        await _queueClient.SendAsync(message);
+        await _sender.SendMessageAsync(message);
     }
 
     /// <summary>
-    /// Todo
+    /// Schedules a command to be sent at a specified time.
     /// </summary>
-    /// <param name="command"></param>
-    /// <param name="offset"></param>
-    /// <returns></returns>
+    /// <param name="command">The command to schedule.</param>
+    /// <param name="offset">The time at which the message should be enqueued.</param>
     public async Task ScheduleAsync(ICommand command, DateTimeOffset offset)
     {
-        var jsonMessage = JsonConvert.SerializeObject(command);
-        var body = Encoding.UTF8.GetBytes(jsonMessage);
+        string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
 
-        var message = new Message
+        var message = new ServiceBusMessage(jsonMessage)
         {
-            MessageId = Guid.NewGuid().ToString(),
-            Body = body
+            MessageId = Guid.NewGuid().ToString()
         };
 
-        await _queueClient.ScheduleMessageAsync(message, offset);
+        await _sender.ScheduleMessageAsync(message, offset);
     }
 
     /// <summary>
-    /// Todo
+    /// Registers a command handler for consuming messages from the queue.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TH"></typeparam>
+    /// <typeparam name="T">The command type.</typeparam>
+    /// <typeparam name="TH">The command handler type.</typeparam>
     public void Consume<T, TH>() where T : ICommand where TH : ICommandHandlerLegacy<T>
     {
-        var eventName = typeof(T).Name;
+        string eventName = typeof(T).Name;
         if (!_handlers.ContainsKey(eventName))
         {
             _handlers.Add(eventName, new KeyValuePair<Type, Type>(typeof(T), typeof(TH)));
@@ -139,23 +118,26 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
 
     private void RegisterQueueMessageHandlerAndProcess()
     {
-        _queueClient.RegisterMessageHandler(
-            async (message, token) =>
+        _processor.ProcessMessageAsync += async (args) =>
+        {
+            string eventName = $"{args.Message.Subject}{COMMAND_SUFFIX}";
+            string messageData = args.Message.Body.ToString();
+
+            // Complete the message so that it is not received again.
+            if (await ProcessQueueMessages(eventName, messageData))
             {
-                var eventName = $"{message.Label}{COMMAND_SUFFIX}";
-                var messageData = Encoding.UTF8.GetString(message.Body);
-                // Complete the message so that it is not received again.
-                if (await ProcessQueueMessages(eventName, messageData))
-                {
-                    await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
-                }
-            },
-            new MessageHandlerOptions(ExceptionReceivedHandler) { MaxConcurrentCalls = _options.MaxConcurrentCalls, AutoComplete = false });
+                await args.CompleteMessageAsync(args.Message);
+            }
+        };
+
+        _processor.ProcessErrorAsync += ExceptionReceivedHandler;
+
+        _processor.StartProcessingAsync().GetAwaiter().GetResult();
     }
 
     private async Task<bool> ProcessQueueMessages(string eventName, string message)
     {
-        var processed = false;
+        bool processed = false;
         if (_handlers.ContainsKey(eventName))
         {
             using (var scope = _serviceProvider.CreateScope())
@@ -167,33 +149,35 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue
                     if (handler != null)
                     {
                         var eventType = type.Key;
-                        var command = JsonConvert.DeserializeObject(message, eventType);
+                        var command = JsonSerializer.Deserialize(message, eventType);
                         var concreteType = typeof(ICommandHandler<>).MakeGenericType(eventType);
-                        await (Task)concreteType.GetMethod("HandleCommand").Invoke(handler, new object[] { command });
+                        await (Task)concreteType.GetMethod("HandleCommand")!.Invoke(handler, new object[] { command! })!;
                     }
-
                 }
             }
+
             processed = true;
         }
+
         return processed;
     }
 
-
-    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+    private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)
     {
-        var ex = exceptionReceivedEventArgs.Exception;
-        var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
-        _logger.LogError($"ERROR handling message: {ex.Message} ", ex);
+        _logger.LogError(args.Exception, "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
+            args.Exception.Message, args.ErrorSource);
         return Task.CompletedTask;
     }
 
-    //public void Register(Func<IQueueClient, Message, CancellationToken, Task> callback, Func<ExceptionReceivedEventArgs, Task> exceptionHandler, MessageHandlerOptions handlerOptions = null)
-    //{
-    //    if (handlerOptions == null)
-    //        handlerOptions = new MessageHandlerOptions(exceptionHandler) { MaxConcurrentCalls = 10, AutoComplete = true };
-
-    //    _client.RegisterMessageHandler((msg, ct) => callback(_client, msg, ct), handlerOptions);
-    //}
-
+    /// <summary>
+    /// Disposes the Service Bus client, sender, and processor.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _processor.StopProcessingAsync();
+        await _processor.DisposeAsync();
+        await _sender.DisposeAsync();
+        await _client.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
 }

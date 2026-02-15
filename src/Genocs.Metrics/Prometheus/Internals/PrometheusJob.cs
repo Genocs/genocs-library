@@ -17,8 +17,8 @@ internal sealed class PrometheusJob : IHostedService
     /// <summary>
     /// Default PrometheusJob Constructor.
     /// </summary>
-    /// <param name="options"></param>
-    /// <param name="logger"></param>
+    /// <param name="options">The Prometheus options.</param>
+    /// <param name="logger">The logger instance.</param>
     public PrometheusJob(PrometheusOptions options, ILogger<PrometheusJob> logger)
     {
         _enabled = options.Enabled;
@@ -26,7 +26,7 @@ internal sealed class PrometheusJob : IHostedService
         _logger.LogInformation($"Prometheus integration is {(_enabled ? "enabled" : "disabled")}.");
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken = default)
     {
         if (_enabled)
         {
