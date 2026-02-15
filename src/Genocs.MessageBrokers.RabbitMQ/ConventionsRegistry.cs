@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Genocs.MessageBrokers.RabbitMQ;
 
 public class ConventionsRegistry : IConventionsRegistry
@@ -11,9 +8,9 @@ public class ConventionsRegistry : IConventionsRegistry
 
     public void Add(Type type, IConventions conventions) => _conventions[type] = conventions;
 
-    public IConventions Get<T>() => Get(typeof(T));
+    public IConventions? Get<T>() => Get(typeof(T));
 
-    public IConventions Get(Type type) => _conventions.TryGetValue(type, out var conventions) ? conventions : null;
+    public IConventions? Get(Type type) => _conventions.TryGetValue(type, out var conventions) ? conventions : null;
 
     public IEnumerable<IConventions> GetAll() => _conventions.Values;
 }

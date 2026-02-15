@@ -60,7 +60,7 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
     /// </summary>
     public TypeList()
     {
-        _typeList = new List<Type>();
+        _typeList = [];
     }
 
     /// <inheritdoc/>
@@ -109,36 +109,64 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
         _typeList.Remove(typeof(T));
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Removes the specified type from the collection.
+    /// </summary>
+    /// <remarks>This method modifies the underlying collection and may affect the state of the collection. It
+    /// is important to ensure that the item being removed is not null.</remarks>
+    /// <param name="item">The type to remove from the collection. If the type is not found, no changes are made.</param>
+    /// <returns>true if the type was successfully removed; otherwise, false.</returns>
     public bool Remove(Type item)
     {
         return _typeList.Remove(item);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Removes the element at the specified index.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to remove.</param>
     public void RemoveAt(int index)
     {
         _typeList.RemoveAt(index);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Clears all elements from the list.
+    /// </summary>
     public void Clear()
     {
         _typeList.Clear();
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Copies the elements of the collection to the specified one-dimensional array, starting at the specified index of
+    /// the target array.
+    /// </summary>
+    /// <remarks>Throws an ArgumentNullException if the array is null. Throws an ArgumentOutOfRangeException
+    /// if arrayIndex is less than zero or greater than the length of the array. Throws an ArgumentException if the
+    /// number of elements in the source collection is greater than the available space from arrayIndex to the end of
+    /// the destination array.</remarks>
+    /// <param name="array">The one-dimensional array that is the destination of the elements copied from the collection. The array must
+    /// have zero-based indexing and sufficient space to accommodate the copied elements.</param>
+    /// <param name="arrayIndex">The zero-based index in the destination array at which copying begins. Must be within the bounds of the array.</param>
     public void CopyTo(Type[] array, int arrayIndex)
     {
         _typeList.CopyTo(array, arrayIndex);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the enumerator.
+    /// </summary>
+    /// <returns>An enumerator for the list of types.</returns>
     public IEnumerator<Type> GetEnumerator()
     {
         return _typeList.GetEnumerator();
     }
 
+    /// <summary>
+    /// Gets the enumerator for the list of types.
+    /// </summary>
+    /// <returns>An enumerator for the list of types.</returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return _typeList.GetEnumerator();
@@ -148,7 +176,7 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
     {
         if (!typeof(TBaseType).GetTypeInfo().IsAssignableFrom(item))
         {
-            throw new ArgumentException("Given item is not type of " + typeof(TBaseType).AssemblyQualifiedName, "item");
+            throw new ArgumentException($"Given item is not type of {typeof(TBaseType).AssemblyQualifiedName}", nameof(item));
         }
     }
 }

@@ -16,7 +16,7 @@ internal sealed class MongoOutboxInitializer : IInitializer
         _options = options;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         if (!_options.Enabled)
         {
@@ -40,8 +40,8 @@ internal sealed class MongoOutboxInitializer : IInitializer
                                                     new CreateIndexOptions
                                                     {
                                                         ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
-                                                    })
-                );
+                                                    }),
+                cancellationToken: cancellationToken);
 
         string outboxCollection = string.IsNullOrWhiteSpace(_options.OutboxCollection)
             ? "outbox"
@@ -55,6 +55,7 @@ internal sealed class MongoOutboxInitializer : IInitializer
                                                     new CreateIndexOptions
                                                     {
                                                         ExpireAfter = TimeSpan.FromSeconds(_options.Expiry)
-                                                    }));
+                                                    }),
+                cancellationToken: cancellationToken);
     }
 }

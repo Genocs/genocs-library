@@ -10,9 +10,7 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// A shortcut of <see cref="CreationAuditedAggregateRoot{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
 /// </summary>
 [Serializable]
-public abstract class CreationAuditedAggregateRoot : CreationAuditedAggregateRoot<int>
-{
-}
+public abstract class CreationAuditedAggregateRoot : CreationAuditedAggregateRoot<int>;
 
 /// <summary>
 /// This class can be used to simplify implementing <see cref="ICreationAudited"/> for aggregate roots.

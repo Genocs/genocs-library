@@ -1,5 +1,3 @@
-using Genocs.Common.Domain.Entities;
-
 namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
@@ -17,7 +15,7 @@ public interface ICreationAudited : IHasCreationTime
 /// <summary>
 /// Adds navigation properties to <see cref="ICreationAudited"/> interface for user.
 /// </summary>
-/// <typeparam name="TUser">Type of the user</typeparam>
+/// <typeparam name="TUser">Type of the user.</typeparam>
 public interface ICreationAudited<TUser> : ICreationAudited
     where TUser : IEntity<DefaultIdType>
 {

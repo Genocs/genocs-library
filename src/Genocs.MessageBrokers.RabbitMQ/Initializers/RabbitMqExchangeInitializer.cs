@@ -24,7 +24,7 @@ public class RabbitMqExchangeInitializer : IInitializer
         _loggerEnabled = _options.Logger?.Enabled == true;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         var exchanges = AppDomain.CurrentDomain
             .GetAssemblies()
@@ -34,7 +34,7 @@ public class RabbitMqExchangeInitializer : IInitializer
             .Distinct()
             .ToList();
 
-        using var channel = await _connection.CreateChannelAsync();
+        await using var channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
         if (_options.Exchange?.Declare == true)
         {
             Log(_options.Exchange.Name, _options.Exchange.Type);
@@ -43,7 +43,8 @@ public class RabbitMqExchangeInitializer : IInitializer
                                                 _options.Exchange.Name,
                                                 _options.Exchange.Type,
                                                 _options.Exchange.Durable,
-                                                _options.Exchange.AutoDelete);
+                                                _options.Exchange.AutoDelete,
+                                                cancellationToken: cancellationToken);
 
             if (_options.DeadLetter?.Enabled is true && _options.DeadLetter?.Declare is true)
             {
@@ -51,7 +52,8 @@ public class RabbitMqExchangeInitializer : IInitializer
                                                     $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}",
                                                     ExchangeType.Direct,
                                                     _options.Exchange.Durable,
-                                                    _options.Exchange.AutoDelete);
+                                                    _options.Exchange.AutoDelete,
+                                                    cancellationToken: cancellationToken);
             }
         }
 
@@ -65,10 +67,10 @@ public class RabbitMqExchangeInitializer : IInitializer
             }
 
             Log(exchange, DefaultType);
-            await channel.ExchangeDeclareAsync(exchange, DefaultType, true);
+            await channel.ExchangeDeclareAsync(exchange, DefaultType, true, cancellationToken: cancellationToken);
         }
 
-        await channel.CloseAsync();
+        await channel.CloseAsync(cancellationToken: cancellationToken);
     }
 
     private void Log(string exchange, string type)

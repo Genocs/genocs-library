@@ -6,7 +6,7 @@ namespace Genocs.Common.Domain.Entities;
 public interface IEntity
 {
     /// <summary>
-    /// Checks if this entity is transient (not persisted to database) />).
+    /// Checks if this entity is transient (not persisted to database).
     /// </summary>
     /// <returns>True, if this entity is transient, otherwise False.</returns>
     bool IsTransient();

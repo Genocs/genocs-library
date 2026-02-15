@@ -27,7 +27,7 @@ public static class EntityAuditingHelper
             // entityWithCreationTime.CreatedAt = DateTime.Now;
         }
 
-        if (!(entityAsObj is ICreationAudited))
+        if (entityAsObj is not ICreationAudited)
         {
             // Object does not implement ICreationAudited
             return;
@@ -40,7 +40,7 @@ public static class EntityAuditingHelper
         }
 
         var entity = entityAsObj as ICreationAudited;
-        if (entity.CreatorUserId != null)
+        if (entity?.CreatorUserId != null)
         {
             // CreatorUserId is already set
             return;
@@ -79,13 +79,19 @@ public static class EntityAuditingHelper
             entityAsObj.As<IHasModificationTime>().LastUpdate = DateTime.Now;
         }
 
-        if (!(entityAsObj is IModificationAudited))
+        if (entityAsObj is not IModificationAudited)
         {
             // Entity does not implement IModificationAudited
             return;
         }
 
         var entity = entityAsObj.As<IModificationAudited>();
+
+        if (entity == null)
+        {
+            // Object does not implement IModificationAudited
+            return;
+        }
 
         if (userId == null)
         {

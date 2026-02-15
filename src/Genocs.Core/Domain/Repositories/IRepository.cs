@@ -1,5 +1,4 @@
 using Genocs.Common.Domain.Entities;
-using Genocs.Common.Domain.Repositories;
 
 namespace Genocs.Core.Domain.Repositories;
 

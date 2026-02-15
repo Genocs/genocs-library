@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 
 namespace Genocs.Common.Types;
 
@@ -13,8 +12,8 @@ public static class Extensions
     /// <summary>
     /// GetDefaultInstance.
     /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <param name="type">The type for which to get the default instance.</param>
+    /// <returns>The default instance of the specified type, or null if it cannot be created.</returns>
     public static object? GetDefaultInstance(this Type type)
     {
         if (type == typeof(string))
@@ -32,12 +31,18 @@ public static class Extensions
         return null;
     }
 
+    /// <summary>
+    /// It sets the default values for all properties of the given instance. It uses reflection to iterate through
+    /// the properties and assigns default values based on their types.
+    /// </summary>
+    /// <param name="instance">The instance for which to set the default values.</param>
+    /// <returns>The instance with its properties set to their default values.</returns>
     public static object SetDefaultInstanceProperties(this object instance)
-        => SetDefaultInstanceProperties(instance, new Dictionary<Type, object?>());
+        => SetDefaultInstanceProperties(instance, []);
 
     private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
     {
-        defaultValueCache ??= new Dictionary<Type, object?>();
+        defaultValueCache ??= [];
 
         var type = instance.GetType();
 

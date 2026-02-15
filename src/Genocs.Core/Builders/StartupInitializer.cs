@@ -8,7 +8,7 @@ namespace Genocs.Core.Builders;
 /// </summary>
 public class StartupInitializer : IStartupInitializer
 {
-    private readonly IList<IInitializer> _initializers = new List<IInitializer>();
+    private readonly IList<IInitializer> _initializers = [];
 
     /// <summary>
     /// Add new initializer if not present.
@@ -27,12 +27,13 @@ public class StartupInitializer : IStartupInitializer
     /// <summary>
     /// Run the initializer.
     /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>The task.</returns>
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         foreach (var initializer in _initializers)
         {
-            await initializer.InitializeAsync();
+            await initializer.InitializeAsync(cancellationToken);
         }
     }
 }

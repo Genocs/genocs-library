@@ -39,6 +39,7 @@ public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimary
 {
     /// <summary>
     /// Reference to the creator user of this entity.
+    /// TODO: Make this relation required in the future (after making sure that all existing data has a creator user).
     /// </summary>
     [ForeignKey("CreatorUserId")]
     public virtual TUser? CreatorUser { get; set; }

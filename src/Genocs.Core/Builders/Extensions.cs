@@ -24,7 +24,6 @@ public static class Extensions
     /// <returns>The updated Genocs builder. To be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this WebApplicationBuilder builder)
     {
-        // Create the builder
         IGenocsBuilder gnxBuilder = GenocsBuilder.Create(builder);
         Setup(gnxBuilder);
         return gnxBuilder;
@@ -38,7 +37,6 @@ public static class Extensions
     /// <returns>The builder to be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
-        // Create the builder
         IGenocsBuilder builder = GenocsBuilder.Create(services, configuration);
         Setup(builder);
         return builder;

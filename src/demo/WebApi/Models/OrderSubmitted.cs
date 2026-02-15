@@ -1,3 +1,5 @@
-﻿namespace Genocs.Library.Demo.WebApi.Models;
+﻿using Genocs.Common.CQRS.Events;
 
-public record OrderSubmitted(string OrderId, string UserId);
+namespace Genocs.Library.Demo.WebApi.Models;
+
+public record OrderSubmitted(string OrderId, string UserId) : IEvent;

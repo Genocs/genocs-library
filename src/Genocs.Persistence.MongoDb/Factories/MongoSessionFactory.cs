@@ -6,7 +6,7 @@ namespace Genocs.Persistence.MongoDb.Factories;
 /// <summary>
 /// The MongoDb Session factory.
 /// </summary>
-/// <param name="client"></param>
+/// <param name="client">The MongoDb client.</param>
 internal sealed class MongoSessionFactory(IMongoClient client) : IMongoSessionFactory
 {
     private readonly IMongoClient _client = client;

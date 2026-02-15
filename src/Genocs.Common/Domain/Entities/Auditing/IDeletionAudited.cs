@@ -1,5 +1,3 @@
-using Genocs.Common.Domain.Entities;
-
 namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
