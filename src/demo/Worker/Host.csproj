@@ -14,12 +14,12 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\Genocs.OpenTelemetry\Genocs.OpenTelemetry.csproj" />
+        <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Logging" Version="8.1.*" />
-        <PackageReference Include="Genocs.OpenTelemetry" Version="8.1.*" />
+        <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />
     </ItemGroup>
 
     <ItemGroup>

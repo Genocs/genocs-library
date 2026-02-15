@@ -1,13 +1,12 @@
 using Genocs.Core.Builders;
-using Genocs.Library.Demo.Worker;
 using Genocs.Library.Demo.Worker.Consumers;
 using Genocs.Logging;
+using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.GnxOpenTelemetry;
+using Genocs.Telemetry;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
-using Genocs.MessageBrokers.RabbitMQ;
 
 StaticLogger.EnsureInitialized();
 
@@ -17,7 +16,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddGenocs(hostContext.Configuration)
-            .AddOpenTelemetry()
+            .AddTelemetry()
             .AddMongoWithRegistration();
 
         ConfigureMassTransit(services, hostContext.Configuration);

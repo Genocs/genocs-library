@@ -1,19 +1,14 @@
-﻿namespace Genocs.GnxOpenTelemetry.Configurations;
+﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// Azure configuration Settings.
+/// Console Section Settings.
 /// </summary>
-public class AzureOptions
+public class ConsoleOptions
 {
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
-
-    /// <summary>
-    /// It defines the azure Connection string.
-    /// </summary>
-    public string? ConnectionString { get; set; }
 
     /// <summary>
     /// It defines whether the console tracing are enabled or not.

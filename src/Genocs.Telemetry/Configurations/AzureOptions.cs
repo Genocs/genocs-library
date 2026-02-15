@@ -1,14 +1,19 @@
-﻿namespace Genocs.GnxOpenTelemetry.Configurations;
+﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// MongoDB configuration Settings.
+/// Azure configuration Settings.
 /// </summary>
-public class MongoDbOptions
+public class AzureOptions
 {
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
     public bool Enabled { get; set; }
+
+    /// <summary>
+    /// It defines the azure Connection string.
+    /// </summary>
+    public string? ConnectionString { get; set; }
 
     /// <summary>
     /// It defines whether the console tracing are enabled or not.

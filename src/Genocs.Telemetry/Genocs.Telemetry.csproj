@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-        <PackageId>Genocs.OpenTelemetry</PackageId>
-        <RootNamespace>Genocs.GnxOpenTelemetry</RootNamespace>
-        <AssemblyName>Genocs.OpenTelemetry</AssemblyName>
+        <PackageId>Genocs.Telemetry</PackageId>
+        <RootNamespace>Genocs.Telemetry</RootNamespace>
+        <AssemblyName>Genocs.Telemetry</AssemblyName>
         <Title>The Open Telemetry support library.</Title>
         <Description>The Open Telemetry support library.</Description>
         <PackageTags>open telemetry dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>

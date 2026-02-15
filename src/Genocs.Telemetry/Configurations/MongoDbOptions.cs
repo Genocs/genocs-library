@@ -1,9 +1,9 @@
-﻿namespace Genocs.GnxOpenTelemetry.Configurations;
+﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// Console Section Settings.
+/// MongoDB configuration Settings.
 /// </summary>
-public class ConsoleOptions
+public class MongoDbOptions
 {
     /// <summary>
     /// It defines whether the section is enabled or not.

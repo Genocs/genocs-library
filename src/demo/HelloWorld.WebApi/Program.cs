@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
@@ -19,7 +19,7 @@ builder.Host
 builder
     .AddGenocs()
     .AddJwt("simmetric_jwt")
-    .AddOpenTelemetry()
+    .AddTelemetry()
     .AddWebApi()
     .AddSwaggerDocs()
     .AddWebApiSwaggerDocs()

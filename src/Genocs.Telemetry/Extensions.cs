@@ -1,21 +1,18 @@
-﻿using System.Runtime;
-using Azure.Monitor.OpenTelemetry.Exporter;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Core.Exceptions;
-using Genocs.GnxOpenTelemetry;
-using Genocs.GnxOpenTelemetry.Configurations;
-using Microsoft.Extensions.Configuration;
+using Genocs.Telemetry;
+using Genocs.Telemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace Genocs.GnxOpenTelemetry;
+namespace Genocs.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
@@ -27,10 +24,10 @@ public static class OpenTelemetryExtensions
     /// </remarks>
     /// <param name="builder">The Genocs builder.</param>
     /// <returns>The updated Genocs builder.</returns>
-    public static IGenocsBuilder AddOpenTelemetry(this IGenocsBuilder builder)
+    public static IGenocsBuilder AddTelemetry(this IGenocsBuilder builder)
     {
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
-            ?? throw new GenocsException.InvalidConfigurationException("app config section is missing. AddOpenTelemetry requires those configuration.");
+            ?? throw new GenocsException.InvalidConfigurationException("app config section is missing. AddTelemetry requires those configuration.");
 
         // No OpenTelemetryTracing in case of missing ServiceName
         if (string.IsNullOrWhiteSpace(appOptions.Service))
@@ -38,7 +35,7 @@ public static class OpenTelemetryExtensions
             return builder;
         }
 
-        OpenTelemetryOptions? openTelemetryOptions = builder.GetOptions<OpenTelemetryOptions>(OpenTelemetryOptions.Position);
+        TelemetryOptions? openTelemetryOptions = builder.GetOptions<TelemetryOptions>(TelemetryOptions.Position);
 
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource =>
@@ -168,7 +165,7 @@ public static class OpenTelemetryExtensions
         resource => resource
             .AddDetector(new ContainerResourceDetector());
 
-                builder.Services.AddOpenTelemetry()
+                builder.Services.AddTelemetry()
                     .ConfigureResource(appResourceBuilder)
                     .WithTracing(tracerBuilder => tracerBuilder
                         .AddRedisInstrumentation(

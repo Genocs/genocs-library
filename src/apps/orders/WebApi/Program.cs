@@ -21,13 +21,13 @@ using Genocs.Orders.WebApi.Queries;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
-using Genocs.GnxOpenTelemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
+using Genocs.Telemetry;
 
 StaticLogger.EnsureInitialized();
 
@@ -39,7 +39,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
-                                    .AddOpenTelemetry()
+                                    .AddTelemetry()
                                     .AddMetrics()
                                     .AddHttpClient()
                                     .AddConsul()

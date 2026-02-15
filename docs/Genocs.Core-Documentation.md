@@ -673,7 +673,7 @@ public class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderDto>
 - **Genocs.MessageBrokers.RabbitMQ**: RabbitMQ integration for events
 - **Genocs.WebApi**: Web API utilities and middleware
 - **Genocs.Logging**: Structured logging integration
-- **Genocs.OpenTelemetry**: Observability and tracing
+- **Genocs.Telemetry**: Observability and tracing
 
 ## Performance Considerations
 

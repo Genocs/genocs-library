@@ -75,7 +75,7 @@
   <Project Path="src/Genocs.MessageBrokers.RabbitMQ/Genocs.MessageBrokers.RabbitMQ.csproj" />
   <Project Path="src/Genocs.MessageBrokers/Genocs.MessageBrokers.csproj" />
   <Project Path="src/Genocs.Metrics/Genocs.Metrics.csproj" />
-  <Project Path="src/Genocs.OpenTelemetry/Genocs.OpenTelemetry.csproj" />
+  <Project Path="src/Genocs.Telemetry/Genocs.Telemetry.csproj" />
   <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
   <Project Path="src/Genocs.Persistence.MongoDb/Genocs.Persistence.MongoDb.csproj" />
   <Project Path="src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj" />

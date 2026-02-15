@@ -3,7 +3,6 @@ using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
-using Genocs.GnxOpenTelemetry;
 using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
@@ -15,6 +14,7 @@ using Genocs.Notifications.WebApi.Hubs;
 using Genocs.Notifications.WebApi.Services;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.Vault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -31,7 +31,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
-                                        .AddOpenTelemetry()
+                                        .AddTelemetry()
                                         .AddMetrics()
                                         .AddJwt()
                                         .AddCorrelationContextLogging()

@@ -3,7 +3,7 @@ using Genocs.Core.Builders;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
-using Genocs.GnxOpenTelemetry;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.Persistence.MongoDb.Extensions;
 using Yarp.ReverseProxy.Forwarder;
@@ -37,7 +37,7 @@ internal class Startup(IConfiguration configuration)
 
         var builder = services
                             .AddGenocs(Configuration)
-                            .AddOpenTelemetry()
+                            .AddTelemetry()
                             .AddMongoWithRegistration()
                             .AddJwt()
                             .AddPrometheus();

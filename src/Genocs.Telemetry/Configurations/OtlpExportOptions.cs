@@ -1,4 +1,4 @@
-﻿namespace Genocs.GnxOpenTelemetry.Configurations;
+﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
 /// OtlpExportOptions Settings.

@@ -1,14 +1,14 @@
-﻿namespace Genocs.GnxOpenTelemetry.Configurations;
+﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
 /// OpenTelemetry Settings.
 /// </summary>
-public class OpenTelemetryOptions
+public class TelemetryOptions
 {
     /// <summary>
     /// Default section name.
     /// </summary>
-    public const string Position = "openTelemetry";
+    public const string Position = "telemetry";
 
     /// <summary>
     /// It defines whether the section is enabled or not.

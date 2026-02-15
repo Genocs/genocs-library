@@ -4,7 +4,6 @@ using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Discovery.Consul;
-using Genocs.GnxOpenTelemetry;
 using Genocs.HTTP;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
@@ -21,6 +20,7 @@ using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
 using Genocs.Products.WebApi.Queries;
 using Genocs.Secrets.Vault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
@@ -38,7 +38,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
-                                        .AddOpenTelemetry()
+                                        .AddTelemetry()
                                         .AddMetrics()
                                         .AddHttpClient()
                                         .AddConsul()

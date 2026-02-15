@@ -1,7 +1,7 @@
 # The Genocs Library - OpenTelemetry components
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.OpenTelemetry.svg)](https://www.nuget.org/packages/Genocs.OpenTelemetry/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.OpenTelemetry.svg)](https://www.nuget.org/packages/Genocs.OpenTelemetry/)
+[![NuGet](https://img.shields.io/nuget/v/Genocs.Telemetry.svg)](https://www.nuget.org/packages/Genocs.Telemetry/)
+[![NuGet](https://img.shields.io/nuget/dt/Genocs.Telemetry.svg)](https://www.nuget.org/packages/Genocs.Telemetry/)
 
 This package contains the components you can use to setup OpenTelemetry.
 The library is built to be used with .NET10, .NET9, .NET8.
@@ -19,7 +19,7 @@ OpenTelemetry is Open-Source widly adopted solution to implement three component
 
 To get started, you need to install the package and configure the settings.
 ``` json
-  "openTelemetry": {
+  "telemetry": {
     "enableTracing": true,
     "enableMetrics": true,
     "enableLogging": true

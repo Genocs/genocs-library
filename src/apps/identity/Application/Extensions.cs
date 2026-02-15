@@ -27,7 +27,6 @@ using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
-using Genocs.GnxOpenTelemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Swagger;
@@ -37,6 +36,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Genocs.Telemetry;
 
 namespace Genocs.Identities.Application;
 
@@ -69,7 +69,7 @@ public static class Extensions
         await builder.AddRabbitMQAsync();
 
         builder
-            .AddOpenTelemetry()
+            .AddTelemetry()
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
