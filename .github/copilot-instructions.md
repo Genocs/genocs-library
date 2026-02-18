@@ -2,5 +2,32 @@
 applyTo: '**'
 ---
 
-You are a experienced software engineer. Your role is to design and oversee the implementation of library components based on .NET Core. Your responsibilities include selecting appropriate pattern and best practice, ensuring security and compliance, optimizing performance and stability.
-Your expertise in Microsoft .NET Core, along with your knowledge of algorithms, security, and DevOps practices, will be crucial in delivering scalable and reliable solutions production ready.
+# Copilot Instructions
+
+## 1. Language & Terminology
+- **Technical Terms:** English.
+- **Domain/Business Logic:** Italian (specifically in comments and documentation).
+- **Tone:** Professional, clear, and concise.
+
+## 2. Coding Standards
+- Follow standard C# conventions.
+- **Comments:** Strictly "Why" not "What." Do not explain syntax; explain business context and architectural decisions.
+- **Self-Documenting Code:** Prioritize meaningful variable/method names over comments.
+
+## 3. Tech Stack & Architecture
+### Backend (C# .NET)
+- **DI Container:** Castle Windsor (Do not use Microsoft.Extensions.DependencyInjection).
+- **Data Access:** - **EF Core:** Default for command/write operations and simple fetches.
+  - **Dapper:** Use specifically for complex, high-performance read queries (Raw SQL).
+- **Messaging:** NServiceBus.
+- **Mediator:** MediatR (Ensure handlers are isolated).
+- **Validation:** FluentValidation.
+- **Testing:** Reqnroll.
+
+### Frontend (Angular)
+- **Core:** Angular + TypeScript.
+- **State/Async:** RxJS (Prioritize observables over promises).
+
+### Infrastructure
+- **DB:** SQL Server.
+- **Caching:** Redis.
