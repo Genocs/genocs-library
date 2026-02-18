@@ -42,7 +42,12 @@ public class MassTransitController : ControllerBase
     [ProducesResponseType(typeof(SubmitOrder), StatusCodes.Status200OK)]
     public async Task<IActionResult> PostSubmitDemoCommand()
     {
-        SubmitOrder order = new SubmitOrder(DefaultIdType.NewGuid(), DefaultIdType.NewGuid().ToString(), DefaultIdType.NewGuid().ToString());
+        SubmitOrder order = new SubmitOrder
+        {
+            Id = DefaultIdType.NewGuid(),
+            OrderId = DefaultIdType.NewGuid().ToString(),
+            UserId = DefaultIdType.NewGuid().ToString()
+        };
 
         // Publish an event with MassTransit
         await _publishEndpoint.Publish(order);

@@ -1,7 +1,7 @@
 namespace Genocs.Security;
 
 /// <summary>
-/// This provides interfaces to the <see cref="Genocs.Security.Services.Hasher"/> class.
+/// This provides interfaces to the <see cref="Services.Hasher"/> class.
 /// </summary>
 public interface IHasher
 {

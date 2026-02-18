@@ -13,20 +13,20 @@ public class PrometheusOptions
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
-    public bool Enabled { get; set; }
+    public bool Enabled { get; internal set; }
 
     /// <summary>
     /// The Prometheus endpoint.
     /// </summary>
-    public string? Endpoint { get; set; }
+    public string? Endpoint { get; internal set; }
 
     /// <summary>
     /// The Prometheus ApiKey.
     /// </summary>
-    public string? ApiKey { get; set; }
+    public string? ApiKey { get; internal set; }
 
     /// <summary>
     /// The Prometheus AllowedHosts.
     /// </summary>
-    public IEnumerable<string>? AllowedHosts { get; set; }
+    public IEnumerable<string>? AllowedHosts { get; internal set; }
 }

@@ -32,7 +32,6 @@ builder.Host
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
                                         .AddTelemetry()
-                                        .AddMetrics()
                                         .AddJwt()
                                         .AddCorrelationContextLogging()
                                         .AddErrorHandler<ExceptionToResponseMapper>()

@@ -10,7 +10,6 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
@@ -39,7 +38,6 @@ builder.Host
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
                                         .AddTelemetry()
-                                        .AddMetrics()
                                         .AddHttpClient()
                                         .AddConsul()
                                         .AddFabio()

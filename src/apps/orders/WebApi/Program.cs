@@ -10,7 +10,6 @@ using Genocs.MessageBrokers.CQRS;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Orders.WebApi;
 using Genocs.Orders.WebApi.Commands;
@@ -21,13 +20,13 @@ using Genocs.Orders.WebApi.Queries;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
 using Genocs.WebApi.Swagger;
 using Genocs.WebApi.Swagger.Docs;
 using Serilog;
-using Genocs.Telemetry;
 
 StaticLogger.EnsureInitialized();
 
@@ -40,7 +39,6 @@ builder.Host
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
                                     .AddTelemetry()
-                                    .AddMetrics()
                                     .AddHttpClient()
                                     .AddConsul()
                                     .AddFabio()

@@ -8,12 +8,7 @@
 
 ## Dependencies
 - **Genocs.Core** (5.0.9)
-- **Microsoft.Extensions.Caching.StackExchangeRedis** (9.0.0)
-- **Microsoft.Extensions.Options** (9.0.0)
-- **StackExchange.Redis** (2.8.16)
-
-### Framework references
-- Microsoft.NETCore.App
+- **Microsoft.Extensions.Caching.StackExchangeRedis** (10.0.0)
 
 ## Support
 Browse documentation at [GitHub](https://github.com/Genocs/genocs-library)

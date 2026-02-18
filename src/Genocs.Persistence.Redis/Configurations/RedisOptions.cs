@@ -13,20 +13,20 @@ public class RedisOptions
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
-    public bool Enabled { get; set; }
+    public bool Enabled { get; internal set; }
 
     /// <summary>
     /// The connection string.
     /// </summary>
-    public string ConnectionString { get; set; } = "localhost";
+    public string ConnectionString { get; internal set; } = "localhost";
 
     /// <summary>
     /// Redis instance.
     /// </summary>
-    public string? Instance { get; set; }
+    public string? Instance { get; internal set; }
 
     /// <summary>
     /// The database Id.
     /// </summary>
-    public int Database { get; set; }
+    public int Database { get; internal set; }
 }

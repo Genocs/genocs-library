@@ -40,15 +40,13 @@ public static class Extensions
         return app;
     }
 
-    public static IDispatcherEndpointsBuilder Dispatch(this IEndpointsBuilder endpoints,
-        Func<IDispatcherEndpointsBuilder, IDispatcherEndpointsBuilder> builder)
+    public static IDispatcherEndpointsBuilder Dispatch(this IEndpointsBuilder endpoints, Func<IDispatcherEndpointsBuilder, IDispatcherEndpointsBuilder> builder)
         => builder(new DispatcherEndpointsBuilder(endpoints));
 
-    public static IApplicationBuilder UsePublicContracts<T>(this IApplicationBuilder app,
-        string endpoint = "/_contracts") => app.UsePublicContracts(endpoint, typeof(T));
+    public static IApplicationBuilder UsePublicContracts<T>(this IApplicationBuilder app, string endpoint = "/_contracts")
+        => app.UsePublicContracts(endpoint, typeof(T));
 
-    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app,
-        bool attributeRequired, string endpoint = "/_contracts")
+    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app, bool attributeRequired, string endpoint = "/_contracts")
         => app.UsePublicContracts(endpoint, null, attributeRequired);
 
     public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app,

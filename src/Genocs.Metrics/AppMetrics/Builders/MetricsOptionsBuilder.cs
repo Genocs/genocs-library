@@ -12,11 +12,11 @@ internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
         return this;
     }
 
-    public IMetricsOptionsBuilder WithInfluxEnabled(bool influxEnabled)
-    {
-        _settings.InfluxEnabled = influxEnabled;
-        return this;
-    }
+    // public IMetricsOptionsBuilder WithInfluxEnabled(bool influxEnabled)
+    // {
+    //     _settings.InfluxEnabled = influxEnabled;
+    //     return this;
+    // }
 
     public IMetricsOptionsBuilder WithPrometheusEnabled(bool prometheusEnabled)
     {
@@ -30,6 +30,7 @@ internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
         return this;
     }
 
+    /*
     public IMetricsOptionsBuilder WithInfluxUrl(string influxUrl)
     {
         _settings.InfluxUrl = influxUrl;
@@ -41,6 +42,7 @@ internal sealed class MetricsOptionsBuilder : IMetricsOptionsBuilder
         _settings.Database = database;
         return this;
     }
+    */
 
     public IMetricsOptionsBuilder WithInterval(int interval)
     {

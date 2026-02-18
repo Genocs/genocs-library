@@ -13,7 +13,7 @@ public class MetricsOptions
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
-    public bool Enabled { get; set; }
+    public bool Enabled { get; internal set; }
 
     /// <summary>
     /// It defines whether the Influx db is enabled or not.
@@ -31,6 +31,7 @@ public class MetricsOptions
     /// </summary>
     public string? PrometheusFormatter { get; internal set; }
 
+    /*
     /// <summary>
     /// The InfluxDb url.
     /// </summary>
@@ -40,6 +41,7 @@ public class MetricsOptions
     /// The InfluxDb database name.
     /// </summary>
     public string? Database { get; internal set; }
+    */
 
     /// <summary>
     /// The metrics interval.

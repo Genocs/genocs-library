@@ -15,6 +15,7 @@ public class DemoEventHandler : IEventHandler<DemoEvent>
     public Task HandleAsync(DemoEvent @event, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"DemoEvent '{@event.Name}' processed!");
+
         // Do something with the message here
         return Task.CompletedTask;
     }

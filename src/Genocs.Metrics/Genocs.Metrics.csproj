@@ -19,11 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="App.Metrics.Formatters.InfluxDB" Version="4.3.0" />
-        <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="4.3.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="prometheus-net.AspNetCore.Grpc" Version="8.2.1" />
         <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.4.1" />
         <PackageReference Include="prometheus-net.SystemMetrics" Version="3.1.0" />

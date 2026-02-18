@@ -7,13 +7,8 @@
 **Genocs.Auth** is a comprehensive authentication library that provides secure user authentication and authorization mechanisms for .NET applications targeting .NET10, .NET9, .NET8.
 
 ## Dependencies
-- **Microsoft.AspNetCore.Authentication.JwtBearer** (9.0.0)
-- **Microsoft.AspNetCore.Identity** (9.0.0)
-- **Microsoft.Extensions.DependencyInjection.Abstractions** (9.0.0)
-- **System.IdentityModel.Tokens.Jwt** (8.1.2)
+- **Microsoft.AspNetCore.Authorization** (9.0.0)
 
-### Framework references
-- Microsoft.AspNetCore.App
 
 ## Support
 Browse documentation at [GitHub](https://github.com/Genocs/genocs-library)

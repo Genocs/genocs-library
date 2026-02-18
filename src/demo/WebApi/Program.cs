@@ -3,7 +3,6 @@ using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDb.Extensions;
 using Genocs.Secrets.AzureKeyVault;
@@ -29,7 +28,6 @@ builder
     .AddOpenIdJwt()
     .AddTelemetry()
     .AddMongoWithRegistration()
-    .AddMetrics()
     .AddPrometheus()
     //.AddEFCorePersistence()
     .AddApplicationServices()
@@ -84,8 +82,7 @@ app.UseAuthorization();
 // Custom middleware to allow both Jwt and ApiKey authentication
 app.UseMiddleware<JwtOrApiKeyAuthenticationMiddleware>();
 
-app.UseMetrics()
-    .UsePrometheus();
+app.UsePrometheus();
 
 app.MapControllers();
 

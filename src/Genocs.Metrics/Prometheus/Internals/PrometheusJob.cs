@@ -44,7 +44,7 @@ internal sealed class PrometheusJob : IHostedService
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken = default)
     {
         _collector?.Dispose();
 

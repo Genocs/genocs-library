@@ -73,7 +73,6 @@ public static class Extensions
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
             .AddRedis()
-            .AddMetrics()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
             .AddWebApiSwaggerDocs();
@@ -118,7 +117,6 @@ public static class Extensions
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
-            .UseMetrics()
             .UseRabbitMQ()
             .SubscribeCommand<CreateUser>()
             .SubscribeCommand<CreateAdmin>();
