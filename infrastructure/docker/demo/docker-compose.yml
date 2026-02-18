@@ -1,0 +1,12 @@
+services:
+  demo.webapi:
+    image: genocs/demo-webapi:2.0.0
+    build:
+      context: ../
+      dockerfile: ../../src/demo/WebApi/Dockerfile
+
+  demo.worker:
+    image: genocs/demo-worker:2.0.0
+    build:
+      context: ../
+      dockerfile: ../../src/demo/Worker/Dockerfile

@@ -7,7 +7,7 @@ services:
     ports:
       - 1433:1433
     environment:
-      SA_PASSWORD: ${SQL_SA_PASSWORD}
+      SA_PASSWORD: ${MSSQL_PASSWORD}
       ACCEPT_EULA: "Y"
     volumes:
       - mssqlsystem:/var/opt/mssql

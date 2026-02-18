@@ -13,8 +13,6 @@ https://dev.azure.com/genocs/_apis/git/repositories?api-version=5.0
 ### List of repositories
 
 
-
-
 ### Window Services
 
 Following some commands that you can use to handle windows services
