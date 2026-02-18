@@ -7,7 +7,7 @@ services:
       - 3306:3306
 
     environment:
-      MYSQL_ROOT_PASSWORD: MySect3tPassw!
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysqlsystem:/var/lib/mysql
     networks:

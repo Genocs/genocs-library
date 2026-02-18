@@ -17,10 +17,10 @@ applyTo: '**'
 ## 3. Tech Stack & Architecture
 ### Backend (C# .NET)
 - **DI Container:** Castle Windsor (Do not use Microsoft.Extensions.DependencyInjection).
-- **Data Access:** - **EF Core:** Default for command/write operations and simple fetches.
+- **Data Access:** 
+  - **EF Core:** Default for command/write operations and simple fetches.
   - **Dapper:** Use specifically for complex, high-performance read queries (Raw SQL).
-- **Messaging:** NServiceBus.
-- **Mediator:** MediatR (Ensure handlers are isolated).
+- **Messaging:** MassTransit.
 - **Validation:** FluentValidation.
 - **Testing:** Reqnroll.
 
