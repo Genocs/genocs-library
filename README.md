@@ -50,7 +50,7 @@
   <p align="center">
     Open Source Library For .NET10 Microservice
     <br />
-    <a href="https://learn.fiscanner.net"><strong>Read the Documentation »</strong></a>
+    <a href="https://learn.fiscanner.net"><strong>Read the Documentation</strong></a>
     <br />
     <br />
     <a href="https://github.com/genocs/genocs-library/issues">Report Bug</a>
@@ -63,7 +63,7 @@
 
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB (Line Of Business) applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET10, it is designed and maintained by Genocs.
+This repo contains a set of libraries to build LOB _Line Of Business_ applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET10, ant it is designed and maintained by Genocs.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -109,10 +109,10 @@ Documentation available at [Genocs Blog](https://learn.fiscanner.net/library/)
 
 ### Prerequisites
 
-- Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Install [Docker](https://www.docker.com/get-started)
-- Install [Docker Compose](https://docs.docker.com/compose/install/)
-- Install [Visual Studio Code](https://code.visualstudio.com/) with the following extensions:
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Visual Studio Code](https://code.visualstudio.com/) with the following extensions:
   - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
   - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
   - [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
@@ -120,72 +120,27 @@ Documentation available at [Genocs Blog](https://learn.fiscanner.net/library/)
 
 ### Setup
 
-1. Clone the repository
 
-   ```bash
-   git clone https://github.com/Genocs/genocs-library.git
-   cd genocs-library
-   ```
+```bash
+# 1. Clone the repository
+git clone https://github.com/Genocs/genocs-library.git
+cd genocs-library
 
-2. Build the solution
+# 2. Build the solution
+dotnet build
 
-   ```bash
-   dotnet build
-   ```
+#3. Pack the projects
+dotnet pack
 
-3. Pack the projects
+# 4. To pack the project with nuspec file
+cd src/Genocs.Core
+dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
 
-   ```bash
-   dotnet pack
-   ```
+# 5. To push on nuget
+dotnet nuget push
+dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
+```
 
-4. Run project with console
-
-   ```bash
-   dotnet run --project ./src/demo/WebApi
-   dotnet run --project ./src/demo/Worker
-   dotnet run --project ./src/demo/HelloWorld.WebApi
-   ```
-
-5. To pack the project with nuspec file
-
-   ```bash
-   cd src/Genocs.Core
-   dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-   ```
-
-6. To push on nuget
-
-   ```bash
-   dotnet nuget push
-   dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
-   ```
-
-7. Build webapi Docker image
-
-   ```bash
-   docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
-   ```
-
-8. Push webapi Docker image to Dockerhub
-
-   ```bash
-   docker push genocs/demo-webapi:2.0.0
-   docker push genocs/demo-webapi:latest
-   ```
-
-9. Build worker Docker image
-
-   ```bash
-   docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
-   ```
-
-10. Push worker Docker image to Dockerhub
-
-    ```bash
-    docker push genocs/demo-worker:2.0.0
-    docker push genocs/demo-worker:latest
-    ```
 
 ## Features
 
@@ -215,12 +170,14 @@ root-project/
 │   ├── rules/
 │   │   ├── solution_architect.mdc
 │   │   └── ...
+├── .devcontainer/
+│   └── ...
 ├── .git/
 │   └── ...
 ├── .github/
 │   ├── agents/
-│   │   ├── code_reviewer.agent.md
-│   │   ├── documentation_writer.agent.md
+│   │   ├── Code Reviewer.agent.md
+│   │   ├── Documentation Writer.agent.md
 │   │   └── ...
 │   ├── copilot-instructions.md
 │   ├── workflows/
@@ -237,7 +194,9 @@ root-project/
 ├── infrastructure/
 │   ├── bicep/
 │   │   └── ...
-│   ├── docker-compose/
+│   ├── docker/
+│   │   └── ...
+│   ├── helm/
 │   │   └── ...
 │   ├── k8s/
 │   │   └── ...
@@ -260,7 +219,7 @@ root-project/
 ├── icon.png
 ├── stylecop.json
 ├── nuget.config
-├── [project].sln
+├── [project].slnx
 ├── README.md
 ├── LICENSE
 ├── CHANGELOG.md
@@ -275,7 +234,7 @@ In this section you can find the infrastructure components you need to execute t
 You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
 ```bash
-cd ./containers
+cd ./infrastructure/docker
 
 # Setup the infrastructure.
 # Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
@@ -308,6 +267,12 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 # Use this file only in case you want to setup AI ML components prepared by Genocs
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
+
+> **NOTE**:
+>
+> The folder contains a .env.example file with the environment variables used by the docker compose files, remember to update the values based on your needs before running the commands.
+>
+> Pay attention to do not push the .env file to a public repository with sensitive data, consider to use secret management tools to manage the secrets in a secure way. 
 
 `infrastructure.yml` allows to install the basic infrastructure components. They are:
 
@@ -496,15 +461,6 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "validateLifetime": true,
     "expiry": "01:00:00"
   },
-  "metrics": {
-    "enabled": false,
-    "influxEnabled": false,
-    "prometheusEnabled": false,
-    "influxUrl": "http://localhost:8086",
-    "database": "test",
-    "env": "local",
-    "interval": 5
-  },
   "prometheus": {
     "enabled": false,
     "endpoint": "/metrics"
@@ -623,10 +579,11 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 
 ---
 
-## Demo Application
+## **_Demo Application_**
 
-Inside the library there is a simple demo application you can use to test the library.
+Inside the repo there is a simple demo application you can use to test the library. The demo application is composed by a WebApi and a Worker service, they are both using the library to show you how to use it in a real application.
 
+### How to BUILD & RUN the application
 Following are the commands to build and run the demo application.
 
 ```bash
@@ -642,37 +599,27 @@ dotnet run --project ./src/demo/Worker
 dotnet run --project ./src/demo/HelloWorld.WebApi
 ```
 
-```bash
-# To pack the project with nuspec file
-cd src/Genocs.Core
-dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-
-# To push on nuget
-dotnet nuget push
-dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
-```
-
-### How to build Docker Demo images
+### Build and push the Docker images to Dockerhub
 
 ```bash
-# Build webapi
+# Build webapi Docker image
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
 
-# Push on Dockerhub
+# Push webapi Docker image to Dockerhub
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
 
-# Build worker
+# Build WORKER Docker image
 docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
 
-# Push on Dockerhub
+# Push WORKER Docker image to Dockerhub
 docker push genocs/demo-worker:2.0.0
 docker push genocs/demo-worker:latest
 ```
 
 ---
 
-## **Enterprise Application**
+## **_Enterprise Application_**
 
 ### Application Components
 
@@ -701,7 +648,6 @@ In that way you can test the entire flow.
 The build and run process can be done by using docker-compose.
 
 Pre-requisites:
-
 - Docker
 
 ```bash
@@ -713,7 +659,7 @@ Pre-requisites:
 # *** if the infrastructure services were setup     ***
 
 # Run with docker compose
-docker compose -f ./src/apps/docker-compose.yml --env-file ./local.env --project-name genocs up -d
+docker compose -f ./src/apps/docker-compose.yml --env-file ./.env --project-name genocs up -d
 
 # Clean Docker cache (optional)
 docker builder prune
@@ -729,7 +675,7 @@ Some useful commands to manage the application:
 ./src/apps/scripts/build-and-push-images.sh
 ```
 
-## **Kubernetes**
+## **_Kubernetes_**
 
 ### KubeCtl
 
@@ -753,7 +699,7 @@ cd ./src/apps/k8s/helm
 microk8s helm install genocs ./gnxchart
 ```
 
-## **makefile**
+## **_makefile_**
 
 Prerequisites:
 
@@ -784,7 +730,7 @@ Upon installation you can use the makefile to build, run, deploy the application
 make build
 ```
 
-## **MCP Servers**
+## **_MCP Servers_**
 
 This repository contains support for MCP servers to be used along with VS Code.
 You can find the MCP servers inside the folder `./.vscode/mcp.json`.
