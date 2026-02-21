@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.Library.Demo.HelloWorld.WebApi.Sagas;
+using Genocs.Library.Demo.HelloWorld.WebApi.Services;
 using Genocs.Logging;
 using Genocs.Saga;
 using Genocs.Telemetry;
@@ -42,6 +42,9 @@ services
         });
     })
     .AddControllers();
+
+// Registrazione del servizio Saga
+services.AddScoped<ISagaTransactionService, SagaTransactionService>();
 
 // Override the default authorization policy
 services.AddAuthorizationBuilder()
@@ -106,51 +109,17 @@ app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
 app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
 
 // Saga - Start Transaction endpoint
-app.MapPost("/saga/start", (ISagaCoordinator sagaCoordinator) =>
+app.MapPost("/saga/start", async (ISagaTransactionService sagaService) =>
 {
-    var context = SagaContext
-      .Create()
-      .WithSagaId(SagaId.NewSagaId())
-      .WithOriginator("Test")
-      .WithMetadata("key", "lulz")
-      .Build();
-
-    sagaCoordinator.ProcessAsync(new StartTransaction { Text = "Start transaction" }, context);
-    return Results.Ok(context.SagaId);
+    SagaId sagaId = await sagaService.StartTransactionAsync("Start transaction", "Test");
+    return Results.Ok(sagaId);
 }).WithTags("Saga");
 
 // Saga - Complete Transaction endpoint
-app.MapPost("/saga/complete/{sagaId}", (ILogger<SampleSaga> logger, ISagaCoordinator sagaCoordinator, string sagaId) =>
+app.MapPost("/saga/complete/{sagaId}", async (ISagaTransactionService sagaService, string sagaId) =>
 {
-    var context = SagaContext
-      .Create()
-      .WithSagaId(sagaId)
-      .WithOriginator("Test")
-      .WithMetadata("key", "lulz")
-      .Build();
-
-    sagaCoordinator.ProcessAsync(
-        new CompleteTransaction { Text = "Complete transaction" },
-        onCompleted: (m, ctx) =>
-        {
-            logger?.LogInformation(
-                "Saga completed successfully with message: {MessageText} and metadata: {Metadata}",
-                m.Text,
-                ctx.Metadata.Select(md => $"{md.Key}={md.Value}").ToArray());
-
-            return Task.CompletedTask;
-        },
-        onRejected: (m, ctx) =>
-        {
-            logger?.LogError(
-                "Saga rejected with message: {MessageText} and metadata: {Metadata}",
-                m.Text,
-                ctx.Metadata.Select(md => $"{md.Key}={md.Value}").ToArray());
-
-            return Task.CompletedTask;
-        },
-        context: context);
-    return Results.Ok(context.SagaId);
+    SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", "Test");
+    return Results.Ok(completedSagaId);
 }).WithTags("Saga");
 
 await app.RunAsync();

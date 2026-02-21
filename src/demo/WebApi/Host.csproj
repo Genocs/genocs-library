@@ -7,7 +7,7 @@
         <AssemblyName>Genocs.Library.Demo.WebApi</AssemblyName>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>_Genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
         <IsPackable>false</IsPackable>
         <!-- Disable web.config transformation for Docker builds -->
         <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
