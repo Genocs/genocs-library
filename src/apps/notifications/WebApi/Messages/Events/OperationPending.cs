@@ -13,11 +13,7 @@ public class OperationPending : IEvent
     public string Resource { get; }
 
     [JsonConstructor]
-    public OperationPending(
-                            DefaultIdType id,
-                            DefaultIdType userId,
-                            string name,
-                            string resource)
+    public OperationPending(DefaultIdType id, DefaultIdType userId, string name, string resource)
     {
         Id = id;
         UserId = userId;

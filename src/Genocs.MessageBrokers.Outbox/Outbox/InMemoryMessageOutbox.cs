@@ -23,7 +23,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
 
     public bool Enabled { get; }
 
-    public async Task HandleAsync(string messageId, Func<Task> handler)
+    public async Task HandleAsync(string messageId, Func<Task> handler, CancellationToken cancellationToken = default)
     {
         if (!Enabled)
         {
@@ -63,7 +63,8 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
                              string? correlationId = null,
                              string? spanContext = null,
                              object? messageContext = null,
-                             IDictionary<string, object>? headers = null)
+                             IDictionary<string, object>? headers = null,
+                             CancellationToken cancellationToken = default)
         where T : class
     {
         if (!Enabled)

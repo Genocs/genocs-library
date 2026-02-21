@@ -15,9 +15,9 @@ public static partial class ExpressionBuilder
     /// <param name="keyword">The keyword.</param>
     /// <param name="propertyName">Name of the property.</param>
     /// <param name="operatorIndexes">The operator indexes.</param>
-    /// <param name="pe">The pe.</param>
+    /// <param name="pe">The parameter expression.</param>
     /// <param name="addParentObjectNullCheck">if set to <c>true</c> [add parent object null check].</param>
-    /// <returns></returns>
+    /// <returns>The expression.</returns>
     internal static Expression GetExpressionString<TSource>(
                                                     string[] searchTerms,
                                                     string keyword,
@@ -35,9 +35,6 @@ public static partial class ExpressionBuilder
         }
 
         Expression? searchExpression = null;
-        Expression? finalExpression = null;
-        Expression? nullOrEmptyCheck = null;
-
         MethodCallExpression left = Expression.Call(propertyExp, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
         var method = typeof(string).GetMethod("Contains", [typeof(string)]);
@@ -86,6 +83,8 @@ public static partial class ExpressionBuilder
             }
         }
 
+        Expression? finalExpression;
+        Expression? nullOrEmptyCheck;
         if (addParentObjectNullCheck)
         {
             // Add Null check for nested Object before checking the value of the property.

@@ -13,11 +13,7 @@ public class OperationCompleted : IEvent
     public string Resource { get; }
 
     [JsonConstructor]
-    public OperationCompleted(
-                                DefaultIdType id,
-                                DefaultIdType userId,
-                                string name,
-                                string resource)
+    public OperationCompleted(DefaultIdType id, DefaultIdType userId, string name, string resource)
     {
         Id = id;
         UserId = userId;

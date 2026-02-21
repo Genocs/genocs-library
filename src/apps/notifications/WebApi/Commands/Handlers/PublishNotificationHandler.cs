@@ -30,15 +30,15 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
     public async Task HandleAsync(PublishNotification command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"Created a notification with id: {command.NotificationId}, customer: {command.CustomerId}.");
-        string? spanContext = "TODO: Genocs";
+        const string? spanContext = "TODO: Genocs";
         var @event = new NotificationPosted(command.NotificationId);
 
         // Send the notification
-        await _hub.Clients.All.SendAsync("PublishNotification", @event);
+        await _hub.Clients.All.SendAsync("PublishNotification", @event, cancellationToken);
 
         if (_outbox.Enabled)
         {
-            await _outbox.SendAsync(@event, spanContext: spanContext);
+            await _outbox.SendAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
             return;
         }
 

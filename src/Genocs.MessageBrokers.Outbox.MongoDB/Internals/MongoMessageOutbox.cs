@@ -45,7 +45,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
         Enabled = options.Enabled;
     }
 
-    public async Task HandleAsync(string messageId, Func<Task> handler)
+    public async Task HandleAsync(string messageId, Func<Task> handler, CancellationToken cancellationToken = default)
     {
         if (!Enabled)
         {
@@ -112,7 +112,8 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
                                     string? correlationId = null,
                                     string? spanContext = null,
                                     object? messageContext = null,
-                                    IDictionary<string, object>? headers = null)
+                                    IDictionary<string, object>? headers = null,
+                                    CancellationToken cancellationToken = default)
         where T : class
     {
         if (!Enabled)
@@ -139,7 +140,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
             MessageType = message?.GetType().AssemblyQualifiedName,
             SentAt = DateTime.UtcNow
         };
-        await _outboxRepository.AddAsync(outboxMessage);
+        await _outboxRepository.AddAsync(outboxMessage, cancellationToken);
     }
 
     async Task<IReadOnlyList<OutboxMessage>> IMessageOutboxAccessor.GetUnsentAsync()

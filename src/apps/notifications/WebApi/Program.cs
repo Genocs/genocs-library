@@ -7,7 +7,6 @@ using Genocs.Logging;
 using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Notifications.WebApi.Commands;
 using Genocs.Notifications.WebApi.Exceptions;
 using Genocs.Notifications.WebApi.Hubs;
