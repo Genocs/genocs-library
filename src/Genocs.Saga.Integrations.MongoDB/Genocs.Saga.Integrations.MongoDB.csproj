@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Saga.Integrations.MongoDB</PackageId>
+        <AssemblyName>Genocs.Saga.Integrations.MongoDB</AssemblyName>
+        <PackageId>Genocs.Saga.Integrations.MongoDB</PackageId>
+        <Title>Genocs Saga Integrations MongoDB</Title>
+        <Description>Implementation of saga pattern Integration with MongoDB.</Description>
+        <PackageTags>saga saga-pattern microservice microservices solid solid-principles</PackageTags>
+    </PropertyGroup>
+
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Saga\Genocs.Saga.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Saga" Version="9.0.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
+        <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+</Project>
