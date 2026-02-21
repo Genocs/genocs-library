@@ -19,7 +19,7 @@
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox\Genocs.MessageBrokers.Outbox.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
@@ -40,7 +40,7 @@
         <PackageReference Include="Genocs.MessageBrokers.Outbox" Version="8.1.*" />
         <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="8.1.*" />
         <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
         <PackageReference Include="Genocs.Persistence.Redis" Version="8.1.*" />
         <PackageReference Include="Genocs.Secrets.Vault" Version="8.1.*" />
         <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />

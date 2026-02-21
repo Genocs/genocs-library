@@ -1,4 +1,4 @@
-﻿namespace Genocs.Persistence.MongoDb.Encryptions;
+﻿namespace Genocs.Persistence.MongoDB.Encryptions;
 
 /// <summary>
 /// The initializer.

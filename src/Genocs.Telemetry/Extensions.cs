@@ -151,7 +151,7 @@ public static class OpenTelemetryExtensions
                 }
 
                 // Setup MongoDB exporter
-                if (openTelemetryOptions.MongoDb?.Enabled == true && openTelemetryOptions.MongoDb.EnableTracing)
+                if (openTelemetryOptions.MongoDB?.Enabled == true && openTelemetryOptions.MongoDB.EnableTracing)
                 {
                     // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
                     tracing.AddMongoDBInstrumentation();

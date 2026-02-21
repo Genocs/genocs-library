@@ -5,7 +5,7 @@ using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Yarp.ReverseProxy.Forwarder;
 using Genocs.APIGateway.WebApi.Configurations;
 using Genocs.APIGateway.WebApi.Framework;

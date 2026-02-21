@@ -1,9 +1,9 @@
-﻿namespace Genocs.Persistence.MongoDb.Configurations;
+﻿namespace Genocs.Persistence.MongoDB.Configurations;
 
 /// <summary>
-/// MongoDb encryption database Settings.
+/// MongoDB encryption database Settings.
 /// </summary>
-public class MongoDbEncryptionOptions
+public class MongoEncryptionOptions
 {
     /// <summary>
     /// Default section name.
@@ -60,7 +60,7 @@ public class MongoDbEncryptionOptions
     /// </summary>
     /// <param name="settings">MongoDbSettings object.</param>
     /// <returns>return true if valid otherwise false.</returns>
-    public static bool IsValid(MongoDbEncryptionOptions settings)
+    public static bool IsValid(MongoEncryptionOptions settings)
     {
         if (settings is null) return false;
 

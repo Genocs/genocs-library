@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb;
+namespace Genocs.Persistence.MongoDB;
 
 /// <summary>
 /// Defines interface to obtain a <see cref="IMongoDatabase"/> object.

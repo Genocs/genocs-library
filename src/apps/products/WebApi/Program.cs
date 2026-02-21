@@ -11,7 +11,7 @@ using Genocs.MessageBrokers.Outbox;
 using Genocs.MessageBrokers.Outbox.MongoDB;
 using Genocs.MessageBrokers.RabbitMQ;
 using Genocs.Metrics.Prometheus;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Products.WebApi;
 using Genocs.Products.WebApi.Commands;

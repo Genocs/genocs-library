@@ -1,11 +1,11 @@
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
+namespace Genocs.Persistence.MongoDB.Repositories;
 
 /// <summary>
-/// The MongoDb seeder.
+/// The MongoDB seeder.
 /// </summary>
-public interface IMongoDbSeeder
+public interface IMongoSeeder
 {
     /// <summary>
     /// Database Seed.

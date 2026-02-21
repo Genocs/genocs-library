@@ -40,7 +40,7 @@
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
-    <Project Path="src/tests/Genocs.Persistence.MongoDb.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.QueryBuilder.UnitTests/Genocs.QueryBuilder.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Saga.UnitTests/Genocs.Saga.UnitTests.csproj" />
   </Folder>
@@ -80,7 +80,7 @@
   <Project Path="src/Genocs.MessageBrokers/Genocs.MessageBrokers.csproj" />
   <Project Path="src/Genocs.Metrics/Genocs.Metrics.csproj" />
   <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
-  <Project Path="src/Genocs.Persistence.MongoDb/Genocs.Persistence.MongoDb.csproj" />
+  <Project Path="src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj" />
   <Project Path="src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj" />
   <Project Path="src/Genocs.QueryBuilder/Genocs.QueryBuilder.csproj" />
   <Project Path="src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj" />

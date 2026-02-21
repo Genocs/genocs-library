@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 
-namespace Genocs.Persistence.MongoDb.Configurations;
+namespace Genocs.Persistence.MongoDB.Configurations;
 
 /// <summary>
-/// MongoDb database Settings.
+/// MongoDB database Settings.
 /// </summary>
-public class MongoDbOptions
+public class MongoOptions
 {
     /// <summary>
     /// Default Section name.
@@ -43,7 +43,7 @@ public class MongoDbOptions
     /// </summary>
     /// <param name="settings">MongoDbSettings object.</param>
     /// <returns>return true if valid otherwise false.</returns>
-    public static bool IsValid(MongoDbOptions settings)
+    public static bool IsValid(MongoOptions settings)
     {
         if (settings is null) return false;
 

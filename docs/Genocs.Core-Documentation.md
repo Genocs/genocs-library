@@ -668,7 +668,7 @@ public class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderDto>
 
 ## Integration with Other Genocs Libraries
 
-- **Genocs.Persistence.MongoDb**: MongoDB repository implementations
+- **Genocs.Persistence.MongoDB**: MongoDB repository implementations
 - **Genocs.Persistence.EFCore**: Entity Framework Core support
 - **Genocs.MessageBrokers.RabbitMQ**: RabbitMQ integration for events
 - **Genocs.WebApi**: Web API utilities and middleware

@@ -195,7 +195,7 @@ public static class Extensions
 
         /*
          * This is an example of how to add a MongoDB health check.
-         * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDb
+         * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDB
          *
         .AddMongoDb(
             builder.Configuration.GetSection("DBSettings:HealthConnectionString").Value!,

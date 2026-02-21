@@ -1,6 +1,6 @@
 using Genocs.MessageBrokers.Outbox.Messages;
 using Genocs.MessageBrokers.Outbox.MongoDB.Internals;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
 

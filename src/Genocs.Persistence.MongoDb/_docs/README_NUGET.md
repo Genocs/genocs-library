@@ -13,14 +13,14 @@ Persistence MongoDB Core NuGet package contains general purpose functionalities 
 
 Please check the GitHub repository getting more info.
 
-## MongoDb Convention
+## MongoDB Convention
 
 - CamelCaseElementNameConvention(),
 - IgnoreExtraElementsConvention(true),
 - EnumRepresentationConvention(BsonType.String)
 
 ### DataProvider Settings
-Following is about how to setup **MongoDb**
+Following is about how to setup **MongoDB**
 
 ``` json
   "mongoDb": {

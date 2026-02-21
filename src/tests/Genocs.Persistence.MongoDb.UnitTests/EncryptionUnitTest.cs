@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Genocs.Persistence.MongoDb.UnitTests;
+namespace Genocs.Persistence.MongoDB.UnitTests;
 
 public class EncryptionUnitTest
 {

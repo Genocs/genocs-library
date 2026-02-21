@@ -4,7 +4,7 @@ using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace Genocs.Persistence.MongoDb.Repositories;
+namespace Genocs.Persistence.MongoDB.Repositories;
 
 public static class Pagination
 {

@@ -365,7 +365,7 @@ dotnet add package Genocs.Common
 ## Related Libraries
 
 - **Genocs.Core**: Concrete implementations and builders
-- **Genocs.Persistence.MongoDb**: MongoDB repository implementations
+- **Genocs.Persistence.MongoDB**: MongoDB repository implementations
 - **Genocs.Persistence.EFCore**: Entity Framework Core implementations
 - **Genocs.MessageBrokers**: Message broker integrations
 

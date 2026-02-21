@@ -1,6 +1,6 @@
 # The Genocs Library - Persistence MongoDB components
 
-Genocs Enterprise Library - Genocs.Persistence.MongoDb. This package contains a repository pattern implementation using MongoDB.
+Genocs Enterprise Library - Genocs.Persistence.MongoDB. This package contains a repository pattern implementation using MongoDB.
 The library is built to be used with .NET10, .NET9, .NET8.
 
 ## Description
@@ -17,7 +17,7 @@ Persistence MongoDB NuGet package contains general purpose functionalities to be
 
 - **NONE**
 
-## MongoDb Convention
+## MongoDB Convention
 
 - CamelCaseElementNameConvention(),
 - IgnoreExtraElementsConvention(true),
@@ -25,7 +25,7 @@ Persistence MongoDB NuGet package contains general purpose functionalities to be
 
 ### DataProvider Settings
 
-Following is about how to setup **MongoDb**
+Following is about how to setup **MongoDB**
 
 ```json
   "mongoDb": {

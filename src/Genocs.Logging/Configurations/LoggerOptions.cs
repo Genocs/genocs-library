@@ -41,7 +41,7 @@ public class LoggerOptions
     public AzureOptions? Azure { get; set; }
 
     /// <summary>
-    /// MongoDb logging settings.
+    /// MongoDB logging settings.
     /// </summary>
     public MongoOptions? Mongo { get; set; }
 

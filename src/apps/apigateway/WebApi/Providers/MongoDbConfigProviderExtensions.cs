@@ -1,5 +1,5 @@
 ﻿using Genocs.APIGateway.WebApi.Configurations;
-using Genocs.Persistence.MongoDb;
+using Genocs.Persistence.MongoDB;
 using Yarp.ReverseProxy.Configuration;
 
 namespace Genocs.APIGateway.WebApi.Providers;

@@ -4,11 +4,11 @@ using Genocs.Common.Domain.Entities;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace Genocs.Persistence.MongoDb.Domain.Repositories;
+namespace Genocs.Persistence.MongoDB.Domain.Repositories;
 
 /// <summary>
 /// Implements IRepository for MongoDB.
@@ -19,7 +19,7 @@ namespace Genocs.Persistence.MongoDb.Domain.Repositories;
 /// Standard constructor.
 /// </remarks>
 /// <param name="databaseProvider"></param>
-public class MongoDbBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider databaseProvider) : RepositoryBase<TEntity, TKey>, IMongoDbBaseRepository<TEntity, TKey>
+public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider databaseProvider) : RepositoryBase<TEntity, TKey>, IMongoBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
     private readonly IMongoDatabaseProvider _databaseProvider = databaseProvider;

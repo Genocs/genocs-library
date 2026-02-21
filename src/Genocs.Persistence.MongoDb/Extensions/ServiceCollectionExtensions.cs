@@ -3,10 +3,10 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace Genocs.Persistence.MongoDb.Extensions;
+namespace Genocs.Persistence.MongoDB.Extensions;
 
 /// <summary>
-/// Service Collection Extension for MongoDb Repository setup.
+/// Service Collection Extension for MongoDB Repository setup.
 /// </summary>
 public static class ServiceCollectionExtensions
 {

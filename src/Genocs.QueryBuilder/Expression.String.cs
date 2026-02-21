@@ -40,45 +40,48 @@ public static partial class ExpressionBuilder
 
         MethodCallExpression left = Expression.Call(propertyExp, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
-        var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+        var method = typeof(string).GetMethod("Contains", [typeof(string)]);
 
-        for (int count = 0; count < searchTerms.Length; count++)
+        if (method != null)
         {
-            string searchTerm = searchTerms[count].ToLower();
-            searchTerm = searchTerm.Replace("*", string.Empty);
-            searchTerm = searchTerm.Replace("\"", string.Empty);
-            Expression rightExpression;
-            Expression methodCallExpression;
-            if (searchTerm.Contains(NotOperator.TrimStart()))
+            for (int count = 0; count < searchTerms.Length; count++)
             {
-                searchTerm = searchTerm.Replace(NotOperator.TrimStart(), string.Empty).Trim();
-                rightExpression = Expression.Constant(searchTerm);
-                methodCallExpression = Expression.Call(left, method, rightExpression);
-                methodCallExpression = Expression.Not(methodCallExpression);
-            }
-            else
-            {
-                rightExpression = Expression.Constant(searchTerm);
-                methodCallExpression = Expression.Call(left, method, rightExpression);
-            }
-
-            if (count == 0)
-            {
-                searchExpression = methodCallExpression;
-            }
-            else
-            {
-                string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
-                switch (conditionOperator)
+                string searchTerm = searchTerms[count].ToLower();
+                searchTerm = searchTerm.Replace("*", string.Empty);
+                searchTerm = searchTerm.Replace("\"", string.Empty);
+                Expression rightExpression;
+                Expression methodCallExpression;
+                if (searchTerm.Contains(NotOperator.TrimStart()))
                 {
-                    case "and":
-                        searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
-                        break;
-                    case "or":
-                        searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
-                        break;
-                    default:
-                        break;
+                    searchTerm = searchTerm.Replace(NotOperator.TrimStart(), string.Empty).Trim();
+                    rightExpression = Expression.Constant(searchTerm);
+                    methodCallExpression = Expression.Call(left, method, rightExpression);
+                    methodCallExpression = Expression.Not(methodCallExpression);
+                }
+                else
+                {
+                    rightExpression = Expression.Constant(searchTerm);
+                    methodCallExpression = Expression.Call(left, method, rightExpression);
+                }
+
+                if (count == 0)
+                {
+                    searchExpression = methodCallExpression;
+                }
+                else
+                {
+                    string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
+                    switch (conditionOperator)
+                    {
+                        case "and":
+                            searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
+                            break;
+                        case "or":
+                            searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

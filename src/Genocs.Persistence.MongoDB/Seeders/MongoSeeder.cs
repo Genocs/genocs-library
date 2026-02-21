@@ -1,10 +1,10 @@
 using Genocs.Core.Collections.Extensions;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Seeders;
+namespace Genocs.Persistence.MongoDB.Seeders;
 
-internal class MongoDbSeeder : IMongoDbSeeder
+internal class MongoSeeder : IMongoSeeder
 {
     public async Task SeedAsync(IMongoDatabase database, CancellationToken cancellationToken = default)
     {

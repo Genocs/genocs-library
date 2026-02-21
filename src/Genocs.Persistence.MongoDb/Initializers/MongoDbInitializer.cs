@@ -1,8 +1,8 @@
-using Genocs.Persistence.MongoDb.Configurations;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Configurations;
+using Genocs.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Initializers;
+namespace Genocs.Persistence.MongoDB.Initializers;
 
 /// <summary>
 /// The MongoDbInitializer implementation.
@@ -10,13 +10,13 @@ namespace Genocs.Persistence.MongoDb.Initializers;
 /// <param name="database">The mongoDb database reference.</param>
 /// <param name="seeder">The database seeder. The seeder is useful to setup database with custom constraint at setup stage</param>
 /// <param name="options">The mongoDb option instance.</param>
-internal sealed class MongoDbInitializer(IMongoDatabase database, IMongoDbSeeder seeder, MongoDbOptions options)
-    : IMongoDbInitializer
+internal sealed class MongoInitializer(IMongoDatabase database, IMongoSeeder seeder, MongoOptions options)
+    : IMongoInitializer
 {
     private static int _initialized;
     private readonly bool _seed = options.Seed;
     private readonly IMongoDatabase _database = database;
-    private readonly IMongoDbSeeder _seeder = seeder;
+    private readonly IMongoSeeder _seeder = seeder;
 
     /// <summary>
     /// Initialize the database.

@@ -17,7 +17,7 @@
         <ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
         <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
@@ -32,7 +32,7 @@
         <PackageReference Include="Genocs.HTTP" Version="8.1.*" />
         <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="8.1.*" />
         <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
         <PackageReference Include="Genocs.Secrets.Vault" Version="8.1.*" />
         <PackageReference Include="Genocs.WebApi.CQRS" Version="8.1.*" />
         <PackageReference Include="Genocs.WebApi.Swagger" Version="8.1.*" />

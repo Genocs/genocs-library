@@ -17,7 +17,7 @@ using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Orders.WebApi.Events.External;
 using Genocs.Orders.WebApi.Queries;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Secrets.Vault;
 using Genocs.Telemetry;

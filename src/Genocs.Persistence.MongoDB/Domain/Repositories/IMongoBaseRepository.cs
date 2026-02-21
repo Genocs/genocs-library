@@ -4,9 +4,9 @@ using Genocs.Common.Domain.Entities;
 using Genocs.Common.Domain.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Domain.Repositories;
+namespace Genocs.Persistence.MongoDB.Domain.Repositories;
 
-public interface IMongoDbBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+public interface IMongoBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
     IMongoCollection<TEntity> Collection { get; }

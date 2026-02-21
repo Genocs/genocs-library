@@ -1,16 +1,16 @@
 using Genocs.Common.CQRS.Queries;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
 using Genocs.Products.WebApi.DTO;
 
 namespace Genocs.Products.WebApi.Queries.Handlers;
 
 public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
 {
-    private readonly IMongoDbBaseRepository<Domain.Product, Guid> _repository;
+    private readonly IMongoBaseRepository<Domain.Product, Guid> _repository;
 
     private static readonly Random _random = new();
 
-    public GetProductHandler(IMongoDbBaseRepository<Domain.Product, Guid> repository)
+    public GetProductHandler(IMongoBaseRepository<Domain.Product, Guid> repository)
     {
         _repository = repository;
     }

@@ -1,15 +1,15 @@
 using Genocs.Identities.Application.Domain.Entities;
 using Genocs.Identities.Application.Domain.Repositories;
 using Genocs.Identities.Application.Mongo.Documents;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
 
 namespace Genocs.Identities.Application.Mongo.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IMongoDbBaseRepository<UserDocument, Guid> _repository;
+    private readonly IMongoBaseRepository<UserDocument, Guid> _repository;
 
-    public UserRepository(IMongoDbBaseRepository<UserDocument, Guid> repository)
+    public UserRepository(IMongoBaseRepository<UserDocument, Guid> repository)
     {
         _repository = repository;
     }

@@ -1,6 +1,6 @@
 using Genocs.Common.CQRS.Queries;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
 using MongoDB.Driver;

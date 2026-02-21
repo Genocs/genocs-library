@@ -1,12 +1,12 @@
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
 
-namespace Genocs.Persistence.MongoDb.Factories;
+namespace Genocs.Persistence.MongoDB.Factories;
 
 /// <summary>
-/// The MongoDb Session factory.
+/// The MongoDB Session factory.
 /// </summary>
-/// <param name="client">The MongoDb client.</param>
+/// <param name="client">The MongoDB client.</param>
 internal sealed class MongoSessionFactory(IMongoClient client) : IMongoSessionFactory
 {
     private readonly IMongoClient _client = client;

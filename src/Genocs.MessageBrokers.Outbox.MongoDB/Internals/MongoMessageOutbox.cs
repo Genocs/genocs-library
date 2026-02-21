@@ -2,8 +2,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Genocs.MessageBrokers.Outbox.Configurations;
 using Genocs.MessageBrokers.Outbox.Messages;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
-using Genocs.Persistence.MongoDb.Repositories;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Repositories;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
@@ -23,8 +23,8 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
     };
 
     private readonly IMongoSessionFactory _sessionFactory;
-    private readonly IMongoDbBaseRepository<InboxMessage, string> _inboxRepository;
-    private readonly IMongoDbBaseRepository<OutboxMessage, string> _outboxRepository;
+    private readonly IMongoBaseRepository<InboxMessage, string> _inboxRepository;
+    private readonly IMongoBaseRepository<OutboxMessage, string> _outboxRepository;
     private readonly ILogger<MongoMessageOutbox> _logger;
     private readonly bool _transactionsEnabled;
 
@@ -32,8 +32,8 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
 
     public MongoMessageOutbox(
                                 IMongoSessionFactory sessionFactory,
-                                IMongoDbBaseRepository<InboxMessage, string> inboxRepository,
-                                IMongoDbBaseRepository<OutboxMessage, string> outboxRepository,
+                                IMongoBaseRepository<InboxMessage, string> inboxRepository,
+                                IMongoBaseRepository<OutboxMessage, string> outboxRepository,
                                 OutboxOptions options,
                                 ILogger<MongoMessageOutbox> logger)
     {

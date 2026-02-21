@@ -12,7 +12,7 @@ using Genocs.Notifications.WebApi.Commands;
 using Genocs.Notifications.WebApi.Exceptions;
 using Genocs.Notifications.WebApi.Hubs;
 using Genocs.Notifications.WebApi.Services;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.Vault;
 using Genocs.Telemetry;
 using Genocs.WebApi;

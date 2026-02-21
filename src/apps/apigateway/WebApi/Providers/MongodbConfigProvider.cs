@@ -1,5 +1,5 @@
 ﻿using Genocs.APIGateway.WebApi.Configurations;
-using Genocs.Persistence.MongoDb;
+using Genocs.Persistence.MongoDB;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Driver;
 using Yarp.ReverseProxy.Configuration;

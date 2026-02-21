@@ -1,10 +1,10 @@
-﻿using Genocs.Persistence.MongoDb.Configurations;
-using Genocs.Persistence.MongoDb.Encryptions;
+﻿using Genocs.Persistence.MongoDB.Configurations;
+using Genocs.Persistence.MongoDB.Encryptions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
-namespace Genocs.Persistence.MongoDb;
+namespace Genocs.Persistence.MongoDB;
 
 /// <summary>
 /// The MongoDatabaseProvider.
@@ -27,14 +27,14 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
     /// <param name="options"></param>
     /// <param name="encrypOptions"></param>
     /// <exception cref="NullReferenceException">This exception happens in case mandatory data is missing.</exception>
-    public MongoDatabaseProvider(IOptions<MongoDbOptions> options, IOptions<MongoDbEncryptionOptions> encrypOptions)
+    public MongoDatabaseProvider(IOptions<MongoOptions> options, IOptions<MongoEncryptionOptions> encrypOptions)
     {
         if (options == null) throw new NullReferenceException(nameof(options));
-        MongoDbOptions dBSettings = options.Value;
+        MongoOptions dBSettings = options.Value;
 
         if (dBSettings == null) throw new NullReferenceException(nameof(dBSettings));
 
-        if (!MongoDbOptions.IsValid(dBSettings)) throw new InvalidOperationException($"{nameof(dBSettings)} is invalid");
+        if (!MongoOptions.IsValid(dBSettings)) throw new InvalidOperationException($"{nameof(dBSettings)} is invalid");
 
         MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(dBSettings.ConnectionString);
 

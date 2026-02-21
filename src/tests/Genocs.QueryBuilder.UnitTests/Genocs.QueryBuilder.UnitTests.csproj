@@ -31,12 +31,12 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
-        <ProjectReference Include="..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.QueryBuilder" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Genocs.Persistence.MongoDb.UnitTests": {
+    "Genocs.Persistence.MongoDB.UnitTests": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

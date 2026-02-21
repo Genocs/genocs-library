@@ -2,15 +2,15 @@ using Genocs.Common.CQRS.Queries;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Mongo.Documents;
 using Genocs.Identities.Application.Queries;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
 
 namespace Genocs.Identities.Application.Mongo.Queries.Handlers;
 
 public class GetUserHandler : IQueryHandler<GetUser, UserDetailsDto>
 {
-    private readonly IMongoDbBaseRepository<UserDocument, Guid> _userRepository;
+    private readonly IMongoBaseRepository<UserDocument, Guid> _userRepository;
 
-    public GetUserHandler(IMongoDbBaseRepository<UserDocument, Guid> userRepository)
+    public GetUserHandler(IMongoBaseRepository<UserDocument, Guid> userRepository)
     {
         _userRepository = userRepository;
     }

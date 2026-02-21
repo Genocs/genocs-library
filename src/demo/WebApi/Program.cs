@@ -4,7 +4,7 @@ using Genocs.Core.Builders;
 using Genocs.Library.Demo.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
 using Genocs.Metrics.Prometheus;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Telemetry;
 using Genocs.WebApi;

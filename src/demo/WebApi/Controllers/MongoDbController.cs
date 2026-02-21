@@ -1,15 +1,15 @@
 ﻿using System.Net.Mime;
 using Genocs.Core.Demo.Domain.Aggregates;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Library.Demo.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class MongoDbRepositoryController(IMongoDbRepository<User> userRepository) : ControllerBase
+public class MongoDbRepositoryController(IMongoRepository<User> userRepository) : ControllerBase
 {
-    private readonly IMongoDbRepository<User> _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+    private readonly IMongoRepository<User> _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
 
     /// <summary>
     /// The Get method is a simple endpoint that returns a string message indicating the name of the controller.

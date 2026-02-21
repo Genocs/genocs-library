@@ -31,5 +31,5 @@ public class TelemetryOptions
     /// <summary>
     /// MongoDB OpenTelemetry settings.
     /// </summary>
-    public MongoDbOptions? MongoDb { get; set; }
+    public MongoDbOptions? MongoDB { get; set; }
 }
