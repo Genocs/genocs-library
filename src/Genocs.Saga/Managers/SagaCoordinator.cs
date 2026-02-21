@@ -8,13 +8,9 @@ internal sealed class SagaCoordinator : ISagaCoordinator
     private readonly ISagaInitializer _initializer;
     private readonly ISagaProcessor _processor;
     private readonly ISagaPostProcessor _postProcessor;
-    private static readonly KeyedLocker Locker = new KeyedLocker();
+    private static readonly KeyedLocker Locker = new();
 
-    public SagaCoordinator(
-        ISagaSeeker seeker,
-        ISagaInitializer initializer,
-        ISagaProcessor processor,
-        ISagaPostProcessor postProcessor)
+    public SagaCoordinator(ISagaSeeker seeker, ISagaInitializer initializer, ISagaProcessor processor, ISagaPostProcessor postProcessor)
     {
         _seeker = seeker;
         _initializer = initializer;

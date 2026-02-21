@@ -25,9 +25,6 @@
   <Folder Name="/demo/Helloworld.WebApi/">
     <Project Path="src/demo/HelloWorld.WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/Saga.WebApi/">
-    <Project Path="src/demo/Saga.WebApi/Host.csproj" />
-  </Folder>
   <Folder Name="/demo/tests/">
     <Project Path="src/demo/ContractTests/ContractTests.csproj" />
   </Folder>

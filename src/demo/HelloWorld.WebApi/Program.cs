@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Library.Demo.HelloWorld.WebApi.Sagas;
 using Genocs.Logging;
+using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.Swagger;
@@ -26,27 +28,29 @@ builder
     .Build();
 
 // Add services to the container.
-builder.Services.AddControllers();
+var services = builder.Services;
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
+services
+    .AddSaga()
+    .AddCors(options =>
     {
-        builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
+        options.AddDefaultPolicy(builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    })
+    .AddControllers();
 
 // Override the default authorization policy
-builder.Services.AddAuthorizationBuilder()
+services.AddAuthorizationBuilder()
                 .AddPolicy("Reader", builder => builder.RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user")))
                 .AddPolicy("Reader2", builder => builder.RequireClaim(ClaimTypes.Role, "user"))
                 .AddPolicy("Reader3", builder => builder.RequireRole(["user"]))
-                .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))))
-                ;
+                .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))));
 
-//builder.Services.AddAuthorizationBuilder()
+//services.AddAuthorizationBuilder()
 //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
 //                    .RequireAuthenticatedUser()
 //                    .Build())
@@ -100,6 +104,54 @@ app.MapGet("/protected", () => "this is a protected endpoint")
 // with authorization policy
 app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
 app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
+
+// Saga - Start Transaction endpoint
+app.MapPost("/saga/start", (ISagaCoordinator sagaCoordinator) =>
+{
+    var context = SagaContext
+      .Create()
+      .WithSagaId(SagaId.NewSagaId())
+      .WithOriginator("Test")
+      .WithMetadata("key", "lulz")
+      .Build();
+
+    sagaCoordinator.ProcessAsync(new StartTransaction { Text = "Start transaction" }, context);
+    return Results.Ok(context.SagaId);
+}).WithTags("Saga");
+
+// Saga - Complete Transaction endpoint
+app.MapPost("/saga/complete/{sagaId}", (ILogger<SampleSaga> logger, ISagaCoordinator sagaCoordinator, string sagaId) =>
+{
+    var context = SagaContext
+      .Create()
+      .WithSagaId(sagaId)
+      .WithOriginator("Test")
+      .WithMetadata("key", "lulz")
+      .Build();
+
+    sagaCoordinator.ProcessAsync(
+        new CompleteTransaction { Text = "Complete transaction" },
+        onCompleted: (m, ctx) =>
+        {
+            logger?.LogInformation(
+                "Saga completed successfully with message: {MessageText} and metadata: {Metadata}",
+                m.Text,
+                ctx.Metadata.Select(md => $"{md.Key}={md.Value}").ToArray());
+
+            return Task.CompletedTask;
+        },
+        onRejected: (m, ctx) =>
+        {
+            logger?.LogError(
+                "Saga rejected with message: {MessageText} and metadata: {Metadata}",
+                m.Text,
+                ctx.Metadata.Select(md => $"{md.Key}={md.Value}").ToArray());
+
+            return Task.CompletedTask;
+        },
+        context: context);
+    return Results.Ok(context.SagaId);
+}).WithTags("Saga");
 
 await app.RunAsync();
 

@@ -1,6 +1,6 @@
 ﻿namespace Genocs.Saga;
 
-public struct SagaId
+public readonly struct SagaId
 {
     public string Id { get; }
 

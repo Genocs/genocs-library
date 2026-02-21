@@ -16,6 +16,7 @@
         <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
+        <ProjectReference Include="..\..\Genocs.Saga\Genocs.Saga.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
     </ItemGroup>
 
@@ -23,10 +24,16 @@
         <PackageReference Include="Genocs.Auth" Version="8.1.*" />
         <PackageReference Include="Genocs.Logging" Version="8.1.*" />
         <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />
+        <PackageReference Include="Genocs.Saga" Version="9.0.*" />
         <PackageReference Include="Genocs.WebApi.Swagger" Version="8.1.*" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+    </ItemGroup>
+    
 </Project>
