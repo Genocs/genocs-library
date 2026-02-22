@@ -5,9 +5,9 @@
         <PackageId>Genocs.Persistence.MongoDB</PackageId>
         <RootNamespace>Genocs.Persistence.MongoDB</RootNamespace>
         <AssemblyName>Genocs.Persistence.MongoDB</AssemblyName>
-        <Title>The Persistence MongoDB Library.</Title>
-        <Description>The Genocs Library .NET Core to be used with MongoDB as persistence datalayer.</Description>
-        <PackageTags>mongodb aggregate architecture boilerplate repository-patterns domain-driven-design dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs MongoDB persistence integration</Title>
+        <Description>MongoDB repository and persistence integration for Genocs applications.</Description>
+        <PackageTags>genocs persistence mongodb repository data-access</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

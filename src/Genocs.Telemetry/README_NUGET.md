@@ -1,43 +1,54 @@
-# The Genocs Library - OpenTelemetry components
+# Genocs.Telemetry
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.Telemetry.svg)](https://www.nuget.org/packages/Genocs.Telemetry/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.Telemetry.svg)](https://www.nuget.org/packages/Genocs.Telemetry/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-This package contains the components you can use to setup OpenTelemetry.
-The library is built to be used with .NET10, .NET9, .NET8.
+OpenTelemetry integration helpers for traces, metrics, and logs. Supports `net10.0`, `net9.0`, and `net8.0`.
 
+## Installation
 
-## Description
-
-OpenTelemetry is Open-Source widly adopted solution to implement three components.
-
-- Tracing
-- Metrics
-- Logging
+```bash
+dotnet add package Genocs.Telemetry
+```
 
 ## Getting Started
 
-To get started, you need to install the package and configure the settings.
-``` json
-  "telemetry": {
-    "enableTracing": true,
-    "enableMetrics": true,
-    "enableLogging": true
-  }
+Use this package to configure OpenTelemetry pipelines and exporters in Genocs services.
+
+Service registration:
+
+```csharp
+using Genocs.Telemetry;
+
+genocs.AddTelemetry();
 ```
 
+Configuration example:
+
+```json
+{
+  "app": {
+    "service": "My Service"
+  },
+  "telemetry": {
+    "exporter": {
+      "enabled": true,
+      "otlpEndpoint": "http://localhost:4317"
+    }
+  }
+}
+```
+
+## Main Entry Points
+
+- `AddTelemetry`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

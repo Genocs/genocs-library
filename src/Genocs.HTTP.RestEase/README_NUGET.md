@@ -1,30 +1,26 @@
 # Genocs.HTTP.RestEase
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.HTTP.RestEase.svg)](https://www.nuget.org/packages/Genocs.HTTP.RestEase/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.HTTP.RestEase.svg)](https://www.nuget.org/packages/Genocs.HTTP.RestEase/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-Genocs Enterprise Library - Genocs.HTTP.RestEase.
+RestEase integration for typed HTTP clients in Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
+## Installation
 
-## Overview
+```bash
+dotnet add package Genocs.HTTP.RestEase
+```
 
-This package contains a query builder that is agnostic about the persistence layer. The library is designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+## Getting Started
 
-## Description
-
-Persistence agnostic query builder service.
-
+Use this package to implement RestEase-based typed clients on top of Genocs HTTP abstractions.
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
+## Release Notes
 
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

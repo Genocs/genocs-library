@@ -1,34 +1,30 @@
-# The Genocs Library - Saga
-Genocs Enterprise Library - Genocs.Saga. This package contains an implementation of the saga pattern for .NET applications.
-The library is built to be used with .NET10, .NET9, .NET8.
+# Genocs.Saga.Integrations.MongoDB
 
-## Description
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-Saga NuGet package contains general purpose functionalities to be used on DDD services with saga pattern as the orchestration mechanism.
+MongoDB storage integration for Genocs saga state management. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Dependencies
+## Installation
 
-- **Genocs.Core**: 7.5.\*
-- **MongoDB.Driver**: 3.5.0
-- **MongoDB.Driver.Core.Extensions.DiagnosticSources**: 2.1.0
+```bash
+dotnet add package Genocs.Saga.Integrations.MongoDB
+```
 
-### Framework references
+## Getting Started
 
-- **NONE**
+Use this package to persist saga state and correlation data in MongoDB when used with `Genocs.Saga`.
 
+## Main Entry Points
+
+- `UseMongoPersistence`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

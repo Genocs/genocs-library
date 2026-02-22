@@ -1,31 +1,31 @@
-# .NET Message Brokers library
+# Genocs.MessageBrokers.Outbox
 
-This package contains a set of functionalities to use http client for microservice, the library is designed by Genocs even thought a lot of insight came from community.
-First of all I have to say thanks to devmentors
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-The libraries are built using .NET10, .NET9, .NET8.
+Outbox pattern abstractions for reliable message delivery. Supports `net10.0`, `net9.0`, and `net8.0`.
 
+## Installation
 
-## Description
-
-Core NuGet package contains Open Telemetry and logging useful for DDD service.
-
-
-### DataProvider Settings
-Following are the project settings needed to enable monitoring
-
-``` json
-
-
+```bash
+dotnet add package Genocs.MessageBrokers.Outbox
 ```
+
+## Getting Started
+
+Use this package to configure outbox processing and choose an in-memory or persistent outbox implementation.
+
+## Main Entry Points
+
+- `AddMessageOutbox`
+- `AddInMemory`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
+## Release Notes
 
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

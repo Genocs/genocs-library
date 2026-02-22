@@ -5,9 +5,9 @@
         <PackageId>Genocs.WebApi.Swagger</PackageId>
         <RootNamespace>Genocs.WebApi.Swagger</RootNamespace>
         <AssemblyName>Genocs.WebApi.Swagger</AssemblyName>
-        <Title>The web api Swagger library</Title>
-        <Description>The web api Swagger library</Description>
-        <PackageTags>openapi open api design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Web API OpenAPI support</Title>
+        <Description>Swagger/OpenAPI integration for documenting Genocs Web APIs.</Description>
+        <PackageTags>genocs webapi swagger openapi aspnetcore api-documentation</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

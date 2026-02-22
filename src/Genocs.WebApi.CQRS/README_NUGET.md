@@ -1,22 +1,32 @@
-# The Genocs Library - CQRS Web API components
+# Genocs.WebApi.CQRS
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.WebApi.CQRS.svg)](https://www.nuget.org/packages/Genocs.WebApi.CQRS/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.WebApi.CQRS.svg)](https://www.nuget.org/packages/Genocs.WebApi.CQRS/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-This package contains CQRS (Command Query Responsibility Segregation) pattern implementation for Web APIs designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+CQRS extensions for Genocs ASP.NET Core Web APIs. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Description
+## Installation
 
-WebApi CQRS NuGet package provides command and query handlers, dispatchers, and decorators for implementing CQRS pattern in Web API services.
+```bash
+dotnet add package Genocs.WebApi.CQRS
+```
+
+## Getting Started
+
+Use this package to expose CQRS dispatcher endpoints and optional public contracts endpoints in Web API hosts.
+
+## Main Entry Points
+
+- `AddInMemoryDispatcher`
+- `UseDispatcherEndpoints`
+- `UsePublicContracts`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.ttps://genocs-blog.netlify.app/).
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Release notes
+## Release Notes
 
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

@@ -1,0 +1,30 @@
+src/Genocs.Auth/README_NUGET.md|Genocs.Auth|net10.0;net9.0;net8.0|Authentication and authorization helpers for ASP.NET Core applications.|AddJwt,AddOpenIdJwt,AddPrivateKeyJwt,UseAccessTokenValidator
+src/Genocs.Common/README_NUGET.md|Genocs.Common|net10.0;net9.0;net8.0|Shared primitives and utilities used across Genocs packages.|
+src/Genocs.Core/README_NUGET.md|Genocs.Core|net10.0;net9.0;net8.0|Core building blocks and abstractions for Genocs-based applications.|AddCommandHandlers,AddDispatchers,AddEventHandlers,AddGenocs,AddHandlers,AddInMemoryCommandDispatcher,AddInMemoryEventDispatcher,AddInMemoryQueryDispatcher,AddQueryHandlers,MapDefaultEndpoints,UseGenocs
+src/Genocs.Discovery.Consul/README_NUGET.md|Genocs.Discovery.Consul|net10.0;net9.0;net8.0|Consul-based service discovery integration for Genocs applications.|AddConsul,AddConsulHttpClient
+src/Genocs.HTTP.RestEase/README_NUGET.md|Genocs.HTTP.RestEase|net10.0;net9.0;net8.0|RestEase integration for typed HTTP clients in Genocs applications.|
+src/Genocs.HTTP/README_NUGET.md|Genocs.HTTP|net10.0;net9.0;net8.0|HTTP client abstractions and helpers for Genocs applications.|AddHttpClient
+src/Genocs.LoadBalancing.Fabio/README_NUGET.md|Genocs.LoadBalancing.Fabio|net10.0;net9.0;net8.0|Fabio load-balancing integration for service-to-service calls.|AddFabio,AddFabioHttpClient
+src/Genocs.Logging/README_NUGET.md|Genocs.Logging|net10.0;net9.0;net8.0|Logging abstractions and extensions for Genocs applications.|AddCommandHandlersLogging,AddCorrelationContextLogging,AddEventHandlersLogging,MapLogLevelHandler,UseLogging,UserCorrelationContextLogging
+src/Genocs.MessageBrokers.Outbox.MongoDB/README_NUGET.md|Genocs.MessageBrokers.Outbox.MongoDB|net10.0;net9.0;net8.0|MongoDB-backed implementation of the messaging outbox pattern.|AddMongo
+src/Genocs.MessageBrokers.Outbox/README_NUGET.md|Genocs.MessageBrokers.Outbox|net10.0;net9.0;net8.0|Outbox pattern abstractions for reliable message delivery.|AddInMemory,AddMessageOutbox
+src/Genocs.MessageBrokers.RabbitMQ/README_NUGET.md|Genocs.MessageBrokers.RabbitMQ|net10.0;net9.0;net8.0|RabbitMQ integration for Genocs messaging abstractions.|AddRabbitMQAsync,UseRabbitMQ
+src/Genocs.MessageBrokers/README_NUGET.md|Genocs.MessageBrokers|net10.0;net9.0;net8.0|Abstractions for message broker publishing and consuming.|AddServiceBusCommandDispatcher,AddServiceBusEventDispatcher
+src/Genocs.Metrics/README_NUGET.md|Genocs.Metrics|net10.0;net9.0;net8.0|Metrics abstractions and instrumentation contracts for Genocs applications.|AddPrometheus,UsePrometheus
+src/Genocs.Persistence.EFCore/README_NUGET.md|Genocs.Persistence.EFCore|net10.0;net9.0;net8.0|EF Core repository and persistence integration for Genocs applications.|AddEFCorePersistence
+src/Genocs.Persistence.MongoDB/README_NUGET.md|Genocs.Persistence.MongoDB|net10.0;net9.0;net8.0|MongoDB repository and persistence integration for Genocs applications.|AddMongo,AddMongoWithRegistration
+src/Genocs.Persistence.Redis/README_NUGET.md|Genocs.Persistence.Redis|net10.0;net9.0;net8.0|Redis-backed persistence helpers and repository integration.|AddRedis
+src/Genocs.QueryBuilder/README_NUGET.md|Genocs.QueryBuilder|net10.0;net9.0;net8.0|Fluent query builder abstractions independent from persistence providers.|
+src/Genocs.Saga.Integrations.MongoDB/README_NUGET.md|Genocs.Saga.Integrations.MongoDB|net10.0;net9.0;net8.0|MongoDB storage integration for Genocs saga state management.|UseMongoPersistence
+src/Genocs.Saga.Integrations.Redis/README_NUGET.md|Genocs.Saga.Integrations.Redis|net10.0;net9.0;net8.0|Redis storage integration for Genocs saga state management.|UseRedisPersistence
+src/Genocs.Saga/README_NUGET.md|Genocs.Saga|net10.0;net9.0;net8.0|Saga pattern abstractions for distributed workflow orchestration.|AddSaga
+src/Genocs.Secrets.AzureKeyVault/README_NUGET.md|Genocs.Secrets.AzureKeyVault|net10.0;net9.0;net8.0|Azure Key Vault integration for retrieving and managing application secrets.|UseAzureKeyVault,UseAzureKeyVaultWithCertificate,UseAzureKeyVaultWithCertificates
+src/Genocs.Secrets.Vault/README_NUGET.md|Genocs.Secrets.Vault|net10.0;net9.0;net8.0|HashiCorp Vault integration for retrieving and managing application secrets.|UseVault
+src/Genocs.Security/README_NUGET.md|Genocs.Security|net10.0;net9.0;net8.0|Security helpers for hashing, encryption, and related operations.|AddSecurity
+src/Genocs.ServiceBusAzure/README_NUGET.md|Genocs.ServiceBusAzure|net10.0;net9.0;net8.0|Azure Service Bus integration for messaging and transport workflows.|
+src/Genocs.Telemetry/README_NUGET.md|Genocs.Telemetry|net10.0;net9.0;net8.0|OpenTelemetry integration helpers for traces, metrics, and logs.|AddTelemetry
+src/Genocs.Tracing.Jaeger.RabbitMQ/README_NUGET.md|Genocs.Tracing.Jaeger.RabbitMQ|net10.0;net9.0;net8.0|Jaeger tracing integration for RabbitMQ-based messaging pipelines.|AddJaegerRabbitMqPlugin
+src/Genocs.WebApi.CQRS/README_NUGET.md|Genocs.WebApi.CQRS|net10.0;net9.0;net8.0|CQRS extensions for Genocs ASP.NET Core Web APIs.|AddInMemoryDispatcher,UseDispatcherEndpoints,UsePublicContracts
+src/Genocs.WebApi.Security/README_NUGET.md|Genocs.WebApi.Security|net10.0;net9.0;net8.0|Security extensions for authentication and authorization in Genocs Web APIs.|AddCertificateAuthentication,UseCertificateAuthentication
+src/Genocs.WebApi.Swagger/README_NUGET.md|Genocs.WebApi.Swagger|net10.0;net9.0;net8.0|Swagger/OpenAPI integration for documenting Genocs Web APIs.|AddSwaggerDocs,AddWebApiSwaggerDocs,UseSwaggerDocs
+src/Genocs.WebApi/README_NUGET.md|Genocs.WebApi|net10.0;net9.0;net8.0|ASP.NET Core Web API extensions and conventions for Genocs applications.|AddWebApi,UseAllForwardedHeaders,UseEndpoints,UseErrorHandler

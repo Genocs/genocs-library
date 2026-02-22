@@ -5,10 +5,10 @@
         <PackageId>Genocs.Common</PackageId>
         <RootNamespace>Genocs.Common</RootNamespace>
         <AssemblyName>Genocs.Common</AssemblyName>
-        <Title>The Genocs common components.</Title>
-        <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
+        <Title>Genocs Common primitives</Title>
+        <Description>Shared primitives and utilities used across Genocs packages.</Description>
         <Summary>The common components to build .NET Core projects along with Genocs Library.</Summary>
-        <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
+        <PackageTags>genocs common primitives abstractions shared</PackageTags>
     </PropertyGroup>
 
 </Project>

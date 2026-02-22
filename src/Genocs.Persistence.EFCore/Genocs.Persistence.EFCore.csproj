@@ -5,9 +5,9 @@
         <PackageId>Genocs.Persistence.EFCore</PackageId>
         <RootNamespace>Genocs.Persistence.EFCore</RootNamespace>
         <AssemblyName>Genocs.Persistence.EFCore</AssemblyName>
-        <Title>The Persistence EFCore Library.</Title>
-        <Description>The Genocs Library .NET Core to be used with EFCore as persistence datalayer.</Description>
-        <PackageTags>Entity Framework EF aggregate architecture boilerplate repository-patterns domain-driven-design dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs EF Core persistence integration</Title>
+        <Description>EF Core repository and persistence integration for Genocs applications.</Description>
+        <PackageTags>genocs persistence efcore entity-framework repository data-access</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

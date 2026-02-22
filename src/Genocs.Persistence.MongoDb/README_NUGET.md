@@ -1,52 +1,50 @@
-# The Genocs Library - Persistence MongoDB components
+# Genocs.Persistence.MongoDB
 
-Genocs Enterprise Library - Genocs.Persistence.MongoDB. This package contains a repository pattern implementation using MongoDB.
-The library is built to be used with .NET10, .NET9, .NET8.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+MongoDB repository and persistence integration for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-Persistence MongoDB NuGet package contains general purpose functionalities to be used on DDD services with MongoDB as the persistence data layer.
+## Installation
 
-## Dependencies
+```bash
+dotnet add package Genocs.Persistence.MongoDB
+```
 
-- **Genocs.Core**: 7.5.\*
-- **MongoDB.Driver**: 3.5.0
-- **MongoDB.Driver.Core.Extensions.DiagnosticSources**: 2.1.0
+## Getting Started
 
-### Framework references
+Use this package to configure MongoDB repositories and persistence registrations for Genocs services.
 
-- **NONE**
+Service registration:
 
-## MongoDB Convention
+```csharp
+using Genocs.Persistence.MongoDB.Extensions;
 
-- CamelCaseElementNameConvention(),
-- IgnoreExtraElementsConvention(true),
-- EnumRepresentationConvention(BsonType.String)
+genocs.AddMongoWithRegistration();
+```
 
-### DataProvider Settings
-
-Following is about how to setup **MongoDB**
+Configuration example:
 
 ```json
+{
   "mongoDb": {
-    "ConnectionString": "mongodb://localhost",
-    "Database": "demo_database",
-    "EnableTracing": false
+    "connectionString": "mongodb://localhost:27017",
+    "database": "genocs_db"
   }
+}
 ```
+
+## Main Entry Points
+
+- `AddMongo`
+- `AddMongoWithRegistration`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

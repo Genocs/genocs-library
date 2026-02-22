@@ -5,9 +5,9 @@
         <PackageId>Genocs.WebApi.CQRS</PackageId>
         <RootNamespace>Genocs.WebApi.CQRS</RootNamespace>
         <AssemblyName>Genocs.WebApi.CQRS</AssemblyName>
-        <Title>The web api CORS library</Title>
-        <Description>The web api CORS library</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Web API CQRS support</Title>
+        <Description>CQRS extensions for Genocs ASP.NET Core Web APIs.</Description>
+        <PackageTags>genocs webapi cqrs aspnetcore commands queries</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

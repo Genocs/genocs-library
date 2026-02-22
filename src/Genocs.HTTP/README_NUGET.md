@@ -1,46 +1,30 @@
-# .NET Core HTTP client library
+# Genocs.HTTP
 
-Genocs Enterprise Library - Genocs.HTTP.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Overview
+HTTP client abstractions and helpers for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-This package is part of the Genocs Enterprise Library - Genocs.HTTP.
+## Installation
 
-This package contains a set of functionalities to use http client for microservice, the library is designed by Genocs even thought a lot of insight came from community.
-
-The libraries are built using .NET10.
-
-## Description
-
-Core NuGet package http client implementation useful for for microservice architecture.
-
-## Support
-
-Please check the GitHub repository getting more info.
-
-### DataProvider Settings
-
-Following are the project settings needed to enable monitoring
-
-```json
-  "AppSettings": {
-    "ServiceName": "Demo WebApi",
-  },
-  "ConnectionStrings": {
-    "ApplicationInsights": ""
-  }
+```bash
+dotnet add package Genocs.HTTP
 ```
 
-## Documentation
+## Getting Started
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
+Use this package to provide the base HTTP abstraction layer for outbound service calls and client configuration in Genocs services.
+
+## Main Entry Points
+
+- `AddHttpClient`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Release notes
+## Release Notes
 
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

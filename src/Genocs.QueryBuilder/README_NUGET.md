@@ -1,24 +1,26 @@
-# .NET query builder library
+# Genocs.QueryBuilder
 
-This package contains a query builder that is agnostic about the persistence layer. The library is designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+Fluent query builder abstractions independent from persistence providers. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-Persistence agnostic query builder service.
+## Installation
 
+```bash
+dotnet add package Genocs.QueryBuilder
+```
+
+## Getting Started
+
+Use this package to compose provider-agnostic query expressions in application and repository layers.
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

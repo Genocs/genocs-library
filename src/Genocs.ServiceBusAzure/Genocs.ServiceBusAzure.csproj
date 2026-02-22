@@ -5,9 +5,9 @@
         <PackageId>Genocs.ServiceBusAzure</PackageId>
         <RootNamespace>Genocs.ServiceBusAzure</RootNamespace>
         <AssemblyName>Genocs.ServiceBusAzure</AssemblyName>
-        <Title>The low level library to use Azure Service Bus.</Title>
-        <Description>The low level library to use Azure Service Bus.</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Azure Service Bus integration</Title>
+        <Description>Azure Service Bus integration for messaging and transport workflows.</Description>
+        <PackageTags>genocs azure-service-bus servicebus messaging integration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

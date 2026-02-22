@@ -5,9 +5,9 @@
         <PackageId>Genocs.QueryBuilder</PackageId>
         <RootNamespace>Genocs.QueryBuilder</RootNamespace>
         <AssemblyName>Genocs.QueryBuilder</AssemblyName>
-        <Title>The Persistence Agnostic Query Builder Library.</Title>
-        <Description>The persistence agnostic query builder library.</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs persistence-agnostic query builder</Title>
+        <Description>Fluent query builder abstractions independent from persistence providers.</Description>
+        <PackageTags>genocs query-builder persistence abstractions fluent-query</PackageTags>
     </PropertyGroup>
 
 </Project>

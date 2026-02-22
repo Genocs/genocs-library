@@ -5,9 +5,9 @@
         <PackageId>Genocs.MessageBrokers.RabbitMQ</PackageId>
         <RootNamespace>Genocs.MessageBrokers.RabbitMQ</RootNamespace>
         <AssemblyName>Genocs.MessageBrokers.RabbitMQ</AssemblyName>
-        <Title>The message brokers RabbitMQ interface library useful to build .NET Core projects.</Title>
-        <Description>The message brokers RabbitMQ outbox interface library useful to build .NET Core projects.</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs RabbitMQ messaging integration</Title>
+        <Description>RabbitMQ integration for Genocs messaging abstractions.</Description>
+        <PackageTags>genocs messaging rabbitmq amqp integration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

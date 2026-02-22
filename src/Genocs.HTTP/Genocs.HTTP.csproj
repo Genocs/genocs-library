@@ -5,9 +5,9 @@
         <PackageId>Genocs.HTTP</PackageId>
         <RootNamespace>Genocs.HTTP</RootNamespace>
         <AssemblyName>Genocs.HTTP</AssemblyName>
-        <Title>The http client library.</Title>
-        <Description>The http client library.</Description>
-        <PackageTags>http http-client genocs microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs HTTP client abstractions</Title>
+        <Description>HTTP client abstractions and helpers for Genocs applications.</Description>
+        <PackageTags>genocs http http-client rest integration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

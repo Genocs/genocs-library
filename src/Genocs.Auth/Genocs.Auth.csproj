@@ -5,9 +5,9 @@
         <PackageId>Genocs.Auth</PackageId>
         <RootNamespace>Genocs.Auth</RootNamespace>
         <AssemblyName>Genocs.Auth</AssemblyName>
-        <Title>The Genocs authorization library.</Title>
-        <Description>The authorization library.</Description>
-        <PackageTags>authentication jwt genocs microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Auth for ASP.NET Core</Title>
+        <Description>Authentication and authorization helpers for ASP.NET Core applications.</Description>
+        <PackageTags>genocs auth authentication authorization jwt aspnetcore</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

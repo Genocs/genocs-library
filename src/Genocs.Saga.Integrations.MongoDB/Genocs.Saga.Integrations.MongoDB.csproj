@@ -5,9 +5,9 @@
         <PackageId>Genocs.Saga.Integrations.MongoDB</PackageId>
         <AssemblyName>Genocs.Saga.Integrations.MongoDB</AssemblyName>
         <PackageId>Genocs.Saga.Integrations.MongoDB</PackageId>
-        <Title>Genocs Saga Integrations MongoDB</Title>
-        <Description>Implementation of saga pattern Integration with MongoDB.</Description>
-        <PackageTags>saga saga-pattern microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs MongoDB saga integration</Title>
+        <Description>MongoDB storage integration for Genocs saga state management.</Description>
+        <PackageTags>genocs saga mongodb state-management orchestration</PackageTags>
     </PropertyGroup>
 
 

@@ -5,9 +5,9 @@
         <PackageId>Genocs.Saga</PackageId>
         <RootNamespace>Genocs.Saga</RootNamespace>
         <AssemblyName>Genocs.Saga</AssemblyName>
-        <Title>Genocs Saga</Title>
-        <Description>Implementation of saga pattern for .NET Core</Description>
-        <PackageTags>saga saga-pattern microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs saga orchestration abstractions</Title>
+        <Description>Saga pattern abstractions for distributed workflow orchestration.</Description>
+        <PackageTags>genocs saga orchestration workflow distributed-transactions</PackageTags>
     </PropertyGroup>
 
     <!-- InternalsVisibleTo for unit tests -->

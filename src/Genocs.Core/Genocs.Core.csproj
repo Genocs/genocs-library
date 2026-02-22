@@ -5,9 +5,9 @@
         <PackageId>Genocs.Core</PackageId>
         <RootNamespace>Genocs.Core</RootNamespace>
         <AssemblyName>Genocs.Core</AssemblyName>
-        <Title>The Genocs Library - Core components.</Title>
-        <Description>The core components to build .NET Core projects along with Genocs Library.</Description>
-        <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
+        <Title>Genocs Core components</Title>
+        <Description>Core building blocks and abstractions for Genocs-based applications.</Description>
+        <PackageTags>genocs core abstractions extensions dependency-injection</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

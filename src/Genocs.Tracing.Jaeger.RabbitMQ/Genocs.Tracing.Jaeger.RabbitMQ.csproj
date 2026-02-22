@@ -5,9 +5,9 @@
 		<PackageId>Genocs.Tracing.Jaeger.RabbitMQ</PackageId>
         <RootNamespace>Genocs.Tracing.Jaeger.RabbitMQ</RootNamespace>
         <AssemblyName>Genocs.Tracing.Jaeger.RabbitMQ</AssemblyName>   		
-		<Title>The load balacer based on Fabio library useful to build .NET Core projects.</Title>
-		<Description>The load balacer based on Fabio library useful to build .NET Core projects.</Description>
-		<PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+		<Title>Genocs Jaeger tracing for RabbitMQ</Title>
+		<Description>Jaeger tracing integration for RabbitMQ-based messaging pipelines.</Description>
+		<PackageTags>genocs tracing jaeger rabbitmq opentelemetry messaging</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">

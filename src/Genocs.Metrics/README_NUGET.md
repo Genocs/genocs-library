@@ -1,20 +1,31 @@
-# .NET Core Metrics library
+# Genocs.Metrics
 
-This package contains a set of support method to use Metrics.
-The libraries can be used on .NET10, .NET9, .NET8.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+Metrics abstractions and instrumentation contracts for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-Genocs.Metrics NuGet package contains general purpose functionalities to be used on DDD services.
+## Installation
 
+```bash
+dotnet add package Genocs.Metrics
+```
+
+## Getting Started
+
+Use this package to register Prometheus metrics instrumentation and expose metrics endpoints in ASP.NET Core applications.
+
+## Main Entry Points
+
+- `AddPrometheus`
+- `UsePrometheus`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
+## Release Notes
 
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

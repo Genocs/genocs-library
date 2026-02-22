@@ -5,9 +5,9 @@
         <PackageId>Genocs.Discovery.Consul</PackageId>
         <RootNamespace>Genocs.Discovery.Consul</RootNamespace>
         <AssemblyName>Genocs.Discovery.Consul</AssemblyName>
-        <Title>The service discovery library powered by Consul.</Title>
-        <Description>The service discovery library powered by Consul.</Description>
-        <PackageTags>service discovery service-discovery genocs microservice microservices solid solid-principles </PackageTags>
+        <Title>Genocs Consul service discovery</Title>
+        <Description>Consul-based service discovery integration for Genocs applications.</Description>
+        <PackageTags>genocs consul service-discovery discovery registration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

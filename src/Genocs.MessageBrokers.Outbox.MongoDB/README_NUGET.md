@@ -1,24 +1,30 @@
-# MongoDB Outbox for Genocs Message Brokers
+# Genocs.MessageBrokers.Outbox.MongoDB
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.MessageBrokers.Outbox.MongoDB.svg)](https://www.nuget.org/packages/Genocs.MessageBrokers.Outbox.MongoDB/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.MessageBrokers.Outbox.MongoDB.svg)](https://www.nuget.org/packages/Genocs.MessageBrokers.Outbox.MongoDB/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-This package contains a set of base functionalities designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+MongoDB-backed implementation of the messaging outbox pattern. Supports `net10.0`, `net9.0`, and `net8.0`.
 
+## Installation
 
-## Description
+```bash
+dotnet add package Genocs.MessageBrokers.Outbox.MongoDB
+```
 
-Core NuGet package contains general purpose functionalities to be used on DDD services.
+## Getting Started
 
+Use this package to persist outbox messages in MongoDB when using `Genocs.MessageBrokers.Outbox`.
+
+## Main Entry Points
+
+- `AddMongo`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
+## Release Notes
 
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

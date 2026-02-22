@@ -5,9 +5,9 @@
         <PackageId>Genocs.WebApi.Security</PackageId>
         <RootNamespace>Genocs.WebApi.Security</RootNamespace>
         <AssemblyName>Genocs.WebApi.Security</AssemblyName>
-        <Title>The web api Security library</Title>
-        <Description>The web api Security library</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Web API security support</Title>
+        <Description>Security extensions for authentication and authorization in Genocs Web APIs.</Description>
+        <PackageTags>genocs webapi security authentication authorization aspnetcore</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

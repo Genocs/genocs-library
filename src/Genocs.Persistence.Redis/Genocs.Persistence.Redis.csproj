@@ -5,9 +5,9 @@
         <PackageId>Genocs.Persistence.Redis</PackageId>
         <RootNamespace>Genocs.Persistence.Redis</RootNamespace>
         <AssemblyName>Genocs.Persistence.Redis</AssemblyName>
-        <Title>The Persistence Redis Library.</Title>
-        <Description>The library containing base repository pattern to build .NET Core projects.</Description>
-        <PackageTags>redis rediscache design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Redis persistence integration</Title>
+        <Description>Redis-backed persistence helpers and repository integration.</Description>
+        <PackageTags>genocs persistence redis repository caching</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

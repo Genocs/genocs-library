@@ -5,9 +5,9 @@
         <PackageId>Genocs.Telemetry</PackageId>
         <RootNamespace>Genocs.Telemetry</RootNamespace>
         <AssemblyName>Genocs.Telemetry</AssemblyName>
-        <Title>The Open Telemetry support library.</Title>
-        <Description>The Open Telemetry support library.</Description>
-        <PackageTags>open telemetry dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs OpenTelemetry integration</Title>
+        <Description>OpenTelemetry integration helpers for traces, metrics, and logs.</Description>
+        <PackageTags>genocs opentelemetry telemetry tracing metrics logging</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

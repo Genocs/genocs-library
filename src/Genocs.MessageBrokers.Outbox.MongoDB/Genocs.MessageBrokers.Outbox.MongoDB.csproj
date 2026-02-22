@@ -5,9 +5,9 @@
         <PackageId>Genocs.MessageBrokers.Outbox.MongoDB</PackageId>
         <RootNamespace>Genocs.MessageBrokers.Outbox.MongoDB</RootNamespace>
         <AssemblyName>Genocs.MessageBrokers.Outbox.MongoDB</AssemblyName>
-        <Title>The message brokers outbox MongoDB interface library useful to build .NET Core projects.</Title>
-        <Description>The message brokers MongoDB outbox interface library useful to build .NET Core projects.</Description>
-        <PackageTags>ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs MongoDB outbox integration</Title>
+        <Description>MongoDB-backed implementation of the messaging outbox pattern.</Description>
+        <PackageTags>genocs messaging outbox mongodb reliability</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

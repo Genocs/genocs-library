@@ -5,9 +5,9 @@
         <PackageId>Genocs.LoadBalancing.Fabio</PackageId>
         <RootNamespace>Genocs.LoadBalancing.Fabio</RootNamespace>
         <AssemblyName>Genocs.LoadBalancing.Fabio</AssemblyName>
-        <Title>The load balacer based on Fabio.</Title>
-        <Description>The load balacer based on Fabio.</Description>
-        <PackageTags>load balancer load-balancer design-patterns dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs Fabio load balancing</Title>
+        <Description>Fabio load-balancing integration for service-to-service calls.</Description>
+        <PackageTags>genocs fabio load-balancing routing service-discovery</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

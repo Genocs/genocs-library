@@ -5,9 +5,9 @@
         <PackageId>Genocs.Security</PackageId>
         <RootNamespace>Genocs.Security</RootNamespace>
         <AssemblyName>Genocs.Security</AssemblyName>
-        <Title>The Genocs Security library</Title>
-        <Description>The Genocs Security library</Description>
-        <PackageTags>security hashing encrypt decrypt dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs security primitives</Title>
+        <Description>Security helpers for hashing, encryption, and related operations.</Description>
+        <PackageTags>genocs security hashing encryption cryptography</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

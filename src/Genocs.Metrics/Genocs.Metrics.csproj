@@ -5,9 +5,9 @@
         <PackageId>Genocs.Metrics</PackageId>
         <RootNamespace>Genocs.Metrics</RootNamespace>
         <AssemblyName>Genocs.Metrics</AssemblyName>
-        <Title>The metrics interface library.</Title>
-        <Description>The metrics interface library.</Description>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
+        <Title>Genocs metrics abstractions</Title>
+        <Description>Metrics abstractions and instrumentation contracts for Genocs applications.</Description>
+        <PackageTags>genocs metrics observability instrumentation telemetry</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

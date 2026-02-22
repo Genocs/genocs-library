@@ -1,32 +1,31 @@
-# The Genocs Library - MessageBrokers components
+# Genocs.MessageBrokers
 
-Genocs Enterprise Library - Genocs.MessageBrokers. This package contains message broker interfaces and abstractions.
-The library is built to be used with .NET10, .NET9, .NET8.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+Abstractions for message broker publishing and consuming. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-MessageBrokers NuGet package contains interfaces and abstractions for message broker implementations to be used in DDD services.
+## Installation
 
-## Dependencies
+```bash
+dotnet add package Genocs.MessageBrokers
+```
 
-- **Genocs.Core**: 7.5.\*
+## Getting Started
 
-### Framework references
+Use this package to integrate broker-agnostic command and event dispatching abstractions in Genocs services.
 
-- **NONE**
+## Main Entry Points
+
+- `AddServiceBusCommandDispatcher`
+- `AddServiceBusEventDispatcher`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

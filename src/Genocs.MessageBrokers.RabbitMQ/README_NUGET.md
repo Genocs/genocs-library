@@ -1,27 +1,30 @@
-# RabbitMQ Message Broker for Genocs Message Brokers
+# Genocs.MessageBrokers.RabbitMQ
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.MessageBrokers.RabbitMQ.svg)](https://www.nuget.org/packages/Genocs.MessageBrokers.RabbitMQ/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.MessageBrokers.RabbitMQ.svg)](https://www.nuget.org/packages/Genocs.MessageBrokers.RabbitMQ/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-This package contains RabbitMQ message broker integration functionalities designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+RabbitMQ integration for Genocs messaging abstractions. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Description
+## Installation
 
-RabbitMQ Message Broker NuGet package provides message queuing, publish/subscribe patterns, and reliable message delivery for distributed systems and microservices architectures.
+```bash
+dotnet add package Genocs.MessageBrokers.RabbitMQ
+```
 
+## Getting Started
+
+Use this package to connect Genocs message broker abstractions to RabbitMQ transports and conventions.
+
+## Main Entry Points
+
+- `UseRabbitMQ`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

@@ -5,9 +5,9 @@
         <PackageId>Genocs.Saga.Integrations.Redis</PackageId>
         <AssemblyName>Genocs.Saga.Integrations.Redis</AssemblyName>
         <PackageId>Genocs.Saga.Integrations.Redis</PackageId>
-        <Title>Genocs Saga Integrations Redis</Title>
-        <PackageTags>saga redis</PackageTags>
-        <Description>Implementation of saga pattern Integration with Redis.</Description>
+        <Title>Genocs Redis saga integration</Title>
+        <Description>Redis storage integration for Genocs saga state management.</Description>
+        <PackageTags>genocs saga redis state-management orchestration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

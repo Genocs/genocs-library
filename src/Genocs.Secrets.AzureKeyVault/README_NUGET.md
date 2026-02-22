@@ -1,35 +1,32 @@
-# The Genocs Library - Azure Key Vault integration
+# Genocs.Secrets.AzureKeyVault
 
-This package contains a support function to read secret variable from Azure Key Vault.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+Azure Key Vault integration for retrieving and managing application secrets. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-This package contains a support function to read secret variable from Azure Key Vault.
+## Installation
 
+```bash
+dotnet add package Genocs.Secrets.AzureKeyVault
+```
 
-## Dependencies
+## Getting Started
 
-- **Genocs.Core**: 7.2.*
-- **Azure.Extensions.AspNetCore.Configuration.Secrets**: 1.4.0
-- **Azure.Identity**: 1.13.2
+Use this package to load secrets from Azure Key Vault into your host/application configuration pipeline.
 
+## Main Entry Points
 
-### Framework references
-- NONE
+- `UseAzureKeyVault`
+- `UseAzureKeyVaultWithCertificate`
+- `UseAzureKeyVaultWithCertificates`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

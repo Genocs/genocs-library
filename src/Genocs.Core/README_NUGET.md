@@ -1,39 +1,55 @@
-# The Genocs Library - Core components
+# Genocs.Core
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-Genocs Enterprise Library - Genocs.Core. This package contains a set of base functionalities to be used across the framework.
-The library is built to be used with .NET10, .NET9, .NET8.
+Core building blocks and abstractions for Genocs-based applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Description
+## Installation
 
-Core NuGet package contains general purpose functionalities to be used on DDD services.
+```bash
+dotnet add package Genocs.Core
+```
 
-## Dependencies
+## Getting Started
 
-- **Genocs.Common**: 7.5.\*
-- **Ardalis.Specification**: 9.3.1
-- **Spectre.Console**: 0.54.0
-- **MediatR.Contracts**: 2.0.1
-- **Scrutor**: 6.1.0
+Use this package to bootstrap core Genocs services and in-memory CQRS dispatching/handler registration for modular applications.
 
-### Framework references
+Service registration:
 
-- **Microsoft.AspNetCore.App**
+```csharp
+using Genocs.Core.Builders;
+
+var genocs = builder.AddGenocs();
+genocs.AddDispatchers();
+```
+
+Pipeline setup:
+
+```csharp
+app.UseGenocs();
+```
+
+## Main Entry Points
+
+- `AddGenocs`
+- `AddHandlers`
+- `AddDispatchers`
+- `AddCommandHandlers`
+- `AddQueryHandlers`
+- `AddEventHandlers`
+- `AddInMemoryCommandDispatcher`
+- `AddInMemoryQueryDispatcher`
+- `AddInMemoryEventDispatcher`
+- `MapDefaultEndpoints`
+- `UseGenocs`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://learn.fiscanner.net/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases
