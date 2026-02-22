@@ -2,10 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <PackageId>Genocs.Library.Demo.Domain</PackageId>
         <RootNamespace>Genocs.Library.Demo.Domain</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Domain</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

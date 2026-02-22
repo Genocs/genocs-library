@@ -2,13 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <PackageId>Genocs.Orders.WebApi</PackageId>
         <RootNamespace>Genocs.Orders.WebApi</RootNamespace>
         <AssemblyName>Genocs.Orders.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
         <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

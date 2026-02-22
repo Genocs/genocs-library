@@ -4,7 +4,6 @@
         <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>Genocs.Saga.UnitTests</RootNamespace>
         <AssemblyName>Genocs.Saga.UnitTests</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

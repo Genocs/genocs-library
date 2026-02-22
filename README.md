@@ -730,6 +730,77 @@ Upon installation you can use the makefile to build, run, deploy the application
 make build
 ```
 
+## **_Test Suite_**
+
+The test suite is composed by unit tests, integration tests and end to end tests.
+
+Test are important to ensure the quality of the code and to avoid regressions, they are also useful to document the code and to show how to use the library in a real application.
+
+The repo use following testing libraries:
+- [xUnit](https://xunit.net/)
+- [Moq](https://github.com/moq/moq4)
+- [FluentAssertions](https://fluentassertions.com/)
+- [Shouldly](https://github.com/shouldly/shouldly)
+- [NSubstitute](https://nsubstitute.github.io/)
+- [Testcontainers](https://github.com/testcontainers/testcontainers-dotnet)
+- [Reqnroll](https://docs.reqnroll.net/)
+
+Why use multiple libraries for testing? Each library has its own strengths and weaknesses, by using multiple libraries we can leverage the strengths of each library and have a more comprehensive test suite. Take a look at the documentation to understand which library is best for your use case.
+
+| Library | Tag | Description |
+| --- | --- | --- |
+| **xUnit** | Unit Testing | A free, open-source, community-focused unit testing tool for the .NET Framework. |
+| **Moq** | Mocking | A popular mocking library for .NET that allows you to create mock objects for unit testing. |
+| **FluentAssertions** | Assertions | A library that provides a fluent syntax for writing assertions in unit tests. |
+| **Shouldly** | Assertions | A library that provides a more readable syntax for writing assertions in unit tests. |
+| **NSubstitute** | Mocking | A friendly substitute for .NET mocking libraries that allows you to create mock objects for unit testing. |
+| **Testcontainers** | Integration Testing | A library that provides a way to use Docker containers for integration testing in .NET. |
+| **Reqnroll** | End-to-End Testing | A library that provides a way to write end-to-end tests for REST APIs in .NET. |
+
+
+
+Under evalutation to be added:
+- [Respawn](https://github.com/jbogard/Respawn)
+
+| Library | Tag | Description |
+| --- | --- | --- |
+| **Respawn** | Integration Testing | A library that provides a way to reset the state of a database for integration testing in .NET. |
+
+
+To run the tests you can use the command below:
+
+```bash
+# Run all the tests
+make test
+# Run unit tests
+make test-unit
+# Run integration tests
+make test-integration
+# Run end to end tests
+make test-e2e
+```
+
+> NOTE:
+> If you need to make available internal methods to the test projects, you can use the attribute `InternalsVisibleTo` inside the test project you want to use and specify the name of the project you want to test as parameter.
+
+Add the following line inside the project you want to test:
+```csharp
+[assembly: InternalsVisibleTo("Genocs.UsersService.Tests.Unit")]
+```
+or you can update the csproj file by adding the following property:
+
+Add the following lines inside the csproj file of the project you want to test:
+```xml
+  <!-- InternalsVisibleTo for unit tests -->
+  <ItemGroup>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+          <_Parameter1>Genocs.Saga.UnitTests</_Parameter1>
+      </AssemblyAttribute>
+  </ItemGroup>
+```
+
+
+
 ## **_MCP Servers_**
 
 This repository contains support for MCP servers to be used along with VS Code.
@@ -794,6 +865,3 @@ Become a financial contributor and help me sustain the project. [Support the Pro
 <a href="https://opencollective.com/genocs"><img src="https://opencollective.com/genocs/individuals.svg?width=890"></a>
 
 ## Acknowledgements
-
-- [devmentors](https://github.com/devmentors)
-- [abp](https://github.com/abpframework)

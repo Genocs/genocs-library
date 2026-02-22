@@ -4,7 +4,6 @@
         <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>Genocs.QueryBuilder.UnitTests</RootNamespace>
         <AssemblyName>Genocs.QueryBuilder.UnitTests</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

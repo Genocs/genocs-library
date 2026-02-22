@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>Genocs.Persistence.MongoDB.UnitTests</RootNamespace>
-        <AssemblyName>Genocs.Persistence.MongoDB.UnitTests</AssemblyName>        
-        <IsPublishable>false</IsPublishable>
+        <AssemblyName>Genocs.Persistence.MongoDB.UnitTests</AssemblyName>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>Genocs</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

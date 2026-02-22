@@ -2,14 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <PackageId>Genocs.Library.Demo.HelloWorld.WebApi</PackageId>
         <RootNamespace>Genocs.Library.Demo.HelloWorld.WebApi</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.HelloWorld.WebApi</AssemblyName>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>Genocs</UserSecretsId>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
+        <UserSecretsId>Genocs</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Saga;
 
+
 public interface ISagaBuilder
 {
     IServiceCollection Services { get; }
