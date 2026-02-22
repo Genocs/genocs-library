@@ -5,7 +5,7 @@ public class RabbitMQOptions
     /// <summary>
     /// Default section name.
     /// </summary>
-    public const string Position = "rabbitMq";
+    public const string Position = "rabbitmq";
 
     public string? ConnectionName { get; set; }
     public IEnumerable<string>? HostNames { get; set; }
