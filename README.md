@@ -444,7 +444,10 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     },
     "azure": {
       "enabled": false,
-      "connectionString": ""
+      "enableTracing": false,
+      "enableMetrics": false,
+      "enableLogging": false,
+      "connectionString": "InstrumentationKey=<<your_istrumentation_key>>;IngestionEndpoint=https://<<your_region>>.in.applicationinsights.azure.com/;LiveEndpoint=https://<<your_region>>.livediagnostics.monitor.azure.com/;ApplicationId=<<your_application_id>>"
     },
     "tags": {}
   },
@@ -479,7 +482,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "outboxCollection": "outbox",
     "disableTransactions": false
   },
-  "rabbitMq": {
+  "rabbitmq": {
     "connectionName": "users-service",
     "retries": 3,
     "retryInterval": 2,

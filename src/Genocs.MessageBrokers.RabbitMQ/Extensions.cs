@@ -22,7 +22,7 @@ namespace Genocs.MessageBrokers.RabbitMQ;
 /// </summary>
 public static class Extensions
 {
-    private const string SectionName = "rabbitMq";
+    private const string SectionName = "rabbitmq";
     private const string RegistryName = "messageBrokers.rabbitmq";
 
     /// <summary>
