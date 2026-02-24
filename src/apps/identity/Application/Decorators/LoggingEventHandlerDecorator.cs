@@ -1,7 +1,7 @@
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Common.Types;
 using Genocs.Core.Extensions;
-using Genocs.HTTP;
+using Genocs.Http;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 

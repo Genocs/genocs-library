@@ -8,7 +8,7 @@ using Genocs.Identities.Application.Queries;
 using Genocs.Identities.Application.Services;
 using Genocs.Logging;
 using Genocs.WebApi;
-using Genocs.WebApi.CQRS;
+using Genocs.WebApi.Cqrs;
 using Serilog;
 
 StaticLogger.EnsureInitialized();

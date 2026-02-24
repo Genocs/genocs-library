@@ -1,7 +1,7 @@
-namespace Genocs.Common.CQRS.Events;
+namespace Genocs.Common.Cqrs.Events;
 
 /// <summary>
-/// Interface for rejected events in CQRS pattern.
+/// Interface for rejected events in Cqrs pattern.
 /// </summary>
 public interface IRejectedEvent : IEvent
 {

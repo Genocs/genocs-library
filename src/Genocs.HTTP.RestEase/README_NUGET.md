@@ -1,18 +1,18 @@
-# Genocs.HTTP.RestEase
+# Genocs.Http.RestEase
 
 ![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-RestEase integration for typed HTTP clients in Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
+RestEase integration for typed Http clients in Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
 ## Installation
 
 ```bash
-dotnet add package Genocs.HTTP.RestEase
+dotnet add package Genocs.Http.RestEase
 ```
 
 ## Getting Started
 
-Use this package to implement RestEase-based typed clients on top of Genocs HTTP abstractions.
+Use this package to implement RestEase-based typed clients on top of Genocs Http abstractions.
 
 ## Support
 

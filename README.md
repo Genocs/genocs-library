@@ -529,7 +529,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "instance": "users-service:",
     "database": 0
   },
-  "swagger": {
+  "openapi": {
     "enabled": false,
     "reDocEnabled": false,
     "name": "v1",

@@ -16,11 +16,11 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.MessageBrokers\Genocs.MessageBrokers.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Security\Genocs.Security.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
@@ -29,11 +29,11 @@
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
         <PackageReference Include="Genocs.Auth" Version="8.1.*" />
         <PackageReference Include="Genocs.Logging" Version="8.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers" Version="8.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="8.1.*" />
+        <PackageReference Include="Genocs.Messaging" Version="8.1.*" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="8.1.*" />
         <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
         <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="8.1.*" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="8.1.*" />
         <PackageReference Include="Genocs.Security" Version="8.1.*" />
         <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />
         <PackageReference Include="Genocs.WebApi" Version="8.1.*" />

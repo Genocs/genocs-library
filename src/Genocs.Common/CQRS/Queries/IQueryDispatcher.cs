@@ -1,4 +1,4 @@
-﻿namespace Genocs.Common.CQRS.Queries;
+﻿namespace Genocs.Common.Cqrs.Queries;
 
 /// <summary>
 /// The query dispatcher interface.

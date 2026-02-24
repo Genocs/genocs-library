@@ -1,4 +1,4 @@
-namespace Genocs.HTTP.RestEase.Configurations;
+namespace Genocs.Http.RestEase.Configurations;
 
 public interface IRestEaseOptionsBuilder
 {

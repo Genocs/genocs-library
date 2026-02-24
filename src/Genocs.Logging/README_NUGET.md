@@ -12,7 +12,7 @@ dotnet add package Genocs.Logging
 
 ## Getting Started
 
-Use this package to wire structured logging, CQRS handler logging behaviors, and correlation-aware middleware.
+Use this package to wire structured logging, Cqrs handler logging behaviors, and correlation-aware middleware.
 
 ## Main Entry Points
 

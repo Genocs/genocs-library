@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-        <PackageId>Genocs.HTTP</PackageId>
-        <RootNamespace>Genocs.HTTP</RootNamespace>
-        <AssemblyName>Genocs.HTTP</AssemblyName>
-        <Title>Genocs HTTP client abstractions</Title>
-        <Description>HTTP client abstractions and helpers for Genocs applications.</Description>
+        <PackageId>Genocs.Http</PackageId>
+        <RootNamespace>Genocs.Http</RootNamespace>
+        <AssemblyName>Genocs.Http</AssemblyName>
+        <Title>Genocs Http client abstractions</Title>
+        <Description>Http client abstractions and helpers for Genocs applications.</Description>
         <PackageTags>genocs http http-client rest integration</PackageTags>
     </PropertyGroup>
 

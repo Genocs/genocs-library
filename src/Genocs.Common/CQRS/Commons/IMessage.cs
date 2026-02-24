@@ -1,6 +1,6 @@
-﻿namespace Genocs.Common.CQRS.Commons;
+﻿namespace Genocs.Common.Cqrs.Commons;
 
 /// <summary>
-/// The message interface definition for CQRS messages, such as commands and events.
+/// The message interface definition for Cqrs messages, such as commands and events.
 /// </summary>
 public interface IMessage;

@@ -1,4 +1,4 @@
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
 /// Provides an implementation of the ICorrelationIdFactory interface that always returns null, indicating that no

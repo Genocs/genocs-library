@@ -1,4 +1,4 @@
-using Genocs.Common.CQRS.Queries;
+using Genocs.Common.Cqrs.Queries;
 using Genocs.Identities.Application.DTO;
 
 namespace Genocs.Identities.Application.Queries;

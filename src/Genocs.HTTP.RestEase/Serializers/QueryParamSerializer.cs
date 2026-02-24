@@ -1,7 +1,7 @@
 ﻿using RestEase;
 using System.Collections;
 
-namespace Genocs.HTTP.RestEase.Serializers;
+namespace Genocs.Http.RestEase.Serializers;
 
 internal sealed class QueryParamSerializer : RequestQueryParamSerializer
 {

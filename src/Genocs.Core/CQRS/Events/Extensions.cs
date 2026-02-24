@@ -1,13 +1,13 @@
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Events.Dispatchers;
+using Genocs.Core.Cqrs.Events.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.CQRS.Events;
+namespace Genocs.Core.Cqrs.Events;
 
 /// <summary>
-/// CQRS events extensions.
+/// Cqrs events extensions.
 /// </summary>
 public static class Extensions
 {

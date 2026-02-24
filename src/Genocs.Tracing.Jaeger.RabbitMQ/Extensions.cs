@@ -1,4 +1,4 @@
-using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Tracing.Jaeger.RabbitMQ.Plugins;
 
 namespace Genocs.Tracing.Jaeger.RabbitMQ;

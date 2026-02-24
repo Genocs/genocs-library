@@ -1,4 +1,4 @@
-﻿using Genocs.Metrics.Prometheus.Options;
+﻿using Genocs.Metrics.Prometheus.Configurations;
 using Microsoft.AspNetCore.Http;
 
 namespace Genocs.Metrics.Prometheus.Internals;

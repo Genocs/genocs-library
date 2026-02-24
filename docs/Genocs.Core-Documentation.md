@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Genocs.Core** is the core implementation library that extends **Genocs.Common** with concrete implementations, utility classes, and the Genocs application builder infrastructure. It provides ready-to-use base classes, dispatchers, extensions, and tools that accelerate development of enterprise applications following DDD, CQRS, and clean architecture principles.
+**Genocs.Core** is the core implementation library that extends **Genocs.Common** with concrete implementations, utility classes, and the Genocs application builder infrastructure. It provides ready-to-use base classes, dispatchers, extensions, and tools that accelerate development of enterprise applications following DDD, Cqrs, and clean architecture principles.
 
 [![NuGet](https://img.shields.io/nuget/v/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
@@ -19,7 +19,7 @@
 
 - **Genocs Builder**: Fluent API for application configuration
 - **Base Entity Classes**: Concrete entity and aggregate implementations
-- **CQRS Dispatchers**: Command, query, and event dispatcher implementations
+- **Cqrs Dispatchers**: Command, query, and event dispatcher implementations
 - **Domain Events**: Base domain event classes
 - **Repository Base**: Base repository implementation with Dapper support
 - **Extension Methods**: Rich set of utility extensions
@@ -338,7 +338,7 @@ Configures automatic repository registration:
 )]
 ```
 
-### 4. CQRS Dispatchers
+### 4. Cqrs Dispatchers
 
 Complete implementation of command, query, and event dispatching.
 
@@ -557,7 +557,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Create Genocs builder
 var genocsBuilder = builder.Services.AddGenocs();
 
-// Register CQRS components
+// Register Cqrs components
 genocsBuilder.AddCommandHandlers();
 genocsBuilder.AddQueryHandlers();
 genocsBuilder.AddEventHandlers();
@@ -599,7 +599,7 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 }
 ```
 
-### CQRS Implementation
+### Cqrs Implementation
 
 **Command:**
 ```csharp
@@ -644,7 +644,7 @@ public class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderDto>
 3. Use specifications for complex queries
 4. Implement `IDapperRepository` for performance-critical queries
 
-### CQRS Best Practices
+### Cqrs Best Practices
 
 1. Separate command and query models
 2. Validate commands before execution
@@ -670,7 +670,7 @@ public class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderDto>
 
 - **Genocs.Persistence.MongoDB**: MongoDB repository implementations
 - **Genocs.Persistence.EFCore**: Entity Framework Core support
-- **Genocs.MessageBrokers.RabbitMQ**: RabbitMQ integration for events
+- **Genocs.Messaging.RabbitMQ**: RabbitMQ integration for events
 - **Genocs.WebApi**: Web API utilities and middleware
 - **Genocs.Logging**: Structured logging integration
 - **Genocs.Telemetry**: Observability and tracing

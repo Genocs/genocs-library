@@ -1,5 +1,5 @@
-﻿using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
+﻿using Genocs.Http;
+using Genocs.Http.Configurations;
 using Genocs.Library.Demo.WebApi.Configurations;
 using Genocs.Security;
 using Microsoft.Extensions.Options;

@@ -1,14 +1,14 @@
 using Genocs.Core.Builders;
-using Genocs.HTTP.Configurations;
+using Genocs.Http.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
 using System.ComponentModel;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
-/// The HTTP client extensions.
+/// The Http client extensions.
 /// </summary>
 public static class Extensions
 {
@@ -35,7 +35,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(clientName))
         {
-            throw new ArgumentException("HTTP client name cannot be empty.", nameof(clientName));
+            throw new ArgumentException("Http client name cannot be empty.", nameof(clientName));
         }
 
         var options = builder.GetOptions<HttpClientOptions>(sectionName);

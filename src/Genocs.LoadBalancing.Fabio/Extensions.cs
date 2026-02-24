@@ -2,8 +2,8 @@ using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
 using Genocs.Discovery.Consul.Configurations;
 using Genocs.Discovery.Consul.Models;
-using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
+using Genocs.Http;
+using Genocs.Http.Configurations;
 using Genocs.LoadBalancing.Fabio.Builders;
 using Genocs.LoadBalancing.Fabio.Configurations;
 using Genocs.LoadBalancing.Fabio.Http;
@@ -106,17 +106,13 @@ public static class Extensions
         return builder;
     }
 
-    public static void AddFabioHttpClient(
-                                            this IGenocsBuilder builder,
-                                            string clientName,
-                                            string serviceName)
-        => builder.Services
-                            .AddHttpClient<IHttpClient, FabioHttpClient>(clientName)
-                            .AddHttpMessageHandler(c => new FabioMessageHandler(c.GetRequiredService<FabioOptions>(), serviceName));
+    public static void AddFabioHttpClient(this IGenocsBuilder builder, string clientName, string serviceName)
+        => builder
+            .Services
+            .AddHttpClient<IHttpClient, FabioHttpClient>(clientName)
+            .AddHttpMessageHandler(c => new FabioMessageHandler(c.GetRequiredService<FabioOptions>(), serviceName));
 
-    private static void UpdateConsulRegistration(
-                                                    this IServiceCollection services,
-                                                    ServiceRegistration registration)
+    private static void UpdateConsulRegistration(this IServiceCollection services, ServiceRegistration registration)
     {
         var serviceDescriptor = services.FirstOrDefault(sd => sd.ServiceType == typeof(ServiceRegistration));
         services.Remove(serviceDescriptor);

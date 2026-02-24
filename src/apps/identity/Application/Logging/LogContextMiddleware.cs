@@ -1,4 +1,4 @@
-using Genocs.HTTP;
+using Genocs.Http;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 

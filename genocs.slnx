@@ -67,14 +67,14 @@
   <Project Path="src/Genocs.Common/Genocs.Common.csproj" />
   <Project Path="src/Genocs.Core/Genocs.Core.csproj" />
   <Project Path="src/Genocs.Discovery.Consul/Genocs.Discovery.Consul.csproj" />
-  <Project Path="src/Genocs.HTTP.RestEase/Genocs.HTTP.RestEase.csproj" />
-  <Project Path="src/Genocs.HTTP/Genocs.HTTP.csproj" />
+  <Project Path="src/Genocs.Http.RestEase/Genocs.Http.RestEase.csproj" />
+  <Project Path="src/Genocs.Http/Genocs.Http.csproj" />
   <Project Path="src/Genocs.LoadBalancing.Fabio/Genocs.LoadBalancing.Fabio.csproj" />
   <Project Path="src/Genocs.Logging/Genocs.Logging.csproj" />
-  <Project Path="src/Genocs.MessageBrokers.Outbox.MongoDB/Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
-  <Project Path="src/Genocs.MessageBrokers.Outbox/Genocs.MessageBrokers.Outbox.csproj" />
-  <Project Path="src/Genocs.MessageBrokers.RabbitMQ/Genocs.MessageBrokers.RabbitMQ.csproj" />
-  <Project Path="src/Genocs.MessageBrokers/Genocs.MessageBrokers.csproj" />
+  <Project Path="src/Genocs.Messaging.Outbox.MongoDB/Genocs.Messaging.Outbox.MongoDB.csproj" />
+  <Project Path="src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj" />
+  <Project Path="src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj" />
+  <Project Path="src/Genocs.Messaging/Genocs.Messaging.csproj" />
   <Project Path="src/Genocs.Metrics/Genocs.Metrics.csproj" />
   <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
   <Project Path="src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj" />
@@ -84,12 +84,12 @@
   <Project Path="src/Genocs.Saga.Integrations.Redis/Genocs.Saga.Integrations.Redis.csproj" />
   <Project Path="src/Genocs.Saga/Genocs.Saga.csproj" />
   <Project Path="src/Genocs.Secrets.AzureKeyVault/Genocs.Secrets.AzureKeyVault.csproj" />
-  <Project Path="src/Genocs.Secrets.Vault/Genocs.Secrets.Vault.csproj" />
+  <Project Path="src/Genocs.Secrets.HashicorpKeyVault/Genocs.Secrets.HashicorpKeyVault.csproj" />
   <Project Path="src/Genocs.Security/Genocs.Security.csproj" />
-  <Project Path="src/Genocs.ServiceBusAzure/Genocs.ServiceBusAzure.csproj" />
+  <Project Path="src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj" />
   <Project Path="src/Genocs.Telemetry/Genocs.Telemetry.csproj" />
-  <Project Path="src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj" />
+  <Project Path="src/Genocs.WebApi.Cqrs/Genocs.WebApi.Cqrs.csproj" />
   <Project Path="src/Genocs.WebApi.Security/Genocs.WebApi.Security.csproj" />
-  <Project Path="src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj" />
+  <Project Path="src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj" />
   <Project Path="src/Genocs.WebApi/Genocs.WebApi.csproj" />
 </Solution>

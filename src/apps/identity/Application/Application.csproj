@@ -13,13 +13,13 @@
         <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
         <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.HTTP\Genocs.HTTP.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.MessageBrokers.Outbox.MongoDB\Genocs.MessageBrokers.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Http\Genocs.Http.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Secrets.Vault\Genocs.Secrets.Vault.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.Swagger\Genocs.WebApi.Swagger.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.WebApi.Cqrs\Genocs.WebApi.Cqrs.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
@@ -28,17 +28,17 @@
         <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />
         <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="8.1.*" />
         <PackageReference Include="Genocs.Persistence.Redis" Version="8.1.*" />
-        <PackageReference Include="Genocs.HTTP" Version="8.1.*" />
-        <PackageReference Include="Genocs.MessageBrokers.Outbox.MongoDB" Version="8.1.*" />
+        <PackageReference Include="Genocs.Http" Version="8.1.*" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="8.1.*" />
         <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
         <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
-        <PackageReference Include="Genocs.Secrets.Vault" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi.Swagger" Version="8.1.*" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="8.1.*" />
+        <PackageReference Include="Genocs.WebApi.Cqrs" Version="8.1.*" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="8.1.*" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
     </ItemGroup>
 
 </Project>

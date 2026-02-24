@@ -1,4 +1,4 @@
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 internal class EmptyCorrelationContextFactory : ICorrelationContextFactory
 {

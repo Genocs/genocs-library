@@ -1,6 +1,6 @@
-using Genocs.HTTP.RestEase.Configurations;
+using Genocs.Http.RestEase.Configurations;
 
-namespace Genocs.HTTP.RestEase;
+namespace Genocs.Http.RestEase;
 
 public interface IRestEaseServiceBuilder
 {

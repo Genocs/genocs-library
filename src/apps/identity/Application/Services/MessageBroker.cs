@@ -1,9 +1,9 @@
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Core.Extensions;
-using Genocs.HTTP;
-using Genocs.MessageBrokers;
-using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Http;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.RabbitMQ;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

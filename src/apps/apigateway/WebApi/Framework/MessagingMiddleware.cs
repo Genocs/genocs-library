@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Genocs.APIGateway.WebApi.Configurations;
-using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.MessageBrokers.RabbitMQ.Conventions;
+using Genocs.Messaging.RabbitMQ;
+using Genocs.Messaging.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 

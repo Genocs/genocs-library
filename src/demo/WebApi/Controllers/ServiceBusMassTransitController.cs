@@ -23,7 +23,7 @@ public class ServiceBusMassTransitController : ControllerBase
 
     /// <summary>
     /// The Get method is a simple endpoint that returns a string message indicating the name of the controller.
-    /// It serves as a basic test to confirm that the controller is set up correctly and can respond to HTTP GET requests.
+    /// It serves as a basic test to confirm that the controller is set up correctly and can respond to Http GET requests.
     /// </summary>
     /// <returns>A string message indicating the name of the controller.</returns>
     [HttpGet]

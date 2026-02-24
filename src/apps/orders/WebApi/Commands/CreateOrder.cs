@@ -1,4 +1,4 @@
-using Genocs.Common.CQRS.Commands;
+using Genocs.Common.Cqrs.Commands;
 
 namespace Genocs.Orders.WebApi.Commands;
 

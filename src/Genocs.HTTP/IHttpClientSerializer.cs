@@ -1,12 +1,12 @@
-﻿namespace Genocs.HTTP;
+﻿namespace Genocs.Http;
 
 /// <summary>
 /// Defines methods for serializing objects to a string and deserializing objects from a stream, enabling conversion
-/// between object instances and their textual representations for HTTP communication.
+/// between object instances and their textual representations for Http communication.
 /// </summary>
 /// <remarks>Implementations should ensure that serialized data can be accurately reconstructed during
 /// deserialization. Consider performance and thread safety when handling large or complex objects. This interface is
-/// typically used to customize how HTTP request and response bodies are processed in client applications.</remarks>
+/// typically used to customize how Http request and response bodies are processed in client applications.</remarks>
 public interface IHttpClientSerializer
 {
     /// <summary>

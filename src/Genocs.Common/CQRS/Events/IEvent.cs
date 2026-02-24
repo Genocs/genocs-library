@@ -1,8 +1,8 @@
-using Genocs.Common.CQRS.Commons;
+using Genocs.Common.Cqrs.Commons;
 
-namespace Genocs.Common.CQRS.Events;
+namespace Genocs.Common.Cqrs.Events;
 
 /// <summary>
-/// The CQRS event interface that defines a generic event used for integration tasks.
+/// The Cqrs event interface that defines a generic event used for integration tasks.
 /// </summary>
 public interface IEvent : IMessage;

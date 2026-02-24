@@ -12,7 +12,7 @@ dotnet add package Genocs.Core
 
 ## Getting Started
 
-Use this package to bootstrap core Genocs services and in-memory CQRS dispatching/handler registration for modular applications.
+Use this package to bootstrap core Genocs services and in-memory Cqrs dispatching/handler registration for modular applications.
 
 Service registration:
 

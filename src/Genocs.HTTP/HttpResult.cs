@@ -1,4 +1,4 @@
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 public class HttpResult<T>(T? result, HttpResponseMessage response)
 {

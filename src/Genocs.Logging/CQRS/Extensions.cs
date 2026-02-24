@@ -1,13 +1,13 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Genocs.Common.CQRS.Commands;
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Core.Builders;
-using Genocs.Logging.CQRS.Decorators;
+using Genocs.Logging.Cqrs.Decorators;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 
-namespace Genocs.Logging.CQRS;
+namespace Genocs.Logging.Cqrs;
 
 public static class Extensions
 {

@@ -1,6 +1,6 @@
-using Genocs.Common.CQRS.Commands;
-using Genocs.MessageBrokers;
-using Genocs.MessageBrokers.Outbox;
+using Genocs.Common.Cqrs.Commands;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
 using Genocs.Persistence.MongoDB.Domain.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.Events;

@@ -11,12 +11,12 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<ProjectReference Include="..\Genocs.MessageBrokers.RabbitMQ\Genocs.MessageBrokers.RabbitMQ.csproj" />
+		<ProjectReference Include="..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
 		<ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.MessageBrokers.RabbitMQ" Version="8.1.*" />
+		<PackageReference Include="Genocs.Messaging.RabbitMQ" Version="8.1.*" />
 		<PackageReference Include="Genocs.Tracing" Version="8.1.*" />
 	</ItemGroup>
 

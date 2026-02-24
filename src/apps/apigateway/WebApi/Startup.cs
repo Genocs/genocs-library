@@ -1,6 +1,6 @@
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Telemetry;

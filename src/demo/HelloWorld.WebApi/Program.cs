@@ -6,8 +6,8 @@ using Genocs.Logging;
 using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.Swagger;
-using Genocs.WebApi.Swagger.Docs;
+using Genocs.WebApi.OpenApi;
+using Genocs.WebApi.OpenApi.Docs;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Serilog;
 

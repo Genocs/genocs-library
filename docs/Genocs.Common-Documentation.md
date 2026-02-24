@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Genocs.Common** is a foundational library that provides essential building blocks for developing enterprise-grade applications using .NET. This library contains core abstractions, interfaces, and base types that support Domain-Driven Design (DDD), Command Query Responsibility Segregation (CQRS), and other architectural patterns commonly used in modern microservices and distributed systems.
+**Genocs.Common** is a foundational library that provides essential building blocks for developing enterprise-grade applications using .NET. This library contains core abstractions, interfaces, and base types that support Domain-Driven Design (DDD), Command Query Responsibility Segregation (Cqrs), and other architectural patterns commonly used in modern microservices and distributed systems.
 
 [![NuGet](https://img.shields.io/nuget/v/Genocs.Common.svg)](https://www.nuget.org/packages/Genocs.Common/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Common.svg)](https://www.nuget.org/packages/Genocs.Common/)
@@ -80,9 +80,9 @@ Repository pattern interfaces for data access:
 - Query composition
 - Explicit relationship loading
 
-### 2. CQRS Implementation
+### 2. Cqrs Implementation
 
-Complete CQRS pattern support with separation of read and write operations.
+Complete Cqrs pattern support with separation of read and write operations.
 
 #### Commands
 
@@ -270,7 +270,7 @@ The library supports bounded context implementation through:
 Designed for microservices architectures:
 - Service independence through abstractions
 - Event-driven communication
-- CQRS separation
+- Cqrs separation
 - Distributed transaction patterns
 
 ### Clean Architecture
@@ -286,7 +286,7 @@ Supports clean architecture principles:
 1. **Repository Pattern**: Data access abstraction
 2. **Unit of Work**: Transaction management
 3. **Specification Pattern**: Query composition
-4. **Command Pattern**: CQRS commands
+4. **Command Pattern**: Cqrs commands
 5. **Mediator Pattern**: Command/Query dispatching
 6. **Observer Pattern**: Event handling
 7. **Factory Pattern**: Entity creation
@@ -345,7 +345,7 @@ Supports clean architecture principles:
 - Domain event sourcing
 - Bounded context separation
 
-### CQRS Applications
+### Cqrs Applications
 
 - Read/write separation
 - Event sourcing
@@ -367,7 +367,7 @@ dotnet add package Genocs.Common
 - **Genocs.Core**: Concrete implementations and builders
 - **Genocs.Persistence.MongoDB**: MongoDB repository implementations
 - **Genocs.Persistence.EFCore**: Entity Framework Core implementations
-- **Genocs.MessageBrokers**: Message broker integrations
+- **Genocs.Messaging**: Message broker integrations
 
 ## Support and Documentation
 

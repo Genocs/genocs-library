@@ -1,11 +1,11 @@
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Events;
+using Genocs.Core.Cqrs.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartFormat;
 
-namespace Genocs.Logging.CQRS.Decorators;
+namespace Genocs.Logging.Cqrs.Decorators;
 
 [Decorator]
 internal sealed class EventHandlerLoggingDecorator<TEvent>(IEventHandler<TEvent> handler, ILogger<EventHandlerLoggingDecorator<TEvent>> logger, IServiceProvider serviceProvider) : IEventHandler<TEvent>

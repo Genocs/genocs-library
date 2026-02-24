@@ -1,4 +1,4 @@
-namespace Genocs.Logging.CQRS;
+namespace Genocs.Logging.Cqrs;
 
 /// <summary>
 /// Interface used to log messages using a template.

@@ -1,6 +1,6 @@
-using Genocs.HTTP.RestEase.Configurations;
+using Genocs.Http.RestEase.Configurations;
 
-namespace Genocs.HTTP.RestEase.Builders;
+namespace Genocs.Http.RestEase.Builders;
 
 internal sealed class RestEaseOptionsBuilder : IRestEaseOptionsBuilder
 {

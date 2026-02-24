@@ -1,8 +1,8 @@
-using Genocs.HTTP.Configurations;
+using Genocs.Http.Configurations;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 // Credits goes to https://www.stevejgordon.co.uk/httpclientfactory-asp-net-core-logging
 internal sealed class GenocsHttpLoggingFilter(ILoggerFactory loggerFactory, HttpClientOptions options) : IHttpMessageHandlerBuilderFilter

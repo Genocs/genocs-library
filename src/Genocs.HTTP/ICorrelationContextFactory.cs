@@ -1,4 +1,4 @@
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
 /// The CorrelationContext Factory interface.

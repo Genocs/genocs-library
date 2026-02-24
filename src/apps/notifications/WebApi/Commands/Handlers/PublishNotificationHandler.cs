@@ -1,6 +1,6 @@
-using Genocs.Common.CQRS.Commands;
-using Genocs.MessageBrokers;
-using Genocs.MessageBrokers.Outbox;
+using Genocs.Common.Cqrs.Commands;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
 using Genocs.Notifications.WebApi.Events;
 using Genocs.Notifications.WebApi.Hubs;
 using Microsoft.AspNetCore.SignalR;

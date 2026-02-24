@@ -1,13 +1,13 @@
 using System.Net.Http.Headers;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
-/// The Genocs HTTP client.
-/// This interface defines a set of methods for sending HTTP requests and receiving HTTP responses
-/// from a resource identified by a URI. It provides methods for common HTTP operations such as
-/// GET, POST, PUT, PATCH, and DELETE, as well as a generic SendAsync method for sending custom HTTP requests.
-/// The interface also includes methods for setting HTTP headers and supports
+/// The Genocs Http client.
+/// This interface defines a set of methods for sending Http requests and receiving Http responses
+/// from a resource identified by a URI. It provides methods for common Http operations such as
+/// GET, POST, PUT, PATCH, and DELETE, as well as a generic SendAsync method for sending custom Http requests.
+/// The interface also includes methods for setting Http headers and supports
 /// serialization and deserialization of request and response bodies using an optional serializer.
 /// </summary>
 public interface IHttpClient
@@ -38,12 +38,12 @@ public interface IHttpClient
     Task<HttpResult<T>> DeleteResultAsync<T>(string uri, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// It sends the HTTP request and returns the HTTP response message. This method allows for sending custom HTTP requests
+    /// It sends the Http request and returns the Http response message. This method allows for sending custom Http requests
     /// and provides a cancellation token to cancel the operation if needed.
     /// </summary>
-    /// <param name="request">The HTTP request message.</param>
+    /// <param name="request">The Http request message.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>The HTTP response message.</returns>
+    /// <returns>The Http response message.</returns>
     Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -67,13 +67,13 @@ public interface IHttpClient
     Task<HttpResult<T>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Set the headers for the HTTP client.
+    /// Set the headers for the Http client.
     /// </summary>
     /// <param name="headers">The headers dictionary.</param>
     void SetHeaders(IDictionary<string, string> headers);
 
     /// <summary>
-    /// Set the headers for the HTTP client.
+    /// Set the headers for the Http client.
     /// </summary>
     /// <param name="headers">The headers action delegate.</param>
     void SetHeaders(Action<HttpRequestHeaders> headers);

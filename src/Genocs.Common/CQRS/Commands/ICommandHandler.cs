@@ -1,7 +1,7 @@
-namespace Genocs.Common.CQRS.Commands;
+namespace Genocs.Common.Cqrs.Commands;
 
 /// <summary>
-/// CQRS command handler interface.
+/// Cqrs command handler interface.
 /// </summary>
 /// <typeparam name="TCommand">The type of command.</typeparam>
 public interface ICommandHandler<in TCommand>
@@ -17,7 +17,7 @@ public interface ICommandHandler<in TCommand>
 }
 
 /// <summary>
-/// Legacy CQRS command handler interface.
+/// Legacy Cqrs command handler interface.
 /// </summary>
 /// <typeparam name="T">The type of command.</typeparam>
 public interface ICommandHandlerLegacy<T>

@@ -1,4 +1,4 @@
-﻿namespace Genocs.Common.CQRS.Queries;
+﻿namespace Genocs.Common.Cqrs.Queries;
 
 /// <summary>
 /// The search request interface. The search request is used to encapsulate the search query and the maximum number of items to return.

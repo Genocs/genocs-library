@@ -1,7 +1,7 @@
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.Worker.Consumers;
 using Genocs.Logging;
-using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Telemetry;
 using MassTransit;

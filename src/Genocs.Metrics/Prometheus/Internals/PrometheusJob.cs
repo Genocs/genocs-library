@@ -1,4 +1,4 @@
-﻿using Genocs.Metrics.Prometheus.Options;
+﻿using Genocs.Metrics.Prometheus.Configurations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prometheus.DotNetRuntime;

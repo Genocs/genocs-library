@@ -1,8 +1,8 @@
-using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
+using Genocs.Http;
+using Genocs.Http.Configurations;
 using Genocs.Orders.WebApi.DTO;
-using Genocs.Secrets.Vault;
-using Genocs.Secrets.Vault.Configurations;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Secrets.HashicorpKeyVault.Configurations;
 using Genocs.WebApi.Security.Configurations;
 
 namespace Genocs.Orders.WebApi.Services;

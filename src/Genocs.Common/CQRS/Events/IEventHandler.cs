@@ -1,7 +1,7 @@
-namespace Genocs.Common.CQRS.Events;
+namespace Genocs.Common.Cqrs.Events;
 
 /// <summary>
-/// Generic interface for CQRS Event handler.
+/// Generic interface for Cqrs Event handler.
 /// </summary>
 /// <typeparam name="TEvent">The type of the event.</typeparam>
 public interface IEventHandler<in TEvent>

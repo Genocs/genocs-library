@@ -1,4 +1,4 @@
-namespace Genocs.HTTP.Configurations;
+namespace Genocs.Http.Configurations;
 
 /// <summary>
 /// The HttpClient settings.

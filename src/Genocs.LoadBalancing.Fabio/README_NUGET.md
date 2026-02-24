@@ -12,7 +12,7 @@ dotnet add package Genocs.LoadBalancing.Fabio
 
 ## Getting Started
 
-Use this package to register Fabio support in your Genocs builder and create named HTTP clients for Fabio-routed services.
+Use this package to register Fabio support in your Genocs builder and create named Http clients for Fabio-routed services.
 
 ## Main Entry Points
 

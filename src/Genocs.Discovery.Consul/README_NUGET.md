@@ -12,7 +12,7 @@ dotnet add package Genocs.Discovery.Consul
 
 ## Getting Started
 
-Use this package to register Consul discovery and configure Consul-backed HTTP clients for inter-service communication.
+Use this package to register Consul discovery and configure Consul-backed Http clients for inter-service communication.
 
 ## Main Entry Points
 

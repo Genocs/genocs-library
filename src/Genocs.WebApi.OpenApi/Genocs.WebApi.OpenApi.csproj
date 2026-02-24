@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.WebApi.OpenApi</PackageId>
+        <RootNamespace>Genocs.WebApi.OpenApi</RootNamespace>
+        <AssemblyName>Genocs.WebApi.OpenApi</AssemblyName>
+        <Title>Genocs Web API OpenAPI support</Title>
+        <Description>Swagger/OpenAPI integration for documenting Genocs Web APIs.</Description>
+        <PackageTags>genocs webapi swagger openapi aspnetcore api-documentation</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.WebApi" Version="8.1.*" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.2" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.*" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.*" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.*" />
+    </ItemGroup>
+</Project>

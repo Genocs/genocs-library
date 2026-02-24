@@ -117,15 +117,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.HTTP.RestEase\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.HTTP.RestEase\README_NUGET.md
-+# Genocs.HTTP.RestEase
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Http.RestEase\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Http.RestEase\README_NUGET.md
++# Genocs.Http.RestEase
 +
-+RestEase integration for typed HTTP clients in Genocs applications. Target frameworks: `net10.0;net9.0;net8.0`.
++RestEase integration for typed Http clients in Genocs applications. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.HTTP.RestEase`
++- `dotnet add package Genocs.Http.RestEase`
 +
 +## Getting Started
 +
@@ -140,15 +140,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.HTTP\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.HTTP\README_NUGET.md
-+# Genocs.HTTP
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Http\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Http\README_NUGET.md
++# Genocs.Http
 +
-+HTTP client abstractions and helpers for Genocs applications. Target frameworks: `net10.0;net9.0;net8.0`.
++Http client abstractions and helpers for Genocs applications. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.HTTP`
++- `dotnet add package Genocs.Http`
 +
 +## Getting Started
 +
@@ -227,15 +227,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.Outbox.MongoDB\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.Outbox.MongoDB\README_NUGET.md
-+# Genocs.MessageBrokers.Outbox.MongoDB
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.Outbox.MongoDB\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.Outbox.MongoDB\README_NUGET.md
++# Genocs.Messaging.Outbox.MongoDB
 +
 +MongoDB-backed implementation of the messaging outbox pattern. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.MessageBrokers.Outbox.MongoDB`
++- `dotnet add package Genocs.Messaging.Outbox.MongoDB`
 +
 +## Getting Started
 +
@@ -254,15 +254,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.Outbox\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.Outbox\README_NUGET.md
-+# Genocs.MessageBrokers.Outbox
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.Outbox\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.Outbox\README_NUGET.md
++# Genocs.Messaging.Outbox
 +
 +Outbox pattern abstractions for reliable message delivery. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.MessageBrokers.Outbox`
++- `dotnet add package Genocs.Messaging.Outbox`
 +
 +## Getting Started
 +
@@ -282,15 +282,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.RabbitMQ\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers.RabbitMQ\README_NUGET.md
-+# Genocs.MessageBrokers.RabbitMQ
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.RabbitMQ\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.RabbitMQ\README_NUGET.md
++# Genocs.Messaging.RabbitMQ
 +
 +RabbitMQ integration for Genocs messaging abstractions. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.MessageBrokers.RabbitMQ`
++- `dotnet add package Genocs.Messaging.RabbitMQ`
 +
 +## Getting Started
 +
@@ -310,15 +310,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.MessageBrokers\README_NUGET.md
-+# Genocs.MessageBrokers
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Messaging\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Messaging\README_NUGET.md
++# Genocs.Messaging
 +
 +Abstractions for message broker publishing and consuming. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.MessageBrokers`
++- `dotnet add package Genocs.Messaging`
 +
 +## Getting Started
 +
@@ -581,15 +581,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Secrets.Vault\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Secrets.Vault\README_NUGET.md
-+# Genocs.Secrets.Vault
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Secrets.HashicorpKeyVault\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Secrets.HashicorpKeyVault\README_NUGET.md
++# Genocs.Secrets.HashicorpKeyVault
 +
 +HashiCorp Vault integration for retrieving and managing application secrets. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.Secrets.Vault`
++- `dotnet add package Genocs.Secrets.HashicorpKeyVault`
 +
 +## Getting Started
 +
@@ -635,15 +635,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.ServiceBusAzure\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.ServiceBusAzure\README_NUGET.md
-+# Genocs.ServiceBusAzure
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.AzureServiceBus\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.Messaging.AzureServiceBus\README_NUGET.md
++# Genocs.Messaging.AzureServiceBus
 +
 +Azure Service Bus integration for messaging and transport workflows. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.ServiceBusAzure`
++- `dotnet add package Genocs.Messaging.AzureServiceBus`
 +
 +## Getting Started
 +
@@ -712,15 +712,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.CQRS\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.CQRS\README_NUGET.md
-+# Genocs.WebApi.CQRS
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Cqrs\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Cqrs\README_NUGET.md
++# Genocs.WebApi.Cqrs
 +
-+CQRS extensions for Genocs ASP.NET Core Web APIs. Target frameworks: `net10.0;net9.0;net8.0`.
++Cqrs extensions for Genocs ASP.NET Core Web APIs. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.WebApi.CQRS`
++- `dotnet add package Genocs.WebApi.Cqrs`
 +
 +## Getting Started
 +
@@ -769,15 +769,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Swagger\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Swagger\README_NUGET.md
-+# Genocs.WebApi.Swagger
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.OpenApi\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.OpenApi\README_NUGET.md
++# Genocs.WebApi.OpenApi
 +
 +Swagger/OpenAPI integration for documenting Genocs Web APIs. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.WebApi.Swagger`
++- `dotnet add package Genocs.WebApi.OpenApi`
 +
 +## Getting Started
 +

@@ -1,6 +1,6 @@
-using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
-using Genocs.MessageBrokers;
+using Genocs.Http;
+using Genocs.Http.Configurations;
+using Genocs.Messaging;
 using Microsoft.AspNetCore.Http;
 
 namespace Genocs.Identities.Application;

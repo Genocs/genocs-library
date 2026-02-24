@@ -1,4 +1,4 @@
-﻿using Genocs.Common.CQRS.Events;
+﻿using Genocs.Common.Cqrs.Events;
 
 namespace Genocs.Library.Demo.WebApi.Models;
 

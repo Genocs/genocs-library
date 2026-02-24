@@ -1,16 +1,16 @@
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul;
 using Genocs.Discovery.Consul.Configurations;
-using Genocs.HTTP.Configurations;
-using Genocs.HTTP.RestEase.Builders;
-using Genocs.HTTP.RestEase.Configurations;
-using Genocs.HTTP.RestEase.Serializers;
+using Genocs.Http.Configurations;
+using Genocs.Http.RestEase.Builders;
+using Genocs.Http.RestEase.Configurations;
+using Genocs.Http.RestEase.Serializers;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.LoadBalancing.Fabio.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using RestEase;
 
-namespace Genocs.HTTP.RestEase;
+namespace Genocs.Http.RestEase;
 
 public static class Extensions
 {

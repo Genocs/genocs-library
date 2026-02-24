@@ -1,5 +1,5 @@
-using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
+using Genocs.Http;
+using Genocs.Http.Configurations;
 
 namespace Genocs.LoadBalancing.Fabio.Http;
 

@@ -1,4 +1,4 @@
-namespace Genocs.HTTP.RestEase;
+namespace Genocs.Http.RestEase;
 
 public class RestEaseServiceNotFoundException : Exception
 {

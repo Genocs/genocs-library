@@ -1,8 +1,8 @@
-using Genocs.HTTP.Configurations;
+using Genocs.Http.Configurations;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
 {
@@ -45,13 +45,13 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
         }
 
         private static readonly Func<ILogger, HttpMethod, Uri, IDisposable?> _beginRequestPipelineScope =
-            LoggerMessage.DefineScope<HttpMethod, Uri>("HTTP {HttpMethod} {Uri}");
+            LoggerMessage.DefineScope<HttpMethod, Uri>("Http {HttpMethod} {Uri}");
 
         private static readonly Action<ILogger, HttpMethod, Uri, Exception> _requestPipelineStart =
-            LoggerMessage.Define<HttpMethod, Uri>(LogLevel.Information, EventIds.PipelineStart, "Start processing HTTP request {HttpMethod} {Uri}");
+            LoggerMessage.Define<HttpMethod, Uri>(LogLevel.Information, EventIds.PipelineStart, "Start processing Http request {HttpMethod} {Uri}");
 
         private static readonly Action<ILogger, HttpStatusCode, Exception?> _requestPipelineEnd =
-            LoggerMessage.Define<HttpStatusCode>(LogLevel.Information, EventIds.PipelineEnd, "End processing HTTP request - {StatusCode}");
+            LoggerMessage.Define<HttpStatusCode>(LogLevel.Information, EventIds.PipelineEnd, "End processing Http request - {StatusCode}");
 
         public static IDisposable BeginRequestPipelineScope(
                                                             ILogger logger,

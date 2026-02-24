@@ -1,10 +1,10 @@
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
-using Genocs.HTTP.Configurations;
+using Genocs.Http.Configurations;
 using Polly;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
 /// The Genocs Http Client.
@@ -123,14 +123,14 @@ public class GenocsHttpClient : IHttpClient
             .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(async () =>
             {
-                // Send the HTTP request
+                // Send the Http request
                 var response = await _client.SendAsync(request, cancellationToken);
 
                 // Check if the response indicates a successful status code
                 if (!response.IsSuccessStatusCode)
                 {
                     // If not successful, throw an exception so the retry will come.
-                    throw new HttpRequestException($"The HTTP request failed with status code {response.StatusCode}.");
+                    throw new HttpRequestException($"The Http request failed with status code {response.StatusCode}.");
                 }
 
                 var stream = await response.Content.ReadAsStreamAsync();
@@ -204,11 +204,11 @@ public class GenocsHttpClient : IHttpClient
             {
                 string requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
 
-                var result = await GetResponseAsync(requestUri, method, content, cancellationToken) ?? throw new HttpRequestException("The HTTP request failed.");
+                var result = await GetResponseAsync(requestUri, method, content, cancellationToken) ?? throw new HttpRequestException("The Http request failed.");
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    throw new Exception($"The HTTP request failed with status code {result.StatusCode}.");
+                    throw new Exception($"The Http request failed with status code {result.StatusCode}.");
                 }
 
                 return result;
@@ -222,7 +222,7 @@ public class GenocsHttpClient : IHttpClient
             Method.Put => _client.PutAsync(uri, content, cancellationToken),
             Method.Patch => _client.PatchAsync(uri, content, cancellationToken),
             Method.Delete => _client.DeleteAsync(uri, cancellationToken),
-            _ => throw new InvalidOperationException($"Unsupported HTTP method: {method}")
+            _ => throw new InvalidOperationException($"Unsupported Http method: {method}")
         };
 
     protected StringContent? GetJsonPayload(object? data, IHttpClientSerializer? serializer = null)

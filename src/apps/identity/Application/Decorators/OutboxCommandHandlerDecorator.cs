@@ -1,8 +1,8 @@
-using Genocs.Common.CQRS.Commands;
+using Genocs.Common.Cqrs.Commands;
 using Genocs.Common.Types;
-using Genocs.MessageBrokers;
-using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.Configurations;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.Configurations;
 
 namespace Genocs.Identities.Application.Decorators;
 

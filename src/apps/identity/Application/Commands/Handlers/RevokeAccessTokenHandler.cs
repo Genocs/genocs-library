@@ -1,5 +1,5 @@
 using Genocs.Auth;
-using Genocs.Common.CQRS.Commands;
+using Genocs.Common.Cqrs.Commands;
 
 namespace Genocs.Identities.Application.Commands.Handlers;
 

@@ -1,4 +1,4 @@
-### Demo Web API HTTP Requests
+### Demo Web API Http Requests
 ### Base URL Configuration
 @baseUrl = https://localhost:5070
 @apiKey = your-api-key-here
@@ -142,7 +142,7 @@ Access-Control-Request-Headers: Content-Type
 GET {{baseUrl}}/secret
 Accept: application/json
 X-Custom-Header: test-value
-User-Agent: Demo-HTTP-Client/1.0
+User-Agent: Demo-Http-Client/1.0
 
 ### ===========================
 ### BATCH REQUESTS

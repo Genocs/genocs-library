@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Genocs.Common.CQRS.Events;
+using Genocs.Common.Cqrs.Events;
 using Genocs.Common.Domain.Entities;
 
 namespace Genocs.Core.Domain.Entities;

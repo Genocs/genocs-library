@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Genocs.Common.CQRS.Queries;
+namespace Genocs.Common.Cqrs.Queries;
 
 /// <summary>
 /// The paged result.

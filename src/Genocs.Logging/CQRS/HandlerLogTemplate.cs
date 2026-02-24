@@ -1,4 +1,4 @@
-namespace Genocs.Logging.CQRS;
+namespace Genocs.Logging.Cqrs;
 
 public sealed class HandlerLogTemplate
 {

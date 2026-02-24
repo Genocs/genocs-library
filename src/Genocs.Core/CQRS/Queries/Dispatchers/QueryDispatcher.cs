@@ -1,7 +1,7 @@
-﻿using Genocs.Common.CQRS.Queries;
+﻿using Genocs.Common.Cqrs.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.CQRS.Queries.Dispatchers;
+namespace Genocs.Core.Cqrs.Queries.Dispatchers;
 
 /// <summary>
 /// Default implementation of the <see cref="IQueryDispatcher"/> interface that uses the built-in dependency injection container to resolve query handlers.

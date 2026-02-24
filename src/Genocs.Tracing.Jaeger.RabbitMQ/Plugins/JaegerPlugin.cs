@@ -1,5 +1,5 @@
 using Genocs.Core.Extensions;
-using Genocs.MessageBrokers.RabbitMQ;
+using Genocs.Messaging.RabbitMQ;
 using Jaeger;
 using OpenTracing;
 using OpenTracing.Tag;

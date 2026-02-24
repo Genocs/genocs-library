@@ -1,4 +1,4 @@
-using Genocs.HTTP;
+using Genocs.Http;
 
 namespace Genocs.Discovery.Consul;
 

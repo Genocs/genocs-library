@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Genocs.HTTP;
+namespace Genocs.Http;
 
 /// <summary>
 /// This class provides an implementation of the IHttpClientSerializer interface using
 /// System.Text.Json for JSON serialization and deserialization. It allows for customizable JsonSerializerOptions to be provided,
 /// or it will use default options that are suitable for most scenarios.
-/// This serializer is designed to be used with the Genocs HTTP client for handling JSON content in HTTP requests and responses.
+/// This serializer is designed to be used with the Genocs Http client for handling JSON content in Http requests and responses.
 /// </summary>
 public class SystemTextJsonHttpClientSerializer : IHttpClientSerializer
 {

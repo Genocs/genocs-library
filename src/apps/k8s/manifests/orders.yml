@@ -47,7 +47,7 @@ spec:
                 secretKeyRef:
                   name: gnx-app-secrets
                   key: MONGODB_CONNECTION_STRING
-            # HTTP CLIENT
+            # Http CLIENT
             - name: httpclient__services__products
               value: "http://products-svc"
 

@@ -1,14 +1,14 @@
-﻿using Genocs.Common.CQRS.Commands;
-using Genocs.Common.CQRS.Commons;
-using Genocs.Common.CQRS.Events;
-using Genocs.Common.CQRS.Queries;
+﻿using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.Cqrs.Commons;
+using Genocs.Common.Cqrs.Events;
+using Genocs.Common.Cqrs.Queries;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Commands.Dispatchers;
-using Genocs.Core.CQRS.Events.Dispatchers;
-using Genocs.Core.CQRS.Queries.Dispatchers;
+using Genocs.Core.Cqrs.Commands.Dispatchers;
+using Genocs.Core.Cqrs.Events.Dispatchers;
+using Genocs.Core.Cqrs.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.CQRS.Commons;
+namespace Genocs.Core.Cqrs.Commons;
 
 /// <summary>
 /// Extension helper to handle the whole set of Dispatcher.

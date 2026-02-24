@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using Genocs.Core.Builders;
-using Genocs.HTTP;
+using Genocs.Http;
 using Genocs.Library.Demo.WebApi.Configurations;
 using Genocs.Library.Demo.WebApi.Infrastructure.Services;
 using Genocs.Security;

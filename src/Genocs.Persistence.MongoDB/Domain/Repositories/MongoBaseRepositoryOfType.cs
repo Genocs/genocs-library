@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Genocs.Common.CQRS.Queries;
+using Genocs.Common.Cqrs.Queries;
 using Genocs.Common.Domain.Entities;
-using Genocs.Core.CQRS.Queries;
+using Genocs.Core.Cqrs.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDB.Repositories;
