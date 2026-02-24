@@ -42,7 +42,7 @@ public class ProductServiceClient : IProductServiceClient
 
         if (string.IsNullOrWhiteSpace(url))
         {
-            throw new Exception("Products HTTP client option cannot be null");
+            throw new Exception("Products service url cannot be null");
         }
 
         _url = url;
@@ -53,7 +53,7 @@ public class ProductServiceClient : IProductServiceClient
             return;
         }
 
-        var certificate = certificatesService?.Get(vaultOptions.Pki.RoleName);
+        var certificate = certificatesService?.Get(vaultOptions.Pki.RoleName!);
         if (certificate is null)
         {
             return;
@@ -69,6 +69,6 @@ public class ProductServiceClient : IProductServiceClient
     /// </summary>
     /// <param name="productId">The ProductId.</param>
     /// <returns>The Product Response.</returns>
-    public Task<ProductDto> GetAsync(Guid productId)
-        => _client.GetAsync<ProductDto>($"{_url}/products/{productId}");
+    public Task<ProductDto?> GetAsync(Guid productId)
+        => _client.GetAsync<ProductDto?>($"{_url}/products/{productId}");
 }

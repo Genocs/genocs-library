@@ -17,7 +17,8 @@ internal sealed class RabbitMQPublisher : IBusPublisher
                                 string? correlationId = null,
                                 string? spanContext = null,
                                 object? messageContext = null,
-                                IDictionary<string, object>? headers = null)
+                                IDictionary<string, object>? headers = null,
+                                CancellationToken cancellationToken = default)
         where T : class
     {
         _client.SendAsync(

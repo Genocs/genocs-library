@@ -1,5 +1,4 @@
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Queries;
 using Genocs.Persistence.MongoDB.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
@@ -32,6 +31,8 @@ public class BrowseProductsHandler : IQueryHandler<BrowseProducts, PagedResult<P
         {
             Id = product.Id,
             SKU = product.SKU,
+            Name = product.Name,
+            Description = product.Description,
             UnitPrice = product.UnitPrice
         };
 }

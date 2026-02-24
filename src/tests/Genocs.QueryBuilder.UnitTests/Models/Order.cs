@@ -11,7 +11,7 @@ public class Order
 
         OrderId = orderId;
         CustomerId = customerId;
-        Products = new List<Product>();
+        Products = [];
     }
 
     public Order(int orderId, int customerId, string pName, string pCost, int cost)

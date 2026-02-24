@@ -81,6 +81,6 @@ app.UseGenocs()
 
 app.MapDefaultEndpoints();
 
-app.Run();
+await app.RunAsync();
 
 Log.CloseAndFlush();

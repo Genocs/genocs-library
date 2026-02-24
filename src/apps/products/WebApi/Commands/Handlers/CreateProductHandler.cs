@@ -28,14 +28,14 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
 
     public async Task HandleAsync(CreateProduct command, CancellationToken cancellationToken = default)
     {
-        bool exists = await _repository.ExistsAsync(o => o.Id == command.ProductId);
+        bool exists = await _repository.ExistsAsync(o => o.Id == command.ProductId, cancellationToken);
         if (exists)
         {
             throw new InvalidOperationException($"Product with given id: {command.ProductId} already exists!");
         }
 
-        var product = new Product(command.ProductId, command.SKU, command.UnitPrice, command.Name, command.Description);
-        await _repository.AddAsync(product);
+        var product = Product.FromCommand(command);
+        await _repository.AddAsync(product, cancellationToken);
 
         _logger.LogInformation($"Created a product with id: {command.ProductId}, sku: {command.SKU}, unitPrice: {command.UnitPrice}.");
 
@@ -43,10 +43,10 @@ public class CreateProductHandler : ICommandHandler<CreateProduct>
         var @event = new ProductCreated(product.Id);
         if (_outbox.Enabled)
         {
-            await _outbox.SendAsync(@event, spanContext: spanContext);
+            await _outbox.SendAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
             return;
         }
 
-        await _publisher.PublishAsync(@event, spanContext: spanContext);
+        await _publisher.PublishAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
     }
 }

@@ -1,6 +1,5 @@
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Events;
-using Genocs.Core.CQRS.Events;
 
 namespace Genocs.MessageBrokers.CQRS.Dispatchers;
 

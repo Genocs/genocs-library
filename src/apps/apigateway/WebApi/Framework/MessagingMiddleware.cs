@@ -58,7 +58,7 @@ internal class MessagingMiddleware : IMiddleware
                 Conventions.TryAdd(key, conventions);
             }
 
-            string? spanContext = "TODO: Genocs";
+            string? spanContext = System.Diagnostics.Activity.Current?.Id;
             string messageId = DefaultIdType.NewGuid().ToString("N");
             string correlationId = _correlationIdFactory.Create();
             string resourceId = DefaultIdType.NewGuid().ToString("N");

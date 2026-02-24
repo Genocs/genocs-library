@@ -1,4 +1,5 @@
 using Genocs.Common.Domain.Entities;
+using Genocs.Products.WebApi.Commands;
 
 namespace Genocs.Products.WebApi.Domain;
 
@@ -24,5 +25,10 @@ public class Product(Guid id, string sku, decimal unitPrice) : IEntity<Guid>
     public bool IsTransient()
     {
         throw new NotImplementedException();
+    }
+
+    public static Product FromCommand(CreateProduct command)
+    {
+        return new Product(command.ProductId, command.SKU, command.UnitPrice, command.Name, command.Description);
     }
 }

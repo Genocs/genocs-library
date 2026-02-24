@@ -30,7 +30,7 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
     public async Task HandleAsync(PublishNotification command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"Created a notification with id: {command.NotificationId}, customer: {command.CustomerId}.");
-        const string? spanContext = "TODO: Genocs";
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new NotificationPosted(command.NotificationId);
 
         // Send the notification

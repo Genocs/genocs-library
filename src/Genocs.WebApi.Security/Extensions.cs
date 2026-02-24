@@ -63,14 +63,22 @@ public static class Extensions
             .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
             .AddCertificate();
 
+#if NET9_0_OR_GREATER
         builder.Services.AddCertificateForwarding(c =>
         {
             c.CertificateHeader = options.Certificate.GetHeaderName();
             c.HeaderConverter = headerValue =>
-                string.IsNullOrWhiteSpace(headerValue)
-                    ? null
-                    : new X509Certificate2(StringToByteArray(headerValue));
+                 X509CertificateLoader.LoadCertificate(StringToByteArray(headerValue));
         });
+#else
+
+        builder.Services.AddCertificateForwarding(c =>
+        {
+            c.CertificateHeader = options.Certificate.GetHeaderName();
+            c.HeaderConverter = headerValue =>
+                 new X509Certificate2(StringToByteArray(headerValue));
+        });
+#endif
 
         return builder;
     }

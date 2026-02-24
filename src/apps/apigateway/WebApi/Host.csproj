@@ -5,7 +5,7 @@
         <RootNamespace>Genocs.APIGateway.WebApi</RootNamespace>
         <AssemblyName>Genocs.APIGateway.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>Genocs</UserSecretsId>
+        <UserSecretsId>_Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
         <!-- Disable web.config transformation for Docker builds -->
