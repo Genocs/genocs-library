@@ -3,9 +3,9 @@
   <Folder Name="/application/apigateway/">
     <Project Path="src/apps/apigateway/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/application/identity/">
-    <Project Path="src/apps/identity/Application/Application.csproj" />
-    <Project Path="src/apps/identity/WebApi/Host.csproj" />
+  <Folder Name="/application/identities/">
+    <Project Path="src/apps/identities/Application/Application.csproj" />
+    <Project Path="src/apps/identities/WebApi/Host.csproj" />
   </Folder>
   <Folder Name="/application/notifications/">
     <Project Path="src/apps/notifications/WebApi/Host.csproj" />
@@ -16,23 +16,23 @@
   <Folder Name="/application/products/">
     <Project Path="src/apps/products/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/application/wallet/" />
+  <Folder Name="/application/wallets/" />
   <Folder Name="/demo/">
     <Project Path="src/demo/Contracts/Contracts.csproj" />
     <Project Path="src/demo/Domain/Domain.csproj" />
     <Project Path="src/demo/Infrastructure/Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/demo/Helloworld.WebApi/">
-    <Project Path="src/demo/HelloWorld.WebApi/Host.csproj" />
+  <Folder Name="/demo/WebApi/">
+    <Project Path="src/demo/WebApi/Host.csproj" />
   </Folder>
   <Folder Name="/demo/tests/">
     <Project Path="src/demo/ContractTests/ContractTests.csproj" />
   </Folder>
-  <Folder Name="/demo/WebApi/">
-    <Project Path="src/demo/WebApi/Host.csproj" />
+  <Folder Name="/demo/Masstransit.WebApi/">
+    <Project Path="src/demo/Masstransit.WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/Worker/">
-    <Project Path="src/demo/Worker/Host.csproj" />
+  <Folder Name="/demo/Masstransit.Worker/">
+    <Project Path="src/demo/Masstransit.Worker/Host.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
@@ -88,7 +88,7 @@
   <Project Path="src/Genocs.Security/Genocs.Security.csproj" />
   <Project Path="src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj" />
   <Project Path="src/Genocs.Telemetry/Genocs.Telemetry.csproj" />
-  <Project Path="src/Genocs.WebApi.Cqrs/Genocs.WebApi.Cqrs.csproj" />
+  <Project Path="src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj" />
   <Project Path="src/Genocs.WebApi.Security/Genocs.WebApi.Security.csproj" />
   <Project Path="src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj" />
   <Project Path="src/Genocs.WebApi/Genocs.WebApi.csproj" />

@@ -1,9 +1,9 @@
-﻿using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Commons;
-using Genocs.Common.Cqrs.Events;
-using Genocs.Common.Cqrs.Queries;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Commons;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
 
-namespace Genocs.Core.Cqrs.Commons;
+namespace Genocs.Core.CQRS.Commons;
 
 /// <summary>
 /// The InMemoryDispatcher class is an implementation of the IDispatcher interface

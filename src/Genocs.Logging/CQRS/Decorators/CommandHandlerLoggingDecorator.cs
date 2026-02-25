@@ -1,10 +1,10 @@
-using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartFormat;
 
-namespace Genocs.Logging.Cqrs.Decorators;
+namespace Genocs.Logging.CQRS.Decorators;
 
 [Decorator]
 internal sealed class CommandHandlerLoggingDecorator<TCommand>(ICommandHandler<TCommand> handler, ILogger<CommandHandlerLoggingDecorator<TCommand>> logger, IServiceProvider serviceProvider) : ICommandHandler<TCommand>

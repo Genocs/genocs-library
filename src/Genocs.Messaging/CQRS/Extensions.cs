@@ -1,10 +1,10 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
-using Genocs.Messaging.Cqrs.Dispatchers;
+using Genocs.Messaging.CQRS.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Messaging.Cqrs;
+namespace Genocs.Messaging.CQRS;
 
 public static class Extensions
 {

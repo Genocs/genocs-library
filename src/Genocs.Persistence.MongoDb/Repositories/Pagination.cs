@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using Genocs.Common.Cqrs.Queries;
-using Genocs.Core.Cqrs.Queries;
+using Genocs.Common.CQRS.Queries;
+using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

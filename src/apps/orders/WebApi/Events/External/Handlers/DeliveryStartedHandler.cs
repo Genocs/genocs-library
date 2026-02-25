@@ -1,4 +1,4 @@
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Events;
 
 namespace Genocs.Orders.WebApi.Events.External.Handlers;
 

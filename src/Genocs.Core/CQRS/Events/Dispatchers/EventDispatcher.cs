@@ -1,7 +1,7 @@
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Events;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.Cqrs.Events.Dispatchers;
+namespace Genocs.Core.CQRS.Events.Dispatchers;
 
 /// <summary>
 /// The event dispatcher is responsible for dispatching events to their respective handlers.

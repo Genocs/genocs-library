@@ -1,4 +1,4 @@
-namespace Genocs.Common.Cqrs.Commands;
+namespace Genocs.Common.CQRS.Commands;
 
 /// <summary>
 /// Command dispatcher interface.

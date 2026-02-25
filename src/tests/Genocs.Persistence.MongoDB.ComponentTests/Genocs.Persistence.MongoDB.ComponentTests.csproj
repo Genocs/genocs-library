@@ -4,11 +4,10 @@
         <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>Genocs.Persistence.MongoDB.ComponentTests</RootNamespace>
         <AssemblyName>Genocs.Persistence.MongoDB.ComponentTests</AssemblyName>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4">
             <PrivateAssets>all</PrivateAssets>

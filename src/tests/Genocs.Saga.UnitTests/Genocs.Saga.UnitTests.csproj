@@ -5,6 +5,9 @@
         <RootNamespace>Genocs.Saga.UnitTests</RootNamespace>
         <AssemblyName>Genocs.Saga.UnitTests</AssemblyName>
         <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\demo\HelloWorld.WebApi\Host.csproj" />
+        <ProjectReference Include="..\..\demo\WebApi\Host.csproj" />
         <ProjectReference Include="..\..\Genocs.Saga\Genocs.Saga.csproj" />
     </ItemGroup>
 

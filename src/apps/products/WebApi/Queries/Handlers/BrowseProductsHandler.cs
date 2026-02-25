@@ -1,4 +1,4 @@
-using Genocs.Common.Cqrs.Queries;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Persistence.MongoDB.Repositories;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;

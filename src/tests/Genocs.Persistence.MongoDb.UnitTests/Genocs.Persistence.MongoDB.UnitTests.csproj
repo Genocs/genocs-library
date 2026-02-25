@@ -5,6 +5,9 @@
         <RootNamespace>Genocs.Persistence.MongoDB.UnitTests</RootNamespace>
         <AssemblyName>Genocs.Persistence.MongoDB.UnitTests</AssemblyName>
         <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>        
     </PropertyGroup>
 
     <ItemGroup>

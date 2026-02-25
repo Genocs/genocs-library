@@ -1,4 +1,4 @@
-﻿using Genocs.Common.Cqrs.Commands;
+﻿using Genocs.Common.CQRS.Commands;
 
 namespace Genocs.Messaging.AzureServiceBus.Queues.Interfaces;
 

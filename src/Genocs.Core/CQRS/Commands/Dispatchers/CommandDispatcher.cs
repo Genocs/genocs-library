@@ -1,7 +1,7 @@
-using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.CQRS.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.Cqrs.Commands.Dispatchers;
+namespace Genocs.Core.CQRS.Commands.Dispatchers;
 
 /// <summary>
 /// CommandDispatcher implementation.

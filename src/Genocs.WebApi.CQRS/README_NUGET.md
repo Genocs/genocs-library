@@ -1,18 +1,18 @@
-# Genocs.WebApi.Cqrs
+# Genocs.WebApi.CQRS
 
 ![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-Cqrs extensions for Genocs ASP.NET Core Web APIs. Supports `net10.0`, `net9.0`, and `net8.0`.
+CQRS extensions for Genocs ASP.NET Core Web APIs. Supports `net10.0`, `net9.0`, and `net8.0`.
 
 ## Installation
 
 ```bash
-dotnet add package Genocs.WebApi.Cqrs
+dotnet add package Genocs.WebApi.CQRS
 ```
 
 ## Getting Started
 
-Use this package to expose Cqrs dispatcher endpoints and optional public contracts endpoints in Web API hosts.
+Use this package to expose CQRS dispatcher endpoints and optional public contracts endpoints in Web API hosts.
 
 ## Main Entry Points
 

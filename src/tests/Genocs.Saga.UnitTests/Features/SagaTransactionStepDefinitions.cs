@@ -1,5 +1,6 @@
-using Genocs.Library.Demo.HelloWorld.WebApi.Sagas;
-using Genocs.Library.Demo.HelloWorld.WebApi.Services;
+using Genocs.Library.Demo.Services;
+using Genocs.Library.Demo.WebApi.Sagas;
+using Genocs.Library.Demo.WebApi.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Reqnroll;

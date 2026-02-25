@@ -4,7 +4,9 @@
         <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>Genocs.Core.UnitTests</RootNamespace>
         <AssemblyName>Genocs.Core.UnitTests</AssemblyName>
-        <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>

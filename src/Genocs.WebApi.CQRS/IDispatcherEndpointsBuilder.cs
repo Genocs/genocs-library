@@ -1,9 +1,9 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Queries;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Genocs.WebApi.Cqrs;
+namespace Genocs.WebApi.CQRS;
 
 public interface IDispatcherEndpointsBuilder
 {

@@ -1,13 +1,13 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Events;
-using Genocs.Core.Cqrs.Events;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
+using Genocs.Core.CQRS.Events;
 using Genocs.WebApi.Helpers;
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Genocs.WebApi.Cqrs.Middlewares;
+namespace Genocs.WebApi.CQRS.Middlewares;
 
 public class PublicContractsMiddleware
 {

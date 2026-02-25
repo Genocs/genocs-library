@@ -5,6 +5,9 @@
         <RootNamespace>Genocs.QueryBuilder.UnitTests</RootNamespace>
         <AssemblyName>Genocs.QueryBuilder.UnitTests</AssemblyName>
         <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,4 +1,4 @@
-﻿using Genocs.Common.Cqrs.Commands;
+﻿using Genocs.Common.CQRS.Commands;
 
 namespace Genocs.Library.Demo.Contracts;
 

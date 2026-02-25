@@ -1,10 +1,10 @@
-using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.Cqrs.Commands.Dispatchers;
+using Genocs.Core.CQRS.Commands.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.Cqrs.Commands;
+namespace Genocs.Core.CQRS.Commands;
 
 /// <summary>
 /// Extension methods.

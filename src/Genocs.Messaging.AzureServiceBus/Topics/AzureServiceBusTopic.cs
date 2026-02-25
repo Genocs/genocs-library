@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using Azure.Messaging.ServiceBus;
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Events;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Topics.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

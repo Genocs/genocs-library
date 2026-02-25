@@ -1,15 +1,15 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Queries;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.WebApi;
-using Genocs.WebApi.Cqrs.Builders;
-using Genocs.WebApi.Cqrs.Middlewares;
+using Genocs.WebApi.CQRS.Builders;
+using Genocs.WebApi.CQRS.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.WebApi.Cqrs;
+namespace Genocs.WebApi.CQRS;
 
 public static class Extensions
 {

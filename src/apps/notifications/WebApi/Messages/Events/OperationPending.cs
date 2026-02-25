@@ -1,4 +1,4 @@
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
 using Newtonsoft.Json;
 

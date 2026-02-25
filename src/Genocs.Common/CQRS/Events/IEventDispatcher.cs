@@ -1,7 +1,7 @@
-namespace Genocs.Common.Cqrs.Events;
+namespace Genocs.Common.CQRS.Events;
 
 /// <summary>
-/// The Cqrs event dispatcher interface used to publish an integration event.
+/// The CQRS event dispatcher interface used to publish an integration event.
 /// </summary>
 public interface IEventDispatcher
 {

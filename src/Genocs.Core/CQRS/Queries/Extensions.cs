@@ -1,13 +1,13 @@
-﻿using Genocs.Common.Cqrs.Queries;
+﻿using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.Cqrs.Queries.Dispatchers;
+using Genocs.Core.CQRS.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Core.Cqrs.Queries;
+namespace Genocs.Core.CQRS.Queries;
 
 /// <summary>
-/// Extension helper class for Cqrs Queries.
+/// Extension helper class for CQRS Queries.
 /// </summary>
 public static class Extensions
 {

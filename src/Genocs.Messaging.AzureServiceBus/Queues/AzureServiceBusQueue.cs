@@ -1,5 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
-using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Queues.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

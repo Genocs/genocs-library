@@ -1,4 +1,4 @@
-using Genocs.Common.Cqrs.Commands;
+using Genocs.Common.CQRS.Commands;
 using Genocs.Messaging;
 using Genocs.Messaging.Outbox;
 using Genocs.Orders.WebApi.Domain;

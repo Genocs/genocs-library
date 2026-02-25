@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-        <PackageId>Genocs.WebApi.Cqrs</PackageId>
-        <RootNamespace>Genocs.WebApi.Cqrs</RootNamespace>
-        <AssemblyName>Genocs.WebApi.Cqrs</AssemblyName>
-        <Title>Genocs Web API Cqrs support</Title>
-        <Description>Cqrs extensions for Genocs ASP.NET Core Web APIs.</Description>
+        <PackageId>Genocs.WebApi.CQRS</PackageId>
+        <RootNamespace>Genocs.WebApi.CQRS</RootNamespace>
+        <AssemblyName>Genocs.WebApi.CQRS</AssemblyName>
+        <Title>Genocs Web API CQRS support</Title>
+        <Description>CQRS extensions for Genocs ASP.NET Core Web APIs.</Description>
         <PackageTags>genocs webapi cqrs aspnetcore commands queries</PackageTags>
     </PropertyGroup>
 

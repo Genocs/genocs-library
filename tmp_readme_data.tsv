@@ -24,7 +24,7 @@ src/Genocs.Security/README_NUGET.md|Genocs.Security|net10.0;net9.0;net8.0|Securi
 src/Genocs.Messaging.AzureServiceBus/README_NUGET.md|Genocs.Messaging.AzureServiceBus|net10.0;net9.0;net8.0|Azure Service Bus integration for messaging and transport workflows.|
 src/Genocs.Telemetry/README_NUGET.md|Genocs.Telemetry|net10.0;net9.0;net8.0|OpenTelemetry integration helpers for traces, metrics, and logs.|AddTelemetry
 src/Genocs.Tracing.Jaeger.RabbitMQ/README_NUGET.md|Genocs.Tracing.Jaeger.RabbitMQ|net10.0;net9.0;net8.0|Jaeger tracing integration for RabbitMQ-based messaging pipelines.|AddJaegerRabbitMqPlugin
-src/Genocs.WebApi.Cqrs/README_NUGET.md|Genocs.WebApi.Cqrs|net10.0;net9.0;net8.0|Cqrs extensions for Genocs ASP.NET Core Web APIs.|AddInMemoryDispatcher,UseDispatcherEndpoints,UsePublicContracts
+src/Genocs.WebApi.CQRS/README_NUGET.md|Genocs.WebApi.CQRS|net10.0;net9.0;net8.0|CQRS extensions for Genocs ASP.NET Core Web APIs.|AddInMemoryDispatcher,UseDispatcherEndpoints,UsePublicContracts
 src/Genocs.WebApi.Security/README_NUGET.md|Genocs.WebApi.Security|net10.0;net9.0;net8.0|Security extensions for authentication and authorization in Genocs Web APIs.|AddCertificateAuthentication,UseCertificateAuthentication
 src/Genocs.WebApi.OpenApi/README_NUGET.md|Genocs.WebApi.OpenApi|net10.0;net9.0;net8.0|Swagger/OpenAPI integration for documenting Genocs Web APIs.|AddSwaggerDocs,AddWebApiSwaggerDocs,UseSwaggerDocs
 src/Genocs.WebApi/README_NUGET.md|Genocs.WebApi|net10.0;net9.0;net8.0|ASP.NET Core Web API extensions and conventions for Genocs applications.|AddWebApi,UseAllForwardedHeaders,UseEndpoints,UseErrorHandler

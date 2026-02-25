@@ -1,10 +1,10 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Queries;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.WebApi.Cqrs.Builders;
+namespace Genocs.WebApi.CQRS.Builders;
 
 public class DispatcherEndpointsBuilder(IEndpointsBuilder builder) : IDispatcherEndpointsBuilder
 {

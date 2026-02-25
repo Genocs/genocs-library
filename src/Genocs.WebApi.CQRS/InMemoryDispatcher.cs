@@ -1,9 +1,9 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Events;
-using Genocs.Common.Cqrs.Queries;
-using Genocs.Core.Cqrs.Events;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
+using Genocs.Core.CQRS.Events;
 
-namespace Genocs.WebApi.Cqrs;
+namespace Genocs.WebApi.CQRS;
 
 public class InMemoryDispatcher : IDispatcher
 {

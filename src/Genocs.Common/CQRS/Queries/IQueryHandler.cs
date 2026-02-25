@@ -1,4 +1,4 @@
-﻿namespace Genocs.Common.Cqrs.Queries;
+﻿namespace Genocs.Common.CQRS.Queries;
 
 /// <summary>
 /// The query handler interface.

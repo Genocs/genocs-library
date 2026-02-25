@@ -13,7 +13,7 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
 - **Purpose**: Common components with no external dependencies
 - **Existing Interfaces**: 
   - Domain: `IEntity<T>`, `IAggregateRoot`, `ISoftDelete`, `IConnectionStringValidator`, `IConnectionStringSecurer`
-  - Cqrs: `IEvent`, `ICommand`, `IQuery`, `IMessage`, `IDispatcher`, `ICommandHandler`, `IQueryHandler`, etc.
+  - CQRS: `IEvent`, `ICommand`, `IQuery`, `IMessage`, `IDispatcher`, `ICommandHandler`, `IQueryHandler`, etc.
   - Types: `IIdentifiable<T>`, `IInitializer`, `IStartupInitializer`
   - Services: `ITransientService`, `IScopedService`, `ISerializerService`, etc.
 
@@ -25,7 +25,7 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
   - `Spectre.Console` v0.54.0
   - `Microsoft.AspNetCore.App` (Framework Reference)
 - **Purpose**: Core components with richer functionality
-- **Contains**: 56 interface files across Collections, Cqrs, Domain, and Repositories
+- **Contains**: 56 interface files across Collections, CQRS, Domain, and Repositories
 
 ---
 
@@ -47,18 +47,18 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
 
 ---
 
-### ✅ Category 2: Cqrs Event Handlers (RECOMMENDED - HIGH PRIORITY)
+### ✅ Category 2: CQRS Event Handlers (RECOMMENDED - HIGH PRIORITY)
 
 | Interface | Current Location | Dependencies | Migration Complexity |
 |-----------|-----------------|--------------|---------------------|
-| `IEventHandler<TEvent>` | Genocs.Core/Cqrs/Events | `IEvent` (Genocs.Common) | LOW |
-| `IEventDispatcher` | Genocs.Core/Cqrs/Events | `IEvent` (Genocs.Common) | LOW |
-| `IRejectedEvent` | Genocs.Core/Cqrs/Events | `IEvent` (Genocs.Common) | LOW |
+| `IEventHandler<TEvent>` | Genocs.Core/CQRS/Events | `IEvent` (Genocs.Common) | LOW |
+| `IEventDispatcher` | Genocs.Core/CQRS/Events | `IEvent` (Genocs.Common) | LOW |
+| `IRejectedEvent` | Genocs.Core/CQRS/Events | `IEvent` (Genocs.Common) | LOW |
 
-**Rationale**: These interfaces only depend on `IEvent` which is already in Genocs.Common. They represent core Cqrs patterns.
+**Rationale**: These interfaces only depend on `IEvent` which is already in Genocs.Common. They represent core CQRS patterns.
 
 **Benefits**:
-- Complete the Cqrs pattern in Genocs.Common
+- Complete the CQRS pattern in Genocs.Common
 - Enable event-driven architecture without Genocs.Core dependency
 - Align with existing `ICommandHandler` and `IQueryHandler` in Genocs.Common
 
@@ -70,8 +70,8 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
 
 | Interface/Class | Current Location | Dependencies | Migration Complexity |
 |-----------------|-----------------|--------------|---------------------|
-| `IPagedFilter<TResult, TQuery>` | Genocs.Core/Cqrs/Queries | `IQuery` (Genocs.Common), `PagedResult<T>` | MEDIUM |
-| `PagedResult<T>` | Genocs.Core/Cqrs/Queries | `PagedResultBase` (Genocs.Common) | LOW |
+| `IPagedFilter<TResult, TQuery>` | Genocs.Core/CQRS/Queries | `IQuery` (Genocs.Common), `PagedResult<T>` | MEDIUM |
+| `PagedResult<T>` | Genocs.Core/CQRS/Queries | `PagedResultBase` (Genocs.Common) | LOW |
 
 **Rationale**: Paging is a common requirement. `PagedResultBase` is already in Genocs.Common, so `PagedResult<T>` and `IPagedFilter` can follow.
 
@@ -184,7 +184,7 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
 1. **ITypeList** and **ITypeList<TBaseType>** + implementation
 2. **IHasCreationTime**, **IHasModificationTime**, **IHasDeletionTime**
 
-### Phase 2: Cqrs Completion (High Priority)
+### Phase 2: CQRS Completion (High Priority)
 1. **IEventHandler<TEvent>**
 2. **IEventDispatcher**
 3. **IRejectedEvent** + RejectedEvent class
@@ -212,7 +212,7 @@ This document provides an assessment of interfaces in **Genocs.Core** that can b
 1. ✅ **Reduced Dependencies**: Projects needing basic abstractions won't require Genocs.Core
 2. ✅ **Cleaner Architecture**: Clear separation between common patterns and framework-specific implementations
 3. ✅ **Better Reusability**: Interfaces can be used in projects that can't use ASP.NET Core
-4. ✅ **Consistency**: Complete Cqrs and auditing patterns in one place
+4. ✅ **Consistency**: Complete CQRS and auditing patterns in one place
 
 ### Risks and Mitigation
 1. ⚠️ **Breaking Change**: Moving interfaces changes namespaces
@@ -276,7 +276,7 @@ Genocs.Common/
 ├── Collections/
 │   ├── ITypeList.cs
 │   └── TypeList.cs (implementation)
-├── Cqrs/
+├── CQRS/
 │   ├── Events/
 │   │   ├── IEvent.cs (existing)
 │   │   ├── IEventHandler.cs (NEW)

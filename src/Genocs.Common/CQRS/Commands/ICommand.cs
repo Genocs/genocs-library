@@ -1,8 +1,8 @@
-using Genocs.Common.Cqrs.Commons;
+using Genocs.Common.CQRS.Commons;
 
-namespace Genocs.Common.Cqrs.Commands;
+namespace Genocs.Common.CQRS.Commands;
 
 /// <summary>
-/// Cqrs command interface.
+/// CQRS command interface.
 /// </summary>
 public interface ICommand : IMessage;

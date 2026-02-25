@@ -712,15 +712,15 @@
 +
 +- CHANGELOG: https://github.com/genocs/genocs-library/blob/main/CHANGELOG.md
 +- Releases: https://github.com/genocs/genocs-library/releases
-*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Cqrs\README_NUGET.md
-*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.Cqrs\README_NUGET.md
-+# Genocs.WebApi.Cqrs
+*** Delete File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.CQRS\README_NUGET.md
+*** Add File: D:/dev/genocs/genocs-library\src\Genocs.WebApi.CQRS\README_NUGET.md
++# Genocs.WebApi.CQRS
 +
-+Cqrs extensions for Genocs ASP.NET Core Web APIs. Target frameworks: `net10.0;net9.0;net8.0`.
++CQRS extensions for Genocs ASP.NET Core Web APIs. Target frameworks: `net10.0;net9.0;net8.0`.
 +
 +## Installation
 +
-+- `dotnet add package Genocs.WebApi.Cqrs`
++- `dotnet add package Genocs.WebApi.CQRS`
 +
 +## Getting Started
 +

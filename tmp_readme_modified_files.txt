@@ -24,7 +24,7 @@ src/Genocs.Security/README_NUGET.md
 src/Genocs.Messaging.AzureServiceBus/README_NUGET.md
 src/Genocs.Telemetry/README_NUGET.md
 src/Genocs.Tracing.Jaeger.RabbitMQ/README_NUGET.md
-src/Genocs.WebApi.Cqrs/README_NUGET.md
+src/Genocs.WebApi.CQRS/README_NUGET.md
 src/Genocs.WebApi.Security/README_NUGET.md
 src/Genocs.WebApi.OpenApi/README_NUGET.md
 src/Genocs.WebApi/README_NUGET.md

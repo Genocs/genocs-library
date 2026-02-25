@@ -1,7 +1,7 @@
-using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Events;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 
-namespace Genocs.Messaging.Cqrs.Dispatchers;
+namespace Genocs.Messaging.CQRS.Dispatchers;
 
 internal sealed class ServiceBusMessageDispatcher : ICommandDispatcher, IEventDispatcher
 {

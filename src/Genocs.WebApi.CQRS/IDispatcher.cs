@@ -1,8 +1,8 @@
-﻿using Genocs.Common.Cqrs.Commands;
-using Genocs.Common.Cqrs.Events;
-using Genocs.Common.Cqrs.Queries;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
 
-namespace Genocs.WebApi.Cqrs;
+namespace Genocs.WebApi.CQRS;
 
 public interface IDispatcher
 {
