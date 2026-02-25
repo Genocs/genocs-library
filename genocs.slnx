@@ -43,7 +43,6 @@
   </Folder>
   <Folder Name="/_Solution Items/">
     <File Path=".editorconfig" />
-    <File Path="demo-docker-compose.yml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="dotnet.ruleset" />
@@ -54,14 +53,8 @@
     <File Path="stylecop.json" />
   </Folder>
   <Folder Name="/_Solution Items/Application/">
-    <File Path="src/apps/apigateway.dockerfile" />
     <File Path="src/apps/docker-compose.override.yml" />
     <File Path="src/apps/docker-compose.yml" />
-    <File Path="src/apps/identities.dockerfile" />
-    <File Path="src/apps/local.env" />
-    <File Path="src/apps/notifications.dockerfile" />
-    <File Path="src/apps/orders.dockerfile" />
-    <File Path="src/apps/products.dockerfile" />
   </Folder>
   <Project Path="src/Genocs.Auth/Genocs.Auth.csproj" />
   <Project Path="src/Genocs.Common/Genocs.Common.csproj" />

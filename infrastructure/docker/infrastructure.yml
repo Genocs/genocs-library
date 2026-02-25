@@ -11,7 +11,8 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - rabbitmq:/var/lib/rabbitmq/mnesia
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia
+      - rabbitmq_logs:/var/log/rabbitmq
 
   mongodb:
     image: mongo
@@ -33,5 +34,7 @@ networks:
 volumes:
   mongodb:
     driver: local
-  rabbitmq:
+  rabbitmq_data:
+    driver: local
+  rabbitmq_logs:
     driver: local

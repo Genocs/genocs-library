@@ -2,7 +2,6 @@
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Core.Exceptions;
-using Genocs.Telemetry;
 using Genocs.Telemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -230,27 +229,4 @@ public static class OpenTelemetryExtensions
 
         return builder;
     }
-
-    /*
-    private static void SetupJaegerExporter(OpenTelemetry.Exporter.OtlpExporterOptions provider)
-    {
-        provider.AddOtlpExporter(o =>
-        {
-            o.Endpoint = new Uri(jaegerOptions.Endpoint);
-
-            // Parse enum
-            o.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(jaegerOptions.Protocol);
-            o.ExportProcessorType = Enum.Parse<ExportProcessorType>(jaegerOptions.ProcessorType);
-
-            // Check if Batch Exporter before setting options
-            o.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
-            {
-                MaxQueueSize = jaegerOptions.MaxQueueSize,
-                ScheduledDelayMilliseconds = jaegerOptions.ScheduledDelayMilliseconds,
-                ExporterTimeoutMilliseconds = jaegerOptions.ExporterTimeoutMilliseconds,
-                MaxExportBatchSize = jaegerOptions.MaxExportBatchSize
-            };
-        });
-    }
-    */
 }

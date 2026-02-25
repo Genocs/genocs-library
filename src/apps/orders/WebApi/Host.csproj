@@ -5,7 +5,7 @@
         <RootNamespace>Genocs.Orders.WebApi</RootNamespace>
         <AssemblyName>Genocs.Orders.WebApi</AssemblyName>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>_Genocs</UserSecretsId>
+        <UserSecretsId>Genocs</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
         <!-- Disable web.config transformation for Docker builds -->

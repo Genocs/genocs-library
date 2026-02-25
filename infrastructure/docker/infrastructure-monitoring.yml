@@ -5,7 +5,7 @@ services:
     container_name: aspire_dashboard
     ports:
       - 18888:18888
-      - 4318:18889
+      - 18889:18889
 
     environment:
       - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
@@ -39,10 +39,12 @@ services:
       - influxdb:/var/lib/influxdb2
 
   jaeger:
-    image: jaegertracing/all-in-one
-    hostname: jaeger_node_1
+    image: jaegertracing/all-in-one:latest
+    hostname: jaeger
     container_name: jaeger
     ports:
+      - 4317:4317
+      - 4318:4318
       - 5775:5775/udp
       - 5778:5778
       - 6831:6831/udp
@@ -50,7 +52,6 @@ services:
       - 9411:9411
       - 14268:14268
       - 16686:16686
-      - 4317:4317
     # network_mode: host
     networks:
       - genocs
@@ -67,13 +68,14 @@ services:
       - prometheus:/etc/prometheus
 
   seq:
-    image: datalust/seq
-    hostname: seq
+    image: datalust/seq:latest
     container_name: seq
+    ports:
+      - 5341:5341 # ingestion
+      - 5380:80 # UI
     environment:
       - ACCEPT_EULA=Y
-    ports:
-      - 5341:80
+      - SEQ_FIRSTRUN_ADMINPASSWORD=${SEQ_FIRSTRUN_ADMINPASSWORD}
     networks:
       - genocs
     # network_mode: host
