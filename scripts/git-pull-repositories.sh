@@ -13,7 +13,6 @@ if [[ "$1" = "-p" ]]
       cd $REPOSITORY
       git pull
       #git checkout main
-      #git checkout develop
       #echo 'clear local branches'
       #git remote prune origin --dry-run
       #git remote update origin --p
