@@ -33,22 +33,22 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Http" Version="8.1.*" />
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="8.1.*" />
-        <PackageReference Include="Genocs.Logging" Version="8.1.*" />
-        <PackageReference Include="Genocs.Messaging" Version="8.1.*" />
-        <PackageReference Include="Genocs.Messaging.Outbox" Version="8.1.*" />
-        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="8.1.*" />
-        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="8.1.*" />
-        <PackageReference Include="Genocs.Metrics" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.Redis" Version="8.1.*" />
-        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="8.1.*" />
-        <PackageReference Include="Genocs.Telemetry" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi.CQRS" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi.Security" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi.OpenApi" Version="8.1.*" />
-        <PackageReference Include="Genocs.WebApi" Version="8.1.*" />
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Metrics" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>

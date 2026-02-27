@@ -44,7 +44,7 @@
 <!-- PROJECT LOGO -->
 <p align="center">
   <a href="https://github.com/genocs/genocs-library">
-    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-logo.png" alt=".NET Microservice Template">
+    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-banner.png" alt=".NET Microservice Template">
   </a>
   <h3 align="center">.NET CLI</h3>
   <p align="center">
