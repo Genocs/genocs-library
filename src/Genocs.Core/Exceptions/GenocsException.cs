@@ -6,13 +6,12 @@
 [Serializable]
 public class GenocsException : Exception
 {
-    ///// <summary>
-    ///// Creates a new <see cref="GenocsException"/> object.
-    ///// </summary>
-    //public GenocsException()
-    //{
-
-    //}
+    /// <summary>
+    /// Creates a new <see cref="GenocsException"/> object.
+    /// </summary>
+    public GenocsException()
+    {
+    }
 
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
@@ -21,7 +20,6 @@ public class GenocsException : Exception
     public GenocsException(string message)
         : base(message)
     {
-
     }
 
     /// <summary>

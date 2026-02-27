@@ -118,14 +118,14 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private async Task SubscribeAsync(IMessageSubscriber messageSubscriber)
     {
         var conventions = _conventionsProvider.Get(messageSubscriber.Type);
-        var channelKey = GetChannelKey(conventions);
+        string channelKey = GetChannelKey(conventions);
         if (_channels.ContainsKey(channelKey))
         {
             return;
         }
 
         var channel = await _consumerConnection.CreateChannelAsync();
-        var channelInfoLog = $"exchange: '{conventions.Exchange}', queue: '{conventions.Queue}', " +
+        string channelInfoLog = $"exchange: '{conventions.Exchange}', queue: '{conventions.Queue}', " +
                              $"routing key: '{conventions.RoutingKey}'";
 
         if (!_channels.TryAdd(channelKey, channel))
@@ -138,9 +138,9 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _logger.LogTrace($"Added the channel: {channel.ChannelNumber} for {channelInfoLog}.");
 
         bool declare = _options.Queue?.Declare ?? true;
-        var durable = _options.Queue?.Durable ?? true;
-        var exclusive = _options.Queue?.Exclusive ?? false;
-        var autoDelete = _options.Queue?.AutoDelete ?? false;
+        bool durable = _options.Queue?.Durable ?? true;
+        bool exclusive = _options.Queue?.Exclusive ?? false;
+        bool autoDelete = _options.Queue?.AutoDelete ?? false;
 
         var deadLetterEnabled = _options.DeadLetter?.Enabled is true;
         var deadLetterExchange = deadLetterEnabled
@@ -179,11 +179,13 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 var ttl = _options.DeadLetter.Ttl.HasValue
                     ? _options.DeadLetter.Ttl <= 0 ? 86400000 : _options.DeadLetter.Ttl
                     : null;
+
                 var deadLetterArgs = new Dictionary<string, object>
                 {
                     { "x-dead-letter-exchange", conventions.Exchange },
                     { "x-dead-letter-routing-key", conventions.Queue }
                 };
+
                 if (ttl.HasValue)
                 {
                     deadLetterArgs["x-message-ttl"] = ttl.Value;
@@ -271,8 +273,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                                         Func<IServiceProvider, object, object, Task> handle,
                                         bool deadLetterEnabled)
     {
-        var currentRetry = 0;
-        var messageName = message.GetType().Name.Underscore();
+        int currentRetry = 0;
+        string? messageName = message.GetType().Name.Underscore();
         var retryPolicy = Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(_retries, _ => TimeSpan.FromSeconds(_retryInterval));
@@ -307,9 +309,13 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                 if (_loggerEnabled)
                 {
-                    _logger.LogInformation("Handled a message: {MessageName} with ID: {MessageId}, " +
-                                           "Correlation ID: {CorrelationId}, retry: {MessageRetry}",
-                        messageName, messageId, correlationId, currentRetry);
+                    _logger.LogInformation(
+                        "Handled a message: {MessageName} with ID: {MessageId}, " +
+                        "Correlation ID: {CorrelationId}, retry: {MessageRetry}",
+                        messageName,
+                        messageId,
+                        correlationId,
+                        currentRetry);
                 }
             }
             catch (Exception ex)
@@ -323,13 +329,13 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 }
 
                 currentRetry++;
-                var hasNextRetry = currentRetry <= _retries;
+                bool hasNextRetry = currentRetry <= _retries;
 
                 var failedMessage = _exceptionToFailedMessageMapper.Map(ex, message);
                 if (failedMessage is null)
                 {
                     // This is a fallback to the previous mechanism in order to avoid the legacy related issues
-                    var rejectedEvent = _exceptionToMessageMapper.Map(ex, message);
+                    object? rejectedEvent = _exceptionToMessageMapper.Map(ex, message);
                     if (rejectedEvent is not null)
                     {
                         failedMessage = new FailedMessage(rejectedEvent, false);
@@ -383,8 +389,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                 if (deadLetterEnabled)
                 {
-                    _logger.LogError("Message: {MessageName} with ID: {MessageId}, Correlation ID: " +
-                                     "{CorrelationId} will be moved to DLX", messageName, messageId, correlationId);
+                    _logger.LogError(
+                        "Message: {MessageName} with ID: {MessageId}, Correlation ID: " +
+                        "{CorrelationId} will be moved to DLX",
+                        messageName,
+                        messageId,
+                        correlationId);
                 }
 
                 channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
@@ -397,7 +407,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     {
         var type = messageSubscriber.Type;
         var conventions = _conventionsProvider.Get(type);
-        var channelKey = GetChannelKey(conventions);
+        string channelKey = GetChannelKey(conventions);
         if (!_channels.TryRemove(channelKey, out var channel))
         {
             return;
@@ -448,12 +458,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
     private class EmptyExceptionToMessageMapper : IExceptionToMessageMapper
     {
-        public object Map(Exception exception, object message) => null;
+        public object? Map(Exception exception, object message) => null;
     }
 
     private class EmptyExceptionToFailedMessageMapper : IExceptionToFailedMessageMapper
     {
-        public FailedMessage Map(Exception exception, object message) => null;
+        public FailedMessage? Map(Exception exception, object message) => null;
     }
 
     private async Task ConnectionOnCallbackExceptionAsync(object sender, CallbackExceptionEventArgs eventArgs)
