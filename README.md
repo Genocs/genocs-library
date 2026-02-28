@@ -166,6 +166,8 @@ root-project/
 │   │   ├── ci-build.yml
 │   │   ├── ci-release.yml
 │   │   └── ...
+├── .codex/
+│   └── AGENT.md
 ├── .cursor/
 │   ├── rules/
 │   │   ├── solution_architect.mdc
@@ -182,13 +184,11 @@ root-project/
 │   ├── copilot-instructions.md
 │   ├── workflows/
 │   │   ├── ...
+├── .kiro/
+│   ├── steering/
+│   │   ├── solution_architect.md
 ├── .vscode/
 │   └── mcp.json
-├── devops/
-│   ├── azure
-│   │   ├── ci-publish_on_acr.yml
-│   │   ├── ci-publish_on_nuget.yml
-│   │   └── ...
 ├── docs/
 │   └── ...
 ├── infrastructure/
@@ -203,6 +203,8 @@ root-project/
 │   ├── terraform/
 │   │   └── ...
 │   ├── ...
+├── postman/
+│   └── ...
 ├── scripts/
 │   └── ...
 ├── src/
@@ -309,7 +311,7 @@ You can find the console locally at:
 - [Jaeger](localhost:16686): `localhost:16686`
 - [Seq](localhost:5341): `localhost:5341`
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a `Loadbalancer` (Fabio) and a `Service Discovery` (Consul) components.
 
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
@@ -333,20 +335,26 @@ networks:
     driver: bridge
 
 volumes:
-  rabbitmq-data:
-  mongo-data:
-  redis-data:
-  postgres-data:
-  influx-data:
-  grafana-data:
-  jaeger-data:
-  seq-data:
-  vault-data:
-  elk-data:
-  fabio-data:
-  consul-data:
-  prometheus-data:
-  ml-data:
+  rabbitmq_data:
+  rabbitmq_logs:
+  mongodb_data:
+  redis_data:
+  postgres_data:
+  mysql_data:
+  influx_data:
+  grafana_data:
+  jaeger_data:
+  seq_data:
+  vault_data:
+  es_data:
+  fabio_data:
+  consul_data:
+  prometheus_data:
+  mssql_system_data:
+  mssql_user_data:
+  oracle_data:
+  oracle_setup:
+  oracle_startup:
 ```
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
@@ -612,12 +620,19 @@ docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/d
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
 
-# Build WORKER Docker image
-docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
+# Build MassTransit WebApi Docker image
+docker build -t genocs/demo-masstransit-webapi:2.0.0 -t genocs/demo-masstransit-webapi:latest -f ./src/demo/Masstransit.WebApi/Dockerfile .
 
-# Push WORKER Docker image to Dockerhub
-docker push genocs/demo-worker:2.0.0
-docker push genocs/demo-worker:latest
+# Push MassTransit WebApi Docker image to Dockerhub
+docker push genocs/demo-masstransit-webapi:2.0.0
+docker push genocs/demo-masstransit-webapi:latest
+
+# Build MassTransit WORKER Docker image
+docker build -t genocs/demo-masstransit-worker:2.0.0 -t genocs/demo-masstransit-worker:latest -f ./src/demo/Masstransit.Worker/Dockerfile .
+
+# Push MassTransit WORKER Docker image to Dockerhub
+docker push genocs/demo-masstransit-worker:2.0.0
+docker push genocs/demo-masstransit-worker:latest
 ```
 
 ---
@@ -761,7 +776,6 @@ Why use multiple libraries for testing? Each library has its own strengths and w
 | **Reqnroll** | End-to-End Testing | A library that provides a way to write end-to-end tests for REST APIs in .NET. |
 
 
-
 Under evalutation to be added:
 - [Respawn](https://github.com/jbogard/Respawn)
 
@@ -801,8 +815,32 @@ Add the following lines inside the csproj file of the project you want to test:
       </AssemblyAttribute>
   </ItemGroup>
 ```
+## **_Agentic Support_**
+
+The repository contains support for agentic development to be used along with VS Code or by other IDEs. 
+
+Supported agents are:
+- Codex
+- Cursor
+- Kiro
+- GitHUb Copilot Agents
+- Google Antigravity
+
+### Codex
+_Codex_ is an AI system developed by [OpenAI](https://openai.com/index/introducing-codex/) that translates natural language into code, acting as an interactive, intelligent programming partner. Based on GPT-5.3-Codex, it allows for real-time collaboration, where users can ask questions, discuss approaches, and guide the AI toward solutions. It excels at generating, synthesizing information, and solving complex coding tasks.
 
 
+### Cursor
+_Cursor_  is an AI-powered integrated development environment (IDE) designed specifically for software development. It is built as a "fork" of Visual Studio Code (VS Code), meaning it retains the familiar interface, extensions, and settings of VS Code while embedding advanced AI models directly into the code editor.
+
+### Kiro
+_Kiro_ is an AI-enhancedagentic Integrated Development Environment (IDE) and Command Line Interface (CLI) developed by Amazon Web Services (AWS) to facilitate end-to-end software development, often referred to as "spec-driven development". It is designed to move beyond simple code completion by using intelligent agents that can understand an entire codebase, generate detailed technical specifications, write code, run tests, and manage deployment
+
+### GitHub Copilot Agents
+_GitHub Copilot Agents_ are a set of agents that allows to use GitHub Copilot inside the IDE. They are designed to help developers to write code faster and with less effort by using natural language prompts.
+
+### Google Antigravity
+_Google Antigravity_ is a introduced "agentic" AI development platform and integrated development environment (IDE) released by Google in late 2025.
 
 ## **_MCP Servers_**
 

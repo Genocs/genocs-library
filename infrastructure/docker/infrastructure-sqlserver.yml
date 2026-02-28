@@ -10,8 +10,8 @@ services:
       SA_PASSWORD: ${MSSQL_PASSWORD}
       ACCEPT_EULA: "Y"
     volumes:
-      - mssqlsystem:/var/opt/mssql
-      - mssqluser:/var/opt/sqlserver
+      - mssql_system_data:/var/opt/mssql
+      - mssql_user_data:/var/opt/sqlserver
     networks:
       - genocs
 
@@ -21,7 +21,7 @@ networks:
     external: true
 
 volumes:
- mssqlsystem:
+ mssql_system_data:
    driver: local
- mssqluser:
+ mssql_user_data:
    driver: local

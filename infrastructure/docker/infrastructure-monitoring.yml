@@ -6,13 +6,10 @@ services:
     ports:
       - 18888:18888
       - 18889:18889
-
     environment:
       - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
-
     networks:
       - genocs
-    # network_mode: host
 
   grafana:
     image: grafana/grafana
@@ -24,7 +21,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - grafana:/var/lib/grafana
+      - grafana_data:/var/lib/grafana
 
   influxdb:
     image: influxdb
@@ -36,7 +33,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - influxdb:/var/lib/influxdb2
+      - influxdb_data:/var/lib/influxdb2
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -52,7 +49,6 @@ services:
       - 9411:9411
       - 14268:14268
       - 16686:16686
-    # network_mode: host
     networks:
       - genocs
 
@@ -63,9 +59,8 @@ services:
       - 9090:9090
     networks:
       - genocs
-    # network_mode: host
     volumes:
-      - prometheus:/etc/prometheus
+      - prometheus_data:/etc/prometheus
 
   seq:
     image: datalust/seq:latest
@@ -80,7 +75,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - seq:/data
+      - seq_data:/data
 
 networks:
   genocs:
@@ -88,11 +83,11 @@ networks:
     external: true
 
 volumes:
-  grafana:
+  grafana_data:
     driver: local
-  influxdb:
+  influxdb_data:
     driver: local
-  prometheus:
+  prometheus_data:
     driver: local
-  seq:
+  seq_data:
     driver: local

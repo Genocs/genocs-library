@@ -24,7 +24,7 @@ services:
       - genocs
     # network_mode: host
     volumes:
-      - mongodb:/data/db
+      - mongodb_data:/data/db
 
 networks:
   genocs:
@@ -32,7 +32,7 @@ networks:
     driver: bridge
 
 volumes:
-  mongodb:
+  mongodb_data:
     driver: local
   rabbitmq_data:
     driver: local

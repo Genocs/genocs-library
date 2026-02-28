@@ -15,6 +15,7 @@
         <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Http\Genocs.Http.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
@@ -30,15 +31,11 @@
         <PackageReference Include="Genocs.Persistence.Redis" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Http" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Metrics" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.WebApi.CQRS" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta001" />
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-    </ItemGroup>
-
 </Project>

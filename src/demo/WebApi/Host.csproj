@@ -25,7 +25,7 @@
         <PackageReference Include="Genocs.Auth" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Logging" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta001" />
-        <PackageReference Include="Genocs.Saga" Version="9.0.*" />
+        <PackageReference Include="Genocs.Saga" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta001" />
     </ItemGroup>
 

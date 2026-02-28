@@ -22,6 +22,7 @@
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
         <ProjectReference Include="..\..\Genocs.Http\Genocs.Http.csproj" />
+        <ProjectReference Include="..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\Genocs.Security\Genocs.Security.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
@@ -33,6 +34,7 @@
         <PackageReference Include="Genocs.Auth" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Logging" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Http" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.Security" Version="9.0.0-beta001" />
         <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta001" />
@@ -42,7 +44,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\Contracts\Contracts.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>

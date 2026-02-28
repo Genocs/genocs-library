@@ -18,24 +18,21 @@ COPY ["Directory.Build.targets", "Directory.Build.targets"]
 COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
-# Copy additional files needed for build
-COPY ["LICENSE", "LICENSE"]
-COPY ["icon.png", "icon.png"]
 
 # Copy project files and restore dependencies
 COPY ["src/demo/Contracts/Contracts.csproj", "src/Contracts/"]
 COPY ["src/demo/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/demo/WebApi/Host.csproj", "src/WebApi/"]
+COPY ["src/demo/Masstransit.WebApi/Host.csproj", "src/Masstransit.WebApi/"]
 
 # Restore dependencies in a separate layer for better caching
-RUN dotnet restore "src/WebApi/Host.csproj"
+RUN dotnet restore "src/Masstransit.WebApi/Host.csproj"
 # Copy source code
 COPY ["src/demo/Contracts/", "src/Contracts/"]
 COPY ["src/demo/Domain/", "src/Domain/"]
-COPY ["src/demo/WebApi/", "src/WebApi/"]
+COPY ["src/demo/Masstransit.WebApi/", "src/Masstransit.WebApi/"]
 
 # Build the application
-WORKDIR "/src/src/WebApi"
+WORKDIR "/src/src/Masstransit.WebApi"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish the application
