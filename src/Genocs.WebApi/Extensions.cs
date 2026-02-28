@@ -71,7 +71,11 @@ public static class Extensions
         if (jsonSerializer.GetType().Namespace?.Contains("Newtonsoft") == true)
         {
             builder.Services.Configure<KestrelServerOptions>(o => o.AllowSynchronousIO = true);
+#if !NET10_0_OR_GREATER
+            // Why: IIS server options type is not available for newer ASP.NET Core targets (e.g. net10).
+            // Keep IIS sync I/O config only where the API exists while preserving Kestrel behavior everywhere.
             builder.Services.Configure<IISServerOptions>(o => o.AllowSynchronousIO = true);
+#endif
         }
 
         builder.Services.AddSingleton(jsonSerializer);
