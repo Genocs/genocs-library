@@ -554,7 +554,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "authType": "token",
     "token": "secret",
     "username": "user",
-    "password": "secret",
+    "password": "$HASHICORP_TOKEN",
     "kv": {
       "enabled": true,
       "engineVersion": 2,
