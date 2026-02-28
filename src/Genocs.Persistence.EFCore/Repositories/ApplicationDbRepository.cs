@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
-using Genocs.Core.Domain.Entities;
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.EFCore.Context;
 using Mapster;

@@ -172,7 +172,7 @@ public static class Extensions
                 loggerConfiguration.WriteTo.GrafanaLoki(
                     lokiOptions.Url!,
                     credentials: auth,
-                    batchPostingLimit: lokiOptions.BatchPostingLimit ?? 1000,
+                    batchPostingLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
             }
@@ -180,13 +180,13 @@ public static class Extensions
             {
                 loggerConfiguration.WriteTo.GrafanaLoki(
                     lokiOptions.Url!,
-                    batchPostingLimit: lokiOptions.BatchPostingLimit ?? 1000,
+                    batchPostingLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
             }
         }
 
-        // azure application insights
+        // Azure application insights
         if (azureOptions.Enabled)
         {
             loggerConfiguration.WriteTo.ApplicationInsights(

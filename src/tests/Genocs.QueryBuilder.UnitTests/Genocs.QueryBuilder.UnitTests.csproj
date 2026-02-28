@@ -2,8 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <IsPublishable>false</IsPublishable>
+        <RootNamespace>Genocs.QueryBuilder.UnitTests</RootNamespace>
+        <AssemblyName>Genocs.QueryBuilder.UnitTests</AssemblyName>
         <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,9 +15,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />        
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
+        <PackageReference Include="NSubstitute" Version="5.3.0" />
+        <PackageReference Include="Shouldly" Version="4.3.0" />
         <PackageReference Include="xunit.v3" Version="3.2.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
             <PrivateAssets>all</PrivateAssets>
@@ -27,12 +33,12 @@
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.QueryBuilder\Genocs.QueryBuilder.csproj" />
-        <ProjectReference Include="..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.QueryBuilder" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
+        <PackageReference Include="Genocs.QueryBuilder" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta001" />
     </ItemGroup>
 
 </Project>

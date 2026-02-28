@@ -1,9 +1,11 @@
-using Genocs.Core.Domain.ConnectionString;
+using Genocs.Common.Domain.ConnectionString;
 using Genocs.Persistence.EFCore.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
+#if !NET10_0_OR_GREATER
 using MySqlConnector;
+#endif
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
@@ -58,6 +60,7 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
         return builder.ToString();
     }
 
+#if !NET10_0_OR_GREATER
     private static string MakeSecureMySqlConnectionString(string connectionString)
     {
         var builder = new MySqlConnectionStringBuilder(connectionString);
@@ -74,6 +77,10 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
 
         return builder.ToString();
     }
+#else
+    private static string MakeSecureMySqlConnectionString(string connectionString) =>
+        connectionString; // TODO: Re-enable when Pomelo supports .NET 10
+#endif
 
     private static string MakeSecureNpgsqlConnectionString(string connectionString)
     {

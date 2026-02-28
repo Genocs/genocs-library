@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Library.Demo.Masstransit.WebApi</RootNamespace>
+        <AssemblyName>Genocs.Library.Demo.Masstransit.WebApi</AssemblyName>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>Genocs</UserSecretsId>
+        <IsPackable>false</IsPackable>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />
+        <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
+        <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
+        <ProjectReference Include="..\..\Genocs.Http\Genocs.Http.csproj" />
+        <ProjectReference Include="..\..\Genocs.Security\Genocs.Security.csproj" />
+        <ProjectReference Include="..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
+        <ProjectReference Include="..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
+        <ProjectReference Include="..\..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
+        <ProjectReference Include="..\..\Genocs.Metrics\Genocs.Metrics.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Security" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Secrets.AzureKeyVault" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Metrics" Version="9.0.0-beta001" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="logs\" />
+    </ItemGroup>
+</Project>

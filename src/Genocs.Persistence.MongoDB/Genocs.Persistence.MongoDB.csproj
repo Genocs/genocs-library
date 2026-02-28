@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.MongoDB</PackageId>
+        <RootNamespace>Genocs.Persistence.MongoDB</RootNamespace>
+        <AssemblyName>Genocs.Persistence.MongoDB</AssemblyName>
+        <Title>Genocs MongoDB persistence integration</Title>
+        <Description>MongoDB repository and persistence integration for Genocs applications.</Description>
+        <PackageTags>genocs persistence mongodb repository data-access</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+        <PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="3.0.0" />
+    </ItemGroup>
+
+</Project>

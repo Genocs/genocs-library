@@ -2,18 +2,16 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <PackageId>Genocs.Library.Demo.Contracts</PackageId>
         <RootNamespace>Genocs.Library.Demo.Contracts</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Contracts</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\..\Genocs.Common\Genocs.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="8.1.*" />
+        <PackageReference Include="Genocs.Common" Version="9.0.0-beta001" />
     </ItemGroup>
 </Project>

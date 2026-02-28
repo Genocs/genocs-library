@@ -1,9 +1,10 @@
-﻿using Genocs.Common.Types;
-using Genocs.Core.CQRS.Commands;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Commons;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
+using Genocs.Common.Types;
 using Genocs.Core.CQRS.Commands.Dispatchers;
-using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Events.Dispatchers;
-using Genocs.Core.CQRS.Queries;
 using Genocs.Core.CQRS.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,11 +20,11 @@ public static class Extensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="project">Name of the project.</param>
-    /// <returns></returns>
+    /// <returns>The service collection. You can use it for chain commands.</returns>
     public static IServiceCollection AddHandlers(this IServiceCollection services, string project)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(x => x.FullName != null && x.FullName.Contains(project))
+            .Where(x => x.FullName?.Contains(project) == true)
             .ToArray();
 
         services.Scan(s => s.FromAssemblies(assemblies)

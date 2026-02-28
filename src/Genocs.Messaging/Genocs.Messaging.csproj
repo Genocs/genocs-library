@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Messaging</PackageId>
+        <RootNamespace>Genocs.Messaging</RootNamespace>
+        <AssemblyName>Genocs.Messaging</AssemblyName>
+        <Title>Genocs message broker abstractions</Title>
+        <Description>Abstractions for message broker publishing and consuming.</Description>
+        <PackageTags>genocs messaging message-broker pubsub integration</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
+    </ItemGroup>
+
+</Project>

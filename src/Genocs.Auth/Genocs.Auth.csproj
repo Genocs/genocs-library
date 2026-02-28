@@ -5,19 +5,9 @@
         <PackageId>Genocs.Auth</PackageId>
         <RootNamespace>Genocs.Auth</RootNamespace>
         <AssemblyName>Genocs.Auth</AssemblyName>
-        <Title>The Genocs authorization library.</Title>
-        <Description>The authorization library.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>authentication jwt genocs microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <Title>Genocs Auth for ASP.NET Core</Title>
+        <Description>Authentication and authorization helpers for ASP.NET Core applications.</Description>
+        <PackageTags>genocs auth authentication authorization jwt aspnetcore</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -25,19 +15,19 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Security" Version="8.1.*" />
+        <PackageReference Include="Genocs.Security" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.3" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.12" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.1.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.23" />
     </ItemGroup>
-    
+
 </Project>

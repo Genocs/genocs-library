@@ -4,21 +4,20 @@ using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Logging;
-using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.MongoDB;
-using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Notifications.WebApi.Commands;
 using Genocs.Notifications.WebApi.Exceptions;
 using Genocs.Notifications.WebApi.Hubs;
 using Genocs.Notifications.WebApi.Services;
-using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Secrets.Vault;
-using Genocs.Tracing;
+using Genocs.Persistence.MongoDB.Extensions;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.WebApi.Swagger;
-using Genocs.WebApi.Swagger.Docs;
+using Genocs.WebApi.OpenApi;
+using Genocs.WebApi.OpenApi.Docs;
 using Serilog;
 
 StaticLogger.EnsureInitialized();
@@ -31,8 +30,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
-                                        .AddOpenTelemetry()
-                                        .AddMetrics()
+                                        .AddTelemetry()
                                         .AddJwt()
                                         .AddCorrelationContextLogging()
                                         .AddErrorHandler<ExceptionToResponseMapper>()

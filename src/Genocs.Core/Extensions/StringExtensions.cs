@@ -1,19 +1,22 @@
-using Genocs.Core.Collections.Extensions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Genocs.Core.Collections.Extensions;
 
 namespace Genocs.Core.Extensions;
 
 /// <summary>
 /// Extension methods for String class.
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
+    /// <param name="str">The string.</param>
+    /// <param name="c">The char to ensure at the end of the string.</param>
+    /// <returns>The modified string if necessary.</returns>
     public static string? EnsureEndsWith(this string? str, char c)
     {
         return EnsureEndsWith(str, c, StringComparison.Ordinal);
@@ -22,6 +25,10 @@ public static class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
+    /// <param name="str">The string.</param>
+    /// <param name="c">The char to ensure at the end of the string.</param>
+    /// <param name="comparisonType">The string comparison type.</param>
+    /// <returns>The modified string if necessary.</returns>
     public static string? EnsureEndsWith(this string? str, char c, StringComparison comparisonType)
     {
         if (string.IsNullOrWhiteSpace(str))
@@ -244,7 +251,7 @@ public static class StringExtensions
     /// </summary>
     public static string[] Split(this string str, string separator)
     {
-        return str.Split(new[] { separator }, StringSplitOptions.None);
+        return str.Split([separator], StringSplitOptions.None);
     }
 
     /// <summary>
@@ -252,7 +259,7 @@ public static class StringExtensions
     /// </summary>
     public static string[] Split(this string str, string separator, StringSplitOptions options)
     {
-        return str.Split(new[] { separator }, options);
+        return str.Split([separator], options);
     }
 
     /// <summary>
@@ -326,11 +333,7 @@ public static class StringExtensions
             return str;
         }
 
-        return Regex.Replace(
-            str,
-            "[a-z][A-Z]",
-            m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
-        );
+        return MyRegex().Replace(str, m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1])));
     }
 
     /// <summary>
@@ -346,7 +349,7 @@ public static class StringExtensions
             return str;
         }
 
-        return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
+        return MyRegex().Replace(str, m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
     }
 
     /// <summary>
@@ -360,7 +363,7 @@ public static class StringExtensions
     {
         if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
 
-        return (T)Enum.Parse(typeof(T), str);
+        return Enum.Parse<T>(str);
     }
 
     /// <summary>
@@ -375,14 +378,13 @@ public static class StringExtensions
     {
         if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
 
-        return (T)Enum.Parse(typeof(T), str, ignoreCase);
+        return Enum.Parse<T>(str, ignoreCase);
     }
 
     public static string ToMd5(this string str)
     {
-        using var md5 = MD5.Create();
         byte[] inputBytes = Encoding.UTF8.GetBytes(str);
-        byte[] hashBytes = md5.ComputeHash(inputBytes);
+        byte[] hashBytes = MD5.HashData(inputBytes);
 
         var sb = new StringBuilder();
         foreach (byte hashByte in hashBytes)
@@ -510,4 +512,12 @@ public static class StringExtensions
         return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
             .ToLowerInvariant();
     }
+
+    /// <summary>
+    /// This is a helper method for <see cref="ToSentenceCase(string?, bool)"/> and <see cref="ToSentenceCase(string?, CultureInfo)"/> methods.
+    /// It is used to find the places where a lowercase letter is followed by an uppercase letter in a string.
+    /// </summary>
+    /// <returns>A <see cref="Regex"/> instance.</returns>
+    [GeneratedRegex("[a-z][A-Z]")]
+    private static partial Regex MyRegex();
 }

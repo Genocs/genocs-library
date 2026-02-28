@@ -1,31 +1,30 @@
-# Entity Framework Core library
+# Genocs.Persistence.EFCore
 
-Genocs Enterprise Library - Genocs.Persistence.EFCore.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Overview
+EF Core repository and persistence integration for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-This library provides a set of components and functionalities specifically designed for working with Entity Framework Core in the context of the Genocs architecture.
+## Installation
 
-It includes features such as:
+```bash
+dotnet add package Genocs.Persistence.EFCore
+```
 
-- DbContext customization
-- Repository and unit of work patterns
-- Integration with other Genocs libraries
+## Getting Started
 
-## Description
+Use this package to wire Entity Framework Core repositories and persistence services into your Genocs application modules.
 
-Genocs.Persistence.EFCore NuGet package contains general purpose functionalities to be used on DDD services.
+## Main Entry Points
+
+- `AddEFCorePersistence`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

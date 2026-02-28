@@ -1,33 +1,31 @@
 # Genocs.Discovery.Consul
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.Discovery.Consul.svg)](https://www.nuget.org/packages/Genocs.Discovery.Consul/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.Discovery.Consul.svg)](https://www.nuget.org/packages/Genocs.Discovery.Consul/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-This package is part of the Genocs Enterprise Library - Genocs.Discovery.Consul.
+Consul-based service discovery integration for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Overview
+## Installation
 
-Genocs Enterprise Library - Genocs.Discovery.Consul.
+```bash
+dotnet add package Genocs.Discovery.Consul
+```
 
-This package provides service discovery and configuration management using HashiCorp Consul. The library is designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+## Getting Started
 
-## Description
+Use this package to register Consul discovery and configure Consul-backed Http clients for inter-service communication.
 
-Discovery Consul NuGet package contains service discovery and health check functionalities to be used on DDD services with Consul as the service discovery mechanism.
+## Main Entry Points
 
+- `AddConsul`
+- `AddConsulHttpClient`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

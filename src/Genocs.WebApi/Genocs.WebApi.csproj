@@ -5,19 +5,9 @@
         <PackageId>Genocs.WebApi</PackageId>
         <RootNamespace>Genocs.WebApi</RootNamespace>
         <AssemblyName>Genocs.WebApi</AssemblyName>
-        <Title>The web api library</Title>
-        <Description>The web api library</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <Title>Genocs ASP.NET Core Web API</Title>
+        <Description>ASP.NET Core Web API extensions and conventions for Genocs applications.</Description>
+        <PackageTags>genocs webapi aspnetcore api middleware conventions</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -25,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="8.1.*" />
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>

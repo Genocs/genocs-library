@@ -34,11 +34,9 @@ public static class Extensions
     /// Add Redis support by means of Genocs builder.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <param name="buildOptions"></param>
+    /// <param name="buildOptions">A function to configure the Redis options.</param>
     /// <returns>The Genocs builder. You can use it to chain commands.</returns>
-    public static IGenocsBuilder AddRedis(
-                                            this IGenocsBuilder builder,
-                                            Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
+    public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, Func<IRedisOptionsBuilder, IRedisOptionsBuilder> buildOptions)
     {
         var options = buildOptions(new RedisSettingsBuilder()).Build();
         return builder.AddRedis(options);
@@ -48,7 +46,7 @@ public static class Extensions
     /// Add Redis support by means of Genocs builder.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
-    /// <param name="options"></param>
+    /// <param name="options">The Redis options.</param>
     /// <returns>The Genocs builder. You can use it to chain commands.</returns>
     public static IGenocsBuilder AddRedis(this IGenocsBuilder builder, RedisOptions options)
     {
@@ -59,7 +57,7 @@ public static class Extensions
 
         builder.Services
             .AddSingleton(options)
-            .AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(options.ConnectionString))
+            .AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.ConnectionString))
             .AddTransient(sp => sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase(options.Database))
             .AddStackExchangeRedisCache(o =>
             {

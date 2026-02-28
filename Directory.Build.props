@@ -13,8 +13,8 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-        <Version>8.0.0</Version>
-        <LangVersion>13.0</LangVersion>
+        <Version>9.0.0-beta01</Version>
+        <LangVersion>latest</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2026</Copyright>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -23,6 +23,15 @@
         <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>5.0.0</MinClientVersion>
+        <Authors>Nocco Giovanni Emanuele</Authors>
+        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <PackageReleaseNotes>
+            The change log and breaking changes are listed here.
+            https://github.com/Genocs/genocs-library/releases
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -61,18 +70,8 @@
         <Using Include="System.Guid" Alias="DefaultIdType" />
     </ItemGroup>
 
-
     <PropertyGroup>
         <!-- Enable Build Acceleration in Visual Studio. -->
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-
-        <!--
-          If you target a framework earlier than .NET 5 (including .NET Framework and .NET Standard),
-          you should set ProduceReferenceAssembly to true in order to speed incremental builds.
-          If you multi-target and any target is before .NET 5, you need this.
-          Even if you target .NET 5 or later, having this property is fine.
-        -->
-        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     </PropertyGroup>
-
 </Project>

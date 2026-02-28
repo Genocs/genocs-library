@@ -5,19 +5,9 @@
         <PackageId>Genocs.WebApi.Security</PackageId>
         <RootNamespace>Genocs.WebApi.Security</RootNamespace>
         <AssemblyName>Genocs.WebApi.Security</AssemblyName>
-        <Title>The web api Security library</Title>
-        <Description>The web api Security library</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>aggregate architecture boilerplate ddd ddd-architecture design-patterns docker domain-driven-design dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <Title>Genocs Web API security support</Title>
+        <Description>Security extensions for authentication and authorization in Genocs Web APIs.</Description>
+        <PackageTags>genocs webapi security authentication authorization aspnetcore</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -25,19 +15,19 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="8.1.*" />
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="10.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="10.0.3" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="9.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="9.0.12" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="8.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="8.0.23" />
     </ItemGroup>
-    
+
 </Project>

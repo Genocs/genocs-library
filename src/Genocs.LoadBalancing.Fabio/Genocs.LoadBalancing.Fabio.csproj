@@ -5,19 +5,9 @@
         <PackageId>Genocs.LoadBalancing.Fabio</PackageId>
         <RootNamespace>Genocs.LoadBalancing.Fabio</RootNamespace>
         <AssemblyName>Genocs.LoadBalancing.Fabio</AssemblyName>
-        <Title>The load balacer based on Fabio.</Title>
-        <Description>The load balacer based on Fabio.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>load balancer load-balancer design-patterns dotnet dotnetcore dotnet-core microservice microservices solid solid-principles</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <Title>Genocs Fabio load balancing</Title>
+        <Description>Fabio load-balancing integration for service-to-service calls.</Description>
+        <PackageTags>genocs fabio load-balancing routing service-discovery</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -25,6 +15,6 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Discovery.Consul" Version="8.1.*" />
+        <PackageReference Include="Genocs.Discovery.Consul" Version="9.0.0-beta001" />
     </ItemGroup>
 </Project>

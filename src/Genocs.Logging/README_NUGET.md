@@ -1,26 +1,35 @@
-# The Genocs Library - Logging components
+# Genocs.Logging
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.Logging.svg)](https://www.nuget.org/packages/Genocs.Logging/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.Logging.svg)](https://www.nuget.org/packages/Genocs.Logging/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
-**Genocs.Logging** provides structured logging capabilities with Serilog integration, supporting multiple sinks and advanced formatting for production-ready applications targeting .NET10, .NET9, .NET8.
+Logging abstractions and extensions for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Dependencies
-- **Genocs.Core** (5.0.9)
-- **Serilog** (4.0.2)
-- **Serilog.Extensions.Logging** (8.0.0)
-- **Serilog.Settings.Configuration** (8.0.4)
-- **Microsoft.Extensions.Logging.Abstractions** (9.0.0)
+## Installation
 
-### Framework references
-- Microsoft.NETCore.App
+```bash
+dotnet add package Genocs.Logging
+```
+
+## Getting Started
+
+Use this package to wire structured logging, CQRS handler logging behaviors, and correlation-aware middleware.
+
+## Main Entry Points
+
+- `UseLogging`
+- `AddCorrelationContextLogging`
+- `AddCommandHandlersLogging`
+- `AddEventHandlersLogging`
+- `MapLogLevelHandler`
+- `UserCorrelationContextLogging`
 
 ## Support
-Browse documentation at [GitHub](https://github.com/Genocs/genocs-library)
 
-## Documentation
-For more details and usage examples, visit our [documentation website](https://genocs.github.io/genocs-library/).
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Release notes
-See the [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md) for release history and [Releases](https://github.com/Genocs/genocs-library/releases) for detailed release notes.
+## Release Notes
+
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

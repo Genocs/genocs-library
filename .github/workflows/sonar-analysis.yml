@@ -55,7 +55,7 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
       - name: Restore dependencies
-        run: dotnet restore genocs.sln
+        run: dotnet restore genocs.slnx
 
       - name: Begin SonarQube analysis
         env:
@@ -73,11 +73,11 @@ jobs:
             /d:sonar.coverage.exclusions="**Tests*.cs,**/Program.cs,**/Startup.cs"
 
       - name: Build solution
-        run: dotnet build genocs.sln --configuration Release --no-restore
+        run: dotnet build genocs.slnx --configuration Release --no-restore
 
       - name: Run tests with coverage
         run: |
-          dotnet test genocs.sln \
+          dotnet test genocs.slnx \
             --configuration Release \
             --no-build \
             --verbosity normal \

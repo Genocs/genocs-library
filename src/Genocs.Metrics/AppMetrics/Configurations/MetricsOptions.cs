@@ -31,6 +31,7 @@ public class MetricsOptions
     /// </summary>
     public string? PrometheusFormatter { get; set; }
 
+    /*
     /// <summary>
     /// The InfluxDb url.
     /// </summary>
@@ -40,6 +41,7 @@ public class MetricsOptions
     /// The InfluxDb database name.
     /// </summary>
     public string? Database { get; set; }
+    */
 
     /// <summary>
     /// The metrics interval.

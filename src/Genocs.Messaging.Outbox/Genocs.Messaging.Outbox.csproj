@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Messaging.Outbox</PackageId>
+        <RootNamespace>Genocs.Messaging.Outbox</RootNamespace>
+        <AssemblyName>Genocs.Messaging.Outbox</AssemblyName>
+        <Title>Genocs messaging outbox abstractions</Title>
+        <Description>Outbox pattern abstractions for reliable message delivery.</Description>
+        <PackageTags>genocs messaging outbox reliability transactional-outbox</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Messaging\Genocs.Messaging.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta001" />
+    </ItemGroup>
+
+</Project>

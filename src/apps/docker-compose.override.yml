@@ -7,7 +7,7 @@ services:
   identities-service:
     build:
       context: ../../
-      dockerfile: ./src/apps/identity/WebApi/Dockerfile
+      dockerfile: ./src/apps/identities/WebApi/Dockerfile
 
   products-service:
     build:

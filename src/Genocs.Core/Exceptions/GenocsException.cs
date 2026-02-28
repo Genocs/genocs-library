@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Genocs.Core.Exceptions;
+﻿namespace Genocs.Core.Exceptions;
 
 /// <summary>
 /// Base exception type for those are thrown by Genocs system for Genocs specific exceptions.
@@ -13,16 +11,6 @@ public class GenocsException : Exception
     /// </summary>
     public GenocsException()
     {
-
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="GenocsException"/> object.
-    /// </summary>
-    public GenocsException(SerializationInfo serializationInfo, StreamingContext context)
-        : base(serializationInfo, context)
-    {
-
     }
 
     /// <summary>
@@ -32,7 +20,6 @@ public class GenocsException : Exception
     public GenocsException(string message)
         : base(message)
     {
-
     }
 
     /// <summary>
@@ -48,7 +35,7 @@ public class GenocsException : Exception
     /// <summary>
     /// Creates a new <see cref="GenocsException"/> object.
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">Exception message.</param>
     public class InvalidConfigurationException(string message)
         : GenocsException(message);
 }

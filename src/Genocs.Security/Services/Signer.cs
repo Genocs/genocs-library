@@ -59,12 +59,10 @@ internal sealed class Signer : ISigner
         }
 
         using var rsa = certificate.GetRSAPrivateKey();
-        if (rsa is null)
-        {
-            throw new InvalidOperationException("RSA private key couldn't be loaded.");
-        }
 
-        return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        return rsa is null
+            ? throw new InvalidOperationException("RSA private key couldn't be loaded.")
+            : rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
     }
 
     public bool Verify(byte[] data, X509Certificate2 certificate, byte[] signature, bool throwException = false)
@@ -74,7 +72,7 @@ internal sealed class Signer : ISigner
             throw new ArgumentNullException(nameof(data), "Data to be verified cannot be null.");
         }
 
-        if (signature is null || !signature.Any())
+        if (signature?.Any() != true)
         {
             throw new ArgumentException("Signature cannot be empty.", nameof(signature));
         }
@@ -87,19 +85,12 @@ internal sealed class Signer : ISigner
         try
         {
             using var rsa = certificate.GetRSAPublicKey();
-            if (rsa is null)
-            {
-                throw new InvalidOperationException("RSA public key couldn't be loaded.");
-            }
-
-            return rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            return rsa is null
+                ? throw new InvalidOperationException("RSA public key couldn't be loaded.")
+                : rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         }
-        catch
+        catch when (!throwException)
         {
-            if (throwException)
-            {
-                throw;
-            }
 
             return false;
         }

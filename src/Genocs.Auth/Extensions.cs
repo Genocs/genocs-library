@@ -282,7 +282,7 @@ internal static class DateExtensions
     /// <summary>
     /// ToTimestamp support function.
     /// </summary>
-    /// <param name="dateTime"></param>
-    /// <returns></returns>
+    /// <param name="dateTime">The DateTime instance to convert.</param>
+    /// <returns>The Unix timestamp representation of the DateTime.</returns>
     public static long ToTimestamp(this in DateTime dateTime) => new DateTimeOffset(dateTime).ToUnixTimeSeconds();
 }

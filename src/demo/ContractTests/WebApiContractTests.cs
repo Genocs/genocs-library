@@ -6,7 +6,7 @@ namespace Genocs.Library.Demo.ContractTests;
 /// <summary>
 /// Provides a suite of contract tests for the "Something API" using the Pact framework.
 /// </summary>
-/// <remarks>This class is responsible for defining and verifying HTTP interactions between the "Something API
+/// <remarks>This class is responsible for defining and verifying Http interactions between the "Something API
 /// Consumer" and the "Something API" provider. It uses the Pact V4 specification to ensure that the API consumer and
 /// provider adhere to a shared contract. The tests simulate real-world API interactions and validate the responses
 /// against the expected contract.  The class initializes a Pact builder with default or custom configurations for the

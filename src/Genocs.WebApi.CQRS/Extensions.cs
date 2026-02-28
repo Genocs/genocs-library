@@ -1,7 +1,7 @@
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Queries;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS.Builders;
 using Genocs.WebApi.CQRS.Middlewares;
@@ -40,15 +40,13 @@ public static class Extensions
         return app;
     }
 
-    public static IDispatcherEndpointsBuilder Dispatch(this IEndpointsBuilder endpoints,
-        Func<IDispatcherEndpointsBuilder, IDispatcherEndpointsBuilder> builder)
+    public static IDispatcherEndpointsBuilder Dispatch(this IEndpointsBuilder endpoints, Func<IDispatcherEndpointsBuilder, IDispatcherEndpointsBuilder> builder)
         => builder(new DispatcherEndpointsBuilder(endpoints));
 
-    public static IApplicationBuilder UsePublicContracts<T>(this IApplicationBuilder app,
-        string endpoint = "/_contracts") => app.UsePublicContracts(endpoint, typeof(T));
+    public static IApplicationBuilder UsePublicContracts<T>(this IApplicationBuilder app, string endpoint = "/_contracts")
+        => app.UsePublicContracts(endpoint, typeof(T));
 
-    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app,
-        bool attributeRequired, string endpoint = "/_contracts")
+    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app, bool attributeRequired, string endpoint = "/_contracts")
         => app.UsePublicContracts(endpoint, null, attributeRequired);
 
     public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app,

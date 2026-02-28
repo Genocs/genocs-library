@@ -22,9 +22,28 @@ public class JwtOptions
     /// Defaults to SecurityAlgorithms.HmacSha256 'HS256'.
     /// </summary>
     public string Algorithm { get; set; } = SecurityAlgorithms.HmacSha256;
+
+    /// <summary>
+    /// The issuer of the token. This is the entity that issues the token and is responsible for its validity.
+    /// </summary>
     public string? Issuer { get; set; }
+
+    /// <summary>
+    /// Gets the security key used to validate the issuer's signature in token authentication.
+    /// </summary>
+    /// <remarks>The key should be provided in a format compatible with the authentication mechanism in use,
+    /// such as a symmetric or asymmetric key. Ensure that the key is kept secure and not exposed in client
+    /// applications.</remarks>
     public string? IssuerSigningKey { get; set; }
+
+    /// <summary>
+    /// Gets the authority component used for authentication or identification purposes.
+    /// </summary>
     public string? Authority { get; set; }
+
+    /// <summary>
+    /// Gets the intended recipient or audience for the token.
+    /// </summary>
     public string? Audience { get; set; }
 
     /// <summary>

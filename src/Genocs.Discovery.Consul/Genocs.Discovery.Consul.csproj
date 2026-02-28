@@ -5,27 +5,17 @@
         <PackageId>Genocs.Discovery.Consul</PackageId>
         <RootNamespace>Genocs.Discovery.Consul</RootNamespace>
         <AssemblyName>Genocs.Discovery.Consul</AssemblyName>
-        <Title>The service discovery library powered by Consul.</Title>
-        <Description>The service discovery library powered by Consul.</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>service discovery service-discovery genocs microservice microservices solid solid-principles </PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <Title>Genocs Consul service discovery</Title>
+        <Description>Consul-based service discovery integration for Genocs applications.</Description>
+        <PackageTags>genocs consul service-discovery discovery registration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.HTTP\Genocs.HTTP.csproj" />
+        <ProjectReference Include="..\Genocs.Http\Genocs.Http.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.HTTP" Version="8.1.*" />
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>

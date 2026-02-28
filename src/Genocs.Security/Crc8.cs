@@ -15,8 +15,8 @@ public static class Crc8
     /// <summary>
     /// Compute the checksum of the byte array.
     /// </summary>
-    /// <param name="bytes"></param>
-    /// <returns></returns>
+    /// <param name="bytes">The byte array to compute the checksum for.</param>
+    /// <returns>The computed checksum.</returns>
     public static byte ComputeChecksum(params byte[] bytes)
     {
         byte crc = 0;

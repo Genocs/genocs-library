@@ -1,0 +1,88 @@
+<Solution>
+  <Folder Name="/application/" />
+  <Folder Name="/application/apigateway/">
+    <Project Path="src/apps/apigateway/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/application/identities/">
+    <Project Path="src/apps/identities/Application/Application.csproj" />
+    <Project Path="src/apps/identities/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/application/notifications/">
+    <Project Path="src/apps/notifications/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/application/orders/">
+    <Project Path="src/apps/orders/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/application/products/">
+    <Project Path="src/apps/products/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/application/wallets/" />
+  <Folder Name="/demo/">
+    <Project Path="src/demo/Contracts/Contracts.csproj" />
+    <Project Path="src/demo/Domain/Domain.csproj" />
+    <Project Path="src/demo/Infrastructure/Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/demo/WebApi/">
+    <Project Path="src/demo/WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/demo/tests/">
+    <Project Path="src/demo/ContractTests/ContractTests.csproj" />
+  </Folder>
+  <Folder Name="/demo/Masstransit.WebApi/">
+    <Project Path="src/demo/Masstransit.WebApi/Host.csproj" />
+  </Folder>
+  <Folder Name="/demo/Masstransit.Worker/">
+    <Project Path="src/demo/Masstransit.Worker/Host.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
+    <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.QueryBuilder.UnitTests/Genocs.QueryBuilder.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Saga.UnitTests/Genocs.Saga.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/_Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="dotnet.ruleset" />
+    <File Path="global.json" />
+    <File Path="launchSettings.json" />
+    <File Path="Makefile" />
+    <File Path="README.md" />
+    <File Path="stylecop.json" />
+  </Folder>
+  <Folder Name="/_Solution Items/Application/">
+    <File Path="src/apps/docker-compose.override.yml" />
+    <File Path="src/apps/docker-compose.yml" />
+  </Folder>
+  <Project Path="src/Genocs.Auth/Genocs.Auth.csproj" />
+  <Project Path="src/Genocs.Common/Genocs.Common.csproj" />
+  <Project Path="src/Genocs.Core/Genocs.Core.csproj" />
+  <Project Path="src/Genocs.Discovery.Consul/Genocs.Discovery.Consul.csproj" />
+  <Project Path="src/Genocs.Http.RestEase/Genocs.Http.RestEase.csproj" />
+  <Project Path="src/Genocs.Http/Genocs.Http.csproj" />
+  <Project Path="src/Genocs.LoadBalancing.Fabio/Genocs.LoadBalancing.Fabio.csproj" />
+  <Project Path="src/Genocs.Logging/Genocs.Logging.csproj" />
+  <Project Path="src/Genocs.Messaging.Outbox.MongoDB/Genocs.Messaging.Outbox.MongoDB.csproj" />
+  <Project Path="src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj" />
+  <Project Path="src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj" />
+  <Project Path="src/Genocs.Messaging/Genocs.Messaging.csproj" />
+  <Project Path="src/Genocs.Metrics/Genocs.Metrics.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
+  <Project Path="src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj" />
+  <Project Path="src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj" />
+  <Project Path="src/Genocs.QueryBuilder/Genocs.QueryBuilder.csproj" />
+  <Project Path="src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj" />
+  <Project Path="src/Genocs.Saga.Integrations.Redis/Genocs.Saga.Integrations.Redis.csproj" />
+  <Project Path="src/Genocs.Saga/Genocs.Saga.csproj" />
+  <Project Path="src/Genocs.Secrets.AzureKeyVault/Genocs.Secrets.AzureKeyVault.csproj" />
+  <Project Path="src/Genocs.Secrets.HashicorpKeyVault/Genocs.Secrets.HashicorpKeyVault.csproj" />
+  <Project Path="src/Genocs.Security/Genocs.Security.csproj" />
+  <Project Path="src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj" />
+  <Project Path="src/Genocs.Telemetry/Genocs.Telemetry.csproj" />
+  <Project Path="src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj" />
+  <Project Path="src/Genocs.WebApi.Security/Genocs.WebApi.Security.csproj" />
+  <Project Path="src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj" />
+  <Project Path="src/Genocs.WebApi/Genocs.WebApi.csproj" />
+</Solution>

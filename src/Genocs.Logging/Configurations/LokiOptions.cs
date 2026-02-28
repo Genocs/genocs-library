@@ -39,7 +39,7 @@ public class LokiOptions
     /// <summary>
     /// The maximum number of events to post in a single batch. Default value is 1000.
     /// </summary>
-    public int? BatchPostingLimit { get; set; }
+    public int BatchPostingLimit { get; set; } = 1000;
 
     /// <summary>
     /// The maximum number of events stored in the queue in memory, waiting to be posted over.

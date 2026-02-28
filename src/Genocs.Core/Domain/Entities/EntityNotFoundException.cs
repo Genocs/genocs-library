@@ -1,5 +1,4 @@
 ﻿using Genocs.Core.Exceptions;
-using System.Runtime.Serialization;
 
 namespace Genocs.Core.Domain.Entities;
 
@@ -12,29 +11,20 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Type of the entity.
     /// </summary>
-    public Type? EntityType { get; set; }
+    public Type EntityType { get; private set; }
 
     /// <summary>
     /// Id of the Entity.
     /// </summary>
-    public object? Id { get; set; }
+    public object Id { get; private set; }
 
-    /// <summary>
-    /// Creates a new <see cref="EntityNotFoundException"/> object.
-    /// </summary>
-    public EntityNotFoundException()
-    {
+    ///// <summary>
+    ///// Creates a new <see cref="EntityNotFoundException"/> object.
+    ///// </summary>
+    //public EntityNotFoundException()
+    //{
 
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="EntityNotFoundException"/> object.
-    /// </summary>
-    public EntityNotFoundException(SerializationInfo serializationInfo, StreamingContext context)
-        : base(serializationInfo, context)
-    {
-
-    }
+    //}
 
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.

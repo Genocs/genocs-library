@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Genocs.Common.Domain.Entities;
+using Genocs.Common.Domain.Entities.Auditing;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
 
@@ -6,10 +8,7 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// A shortcut of <see cref="FullAuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="Guid"/>).
 /// </summary>
 [Serializable]
-public abstract class FullAuditedEntity : FullAuditedEntity<Guid>, IEntity
-{
-
-}
+public abstract class FullAuditedEntity : FullAuditedEntity<Guid>, IEntity;
 
 /// <summary>
 /// Implements <see cref="IFullAudited"/> to be a base class for full-audited entities.

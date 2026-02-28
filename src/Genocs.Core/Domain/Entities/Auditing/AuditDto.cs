@@ -1,6 +1,8 @@
+using Genocs.Common.Interfaces;
+
 namespace Genocs.Core.Domain.Entities.Auditing;
 
-public class AuditDto
+public class AuditDto : IDto
 {
     public DefaultIdType Id { get; set; }
     public DefaultIdType UserId { get; set; }

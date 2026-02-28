@@ -2,21 +2,19 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <PackageId>Genocs.Library.Demo.Domain</PackageId>
         <RootNamespace>Genocs.Library.Demo.Domain</RootNamespace>
         <AssemblyName>Genocs.Library.Demo.Domain</AssemblyName>
-        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\Genocs.Persistence.MongoDb\Genocs.Persistence.MongoDb.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Persistence.MongoDb" Version="8.1.*" />
-        <PackageReference Include="Genocs.Persistence.EFCore" Version="8.1.*" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Persistence.EFCore" Version="9.0.0-beta001" />
     </ItemGroup>
 
 </Project>

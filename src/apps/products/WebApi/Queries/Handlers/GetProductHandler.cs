@@ -1,16 +1,16 @@
-using Genocs.Core.CQRS.Queries;
-using Genocs.Persistence.MongoDb.Domain.Repositories;
+using Genocs.Common.CQRS.Queries;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
 using Genocs.Products.WebApi.DTO;
 
 namespace Genocs.Products.WebApi.Queries.Handlers;
 
 public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
 {
-    private readonly IMongoDbBaseRepository<Domain.Product, Guid> _repository;
+    private readonly IMongoBaseRepository<Domain.Product, Guid> _repository;
 
     private static readonly Random _random = new();
 
-    public GetProductHandler(IMongoDbBaseRepository<Domain.Product, Guid> repository)
+    public GetProductHandler(IMongoBaseRepository<Domain.Product, Guid> repository)
     {
         _repository = repository;
     }
@@ -24,10 +24,17 @@ public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
             throw new Exception("Intentional exception thrown for testing or demonstration purposes.");
         }
 
-        var product = await _repository.GetAsync(query.ProductId);
+        var product = await _repository.GetAsync(query.ProductId, cancellationToken);
 
         return product is null
             ? null
-            : new ProductDto { Id = product.Id, SKU = product.SKU, UnitPrice = product.UnitPrice };
+            : new ProductDto
+            {
+                Id = product.Id,
+                SKU = product.SKU,
+                Name = product.Name,
+                Description = product.Description,
+                UnitPrice = product.UnitPrice
+            };
     }
 }
