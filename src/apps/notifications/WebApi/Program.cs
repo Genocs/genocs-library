@@ -16,7 +16,6 @@ using Genocs.Secrets.HashicorpKeyVault;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Serilog;
 
@@ -43,8 +42,7 @@ IGenocsBuilder gnxBuilder = await builder
                                         .AddInMemoryQueryDispatcher()
                                         .AddMessageOutbox(o => o.AddMongo())
                                         .AddWebApi()
-                                        .AddSwaggerDocs()
-                                        .AddWebApiSwaggerDocs()
+                                        .AddOpenApiDocs()
                                         .AddRabbitMQAsync();
 
 var services = builder.Services;
@@ -67,7 +65,7 @@ app.UseGenocs()
     })
     .UseDispatcherEndpoints(endpoints => endpoints
         .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
-    .UseSwaggerDocs()
+    .UseOpenApiDocs()
     .UseRabbitMQ();
 
 app.MapDefaultEndpoints();

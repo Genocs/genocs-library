@@ -7,7 +7,6 @@ using Genocs.Logging;
 using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Serilog;
@@ -24,8 +23,7 @@ builder
     .AddJwt("simmetric_jwt")
     .AddTelemetry()
     .AddWebApi()
-    .AddSwaggerDocs()
-    .AddWebApiSwaggerDocs()
+    .AddOpenApiDocs()
     .Build();
 
 // Add services to the container.
@@ -69,7 +67,7 @@ services.AddAuthorizationBuilder()
 var app = builder.Build();
 
 app.UseGenocs()
-    .UseSwaggerDocs();
+    .UseOpenApiDocs();
 
 app.UseHttpsRedirection();
 

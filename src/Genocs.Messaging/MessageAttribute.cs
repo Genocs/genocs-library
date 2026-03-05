@@ -29,15 +29,11 @@ public class MessageAttribute : Attribute
     /// <summary>
     /// ctor.
     /// </summary>
-    /// <param name="exchange"></param>
-    /// <param name="routingKey"></param>
-    /// <param name="queue"></param>
-    /// <param name="external"></param>
-    public MessageAttribute(
-                            string? exchange = null,
-                            string? routingKey = null,
-                            string? queue = null,
-                            bool external = false)
+    /// <param name="exchange">The Exchange name.</param>
+    /// <param name="routingKey">The Routing Key.</param>
+    /// <param name="queue">The Queue name.</param>
+    /// <param name="external">Indicates if the message is external.</param>
+    public MessageAttribute(string? exchange = null, string? routingKey = null, string? queue = null, bool external = false)
     {
         Exchange = exchange;
         RoutingKey = routingKey;

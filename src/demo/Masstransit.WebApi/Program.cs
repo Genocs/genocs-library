@@ -8,7 +8,6 @@ using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -32,8 +31,7 @@ builder
     //.AddEFCorePersistence()
     .AddApplicationServices()
     .AddWebApi()
-    .AddSwaggerDocs()
-    .AddWebApiSwaggerDocs()
+    .AddOpenApiDocs()
     .Build();
 
 var services = builder.Services;
@@ -64,7 +62,7 @@ var app = builder.Build();
 //await app.Services.InitializeDatabasesAsync();
 
 app.UseGenocs()
-    .UseSwaggerDocs();
+    .UseOpenApiDocs();
 
 app.UseHttpsRedirection();
 

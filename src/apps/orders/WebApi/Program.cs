@@ -24,7 +24,6 @@ using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Serilog;
 
@@ -59,8 +58,7 @@ IGenocsBuilder gnxBuilder = await builder
 
 gnxBuilder.AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
-        .AddSwaggerDocs()
-        .AddWebApiSwaggerDocs()
+        .AddOpenApiDocs()
         .Build();
 
 var app = builder.Build();
@@ -75,7 +73,7 @@ app.UseGenocs()
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
-    .UseSwaggerDocs()
+    .UseOpenApiDocs()
     .UseRabbitMQ()
     .SubscribeEvent<DeliveryStarted>();
 

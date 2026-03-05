@@ -1,7 +1,12 @@
 namespace Genocs.WebApi.OpenApi.Docs.Configurations;
 
-public class SwaggerOptions
+public class OpenApiOptions
 {
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "openapi";
+
     /// <summary>
     /// The flag to enable or disable Swagger.
     /// </summary>

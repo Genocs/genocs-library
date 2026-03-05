@@ -23,7 +23,6 @@ using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Serilog;
 
@@ -56,8 +55,7 @@ IGenocsBuilder gnxBuilder = await builder
                                         .AddRedis()
                                         .AddMessageOutbox(o => o.AddMongo())
                                         .AddWebApi()
-                                        .AddSwaggerDocs()
-                                        .AddWebApiSwaggerDocs()
+                                        .AddOpenApiDocs()
                                         .AddRabbitMQAsync();
 
 // Build the Genocs builder
@@ -77,7 +75,7 @@ app.UseGenocs()
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
         .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
-    .UseSwaggerDocs()
+    .UseOpenApiDocs()
     .UseRabbitMQ();
 
 app.MapDefaultEndpoints();

@@ -16,9 +16,9 @@ Use this package to register OpenAPI generation and expose Swagger UI/document e
 
 ## Main Entry Points
 
-- `AddSwaggerDocs`
-- `AddWebApiSwaggerDocs`
-- `UseSwaggerDocs`
+- `AddOpenApiDocs`
+- `AddWebApiOpenApiDocs`
+- `UseOpenApiDocs`
 
 ## Support
 

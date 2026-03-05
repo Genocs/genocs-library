@@ -1,17 +1,14 @@
 using System.Reflection;
 using Genocs.Core.Builders;
-using Genocs.WebApi.OpenApi.Docs.Builders;
+using Genocs.WebApi.OpenApi.Builders;
 using Genocs.WebApi.OpenApi.Docs.Configurations;
+using Genocs.WebApi.OpenApi.Filters;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 
-#if NET10_0_OR_GREATER
-
-#else
-
+#if !NET10_0_OR_GREATER
 using Microsoft.OpenApi.Models;
 #endif
 
@@ -19,46 +16,45 @@ namespace Genocs.WebApi.OpenApi.Docs;
 
 public static class Extensions
 {
-    private const string SectionName = "swagger";
-    private const string RegistryName = "docs.swagger";
+    private const string RegistryName = "docs.openapi";
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, string sectionName = SectionName)
+    public static IGenocsBuilder AddOpenApiDocs(this IGenocsBuilder builder, string sectionName = OpenApiOptions.Position)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = OpenApiOptions.Position;
         }
 
-        SwaggerOptions settings = builder.GetOptions<SwaggerOptions>(sectionName);
+        OpenApiOptions settings = builder.GetOptions<OpenApiOptions>(sectionName);
 
         if (settings is null)
         {
             return builder;
         }
 
-        return builder.AddSwaggerDocs(settings);
+        return builder.AddOpenApiDocs(settings);
     }
 
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, Func<ISwaggerOptionsBuilder, ISwaggerOptionsBuilder> buildOptions)
+    public static IGenocsBuilder AddOpenApiDocs(this IGenocsBuilder builder, Func<IOpenApiOptionsBuilder, IOpenApiOptionsBuilder> buildOptions)
     {
-        SwaggerOptions settings = buildOptions(new SwaggerOptionsBuilder()).Build();
+        OpenApiOptions settings = buildOptions(new OpenApiOptionsBuilder()).Build();
 
         if (settings is null)
         {
             return builder;
         }
 
-        return builder.AddSwaggerDocs(settings);
+        return builder.AddOpenApiDocs(settings);
     }
 
     /// <summary>
     /// Use this method to add and configure Swagger documentation.
-    /// Remove in case you are not using AddWebApiSwaggerDocs.
+    /// Remove in case you are not using AddOpenApiDocs.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="settings">The Settings.</param>
     /// <returns>The Genocs builder to be used for chain.</returns>
-    public static IGenocsBuilder AddSwaggerDocs(this IGenocsBuilder builder, SwaggerOptions settings)
+    public static IGenocsBuilder AddOpenApiDocs(this IGenocsBuilder builder, OpenApiOptions settings)
     {
         if (!settings.Enabled || !builder.TryRegister(RegistryName))
         {
@@ -73,6 +69,7 @@ public static class Extensions
         builder.Services.AddSwaggerGen(c =>
         {
             c.EnableAnnotations();
+            c.DocumentFilter<WebApiDocumentFilter>();
 
 #if NET10_0_OR_GREATER
 
@@ -253,9 +250,9 @@ public static class Extensions
         return builder;
     }
 
-    public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseOpenApiDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<SwaggerOptions>();
+        var options = builder.ApplicationServices.GetRequiredService<OpenApiOptions>();
         if (!options.Enabled)
         {
             return builder;

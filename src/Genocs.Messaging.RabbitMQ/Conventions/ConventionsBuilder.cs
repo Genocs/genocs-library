@@ -20,7 +20,7 @@ public class ConventionsBuilder : IConventionsBuilder
 
     public string GetRoutingKey(Type type)
     {
-        var routingKey = type.Name;
+        string routingKey = type.Name;
         if (_options.Conventions?.MessageAttribute?.IgnoreRoutingKey is true)
         {
             return WithCasing(routingKey); ;
@@ -34,12 +34,13 @@ public class ConventionsBuilder : IConventionsBuilder
 
     public string GetExchange(Type type)
     {
-        var exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
+        string? exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
             ? type.Assembly.GetName().Name
             : _options.Exchange.Name;
+
         if (_options.Conventions?.MessageAttribute?.IgnoreExchange is true)
         {
-            return WithCasing(exchange); ;
+            return WithCasing(exchange);
         }
 
         var attribute = GeAttribute(type);
@@ -51,7 +52,7 @@ public class ConventionsBuilder : IConventionsBuilder
     public string GetQueue(Type type)
     {
         var attribute = GeAttribute(type);
-        var ignoreQueue = _options.Conventions?.MessageAttribute?.IgnoreQueue;
+        bool? ignoreQueue = _options.Conventions?.MessageAttribute?.IgnoreQueue;
         if (ignoreQueue is null or false && !string.IsNullOrWhiteSpace(attribute?.Queue))
         {
             return WithCasing(attribute.Queue);
@@ -79,6 +80,6 @@ public class ConventionsBuilder : IConventionsBuilder
                 i > 0 && value[i - 1] != '.' && value[i - 1] != '/' && char.IsUpper(x) ? "_" + x : x.ToString()))
             .ToLowerInvariant();
 
-    private static MessageAttribute GeAttribute(MemberInfo type)
+    private static MessageAttribute? GeAttribute(MemberInfo type)
         => type.GetCustomAttribute<MessageAttribute>();
 }

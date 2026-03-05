@@ -44,9 +44,9 @@
 <!-- PROJECT LOGO -->
 <p align="center">
   <a href="https://github.com/genocs/genocs-library">
-    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-banner.png" alt=".NET Microservice Template">
+    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-banner.png" alt="Genocs Library">
   </a>
-  <h3 align="center">.NET CLI</h3>
+  <h3 align="center">Genocs Library</h3>
   <p align="center">
     Open Source Library For .NET10 Microservice
     <br />
@@ -491,7 +491,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "disableTransactions": false
   },
   "rabbitmq": {
-    "connectionName": "users-service",
+    "connectionName": "service-name",
     "retries": 3,
     "retryInterval": 2,
     "conventionsCasing": "snakeCase",

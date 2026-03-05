@@ -24,19 +24,17 @@ using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Genocs.Telemetry;
 
 namespace Genocs.Identities.Application;
 
@@ -75,7 +73,7 @@ public static class Extensions
             .AddRedis()
             .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
             .AddMongoRepository<UserDocument, Guid>("users")
-            .AddWebApiSwaggerDocs();
+            .AddOpenApiDocs();
 
         builder.Services.AddSingleton<ICorrelationIdFactory, CorrelationIdFactory>();
 
@@ -109,10 +107,10 @@ public static class Extensions
 
     public static IApplicationBuilder UseCore(this IApplicationBuilder app)
     {
-        app.UseMiddleware<LogContextMiddleware>()
+        app.UseGenocs()
+            .UseMiddleware<LogContextMiddleware>()
             .UseErrorHandler()
-            .UseSwaggerDocs()
-            .UseGenocs()
+            .UseOpenApiDocs()
             .UseAccessTokenValidator() // Implement the Authorization.
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
