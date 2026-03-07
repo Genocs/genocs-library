@@ -20,13 +20,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host
     .UseLogging();
 
-builder
+IGenocsBuilder gnxBuilder = builder
     .AddGenocs()
-    .AddJwt("simmetric_jwt")
     .AddTelemetry()
+    .AddJwt("simmetric_jwt")
+    .AddCorrelationContextLogging()
     .AddWebApi()
-    .AddOpenApiDocs()
-    .Build();
+    .AddOpenApiDocs();
+
+gnxBuilder.Build();
 
 // Add services to the container.
 var services = builder.Services;
@@ -57,6 +59,7 @@ var app = builder.Build();
 await BookStoreDatabaseInitializer.InitializeAsync(app.Services);
 
 app.UseGenocs()
+    .UseCorrelationContextLogging()
     .UseOpenApiDocs();
 
 app.UseHttpsRedirection();

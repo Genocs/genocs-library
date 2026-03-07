@@ -13,8 +13,12 @@ internal sealed class SagaProcessor : ISagaProcessor
         _log = log;
     }
 
-    public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state,
-        ISagaContext context) where TMessage : class
+    public async Task ProcessAsync<TMessage>(
+        ISaga saga,
+        TMessage message,
+        ISagaState state,
+        ISagaContext context)
+        where TMessage : class
     {
         var action = (ISagaAction<TMessage>)saga;
 
@@ -26,9 +30,17 @@ internal sealed class SagaProcessor : ISagaProcessor
         {
             context.SagaContextError = new SagaContextError(ex);
 
-            if (!(saga.State is SagaProcessState.Rejected))
+            if (saga.State is not SagaProcessState.Rejected)
             {
-                saga.Reject(ex);
+                try
+                {
+                    saga.Reject(ex);
+                }
+                catch (SagaException)
+                {
+                    // Reject transitions the saga to Rejected and throws by design.
+                    // Swallowing here keeps the pipeline alive so post-processing can compensate.
+                }
             }
         }
         finally
@@ -47,7 +59,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         state.Update(saga.State, updatedSagaData);
         var logData = SagaLogData.Create(saga.Id, sagaType, message);
 
-        var persistenceTasks = new []
+        var persistenceTasks = new[]
         {
             _repository.WriteAsync(state),
             _log.WriteAsync(logData)

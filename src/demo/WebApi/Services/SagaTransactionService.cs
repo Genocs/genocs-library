@@ -26,15 +26,15 @@ public class SagaTransactionService : ISagaTransactionService
     }
 
     /// <summary>
-    /// Starts a new transaction asynchronously using the specified text and originator identifier. 
+    /// Starts a new transaction asynchronously using the specified command and originator identifier.
     /// </summary>
     /// <remarks>This method creates a new saga context and processes the transaction using the saga
     /// coordinator. Ensure that both the text and originator parameters are valid and non-null before calling this
     /// method.</remarks>
-    /// <param name="text">The text that provides context or details for the transaction.</param>
+    /// <param name="command">The saga command that provides context or details for the transaction.</param>
     /// <param name="originator">The identifier of the entity initiating the transaction. Used to track the source of the transaction.</param>
     /// <returns>The <see cref="SagaId"/> of the newly started transaction.</returns>
-    public async Task<SagaId> StartTransactionAsync(string text, string originator)
+    public async Task<SagaId> StartTransactionAsync(StartSagaCommand command, string originator)
     {
         var context = SagaContext
             .Create()
@@ -44,7 +44,7 @@ public class SagaTransactionService : ISagaTransactionService
             .Build();
 
         await _sagaCoordinator.ProcessAsync(
-            new StartTransaction { Text = text },
+            new StartTransaction { Text = command.Text, TransactionValue = command.TransactionValue },
             context);
 
         return context.SagaId;

@@ -2,20 +2,29 @@ using Genocs.Saga;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
 
+public sealed class StartSagaCommand
+{
+    public string? Text { get; set; }
+    public int TransactionValue { get; set; }
+}
+
 public class StartTransaction
 {
     public string? Text { get; set; }
+    public int TransactionValue { get; set; }
 }
 
 public class CompleteTransaction
 {
     public string? Text { get; set; }
+    public int TransactionValue { get; set; }
 }
 
 public class SagaData
 {
     public bool IsStartTransaction { get; set; }
     public bool IsCompleteTransaction { get; set; }
+    public int TransactionValue { get; set; }
 
     public bool IsEnded { get; set; }
 
@@ -33,22 +42,30 @@ public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
     {
         Data.IsStartTransaction = true;
         _logger.LogInformation("StartTransaction reached!");
+
+        Data.TransactionValue = message.TransactionValue;
+
         CompleteSaga();
         return Task.CompletedTask;
     }
 
-    public Task HandleAsync(CompleteTransaction message, ISagaContext context)
+    public async Task HandleAsync(CompleteTransaction message, ISagaContext context)
     {
         Data.IsCompleteTransaction = true;
         _logger.LogInformation("CompleteTransaction reached!");
+
+        if (Data.TransactionValue < 0)
+        {
+            throw new Exception("Simulated exception in CompleteTransaction");
+        }
+
         CompleteSaga();
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
     public Task CompensateAsync(StartTransaction message, ISagaContext context)
     {
         _logger.LogError("StartTransaction failed, compensating... {message}", message.Text);
-
         return Task.CompletedTask;
     }
 
@@ -61,7 +78,10 @@ public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
     private void CompleteSaga()
     {
         if (State == SagaProcessState.Completed)
+        {
+            _logger.LogInformation("Saga already completed.");
             return;
+        }
 
         if (Data.IsSagaCompleted)
         {

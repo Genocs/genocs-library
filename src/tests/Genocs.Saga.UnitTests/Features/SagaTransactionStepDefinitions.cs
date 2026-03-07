@@ -56,7 +56,9 @@ public class SagaTransactionStepDefinitions
             .Callback<StartTransaction, ISagaContext>((msg, ctx) => _capturedContext = ctx)
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(text, originator);
+        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(
+            new StartSagaCommand { Text = text, TransactionValue = 0 },
+            originator);
         _existingSagaId = _resultSagaId.Id;
     }
 
@@ -71,7 +73,9 @@ public class SagaTransactionStepDefinitions
             .Callback<StartTransaction, ISagaContext>((msg, ctx) => _capturedContext = ctx)
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(_transactionText, _originator);
+        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(
+            new StartSagaCommand { Text = _transactionText, TransactionValue = 0 },
+            _originator);
     }
 
     [When(@"I complete the saga transaction with text ""(.*)"" and originator ""(.*)""")]

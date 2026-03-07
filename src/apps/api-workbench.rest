@@ -8,7 +8,7 @@
 #@identities = https://localhost:5271
 
 # Container version
-@apigateway = http://localhost:5000
+@apigateway = https://localhost:5500
 @identities = http://localhost:5001
 
 
@@ -77,7 +77,7 @@ PUT {{identities}}/users/59c00efe-6505-4a45-805b-155095c66a6d/unlock
 
 
 ### Get list of products using the API Gateway
-GET {{apigateway}}/products-service/products/ec5983de-c667-4ad3-8e0e-d42e653572b9
+GET {{apigateway}}/products-service/products/260f0334-c50f-4414-ba86-c6cef34d58e8
 
 
 ### Create new product using the API Gateway

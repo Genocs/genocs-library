@@ -1,12 +1,7 @@
-@Genocs.Core.Demo.HelloWorld_HostAddress = http://localhost:5267
+@Genocs.Core.Demo.HelloWorld_HostAddress = https://localhost:5070
 @bookStoreBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/api/bookstore
 @authorId = 00000000-0000-0000-0000-000000000000
 @bookId = 00000000-0000-0000-0000-000000000000
-
-GET {{Genocs.Core.Demo.HelloWorld_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
 
 # BookStore - list authors
 GET {{bookStoreBaseUrl}}/authors

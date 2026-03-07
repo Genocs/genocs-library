@@ -2,12 +2,12 @@ namespace Genocs.Saga.Async;
 
 public sealed class KeyedLocker
 {
-    private static readonly Dictionary<object, RefCounted<SemaphoreSlim>> SemaphoreSlims
-        = [];
+    private static readonly Dictionary<object, RefCounted<SemaphoreSlim>> SemaphoreSlims = [];
 
     private SemaphoreSlim GetOrCreate(object key)
     {
         RefCounted<SemaphoreSlim> item;
+
         lock (SemaphoreSlims)
         {
             if (SemaphoreSlims.TryGetValue(key, out item))
@@ -20,6 +20,7 @@ public sealed class KeyedLocker
                 SemaphoreSlims[key] = item;
             }
         }
+
         return item.Value;
     }
 
@@ -52,6 +53,7 @@ public sealed class KeyedLocker
             {
                 item = SemaphoreSlims[Key];
                 --item.RefCount;
+
                 if (item.RefCount is 0)
                     SemaphoreSlims.Remove(Key);
             }

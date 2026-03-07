@@ -1,3 +1,4 @@
+using Genocs.Library.Demo.WebApi.Sagas;
 using Genocs.Saga;
 
 namespace Genocs.Library.Demo.WebApi.Services;
@@ -10,10 +11,10 @@ public interface ISagaTransactionService
     /// <summary>
     /// Starts a new Saga transaction.
     /// </summary>
-    /// <param name="text">The text associated with the transaction.</param>
+    /// <param name="command">The command containing the transaction details.</param>
     /// <param name="originator">The originator of the transaction.</param>
     /// <returns>The SagaId of the newly started transaction.</returns>
-    Task<SagaId> StartTransactionAsync(string text, string originator);
+    Task<SagaId> StartTransactionAsync(StartSagaCommand command, string originator);
 
     /// <summary>
     /// Completes an existing Saga transaction.

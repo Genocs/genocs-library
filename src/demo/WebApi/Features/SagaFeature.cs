@@ -1,7 +1,7 @@
+using Genocs.Library.Demo.WebApi.Sagas;
 using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Saga;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Library.Demo.WebApi.Features;
 
@@ -17,9 +17,9 @@ public static class SagaFeature
         return endpoints;
     }
 
-    private static async Task<IResult> StartTransactionAsync(ISagaTransactionService sagaService)
+    private static async Task<IResult> StartTransactionAsync(ISagaTransactionService sagaService, [FromBody] StartSagaCommand command)
     {
-        SagaId sagaId = await sagaService.StartTransactionAsync("Start transaction", "Test");
+        SagaId sagaId = await sagaService.StartTransactionAsync(command, "Test");
         return Results.Ok(sagaId);
     }
 

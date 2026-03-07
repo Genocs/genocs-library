@@ -10,7 +10,11 @@ internal sealed class SagaCoordinator : ISagaCoordinator
     private readonly ISagaPostProcessor _postProcessor;
     private static readonly KeyedLocker Locker = new();
 
-    public SagaCoordinator(ISagaSeeker seeker, ISagaInitializer initializer, ISagaProcessor processor, ISagaPostProcessor postProcessor)
+    public SagaCoordinator(
+        ISagaSeeker seeker,
+        ISagaInitializer initializer,
+        ISagaProcessor processor,
+        ISagaPostProcessor postProcessor)
     {
         _seeker = seeker;
         _initializer = initializer;
@@ -24,25 +28,33 @@ internal sealed class SagaCoordinator : ISagaCoordinator
         where TMessage : class
             => ProcessAsync(message: message, onCompleted: null, onRejected: null, context: context);
 
-    public async Task ProcessAsync<TMessage>(TMessage message, Func<TMessage, ISagaContext, Task> onCompleted = null,
-        Func<TMessage, ISagaContext, Task> onRejected = null, ISagaContext context = null) where TMessage : class
+    public async Task ProcessAsync<TMessage>(
+        TMessage message,
+        Func<TMessage, ISagaContext, Task>? onCompleted = null,
+        Func<TMessage, ISagaContext, Task>? onRejected = null,
+        ISagaContext? context = null)
+        where TMessage : class
     {
         var actions = _seeker.Seek<TMessage>().ToList();
 
         Task EmptyHook(TMessage m, ISagaContext ctx) => Task.CompletedTask;
+
         onCompleted ??= EmptyHook;
         onRejected ??= EmptyHook;
 
         var sagaTasks = actions
-            .ConvertAll(action => ProcessAsync(message, action, onCompleted, onRejected, context))
-;
+            .ConvertAll(action => ProcessAsync(message, action, onCompleted, onRejected, context));
 
         await Task.WhenAll(sagaTasks);
     }
 
-    private async Task ProcessAsync<TMessage>(TMessage message, ISagaAction<TMessage> action,
-        Func<TMessage, ISagaContext, Task> onCompleted, Func<TMessage, ISagaContext, Task> onRejected,
-        ISagaContext context = null) where TMessage : class
+    private async Task ProcessAsync<TMessage>(
+        TMessage message,
+        ISagaAction<TMessage> action,
+        Func<TMessage, ISagaContext, Task> onCompleted,
+        Func<TMessage, ISagaContext, Task> onRejected,
+        ISagaContext? context = null)
+        where TMessage : class
     {
         context ??= SagaContext.Empty;
         var saga = (ISaga)action;
