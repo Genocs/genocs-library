@@ -2,35 +2,6 @@ using Genocs.Saga;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
 
-public sealed class StartSagaCommand
-{
-    public string? Text { get; set; }
-    public int TransactionValue { get; set; }
-}
-
-public class StartTransaction
-{
-    public string? Text { get; set; }
-    public int TransactionValue { get; set; }
-}
-
-public class CompleteTransaction
-{
-    public string? Text { get; set; }
-    public int TransactionValue { get; set; }
-}
-
-public class SagaData
-{
-    public bool IsStartTransaction { get; set; }
-    public bool IsCompleteTransaction { get; set; }
-    public int TransactionValue { get; set; }
-
-    public bool IsEnded { get; set; }
-
-    public bool IsSagaCompleted => IsStartTransaction && IsCompleteTransaction;
-}
-
 public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
     ISagaStartAction<StartTransaction>,
     ISagaAction<CompleteTransaction>

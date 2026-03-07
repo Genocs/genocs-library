@@ -14,44 +14,44 @@ namespace Genocs.Library.Demo.ContractTests;
 /// verifies the contract by executing the consumer code against a mock server.</remarks>
 public class WebApiContractTests
 {
-    private readonly IPactBuilderV4 pactBuilder;
+    private readonly IPactBuilderV4 _pactBuilder;
 
     public WebApiContractTests()
     {
         // Use default pact directory ..\..\pacts and default log
         // directory ..\..\logs
-        var pact = Pact.V4("Something API Consumer", "Something API", new PactConfig());
+        var pact = Pact.V4("Demo API Consumer", "Demo API", new PactConfig());
 
         // or specify custom log and pact directories
-        pact = Pact.V4("Something API Consumer", "Something API", new PactConfig
+        pact = Pact.V4("Demo API Consumer", "Demo API", new PactConfig
         {
             PactDir = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName}{Path.DirectorySeparatorChar}pacts"
         });
 
         // Initialize Rust backend
-        this.pactBuilder = pact.WithHttpInteractions();
+        _pactBuilder = pact.WithHttpInteractions();
     }
 
-    [Fact(Skip = "Skipping until the API is ready")]
+    [Fact]
     public async Task GetSomething_WhenTheTesterSomethingExists_ReturnsTheSomething()
     {
         // Arrange
-        this.pactBuilder
-            .UponReceiving("A GET request to retrieve the something")
-                .Given("There is a something with id 'tester'")
-                .WithRequest(HttpMethod.Get, "/somethings/tester")
-                .WithHeader("Accept", "application/json")
-            .WillRespond()
-                .WithStatus(HttpStatusCode.OK)
-                .WithHeader("Content-Type", "application/json; charset=utf-8")
-                .WithJsonBody(new
-                {
-                    id = "tester",
-                    firstName = "Totally",
-                    lastName = "Awesome"
-                });
+        _pactBuilder
+             .UponReceiving("A GET request to retrieve the something")
+                 .Given("There is a something with id 'tester'")
+                 .WithRequest(HttpMethod.Get, "/somethings/tester")
+                 .WithHeader("Accept", "application/json")
+             .WillRespond()
+                 .WithStatus(HttpStatusCode.OK)
+                 .WithHeader("Content-Type", "application/json; charset=utf-8")
+                 .WithJsonBody(new
+                 {
+                     id = "tester",
+                     firstName = "Totally",
+                     lastName = "Awesome"
+                 });
 
-        await this.pactBuilder.VerifyAsync(async ctx =>
+        await _pactBuilder.VerifyAsync(async ctx =>
         {
             //// Act
             //var client = new SomethingApiClient(ctx.MockServerUri);

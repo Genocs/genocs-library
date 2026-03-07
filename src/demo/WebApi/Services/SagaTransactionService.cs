@@ -1,8 +1,7 @@
 using Genocs.Library.Demo.WebApi.Sagas;
-using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Saga;
 
-namespace Genocs.Library.Demo.Services;
+namespace Genocs.Library.Demo.WebApi.Services;
 
 /// <summary>
 /// Helper service to manage saga transactions,
