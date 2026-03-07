@@ -55,7 +55,7 @@ gnxBuilder.Build();
 var app = builder.Build();
 
 app.UseGenocs()
-    .UserCorrelationContextLogging()
+    .UseCorrelationContextLogging()
     .UseErrorHandler()
     .UseRouting()
     .UseEndpoints(r =>

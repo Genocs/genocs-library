@@ -45,6 +45,11 @@ public class LoggerOptions
     /// </summary>
     public MongoOptions? Mongo { get; set; }
 
+    /// <summary>
+    /// Optional HTTP payload capture settings.
+    /// </summary>
+    public HttpPayloadOptions? HttpPayload { get; set; }
+
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
     public IEnumerable<string>? ExcludePaths { get; set; }
     public IEnumerable<string>? ExcludeProperties { get; set; }

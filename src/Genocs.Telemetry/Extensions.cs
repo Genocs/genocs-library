@@ -1,11 +1,13 @@
-﻿using Azure.Monitor.OpenTelemetry.Exporter;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
-using Genocs.Core.Exceptions;
 using Genocs.Telemetry.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -18,215 +20,142 @@ public static class OpenTelemetryExtensions
     /// <summary>
     /// Adds OpenTelemetry services to the Genocs application.
     /// </summary>
-    /// <remarks>
-    /// This method adds OpenTelemetry services to the Genocs application.
-    /// </remarks>
     /// <param name="builder">The Genocs builder.</param>
     /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddTelemetry(this IGenocsBuilder builder)
     {
-        AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position)
-            ?? throw new GenocsException.InvalidConfigurationException("app config section is missing. AddTelemetry requires those configuration.");
-
-        // No OpenTelemetryTracing in case of missing ServiceName
+        AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
         if (string.IsNullOrWhiteSpace(appOptions.Service))
         {
             return builder;
         }
 
-        TelemetryOptions? openTelemetryOptions = builder.GetOptions<TelemetryOptions>(TelemetryOptions.Position);
-
-        builder.Services.AddOpenTelemetry()
-            .ConfigureResource(resource =>
-            {
-                resource.AddService(serviceName: appOptions.Service)
-                    .AddTelemetrySdk()
-                    .AddEnvironmentVariableDetector();
-
-            })
-            .WithMetrics(metrics =>
-            {
-                // Setup standard instrumentations
-                MeterProviderBuilder provider = metrics.SetResourceBuilder(ResourceBuilder.CreateDefault());
-
-                provider.AddAspNetCoreInstrumentation();
-                provider.AddRuntimeInstrumentation();
-                provider.AddHttpClientInstrumentation();
-                provider.AddOtlpExporter();
-
-                // Setup the exporter
-                if (openTelemetryOptions.Exporter?.Enabled == true)
-                {
-                    metrics
-                        .AddOtlpExporter(otlpOptions =>
-                        {
-                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
-
-                            // Check if Jaeger is enabled
-                            if (openTelemetryOptions.Exporter?.Enabled == true)
-                            {
-                                // Parse enum
-                                otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
-                                otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
-
-                                // Check if Batch Exporter before setting options
-                                otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
-                                {
-                                    MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
-                                    ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
-                                    ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
-                                    MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
-                                };
-                            }
-                        });
-                }
-
-                // Check for Console config
-                if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableMetrics)
-                {
-                    // you should add OpenTelemetry.Exporter.Console NuGet package
-                    // Any OTEL supportable exporter can be used here
-                    metrics.AddConsoleExporter();
-                }
-
-                // Check for Azure ApplicationInsights config
-                if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableMetrics)
-                {
-                    // you should add OpenTelemetry.Exporter.Console NuGet package
-                    metrics.AddAzureMonitorMetricExporter(o =>
-                    {
-                        o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
-                    });
-                }
-            })
-            .WithTracing(tracing =>
-            {
-                tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation();
-
-                // Setup the exporter
-                if (openTelemetryOptions.Exporter?.Enabled == true)
-                {
-                    tracing
-                        .AddOtlpExporter(otlpOptions =>
-                        {
-                            otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
-
-                            // Check if Jaeger is enabled
-                            if (openTelemetryOptions.Exporter?.Enabled == true)
-                            {
-                                // Parse enum
-                                otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
-                                otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
-
-                                // Check if Batch Exporter before setting options
-                                otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
-                                {
-                                    MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
-                                    ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
-                                    ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
-                                    MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
-                                };
-                            }
-                        });
-                }
-
-                // Setup Console exporter
-                if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableTracing)
-                {
-                    // you should add OpenTelemetry.Exporter.Console NuGet package
-                    tracing.AddConsoleExporter();
-                }
-
-                // Setup Azure exporter
-                if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableTracing)
-                {
-                    // you should add Azure.Monitor.OpenTelemetry.Exporter NuGet package
-                    tracing.AddAzureMonitorTraceExporter(o =>
-                    {
-                        o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
-                    });
-                }
-
-                // Setup MongoDB exporter
-                if (openTelemetryOptions.MongoDB?.Enabled == true && openTelemetryOptions.MongoDB.EnableTracing)
-                {
-                    // you should add MongoDB.Driver.Core.Extensions.OpenTelemetry NuGet package
-                    tracing.AddMongoDBInstrumentation();
-                }
-
-                // TODO: Add more instrumentations as needed, e.g., Redis, gRPC, etc.
-                tracing.AddSource("*");
-
-                /*
-    Action<ResourceBuilder> appResourceBuilder =
-        resource => resource
-            .AddDetector(new ContainerResourceDetector());
-
-                builder.Services.AddTelemetry()
-                    .ConfigureResource(appResourceBuilder)
-                    .WithTracing(tracerBuilder => tracerBuilder
-                        .AddRedisInstrumentation(
-                            cartStore.GetConnection(),
-                            options => options.SetVerboseDatabaseStatements = true)
-                        .AddGrpcClientInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddOtlpExporter())
-
-*/
-            });
-
-        // Add the OpenTelemetry logging provider
-        builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(logging =>
+        TelemetryOptions telemetryOptions = builder.GetOptions<TelemetryOptions>(TelemetryOptions.Position);
+        if (!telemetryOptions.Enabled)
         {
-            logging.IncludeFormattedMessage = true;
-            logging.IncludeScopes = true;
+            return builder;
+        }
 
-            // Setup the exporter
-            if (openTelemetryOptions.Exporter?.Enabled == true)
-            {
-                logging.AddOtlpExporter(otlpOptions =>
-                {
-                    otlpOptions.Endpoint = new Uri(openTelemetryOptions.Exporter.OtlpEndpoint!);
+        builder.Services
+            .AddOpenTelemetry()
+            .ConfigureResource(resource => resource
+                .AddService(serviceName: appOptions.Service)
+                .AddTelemetrySdk()
+                .AddEnvironmentVariableDetector())
+            .WithMetrics(metrics => ConfigureMetrics(metrics, telemetryOptions))
+            .WithTracing(tracing => ConfigureTracing(tracing, telemetryOptions));
 
-                    // Check if Jaeger is enabled
-                    if (openTelemetryOptions.Exporter?.Enabled == true)
-                    {
-                        // Parse enum
-                        otlpOptions.Protocol = Enum.Parse<OpenTelemetry.Exporter.OtlpExportProtocol>(openTelemetryOptions.Exporter.Protocol);
-                        otlpOptions.ExportProcessorType = Enum.Parse<ExportProcessorType>(openTelemetryOptions.Exporter.ProcessorType);
-
-                        // Check if Batch Exporter before setting options
-                        otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<System.Diagnostics.Activity>
-                        {
-                            MaxQueueSize = openTelemetryOptions.Exporter.MaxQueueSize,
-                            ScheduledDelayMilliseconds = openTelemetryOptions.Exporter.ScheduledDelayMilliseconds,
-                            ExporterTimeoutMilliseconds = openTelemetryOptions.Exporter.ExporterTimeoutMilliseconds,
-                            MaxExportBatchSize = openTelemetryOptions.Exporter.MaxExportBatchSize
-                        };
-                    }
-                });
-            }
-
-            // Setup Console exporter
-            if (openTelemetryOptions.Console?.Enabled == true && openTelemetryOptions.Console.EnableLogging)
-            {
-                // you should add OpenTelemetry.Exporter.Console NuGet package
-                logging.AddConsoleExporter();
-            }
-
-            // Setup Azure exporter
-            if (openTelemetryOptions.Azure?.Enabled == true && openTelemetryOptions.Azure.EnableLogging)
-            {
-                // you should add Azure.Monitor.OpenTelemetry.Exporter NuGet package
-                logging.AddAzureMonitorLogExporter(o =>
-                {
-                    o.ConnectionString = openTelemetryOptions.Azure.ConnectionString;
-                });
-            }
-        });
+        builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(logging => ConfigureLogging(logging, telemetryOptions));
 
         return builder;
+    }
+
+    private static void ConfigureMetrics(MeterProviderBuilder metrics, TelemetryOptions options)
+    {
+        metrics
+            .SetResourceBuilder(ResourceBuilder.CreateDefault())
+            .AddAspNetCoreInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddHttpClientInstrumentation();
+
+        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableMetrics)
+        {
+            metrics.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
+        }
+
+        if (options.Console?.Enabled == true && options.Console.EnableMetrics)
+        {
+            metrics.AddConsoleExporter();
+        }
+
+        if (options.Azure?.Enabled == true && options.Azure.EnableMetrics && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
+        {
+            metrics.AddAzureMonitorMetricExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
+        }
+    }
+
+    private static void ConfigureTracing(TracerProviderBuilder tracing, TelemetryOptions options)
+    {
+        tracing
+            .AddAspNetCoreInstrumentation(aspNetCore =>
+            {
+                aspNetCore.RecordException = true;
+            })
+            .AddHttpClientInstrumentation(httpClient =>
+            {
+                httpClient.RecordException = true;
+            });
+
+        if (options.MongoDB?.Enabled == true && options.MongoDB.EnableTracing)
+        {
+            tracing.AddMongoDBInstrumentation();
+        }
+
+        tracing.AddSource("*");
+
+        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableTracing)
+        {
+            tracing.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
+        }
+
+        if (options.Console?.Enabled == true && options.Console.EnableTracing)
+        {
+            tracing.AddConsoleExporter();
+        }
+
+        if (options.Azure?.Enabled == true && options.Azure.EnableTracing && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
+        {
+            tracing.AddAzureMonitorTraceExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
+        }
+    }
+
+    private static void ConfigureLogging(OpenTelemetryLoggerOptions logging, TelemetryOptions options)
+    {
+        logging.IncludeFormattedMessage = true;
+        logging.IncludeScopes = true;
+
+        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableLogging)
+        {
+            logging.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
+        }
+
+        if (options.Console?.Enabled == true && options.Console.EnableLogging)
+        {
+            logging.AddConsoleExporter();
+        }
+
+        if (options.Azure?.Enabled == true && options.Azure.EnableLogging && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
+        {
+            logging.AddAzureMonitorLogExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
+        }
+    }
+
+    private static bool TryGetEnabledExporter(TelemetryOptions options, [NotNullWhen(true)] out OtlpExportOptions? exporterOptions)
+    {
+        exporterOptions = options.Exporter;
+        return exporterOptions?.Enabled == true && !string.IsNullOrWhiteSpace(exporterOptions.OtlpEndpoint);
+    }
+
+    private static void ApplyExporterOptions(OtlpExporterOptions otlpOptions, OtlpExportOptions exporterOptions)
+    {
+        otlpOptions.Endpoint = new Uri(exporterOptions.OtlpEndpoint!);
+
+        if (Enum.TryParse<OtlpExportProtocol>(exporterOptions.Protocol, true, out OtlpExportProtocol protocol))
+        {
+            otlpOptions.Protocol = protocol;
+        }
+
+        if (Enum.TryParse<ExportProcessorType>(exporterOptions.ProcessorType, true, out ExportProcessorType processorType))
+        {
+            otlpOptions.ExportProcessorType = processorType;
+        }
+
+        otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
+        {
+            MaxQueueSize = exporterOptions.MaxQueueSize,
+            ScheduledDelayMilliseconds = exporterOptions.ScheduledDelayMilliseconds,
+            ExporterTimeoutMilliseconds = exporterOptions.ExporterTimeoutMilliseconds,
+            MaxExportBatchSize = exporterOptions.MaxExportBatchSize
+        };
     }
 }

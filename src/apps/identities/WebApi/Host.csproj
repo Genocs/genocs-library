@@ -32,6 +32,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="appsettings.json~RF1f8b7c3.TMP" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Folder Include="logs\" />
     </ItemGroup>
 

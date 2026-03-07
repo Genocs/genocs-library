@@ -64,7 +64,7 @@ gnxBuilder.AddMessageOutbox(o => o.AddMongo())
 var app = builder.Build();
 
 app.UseGenocs()
-    .UserCorrelationContextLogging()
+    .UseCorrelationContextLogging()
     .UseErrorHandler()
     .UsePrometheus()
     .UseRouting()

@@ -30,9 +30,65 @@ Configuration example:
     "service": "My Service"
   },
   "telemetry": {
+    "enabled": true,
     "exporter": {
       "enabled": true,
-      "otlpEndpoint": "http://localhost:4317"
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc"
+    }
+  }
+}
+```
+
+Azure Application Insights (logs + metrics + traces, non-overlapping):
+
+When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` to avoid duplicate ingestion.
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": false
+    },
+    "azure": {
+      "enabled": true,
+      "enableTracing": true,
+      "enableMetrics": true,
+      "enableLogging": true,
+      "connectionString": "InstrumentationKey=<<key>>;IngestionEndpoint=https://<<region>>.in.applicationinsights.azure.com/"
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "enableLogging": false
+    }
+  }
+}
+```
+
+Jaeger with OTLP (trace-only) example:
+
+When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` so only traces go to Jaeger.
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": true,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": false,
+      "enableLogging": false
+    },
+    "azure": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "enableLogging": false
     }
   }
 }

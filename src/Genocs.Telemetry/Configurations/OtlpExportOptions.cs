@@ -27,6 +27,21 @@ public class OtlpExportOptions
     /// </summary>
     public string ProcessorType { get; set; } = "Batch";
 
+    /// <summary>
+    /// Enables OTLP tracing export.
+    /// </summary>
+    public bool EnableTracing { get; set; } = true;
+
+    /// <summary>
+    /// Enables OTLP metrics export.
+    /// </summary>
+    public bool EnableMetrics { get; set; } = true;
+
+    /// <summary>
+    /// Enables OTLP logging export.
+    /// </summary>
+    public bool EnableLogging { get; set; } = true;
+
     public int MaxQueueSize { get; set; } = 2048;
     public int ScheduledDelayMilliseconds { get; set; } = 5000;
     public int ExporterTimeoutMilliseconds { get; set; } = 30000;

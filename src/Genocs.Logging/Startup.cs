@@ -1,5 +1,5 @@
-﻿using Serilog.Events;
-using Serilog;
+﻿using Serilog;
+using Serilog.Events;
 
 namespace Genocs.Logging;
 
@@ -27,7 +27,7 @@ public static class StaticLogger
 
 #if DEBUG
     /// <summary>
-    /// Creates a debug logger configuration with verbose logging for development.
+    /// Creates a debug bootstrap logger for startup diagnostics.
     /// </summary>
     /// <returns>Configured Serilog logger for debug builds.</returns>
     private static Serilog.Core.Logger CreateDebugLogger()
@@ -44,12 +44,14 @@ public static class StaticLogger
             .MinimumLevel.Override("Microsoft.AspNetCore.Http", LogEventLevel.Debug)
             .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Debug)
             .Enrich.FromLogContext()
+            .Enrich.WithThreadId()
+            .Enrich.WithProperty("Application", "Genocs")
             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
             .CreateLogger();
     }
 #else
     /// <summary>
-    /// Creates a release logger configuration with optimized logging for production.
+    /// Creates a release bootstrap logger with conservative verbosity.
     /// </summary>
     /// <returns>Configured Serilog logger for release builds.</returns>
     private static Serilog.Core.Logger CreateReleaseLogger()

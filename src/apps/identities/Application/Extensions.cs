@@ -13,6 +13,7 @@ using Genocs.Identities.Application.Commands;
 using Genocs.Identities.Application.Decorators;
 using Genocs.Identities.Application.Domain.Constants;
 using Genocs.Identities.Application.Domain.Repositories;
+using Genocs.Identities.Application.Events;
 using Genocs.Identities.Application.Exceptions;
 using Genocs.Identities.Application.Logging;
 using Genocs.Identities.Application.Mongo;
@@ -117,7 +118,8 @@ public static class Extensions
             .UseAuthentication()
             .UseRabbitMQ()
             .SubscribeCommand<CreateUser>()
-            .SubscribeCommand<CreateAdmin>();
+            .SubscribeCommand<CreateAdmin>()
+            .SubscribeEvent<UserCreated>(); // Eample of event registration
 
         return app;
     }
@@ -125,7 +127,7 @@ public static class Extensions
     public static async Task GetAppName(this HttpContext httpContext)
         => await httpContext.Response.WriteAsync(httpContext.RequestServices?.GetService<AppOptions>()?.Name ?? string.Empty);
 
-    internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
+    internal static CorrelationContext? GetCorrelationContext(this IHttpContextAccessor accessor)
         => accessor.HttpContext?.Request.Headers.TryGetValue("Correlation-Context", out var json) is true
             ? JsonConvert.DeserializeObject<CorrelationContext>(json.FirstOrDefault())
             : null;

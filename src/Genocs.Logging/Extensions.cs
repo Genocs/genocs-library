@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
@@ -49,7 +50,7 @@ public static class Extensions
                     configure?.Invoke(context, loggerConfiguration);
                 });
 
-    public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder, string endpointRoute = "~/logging/level")
+    public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder, string endpointRoute = "/logging/level")
         => builder.MapPost(endpointRoute, LevelSwitch);
 
     private static void MapOptions(
@@ -136,7 +137,7 @@ public static class Extensions
         }
 
         // elastic search
-        if (elkOptions.Enabled)
+        if (elkOptions.Enabled && !string.IsNullOrWhiteSpace(elkOptions.Url))
         {
             loggerConfiguration.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elkOptions.Url))
             {
@@ -187,13 +188,13 @@ public static class Extensions
         }
 
         // Azure application insights
-        if (azureOptions.Enabled)
+        if (azureOptions.Enabled && !string.IsNullOrWhiteSpace(azureOptions.ConnectionString))
         {
+            var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
+            telemetryConfiguration.ConnectionString = azureOptions.ConnectionString;
+
             loggerConfiguration.WriteTo.ApplicationInsights(
-                new TelemetryConfiguration
-                {
-                    ConnectionString = azureOptions.ConnectionString,
-                },
+                telemetryConfiguration,
                 TelemetryConverter.Traces);
         }
     }
@@ -211,6 +212,8 @@ public static class Extensions
     /// <returns>The Genocs builder.</returns>
     public static IGenocsBuilder AddCorrelationContextLogging(this IGenocsBuilder builder)
     {
+        var loggerOptions = builder.GetOptions<LoggerOptions>(LoggerOptions.Position);
+        builder.Services.TryAddSingleton(loggerOptions);
         builder.Services.AddTransient<CorrelationContextLoggingMiddleware>();
 
         return builder;
@@ -222,11 +225,15 @@ public static class Extensions
     /// </summary>
     /// <param name="app">The application builder.</param>
     /// <returns>The application builder.</returns>
-    public static IApplicationBuilder UserCorrelationContextLogging(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCorrelationContextLogging(this IApplicationBuilder app)
     {
         app.UseMiddleware<CorrelationContextLoggingMiddleware>();
         return app;
     }
+
+    [Obsolete("Use UseCorrelationContextLogging().")]
+    public static IApplicationBuilder UserCorrelationContextLogging(this IApplicationBuilder app)
+        => app.UseCorrelationContextLogging();
 
     private static async Task LevelSwitch(HttpContext context)
     {
