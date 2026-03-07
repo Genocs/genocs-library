@@ -31,6 +31,9 @@ Configuration example:
   },
   "telemetry": {
     "enabled": true,
+    "sqlClient": {
+      "enableStatementText": false
+    },
     "exporter": {
       "enabled": true,
       "otlpEndpoint": "http://localhost:4317",
@@ -39,6 +42,8 @@ Configuration example:
   }
 }
 ```
+
+`telemetry.sqlClient.enableStatementText` is disabled by default. Enable it only when SQL query text (`db.query.text`/`db.statement`) collection is explicitly required.
 
 Azure Application Insights (logs + metrics + traces, non-overlapping):
 

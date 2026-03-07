@@ -35,4 +35,9 @@ public class TelemetryOptions
     /// MongoDB OpenTelemetry settings.
     /// </summary>
     public MongoDbOptions? MongoDB { get; set; }
+
+    /// <summary>
+    /// SQL client OpenTelemetry settings.
+    /// </summary>
+    public SqlClientOptions? SqlClient { get; set; }
 }

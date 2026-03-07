@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.Services;
+using Genocs.Library.Demo.WebApi.Features;
 using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Logging;
 using Genocs.Saga;
@@ -52,7 +53,7 @@ services.AddAuthorizationBuilder()
                 .AddPolicy("Reader3", builder => builder.RequireRole(["user"]))
                 .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))));
 
-//services.AddAuthorizationBuilder()
+// services.AddAuthorizationBuilder()
 //                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
 //                    .RequireAuthenticatedUser()
 //                    .Build())
@@ -81,45 +82,7 @@ app.UseAuthorization();
 app.UseAccessTokenValidator();
 
 app.MapControllers();
-
-// Minimal API
-
-// welcome endpoint
-app.MapGet(string.Empty, () => "Welcome to Genocs Library Demo Web Api!");
-
-// free endpoint
-app.MapGet("/free", () => "this is a free endpoint");
-
-// protected endpoint
-app.MapGet("/protected", () => "this is a protected endpoint")
-    .RequireAuthorization()
-    .WithTags("Home");
-//.WithOpenApi(op =>
-//{
-//    op.OperationId = "_home_default";
-//    op.Summary = "Get a single todo";
-//    op.Description = "Returns a todo by its ID.";
-//    op.Tags = new[] { new Microsoft.OpenApi.Models.OpenApiTag { Name = "Home" } };
-//    return op;
-//});
-
-// with authorization policy
-app.MapGet("/onlyreader", () => "ok").RequireAuthorization("Reader");
-app.MapGet("/onlyreader2", () => "ok").RequireAuthorization("Reader2");
-
-// Saga - Start Transaction endpoint
-app.MapPost("/saga/start", async (ISagaTransactionService sagaService) =>
-{
-    SagaId sagaId = await sagaService.StartTransactionAsync("Start transaction", "Test");
-    return Results.Ok(sagaId);
-}).WithTags("Saga");
-
-// Saga - Complete Transaction endpoint
-app.MapPost("/saga/complete/{sagaId}", async (ISagaTransactionService sagaService, string sagaId) =>
-{
-    SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", "Test");
-    return Results.Ok(completedSagaId);
-}).WithTags("Saga");
+app.MapFeatures();
 
 await app.RunAsync();
 

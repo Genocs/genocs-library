@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Telemetry.Configurations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
@@ -76,15 +79,30 @@ public static class OpenTelemetryExtensions
 
     private static void ConfigureTracing(TracerProviderBuilder tracing, TelemetryOptions options)
     {
+        bool enableSqlStatementText = options.SqlClient?.EnableStatementText == true;
+
         tracing
             .AddAspNetCoreInstrumentation(aspNetCore =>
             {
                 aspNetCore.RecordException = true;
+                aspNetCore.EnrichWithHttpRequest = EnrichIncomingRequestActivity;
+                aspNetCore.EnrichWithHttpResponse = EnrichIncomingResponseActivity;
+                aspNetCore.EnrichWithException = EnrichExceptionActivity;
             })
             .AddHttpClientInstrumentation(httpClient =>
             {
                 httpClient.RecordException = true;
+                httpClient.EnrichWithException = EnrichExceptionActivity;
+            })
+            .AddSqlClientInstrumentation(sqlClient =>
+            {
+                sqlClient.RecordException = true;
             });
+
+        if (!enableSqlStatementText)
+        {
+            tracing.AddProcessor(new StripSqlStatementTextProcessor());
+        }
 
         if (options.MongoDB?.Enabled == true && options.MongoDB.EnableTracing)
         {
@@ -113,6 +131,7 @@ public static class OpenTelemetryExtensions
     {
         logging.IncludeFormattedMessage = true;
         logging.IncludeScopes = true;
+        logging.ParseStateValues = true;
 
         if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableLogging)
         {
@@ -157,5 +176,113 @@ public static class OpenTelemetryExtensions
             ExporterTimeoutMilliseconds = exporterOptions.ExporterTimeoutMilliseconds,
             MaxExportBatchSize = exporterOptions.MaxExportBatchSize
         };
+    }
+
+    private static void EnrichExceptionActivity(Activity activity, Exception exception)
+    {
+        // Persist key exception details as span attributes to simplify querying in downstream backends.
+        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetTag("error.type", exception.GetType().FullName);
+        activity.SetTag("error.message", exception.Message);
+        activity.SetTag("exception.source", exception.Source);
+        activity.SetTag("exception.hresult", exception.HResult);
+        activity.SetTag("exception.target_site", exception.TargetSite?.Name);
+
+        if (exception.InnerException is not null)
+        {
+            activity.SetTag("exception.inner.type", exception.InnerException.GetType().FullName);
+            activity.SetTag("exception.inner.message", exception.InnerException.Message);
+        }
+    }
+
+    private static void EnrichIncomingRequestActivity(Activity activity, HttpRequest request)
+    {
+        activity.SetTag("http.request_id", request.HttpContext.TraceIdentifier);
+
+        if (TryGetCorrelationId(request.Headers, out string? correlationId) && !string.IsNullOrWhiteSpace(correlationId))
+        {
+            activity.SetTag("correlation.id", correlationId);
+        }
+
+        string? userId = request.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? request.HttpContext.User.FindFirst("sub")?.Value;
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            activity.SetTag("enduser.id", userId);
+        }
+
+        SetRouteTag(activity, request.HttpContext);
+    }
+
+    private static void EnrichIncomingResponseActivity(Activity activity, HttpResponse response)
+    {
+        // Route data can be unavailable at request start and become available later in the pipeline.
+        SetRouteTag(activity, response.HttpContext);
+    }
+
+    private static void SetRouteTag(Activity activity, HttpContext context)
+    {
+        string? route = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern?.RawText;
+        if (string.IsNullOrWhiteSpace(route))
+        {
+            route = context.Request.Path.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(route))
+        {
+            activity.SetTag("http.route", route);
+        }
+    }
+
+    private static bool TryGetCorrelationId(IHeaderDictionary headers, [NotNullWhen(true)] out string? correlationId)
+    {
+        if (TryGetHeaderValue(headers, "x-correlation-id", out correlationId))
+        {
+            return true;
+        }
+
+        if (TryGetHeaderValue(headers, "x-request-id", out correlationId))
+        {
+            return true;
+        }
+
+        if (TryGetHeaderValue(headers, "correlation-id", out correlationId))
+        {
+            return true;
+        }
+
+        correlationId = null;
+        return false;
+    }
+
+    private static bool TryGetHeaderValue(IHeaderDictionary headers, string headerName, [NotNullWhen(true)] out string? value)
+    {
+        if (headers.TryGetValue(headerName, out var headerValues))
+        {
+            string parsedValue = headerValues.ToString();
+            if (!string.IsNullOrWhiteSpace(parsedValue))
+            {
+                value = parsedValue;
+                return true;
+            }
+        }
+
+        value = null;
+        return false;
+    }
+
+    private sealed class StripSqlStatementTextProcessor : BaseProcessor<Activity>
+    {
+        public override void OnEnd(Activity activity)
+        {
+            // SqlClient currently emits SQL text by default; scrub it unless explicitly enabled.
+            if (activity.GetTagItem("db.system.name") is null && activity.GetTagItem("db.system") is null)
+            {
+                return;
+            }
+
+            activity.SetTag("db.query.text", null);
+            activity.SetTag("db.statement", null);
+        }
     }
 }
