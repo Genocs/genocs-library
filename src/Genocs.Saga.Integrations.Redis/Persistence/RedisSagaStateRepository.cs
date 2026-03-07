@@ -11,25 +11,27 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
     public RedisSagaStateRepository(IDistributedCache cache)
         => _cache = cache;
 
-    public async Task<ISagaState> ReadAsync(SagaId sagaId, Type sagaType)
+    public async Task<ISagaState?> ReadAsync(SagaId sagaId, Type sagaType)
     {
         if (string.IsNullOrWhiteSpace(sagaId))
         {
             throw new SagaException($"{nameof(sagaId)} was null or whitespace.");
         }
+
         if (sagaType is null)
         {
             throw new SagaException($"{nameof(sagaType)} was null.");
         }
 
-        RedisSagaState state = null;
-        var cachedSagaState = await _cache.GetStringAsync(StateId(sagaId, sagaType));
+        RedisSagaState? state = null;
+        string? cachedSagaState = await _cache.GetStringAsync(StateId(sagaId, sagaType));
 
         if (!string.IsNullOrWhiteSpace(cachedSagaState))
         {
             state = JsonConvert.DeserializeObject<RedisSagaState>(cachedSagaState);
-            state.Update(state.State, (state.Data as JObject)?.ToObject(state.DataType));
+            state?.Update(state.State, (state.Data as JObject)?.ToObject(state.DataType));
         }
+
         return state;
     }
 
@@ -42,7 +44,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
 
         var sagaState = new RedisSagaState(state.Id.Value, state.Type, state.State, state.Data, state.Data.GetType());
 
-        var serializedSagaState = JsonConvert.SerializeObject(sagaState);
+        string serializedSagaState = JsonConvert.SerializeObject(sagaState);
         await _cache.SetStringAsync(StateId(state.Id, state.Type), serializedSagaState);
     }
 

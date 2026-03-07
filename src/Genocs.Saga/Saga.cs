@@ -41,7 +41,7 @@ public abstract class Saga<TData> : Saga, ISaga<TData>
 
     public virtual void Initialize(SagaId id, SagaProcessState state, TData data)
     {
-        base.Initialize(id, state);
+        Initialize(id, state);
         Data = data;
     }
 }

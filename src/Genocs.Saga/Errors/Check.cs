@@ -2,7 +2,7 @@ namespace Genocs.Saga.Errors;
 
 internal static class Check
 {
-    internal static void Is<TExpected>(Type type, string message = null)
+    internal static void Is<TExpected>(Type type, string? message = null)
     {
         if (typeof(TExpected).IsAssignableFrom(type))
         {
@@ -13,7 +13,7 @@ internal static class Check
         throw new SagaException(message);
     }
 
-    internal static void IsNull<TData>(TData data, string message = null)
+    internal static void IsNull<TData>(TData data, string? message = null)
         where TData : class
     {
         if (data is null)

@@ -21,6 +21,10 @@ internal sealed class SagaProcessor : ISagaProcessor
         where TMessage : class
     {
         var action = (ISagaAction<TMessage>)saga;
+        string sagaType = saga.GetType().Name;
+        string messageType = typeof(TMessage).Name;
+
+        using var handleActivity = SagaTelemetry.StartHandleActivity(saga.Id, sagaType, messageType);
 
         try
         {
@@ -54,7 +58,7 @@ internal sealed class SagaProcessor : ISagaProcessor
     {
         var sagaType = saga.GetType();
 
-        var updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
+        object? updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
 
         state.Update(saga.State, updatedSagaData);
         var logData = SagaLogData.Create(saga.Id, sagaType, message);

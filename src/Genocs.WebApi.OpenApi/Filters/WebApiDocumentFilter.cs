@@ -1,20 +1,12 @@
 #if NET10_0_OR_GREATER
-
-using Microsoft.AspNetCore.Components;
 using Microsoft.OpenApi;
-
 #else
-
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-
 #endif
 
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Data.Common;
-using System.Reflection.Metadata;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace Genocs.WebApi.OpenApi.Filters;
 
@@ -26,7 +18,6 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
     private readonly Func<OpenApiPathItem, string, OpenApiOperation?> _getOperation = static (item, path) =>
     {
 #if NET10_0_OR_GREATER
-
         switch (path)
         {
             case "GET":
@@ -42,7 +33,6 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
                 item.AddOperation(HttpMethod.Delete, new OpenApiOperation());
                 return item.Operations[HttpMethod.Delete];
         }
-
 #else
         switch (path)
         {
@@ -75,7 +65,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
             foreach (var methodDefinition in pathDefinition)
             {
                 var operation = _getOperation(pathItem, methodDefinition.Method);
-                operation.Responses = new OpenApiResponses();
+                operation.Responses = [];
                 operation.Parameters = [];
 
                 foreach (var parameter in methodDefinition.Parameters)
@@ -162,9 +152,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
             //Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
         };
     }
-
 #else
-
     private OpenApiSchema GetSchema(WebApiEndpointParameter parameter, JsonSerializerOptions jsonSerializerOptions)
     {
         return new OpenApiSchema
@@ -182,6 +170,5 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
             Example = new OpenApiString(JsonSerializer.Serialize(response.Example, jsonSerializerOptions))
         };
     }
-
 #endif
 }

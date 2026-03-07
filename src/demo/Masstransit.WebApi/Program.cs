@@ -8,7 +8,7 @@ using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.OpenApi.Docs;
+using Genocs.WebApi.OpenApi;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 

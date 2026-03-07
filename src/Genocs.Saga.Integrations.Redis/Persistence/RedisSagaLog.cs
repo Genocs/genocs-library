@@ -6,11 +6,11 @@ namespace Genocs.Saga.Integrations.Redis.Persistence;
 
 internal sealed class RedisSagaLog : ISagaLog
 {
-    private readonly IDistributedCache cache;
+    private readonly IDistributedCache _cache;
 
     public RedisSagaLog(IDistributedCache cache)
     {
-        this.cache = cache;
+        _cache = cache;
     }
 
     public async Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type sagaType)
@@ -27,7 +27,7 @@ internal sealed class RedisSagaLog : ISagaLog
 
         var sagaLogDatas = new List<RedisSagaLogData>();
         var deserializedSagaLogDatas = new List<RedisSagaLogData>();
-        var cachedSagaLogDatas = await cache.GetStringAsync(LogId(id, sagaType));
+        var cachedSagaLogDatas = await _cache.GetStringAsync(LogId(id, sagaType));
 
         if (!string.IsNullOrWhiteSpace(cachedSagaLogDatas))
         {
@@ -57,9 +57,9 @@ internal sealed class RedisSagaLog : ISagaLog
 
         sagaLogDatas.Add(sagaLogData);
 
-        var serializedSagaLogDatas = JsonConvert.SerializeObject(sagaLogDatas);
+        string serializedSagaLogDatas = JsonConvert.SerializeObject(sagaLogDatas);
 
-        await cache.SetStringAsync(LogId(logData.Id, logData.Type), serializedSagaLogDatas);
+        await _cache.SetStringAsync(LogId(logData.Id, logData.Type), serializedSagaLogDatas);
     }
 
     public async Task DeleteAsync(SagaId sagaId, Type sagaType)
@@ -74,7 +74,7 @@ internal sealed class RedisSagaLog : ISagaLog
             throw new SagaException($"{nameof(sagaType)} was null.");
         }
 
-        await cache.RemoveAsync(LogId(sagaId, sagaType));
+        await _cache.RemoveAsync(LogId(sagaId, sagaType));
     }
 
     private string LogId(string id, Type type) => $"_log_{id}_{type.GetHashCode()}";

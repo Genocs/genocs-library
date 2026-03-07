@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Azure.Monitor.OpenTelemetry.Exporter;
@@ -109,7 +109,9 @@ public static class OpenTelemetryExtensions
             tracing.AddMongoDBInstrumentation();
         }
 
-        tracing.AddSource("*");
+        tracing
+            .AddSource("*")
+            .AddSource("Genocs.Saga");
 
         if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableTracing)
         {

@@ -24,8 +24,8 @@ using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
-using Genocs.WebApi.OpenApi.Docs;
 using Serilog;
+using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 

@@ -1,4 +1,4 @@
-namespace Genocs.WebApi.OpenApi.Docs.Configurations;
+namespace Genocs.WebApi.OpenApi.Configurations;
 
 public class OpenApiOptions
 {

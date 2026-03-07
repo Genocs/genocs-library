@@ -1,11 +1,6 @@
 ﻿namespace Genocs.Saga;
 
-public class SagaContextError
+public class SagaContextError(Exception e)
 {
-    public Exception Exception { get; }
-
-    public SagaContextError(Exception e)
-    {
-        Exception = e;
-    }
+    public Exception Exception { get; } = e;
 }

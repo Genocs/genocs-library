@@ -7,10 +7,10 @@ using Genocs.Logging;
 using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.OpenApi.Docs;
 using Genocs.Library.Demo.WebApi.Securities;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 

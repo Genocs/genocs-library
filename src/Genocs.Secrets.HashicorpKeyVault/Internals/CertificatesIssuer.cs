@@ -34,7 +34,8 @@ internal sealed class CertificatesIssuer : ICertificatesIssuer
     public async Task<X509Certificate2> IssueAsync()
     {
         var credentials =
-            await _client.V1.Secrets.PKI.GetCredentialsAsync(_options.RoleName,
+            await _client.V1.Secrets.PKI.GetCredentialsAsync(
+                _options.RoleName,
                 new CertificateCredentialsRequestOptions
                 {
                     CertificateFormat = _certificateFormat,
@@ -45,9 +46,9 @@ internal sealed class CertificatesIssuer : ICertificatesIssuer
                     OtherSubjectAlternativeNames = _options.OtherSubjectAlternativeNames,
                     IPSubjectAlternativeNames = _options.IPSubjectAlternativeNames,
                     URISubjectAlternativeNames = _options.URISubjectAlternativeNames,
-                    ExcludeCommonNameFromSubjectAlternativeNames =
-                        _options.ExcludeCommonNameFromSubjectAlternativeNames
-                }, _mountPoint);
+                    ExcludeCommonNameFromSubjectAlternativeNames = _options.ExcludeCommonNameFromSubjectAlternativeNames
+                },
+                _mountPoint);
 
         var certificate = new X509Certificate2(Encoding.UTF8.GetBytes(credentials.Data.CertificateContent));
         if (!_options.ImportPrivateKey || _privateKeyFormat != PrivateKeyFormat.der)

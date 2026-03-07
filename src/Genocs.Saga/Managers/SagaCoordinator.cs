@@ -22,9 +22,7 @@ internal sealed class SagaCoordinator : ISagaCoordinator
         _postProcessor = postProcessor;
     }
 
-    public Task ProcessAsync<TMessage>(
-        TMessage message,
-        ISagaContext? context = null)
+    public Task ProcessAsync<TMessage>(TMessage message, ISagaContext? context = null)
         where TMessage : class
             => ProcessAsync(message: message, onCompleted: null, onRejected: null, context: context);
 
@@ -35,17 +33,23 @@ internal sealed class SagaCoordinator : ISagaCoordinator
         ISagaContext? context = null)
         where TMessage : class
     {
-        var actions = _seeker.Seek<TMessage>().ToList();
+        string messageType = typeof(TMessage).Name;
+        using var processActivity = SagaTelemetry.StartProcessActivity(context, messageType);
 
-        Task EmptyHook(TMessage m, ISagaContext ctx) => Task.CompletedTask;
+        var actions = _seeker.Seek<TMessage>()?.ToList();
+
+        static Task EmptyHook(TMessage m, ISagaContext ctx) => Task.CompletedTask;
 
         onCompleted ??= EmptyHook;
         onRejected ??= EmptyHook;
 
-        var sagaTasks = actions
+        var sagaTasks = actions?
             .ConvertAll(action => ProcessAsync(message, action, onCompleted, onRejected, context));
 
-        await Task.WhenAll(sagaTasks);
+        if (sagaTasks != null)
+        {
+            await Task.WhenAll(sagaTasks);
+        }
     }
 
     private async Task ProcessAsync<TMessage>(
@@ -59,6 +63,10 @@ internal sealed class SagaCoordinator : ISagaCoordinator
         context ??= SagaContext.Empty;
         var saga = (ISaga)action;
         var id = saga.ResolveId(message, context);
+        string sagaType = saga.GetType().Name;
+        string messageType = typeof(TMessage).Name;
+
+        using var executeActivity = SagaTelemetry.StartExecuteActivity(context, id, sagaType, messageType);
 
         using (await Locker.LockAsync(id))
         {
@@ -71,6 +79,8 @@ internal sealed class SagaCoordinator : ISagaCoordinator
 
             await _processor.ProcessAsync(saga, message, state, context);
             await _postProcessor.ProcessAsync(saga, message, context, onCompleted, onRejected);
+
+            SagaTelemetry.SetSagaOutcome(saga.State, context.SagaContextError);
         }
     }
 }

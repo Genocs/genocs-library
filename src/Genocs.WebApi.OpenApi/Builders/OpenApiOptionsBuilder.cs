@@ -1,4 +1,4 @@
-using Genocs.WebApi.OpenApi.Docs.Configurations;
+using Genocs.WebApi.OpenApi.Configurations;
 
 namespace Genocs.WebApi.OpenApi.Builders;
 

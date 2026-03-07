@@ -30,7 +30,7 @@ using Genocs.Persistence.Redis;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
-using Genocs.WebApi.OpenApi.Docs;
+using Genocs.WebApi.OpenApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

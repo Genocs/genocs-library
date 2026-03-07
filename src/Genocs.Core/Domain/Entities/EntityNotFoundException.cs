@@ -18,14 +18,6 @@ public class EntityNotFoundException : GenocsException
     /// </summary>
     public object Id { get; private set; }
 
-    ///// <summary>
-    ///// Creates a new <see cref="EntityNotFoundException"/> object.
-    ///// </summary>
-    //public EntityNotFoundException()
-    //{
-
-    //}
-
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
@@ -52,7 +44,6 @@ public class EntityNotFoundException : GenocsException
     public EntityNotFoundException(string message)
         : base(message)
     {
-
     }
 
     /// <summary>

@@ -45,6 +45,5 @@ internal sealed class SagaContextBuilder : ISagaContextBuilder
             throw new InvalidOperationException("Originator must be provided.");
 
         return SagaContext.Create(_sagaId.Value, _originator, _metadata);
-
     }
 }

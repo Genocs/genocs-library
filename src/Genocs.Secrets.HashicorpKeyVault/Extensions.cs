@@ -330,9 +330,12 @@ public static class Extensions
                 continue;
             }
 
-            var templateValue = $"{template}";
-            templateValue = values.Aggregate(templateValue,
+            string templateValue = $"{template}";
+
+            templateValue = values.Aggregate(
+                templateValue,
                 (current, value) => current.Replace($"{{{{{value.Key}}}}}", value.Value));
+
             configuration.Add($"{key}:{property}", templateValue);
         }
     }
