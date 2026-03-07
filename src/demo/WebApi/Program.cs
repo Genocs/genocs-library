@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.Services;
@@ -9,7 +8,7 @@ using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.OpenApi.Docs;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Genocs.Library.Demo.WebApi.Securities;
 using Serilog;
 
 StaticLogger.EnsureInitialized();
@@ -46,24 +45,7 @@ services
 // Registrazione del servizio Saga
 services.AddScoped<ISagaTransactionService, SagaTransactionService>();
 
-// Override the default authorization policy
-services.AddAuthorizationBuilder()
-                .AddPolicy("Reader", builder => builder.RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user")))
-                .AddPolicy("Reader2", builder => builder.RequireClaim(ClaimTypes.Role, "user"))
-                .AddPolicy("Reader3", builder => builder.RequireRole(["user"]))
-                .AddPolicy("Reader4", builder => builder.AddRequirements(new AssertionRequirement(context => context.User.IsInRole("user"))));
-
-// services.AddAuthorizationBuilder()
-//                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-//                    .RequireAuthenticatedUser()
-//                    .Build())
-//                        .AddPolicy(Policies.UserOnly, policy => policy.RequireAssertion(context
-//                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)))
-//                        .AddPolicy(Policies.AdminOnly, policy => policy.RequireAssertion(context
-//                            => context.User.HasClaim(ClaimTypes.Role, Roles.Admin)))
-//                        .AddPolicy(Policies.UserOrAdmin, policy => policy.RequireAssertion(context
-//                            => context.User.HasClaim(ClaimTypes.Role, Roles.User)
-//                                || context.User.HasClaim(ClaimTypes.Role, Roles.Admin)));
+services.MapSecurityFeatures();
 
 var app = builder.Build();
 
@@ -74,6 +56,7 @@ app.UseHttpsRedirection();
 
 app.UseCors();
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
