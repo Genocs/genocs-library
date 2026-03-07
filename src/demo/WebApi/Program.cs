@@ -1,4 +1,5 @@
 using Genocs.Auth;
+using Genocs.Library.Demo.WebApi.BookStore.Data;
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.Services;
 using Genocs.Library.Demo.WebApi.Features;
@@ -9,6 +10,7 @@ using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.OpenApi.Docs;
 using Genocs.Library.Demo.WebApi.Securities;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 StaticLogger.EnsureInitialized();
@@ -28,8 +30,11 @@ builder
 
 // Add services to the container.
 var services = builder.Services;
+string bookStoreConnectionString = builder.Configuration.GetConnectionString("BookStore")
+    ?? throw new InvalidOperationException("Missing 'ConnectionStrings:BookStore' configuration.");
 
 services
+    .AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(bookStoreConnectionString))
     .AddSaga()
     .AddCors(options =>
     {
@@ -48,6 +53,8 @@ services.AddScoped<ISagaTransactionService, SagaTransactionService>();
 services.MapSecurityFeatures();
 
 var app = builder.Build();
+
+await BookStoreDatabaseInitializer.InitializeAsync(app.Services);
 
 app.UseGenocs()
     .UseOpenApiDocs();

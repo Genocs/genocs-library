@@ -9,18 +9,23 @@ public static class SagaFeature
 {
     public static IEndpointRouteBuilder MapSagaFeature(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/saga/start", async (ISagaTransactionService sagaService) =>
-        {
-            SagaId sagaId = await sagaService.StartTransactionAsync("Start transaction", "Test");
-            return Results.Ok(sagaId);
-        }).WithTags("Saga");
+        RouteGroupBuilder sagaGroup = endpoints.MapGroup("/saga").WithTags("Saga");
 
-        endpoints.MapPost("/saga/complete/{sagaId}", async (ISagaTransactionService sagaService, string sagaId) =>
-        {
-            SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", "Test");
-            return Results.Ok(completedSagaId);
-        }).WithTags("Saga");
+        sagaGroup.MapPost("/start", StartTransactionAsync);
+        sagaGroup.MapPost("/complete/{sagaId}", CompleteTransactionAsync);
 
         return endpoints;
+    }
+
+    private static async Task<IResult> StartTransactionAsync(ISagaTransactionService sagaService)
+    {
+        SagaId sagaId = await sagaService.StartTransactionAsync("Start transaction", "Test");
+        return Results.Ok(sagaId);
+    }
+
+    private static async Task<IResult> CompleteTransactionAsync(ISagaTransactionService sagaService, string sagaId)
+    {
+        SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", "Test");
+        return Results.Ok(completedSagaId);
     }
 }

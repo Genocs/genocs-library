@@ -594,6 +594,8 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 
 Inside the repo there is a simple demo application you can use to test the library. The demo application is composed by a WebApi and a Worker service, they are both using the library to show you how to use it in a real application.
 
+For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/WebApi/README.md`](src/demo/WebApi/README.md).
+
 ### How to BUILD & RUN the application
 Following are the commands to build and run the demo application.
 

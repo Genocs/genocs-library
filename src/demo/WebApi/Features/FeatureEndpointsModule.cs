@@ -8,6 +8,7 @@ public static class FeatureEndpointsModule
     {
         endpoints.MapHomeFeature();
         endpoints.MapSagaFeature();
+        endpoints.MapBookStoreFeature();
 
         return endpoints;
     }
