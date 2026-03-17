@@ -13,8 +13,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta001" />
-        <PackageReference Include="Genocs.Persistence.EFCore" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta002" />
+        <PackageReference Include="Genocs.Persistence.EFCore" Version="9.0.0-beta002" />
     </ItemGroup>
 
 </Project>
