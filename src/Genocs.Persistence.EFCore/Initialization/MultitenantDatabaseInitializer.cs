@@ -59,31 +59,28 @@ internal class MultitenantDatabaseInitializer : IDatabaseInitializer
 
     private async Task InitializeTenantDbAsync(CancellationToken cancellationToken)
     {
-        //if (_tenantDbContext.Database.GetPendingMigrations().Any())
-        //{
-        //    _logger.LogInformation("Applying Root Migrations.");
-        //    await _tenantDbContext.Database.MigrateAsync(cancellationToken);
-        //}
+        // if (_tenantDbContext.Database.GetPendingMigrations().Any())
+        // {
+        //     _logger.LogInformation("Applying Root Migrations.");
+        //     await _tenantDbContext.Database.MigrateAsync(cancellationToken);
+        // }
 
         await SeedRootTenantAsync(cancellationToken);
     }
 
     private async Task SeedRootTenantAsync(CancellationToken cancellationToken)
     {
-        //if (await _tenantDbContext.TenantInfo.FindAsync(new object?[] { MultitenancyConstants.Root.Id }, cancellationToken: cancellationToken) is null)
-        //{
-        //    var rootTenant = new GNXTenantInfo(
-        //                                        MultitenancyConstants.Root.Id,
-        //                                        MultitenancyConstants.Root.Name,
-        //                                        string.Empty,
-        //                                        MultitenancyConstants.Root.EmailAddress);
-
-        //    rootTenant.SetValidity(DateTime.UtcNow.AddYears(1));
-
-        //    _tenantDbContext.TenantInfo.Add(rootTenant);
-
-        //    await _tenantDbContext.SaveChangesAsync(cancellationToken);
-        //}
+        // if (await _tenantDbContext.TenantInfo.FindAsync(new object?[] { MultitenancyConstants.Root.Id }, cancellationToken: cancellationToken) is null)
+        // {
+        //     var rootTenant = new GNXTenantInfo(
+        //                                         MultitenancyConstants.Root.Id,
+        //                                         MultitenancyConstants.Root.Name,
+        //                                         string.Empty,
+        //                                         MultitenancyConstants.Root.EmailAddress); 
+        //     rootTenant.SetValidity(DateTime.UtcNow.AddYears(1)); 
+        //     _tenantDbContext.TenantInfo.Add(rootTenant); 
+        //     await _tenantDbContext.SaveChangesAsync(cancellationToken);
+        // }
 
         await Task.CompletedTask; // Placeholder for the actual implementation
     }

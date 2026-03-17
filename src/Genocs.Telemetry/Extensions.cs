@@ -111,7 +111,9 @@ public static class OpenTelemetryExtensions
 
         tracing
             .AddSource("*")
-            .AddSource("Genocs.Saga");
+            .AddSource("Genocs.Saga")
+            .AddSource("Genocs.Messaging.RabbitMQ")
+            .AddSource("Genocs.Messaging.AzureServiceBus");
 
         if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableTracing)
         {
