@@ -1,4 +1,4 @@
-namespace Genocs.Library.Demo.WebApi.BookStore.Domain;
+namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Domain;
 
 public class Book
 {

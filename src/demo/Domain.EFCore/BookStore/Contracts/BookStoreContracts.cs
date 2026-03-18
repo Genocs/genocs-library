@@ -1,4 +1,4 @@
-namespace Genocs.Library.Demo.WebApi.BookStore.Contracts;
+namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Contracts;
 
 public sealed record CreateAuthorRequest(
     string FirstName,

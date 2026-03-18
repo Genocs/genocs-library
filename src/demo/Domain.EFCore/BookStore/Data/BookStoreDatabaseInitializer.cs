@@ -1,9 +1,10 @@
 using System.Data;
 using System.Data.Common;
-using Genocs.Library.Demo.WebApi.BookStore.Domain;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Genocs.Library.Demo.WebApi.BookStore.Data;
+namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Data;
 
 public static class BookStoreDatabaseInitializer
 {

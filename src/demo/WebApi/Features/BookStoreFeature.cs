@@ -1,8 +1,6 @@
-using Genocs.Library.Demo.WebApi.BookStore.Contracts;
-using Genocs.Library.Demo.WebApi.BookStore.Data;
-using Genocs.Library.Demo.WebApi.BookStore.Domain;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Contracts;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Data;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genocs.Library.Demo.WebApi.Features;

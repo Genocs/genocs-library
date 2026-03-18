@@ -1,7 +1,32 @@
 @Genocs.Core.Demo.HelloWorld_HostAddress = https://localhost:5070
+@sagaBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/saga
 @bookStoreBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/api/bookstore
-@authorId = 00000000-0000-0000-0000-000000000000
-@bookId = 00000000-0000-0000-0000-000000000000
+@authorId = 80f5872d-7db0-4072-82e8-23024efeba2c
+@bookId = 5393e1ec-c9fe-4e29-921b-8cd644411376
+@sagaId = 8b9ff197-9ba6-4bec-b0d3-5e98728c0c93
+
+
+# Saga - start transaction
+POST {{sagaBaseUrl}}/start
+Content-Type: application/json
+
+{
+    "text": "Mylene_Hermiston",
+    "transactionValue": 10
+}
+
+###
+
+# Saga - commit transaction
+POST {{sagaBaseUrl}}/complete/{{sagaId}}
+Content-Type: application/json
+
+{
+    "text": "Mylene_Hermiston",
+    "transactionValue": 10
+}
+
+###
 
 # BookStore - list authors
 GET {{bookStoreBaseUrl}}/authors

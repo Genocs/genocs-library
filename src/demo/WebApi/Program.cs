@@ -1,16 +1,15 @@
 using Genocs.Auth;
-using Genocs.Library.Demo.WebApi.BookStore.Data;
 using Genocs.Core.Builders;
+using Genocs.Library.Demo.WebApi.Extensions;
 using Genocs.Library.Demo.WebApi.Features;
+using Genocs.Library.Demo.WebApi.Securities;
 using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Logging;
 using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.Library.Demo.WebApi.Securities;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Genocs.WebApi.OpenApi;
+using Serilog;
 
 StaticLogger.EnsureInitialized();
 
@@ -25,18 +24,15 @@ IGenocsBuilder gnxBuilder = builder
     .AddJwt("simmetric_jwt")
     .AddCorrelationContextLogging()
     .AddWebApi()
-    .AddOpenApiDocs();
+    .AddOpenApiDocs()
+    .AddBookStoreDbContext();
 
 gnxBuilder.Build();
 
 // Add services to the container.
 var services = builder.Services;
-string bookStoreConnectionString = builder.Configuration.GetConnectionString("BookStore")
-    ?? throw new InvalidOperationException("Missing 'ConnectionStrings:BookStore' configuration.");
 
-services
-    .AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(bookStoreConnectionString))
-    .AddSaga()
+services.AddSaga()
     .AddCors(options =>
     {
         options.AddDefaultPolicy(builder =>
@@ -55,25 +51,20 @@ services.MapSecurityFeatures();
 
 var app = builder.Build();
 
-await BookStoreDatabaseInitializer.InitializeAsync(app.Services);
-
 app.UseGenocs()
     .UseCorrelationContextLogging()
-    .UseOpenApiDocs();
+    .UseOpenApiDocs()
+    .UseHttpsRedirection()
+    .UseCors()
+    .UseRouting()
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseAccessTokenValidator(); // Used to validate the access token In RealTime
 
-app.UseHttpsRedirection();
-
-app.UseCors();
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-// Used to validate the access token
-// In RealTime
-app.UseAccessTokenValidator();
+await app.UseBookStoreDbContextAsync();
 
 app.MapControllers();
+
 app.MapFeatures();
 
 await app.RunAsync();

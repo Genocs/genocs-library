@@ -1,7 +1,7 @@
-using Genocs.Library.Demo.WebApi.BookStore.Domain;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Genocs.Library.Demo.WebApi.BookStore.Data;
+namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Data;
 
 public sealed class BookStoreDbContext : DbContext
 {
