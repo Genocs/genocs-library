@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta002" />
     </ItemGroup>
 
     <ItemGroup>

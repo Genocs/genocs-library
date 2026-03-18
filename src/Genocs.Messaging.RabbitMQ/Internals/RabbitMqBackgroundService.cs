@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,6 +17,7 @@ namespace Genocs.Messaging.RabbitMQ.Internals;
 
 internal sealed class RabbitMqBackgroundService : BackgroundService
 {
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.RabbitMQ");
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -46,6 +48,10 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private readonly RabbitMQOptions _options;
     private readonly RabbitMQOptions.QosOptions _qosOptions;
     private readonly bool _requeueFailedMessages;
+    private readonly string _spanContextHeader;
+
+    private const string TraceParentHeader = "traceparent";
+    private const string TraceStateHeader = "tracestate";
 
     public RabbitMqBackgroundService(IServiceProvider serviceProvider)
     {
@@ -68,6 +74,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _retryInterval = _options.RetryInterval > 0 ? _options.RetryInterval : 2;
         _qosOptions = _options.Qos ?? new RabbitMQOptions.QosOptions();
         _requeueFailedMessages = _options.RequeueFailedMessages;
+        _spanContextHeader = _options.GetSpanContextHeader();
         if (_qosOptions.PrefetchCount < 1)
         {
             _qosOptions.PrefetchCount = 1;
@@ -208,6 +215,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (_, args) =>
         {
+            using var processingActivity = StartConsumerActivity(args, messageSubscriber, conventions);
+
             try
             {
                 using var scope = _serviceProvider.CreateScope();
@@ -237,6 +246,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             }
             catch (Exception ex)
             {
+                MarkActivityAsError(processingActivity, ex);
                 _logger.LogError(ex, ex.Message);
                 await channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
                 await Task.Yield();
@@ -244,6 +254,81 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         };
 
         await channel.BasicConsumeAsync(conventions.Queue, false, consumer);
+    }
+
+    private Activity? StartConsumerActivity(
+                                            BasicDeliverEventArgs args,
+                                            IMessageSubscriber messageSubscriber,
+                                            IConventions conventions)
+    {
+        ActivityContext parentContext = default;
+        TryExtractParentContext(args.BasicProperties.Headers, out parentContext);
+
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "rabbitmq",
+            ["messaging.operation"] = "process",
+            ["messaging.destination.name"] = conventions.Exchange,
+            ["messaging.rabbitmq.routing_key"] = conventions.RoutingKey,
+            ["messaging.message.id"] = args.BasicProperties.MessageId,
+            ["messaging.conversation_id"] = args.BasicProperties.CorrelationId,
+            ["messaging.destination_kind"] = "queue",
+            ["genocs.message.type"] = messageSubscriber.Type.Name
+        };
+
+        return ActivitySource.StartActivity("rabbitmq.process", ActivityKind.Consumer, parentContext, tags);
+    }
+
+    private bool TryExtractParentContext(IDictionary<string, object>? headers, out ActivityContext parentContext)
+    {
+        string? traceParent = TryGetHeaderValue(headers, TraceParentHeader);
+        string? traceState = TryGetHeaderValue(headers, TraceStateHeader);
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            traceParent = TryGetHeaderValue(headers, _spanContextHeader);
+        }
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            parentContext = default;
+            return false;
+        }
+
+        return ActivityContext.TryParse(traceParent, traceState, out parentContext);
+    }
+
+    private static string? TryGetHeaderValue(IDictionary<string, object>? headers, string headerName)
+    {
+        if (headers is null || string.IsNullOrWhiteSpace(headerName))
+        {
+            return null;
+        }
+
+        if (!headers.TryGetValue(headerName, out object? value) || value is null)
+        {
+            return null;
+        }
+
+        return value switch
+        {
+            byte[] bytes => Encoding.UTF8.GetString(bytes),
+            ReadOnlyMemory<byte> memory => Encoding.UTF8.GetString(memory.Span),
+            string text => text,
+            _ => value.ToString()
+        };
+    }
+
+    private static void MarkActivityAsError(Activity? activity, Exception exception)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetTag("error.type", exception.GetType().FullName);
+        activity.SetTag("error.message", exception.Message);
     }
 
     private object BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
@@ -320,6 +405,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             }
             catch (Exception ex)
             {
+                MarkActivityAsError(Activity.Current, ex);
                 _logger.LogError(ex, ex.Message);
                 if (ex is RabbitMqMessageProcessingTimeoutException)
                 {

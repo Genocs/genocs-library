@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Diagnostics;
 using Azure.Messaging.ServiceBus;
 using Genocs.Common.CQRS.Events;
 using Genocs.Messaging.AzureServiceBus.Configurations;
@@ -14,6 +15,10 @@ namespace Genocs.Messaging.AzureServiceBus.Topics;
 /// </summary>
 public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
 {
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
+    private const string TraceParentHeader = "traceparent";
+    private const string TraceStateHeader = "tracestate";
+
     private readonly ServiceBusClient _client;
     private readonly ServiceBusSender _sender;
     private readonly ServiceBusProcessor? _processor;
@@ -89,7 +94,18 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
             Subject = eventName,
         };
 
-        await _sender.SendMessageAsync(message);
+        using var producerActivity = StartProducerActivity(message, eventName, "publish");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.SendMessageAsync(message);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -113,7 +129,18 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
             message.ApplicationProperties.Add(filter);
         }
 
-        await _sender.SendMessageAsync(message);
+        using var producerActivity = StartProducerActivity(message, eventName, "publish");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.SendMessageAsync(message);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -132,7 +159,18 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
             Subject = eventName,
         };
 
-        await _sender.ScheduleMessageAsync(message, offset);
+        using var producerActivity = StartProducerActivity(message, eventName, "schedule");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.ScheduleMessageAsync(message, offset);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -157,7 +195,18 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
             message.ApplicationProperties.Add(filter);
         }
 
-        await _sender.ScheduleMessageAsync(message, offset);
+        using var producerActivity = StartProducerActivity(message, eventName, "schedule");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.ScheduleMessageAsync(message, offset);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -197,6 +246,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
         _processor!.ProcessMessageAsync += async (args) =>
         {
             string eventName = $"{args.Message.Subject}{EVENT_SUFFIX}";
+            using var processingActivity = StartConsumerActivity(args.Message, eventName);
             string messageData = args.Message.Body.ToString();
 
             // Complete the message so that it is not received again.
@@ -209,6 +259,90 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
         _processor.ProcessErrorAsync += ExceptionReceivedHandler;
 
         _processor.StartProcessingAsync().GetAwaiter().GetResult();
+    }
+
+    private static void InjectTraceContext(IDictionary<string, object> applicationProperties)
+    {
+        Activity? currentActivity = Activity.Current;
+
+        if (!string.IsNullOrWhiteSpace(currentActivity?.Id) && !applicationProperties.ContainsKey(TraceParentHeader))
+        {
+            applicationProperties[TraceParentHeader] = currentActivity.Id;
+        }
+
+        if (!string.IsNullOrWhiteSpace(currentActivity?.TraceStateString) && !applicationProperties.ContainsKey(TraceStateHeader))
+        {
+            applicationProperties[TraceStateHeader] = currentActivity.TraceStateString;
+        }
+    }
+
+    private Activity? StartProducerActivity(ServiceBusMessage message, string messageType, string operation)
+    {
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "azureservicebus",
+            ["messaging.operation"] = operation,
+            ["messaging.destination.name"] = _options.TopicName,
+            ["messaging.destination_kind"] = "topic",
+            ["messaging.message.id"] = message.MessageId,
+            ["genocs.message.type"] = messageType
+        };
+
+        return ActivitySource.StartActivity($"azureservicebus.{operation}", ActivityKind.Producer, default(ActivityContext), tags);
+    }
+
+    private Activity? StartConsumerActivity(ServiceBusReceivedMessage message, string eventName)
+    {
+        ActivityContext parentContext = default;
+        TryExtractParentContext(message, out parentContext);
+
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "azureservicebus",
+            ["messaging.operation"] = "process",
+            ["messaging.destination.name"] = _options.TopicName,
+            ["messaging.message.id"] = message.MessageId,
+            ["messaging.conversation_id"] = message.CorrelationId,
+            ["genocs.message.type"] = eventName
+        };
+
+        return ActivitySource.StartActivity("azureservicebus.process", ActivityKind.Consumer, parentContext, tags);
+    }
+
+    private static bool TryExtractParentContext(ServiceBusReceivedMessage message, out ActivityContext parentContext)
+    {
+        string? traceParent = TryGetApplicationProperty(message, TraceParentHeader);
+        string? traceState = TryGetApplicationProperty(message, TraceStateHeader);
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            parentContext = default;
+            return false;
+        }
+
+        return ActivityContext.TryParse(traceParent, traceState, out parentContext);
+    }
+
+    private static string? TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
+    {
+        if (!message.ApplicationProperties.TryGetValue(propertyName, out object? value) || value is null)
+        {
+            return null;
+        }
+
+        return value.ToString();
+    }
+
+    private static void MarkActivityAsError(Activity? activity, Exception exception)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetTag("error.type", exception.GetType().FullName);
+        activity.SetTag("error.message", exception.Message);
     }
 
     private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)

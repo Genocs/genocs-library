@@ -34,6 +34,11 @@
   <Folder Name="/demo/Masstransit.Worker/">
     <Project Path="src/demo/Masstransit.Worker/Host.csproj" />
   </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/tests/">
+    <Project Path="src/tests/Genocs.Messaging.Tracing.IntegrationTests/Genocs.Messaging.Tracing.IntegrationTests.csproj" />
+    <Project Path="src/tests/Genocs.Messaging.Tracing.UnitTests/Genocs.Messaging.Tracing.UnitTests.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
