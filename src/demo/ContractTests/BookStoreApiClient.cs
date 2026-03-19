@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
-using Genocs.Library.Demo.WebApi.BookStore.Contracts;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Contracts;
 
 namespace Genocs.Library.Demo.ContractTests;
 
@@ -40,6 +40,7 @@ public sealed class BookStoreApiClient
         {
             return null;
         }
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<AuthorResponse>(JsonOptions, cancellationToken);
     }
@@ -67,6 +68,7 @@ public sealed class BookStoreApiClient
         {
             return null;
         }
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<BookResponse>(JsonOptions, cancellationToken);
     }

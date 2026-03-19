@@ -19,13 +19,13 @@ public static class SagaFeature
 
     private static async Task<IResult> StartTransactionAsync(ISagaTransactionService sagaService, [FromBody] StartSagaCommand command)
     {
-        SagaId sagaId = await sagaService.StartTransactionAsync(command, "Test");
+        SagaId sagaId = await sagaService.StartTransactionAsync(command, nameof(SagaFeature));
         return Results.Ok(sagaId);
     }
 
     private static async Task<IResult> CompleteTransactionAsync(ISagaTransactionService sagaService, string sagaId)
     {
-        SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", "Test");
+        SagaId completedSagaId = await sagaService.CompleteTransactionAsync(sagaId, "Complete transaction", nameof(SagaFeature));
         return Results.Ok(completedSagaId);
     }
 }

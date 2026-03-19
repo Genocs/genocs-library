@@ -1,13 +1,21 @@
+using Genocs.Common.CQRS.Commons;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
 using Genocs.Saga;
+using OpenTelemetry.Trace;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
 
-public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
+public class SampleSaga(ILogger<SampleSaga> logger,
+    IBusPublisher publisher,
+    IMessageOutbox outbox) : Saga<SagaData>,
     ISagaStartAction<StartTransaction>,
     ISagaAction<CompleteTransaction>
 {
 
     private readonly ILogger<SampleSaga> _logger = logger;
+    private readonly IBusPublisher _publisher = publisher;
+    private readonly IMessageOutbox _outbox = outbox;
 
     public Task HandleAsync(StartTransaction message, ISagaContext context)
     {
@@ -29,6 +37,8 @@ public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
         {
             throw new Exception("Simulated exception in CompleteTransaction");
         }
+
+        await PublishEventAsync(message.ToEvent());
 
         CompleteSaga();
         await Task.CompletedTask;
@@ -59,5 +69,18 @@ public class SampleSaga(ILogger<SampleSaga> logger) : Saga<SagaData>,
             Complete();
             _logger.LogInformation("Saga completed!");
         }
+    }
+
+    private async Task PublishEventAsync(IMessage message, CancellationToken cancellationToken = default)
+    {
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
+
+        if (_outbox.Enabled)
+        {
+            await _outbox.SendAsync(message, spanContext: spanContext, cancellationToken: cancellationToken);
+            return;
+        }
+
+        await _publisher.PublishAsync(message, spanContext: spanContext);
     }
 }

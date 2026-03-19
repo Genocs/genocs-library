@@ -23,9 +23,9 @@ using Genocs.Secrets.HashicorpKeyVault;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
+using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.Security;
 using Serilog;
-using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 

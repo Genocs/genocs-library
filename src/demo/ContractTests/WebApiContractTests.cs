@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using Genocs.Library.Demo.WebApi.BookStore.Contracts;
+using Genocs.Library.Demo.Domain.EFCore.BookStore.Contracts;
 using PactNet;
 
 namespace Genocs.Library.Demo.ContractTests;

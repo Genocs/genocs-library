@@ -1,10 +1,18 @@
 using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.CQRS.Queries;
 using Genocs.Library.Demo.WebApi.Extensions;
 using Genocs.Library.Demo.WebApi.Features;
+using Genocs.Library.Demo.WebApi.Sagas;
 using Genocs.Library.Demo.WebApi.Securities;
-using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Logging;
+using Genocs.Messaging.CQRS;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Saga;
 using Genocs.Telemetry;
 using Genocs.WebApi;
@@ -25,7 +33,17 @@ IGenocsBuilder gnxBuilder = builder
     .AddCorrelationContextLogging()
     .AddWebApi()
     .AddOpenApiDocs()
-    .AddBookStoreDbContext();
+    .AddBookStoreDbContext()
+    .AddMongo()
+    .AddCommandHandlers()
+    .AddEventHandlers()
+    .AddQueryHandlers()
+    //.AddInMemoryCommandDispatcher()
+    //.AddInMemoryEventDispatcher()
+    //.AddInMemoryQueryDispatcher()
+    .AddMessageOutbox(o => o.AddMongo());
+
+await gnxBuilder.AddRabbitMQAsync();
 
 gnxBuilder.Build();
 
@@ -44,9 +62,6 @@ services.AddSaga()
     })
     .AddControllers();
 
-// Registrazione del servizio Saga
-services.AddScoped<ISagaTransactionService, SagaTransactionService>();
-
 services.MapSecurityFeatures();
 
 var app = builder.Build();
@@ -59,7 +74,9 @@ app.UseGenocs()
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
-    .UseAccessTokenValidator(); // Used to validate the access token In RealTime
+    .UseAccessTokenValidator()// Used to validate the access token In RealTime
+    .UseRabbitMQ()
+    .SubscribeEvent<TransactionCompleted>();
 
 await app.UseBookStoreDbContextAsync();
 
