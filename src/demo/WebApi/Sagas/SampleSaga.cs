@@ -2,7 +2,6 @@ using Genocs.Common.CQRS.Commons;
 using Genocs.Messaging;
 using Genocs.Messaging.Outbox;
 using Genocs.Saga;
-using OpenTelemetry.Trace;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
 
@@ -30,7 +29,6 @@ public class SampleSaga(ILogger<SampleSaga> logger,
 
     public async Task HandleAsync(CompleteTransaction message, ISagaContext context)
     {
-        Data.IsCompleteTransaction = true;
         _logger.LogInformation("CompleteTransaction reached!");
 
         if (Data.TransactionValue < 0)
@@ -40,19 +38,19 @@ public class SampleSaga(ILogger<SampleSaga> logger,
 
         await PublishEventAsync(message.ToEvent());
 
+        Data.IsCompleteTransaction = true;
         CompleteSaga();
-        await Task.CompletedTask;
     }
 
     public Task CompensateAsync(StartTransaction message, ISagaContext context)
     {
-        _logger.LogError("StartTransaction failed, compensating... {message}", message.Text);
+        _logger.LogError($"{nameof(StartTransaction)} failed, compensating... {message}", message.Text);
         return Task.CompletedTask;
     }
 
     public Task CompensateAsync(CompleteTransaction message, ISagaContext context)
     {
-        _logger.LogError("CompleteTransaction failed, compensating... {message}", message.Text);
+        _logger.LogError($"{nameof(CompleteTransaction)} failed, compensating... {message}", message.Text);
         return Task.CompletedTask;
     }
 
@@ -81,6 +79,6 @@ public class SampleSaga(ILogger<SampleSaga> logger,
             return;
         }
 
-        await _publisher.PublishAsync(message, spanContext: spanContext);
+        await _publisher.PublishAsync(message, spanContext: spanContext, cancellationToken: cancellationToken);
     }
 }

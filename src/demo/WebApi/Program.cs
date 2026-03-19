@@ -6,7 +6,6 @@ using Genocs.Core.CQRS.Queries;
 using Genocs.Library.Demo.WebApi.Extensions;
 using Genocs.Library.Demo.WebApi.Features;
 using Genocs.Library.Demo.WebApi.Sagas;
-using Genocs.Library.Demo.WebApi.Securities;
 using Genocs.Logging;
 using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
@@ -38,9 +37,6 @@ IGenocsBuilder gnxBuilder = builder
     .AddCommandHandlers()
     .AddEventHandlers()
     .AddQueryHandlers()
-    //.AddInMemoryCommandDispatcher()
-    //.AddInMemoryEventDispatcher()
-    //.AddInMemoryQueryDispatcher()
     .AddMessageOutbox(o => o.AddMongo());
 
 await gnxBuilder.AddRabbitMQAsync();

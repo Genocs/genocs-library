@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 
-namespace Genocs.Library.Demo.WebApi.Securities;
+namespace Genocs.Library.Demo.WebApi.Features;
 
 /// <summary>
 /// This class is responsible for configuring the security features of the application, such as authorization policies and requirements.

@@ -16,7 +16,6 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\Genocs.Http\Genocs.Http.csproj" />
         <ProjectReference Include="..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
         <ProjectReference Include="..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
         <ProjectReference Include="..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
