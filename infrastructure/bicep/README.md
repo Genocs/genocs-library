@@ -1,47 +1,12 @@
-giovanninocco: Can you add the Azure logAnalitics and AzureAppInsight resource?
+# Bicep Resources
 
-GitHub Copilot: Optimizing tool selection...I'll help you add Azure Log Analytics and Azure Application Insights resources to your Bicep template. Let me first examine the current content of the main.bicep file to understand the existing structure. 
-
-Read [main.bicep#1-1](../../infrastructure/bicep/main.bicep#1-1), lines 1 to 50
-
-Read [](../../infrastructure/bicep/main.bicep#45-45), lines 45 to 57
-
-Now I'll get the best practices and latest resource schemas for Azure Log Analytics and Application Insights: 
-
-Ran Get Bicep best-practices 
-Completed with input: {}
-
-Ran Get Azure resource type schema 
-Completed with input: {
-  "azResourceType": "Microsoft.OperationalInsights/workspaces",
-  "apiVersion": "2023-09-01"
-}
-
-Ran Get Azure resource type schema 
-Completed with input: {
-  "apiVersion": "2020-02-02",
-  "azResourceType": "Microsoft.Insights/components"
-}
-
-Now I'll add the Azure Log Analytics workspace and Application Insights resources to the Bicep template: 
-
-Using "Replace String in File"
-
-
-```
-
-```
-Perfect! I've successfully added Azure Log Analytics and Azure Application Insights resources to your Bicep template. Here's what I added:
-
-## New Resources Added:
-
-### 1. **Log Analytics Workspace** (`Microsoft.OperationalInsights/workspaces@2023-09-01`)
+## 1. Log Analytics Workspace (`Microsoft.OperationalInsights/workspaces@2023-09-01`)
 - **Name**: `law-{uniqueString}` (following Azure naming conventions)
 - **SKU**: `PerGB2018` (pay-as-you-go pricing model)
 - **Retention**: 30 days (cost-effective for development/testing)
 - **Features**: Enabled resource-based access control
 
-### 2. **Application Insights** (`Microsoft.Insights/components@2020-02-02`)
+## 2. Application Insights (`Microsoft.Insights/components@2020-02-02`)
 - **Name**: `appi-{uniqueString}` (following Azure naming conventions)
 - **Kind**: `web` (optimized for web applications)
 - **Application Type**: `web`

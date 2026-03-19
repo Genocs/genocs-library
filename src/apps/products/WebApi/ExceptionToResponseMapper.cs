@@ -1,5 +1,5 @@
-using Genocs.WebApi.Exceptions;
 using System.Net;
+using Genocs.WebApi.Exceptions;
 
 namespace Genocs.Products.WebApi;
 

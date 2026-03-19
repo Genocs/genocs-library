@@ -1,4 +1,4 @@
-using Genocs.Core.CQRS.Events;
+using Genocs.Common.CQRS.Events;
 using Genocs.Notifications.WebApi.Messages.Events;
 using Genocs.Notifications.WebApi.Services;
 

@@ -1,7 +1,5 @@
-using Genocs.HTTP;
+using Genocs.Http;
 
 namespace Genocs.Discovery.Consul;
 
-public interface IConsulHttpClient : IHttpClient
-{
-}
+public interface IConsulHttpClient : IHttpClient;

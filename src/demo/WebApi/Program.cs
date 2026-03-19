@@ -1,93 +1,71 @@
-using System.Text.Json.Serialization;
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.Library.Demo.WebApi.Infrastructure.Extensions;
+using Genocs.Library.Demo.WebApi.Extensions;
+using Genocs.Library.Demo.WebApi.Features;
+using Genocs.Library.Demo.WebApi.Securities;
+using Genocs.Library.Demo.WebApi.Services;
 using Genocs.Logging;
-using Genocs.Metrics.AppMetrics;
-using Genocs.Metrics.Prometheus;
-using Genocs.Persistence.MongoDb.Extensions;
-using Genocs.Secrets.AzureKeyVault;
-using Genocs.Tracing;
+using Genocs.Saga;
+using Genocs.Telemetry;
 using Genocs.WebApi;
-using Genocs.WebApi.Swagger;
-using Genocs.WebApi.Swagger.Docs;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Genocs.WebApi.OpenApi;
 using Serilog;
-
-// using Genocs.Persistence.EFCore.Extensions;
 
 StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-        .UseAzureKeyVault()
-        .UseLogging();
+    .UseLogging();
 
-builder
+IGenocsBuilder gnxBuilder = builder
     .AddGenocs()
-    .AddOpenIdJwt()
-    .AddOpenTelemetry()
-    .AddMongoWithRegistration()
-    .AddMetrics()
-    .AddPrometheus()
-    //.AddEFCorePersistence()
-    .AddApplicationServices()
+    .AddTelemetry()
+    .AddJwt("simmetric_jwt")
+    .AddCorrelationContextLogging()
     .AddWebApi()
-    .AddSwaggerDocs()
-    .AddWebApiSwaggerDocs()
-    .Build();
+    .AddOpenApiDocs()
+    .AddBookStoreDbContext();
 
+gnxBuilder.Build();
+
+// Add services to the container.
 var services = builder.Services;
 
-services.AddControllers().AddJsonOptions(x =>
-{
-    // serialize Enums as strings in api responses (e.g. Role)
-    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+services.AddSaga()
+    .AddCors(options =>
+    {
+        options.AddDefaultPolicy(builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    })
+    .AddControllers();
 
-services.AddCors();
+// Registrazione del servizio Saga
+services.AddScoped<ISagaTransactionService, SagaTransactionService>();
 
-services.Configure<HealthCheckPublisherOptions>(options =>
-{
-    options.Delay = TimeSpan.FromSeconds(2);
-    options.Predicate = check => check.Tags.Contains("ready");
-});
-
-// Add Masstransit bus configuration
-services.AddCustomMassTransit(builder.Configuration);
-
-// Add Firebase authorization configuration with claims transformation
-services.AddFirebaseAuthorization(builder.Configuration);
+services.MapSecurityFeatures();
 
 var app = builder.Build();
 
-// Use it only  in case you are using EF Core
-//await app.Services.InitializeDatabasesAsync();
-
 app.UseGenocs()
-    .UseSwaggerDocs();
+    .UseCorrelationContextLogging()
+    .UseOpenApiDocs()
+    .UseHttpsRedirection()
+    .UseCors()
+    .UseRouting()
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseAccessTokenValidator(); // Used to validate the access token In RealTime
 
-app.UseHttpsRedirection();
-
-// global cors policy
-app.UseCors(x => x
-    .SetIsOriginAllowed(origin => true)
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials());
-
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
-// Custom middleware to allow both Jwt and ApiKey authentication
-app.UseMiddleware<JwtOrApiKeyAuthenticationMiddleware>();
-
-app.UseMetrics()
-    .UsePrometheus();
+await app.UseBookStoreDbContextAsync();
 
 app.MapControllers();
+
+app.MapFeatures();
 
 await app.RunAsync();
 

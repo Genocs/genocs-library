@@ -1,5 +1,5 @@
 using Genocs.Logging;
-using Genocs.Secrets.Vault;
+using Genocs.Secrets.HashicorpKeyVault;
 
 namespace Genocs.APIGateway.WebApi;
 

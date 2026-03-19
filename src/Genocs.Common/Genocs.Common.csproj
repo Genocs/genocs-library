@@ -5,20 +5,10 @@
         <PackageId>Genocs.Common</PackageId>
         <RootNamespace>Genocs.Common</RootNamespace>
         <AssemblyName>Genocs.Common</AssemblyName>
-        <Title>The Genocs common components.</Title>
-        <Description>The common components to build .NET Core projects along with Genocs Library.</Description>
+        <Title>Genocs Common primitives</Title>
+        <Description>Shared primitives and utilities used across Genocs packages.</Description>
         <Summary>The common components to build .NET Core projects along with Genocs Library.</Summary>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <MinClientVersion>5.0.0</MinClientVersion>
-        <Authors>Nocco Giovanni Emanuele</Authors>
-        <PackageTags>microservice microservices solid solid-principles genocs</PackageTags>
-        <PackageReadmeFile>README_NUGET.md</PackageReadmeFile>
-        <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <PackageReleaseNotes>
-            The change log and breaking changes are listed here.
-            https://github.com/Genocs/genocs-library/releases
-        </PackageReleaseNotes>
+        <PackageTags>genocs common primitives abstractions shared</PackageTags>
     </PropertyGroup>
 
 </Project>

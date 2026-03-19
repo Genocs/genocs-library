@@ -1,4 +1,5 @@
 using System.Reflection;
+using Genocs.Common.Builders;
 using Genocs.Common.Configurations;
 using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Spectre.Console;
 
 namespace Genocs.Core.Builders;
 
@@ -23,7 +25,6 @@ public static class Extensions
     /// <returns>The updated Genocs builder. To be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this WebApplicationBuilder builder)
     {
-        // Create the builder
         IGenocsBuilder gnxBuilder = GenocsBuilder.Create(builder);
         Setup(gnxBuilder);
         return gnxBuilder;
@@ -37,7 +38,6 @@ public static class Extensions
     /// <returns>The builder to be used for chaining.</returns>
     public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
     {
-        // Create the builder
         IGenocsBuilder builder = GenocsBuilder.Create(services, configuration);
         Setup(builder);
         return builder;
@@ -176,11 +176,14 @@ public static class Extensions
         }
 
         string version = settings.DisplayVersion ? $" {settings.Version}" : string.Empty;
-        Console.WriteLine(Figgle.Fonts.FiggleFonts.Doom.Render(settings.Name + version));
-        ConsoleColor current = Console.ForegroundColor;
-        Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
-        Console.ForegroundColor = current;
+        var banner = new FigletText(settings.Name + version)
+        {
+            Color = Color.Blue,
+            Justification = Justify.Left
+        };
+        AnsiConsole.Write(banner);
+        AnsiConsole.WriteLine("Runtime Version: {0}", Environment.Version.ToString());
+        AnsiConsole.Write(new Rule().RuleStyle(Style.Parse("green dim")));
 
         // Add the health checks
         // Add health checks to the application
@@ -190,18 +193,18 @@ public static class Extensions
             .AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-            /*
-             * This is an example of how to add a MongoDB health check.
-             * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDb
-             *
-            .AddMongoDb(
-                builder.Configuration.GetSection("DBSettings:HealthConnectionString").Value!,
-                builder.Configuration.GetSection("DBSettings:Database").Value!,
-                name: "mongodb",
-                timeout: TimeSpan.FromSeconds(10),
-                tags: ["live"]);
+        /*
+         * This is an example of how to add a MongoDB health check.
+         * Please note that you need to install the NuGet package AspNetCore.HealthChecks.MongoDB
+         *
+        .AddMongoDb(
+            builder.Configuration.GetSection("DBSettings:HealthConnectionString").Value!,
+            builder.Configuration.GetSection("DBSettings:Database").Value!,
+            name: "mongodb",
+            timeout: TimeSpan.FromSeconds(10),
+            tags: ["live"]);
 
-            */
+        */
 
         // Set the memory cache as default.
         builder.Services.AddMemoryCache();

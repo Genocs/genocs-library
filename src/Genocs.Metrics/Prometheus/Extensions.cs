@@ -1,6 +1,6 @@
 using Genocs.Core.Builders;
+using Genocs.Metrics.Prometheus.Configurations;
 using Genocs.Metrics.Prometheus.Internals;
-using Genocs.Metrics.Prometheus.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Prometheus;

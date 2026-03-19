@@ -1,4 +1,3 @@
-using Genocs.Common.Interfaces;
 using MediatR;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
@@ -6,7 +5,6 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 public class GetAuditLogsRequest : IRequest<List<AuditDto>>;
 
 /*
- 
 DefaultIdType
 
 public class GetAuditLogsRequestHandler : IRequestHandler<GetAuditLogsRequest, List<AuditDto>>
@@ -20,5 +18,4 @@ public class GetAuditLogsRequestHandler : IRequestHandler<GetAuditLogsRequest, L
     public Task<List<AuditDto>> Handle(GetAuditLogsRequest request, CancellationToken cancellationToken) =>
         _auditService.GetUserTrailsAsync(_currentUser.GetUserId());
 }
-
 */

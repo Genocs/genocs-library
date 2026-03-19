@@ -1,8 +1,8 @@
-using Genocs.Persistence.MongoDb.Configurations;
+using Genocs.Persistence.MongoDB.Configurations;
 
 namespace Genocs.APIGateway.WebApi.Configurations;
 
-public class YarpMongoDbOptions : MongoDbOptions
+public class YarpMongoDbOptions : MongoOptions
 {
     public string RoutesCollection { get; set; } = "yarp_routes";
 

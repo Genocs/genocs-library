@@ -1,5 +1,5 @@
+using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Events;
 using Newtonsoft.Json;
 
 namespace Genocs.Notifications.WebApi.Messages.Events;
@@ -13,11 +13,7 @@ public class OperationCompleted : IEvent
     public string Resource { get; }
 
     [JsonConstructor]
-    public OperationCompleted(
-                                DefaultIdType id,
-                                DefaultIdType userId,
-                                string name,
-                                string resource)
+    public OperationCompleted(DefaultIdType id, DefaultIdType userId, string name, string resource)
     {
         Id = id;
         UserId = userId;

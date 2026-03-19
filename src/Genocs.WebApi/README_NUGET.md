@@ -1,33 +1,52 @@
-# The Genocs Library - WebApi components
+# Genocs.WebApi
 
-Genocs Enterprise Library - Genocs.WebApi. This package contains a set of web API functionalities designed by Genocs.
-The library is built to be used with .NET10, .NET9, .NET8.
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
+ASP.NET Core Web API extensions and conventions for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-WebApi NuGet package contains general purpose functionalities to be used on DDD web API services.
+## Installation
 
-## Dependencies
+```bash
+dotnet add package Genocs.WebApi
+```
 
-- **Genocs.Core**: 7.4.*
-- **Open.Serialization.Json.System**: 3.0.0
-- **Open.Serialization.Json.Utf8Json**: 3.0.0
+## Getting Started
 
-### Framework references
-- **Microsoft.AspNetCore.App**
+Use this package to register Web API conventions, endpoint mapping, forwarded headers handling, and unified error handling.
+
+Service registration:
+
+```csharp
+using Genocs.WebApi;
+
+genocs.AddWebApi();
+```
+
+Pipeline setup:
+
+```csharp
+app.UseErrorHandler();
+app.UseAllForwardedHeaders();
+app.UseEndpoints(endpoints =>
+{
+    // Register endpoints here
+});
+```
+
+## Main Entry Points
+
+- `AddWebApi`
+- `UseEndpoints`
+- `UseErrorHandler`
+- `UseAllForwardedHeaders`
 
 ## Support
 
-Please check the [GitHub repository](https://github.com/Genocs/genocs-library) to get more info.
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Documentation
+## Release Notes
 
-The documentation is available at [Genocs - Open-Source Framework for Enterprise Applications](https://genocs-blog.netlify.app/).
-
-## Release notes
-
-The change log and breaking changes are listed here.
-
-- [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)
-
-- [releases](https://github.com/Genocs/genocs-library/releases)
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

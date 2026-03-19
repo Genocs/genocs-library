@@ -1,3 +1,4 @@
+using Genocs.Common.Builders;
 using Genocs.Core.Builders;
 using Genocs.Discovery.Consul.Builders;
 using Genocs.Discovery.Consul.Configurations;
@@ -5,8 +6,8 @@ using Genocs.Discovery.Consul.Http;
 using Genocs.Discovery.Consul.MessageHandlers;
 using Genocs.Discovery.Consul.Models;
 using Genocs.Discovery.Consul.Services;
-using Genocs.HTTP;
-using Genocs.HTTP.Configurations;
+using Genocs.Http;
+using Genocs.Http.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Discovery.Consul;

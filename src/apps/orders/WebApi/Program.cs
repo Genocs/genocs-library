@@ -3,14 +3,13 @@ using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Discovery.Consul;
-using Genocs.HTTP;
+using Genocs.Http;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
-using Genocs.MessageBrokers.CQRS;
-using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.MongoDB;
-using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
+using Genocs.Messaging.CQRS;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Metrics.Prometheus;
 using Genocs.Orders.WebApi;
 using Genocs.Orders.WebApi.Commands;
@@ -18,16 +17,15 @@ using Genocs.Orders.WebApi.Domain;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Orders.WebApi.Events.External;
 using Genocs.Orders.WebApi.Queries;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
-using Genocs.Secrets.Vault;
-using Genocs.Tracing;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
-using Genocs.WebApi.Swagger;
-using Genocs.WebApi.Swagger.Docs;
 using Serilog;
+using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 
@@ -39,8 +37,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                     .AddGenocs()
-                                    .AddOpenTelemetry()
-                                    .AddMetrics()
+                                    .AddTelemetry()
                                     .AddHttpClient()
                                     .AddConsul()
                                     .AddFabio()
@@ -61,14 +58,13 @@ IGenocsBuilder gnxBuilder = await builder
 
 gnxBuilder.AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
-        .AddSwaggerDocs()
-        .AddWebApiSwaggerDocs()
+        .AddOpenApiDocs()
         .Build();
 
 var app = builder.Build();
 
 app.UseGenocs()
-    .UserCorrelationContextLogging()
+    .UseCorrelationContextLogging()
     .UseErrorHandler()
     .UsePrometheus()
     .UseRouting()
@@ -77,12 +73,12 @@ app.UseGenocs()
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
-    .UseSwaggerDocs()
+    .UseOpenApiDocs()
     .UseRabbitMQ()
     .SubscribeEvent<DeliveryStarted>();
 
 app.MapDefaultEndpoints();
 
-app.Run();
+await app.RunAsync();
 
 Log.CloseAndFlush();

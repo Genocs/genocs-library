@@ -4,6 +4,4 @@ namespace Genocs.Common.Types;
 /// DecoratorAttribute placeholder.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class DecoratorAttribute : Attribute
-{
-}
+public class DecoratorAttribute : Attribute;

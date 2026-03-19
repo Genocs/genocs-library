@@ -43,7 +43,7 @@ internal sealed class ErrorHandlerMiddleware(
     }
 
     /// <summary>
-    /// Handles the error by mapping the exception to an HTTP response and writing it to the response body.
+    /// Handles the error by mapping the exception to an Http response and writing it to the response body.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="exception">The exception.</param>

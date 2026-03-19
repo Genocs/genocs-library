@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 
+.env
+*.env
+
 
 # Build results
 [Dd]ebug/

@@ -1,6 +1,6 @@
 using System.Data;
+using Genocs.Common.Domain.Entities;
 using Genocs.Common.Interfaces;
-using Genocs.Core.Domain.Entities;
 
 namespace Genocs.Core.Domain.Repositories;
 

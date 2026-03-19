@@ -45,7 +45,7 @@ internal sealed class Encryptor : IEncryptor
 
         using var aes = Aes.Create();
         aes.Key = Encoding.UTF8.GetBytes(key);
-        aes.IV = Convert.FromBase64String(data.Substring(0, 24));
+        aes.IV = Convert.FromBase64String(data[..24]);
         var transform = aes.CreateDecryptor(aes.Key, aes.IV);
         using var memoryStream = new MemoryStream(Convert.FromBase64String(data.Substring(24)));
         using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read);
@@ -56,17 +56,17 @@ internal sealed class Encryptor : IEncryptor
 
     public byte[] Encrypt(byte[] data, byte[] iv, byte[] key)
     {
-        if (data is null || !data.Any())
+        if (data?.Any() != true)
         {
             throw new ArgumentException("Data to be encrypted cannot be empty.", nameof(data));
         }
 
-        if (iv is null || !iv.Any())
+        if (iv?.Any() != true)
         {
             throw new ArgumentException("Initialization vector cannot be empty.", nameof(iv));
         }
 
-        if (key is null || !key.Any())
+        if (key?.Any() != true)
         {
             throw new ArgumentException("Encryption key cannot be empty.", nameof(key));
         }
@@ -87,17 +87,17 @@ internal sealed class Encryptor : IEncryptor
 
     public byte[] Decrypt(byte[] data, byte[] iv, byte[] key)
     {
-        if (data is null || !data.Any())
+        if (data?.Any() != true)
         {
             throw new ArgumentException("Data to be decrypted cannot be empty.", nameof(data));
         }
 
-        if (iv is null || !iv.Any())
+        if (iv?.Any() != true)
         {
             throw new ArgumentException("Initialization vector cannot be empty.", nameof(iv));
         }
 
-        if (key is null || !key.Any())
+        if (key?.Any() != true)
         {
             throw new ArgumentException("Encryption key cannot be empty.", nameof(key));
         }

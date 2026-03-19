@@ -1,25 +1,49 @@
-# The Genocs Library - Authentication components
+# Genocs.Auth
 
-[![NuGet](https://img.shields.io/nuget/v/Genocs.Auth.svg)](https://www.nuget.org/packages/Genocs.Auth/)
-[![NuGet](https://img.shields.io/nuget/dt/Genocs.Auth.svg)](https://www.nuget.org/packages/Genocs.Auth/)
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-## Description
-**Genocs.Auth** is a comprehensive authentication library that provides secure user authentication and authorization mechanisms for .NET applications targeting .NET10, .NET9, .NET8.
+Authentication and authorization helpers for ASP.NET Core applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
-## Dependencies
-- **Microsoft.AspNetCore.Authentication.JwtBearer** (9.0.0)
-- **Microsoft.AspNetCore.Identity** (9.0.0)
-- **Microsoft.Extensions.DependencyInjection.Abstractions** (9.0.0)
-- **System.IdentityModel.Tokens.Jwt** (8.1.2)
+## Installation
 
-### Framework references
-- Microsoft.AspNetCore.App
+```bash
+dotnet add package Genocs.Auth
+```
+
+## Getting Started
+
+Use this package to configure JWT/OpenID authentication flows and access-token validation in ASP.NET Core services.
+
+Service registration:
+
+```csharp
+using Genocs.Auth;
+
+genocs.AddJwt();
+```
+
+Pipeline setup:
+
+```csharp
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAccessTokenValidator();
+```
+
+## Main Entry Points
+
+- `AddJwt`
+- `AddOpenIdJwt`
+- `AddPrivateKeyJwt`
+- `UseAccessTokenValidator`
 
 ## Support
-Browse documentation at [GitHub](https://github.com/Genocs/genocs-library)
 
-## Documentation
-For more details and usage examples, visit our [documentation website](https://genocs.github.io/genocs-library/).
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
 
-## Release notes
-See the [CHANGELOG](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md) for release history and [Releases](https://github.com/Genocs/genocs-library/releases) for detailed release notes.
+## Release Notes
+
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

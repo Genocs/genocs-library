@@ -1,11 +1,11 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Events;
 using Genocs.Logging.CQRS.Decorators;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace Genocs.Logging.CQRS;
 

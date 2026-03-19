@@ -1,17 +1,17 @@
 namespace Genocs.Common.Types;
 
 /// <summary>
-/// MessageAttribute class.
+/// MessageAttribute class. This attribute is used to define the message properties for the message bus system.
 /// </summary>
 /// <remarks>
 /// Standard constructor.
 /// </remarks>
-/// <param name="exchange"></param>
-/// <param name="topic"></param>
-/// <param name="queue"></param>
-/// <param name="queueType"></param>
-/// <param name="errorQueue"></param>
-/// <param name="subscriptionId"></param>
+/// <param name="exchange">The exchange used by the system.</param>
+/// <param name="topic">The topic used to send/receive message.</param>
+/// <param name="queue">The queue.</param>
+/// <param name="queueType">The type of the queue.</param>
+/// <param name="errorQueue">The error queue.</param>
+/// <param name="subscriptionId">The subscription ID.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class MessageAttribute(
                         string? exchange = null,

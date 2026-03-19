@@ -1,3 +1,4 @@
+using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands.Dispatchers;
@@ -20,7 +21,7 @@ public static class Extensions
         builder.Services.Scan(s =>
             s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
-                    .WithoutAttribute(typeof(DecoratorAttribute)))
+                    .WithoutAttribute<DecoratorAttribute>())
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 

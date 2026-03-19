@@ -9,14 +9,12 @@ services:
       - consul__address=apigateway
       - consul__port=8080
       - fabio__url=${FABIO_URL}
-      - jaeger__udpHost=${JAEGER_URL}
-      - openTelemetry__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
-      - reverseProxy__clusters__identity-cluster__destinations__destination1__address=http://identities-service:8080
+      - reverseProxy__clusters__identities-cluster__destinations__destination1__address=http://identities-service:8080
       - reverseProxy__clusters__products-cluster__destinations__destination1__address=http://products-service:8080
       - reverseProxy__clusters__orders-cluster__destinations__destination1__address=http://orders-service:8080
       - reverseProxy__clusters__notifications-cluster__destinations__destination1__address=http://notifications-service:8080
-
     ports:
       - 5500:8080
     networks:
@@ -35,10 +33,8 @@ services:
       - consul__address=identities-service
       - consul__port=8080
       - fabio__url=${FABIO_URL}
-      - jaeger__udpHost=${JAEGER_URL}
-      - openTelemetry__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
-
     ports:
       - 5510:8080
     networks:
@@ -57,10 +53,8 @@ services:
       - consul__address=products-service
       - consul__port=8080
       - fabio__url=${FABIO_URL}
-      - jaeger__udpHost=${JAEGER_URL}
-      - openTelemetry__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
-
     ports:
       - 5520:8080
     #ports:
@@ -80,10 +74,9 @@ services:
       - consul__address=orders-service
       - consul__port=8080
       - fabio__url=${FABIO_URL}
-      - jaeger__udpHost=${JAEGER_URL}
-      - openTelemetry__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
-
+      - httpClient__services__products=http://products-service:8080
     ports:
       - 5530:8080
     #ports:
@@ -103,10 +96,8 @@ services:
       - consul__address=notifications-service
       - consul__port=8080
       - fabio__url=${FABIO_URL}
-      - jaeger__udpHost=${JAEGER_URL}
-      - openTelemetry__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
-
     ports:
       - 5540:8080
     #ports:

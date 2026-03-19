@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace Genocs.WebApi.Helpers;
 
@@ -13,9 +13,9 @@ public static class Extensions
             return string.Empty;
         }
 
-        var defaultValueCache = new Dictionary<Type, object>();
+        var defaultValueCache = new Dictionary<Type, object?>();
 
-        if (TryGetDefaultValue(type, out var instance, defaultValueCache))
+        if (TryGetDefaultValue(type, out object? instance, defaultValueCache))
         {
             return instance;
         }
@@ -24,17 +24,17 @@ public static class Extensions
     }
 
     public static object SetDefaultInstanceProperties(this object instance)
-        => SetDefaultInstanceProperties(instance, new Dictionary<Type, object>());
+        => SetDefaultInstanceProperties(instance, []);
 
-    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object> defaultValueCache)
+    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
     {
-        defaultValueCache ??= new Dictionary<Type, object>();
+        defaultValueCache ??= [];
 
         var type = instance.GetType();
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance))
         {
-            if (TryGetDefaultValue(propertyInfo.PropertyType, out var defaultValue, defaultValueCache))
+            if (TryGetDefaultValue(propertyInfo.PropertyType, out object? defaultValue, defaultValueCache))
             {
                 SetValue(propertyInfo, instance, defaultValue);
             }
@@ -108,7 +108,7 @@ public static class Extensions
             return false;
         }
 
-        defaultValue = FormatterServices.GetUninitializedObject(type);
+        defaultValue = RuntimeHelpers.GetUninitializedObject(type);
 
         defaultValueCache[type] = defaultValue;
 
@@ -150,7 +150,7 @@ public static class Extensions
         return true;
     }
 
-    private static void SetValue(PropertyInfo propertyInfo, object instance, object value)
+    private static void SetValue(PropertyInfo propertyInfo, object? instance, object? value)
     {
         if (propertyInfo.CanWrite)
         {
@@ -160,7 +160,7 @@ public static class Extensions
         }
 
         var fieldInfo =
-            instance
+            instance?
                 .GetType()
                 .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
                 .SingleOrDefault(x => x.Name.StartsWith($"<{propertyInfo.Name}>"));

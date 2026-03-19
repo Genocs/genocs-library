@@ -43,7 +43,7 @@ internal sealed class InMemoryAccessTokenService(IMemoryCache cache, IHttpContex
 
         return authorizationHeader.Value == StringValues.Empty
             ? string.Empty
-            : authorizationHeader.Value.Single()?.Split(' ').Last();
+            : authorizationHeader.Value.Single()?.Split(' ').Last() ?? string.Empty;
     }
 
     private static string GetKey(string token) => $"blacklisted-tokens:{token}";

@@ -1,6 +1,7 @@
 ﻿// using Genocs.Timing;
 // using Genocs.Core.Configuration.Startup;
 // using Genocs.Core.MultiTenancy;
+using Genocs.Common.Domain.Entities.Auditing;
 using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
@@ -14,20 +15,19 @@ public static class EntityAuditingHelper
         int? tenantId,
         DefaultIdType? userId)
     {
-        var entityWithCreationTime = entityAsObj as IHasCreationTime;
-        if (entityWithCreationTime == null)
+        if (entityAsObj is not IHasCreationTime entityWithCreationTime)
         {
             // Object does not implement IHasCreationTime
             return;
         }
 
-        if (entityWithCreationTime.CreatedAt == default(DateTime))
+        if (entityWithCreationTime.CreatedAt == default)
         {
             // entityWithCreationTime.CreationTime = Clock.Now;
             // entityWithCreationTime.CreatedAt = DateTime.Now;
         }
 
-        if (!(entityAsObj is ICreationAudited))
+        if (entityAsObj is not ICreationAudited)
         {
             // Object does not implement ICreationAudited
             return;
@@ -40,7 +40,7 @@ public static class EntityAuditingHelper
         }
 
         var entity = entityAsObj as ICreationAudited;
-        if (entity.CreatorUserId != null)
+        if (entity?.CreatorUserId != null)
         {
             // CreatorUserId is already set
             return;
@@ -79,13 +79,19 @@ public static class EntityAuditingHelper
             entityAsObj.As<IHasModificationTime>().LastUpdate = DateTime.Now;
         }
 
-        if (!(entityAsObj is IModificationAudited))
+        if (entityAsObj is not IModificationAudited)
         {
             // Entity does not implement IModificationAudited
             return;
         }
 
         var entity = entityAsObj.As<IModificationAudited>();
+
+        if (entity == null)
+        {
+            // Object does not implement IModificationAudited
+            return;
+        }
 
         if (userId == null)
         {

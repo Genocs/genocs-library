@@ -41,9 +41,14 @@ public class LoggerOptions
     public AzureOptions? Azure { get; set; }
 
     /// <summary>
-    /// MongoDb logging settings.
+    /// MongoDB logging settings.
     /// </summary>
     public MongoOptions? Mongo { get; set; }
+
+    /// <summary>
+    /// Optional HTTP payload capture settings.
+    /// </summary>
+    public HttpPayloadOptions? HttpPayload { get; set; }
 
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
     public IEnumerable<string>? ExcludePaths { get; set; }

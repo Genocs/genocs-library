@@ -1,31 +1,30 @@
-﻿using Genocs.Core.Builders;
+﻿using Genocs.Common.CQRS.Queries;
+using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
 using Genocs.Discovery.Consul;
-using Genocs.HTTP;
+using Genocs.Http;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
-using Genocs.MessageBrokers.Outbox;
-using Genocs.MessageBrokers.Outbox.MongoDB;
-using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.Metrics.AppMetrics;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
 using Genocs.Metrics.Prometheus;
-using Genocs.Persistence.MongoDb.Extensions;
+using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Products.WebApi;
 using Genocs.Products.WebApi.Commands;
 using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
 using Genocs.Products.WebApi.Queries;
-using Genocs.Secrets.Vault;
-using Genocs.Tracing;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Genocs.WebApi.Security;
-using Genocs.WebApi.Swagger;
-using Genocs.WebApi.Swagger.Docs;
 using Serilog;
+using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 
@@ -37,8 +36,7 @@ builder.Host
 
 IGenocsBuilder gnxBuilder = await builder
                                         .AddGenocs()
-                                        .AddOpenTelemetry()
-                                        .AddMetrics()
+                                        .AddTelemetry()
                                         .AddHttpClient()
                                         .AddConsul()
                                         .AddFabio()
@@ -57,8 +55,7 @@ IGenocsBuilder gnxBuilder = await builder
                                         .AddRedis()
                                         .AddMessageOutbox(o => o.AddMongo())
                                         .AddWebApi()
-                                        .AddSwaggerDocs()
-                                        .AddWebApiSwaggerDocs()
+                                        .AddOpenApiDocs()
                                         .AddRabbitMQAsync();
 
 // Build the Genocs builder
@@ -68,7 +65,7 @@ gnxBuilder.Build();
 var app = builder.Build();
 
 app.UseGenocs()
-    .UserCorrelationContextLogging()
+    .UseCorrelationContextLogging()
     .UseErrorHandler()
     .UsePrometheus()
     .UseRouting()
@@ -78,7 +75,7 @@ app.UseGenocs()
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")
         .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
-    .UseSwaggerDocs()
+    .UseOpenApiDocs()
     .UseRabbitMQ();
 
 app.MapDefaultEndpoints();

@@ -19,7 +19,7 @@ get_service_info() {
             echo "apigateway apigateway"
             ;;
         "identities-webapi")
-            echo "identities-webapi identity"
+            echo "identities-webapi identities"
             ;;
         "products-webapi")
             echo "products-webapi products"

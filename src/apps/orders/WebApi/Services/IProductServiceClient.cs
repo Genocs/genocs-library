@@ -12,5 +12,5 @@ public interface IProductServiceClient
     /// </summary>
     /// <param name="productId">The ProductId.</param>
     /// <returns>The Product Response.</returns>
-    Task<ProductDto> GetAsync(Guid productId);
+    Task<ProductDto?> GetAsync(Guid productId);
 }

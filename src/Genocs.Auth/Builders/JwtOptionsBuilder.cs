@@ -2,6 +2,9 @@ using Genocs.Auth.Configurations;
 
 namespace Genocs.Auth.Builders;
 
+/// <summary>
+/// The JwtOptionsBuilder class is responsible for building and configuring JWT options for authentication.
+/// </summary>
 internal sealed class JwtOptionsBuilder : IJwtOptionsBuilder
 {
     private readonly JwtOptions _options = new();

@@ -1,0 +1,115 @@
+# Genocs.Telemetry
+
+![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
+
+OpenTelemetry integration helpers for traces, metrics, and logs. Supports `net10.0`, `net9.0`, and `net8.0`.
+
+## Installation
+
+```bash
+dotnet add package Genocs.Telemetry
+```
+
+## Getting Started
+
+Use this package to configure OpenTelemetry pipelines and exporters in Genocs services.
+
+Service registration:
+
+```csharp
+using Genocs.Telemetry;
+
+genocs.AddTelemetry();
+```
+
+Configuration example:
+
+```json
+{
+  "app": {
+    "service": "My Service"
+  },
+  "telemetry": {
+    "enabled": true,
+    "sqlClient": {
+      "enableStatementText": false
+    },
+    "exporter": {
+      "enabled": true,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc"
+    }
+  }
+}
+```
+
+`telemetry.sqlClient.enableStatementText` is disabled by default. Enable it only when SQL query text (`db.query.text`/`db.statement`) collection is explicitly required.
+
+Azure Application Insights (logs + metrics + traces, non-overlapping):
+
+When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` to avoid duplicate ingestion.
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": false
+    },
+    "azure": {
+      "enabled": true,
+      "enableTracing": true,
+      "enableMetrics": true,
+      "enableLogging": true,
+      "connectionString": "InstrumentationKey=<<key>>;IngestionEndpoint=https://<<region>>.in.applicationinsights.azure.com/"
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "enableLogging": false
+    }
+  }
+}
+```
+
+Jaeger with OTLP (trace-only) example:
+
+When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` so only traces go to Jaeger.
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": true,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": false,
+      "enableLogging": false
+    },
+    "azure": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "enableLogging": false
+    }
+  }
+}
+```
+
+## Main Entry Points
+
+- `AddTelemetry`
+
+## Support
+
+- Documentation Portal: https://learn.fiscanner.net/
+- Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
+- Repository: https://github.com/Genocs/genocs-library
+
+## Release Notes
+
+- CHANGELOG: https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md
+- Releases: https://github.com/Genocs/genocs-library/releases

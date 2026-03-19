@@ -1,5 +1,5 @@
-﻿using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Queries;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Queries;
 using Genocs.Orders.WebApi.Commands;
 using Genocs.Orders.WebApi.DTO;
 using Genocs.Orders.WebApi.Queries;
@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Genocs.Orders.WebApi.Controllers;
 
+/// <summary>
+/// The OrdersController class is an API controller that handles Http requests related to orders.
+/// It uses the CQRS pattern to separate command and query handling.
+/// The controller provides endpoints for creating new orders and retrieving existing orders by their ID.
+/// NOTE: This controller is meant to show how to implement hybrid Controller path: Minimal APIs vs. Controllers.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class OrdersController : ControllerBase

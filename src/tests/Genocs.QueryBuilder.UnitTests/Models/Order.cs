@@ -11,7 +11,7 @@ public class Order
 
         OrderId = orderId;
         CustomerId = customerId;
-        Products = new List<Product>();
+        Products = [];
     }
 
     public Order(int orderId, int customerId, string pName, string pCost, int cost)
@@ -22,7 +22,7 @@ public class Order
 
     public void AddProduct(string pName, string pCost, int cost)
     {
-        if (Products == null) Products = new List<Product>();
+        Products ??= [];
         Products.Add(new Product(pName, pCost, cost));
     }
 }

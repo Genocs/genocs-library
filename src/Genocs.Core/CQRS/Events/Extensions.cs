@@ -1,3 +1,4 @@
+using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Events.Dispatchers;
@@ -13,26 +14,25 @@ public static class Extensions
     /// <summary>
     /// AddEventHandlers.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddEventHandlers(this IGenocsBuilder builder)
     {
         builder.Services.Scan(s =>
             s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
-                    .WithoutAttribute(typeof(DecoratorAttribute)))
+                    .WithoutAttribute<DecoratorAttribute>())
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
         return builder;
     }
 
-
     /// <summary>
     /// AddInMemoryEventDispatcher.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddInMemoryEventDispatcher(this IGenocsBuilder builder)
     {
         builder.Services.AddSingleton<IEventDispatcher, EventDispatcher>();
@@ -42,14 +42,14 @@ public static class Extensions
     /// <summary>
     /// AddEventHandlers.
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddEventHandlers(this IServiceCollection services)
     {
         services.Scan(s =>
             s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
-                    .WithoutAttribute(typeof(DecoratorAttribute)))
+                    .WithoutAttribute<DecoratorAttribute>())
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
@@ -59,8 +59,8 @@ public static class Extensions
     /// <summary>
     /// AddInMemoryEventDispatcher.
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddInMemoryEventDispatcher(this IServiceCollection services)
     {
         services.AddSingleton<IEventDispatcher, EventDispatcher>();

@@ -1,3 +1,4 @@
+using Genocs.Common.CQRS.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Core.CQRS.Commands.Dispatchers;

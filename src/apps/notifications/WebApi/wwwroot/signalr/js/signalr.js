@@ -1472,13 +1472,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/** Error thrown when an HTTP request fails. */
+/** Error thrown when an Http request fails. */
 var HttpError = /** @class */ (function (_super) {
     __extends(HttpError, _super);
     /** Constructs a new instance of {@link @aspnet/signalr.HttpError}.
      *
      * @param {string} errorMessage A descriptive error message.
-     * @param {number} statusCode The HTTP status code represented by this error.
+     * @param {number} statusCode The Http status code represented by this error.
      */
     function HttpError(errorMessage, statusCode) {
         var _newTarget = this.constructor;
@@ -1556,7 +1556,7 @@ var __assign = (undefined && undefined.__assign) || Object.assign || function(t)
     }
     return t;
 };
-/** Represents an HTTP response. */
+/** Represents an Http response. */
 var HttpResponse = /** @class */ (function () {
     function HttpResponse(statusCode, statusText, content) {
         this.statusCode = statusCode;
@@ -1566,9 +1566,9 @@ var HttpResponse = /** @class */ (function () {
     return HttpResponse;
 }());
 
-/** Abstraction over an HTTP client.
+/** Abstraction over an Http client.
  *
- * This class provides an abstraction over an HTTP client so that a different implementation can be provided on different platforms.
+ * This class provides an abstraction over an Http client so that a different implementation can be provided on different platforms.
  */
 var HttpClient = /** @class */ (function () {
     function HttpClient() {
@@ -1750,11 +1750,11 @@ var XhrHttpClient = /** @class */ (function (_super) {
                 }
             };
             xhr.onerror = function () {
-                _this.logger.log(_ILogger__WEBPACK_IMPORTED_MODULE_2__["LogLevel"].Warning, "Error from HTTP request. " + xhr.status + ": " + xhr.statusText + ".");
+                _this.logger.log(_ILogger__WEBPACK_IMPORTED_MODULE_2__["LogLevel"].Warning, "Error from Http request. " + xhr.status + ": " + xhr.statusText + ".");
                 reject(new _Errors__WEBPACK_IMPORTED_MODULE_0__["HttpError"](xhr.statusText, xhr.status));
             };
             xhr.ontimeout = function () {
-                _this.logger.log(_ILogger__WEBPACK_IMPORTED_MODULE_2__["LogLevel"].Warning, "Timeout from HTTP request.");
+                _this.logger.log(_ILogger__WEBPACK_IMPORTED_MODULE_2__["LogLevel"].Warning, "Timeout from Http request.");
                 reject(new _Errors__WEBPACK_IMPORTED_MODULE_0__["TimeoutError"]());
             };
             xhr.send(request.content || "");
@@ -3272,7 +3272,7 @@ __webpack_require__.r(__webpack_exports__);
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // This will be treated as a bit flag in the future, so we keep it using power-of-two values.
-/** Specifies a specific HTTP transport type. */
+/** Specifies a specific Http transport type. */
 var HttpTransportType;
 (function (HttpTransportType) {
     /** Specifies no transport preference. */

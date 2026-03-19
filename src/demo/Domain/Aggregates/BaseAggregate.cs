@@ -1,6 +1,6 @@
-﻿using Genocs.Core.Domain.Entities;
-using Genocs.Core.Domain.Entities.Auditing;
-using Genocs.Persistence.MongoDb.Domain.Entities;
+﻿using Genocs.Common.Domain.Entities.Auditing;
+using Genocs.Core.Domain.Entities;
+using Genocs.Persistence.MongoDB.Domain.Entities;
 using MongoDB.Bson;
 
 namespace Genocs.Core.Demo.Domain.Aggregates;
@@ -9,7 +9,7 @@ namespace Genocs.Core.Demo.Domain.Aggregates;
 /// Base aggregate class used for all entities.
 /// This class is used to define some common properties for all entities.
 /// </summary>
-public class BaseAggregate : AggregateRoot<ObjectId>, IMongoDbEntity, IHasCreationTime
+public class BaseAggregate : AggregateRoot<ObjectId>, IMongoEntity, IHasCreationTime
 {
     public BaseAggregate()
     {

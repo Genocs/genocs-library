@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Genocs.Common.Domain.Entities;
+using Genocs.Common.Domain.Entities.Auditing;
 
 namespace Genocs.Core.Domain.Entities.Auditing;
 
@@ -32,7 +34,6 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     {
         // CreationTime = Clock.Now;
         CreatedAt = DateTime.Now;
-
     }
 }
 

@@ -1,11 +1,6 @@
 ﻿namespace Genocs.Notifications.WebApi.Events;
 
-public class NotificationPosted
+public class NotificationPosted(DefaultIdType notificationId)
 {
-    public DefaultIdType NotificationId { get; }
-
-    public NotificationPosted(DefaultIdType notificationId)
-    {
-        NotificationId = notificationId;
-    }
+    public DefaultIdType NotificationId { get; } = notificationId;
 }

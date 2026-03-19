@@ -1,6 +1,6 @@
-﻿using Genocs.Core.CQRS.Commands;
-using Genocs.Core.CQRS.Events;
-using Genocs.Core.CQRS.Queries;
+﻿using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Queries;
 
 namespace Genocs.WebApi.CQRS;
 

@@ -1,6 +1,6 @@
-using Genocs.Core.CQRS.Commands;
-using Genocs.MessageBrokers;
-using Genocs.MessageBrokers.Outbox;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Messaging;
+using Genocs.Messaging.Outbox;
 using Genocs.Notifications.WebApi.Events;
 using Genocs.Notifications.WebApi.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -30,15 +30,15 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
     public async Task HandleAsync(PublishNotification command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"Created a notification with id: {command.NotificationId}, customer: {command.CustomerId}.");
-        string? spanContext = "TODO: Genocs";
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new NotificationPosted(command.NotificationId);
 
         // Send the notification
-        await _hub.Clients.All.SendAsync("PublishNotification", @event);
+        await _hub.Clients.All.SendAsync("PublishNotification", @event, cancellationToken);
 
         if (_outbox.Enabled)
         {
-            await _outbox.SendAsync(@event, spanContext: spanContext);
+            await _outbox.SendAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
             return;
         }
 

@@ -1,5 +1,5 @@
 ﻿using Genocs.APIGateway.WebApi.Configurations;
-using Genocs.Persistence.MongoDb;
+using Genocs.Persistence.MongoDB;
 using Yarp.ReverseProxy.Configuration;
 
 namespace Genocs.APIGateway.WebApi.Providers;
@@ -7,12 +7,12 @@ namespace Genocs.APIGateway.WebApi.Providers;
 public static class MongoDbConfigProviderExtensions
 {
     /// <summary>
-    /// Adds an InMemoryConfigProvider.
+    /// Adds a MongoDB-based configuration provider to the reverse proxy builder, allowing it to read its configuration from a MongoDB database.
     /// </summary>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentNullException">Thrown when the configuration is null.</exception>
     public static IReverseProxyBuilder LoadFromDatabase(this IReverseProxyBuilder builder, IConfiguration configuration)
     {
-        var config = configuration ?? throw new ArgumentNullException("config");
+        var config = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
         var options = new YarpMongoDbOptions();
 

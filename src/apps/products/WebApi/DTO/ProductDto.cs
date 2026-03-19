@@ -1,6 +1,8 @@
+using Genocs.Common.Interfaces;
+
 namespace Genocs.Products.WebApi.DTO;
 
-public class ProductDto
+public class ProductDto : IDto
 {
     public Guid Id { get; set; }
     public string SKU { get; set; } = default!;

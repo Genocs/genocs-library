@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Genocs.APIGateway.WebApi.Configurations;
-using Genocs.MessageBrokers.RabbitMQ;
-using Genocs.MessageBrokers.RabbitMQ.Conventions;
+using Genocs.Messaging.RabbitMQ;
+using Genocs.Messaging.RabbitMQ.Conventions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -58,7 +58,7 @@ internal class MessagingMiddleware : IMiddleware
                 Conventions.TryAdd(key, conventions);
             }
 
-            string? spanContext = "TODO: Genocs";
+            string? spanContext = System.Diagnostics.Activity.Current?.Id;
             string messageId = DefaultIdType.NewGuid().ToString("N");
             string correlationId = _correlationIdFactory.Create();
             string resourceId = DefaultIdType.NewGuid().ToString("N");

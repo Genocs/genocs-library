@@ -15,9 +15,9 @@ public static partial class ExpressionBuilder
     /// <param name="keyword">The keyword.</param>
     /// <param name="propertyName">Name of the property.</param>
     /// <param name="operatorIndexes">The operator indexes.</param>
-    /// <param name="pe">The pe.</param>
+    /// <param name="pe">The parameter expression.</param>
     /// <param name="addParentObjectNullCheck">if set to <c>true</c> [add parent object null check].</param>
-    /// <returns></returns>
+    /// <returns>The expression.</returns>
     internal static Expression GetExpressionString<TSource>(
                                                     string[] searchTerms,
                                                     string keyword,
@@ -35,54 +35,56 @@ public static partial class ExpressionBuilder
         }
 
         Expression? searchExpression = null;
-        Expression? finalExpression = null;
-        Expression? nullOrEmptyCheck = null;
-
         MethodCallExpression left = Expression.Call(propertyExp, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
-        var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+        var method = typeof(string).GetMethod("Contains", [typeof(string)]);
 
-        for (int count = 0; count < searchTerms.Length; count++)
+        if (method != null)
         {
-            string searchTerm = searchTerms[count].ToLower();
-            searchTerm = searchTerm.Replace("*", string.Empty);
-            searchTerm = searchTerm.Replace("\"", string.Empty);
-            Expression rightExpression;
-            Expression methodCallExpression;
-            if (searchTerm.Contains(NotOperator.TrimStart()))
+            for (int count = 0; count < searchTerms.Length; count++)
             {
-                searchTerm = searchTerm.Replace(NotOperator.TrimStart(), string.Empty).Trim();
-                rightExpression = Expression.Constant(searchTerm);
-                methodCallExpression = Expression.Call(left, method, rightExpression);
-                methodCallExpression = Expression.Not(methodCallExpression);
-            }
-            else
-            {
-                rightExpression = Expression.Constant(searchTerm);
-                methodCallExpression = Expression.Call(left, method, rightExpression);
-            }
-
-            if (count == 0)
-            {
-                searchExpression = methodCallExpression;
-            }
-            else
-            {
-                string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
-                switch (conditionOperator)
+                string searchTerm = searchTerms[count].ToLower();
+                searchTerm = searchTerm.Replace("*", string.Empty);
+                searchTerm = searchTerm.Replace("\"", string.Empty);
+                Expression rightExpression;
+                Expression methodCallExpression;
+                if (searchTerm.Contains(NotOperator.TrimStart()))
                 {
-                    case "and":
-                        searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
-                        break;
-                    case "or":
-                        searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
-                        break;
-                    default:
-                        break;
+                    searchTerm = searchTerm.Replace(NotOperator.TrimStart(), string.Empty).Trim();
+                    rightExpression = Expression.Constant(searchTerm);
+                    methodCallExpression = Expression.Call(left, method, rightExpression);
+                    methodCallExpression = Expression.Not(methodCallExpression);
+                }
+                else
+                {
+                    rightExpression = Expression.Constant(searchTerm);
+                    methodCallExpression = Expression.Call(left, method, rightExpression);
+                }
+
+                if (count == 0)
+                {
+                    searchExpression = methodCallExpression;
+                }
+                else
+                {
+                    string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
+                    switch (conditionOperator)
+                    {
+                        case "and":
+                            searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
+                            break;
+                        case "or":
+                            searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
 
+        Expression? finalExpression;
+        Expression? nullOrEmptyCheck;
         if (addParentObjectNullCheck)
         {
             // Add Null check for nested Object before checking the value of the property.

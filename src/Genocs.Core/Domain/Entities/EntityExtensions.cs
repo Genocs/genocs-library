@@ -1,4 +1,5 @@
-﻿using Genocs.Core.Domain.Entities.Auditing;
+﻿using Genocs.Common.Domain.Entities;
+using Genocs.Common.Domain.Entities.Auditing;
 using Genocs.Core.Extensions;
 
 namespace Genocs.Core.Domain.Entities;
@@ -13,7 +14,7 @@ public static class EntityExtensions
     /// </summary>
     public static bool IsNullOrDeleted(this ISoftDelete entity)
     {
-        return entity == null || entity.IsDeleted;
+        return entity?.IsDeleted != false;
     }
 
     /// <summary>

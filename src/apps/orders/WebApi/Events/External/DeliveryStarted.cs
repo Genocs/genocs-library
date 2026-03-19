@@ -1,5 +1,5 @@
-using Genocs.Core.CQRS.Events;
-using Genocs.MessageBrokers;
+using Genocs.Common.CQRS.Events;
+using Genocs.Messaging;
 
 namespace Genocs.Orders.WebApi.Events.External;
 

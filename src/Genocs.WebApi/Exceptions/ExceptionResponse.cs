@@ -15,7 +15,7 @@ public class ExceptionResponse(object response, HttpStatusCode statusCode)
     public object Response { get; } = response;
 
     /// <summary>
-    /// Gets the HTTP status code.
+    /// Gets the Http status code.
     /// </summary>
     public HttpStatusCode StatusCode { get; } = statusCode;
 }

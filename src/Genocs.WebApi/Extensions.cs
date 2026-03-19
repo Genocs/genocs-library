@@ -38,10 +38,10 @@ public static class Extensions
 
     [Description("By default System JSON serializer is being used. If Newtonsoft JSON serializer is used then it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true")]
     public static IGenocsBuilder AddWebApi(
-                                            this IGenocsBuilder builder,
-                                            Action<IMvcCoreBuilder>? configureMvc = null,
-                                            IJsonSerializer? jsonSerializer = null,
-                                            string sectionName = SectionName)
+        this IGenocsBuilder builder,
+        Action<IMvcCoreBuilder>? configureMvc = null,
+        IJsonSerializer? jsonSerializer = null,
+        string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -71,7 +71,11 @@ public static class Extensions
         if (jsonSerializer.GetType().Namespace?.Contains("Newtonsoft") == true)
         {
             builder.Services.Configure<KestrelServerOptions>(o => o.AllowSynchronousIO = true);
+#if !NET10_0_OR_GREATER
+            // Why: IIS server options type is not available for newer ASP.NET Core targets (e.g. net10).
+            // Keep IIS sync I/O config only where the API exists while preserving Kestrel behavior everywhere.
             builder.Services.Configure<IISServerOptions>(o => o.AllowSynchronousIO = true);
+#endif
         }
 
         builder.Services.AddSingleton(jsonSerializer);
@@ -103,7 +107,7 @@ public static class Extensions
         builder.Services.Scan(s =>
             s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IRequestHandler<,>))
-                    .WithoutAttribute(typeof(DecoratorAttribute)))
+                    .WithoutAttribute<DecoratorAttribute>())
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
@@ -172,7 +176,12 @@ public static class Extensions
 
         if (resetKnownNetworksAndProxies)
         {
+#if NET10_0_OR_GREATER
+            forwardingOptions.KnownIPNetworks.Clear();
+#else
             forwardingOptions.KnownNetworks.Clear();
+
+#endif
             forwardingOptions.KnownProxies.Clear();
         }
 
@@ -358,8 +367,10 @@ public static class Extensions
                         continue;
                     }
 
-                    object? fieldValue = TypeDescriptor.GetConverter(field.FieldType)
+                    object? fieldValue = TypeDescriptor
+                        .GetConverter(field.FieldType)
                         .ConvertFromInvariantString(value.ToString());
+
                     field.SetValue(payload, fieldValue);
                 }
             }

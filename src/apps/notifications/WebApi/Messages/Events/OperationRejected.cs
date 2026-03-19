@@ -1,5 +1,5 @@
+using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Events;
 using Newtonsoft.Json;
 
 namespace Genocs.Notifications.WebApi.Messages.Events;

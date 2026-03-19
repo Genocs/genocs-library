@@ -1,14 +1,14 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # Use the official .NET runtime as base image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
 # Use the official .NET SDK for building
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
@@ -18,20 +18,16 @@ COPY ["Directory.Build.targets", "Directory.Build.targets"]
 COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
-# Copy additional files needed for build
-COPY ["LICENSE", "LICENSE"]
-COPY ["icon.png", "icon.png"]
 
 # Copy project files and restore dependencies
-COPY ["src/demo/Contracts/Contracts.csproj", "src/Contracts/"]
-COPY ["src/demo/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/demo/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/demo/WebApi/Host.csproj", "src/WebApi/"]
+
 
 # Restore dependencies in a separate layer for better caching
 RUN dotnet restore "src/WebApi/Host.csproj"
 # Copy source code
-COPY ["src/demo/Contracts/", "src/Contracts/"]
-COPY ["src/demo/Domain/", "src/Domain/"]
+COPY ["src/demo/Infrastructure/", "src/Infrastructure/"]
 COPY ["src/demo/WebApi/", "src/WebApi/"]
 
 # Build the application
