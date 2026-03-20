@@ -7,7 +7,7 @@
         <IsPackable>false</IsPackable>
         <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
         <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
-        <EnableNETAnalyzers>False</EnableNETAnalyzers>        
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>
