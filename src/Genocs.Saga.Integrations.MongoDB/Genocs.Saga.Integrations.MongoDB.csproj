@@ -12,10 +12,12 @@
 
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Saga\Genocs.Saga.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta002" />
         <PackageReference Include="Genocs.Saga" Version="9.0.0-beta002" />
     </ItemGroup>
 

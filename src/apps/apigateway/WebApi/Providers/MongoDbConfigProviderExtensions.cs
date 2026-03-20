@@ -1,5 +1,6 @@
 ﻿using Genocs.APIGateway.WebApi.Configurations;
 using Genocs.Persistence.MongoDB;
+using Genocs.Core.Builders;
 using Yarp.ReverseProxy.Configuration;
 
 namespace Genocs.APIGateway.WebApi.Providers;
@@ -14,9 +15,7 @@ public static class MongoDbConfigProviderExtensions
     {
         var config = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-        var options = new YarpMongoDbOptions();
-
-        config.Bind(YarpMongoDbOptions.Position, options);
+        var options = config.GetOptions<YarpMongoDbOptions>(YarpMongoDbOptions.Position);
 
         builder.Services.AddSingleton((Func<IServiceProvider, IProxyConfigProvider>)((sp)
             => new MongodbConfigProvider(sp.GetRequiredService<ILogger<MongodbConfigProvider>>(), sp.GetRequiredService<IMongoDatabaseProvider>(), options)));

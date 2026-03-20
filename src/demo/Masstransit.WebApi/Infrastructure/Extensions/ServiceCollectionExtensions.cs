@@ -1,4 +1,5 @@
 ﻿using Genocs.Common.Persistence.Initialization;
+using Genocs.Core.Builders;
 using Genocs.Library.Demo.Masstransit.WebApi.Configurations;
 using Genocs.Messaging.RabbitMQ;
 using MassTransit;
@@ -10,8 +11,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCustomMassTransit(this IServiceCollection services, IConfiguration configuration)
     {
-        var rabbitMQSettings = new RabbitMQOptions();
-        configuration.GetSection(RabbitMQOptions.Position).Bind(rabbitMQSettings);
+        var rabbitMQSettings = configuration.GetOptions<RabbitMQOptions>(RabbitMQOptions.Position);
 
         // This is another way to get the RabbitMQOptions
         // RabbitMQOptions? rabbitMQSettingsV2 = configuration.GetSection(RabbitMQOptions.Position).Get<RabbitMQOptions>();

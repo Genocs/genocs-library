@@ -30,8 +30,7 @@ await Log.CloseAndFlushAsync();
 
 static IServiceCollection ConfigureMassTransit(IServiceCollection services, IConfiguration configuration)
 {
-    var rabbitMQSettings = new RabbitMQOptions();
-    configuration.GetSection(RabbitMQOptions.Position).Bind(rabbitMQSettings);
+    var rabbitMQSettings = configuration.GetOptions<RabbitMQOptions>(RabbitMQOptions.Position);
 
     services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
     services.AddMassTransit(cfg =>

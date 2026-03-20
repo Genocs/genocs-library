@@ -1,6 +1,7 @@
 using Genocs.Saga.Integrations.MongoDB.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Genocs.Core.Builders;
 using MongoDB.Driver;
 
 namespace Genocs.Saga.Integrations.MongoDB;
@@ -17,8 +18,7 @@ public static class Extensions
         {
             try
             {
-                var mongoSettings = new SagaMongoOption();
-                configuration.GetSection(SagaMongoOption.Position).Bind(mongoSettings);
+                var mongoSettings = configuration.GetOptions<SagaMongoOption>(SagaMongoOption.Position);
                 var database = new MongoClient(mongoSettings.ConnectionString).GetDatabase(mongoSettings.Database);
 
                 return database;
