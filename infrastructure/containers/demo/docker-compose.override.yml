@@ -1,0 +1,15 @@
+services:
+  demo-webapi-service:
+    build:
+      context: ../../../
+      dockerfile: ./src/demo/WebApi/Dockerfile
+
+  demo-masstransit-webapi-service:
+    build:
+      context: ../../../
+      dockerfile: ./src/demo/Masstransit.WebApi/Dockerfile
+
+  demo-masstransit-worker-service:
+    build:
+      context: ../../../
+      dockerfile: ./src/demo/Masstransit.Worker/Dockerfile

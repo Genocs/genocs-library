@@ -21,6 +21,8 @@ COPY ["global.json", "global.json"]
 
 # Copy project files and restore dependencies
 COPY ["src/demo/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/demo/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/demo/Domain.EFCore/Domain.EFCore.csproj", "src/Domain.EFCore/"]
 COPY ["src/demo/WebApi/Host.csproj", "src/WebApi/"]
 
 
@@ -28,6 +30,8 @@ COPY ["src/demo/WebApi/Host.csproj", "src/WebApi/"]
 RUN dotnet restore "src/WebApi/Host.csproj"
 # Copy source code
 COPY ["src/demo/Infrastructure/", "src/Infrastructure/"]
+COPY ["src/demo/Domain/", "src/Domain/"]
+COPY ["src/demo/Domain.EFCore/", "src/Domain.EFCore/"]
 COPY ["src/demo/WebApi/", "src/WebApi/"]
 
 # Build the application

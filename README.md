@@ -132,11 +132,7 @@ dotnet build
 #3. Pack the projects
 dotnet pack
 
-# 4. To pack the project with nuspec file
-cd src/Genocs.Core
-dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-
-# 5. To push on nuget
+# 4. To push on nuget
 dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
@@ -196,9 +192,11 @@ root-project/
 │   │   └── ...
 │   ├── docker/
 │   │   └── ...
-│   ├── helm/
-│   │   └── ...
 │   ├── k8s/
+│   │   ├── helm/
+│   │   │   └── ...
+│   │   ├── manifest/
+│   │   │   └── ...
 │   │   └── ...
 │   ├── terraform/
 │   │   └── ...
@@ -236,7 +234,7 @@ In this section you can find the infrastructure components you need to execute t
 You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
 ```bash
-cd ./infrastructure/docker
+cd ./infrastructure/containers
 
 # Setup the infrastructure.
 # Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
@@ -608,13 +606,26 @@ dotnet pack
 
 # Run project with console
 dotnet run --project ./src/demo/WebApi
-dotnet run --project ./src/demo/Worker
-dotnet run --project ./src/demo/HelloWorld.WebApi
+dotnet run --project ./src/demo/Masstransit.WebApi
+dotnet run --project ./src/demo/Masstransit.Worker
 ```
 
 ### Build and push the Docker images to Dockerhub
 
+You can build the Demo application by using Docker and push the images to Dockerhub, so you can use them to deploy the application on Kubernetes cluster or other cloud platforms.
 ```bash
+# Build and run with docker compose
+./scripts/build-and-run-demo-docker-images.sh
+
+cd ./infrastructure/containers/apps
+# Build with docker compose
+docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
+
+# Run with docker compose
+docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d
+
+
+
 # Build webapi Docker image
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
 
@@ -672,8 +683,10 @@ Pre-requisites:
 
 ```bash
 
-# Build with docker compose
-./src/apps/scripts/build-images-docker-compose.sh
+```bash
+# Build and run with docker compose
+./scripts/build-and-run-apps-docker-images.sh
+
 
 # *** Before running the solution remember to check ***
 # *** if the infrastructure services were setup     ***

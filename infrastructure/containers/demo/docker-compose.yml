@@ -1,0 +1,53 @@
+services:
+  demo-webapi-service:
+    image: genocs/demo-webapi:${IMAGE_VERSION}
+    hostname: demo-webapi-service
+    container_name: demo-webapi-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - mongodb__connectionString=mongodb://mongodb:27017
+      - seq__url=http://seq
+      - exporter__otlpEndpoint=http://jaeger
+    networks:
+      - genocs
+    ports:
+      - 5700:80
+      - 5701:443
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  demo-masstransit-webapi-service:
+    image: genocs/demo-masstransit-webapi:${IMAGE_VERSION}
+    hostname: demo-masstransit-webapi-service
+    container_name: demo-masstransit-webapi-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - mongodb__connectionString=mongodb://mongodb:27017
+      - seq__url=http://seq
+      - exporter__otlpEndpoint=http://jaeger
+    networks:
+      - genocs
+    ports:
+      - 5710:80
+      - 5711:443
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  demo-masstransit-worker-service:
+    image: genocs/demo-masstransit-worker:${IMAGE_VERSION}
+    hostname: demo-masstransit-worker-service
+    container_name: demo-masstransit-worker-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - mongodb__connectionString=mongodb://mongodb:27017
+      - seq__url=http://seq
+      - exporter__otlpEndpoint=http://jaeger
+
+networks:
+  genocs:
+    name: genocs-network
+    external: true
