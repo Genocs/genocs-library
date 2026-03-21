@@ -129,7 +129,7 @@ cd genocs-library
 # 2. Build the solution
 dotnet build
 
-#3. Pack the projects
+# 3. Pack the projects
 dotnet pack
 
 # 4. To push on nuget
