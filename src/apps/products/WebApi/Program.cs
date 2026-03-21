@@ -3,7 +3,6 @@ using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Discovery.Consul;
 using Genocs.Http;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;
@@ -19,12 +18,13 @@ using Genocs.Products.WebApi.Domain;
 using Genocs.Products.WebApi.DTO;
 using Genocs.Products.WebApi.Queries;
 using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.ServiceDiscovery.Consul;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
+using Genocs.WebApi.OpenApi;
 using Genocs.WebApi.Security;
 using Serilog;
-using Genocs.WebApi.OpenApi;
 
 StaticLogger.EnsureInitialized();
 

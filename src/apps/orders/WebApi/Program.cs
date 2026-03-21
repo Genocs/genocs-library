@@ -2,7 +2,7 @@
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Discovery.Consul;
+using Genocs.ServiceDiscovery.Consul;
 using Genocs.Http;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.Logging;

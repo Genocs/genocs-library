@@ -61,7 +61,7 @@
   <Project Path="src/Genocs.Auth/Genocs.Auth.csproj" />
   <Project Path="src/Genocs.Common/Genocs.Common.csproj" />
   <Project Path="src/Genocs.Core/Genocs.Core.csproj" />
-  <Project Path="src/Genocs.Discovery.Consul/Genocs.Discovery.Consul.csproj" />
+  <Project Path="src/Genocs.ServiceDiscovery.Consul/Genocs.ServiceDiscovery.Consul.csproj" />
   <Project Path="src/Genocs.Http.RestEase/Genocs.Http.RestEase.csproj" />
   <Project Path="src/Genocs.Http/Genocs.Http.csproj" />
   <Project Path="src/Genocs.LoadBalancing.Fabio/Genocs.LoadBalancing.Fabio.csproj" />

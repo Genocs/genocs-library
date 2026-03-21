@@ -11,10 +11,10 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
+        <ProjectReference Include="..\Genocs.ServiceDiscovery.Consul\Genocs.ServiceDiscovery.Consul.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Discovery.Consul" Version="9.0.0-beta002" />
+        <PackageReference Include="Genocs.ServiceDiscovery.Consul" Version="9.0.0-beta002" />
     </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
 using Genocs.Core.Builders;
-using Genocs.Discovery.Consul;
-using Genocs.Discovery.Consul.Configurations;
 using Genocs.Http.Configurations;
 using Genocs.Http.RestEase.Builders;
 using Genocs.Http.RestEase.Configurations;
 using Genocs.Http.RestEase.Serializers;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.LoadBalancing.Fabio.Configurations;
+using Genocs.ServiceDiscovery.Consul;
+using Genocs.ServiceDiscovery.Consul.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using RestEase;
 
