@@ -191,4 +191,4 @@ From [src/Genocs.Messaging.Outbox.MongoDB/Genocs.Messaging.Outbox.MongoDB.csproj
 
 - NuGet package readme: [src/Genocs.Messaging.Outbox.MongoDB/README_NUGET.md](src/Genocs.Messaging.Outbox.MongoDB/README_NUGET.md)
 - Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md)
+- Package documentation: [docs/Genocs.Messaging.Outbox.MongoDB-Agent-Documentation.md](docs/Genocs.Messaging.Outbox.MongoDB-Agent-Documentation.md)

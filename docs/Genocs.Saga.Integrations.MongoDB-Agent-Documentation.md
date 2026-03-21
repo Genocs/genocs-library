@@ -175,5 +175,6 @@ From [src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.cspr
 ## Related Docs
 
 - NuGet package readme: [src/Genocs.Saga.Integrations.MongoDB/README_NUGET.md](src/Genocs.Saga.Integrations.MongoDB/README_NUGET.md)
-- Saga package doc: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Saga.Integrations.MongoDB-Agent-Documentation.md](docs/Genocs.Saga.Integrations.MongoDB-Agent-Documentation.md)
+- Saga package doc: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)

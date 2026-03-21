@@ -228,4 +228,4 @@ From [src/Genocs.WebApi/Genocs.WebApi.csproj](src/Genocs.WebApi/Genocs.WebApi.cs
 
 - NuGet package readme: [src/Genocs.WebApi/README_NUGET.md](src/Genocs.WebApi/README_NUGET.md)
 - Repository guide: [README.md](README.md)
-- Package documentation: [docs/Library-Agent-Documentation-Template.md](docs/Library-Agent-Documentation-Template.md)
+- Package documentation: [docs/Genocs.WebApi-Agent-Documentation.md](docs/Genocs.WebApi-Agent-Documentation.md)

@@ -16,7 +16,7 @@ It prioritizes fast retrieval of:
 |---|---|
 | Package | Genocs.Logging |
 | Project file | [src/Genocs.Logging/Genocs.Logging.csproj](src/Genocs.Logging/Genocs.Logging.csproj) |
-| Target frameworks | net8.0, net9.0, net10.0 |
+| Target frameworks | net10.0, net9.0, net8.0 |
 | Primary role | Serilog-based structured logging with multi-sink support, correlation context enrichment, dynamic log level control, and CQRS handler logging decorators |
 | Core themes | Serilog pipeline setup, sink configuration (Console, File, ELK, Seq, Loki, Azure App Insights, OTLP), log level switching at runtime, HTTP request/response body capture, CQRS decorator logging |
 
@@ -274,5 +274,5 @@ From [src/Genocs.Logging/Genocs.Logging.csproj](src/Genocs.Logging/Genocs.Loggin
 
 - NuGet package readme: [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Logging-Agent-Documentation.md](docs/Genocs.Logging-Agent-Documentation.md)
 - Genocs.Core reference: [docs/Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md)
-- Telemetry notes: [/memories/repo/telemetry.md](/memories/repo/telemetry.md)

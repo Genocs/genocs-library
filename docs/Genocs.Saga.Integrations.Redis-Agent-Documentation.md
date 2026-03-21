@@ -168,5 +168,6 @@ From [src/Genocs.Saga.Integrations.Redis/Genocs.Saga.Integrations.Redis.csproj](
 ## Related Docs
 
 - NuGet package readme: [src/Genocs.Saga.Integrations.Redis/README_NUGET.md](src/Genocs.Saga.Integrations.Redis/README_NUGET.md)
-- Saga package doc: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Saga.Integrations.Redis-Agent-Documentation.md](docs/Genocs.Saga.Integrations.Redis-Agent-Documentation.md)
+- Saga package doc: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)

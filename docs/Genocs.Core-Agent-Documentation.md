@@ -246,3 +246,4 @@ From [src/Genocs.Core/Genocs.Core.csproj](src/Genocs.Core/Genocs.Core.csproj):
 
 - NuGet package readme: [src/Genocs.Core/README_NUGET.md](src/Genocs.Core/README_NUGET.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md)

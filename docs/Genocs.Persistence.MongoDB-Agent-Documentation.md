@@ -206,3 +206,4 @@ From [src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj](src/Geno
 - NuGet package readme: [src/Genocs.Persistence.MongoDB/README_NUGET.md](src/Genocs.Persistence.MongoDB/README_NUGET.md)
 - Legacy package notes: [src/Genocs.Persistence.MongoDB/_docs/README_NUGET.md](src/Genocs.Persistence.MongoDB/_docs/README_NUGET.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Persistence.MongoDB-Agent-Documentation.md](docs/Genocs.Persistence.MongoDB-Agent-Documentation.md)

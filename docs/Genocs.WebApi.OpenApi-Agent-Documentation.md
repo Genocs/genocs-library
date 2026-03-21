@@ -22,7 +22,7 @@ the generated spec via a custom `IDocumentFilter`.
 
 | Property | Value |
 |---|---|
-| Target frameworks | `net8.0`, `net9.0`, `net10.0` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
 | Config section key | `openapi` (= `OpenApiOptions.Position`) |
 | Registration guard | `builder.TryRegister("docs.openapi")` — idempotent |
 | Swashbuckle version | 9.x (net8/9), 10.x (net10) |
@@ -199,8 +199,8 @@ builder.AddOpenApiDocs(b => b
 
 ## 11. Related Docs
 
-- [Genocs.WebApi-Agent-Documentation.md](./Genocs.WebApi-Agent-Documentation.md) — endpoint DSL whose
-  `WebApiEndpointDefinitions` is consumed by `WebApiDocumentFilter`
-- [Genocs.Core-Agent-Documentation.md](./Genocs.Core-Agent-Documentation.md) — `IGenocsBuilder` foundation
-- [Library-Agent-Documentation-Template.md](./Library-Agent-Documentation-Template.md) — template used to
-  author this file
+- NuGet package readme: [src/Genocs.WebApi.OpenApi/README_NUGET.md](src/Genocs.WebApi.OpenApi/README_NUGET.md)
+- Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.WebApi.OpenApi-Agent-Documentation.md](docs/Genocs.WebApi.OpenApi-Agent-Documentation.md)
+- Related: [Genocs.WebApi-Agent-Documentation.md](docs/Genocs.WebApi-Agent-Documentation.md) — endpoint DSL whose `WebApiEndpointDefinitions` is consumed by `WebApiDocumentFilter`
+- Related: [Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md) — `IGenocsBuilder` foundation

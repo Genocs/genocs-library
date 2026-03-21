@@ -16,7 +16,7 @@ It prioritizes fast retrieval of:
 |---|---|
 | Package | Genocs.Common |
 | Project file | [src/Genocs.Common/Genocs.Common.csproj](src/Genocs.Common/Genocs.Common.csproj) |
-| Target frameworks | net8.0, net9.0, net10.0 |
+| Target frameworks | net10.0, net9.0, net8.0 |
 | Primary role | Shared primitives, CQRS contracts, domain model abstractions, and cross-cutting utility types for all Genocs packages |
 | Core themes | CQRS interfaces, domain-driven design building blocks, paged query support, notification model, DI markers, persistence initialization |
 
@@ -284,11 +284,11 @@ Files:
 From [src/Genocs.Common/Genocs.Common.csproj](src/Genocs.Common/Genocs.Common.csproj):
 
 - No external NuGet dependencies — this is a zero-dependency primitives package
-- Targets: `net8.0`, `net9.0`, `net10.0`
+- Targets: `net10.0`, `net9.0`, `net8.0`
 
 ## Related Docs
 
 - NuGet package readme: [src/Genocs.Common/README_NUGET.md](src/Genocs.Common/README_NUGET.md)
 - Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Common-Documentation.md](docs/Genocs.Common-Documentation.md)
+- Package documentation: [docs/Genocs.Common-Agent-Documentation.md](docs/Genocs.Common-Agent-Documentation.md)
 - Genocs.Core reference: [docs/Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md)

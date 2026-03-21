@@ -29,7 +29,7 @@ into the `Genocs.WebApi` endpoint-builder DSL. It provides:
 
 | Property | Value |
 |---|---|
-| Target frameworks | `net8.0`, `net9.0`, `net10.0` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
 | Config section key | — (none) |
 | Registration guard | none — `AddInMemoryDispatcher` is not idempotent |
 | Dispatcher type | In-process / in-memory (delegates to injected dispatchers) |
@@ -213,9 +213,8 @@ public class MyService(IDispatcher dispatcher)
 
 ## 11. Related Docs
 
-- [Genocs.WebApi-Agent-Documentation.md](./Genocs.WebApi-Agent-Documentation.md) — base endpoint DSL that
-  `DispatcherEndpointsBuilder` wraps
-- [Genocs.Core-Agent-Documentation.md](./Genocs.Core-Agent-Documentation.md) — CQRS abstractions source
-  (`ICommandDispatcher`, `IEventDispatcher`)
-- [Library-Agent-Documentation-Template.md](./Library-Agent-Documentation-Template.md) — template used to
-  author this file
+- NuGet package readme: [src/Genocs.WebApi.CQRS/README_NUGET.md](src/Genocs.WebApi.CQRS/README_NUGET.md)
+- Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.WebApi.CQRS-Agent-Documentation.md](docs/Genocs.WebApi.CQRS-Agent-Documentation.md)
+- Related: [Genocs.WebApi-Agent-Documentation.md](docs/Genocs.WebApi-Agent-Documentation.md) — base endpoint DSL that `DispatcherEndpointsBuilder` wraps
+- Related: [Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md) — CQRS abstractions source (`ICommandDispatcher`, `IEventDispatcher`)

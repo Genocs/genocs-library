@@ -193,4 +193,4 @@ From [src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj](src/Genocs.Mes
 
 - NuGet package readme: [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md)
 - Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md)
+- Package documentation: [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md)

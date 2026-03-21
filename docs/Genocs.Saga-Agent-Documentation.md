@@ -18,7 +18,7 @@ It prioritizes fast retrieval of:
 | Project file | [src/Genocs.Saga/Genocs.Saga.csproj](src/Genocs.Saga/Genocs.Saga.csproj) |
 | Target frameworks | net10.0, net9.0, net8.0 |
 | Primary role | Saga orchestration abstractions and execution pipeline for distributed workflows |
-| Core themes | AddSaga registration, pluggable persistence, saga discovery, coordinated execution, compensation handling |
+| Core themes | AddSaga registration, pluggable persistence, saga discovery, coordinated execution, compensation handling, OpenTelemetry trace correlation (Jaeger) |
 
 ## Use This Package When
 
@@ -27,6 +27,7 @@ It prioritizes fast retrieval of:
 - Running compensation logic for rejected saga flows.
 - Using default in-memory saga state/log persistence.
 - Integrating custom saga persistence through ISagaBuilder.
+- Propagating trace context across services for distributed tracing (Jaeger) via SagaTraceContext.
 
 ## Do Not Assume
 
@@ -72,6 +73,12 @@ It prioritizes fast retrieval of:
 - SagaContextBuilder in [src/Genocs.Saga/Builders/SagaContextBuilder.cs](src/Genocs.Saga/Builders/SagaContextBuilder.cs)
 - KeyedLocker in [src/Genocs.Saga/Async/KeyedLocker.cs](src/Genocs.Saga/Async/KeyedLocker.cs)
 
+### Telemetry correlation
+
+- SagaTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
+- SagaTraceContext.WithCurrentTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
+- SagaTraceContext.WithTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
+
 ## Decision Matrix For Agents
 
 | Goal | Preferred API | Notes |
@@ -84,6 +91,8 @@ It prioritizes fast retrieval of:
 | Trigger completion/rejection hooks and compensation | SagaPostProcessor.ProcessAsync | Runs compensation in reverse log order for rejected state |
 | Register custom log provider | ISagaBuilder.UseSagaLog<TSagaLog>() | Replace default in-memory log implementation |
 | Register custom state repository | ISagaBuilder.UseSagaStateRepository<TRepository>() | Replace default in-memory state store |
+| Propagate trace context from current Activity | SagaTraceContext.WithCurrentTraceContext on ISagaContextBuilder | Links saga to incoming HTTP/message trace when building context |
+| Propagate trace context from message headers | SagaTraceContext.WithTraceContext(traceparent, tracestate) | Use when building context from RabbitMQ/Kafka/HTTP headers |
 
 ## Minimal Integration Recipe
 
@@ -122,6 +131,7 @@ await coordinator.ProcessAsync(message);
 - Saga.Reject sets state to Rejected and throws SagaException by design.
 - SagaPostProcessor executes compensation by reading saga logs and replaying messages in descending CreatedAt order.
 - Initial state is created only for ISagaStartAction<TMessage> when no persisted state exists.
+- Saga execution emits OpenTelemetry spans (Saga.Process, Saga.Execute, Saga.Handle, Saga.Compensate) for Jaeger correlation; register Genocs.Telemetry and AddSource("Genocs.Saga") is included.
 
 ## Source-Accurate Capability Map
 
@@ -181,6 +191,17 @@ Files:
 - [src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs](src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs)
 - [src/Genocs.Saga/Persistence/InMemorySagaLog.cs](src/Genocs.Saga/Persistence/InMemorySagaLog.cs)
 
+### Telemetry correlation
+
+- Emits ActivitySource spans for Saga.Process, Saga.Execute, Saga.Handle, Saga.Compensate.
+- Extracts W3C traceparent/tracestate from ISagaContext metadata when present.
+- SagaTraceContext provides WithCurrentTraceContext and WithTraceContext for cross-service trace propagation.
+
+Files:
+
+- [src/Genocs.Saga/SagaTelemetry.cs](src/Genocs.Saga/SagaTelemetry.cs)
+- [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
+
 ## Dependencies
 
 From [src/Genocs.Saga/Genocs.Saga.csproj](src/Genocs.Saga/Genocs.Saga.csproj):
@@ -193,3 +214,4 @@ From [src/Genocs.Saga/Genocs.Saga.csproj](src/Genocs.Saga/Genocs.Saga.csproj):
 - NuGet package readme: [src/Genocs.Saga/README_NUGET.md](src/Genocs.Saga/README_NUGET.md)
 - Package readme: [src/Genocs.Saga/README.md](src/Genocs.Saga/README.md)
 - Repository guide: [README.md](README.md)
+- Package documentation: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)

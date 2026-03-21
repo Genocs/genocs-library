@@ -224,4 +224,4 @@ From [src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj](src/Genocs
 
 - NuGet package readme: [src/Genocs.Messaging.RabbitMQ/README_NUGET.md](src/Genocs.Messaging.RabbitMQ/README_NUGET.md)
 - Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md)
+- Package documentation: [docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md](docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md)
