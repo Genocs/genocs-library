@@ -1,93 +1,32 @@
 # Genocs.Messaging.Outbox Agent Reference
 
+## Consumer Mode for Agents
+
+- Assume package is installed from NuGet.
+- Do not rely on repository source code access.
+- Prefer stable public APIs and extension methods documented here.
+- If behavior is uncertain, fail safely and request config/package version details.
+
 ## Purpose
 
-This document is optimized for AI-assisted development sessions.
-It prioritizes fast retrieval of:
-
-- What Genocs.Messaging.Outbox is responsible for
-- Which APIs to call for specific goals
-- Where source of truth lives
-- What constraints and runtime behaviors matter
+`Genocs.Messaging.Outbox` provides outbox abstractions and a background processor for reliable outbound publish and idempotent inbound handling.
 
 ## Quick Facts
 
 | Key | Value |
 |---|---|
-| Package | Genocs.Messaging.Outbox |
-| Project file | [src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj](src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj) |
-| Target frameworks | net10.0, net9.0, net8.0 |
-| Primary role | Outbox pattern abstraction and hosted processor for reliable publish and idempotent message handling |
-| Core themes | AddMessageOutbox registration, IMessageOutbox abstraction, in-memory outbox, periodic flush processor, inbox/outbox records |
+| Package | `Genocs.Messaging.Outbox` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
+| Primary role | Outbox abstraction and processing runtime |
+| Core entry points | `AddMessageOutbox`, `AddInMemory`, `IMessageOutbox`, `IMessageOutboxAccessor` |
 
-## Use This Package When
-
-- Buffering outbound bus messages before publish.
-- Applying idempotent processing for inbound messages via message IDs.
-- Running periodic outbox flush logic as a hosted service.
-- Selecting outbox implementation via configurator extensions.
-- Sharing a transport-agnostic outbox abstraction across messaging backends.
-
-## Do Not Assume
-
-- AddMessageOutbox only starts processing when outbox options are enabled.
-- Default configurator behavior is in-memory outbox when no custom configure action is provided.
-- Header assignment in SendAsync expects a Dictionary<string, object> at runtime; non-dictionary IDictionary input can fail with cast errors.
-
-## High-Value Entry Points
-
-### Registration and configuration
-
-- AddMessageOutbox in [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs)
-- AddInMemory in [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs)
-- OutboxOptions in [src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs](src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs)
-- MessageOutboxConfigurator in [src/Genocs.Messaging.Outbox/Configurators/MessageOutboxConfigurator.cs](src/Genocs.Messaging.Outbox/Configurators/MessageOutboxConfigurator.cs)
-
-### Outbox abstraction contracts
-
-- IMessageOutbox in [src/Genocs.Messaging.Outbox/IMessageOutbox.cs](src/Genocs.Messaging.Outbox/IMessageOutbox.cs)
-- IMessageOutboxAccessor in [src/Genocs.Messaging.Outbox/IMessageOutboxAccessor.cs](src/Genocs.Messaging.Outbox/IMessageOutboxAccessor.cs)
-- IMessageOutboxConfigurator in [src/Genocs.Messaging.Outbox/IMessageOutboxConfigurator.cs](src/Genocs.Messaging.Outbox/IMessageOutboxConfigurator.cs)
-
-### Hosted processing flow
-
-- OutboxProcessor in [src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs](src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs)
-
-### In-memory implementation
-
-- InMemoryMessageOutbox in [src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs](src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs)
-
-### Message persistence models
-
-- OutboxMessage in [src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs)
-- InboxMessage in [src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs)
-
-### Integration usage reference
-
-- Demo registration in [src/demo/WebApi/Program.cs](src/demo/WebApi/Program.cs)
-
-## Decision Matrix For Agents
-
-| Goal | Preferred API | Notes |
-|---|---|---|
-| Enable outbox feature | AddMessageOutbox | Reads outbox options and wires processor/services |
-| Use default implementation quickly | AddMessageOutbox with no configure delegate | Automatically calls AddInMemory |
-| Select in-memory outbox explicitly | AddInMemory | Registers InMemoryMessageOutbox as IMessageOutbox |
-| Save outbound message with metadata | IMessageOutbox.SendAsync | Stores message payload, context, IDs, headers, timestamps |
-| Process incoming message idempotently | IMessageOutbox.HandleAsync | Uses inbox marker to skip duplicates |
-| Pull pending unsent records | IMessageOutboxAccessor.GetUnsentAsync | Used by hosted processor |
-| Mark one message processed | IMessageOutboxAccessor.ProcessAsync(OutboxMessage) | Used in sequential mode |
-| Mark many messages processed | IMessageOutboxAccessor.ProcessAsync(IEnumerable<OutboxMessage>) | Used in parallel mode |
-
-## Minimal Integration Recipe
-
-### Install
+## Install
 
 ```bash
 dotnet add package Genocs.Messaging.Outbox
 ```
 
-### Setup in Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
 using Genocs.Core.Builders;
@@ -96,101 +35,76 @@ using Genocs.Messaging.Outbox;
 var builder = WebApplication.CreateBuilder(args);
 
 IGenocsBuilder gnxBuilder = builder.AddGenocs();
-
 gnxBuilder.AddMessageOutbox();
-
 gnxBuilder.Build();
 
 var app = builder.Build();
-
 app.Run();
 ```
 
-## Behavior Notes That Affect Agent Decisions
+## Configuration
 
-- AddMessageOutbox uses registry key messageBrokers.outbox and ignores duplicate registration.
-- OutboxProcessor validates interval milliseconds and throws when enabled with non-positive interval.
-- OutboxProcessor supports sequential and parallel processing modes via outbox type option.
-- In sequential mode, each message is marked processed immediately after publish.
-- In parallel mode, all published messages are marked processed in one batch.
-- InMemoryMessageOutbox removes expired processed records only when expiry is greater than zero.
+Use the `outbox` section.
 
-## Source-Accurate Capability Map
+```json
+{
+	"outbox": {
+		"enabled": true,
+		"expiry": 3600,
+		"intervalMilliseconds": 5000,
+		"inboxCollection": "inbox",
+		"outboxCollection": "outbox",
+		"type": "sequential",
+		"disableTransactions": false
+	}
+}
+```
 
-### Registration and lifecycle
+| Setting | Type | Description |
+|---|---|---|
+| `enabled` | `bool` | Enables the outbox runtime and hosted processing loop. |
+| `expiry` | `int` | Expiry window used by providers that support processed-message cleanup. |
+| `intervalMilliseconds` | `double` | Polling interval used by the background processor. Must be positive when processing is enabled. |
+| `inboxCollection` | `string` | Inbox storage name used by durable providers such as MongoDB. |
+| `outboxCollection` | `string` | Outbox storage name used by durable providers such as MongoDB. |
+| `type` | `string` | Processing strategy hint used by the runtime, for example sequential versus batch-style processing. |
+| `disableTransactions` | `bool` | Disables transaction usage for providers that support transactional handling. |
 
-- Reads options from configurable section with default key outbox.
-- Registers options singleton and implementation services.
-- Auto-adds hosted outbox processor when enabled.
-- Supports extension-based implementation choice.
+For simple in-memory usage, only `enabled` and `intervalMilliseconds` are typically required. Collection and transaction settings become relevant when you add a durable provider.
 
-Files:
+## Decision Matrix For Agents
 
-- [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs)
-- [src/Genocs.Messaging.Outbox/Configurators/MessageOutboxConfigurator.cs](src/Genocs.Messaging.Outbox/Configurators/MessageOutboxConfigurator.cs)
-- [src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs](src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs)
+| Goal | Preferred API |
+|---|---|
+| Enable outbox with default storage | `AddMessageOutbox()` |
+| Select explicit in-memory provider | `AddMessageOutbox(o => o.AddInMemory())` |
+| Buffer outbound message before publish | `IMessageOutbox.SendAsync(...)` |
+| Enforce idempotent inbound handling | `IMessageOutbox.HandleAsync(...)` |
+| Retrieve and mark pending outbox records | `IMessageOutboxAccessor.GetUnsentAsync()` and `ProcessAsync(...)` |
 
-### Abstraction layer
+## Behavior Notes / Constraints
 
-- Defines enabled state and methods for inbox handling and outbound buffering.
-- Defines accessor methods for unsent retrieval and processed marking.
-- Exposes configurator bridge to builder and options.
+- Outbox background processing starts only when enabled by configuration.
+- Processing interval must be positive when outbox processing is enabled.
+- In-memory provider is non-durable and suited for development or simple single-instance scenarios.
 
-Files:
+## Public Capability Map
 
-- [src/Genocs.Messaging.Outbox/IMessageOutbox.cs](src/Genocs.Messaging.Outbox/IMessageOutbox.cs)
-- [src/Genocs.Messaging.Outbox/IMessageOutboxAccessor.cs](src/Genocs.Messaging.Outbox/IMessageOutboxAccessor.cs)
-- [src/Genocs.Messaging.Outbox/IMessageOutboxConfigurator.cs](src/Genocs.Messaging.Outbox/IMessageOutboxConfigurator.cs)
-
-### Hosted dispatch processing
-
-- Periodically reads unsent records from accessor.
-- Publishes records through IBusPublisher.
-- Applies sequential or batch processed marking strategy.
-- Uses DI scope per processing iteration.
-
-Files:
-
-- [src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs](src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs)
-
-### In-memory storage behavior
-
-- Uses concurrent dictionaries for inbox and outbox state.
-- Implements duplicate detection for inbound IDs.
-- Stores outbound payload and metadata in OutboxMessage.
-- Removes processed records after expiry window.
-
-Files:
-
-- [src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs](src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs)
-
-### Message entity models
-
-- Outbox entity stores serialized/raw payload metadata and lifecycle timestamps.
-- Inbox entity stores processed marker and timestamp.
-- Both entities implement IEntity<string>.
-
-Files:
-
-- [src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs)
-- [src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs)
-
-### Practical integration reference
-
-- Demonstrates AddMessageOutbox with Mongo implementation selection.
-
-Files:
-
-- [src/demo/WebApi/Program.cs](src/demo/WebApi/Program.cs)
+- Outbox registration through `AddMessageOutbox`.
+- Provider selection through the outbox configurator.
+- Outbound buffering and inbound deduplication via `IMessageOutbox`.
+- Pending-record retrieval and processed marking via `IMessageOutboxAccessor`.
 
 ## Dependencies
 
-From [src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj](src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj):
+- `Genocs.Messaging`
+- Optional durable provider package for production usage
 
-- Genocs.Messaging
+## Troubleshooting
 
-## Related Docs
-
-- NuGet package readme: [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md)
+1. Outbox processor never starts.
+Fix: Set `outbox.enabled` to true and configure a positive `outbox.intervalMilliseconds` value.
+2. Messages disappear after service restart.
+Fix: Replace in-memory outbox storage with a durable outbox provider.
+3. Duplicate inbound processing still occurs.
+Fix: Call `HandleAsync` with stable message identifiers for each consumed message.

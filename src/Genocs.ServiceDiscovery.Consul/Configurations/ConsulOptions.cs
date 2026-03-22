@@ -1,5 +1,8 @@
 namespace Genocs.ServiceDiscovery.Consul.Configurations;
 
+/// <summary>
+/// Represents the configuration options for Consul service discovery.
+/// </summary>
 public class ConsulOptions
 {
     /// <summary>

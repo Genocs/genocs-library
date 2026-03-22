@@ -1,227 +1,237 @@
 # Genocs.Messaging.RabbitMQ Agent Reference
 
+## Consumer Mode for Agents
+
+- Assume package is installed from NuGet.
+- Do not rely on repository source code access.
+- Prefer stable public APIs and extension methods documented here.
+- If behavior is uncertain, fail safely and request config/package version details.
+
 ## Purpose
 
-This document is optimized for AI-assisted development sessions.
-It prioritizes fast retrieval of:
-
-- What Genocs.Messaging.RabbitMQ is responsible for
-- Which APIs to call for specific goals
-- Where source of truth lives
-- What constraints and runtime behaviors matter
+Genocs.Messaging.RabbitMQ implements the Genocs messaging abstractions over RabbitMQ. It wires `IBusPublisher` and `IBusSubscriber` to a real AMQP broker, providing exchange/queue convention management, configurable retry policies, dead-letter routing, TLS/SSL support, plugin hooks, and a background consumer hosted service — all driven by a single `rabbitmq` configuration section.
 
 ## Quick Facts
 
 | Key | Value |
 |---|---|
-| Package | Genocs.Messaging.RabbitMQ |
-| Project file | [src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj](src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj) |
-| Target frameworks | net10.0, net9.0, net8.0 |
-| Primary role | RabbitMQ transport implementation for Genocs messaging abstractions with conventions, retries, DLQ flow, plugins, and tracing headers |
-| Core themes | AddRabbitMQAsync registration, IBusPublisher and IBusSubscriber implementations, conventions builder/provider, background consumer service, plugin chain, serializer abstraction |
+| Package | `Genocs.Messaging.RabbitMQ` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
+| Primary role | RabbitMQ transport provider for Genocs messaging |
+| Typical startup APIs | `AddRabbitMQAsync`, `UseRabbitMQ` |
 
-## Use This Package When
-
-- Binding Genocs.Messaging abstractions to RabbitMQ transport.
-- Publishing messages with conventions-driven exchange, routing key, and queue naming.
-- Running background consumer handling with retry and optional dead-letter routing.
-- Propagating correlation context and tracing headers over RabbitMQ.
-- Extending message handling with plugin middleware and custom exception mappers.
-
-## Do Not Assume
-
-- AddRabbitMQAsync is asynchronous and must be awaited.
-- Host names are required; registration throws when rabbitmq host list is empty.
-- UseRabbitMQ returns a subscriber facade and does not auto-subscribe handlers unless Subscribe calls are made.
-- Producer channels are created per managed thread and bounded by max producer channels.
-- Retries in background consumer do not imply automatic success; failure mapping and dead-letter settings alter final ack/nack behavior.
-
-## High-Value Entry Points
-
-### Registration and host integration
-
-- AddRabbitMQAsync in [src/Genocs.Messaging.RabbitMQ/Extensions.cs](src/Genocs.Messaging.RabbitMQ/Extensions.cs)
-- UseRabbitMQ in [src/Genocs.Messaging.RabbitMQ/Extensions.cs](src/Genocs.Messaging.RabbitMQ/Extensions.cs)
-- RabbitMQOptions in [src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs](src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs)
-
-### Publish and subscribe abstractions
-
-- RabbitMQPublisher in [src/Genocs.Messaging.RabbitMQ/Publishers/RabbitMqPublisher.cs](src/Genocs.Messaging.RabbitMQ/Publishers/RabbitMqPublisher.cs)
-- RabbitMQSubscriber in [src/Genocs.Messaging.RabbitMQ/Subscribers/RabbitMqSubscriber.cs](src/Genocs.Messaging.RabbitMQ/Subscribers/RabbitMqSubscriber.cs)
-- MessageSubscribersChannel in [src/Genocs.Messaging.RabbitMQ/MessageSubscribersChannel.cs](src/Genocs.Messaging.RabbitMQ/MessageSubscribersChannel.cs)
-- RabbitMqBackgroundService in [src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs](src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs)
-
-### Client, serialization, and context
-
-- IRabbitMQClient in [src/Genocs.Messaging.RabbitMQ/IRabbitMqClient.cs](src/Genocs.Messaging.RabbitMQ/IRabbitMqClient.cs)
-- RabbitMQClient in [src/Genocs.Messaging.RabbitMQ/Clients/RabbitMqClient.cs](src/Genocs.Messaging.RabbitMQ/Clients/RabbitMqClient.cs)
-- IRabbitMQSerializer in [src/Genocs.Messaging.RabbitMQ/IRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/IRabbitMqSerializer.cs)
-- SystemTextJsonJsonRabbitMQSerializer in [src/Genocs.Messaging.RabbitMQ/Serializers/SystemTextJsonJsonRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/Serializers/SystemTextJsonJsonRabbitMqSerializer.cs)
-- NewtonsoftJsonRabbitMQSerializer in [src/Genocs.Messaging.RabbitMQ/Serializers/NewtonsoftJsonRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/Serializers/NewtonsoftJsonRabbitMqSerializer.cs)
-
-### Conventions and routing metadata
-
-- IConventionsBuilder in [src/Genocs.Messaging.RabbitMQ/IConventionsBuilder.cs](src/Genocs.Messaging.RabbitMQ/IConventionsBuilder.cs)
-- ConventionsBuilder in [src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsBuilder.cs](src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsBuilder.cs)
-- IConventionsProvider in [src/Genocs.Messaging.RabbitMQ/IConventionsProvider.cs](src/Genocs.Messaging.RabbitMQ/IConventionsProvider.cs)
-- ConventionsProvider in [src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsProvider.cs](src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsProvider.cs)
-- ConventionsRegistry in [src/Genocs.Messaging.RabbitMQ/ConventionsRegistry.cs](src/Genocs.Messaging.RabbitMQ/ConventionsRegistry.cs)
-
-### Plugin and failure extension points
-
-- IRabbitMqPluginsRegistry in [src/Genocs.Messaging.RabbitMQ/IRabbitMqPluginsRegistry.cs](src/Genocs.Messaging.RabbitMQ/IRabbitMqPluginsRegistry.cs)
-- RabbitMQPlugin in [src/Genocs.Messaging.RabbitMQ/RabbitMqPlugin.cs](src/Genocs.Messaging.RabbitMQ/RabbitMqPlugin.cs)
-- RabbitMqPluginsRegistry in [src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginsRegistry.cs](src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginsRegistry.cs)
-- RabbitMqPluginsExecutor in [src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginExecutor.cs](src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginExecutor.cs)
-- AddExceptionToMessageMapper and AddExceptionToFailedMessageMapper in [src/Genocs.Messaging.RabbitMQ/Extensions.cs](src/Genocs.Messaging.RabbitMQ/Extensions.cs)
-
-### Exchange initialization and processing constraints
-
-- RabbitMqExchangeInitializer in [src/Genocs.Messaging.RabbitMQ/Initializers/RabbitMqExchangeInitializer.cs](src/Genocs.Messaging.RabbitMQ/Initializers/RabbitMqExchangeInitializer.cs)
-- FailedMessage in [src/Genocs.Messaging.RabbitMQ/FailedMessage.cs](src/Genocs.Messaging.RabbitMQ/FailedMessage.cs)
-- RabbitMqMessageProcessingTimeoutException in [src/Genocs.Messaging.RabbitMQ/RabbitMqMessageProcessingTimeoutException.cs](src/Genocs.Messaging.RabbitMQ/RabbitMqMessageProcessingTimeoutException.cs)
-
-## Decision Matrix For Agents
-
-| Goal | Preferred API | Notes |
-|---|---|---|
-| Register RabbitMQ transport | AddRabbitMQAsync | Wires connections, publisher, subscriber, background service, conventions |
-| Add typed subscriptions in pipeline | UseRabbitMQ then Subscribe<T> | Pushes subscriber actions to internal channel consumed by hosted service |
-| Publish broker message | IBusPublisher.PublishAsync | Uses RabbitMQPublisher then RabbitMQClient.SendAsync |
-| Customize message routing names | IConventionsBuilder and options | Supports MessageAttribute values plus casing and queue template |
-| Add pre-handler middleware | plugins argument on AddRabbitMQAsync with IRabbitMqPluginsRegistry.Add<TPlugin> | Builds linked plugin chain around core handler |
-| Map exceptions to failure events | AddExceptionToFailedMessageMapper or AddExceptionToMessageMapper | Controls retry, failed publish, and dead-letter path |
-| Switch serializer implementation | pass serializer argument to AddRabbitMQAsync or register custom IRabbitMQSerializer | Defaults to System.Text.Json serializer |
-| Tune retry and dead-letter behavior | RabbitMQOptions.Retries, RetryInterval, DeadLetter, RequeueFailedMessages | Background service decides ack/nack and DLX behavior |
-
-## Minimal Integration Recipe
-
-### Install
+## Install
 
 ```bash
 dotnet add package Genocs.Messaging.RabbitMQ
 ```
 
-### Setup in Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
 using Genocs.Core.Builders;
 using Genocs.Messaging.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
-
 IGenocsBuilder gnxBuilder = builder.AddGenocs();
 
 await gnxBuilder.AddRabbitMQAsync();
-
 gnxBuilder.Build();
 
 var app = builder.Build();
-
 app.UseRabbitMQ();
-
 app.Run();
 ```
 
-## Behavior Notes That Affect Agent Decisions
+## Configuration
 
-- AddRabbitMQAsync uses registry key messageBrokers.rabbitmq and skips duplicate registrations.
-- AddRabbitMQAsync creates two RabbitMQ connections, one consumer and one producer.
-- Producer publish path injects traceparent and tracestate headers when activity data is available.
-- Consumer path supports retry policy with wait-and-retry based on configured retries and interval.
-- When message processing timeout is configured, timed-out handlers trigger RabbitMqMessageProcessingTimeoutException.
-- FailedMessage mapping controls whether to retry, acknowledge, or move message to dead-letter flow.
+Use the `rabbitmq` section in `appsettings.json`.
 
-## Source-Accurate Capability Map
+```json
+{
+	"rabbitmq": {
+		"connectionName": "orders-api",
+		"hostNames": ["localhost"],
+		"port": 5672,
+		"virtualHost": "/",
+		"username": "guest",
+		"password": "guest",
+		"requestedHeartbeat": "00:01:00",
+		"requestedConnectionTimeout": "00:00:30",
+		"socketReadTimeout": "00:00:30",
+		"socketWriteTimeout": "00:00:30",
+		"continuationTimeout": "00:00:20",
+		"handshakeContinuationTimeout": "00:00:10",
+		"networkRecoveryInterval": "00:00:05",
+		"messageProcessingTimeout": "00:00:30",
+		"requestedChannelMax": 0,
+		"requestedFrameMax": 0,
+		"conventionsCasing": "snake_case",
+		"retries": 3,
+		"retryInterval": 5,
+		"messagesPersisted": true,
+		"spanContextHeader": "span_context",
+		"maxProducerChannels": 16,
+		"requeueFailedMessages": false,
+		"context": {
+			"enabled": true,
+			"header": "context"
+		},
+		"exchange": {
+			"name": "genocs",
+			"type": "topic",
+			"declare": true,
+			"durable": true,
+			"autoDelete": false
+		},
+		"queue": {
+			"template": "{service}/{message}",
+			"declare": true,
+			"durable": true,
+			"exclusive": false,
+			"autoDelete": false
+		},
+		"deadLetter": {
+			"enabled": true,
+			"prefix": "dlx.",
+			"suffix": ".dead",
+			"declare": true,
+			"durable": true,
+			"exclusive": false,
+			"autoDelete": false,
+			"ttl": 60000
+		},
+		"ssl": {
+			"enabled": false,
+			"serverName": null,
+			"certificatePath": null,
+			"caCertificatePath": null,
+			"x509IgnoredStatuses": []
+		},
+		"qos": {
+			"prefetchSize": 0,
+			"prefetchCount": 10,
+			"global": false
+		},
+		"conventions": {
+			"messageAttribute": {
+				"ignoreExchange": false,
+				"ignoreRoutingKey": false,
+				"ignoreQueue": false
+			}
+		},
+		"logger": {
+			"enabled": true,
+			"logConnectionStatus": true,
+			"logMessagePayload": false
+		}
+	}
+}
+```
 
-### Transport registration and DI wiring
+| Setting | Type | Description |
+|---|---|---|
+| `connectionName` | `string` | Friendly connection name visible on the RabbitMQ server. |
+| `hostNames` | `string[]` | One or more RabbitMQ broker hostnames. |
+| `port` | `int` | AMQP port; `0` leaves the driver default. |
+| `virtualHost` | `string` | Virtual host. Defaults to `/`. |
+| `username` | `string` | Broker username. |
+| `password` | `string` | Broker password. |
+| `requestedHeartbeat` | `TimeSpan` | Requested heartbeat interval. |
+| `requestedConnectionTimeout` | `TimeSpan` | Connection timeout. |
+| `socketReadTimeout` | `TimeSpan` | Socket read timeout. |
+| `socketWriteTimeout` | `TimeSpan` | Socket write timeout. |
+| `continuationTimeout` | `TimeSpan` | Timeout for AMQP continuation operations. |
+| `handshakeContinuationTimeout` | `TimeSpan` | Timeout for handshake continuation operations. |
+| `networkRecoveryInterval` | `TimeSpan` | Delay between automatic recovery attempts. |
+| `messageProcessingTimeout` | `TimeSpan?` | Optional max processing time per consumed message. |
+| `requestedChannelMax` | `ushort` | Requested max channel count for the connection. |
+| `requestedFrameMax` | `uint` | Requested max frame size. |
+| `conventionsCasing` | `string` | Naming convention for generated exchange, queue, and routing names. |
+| `retries` | `int` | Maximum message processing retry attempts. |
+| `retryInterval` | `int` | Seconds between retries. |
+| `messagesPersisted` | `bool` | Publishes messages using persistent delivery. |
+| `spanContextHeader` | `string` | Header name used to propagate tracing span context. |
+| `maxProducerChannels` | `int` | Max producer channels cached for concurrent publishing. |
+| `requeueFailedMessages` | `bool` | Requeues failed messages instead of routing directly to dead-letter flow. |
+| `context.enabled` | `bool` | Enables message-context propagation. |
+| `context.header` | `string` | Header name used for serialized message context. |
+| `exchange.name` | `string` | Default exchange name. |
+| `exchange.type` | `string` | Exchange type such as `topic` or `direct`. |
+| `exchange.declare` | `bool` | Declares the exchange automatically. |
+| `exchange.durable` | `bool` | Makes the exchange durable. |
+| `exchange.autoDelete` | `bool` | Auto-deletes the exchange when unused. |
+| `queue.template` | `string` | Queue naming template. |
+| `queue.declare` | `bool` | Declares queues automatically. |
+| `queue.durable` | `bool` | Makes queues durable. |
+| `queue.exclusive` | `bool` | Makes queues exclusive to the declaring connection. |
+| `queue.autoDelete` | `bool` | Auto-deletes queues when unused. |
+| `deadLetter.enabled` | `bool` | Enables dead-letter routing. |
+| `deadLetter.prefix` | `string` | Prefix applied to dead-letter exchange names. |
+| `deadLetter.suffix` | `string` | Suffix applied to dead-letter queue names. |
+| `deadLetter.declare` | `bool` | Declares dead-letter infrastructure automatically. |
+| `deadLetter.durable` | `bool` | Makes dead-letter entities durable. |
+| `deadLetter.exclusive` | `bool` | Makes dead-letter queues exclusive. |
+| `deadLetter.autoDelete` | `bool` | Auto-deletes dead-letter queues when unused. |
+| `deadLetter.ttl` | `int?` | Optional TTL for dead-lettered messages. |
+| `ssl.enabled` | `bool` | Enables TLS for broker connections. |
+| `ssl.serverName` | `string` | TLS server name override. |
+| `ssl.certificatePath` | `string` | Client certificate path. |
+| `ssl.caCertificatePath` | `string` | CA certificate path. |
+| `ssl.x509IgnoredStatuses` | `string[]` | Certificate validation statuses to ignore. |
+| `qos.prefetchSize` | `uint` | QoS prefetch size. |
+| `qos.prefetchCount` | `ushort` | QoS prefetch count. |
+| `qos.global` | `bool` | Applies QoS settings globally on the channel. |
+| `conventions.messageAttribute.ignoreExchange` | `bool` | Ignores message attribute exchange overrides. |
+| `conventions.messageAttribute.ignoreRoutingKey` | `bool` | Ignores message attribute routing-key overrides. |
+| `conventions.messageAttribute.ignoreQueue` | `bool` | Ignores message attribute queue overrides. |
+| `logger.enabled` | `bool` | Enables transport-level RabbitMQ logging. |
+| `logger.logConnectionStatus` | `bool` | Logs connection state changes. |
+| `logger.logMessagePayload` | `bool` | Logs raw message payloads. |
 
-- Registers core messaging services, conventions services, and context accessors.
-- Registers background consumer hosted service and exchange initializer.
-- Supports plugin registry and plugin executor registration.
-- Supports SSL and optional custom connection factory configuration.
+## Decision Matrix For Agents
 
-Files:
+| Goal | Preferred API | Why |
+|---|---|---|
+| Register RabbitMQ transport | `await gnxBuilder.AddRabbitMQAsync()` | Wires `IBusPublisher`, `IBusSubscriber`, and all broker services |
+| Start the background consumer | `app.UseRabbitMQ()` | Activates the hosted subscriber processing pipeline |
+| Inject a custom serializer | `AddRabbitMQAsync(..., serializer: mySerializer)` | Replaces the default Newtonsoft.Json payload serializer |
+| Register processing plugins | `AddRabbitMQAsync(..., plugins: r => r.Add<MyPlugin>())` | Adds pre/post-processing hooks via `IRabbitMqPlugin` |
+| Tune retries and dead-letter | `rabbitmq` config options | Uses the supported configuration path without custom runtime code |
 
-- [src/Genocs.Messaging.RabbitMQ/Extensions.cs](src/Genocs.Messaging.RabbitMQ/Extensions.cs)
-- [src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs](src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs)
-- [src/Genocs.Messaging.RabbitMQ/Initializers/RabbitMqExchangeInitializer.cs](src/Genocs.Messaging.RabbitMQ/Initializers/RabbitMqExchangeInitializer.cs)
+## Behavior Notes / Constraints
 
-### Publish pipeline
+- `AddRabbitMQAsync` is asynchronous and must be awaited; startup throws `ArgumentException` if `hostNames` is null or empty.
+- `UseRabbitMQ` must be called after `builder.Build()` to activate the subscriber background service.
+- Conventions are derived from exchange and queue options in the `rabbitmq` section; names follow `conventionsCasing` if set.
+- Retry behaviour and dead-letter routing are controlled by `retries`, `retryInterval`, and `deadLetter` options — not by handler code.
+- Message context propagation (correlation IDs, span context) is controlled by the `context` and `spanContextHeader` options.
 
-- Resolves routing conventions by message type.
-- Serializes payload and builds RabbitMQ basic properties.
-- Adds correlation, message ID, timestamp, optional context, and tracing headers.
-- Publishes using producer channel pool keyed by managed thread id.
+## Public Capability Map
 
-Files:
-
-- [src/Genocs.Messaging.RabbitMQ/Publishers/RabbitMqPublisher.cs](src/Genocs.Messaging.RabbitMQ/Publishers/RabbitMqPublisher.cs)
-- [src/Genocs.Messaging.RabbitMQ/Clients/RabbitMqClient.cs](src/Genocs.Messaging.RabbitMQ/Clients/RabbitMqClient.cs)
-- [src/Genocs.Messaging.RabbitMQ/Contexts/ContextProvider.cs](src/Genocs.Messaging.RabbitMQ/Contexts/ContextProvider.cs)
-
-### Subscribe and consume runtime
-
-- Queues subscribe actions through MessageSubscribersChannel.
-- Declares and binds queues with optional dead-letter setup.
-- Processes incoming messages with scoped services and correlation/message properties accessors.
-- Acknowledges, retries, nacks, and dead-letter transitions based on processing outcome.
-
-Files:
-
-- [src/Genocs.Messaging.RabbitMQ/Subscribers/RabbitMqSubscriber.cs](src/Genocs.Messaging.RabbitMQ/Subscribers/RabbitMqSubscriber.cs)
-- [src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs](src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs)
-- [src/Genocs.Messaging.RabbitMQ/MessageSubscribersChannel.cs](src/Genocs.Messaging.RabbitMQ/MessageSubscribersChannel.cs)
-
-### Conventions and routing computation
-
-- Computes routing key, exchange, and queue from options plus MessageAttribute metadata.
-- Supports snake_case naming mode and queue template token replacement.
-- Caches resolved conventions and allows explicit overrides in registry.
-
-Files:
-
-- [src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsBuilder.cs](src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsBuilder.cs)
-- [src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsProvider.cs](src/Genocs.Messaging.RabbitMQ/Conventions/ConventionsProvider.cs)
-- [src/Genocs.Messaging.RabbitMQ/ConventionsRegistry.cs](src/Genocs.Messaging.RabbitMQ/ConventionsRegistry.cs)
-
-### Plugin chain and failure mapping
-
-- Supports chain-of-responsibility plugin execution around handler invocation.
-- Allows custom exception-to-message mapping for legacy behavior.
-- Supports richer failure mapping with retry and dead-letter intent flags.
-
-Files:
-
-- [src/Genocs.Messaging.RabbitMQ/RabbitMqPlugin.cs](src/Genocs.Messaging.RabbitMQ/RabbitMqPlugin.cs)
-- [src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginExecutor.cs](src/Genocs.Messaging.RabbitMQ/Plugins/RabbitMqPluginExecutor.cs)
-- [src/Genocs.Messaging.RabbitMQ/FailedMessage.cs](src/Genocs.Messaging.RabbitMQ/FailedMessage.cs)
-
-### Serializer and options surface
-
-- Defines serializer contract for generic and typed deserialization.
-- Provides System.Text.Json default serializer.
-- Provides Newtonsoft.Json serializer alternative.
-- Exposes extensive RabbitMQ option model for connection, queue, exchange, DLQ, QoS, context, and logging.
-
-Files:
-
-- [src/Genocs.Messaging.RabbitMQ/IRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/IRabbitMqSerializer.cs)
-- [src/Genocs.Messaging.RabbitMQ/Serializers/SystemTextJsonJsonRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/Serializers/SystemTextJsonJsonRabbitMqSerializer.cs)
-- [src/Genocs.Messaging.RabbitMQ/Serializers/NewtonsoftJsonRabbitMqSerializer.cs](src/Genocs.Messaging.RabbitMQ/Serializers/NewtonsoftJsonRabbitMqSerializer.cs)
-- [src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs](src/Genocs.Messaging.RabbitMQ/RabbitMQOptions.cs)
+| Capability | Surface |
+|---|---|
+| Register RabbitMQ transport and services | `AddRabbitMQAsync` on `IGenocsBuilder` |
+| Activate subscriber background service | `UseRabbitMQ` on `IApplicationBuilder` |
+| Publish messages to the broker | `IBusPublisher` (resolved from DI) |
+| Subscribe to broker messages | `IBusSubscriber` (resolved from DI) |
+| Access message delivery properties | `IMessagePropertiesAccessor` (resolved from DI) |
+| Access correlation context | `ICorrelationContextAccessor` (resolved from DI) |
+| Add a custom processing plugin | `IRabbitMqPlugin` implementation |
+| Replace the payload serializer | `IRabbitMQSerializer` implementation |
 
 ## Dependencies
 
-From [src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj](src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj):
+- `Genocs.Messaging`
+- `RabbitMQ.Client`
+- `Polly`
+- `Newtonsoft.Json`
 
-- Genocs.Messaging
-- RabbitMQ.Client
-- Polly
-- Newtonsoft.Json
+## Troubleshooting
 
-## Related Docs
-
-- NuGet package readme: [src/Genocs.Messaging.RabbitMQ/README_NUGET.md](src/Genocs.Messaging.RabbitMQ/README_NUGET.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md](docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md)
+1. Service fails to start with a broker connection error.
+Fix: Verify `rabbitmq.hostNames`, `username`, `password`, and that the broker is reachable on the configured port.
+2. Messages are published successfully but no handlers execute.
+Fix: Confirm `UseRabbitMQ()` is called after `builder.Build()` and that subscriber registrations are in place before the app starts.
+3. Messages are retried too many times or move to dead-letter unexpectedly.
+Fix: Review `retries`, `retryInterval`, `requeueFailedMessages`, and `deadLetter.enabled` in the `rabbitmq` configuration section.

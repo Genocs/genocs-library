@@ -7,9 +7,9 @@ namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 internal sealed class KeyValueSecrets : IKeyValueSecrets
 {
     private readonly IVaultClient _client;
-    private readonly VaultOptions _options;
+    private readonly HashicorpKeyVaultOptions _options;
 
-    public KeyValueSecrets(IVaultClient client, VaultOptions options)
+    public KeyValueSecrets(IVaultClient client, HashicorpKeyVaultOptions options)
     {
         _client = client;
         _options = options;

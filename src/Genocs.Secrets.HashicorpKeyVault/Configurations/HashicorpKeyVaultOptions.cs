@@ -1,10 +1,18 @@
 namespace Genocs.Secrets.HashicorpKeyVault.Configurations;
 
 /// <summary>
-/// The vault Setting definition.
+/// The Hashicorp Key Vault setting definition.
 /// </summary>
-public class VaultOptions
+public class HashicorpKeyVaultOptions
 {
+    /// <summary>
+    /// Default section name.
+    /// </summary>
+    public const string Position = "hashicorpKeyVault";
+
+    /// <summary>
+    /// It defines whether the section is enabled or not.
+    /// </summary>
     public bool Enabled { get; set; }
     public string? Url { get; set; }
     public string? Key { get; set; }
@@ -14,9 +22,9 @@ public class VaultOptions
     public string? Password { get; set; }
     public bool RevokeLeaseOnShutdown { get; set; }
     public int RenewalsInterval { get; set; }
-    public KeyValueOptions Kv { get; set; }
-    public PkiOptions Pki { get; set; }
-    public IDictionary<string, LeaseOptions> Lease { get; set; }
+    public KeyValueOptions? Kv { get; set; }
+    public PkiOptions? Pki { get; set; }
+    public IDictionary<string, LeaseOptions>? Lease { get; set; }
 
     public class KeyValueOptions
     {

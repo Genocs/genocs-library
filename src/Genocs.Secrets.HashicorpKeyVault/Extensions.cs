@@ -39,7 +39,7 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
+                HashicorpKeyVaultOptions options = ctx.Configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -63,7 +63,7 @@ public static class Extensions
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
+                HashicorpKeyVaultOptions options = ctx.Configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -85,7 +85,7 @@ public static class Extensions
             configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
 
-        VaultOptions options = configuration.GetOptions<VaultOptions>(sectionName);
+        HashicorpKeyVaultOptions options = configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
 
         VerifyOptions(options);
         services.AddSingleton(options);
@@ -108,13 +108,13 @@ public static class Extensions
         return services;
     }
 
-    private static void VerifyOptions(VaultOptions options)
+    private static void VerifyOptions(HashicorpKeyVaultOptions options)
     {
         if (options.Kv is null)
         {
             if (!string.IsNullOrWhiteSpace(options.Key))
             {
-                options.Kv = new VaultOptions.KeyValueOptions
+                options.Kv = new HashicorpKeyVaultOptions.KeyValueOptions
                 {
                     Enabled = options.Enabled,
                     Path = options.Key
@@ -137,7 +137,7 @@ public static class Extensions
 
     private static async Task AddVaultAsync(
                                             this IConfigurationBuilder builder,
-                                            VaultOptions options,
+                                            HashicorpKeyVaultOptions options,
                                             string? keyValuePath)
     {
         VerifyOptions(options);
@@ -188,7 +188,7 @@ public static class Extensions
     private static Task InitLeaseAsync(
                                        string key,
                                        IVaultClient client,
-                                       VaultOptions.LeaseOptions options,
+                                       HashicorpKeyVaultOptions.LeaseOptions options,
                                        IDictionary<string, string> configuration)
         => options.Type.ToLowerInvariant() switch
         {
@@ -203,7 +203,7 @@ public static class Extensions
     private static async Task SetActiveDirectorySecretsAsync(
                                                              string key,
                                                              IVaultClient client,
-                                                             VaultOptions.LeaseOptions options,
+                                                             HashicorpKeyVaultOptions.LeaseOptions options,
                                                              IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
@@ -221,7 +221,7 @@ public static class Extensions
     private static async Task SetAzureSecretsAsync(
                                                     string key,
                                                     IVaultClient client,
-                                                    VaultOptions.LeaseOptions options,
+                                                    HashicorpKeyVaultOptions.LeaseOptions options,
                                                     IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
@@ -239,7 +239,7 @@ public static class Extensions
     private static async Task SetConsulSecretsAsync(
                                                     string key,
                                                     IVaultClient client,
-                                                    VaultOptions.LeaseOptions options,
+                                                    HashicorpKeyVaultOptions.LeaseOptions options,
                                                     IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
@@ -255,7 +255,7 @@ public static class Extensions
     private static async Task SetDatabaseSecretsAsync(
                                                         string key,
                                                         IVaultClient client,
-                                                        VaultOptions.LeaseOptions options,
+                                                        HashicorpKeyVaultOptions.LeaseOptions options,
                                                         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
@@ -269,7 +269,7 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetPkiSecretsAsync(IVaultClient client, VaultOptions options)
+    private static async Task SetPkiSecretsAsync(IVaultClient client, HashicorpKeyVaultOptions options)
     {
         var issuer = new CertificatesIssuer(client, options);
         var certificate = await issuer.IssueAsync();
@@ -279,7 +279,7 @@ public static class Extensions
     private static async Task SetRabbitMqSecretsAsync(
                                                         string key,
                                                         IVaultClient client,
-                                                        VaultOptions.LeaseOptions options,
+                                                        HashicorpKeyVaultOptions.LeaseOptions options,
                                                         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
@@ -295,7 +295,7 @@ public static class Extensions
 
     private static void SetSecrets(
                                     string key,
-                                    VaultOptions.LeaseOptions options,
+                                    HashicorpKeyVaultOptions.LeaseOptions options,
                                     IDictionary<string, string> configuration,
                                     string name,
                                     Func<(object Credentials, Dictionary<string, string> Values, string LeaseId, int Duration, bool Renewable)> lease)
@@ -307,7 +307,7 @@ public static class Extensions
         LeaseService.Set(key, leaseData);
     }
 
-    private static (IVaultClient Client, VaultClientSettings Settings) GetClientAndSettings(VaultOptions options)
+    private static (IVaultClient Client, VaultClientSettings Settings) GetClientAndSettings(HashicorpKeyVaultOptions options)
     {
         var settings = new VaultClientSettings(options.Url, GetAuthMethod(options));
         var client = new VaultClient(settings);
@@ -315,7 +315,7 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, VaultOptions.LeaseOptions lease,
+    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease,
         IDictionary<string, string> configuration, IDictionary<string, string> values)
     {
         if (lease.Templates is null || !lease.Templates.Any())
@@ -340,7 +340,7 @@ public static class Extensions
         }
     }
 
-    private static IAuthMethodInfo GetAuthMethod(VaultOptions options)
+    private static IAuthMethodInfo GetAuthMethod(HashicorpKeyVaultOptions options)
         => options.AuthType?.ToLowerInvariant() switch
         {
             "token" => new TokenAuthMethodInfo(options.Token),

@@ -1,7 +1,7 @@
 ﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// OtlpExportOptions Settings.
+/// OTLP export telemetry configuration settings.
 /// </summary>
 public class OtlpExportOptions
 {
@@ -17,7 +17,7 @@ public class OtlpExportOptions
 
     /// <summary>
     /// The used OtlpExportProtocol.
-    /// IT could be [Grpc|HttpProtobuf].
+    /// It could be [Grpc|HttpProtobuf].
     /// </summary>
     public string Protocol { get; set; } = "Grpc";
 
@@ -42,8 +42,23 @@ public class OtlpExportOptions
     /// </summary>
     public bool EnableLogging { get; set; } = true;
 
+    /// <summary>
+    /// The maximum queue size for OTLP export.
+    /// </summary>
     public int MaxQueueSize { get; set; } = 2048;
+
+    /// <summary>
+    /// The scheduled delay in milliseconds for OTLP export.
+    /// </summary>
     public int ScheduledDelayMilliseconds { get; set; } = 5000;
+
+    /// <summary>
+    /// The exporter timeout in milliseconds for OTLP export.
+    /// </summary>
     public int ExporterTimeoutMilliseconds { get; set; } = 30000;
+
+    /// <summary>
+    /// The maximum export batch size for OTLP export.
+    /// </summary>
     public int MaxExportBatchSize { get; set; } = 512;
 }

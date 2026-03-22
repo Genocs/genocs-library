@@ -1,99 +1,32 @@
 # Genocs.Http Agent Reference
 
+## Consumer Mode for Agents
+
+- Assume package is installed from NuGet
+- Do not rely on repository source code access
+- Prefer stable public APIs and extension methods documented here
+- If behavior is uncertain, fail safely and request config/package version details.
+
 ## Purpose
 
-This document is optimized for AI-assisted development sessions.
-It prioritizes fast retrieval of:
-
-- What Genocs.Http is responsible for
-- Which APIs to call for specific goals
-- Where source of truth lives
-- What constraints and runtime behaviors matter
+`Genocs.Http` provides a typed outbound HTTP abstraction with retry behavior, serialization extension points, and optional correlation/masking support.
 
 ## Quick Facts
 
 | Key | Value |
 |---|---|
-| Package | Genocs.Http |
-| Project file | [src/Genocs.Http/Genocs.Http.csproj](src/Genocs.Http/Genocs.Http.csproj) |
-| Target frameworks | net10.0, net9.0, net8.0 |
-| Primary role | Typed outbound HTTP client abstraction with retries, serializer pluggability, optional correlation headers, and request URL masking in logs |
-| Core themes | IHttpClient abstraction, Genocs builder registration, Polly retry policy, JSON serializer abstraction, correlation context propagation, URL masking |
+| Package | `Genocs.Http` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
+| Primary role | Outbound HTTP client abstraction for service-to-service calls |
+| Core entry points | `AddHttpClient(...)`, `IHttpClient`, `HttpResult<T>`, `IHttpClientSerializer` |
 
-## Use This Package When
-
-- Calling downstream HTTP services through a consistent typed client interface.
-- Standardizing retry behavior for transient outbound request failures.
-- Returning both payload and raw HttpResponseMessage metadata to callers.
-- Injecting correlation context and correlation ID headers into outbound calls.
-- Masking sensitive URL fragments in HttpClient request logs.
-
-## Do Not Assume
-
-- A URI without scheme is treated as HTTP and rewritten to start with http://.
-- Typed and result methods have different failure behavior: some throw and retry, some return default/null with response details.
-- Correlation headers are only sent when header names are configured in httpClient options.
-
-## High-Value Entry Points
-
-### Registration and host integration
-
-- AddHttpClient(this IGenocsBuilder, ...) in [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- RemoveHttpClient(this IGenocsBuilder) in [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- HttpClientOptions in [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
-
-### Request execution surface
-
-- IHttpClient in [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
-- GenocsHttpClient in [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-- HttpResult<T> in [src/Genocs.Http/HttpResult.cs](src/Genocs.Http/HttpResult.cs)
-
-### Serialization extension points
-
-- IHttpClientSerializer in [src/Genocs.Http/IHttpClientSerializer.cs](src/Genocs.Http/IHttpClientSerializer.cs)
-- SystemTextJsonHttpClientSerializer in [src/Genocs.Http/SystemTextJsonHttpClientSerializer.cs](src/Genocs.Http/SystemTextJsonHttpClientSerializer.cs)
-
-### Correlation and headers
-
-- ICorrelationContextFactory in [src/Genocs.Http/ICorrelationContextFactory.cs](src/Genocs.Http/ICorrelationContextFactory.cs)
-- ICorrelationIdFactory in [src/Genocs.Http/ICorrelationIdFactory.cs](src/Genocs.Http/ICorrelationIdFactory.cs)
-- EmptyCorrelationContextFactory in [src/Genocs.Http/EmptyCorrelationContextFactory.cs](src/Genocs.Http/EmptyCorrelationContextFactory.cs)
-- EmptyCorrelationIdFactory in [src/Genocs.Http/EmptyCorrelationIdFactory.cs](src/Genocs.Http/EmptyCorrelationIdFactory.cs)
-
-### Logging and masking internals
-
-- GenocsHttpLoggingFilter in [src/Genocs.Http/GenocsHttpLoggingFilter.cs](src/Genocs.Http/GenocsHttpLoggingFilter.cs)
-- GenocsLoggingScopeHttpMessageHandler in [src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs](src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs)
-
-### Headers and custom requests
-
-- SetHeaders(IDictionary<string, string>) in [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-- SetHeaders(Action<HttpRequestHeaders>) in [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-- SendAsync(HttpRequestMessage, ...) in [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-- SendResultAsync<T>(HttpRequestMessage, ...) in [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-
-## Decision Matrix For Agents
-
-| Goal | Preferred API | Notes |
-|---|---|---|
-| Register typed outbound client | AddHttpClient on IGenocsBuilder | Registers IHttpClient, serializer, options, and fallback correlation factories if missing |
-| Override typed client setup | AddHttpClient(..., httpClientBuilder: action) | Use callback to set base address, auth handlers, timeouts, and policies |
-| Send GET/POST/PUT/PATCH/DELETE with typed payload | IHttpClient generic methods | Non-success returns default/null; use result variants when response metadata is needed |
-| Preserve status code with payload | GetResultAsync, PostResultAsync, PutResultAsync, PatchResultAsync, DeleteResultAsync | Returns HttpResult<T> with HasResult and raw Response |
-| Execute raw HttpRequestMessage | SendAsync(HttpRequestMessage) | Retries and throws on failures through Polly policy |
-| Swap JSON implementation | Implement IHttpClientSerializer | Pass custom serializer per call or replace service registration globally |
-| Add correlation context headers | Configure CorrelationContextHeader and CorrelationIdHeader | Header names must be configured; values come from correlation factories |
-| Mask secret URL parts in logs | Enable RequestMasking and set UrlParts | Installs GenocsHttpLoggingFilter replacing default handler filter |
-
-## Minimal Integration Recipe
-
-### Install
+## Install
 
 ```bash
 dotnet add package Genocs.Http
 ```
 
-### Setup in Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
 using Genocs.Core.Builders;
@@ -102,122 +35,115 @@ using Genocs.Http;
 var builder = WebApplication.CreateBuilder(args);
 
 IGenocsBuilder gnxBuilder = builder.AddGenocs();
-
-gnxBuilder.AddHttpClient(
-    clientName: "downstream",
-    sectionName: "httpClient",
-    httpClientBuilder: client =>
-    {
-        client.ConfigureHttpClient(c =>
-        {
-            c.Timeout = TimeSpan.FromSeconds(30);
-        });
-    });
-
+gnxBuilder.AddHttpClient(clientName: "downstream", sectionName: "httpClient");
 gnxBuilder.Build();
 
 var app = builder.Build();
-
 app.Run();
 ```
 
-## Behavior Notes That Affect Agent Decisions
+## Configuration
 
-- AddHttpClient uses builder.TryRegister("http.client"); repeated registrations are ignored.
-- GenocsHttpClient applies Polly WaitAndRetryAsync with exponential backoff based on Retries.
-- URI strings without http/https scheme are rewritten to http://{uri}.
-- SendAsync and internal verb pipeline throw on non-success status codes, which triggers retries.
-- Generic convenience methods like GetAsync<T> return default/null when response status is non-success.
-- SendResultAsync<T> returns HttpResult<T> with response even when status is non-success.
-- RemoveCharsetFromContentType removes charset from application/json payload Content-Type when enabled.
-- RequestMasking replaces configured URL parts in logs with MaskTemplate via GenocsLoggingScopeHttpMessageHandler.
+Primary section: `httpClient`
 
-## Source-Accurate Capability Map
+```json
+{
+	"httpClient": {
+		"enabled": true,
+		"type": "consul",
+		"retries": 3,
+		"services": {
+			"orders": "http://orders-service",
+			"catalog": "http://catalog-service"
+		},
+		"removeCharsetFromContentType": true,
+		"correlationContextHeader": "x-correlation-context",
+		"correlationIdHeader": "x-correlation-id",
+		"requestMasking": {
+			"enabled": true,
+			"urlParts": ["token", "password"],
+			"maskTemplate": "*****"
+		}
+	}
+}
+```
 
-### Client registration and lifecycle
+| Setting | Type | Description |
+|---|---|---|
+| `enabled` | `bool` | Enables the section for consumers that read `HttpClientOptions`. |
+| `type` | `string` | Resolution mode for downstream services. Supported values in code are `consul` and `Fabio`. |
+| `retries` | `int` | Retry count applied by the Genocs HTTP client abstraction. |
+| `services` | `object` | Name-to-address map for downstream service resolution. |
+| `removeCharsetFromContentType` | `bool` | Removes charset from JSON content types when sending request bodies. |
+| `correlationContextHeader` | `string` | Header name used to propagate correlation-context payloads. |
+| `correlationIdHeader` | `string` | Header name used to propagate a correlation ID. |
+| `requestMasking.enabled` | `bool` | Enables masking of configured URL fragments in request logs. |
+| `requestMasking.urlParts` | `string[]` | URL fragments or segments to mask in logs. |
+| `requestMasking.maskTemplate` | `string` | Replacement text used when masking matched URL fragments. |
 
-- Registers typed IHttpClient through Microsoft HttpClientFactory.
-- Loads HttpClientOptions from configuration section (default httpClient).
-- Registers fallback EmptyCorrelationContextFactory and EmptyCorrelationIdFactory when not already present.
-- Provides RemoveHttpClient workaround for typed client mapping registry edge case.
+Optional section used by the RestEase integration: `restEase`
 
-Files:
+```json
+{
+	"restEase": {
+		"enabled": true,
+		"loadBalancer": "fabio",
+		"services": [
+			{
+				"name": "catalog",
+				"scheme": "https",
+				"host": "catalog.internal",
+				"port": 443
+			}
+		]
+	}
+}
+```
 
-- [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
+| RestEase Setting | Type | Description |
+|---|---|---|
+| `enabled` | `bool` | Enables RestEase-specific client registration. |
+| `loadBalancer` | `string` | Load-balancer mode used by RestEase-generated clients. |
+| `services[].name` | `string` | Logical service name. |
+| `services[].scheme` | `string` | Request scheme such as `http` or `https`. |
+| `services[].host` | `string` | Host name used by the generated client. |
+| `services[].port` | `int` | Service port. |
 
-### HTTP verb and request APIs
+## Decision Matrix For Agents
 
-- Exposes all common verbs with raw response, typed payload, and typed result wrappers.
-- Supports custom HttpRequestMessage execution paths.
-- Supports cancellation tokens across all methods.
-- Supports setting default headers on typed client.
+| If you need to... | Use |
+|---|---|
+| Register typed outbound HTTP capabilities | `AddHttpClient(...)` |
+| Send standard typed requests | `IHttpClient` HTTP verb methods |
+| Preserve status code and response metadata | `GetResultAsync(...)` and other `*ResultAsync` methods returning `HttpResult<T>` |
+| Send a custom `HttpRequestMessage` | `SendAsync(...)` or `SendResultAsync<T>(...)` |
+| Replace default JSON serializer | Register a custom `IHttpClientSerializer` |
 
-Files:
+## Behavior Notes / Constraints
 
-- [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
-- [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-- [src/Genocs.Http/HttpResult.cs](src/Genocs.Http/HttpResult.cs)
+- Exception-oriented paths can throw on non-success HTTP responses; result-oriented methods preserve response metadata.
+- Retry execution depends on configured retry count and request failure behavior.
+- Correlation headers are applied only when corresponding header names and value providers are configured.
 
-### Retry and failure behavior
+## Public Capability Map
 
-- Uses Polly retry policy in both raw and typed send paths.
-- Retries on exceptions with exponential delay formula 2^retryAttempt seconds.
-- Throws on non-success in exception-based paths.
-- Preserves response without throwing in SendResultAsync path.
-
-Files:
-
-- [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-
-### Serialization and content handling
-
-- Abstract serializer contract for request and response bodies.
-- Default serializer uses System.Text.Json with camelCase and enum string conversion.
-- Optional per-call serializer override for all typed methods.
-- JSON payload creation supports optional charset removal.
-
-Files:
-
-- [src/Genocs.Http/IHttpClientSerializer.cs](src/Genocs.Http/IHttpClientSerializer.cs)
-- [src/Genocs.Http/SystemTextJsonHttpClientSerializer.cs](src/Genocs.Http/SystemTextJsonHttpClientSerializer.cs)
-- [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
-
-### Correlation header propagation
-
-- Defines contracts for building correlation context and correlation ID values.
-- Adds configured correlation headers to default request headers at client creation time.
-- Provides null-object factory implementations when no concrete factory is registered.
-
-Files:
-
-- [src/Genocs.Http/ICorrelationContextFactory.cs](src/Genocs.Http/ICorrelationContextFactory.cs)
-- [src/Genocs.Http/ICorrelationIdFactory.cs](src/Genocs.Http/ICorrelationIdFactory.cs)
-- [src/Genocs.Http/EmptyCorrelationContextFactory.cs](src/Genocs.Http/EmptyCorrelationContextFactory.cs)
-- [src/Genocs.Http/EmptyCorrelationIdFactory.cs](src/Genocs.Http/EmptyCorrelationIdFactory.cs)
-
-### Request logging and URL masking
-
-- Installs HttpMessageHandlerBuilder filter to add logging scope handler.
-- Logs request pipeline start and end with event IDs.
-- Masks configured URL fragments before logging.
-- Uses configurable mask template with default *****.
-
-Files:
-
-- [src/Genocs.Http/GenocsHttpLoggingFilter.cs](src/Genocs.Http/GenocsHttpLoggingFilter.cs)
-- [src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs](src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs)
+- Registration and lifecycle: `AddHttpClient(...)`, `RemoveHttpClient(...)`
+- Outbound operations: `IHttpClient` for GET, POST, PUT, PATCH, DELETE, and custom requests
+- Response wrappers: `HttpResult<T>` for status-aware result handling
+- Serialization extension points: `IHttpClientSerializer`
+- Correlation extension points: correlation context and correlation ID factories
 
 ## Dependencies
 
-From [src/Genocs.Http/Genocs.Http.csproj](src/Genocs.Http/Genocs.Http.csproj):
+- `Genocs.Core`
+- `Microsoft.Extensions.Http`
+- `Polly`
 
-- Genocs.Core
-- Microsoft.Extensions.Http
-- Polly
+## Troubleshooting
 
-## Related Docs
-
-- NuGet package readme: [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
+1. Retries are not occurring for failing requests.
+Fix: Confirm `httpClient.retries` is greater than zero and calls are executed through the registered `IHttpClient` abstraction.
+2. Correlation headers are missing on outbound calls.
+Fix: Configure `correlationContextHeader` and `correlationIdHeader`, and register correlation value providers.
+3. Sensitive URL segments appear in logs.
+Fix: Enable `requestMasking` and configure `urlParts` plus `maskTemplate` for consistent masking.

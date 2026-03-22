@@ -1,206 +1,145 @@
 # Genocs.WebApi.OpenApi — Agent Reference Documentation
 
-> **Format**: AI-optimized agent reference. Structured for rapid decision-making. All capability claims are
-> linked to actual source files. Do not infer capabilities not listed here.
+## Consumer Mode for Agents
 
----
+- Assume package is installed from NuGet.
+- Do not rely on repository source code access.
+- Prefer stable public APIs and extension methods documented here.
+- If behavior is uncertain, fail safely and request package version and configuration details.
 
-## 1. Purpose
+## Purpose
 
-`Genocs.WebApi.OpenApi` integrates Swashbuckle/OpenAPI documentation into the Genocs builder pipeline. It
-registers Swagger generation, configures the `OpenApiInfo` document (title, version, contact, license,
-servers), optionally adds a JWT Bearer security definition, generates custom LangChain-compatible operation
-IDs, serves Swagger UI or ReDoc, and bridges the `WebApiEndpointDefinitions` DSL (from `Genocs.WebApi`) into
-the generated spec via a custom `IDocumentFilter`.
+`Genocs.WebApi.OpenApi` adds OpenAPI document generation and UI hosting (Swagger UI or ReDoc) for Genocs-based Web API services.
 
-**Package ID**: `Genocs.WebApi.OpenApi`  
-**NuGet config section**: `openapi`
+## Quick Facts
 
----
-
-## 2. Quick Facts
-
-| Property | Value |
+| Key | Value |
 |---|---|
+| Package | `Genocs.WebApi.OpenApi` |
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
-| Config section key | `openapi` (= `OpenApiOptions.Position`) |
-| Registration guard | `builder.TryRegister("docs.openapi")` — idempotent |
-| Swashbuckle version | 9.x (net8/9), 10.x (net10) |
-| UI options | Swagger UI (default) or ReDoc |
-| Security definition | Optional Bearer JWT; controlled by `IncludeSecurity` |
-| Requires | `Genocs.WebApi` (project ref in Debug, package ref in Release) |
-| Source file | [`src/Genocs.WebApi.OpenApi/Extensions.cs`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
+| Primary role | OpenAPI/Swagger integration for Genocs hosts |
+| Main APIs | `AddOpenApiDocs` overloads and `UseOpenApiDocs` |
 
----
+## Install
 
-## 3. Use When
-
-- You need Swagger UI or ReDoc served from any Genocs-based ASP.NET Core host.
-- You want the `IEndpointsBuilder` DSL endpoints (registered via `UseEndpoints`) to appear in the OpenAPI
-  spec — the `WebApiDocumentFilter` bridges DSL endpoint metadata into the Swagger doc automatically.
-- You want LangChain-compatible custom operation IDs (controller action name as operation ID).
-- You need Bearer JWT visually documented in Swagger UI to allow authenticated requests from the UI.
-- You need multi-server entries in the Swagger JSON for different deployment environments.
-
----
-
-## 4. Do Not Assume
-
-- **`AddOpenApiDocs` does NOT enable docs by default.** The `openapi.enabled` flag must be `true`; if absent
-  or false the method returns immediately without registering anything.
-- **Calling `AddOpenApiDocs` twice is safe** — `TryRegister("docs.openapi")` blocks the second call.
-- **`UseOpenApiDocs` is required** separately in the middleware pipeline; `AddOpenApiDocs` only registers
-  services.
-- **XML comments are loaded unconditionally** when docs are enabled: `<EntryAssembly>.xml` is read from
-  `AppContext.BaseDirectory`. Missing the XML file causes a runtime exception — ensure
-  `<GenerateDocumentationFile>true</GenerateDocumentationFile>` is set in the host project.
-- **The `WebApiDocumentFilter`** only documents routes registered via `WebApiEndpointDefinitions` (the DSL).
-  Regular MVC controller routes appear via the standard Swashbuckle discovery flow and are not affected.
-- **On net10**, `Microsoft.OpenApi` namespace is used instead of `Microsoft.OpenApi.Models` — this is handled
-  via `#if NET10_0_OR_GREATER` inside the package; no action required from library users.
-- **The fluent builder overload** (`Func<IOpenApiOptionsBuilder, IOpenApiOptionsBuilder>`) builds an
-  `OpenApiOptions` in memory and does not read from `appsettings.json`.
-
----
-
-## 5. High-Value Entry Points
-
-```
-Extensions.cs → AddOpenApiDocs(IGenocsBuilder, string sectionName)
-Extensions.cs → AddOpenApiDocs(IGenocsBuilder, Func<IOpenApiOptionsBuilder, IOpenApiOptionsBuilder>)
-Extensions.cs → AddOpenApiDocs(IGenocsBuilder, OpenApiOptions settings)     ← internal workhorse
-Extensions.cs → UseOpenApiDocs(IApplicationBuilder)
-Configurations/OpenApiOptions.cs → OpenApiOptions                           ← config model
-Builders/OpenApiOptionsBuilder.cs → IOpenApiOptionsBuilder (fluent)
-Filters/WebApiDocumentFilter.cs → IDocumentFilter                           ← bridges DSL to spec
+```bash
+dotnet add package Genocs.WebApi.OpenApi
 ```
 
----
-
-## 6. Decision Matrix
-
-| Goal | API to use |
-|---|---|
-| Register all Swagger services from config | `builder.AddOpenApiDocs()` (no args) |
-| Register Swagger services via fluent code | `builder.AddOpenApiDocs(b => b.Enable(true).WithName("v1")...)` |
-| Activate Swagger middleware in pipeline | `app.UseOpenApiDocs()` |
-| Show Bearer JWT auth in Swagger UI | Set `openapi.includeSecurity: true` in config |
-| Use ReDoc instead of Swagger UI | Set `openapi.reDocEnabled: true` in config |
-| Add multiple server entries | Populate `openapi.servers[]` with `url`/`description` pairs |
-| Change Swagger JSON route prefix | Set `openapi.routePrefix` |
-| Enable Swagger in specific env only | Gate `AddOpenApiDocs` call with environment check before calling |
-
----
-
-## 7. Minimal Integration Recipe
-
-### 7.1 appsettings.json
-
-```json
-{
-  "openapi": {
-    "enabled": true,
-    "name": "v1",
-    "title": "My Service API",
-    "version": "1.0",
-    "description": "My service description.",
-    "routePrefix": "docs",
-    "includeSecurity": true,
-    "reDocEnabled": false,
-    "contactName": "Team",
-    "contactEmail": "team@example.com",
-    "contactUrl": "https://example.com",
-    "licenseName": "MIT",
-    "licenseUrl": "https://opensource.org/license/mit/",
-    "termsOfService": "https://example.com/terms"
-  }
-}
-```
-
-### 7.2 Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
+using Genocs.Core.Builders;
+using Genocs.WebApi.OpenApi;
+
+var builder = WebApplication.CreateBuilder(args);
+
 IGenocsBuilder gnxBuilder = builder
-    .AddGenocs()
-    .AddWebApi()
-    .AddOpenApiDocs();   // reads from "openapi" section
+        .AddGenocs()
+        .AddWebApi()
+        .AddOpenApiDocs();
 
 gnxBuilder.Build();
 
 var app = builder.Build();
-
-app.UseGenocs()
-   .UseEndpoints(...)
-   .UseOpenApiDocs();   // serves /docs/v1/swagger.json + Swagger UI at /docs
+app.UseOpenApiDocs();
+app.Run();
 ```
 
-### 7.3 Fluent variant (no appsettings.json)
+## Configuration
 
-```csharp
-builder.AddOpenApiDocs(b => b
-    .Enable(true)
-    .WithName("v1")
-    .WithTitle("My API")
-    .WithVersion("1.0")
-    .IncludeSecurity(true));
+Use the `openapi` section.
+
+```json
+{
+    "openapi": {
+        "enabled": true,
+        "reDocEnabled": false,
+        "name": "v1",
+        "title": "Orders API",
+        "version": "1.0.0",
+        "description": "OpenAPI description for the Orders service.",
+        "routePrefix": "docs",
+        "contactName": "Platform Team",
+        "contactEmail": "platform@example.com",
+        "contactUrl": "https://example.com/platform",
+        "licenseName": "MIT",
+        "licenseUrl": "https://opensource.org/licenses/MIT",
+        "termsOfService": "https://example.com/terms",
+        "includeSecurity": true,
+        "servers": [
+            {
+                "url": "https://api.example.com/orders",
+                "description": "Production"
+            }
+        ]
+    }
+}
 ```
 
----
+| Setting | Type | Description |
+|---|---|---|
+| `enabled` | `bool` | Enables OpenAPI service registration. |
+| `reDocEnabled` | `bool` | Switches UI rendering from Swagger UI to ReDoc. |
+| `name` | `string` | Document name used by Swagger generation, commonly `v1`. |
+| `title` | `string` | API title shown in generated documentation. |
+| `version` | `string` | API version string embedded in the document metadata. |
+| `description` | `string` | API description shown in the docs UI. |
+| `routePrefix` | `string` | Base route for the JSON document and UI assets. |
+| `contactName` | `string` | Contact person or team name. |
+| `contactEmail` | `string` | Contact email. |
+| `contactUrl` | `string` | Contact URL. |
+| `licenseName` | `string` | API license name. |
+| `licenseUrl` | `string` | API license URL. |
+| `termsOfService` | `string` | Terms of service URL or text reference. |
+| `includeSecurity` | `bool` | Adds Bearer/JWT security metadata to the generated document. |
+| `servers[].url` | `string` | Server URL advertised by the generated OpenAPI document. |
+| `servers[].description` | `string` | Human-readable label for each server. |
 
-## 8. Behavior Notes
+If XML comments are enabled for the host assembly, they are included in the generated document. Keep the XML documentation file available in the application output when `openapi.enabled` is turned on.
 
-- **`AddOpenApiDocs` (the overloaded entry points)** sanitise the `sectionName` parameter — empty/whitespace
-  reverts to `OpenApiOptions.Position` (`"openapi"`).
-- **`GetOptions<OpenApiOptions>`** returns null if the section is absent from config; the method then returns
-  the builder unmodified (no exception).
-- **The doc is registered as** `builder.Services.AddSingleton(settings)` — the `OpenApiOptions` instance is
-  available from DI.
-- **`CustomOperationIds`**: only applies to `ControllerActionDescriptor`-backed actions. For non-controller
-  endpoints the fallback returns `null` (default Swashbuckle behaviour). The pattern is `{ActionName}` for
-  group `"v1"` and `_{ActionName}` otherwise — aligns with LangChain tool naming conventions.
-- **Security requirements on net8/net9**: both `AddSecurityDefinition` and `AddSecurityRequirement` are
-  registered. On **net10** only `AddSecurityDefinition` is registered (requirement block is commented out
-  pending double-check).
-- **ReDoc vs Swagger UI**: `UseOpenApiDocs` checks `options.ReDocEnabled` at runtime; there is no dual
-  registration — exactly one UI endpoint is registered.
-- **`FormatEmptyRoutePrefix`**: `//` double-slash caused by an empty `routePrefix` is auto-corrected to `/`.
+## Decision Matrix For Agents
 
----
-
-## 9. Source-Accurate Capability Map
-
-| Capability | Source Location |
+| Goal | Preferred API |
 |---|---|
-| Builder guard / idempotency | [`Extensions.cs` → `TryRegister("docs.openapi")`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
-| Config model | [`Configurations/OpenApiOptions.cs`](../src/Genocs.WebApi.OpenApi/Configurations/OpenApiOptions.cs) |
-| Fluent builder interface | [`Configurations/IOpenApiOptionsBuilder.cs`](../src/Genocs.WebApi.OpenApi/Configurations/IOpenApiOptionsBuilder.cs) |
-| Fluent builder implementation | [`Builders/OpenApiOptionsBuilder.cs`](../src/Genocs.WebApi.OpenApi/Builders/OpenApiOptionsBuilder.cs) |
-| DSL-to-spec bridge | [`Filters/WebApiDocumentFilter.cs`](../src/Genocs.WebApi.OpenApi/Filters/WebApiDocumentFilter.cs) |
-| LangChain operation ID generator | [`Extensions.cs` → `c.CustomOperationIds(...)`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
-| Bearer JWT security definition | [`Extensions.cs` → `settings.IncludeSecurity`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
-| Swagger UI / ReDoc middleware | [`Extensions.cs` → `UseOpenApiDocs`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
-| Multi-server registration | [`Extensions.cs` → `settings.Servers` loop](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
-| XML comments inclusion | [`Extensions.cs` → `c.IncludeXmlComments`](../src/Genocs.WebApi.OpenApi/Extensions.cs) |
+| Register OpenAPI services from configuration | `AddOpenApiDocs()` |
+| Register OpenAPI services from fluent builder | `AddOpenApiDocs(builder => ...)` |
+| Activate docs endpoints and UI | `UseOpenApiDocs()` |
+| Add Bearer security definition in docs | Set `openapi.includeSecurity = true` |
+| Serve ReDoc instead of Swagger UI | Set `openapi.reDocEnabled = true` |
 
----
+## Behavior Notes / Constraints
 
-## 10. Dependencies
+- Service registration and middleware activation are separate steps.
+- If docs are disabled in settings, middleware activation returns without serving docs.
+- XML comment integration depends on host XML documentation file availability.
 
-| Dependency | Role |
-|---|---|
-| `Genocs.WebApi` | Provides `IGenocsBuilder`, `WebApiEndpointDefinitions`, `IEndpointsBuilder` |
-| `Swashbuckle.AspNetCore.SwaggerGen` | Core Swagger generation |
-| `Swashbuckle.AspNetCore.SwaggerUI` | Swagger UI serving |
-| `Swashbuckle.AspNetCore.ReDoc` | ReDoc serving |
-| `Swashbuckle.AspNetCore.Annotations` | `[SwaggerOperation]` attribute support |
-| `Microsoft.AspNetCore.App` (framework ref) | ASP.NET Core primitives |
+## Public Capability Map
 
----
+- OpenAPI service registration via `AddOpenApiDocs` overloads.
+- Runtime docs middleware via `UseOpenApiDocs`.
+- Configuration model for document metadata, route prefix, and security options.
+- Endpoint metadata enrichment through package document filtering support.
 
-## 11. Related Docs
+## Dependencies
 
-- NuGet package readme: [src/Genocs.WebApi.OpenApi/README_NUGET.md](src/Genocs.WebApi.OpenApi/README_NUGET.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.WebApi.OpenApi-Agent-Documentation.md](docs/Genocs.WebApi.OpenApi-Agent-Documentation.md)
-- Related: [Genocs.WebApi-Agent-Documentation.md](docs/Genocs.WebApi-Agent-Documentation.md) — endpoint DSL whose `WebApiEndpointDefinitions` is consumed by `WebApiDocumentFilter`
-- Related: [Genocs.Core-Agent-Documentation.md](docs/Genocs.Core-Agent-Documentation.md) — `IGenocsBuilder` foundation
+- `Genocs.WebApi`
+- `Swashbuckle.AspNetCore.Annotations`
+- `Swashbuckle.AspNetCore.Swagger`
+- `Swashbuckle.AspNetCore.SwaggerGen`
+- `Swashbuckle.AspNetCore.SwaggerUI`
+- `Swashbuckle.AspNetCore.ReDoc`
+
+## Troubleshooting
+
+1. Swagger or ReDoc endpoints are missing.
+Fix: Enable `openapi.enabled` and ensure `UseOpenApiDocs()` is called in the app pipeline.
+2. Security authorization controls do not appear in UI.
+Fix: Set `openapi.includeSecurity` to `true` and restart the service.
+3. Startup fails when docs are enabled with XML comments.
+Fix: Enable XML documentation file generation in the host project so the runtime can load the XML doc file.
+
+
+
+
+

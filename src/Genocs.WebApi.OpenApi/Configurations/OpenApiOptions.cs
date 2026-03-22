@@ -1,5 +1,9 @@
 namespace Genocs.WebApi.OpenApi.Configurations;
 
+///
+/// <summary>
+/// OpenAPI configuration settings.
+/// </summary>
 public class OpenApiOptions
 {
     /// <summary>

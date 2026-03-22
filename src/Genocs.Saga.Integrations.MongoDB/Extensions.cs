@@ -1,7 +1,8 @@
+using Genocs.Core.Builders;
+using Genocs.Saga.Integrations.MongoDB.Configurations;
 using Genocs.Saga.Integrations.MongoDB.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Genocs.Core.Builders;
 using MongoDB.Driver;
 
 namespace Genocs.Saga.Integrations.MongoDB;
@@ -18,7 +19,7 @@ public static class Extensions
         {
             try
             {
-                var mongoSettings = configuration.GetOptions<SagaMongoOption>(SagaMongoOption.Position);
+                var mongoSettings = configuration.GetOptions<SagaMongoOptions>(SagaMongoOptions.Position);
                 var database = new MongoClient(mongoSettings.ConnectionString).GetDatabase(mongoSettings.Database);
 
                 return database;
@@ -30,7 +31,7 @@ public static class Extensions
         }
     }
 
-    public static ISagaBuilder UseMongoPersistence(this ISagaBuilder builder, SagaMongoOption settings)
+    public static ISagaBuilder UseMongoPersistence(this ISagaBuilder builder, SagaMongoOptions settings)
     {
         return builder.UseMongoPersistence(GetDatabase);
 

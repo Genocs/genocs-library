@@ -1,3 +1,4 @@
+using Genocs.Saga.Integrations.Redis.Configurations;
 using Genocs.Saga.Integrations.Redis.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +12,11 @@ public static class Extensions
 
     public static ISagaBuilder UseRedisPersistence(this ISagaBuilder builder, string appSettingsSection, IConfiguration configuration)
     {
-        SagaRedisSettings settings;
+        SagaRedisOptions settings;
 
         try
         {
-            settings = JsonConvert.DeserializeObject<SagaRedisSettings>(configuration.GetSection(appSettingsSection)?.Value);
+            settings = JsonConvert.DeserializeObject<SagaRedisOptions>(configuration.GetSection(appSettingsSection)?.Value);
         }
         catch
         {
@@ -25,12 +26,12 @@ public static class Extensions
         return builder.ConfigureRedisPersistence(settings);
     }
 
-    public static ISagaBuilder UseRedisPersistence(this ISagaBuilder builder, SagaRedisSettings settings)
+    public static ISagaBuilder UseRedisPersistence(this ISagaBuilder builder, SagaRedisOptions settings)
     {
         return builder.ConfigureRedisPersistence(settings);
     }
 
-    private static ISagaBuilder ConfigureRedisPersistence(this ISagaBuilder builder, SagaRedisSettings settings)
+    private static ISagaBuilder ConfigureRedisPersistence(this ISagaBuilder builder, SagaRedisOptions settings)
     {
         builder.Services.AddStackExchangeRedisCache(options =>
         {

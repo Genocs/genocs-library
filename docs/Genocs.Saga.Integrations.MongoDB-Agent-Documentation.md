@@ -1,85 +1,32 @@
 # Genocs.Saga.Integrations.MongoDB Agent Reference
 
+## Consumer Mode for Agents
+
+- Assume package is installed from NuGet.
+- Do not rely on repository source code access.
+- Prefer stable public APIs and extension methods documented here.
+- If behavior is uncertain, fail safely and request config/package version details.
+
 ## Purpose
 
-This document is optimized for AI-assisted development sessions.
-It prioritizes fast retrieval of:
-
-- What Genocs.Saga.Integrations.MongoDB is responsible for
-- Which APIs to call for specific goals
-- Where source of truth lives
-- What constraints and runtime behaviors matter
+Genocs.Saga.Integrations.MongoDB replaces the default in-memory saga persistence in `Genocs.Saga` with durable MongoDB-backed storage for both saga state and saga logs. It exposes two `UseMongoPersistence` extension methods on `ISagaBuilder` — one that reads from `IConfiguration` and one that accepts an explicit `SagaMongoOptions` object — both registering `MongoSagaStateRepository` and `MongoSagaLog` implementations transparently.
 
 ## Quick Facts
 
 | Key | Value |
 |---|---|
-| Package | Genocs.Saga.Integrations.MongoDB |
-| Project file | [src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj](src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj) |
-| Target frameworks | net10.0, net9.0, net8.0 |
-| Primary role | MongoDB-backed saga state and log persistence implementation for Genocs.Saga |
-| Core themes | UseMongoPersistence extensions, SagaMongoOption config, MongoSagaStateRepository, MongoSagaLog |
+| Package | `Genocs.Saga.Integrations.MongoDB` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
+| Primary role | MongoDB-backed saga state and log persistence |
+| Typical startup APIs | `AddSaga` + `UseMongoPersistence` |
 
-## Use This Package When
-
-- Persisting saga state and saga logs into MongoDB collections.
-- Replacing default in-memory saga persistence with durable storage.
-- Configuring saga Mongo persistence from app configuration.
-- Passing explicit Mongo settings in tests or controlled environments.
-- Sharing saga persistence across multiple application instances.
-
-## Do Not Assume
-
-- UseMongoPersistence requires Genocs.Saga AddSaga registration; this package does not register saga coordinator pipeline by itself.
-- Configuration overload throws SagaException when settings deserialization/access fails.
-- Mongo persistence uses fixed collection names SagaData and SagaLog.
-
-## High-Value Entry Points
-
-### Integration registration
-
-- UseMongoPersistence(ISagaBuilder, IConfiguration) in [src/Genocs.Saga.Integrations.MongoDB/Extensions.cs](src/Genocs.Saga.Integrations.MongoDB/Extensions.cs)
-- UseMongoPersistence(ISagaBuilder, SagaMongoOption) in [src/Genocs.Saga.Integrations.MongoDB/Extensions.cs](src/Genocs.Saga.Integrations.MongoDB/Extensions.cs)
-
-### Configuration model
-
-- SagaMongoOption in [src/Genocs.Saga.Integrations.MongoDB/SagaMongoOption.cs](src/Genocs.Saga.Integrations.MongoDB/SagaMongoOption.cs)
-
-### Mongo persistence implementations
-
-- MongoSagaStateRepository in [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaStateRepository.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaStateRepository.cs)
-- MongoSagaLog in [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLog.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLog.cs)
-- MongoSagaState in [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaState.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaState.cs)
-- MongoSagaLogData in [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLogData.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLogData.cs)
-
-### Core saga abstractions consumed
-
-- ISagaBuilder in [src/Genocs.Saga/ISagaBuilder.cs](src/Genocs.Saga/ISagaBuilder.cs)
-- ISagaStateRepository in [src/Genocs.Saga/ISagaStateRepository.cs](src/Genocs.Saga/ISagaStateRepository.cs)
-- ISagaLog in [src/Genocs.Saga/ISagaLog.cs](src/Genocs.Saga/ISagaLog.cs)
-
-## Decision Matrix For Agents
-
-| Goal | Preferred API | Notes |
-|---|---|---|
-| Enable Mongo persistence via configuration | UseMongoPersistence(builder, IConfiguration) | Reads SagaMongo section using SagaMongoOption.Position |
-| Enable Mongo persistence with explicit settings | UseMongoPersistence(builder, SagaMongoOption) | Best for tests and explicit startup wiring |
-| Persist saga state snapshot | ISagaStateRepository.WriteAsync via MongoSagaStateRepository | Replaces existing document by saga ID and type then inserts new state |
-| Load saga state for rehydration | ISagaStateRepository.ReadAsync via MongoSagaStateRepository | Returns first state doc matching saga ID and saga type |
-| Persist saga log entry | ISagaLog.WriteAsync via MongoSagaLog | Appends message entry to SagaLog collection |
-| Read compensation history | ISagaLog.ReadAsync via MongoSagaLog | Reads all log rows for saga ID and type |
-| Set custom Mongo database connection | SagaMongoOption.ConnectionString and Database | Passed to MongoClient and GetDatabase |
-| Replace storage provider without changing saga core | ISagaBuilder.UseSagaLog and UseSagaStateRepository calls in extension | Package binds both interfaces to Mongo implementations |
-
-## Minimal Integration Recipe
-
-### Install
+## Install
 
 ```bash
 dotnet add package Genocs.Saga.Integrations.MongoDB
 ```
 
-### Setup in Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
 using Genocs.Saga;
@@ -93,88 +40,67 @@ builder.Services.AddSaga(saga =>
 });
 
 var app = builder.Build();
-
 app.Run();
 ```
 
-### Configuration
+## Configuration
+
+Use the `sagaMongo` section in `appsettings.json`.
 
 ```json
 {
-  "SagaMongo": {
-    "ConnectionString": "mongodb://localhost:27017",
-    "Database": "genocs_saga"
-  }
+    "sagaMongo": {
+        "enabled": true,
+        "connectionString": "mongodb://localhost:27017",
+        "database": "genocs_saga"
+    }
 }
 ```
 
-## Behavior Notes That Affect Agent Decisions
+| Setting | Type | Description |
+|---|---|---|
+| `enabled` | `bool` | Option flag available in the model. Registration still depends on calling `UseMongoPersistence(...)`. |
+| `connectionString` | `string` | MongoDB connection string for saga persistence. Required. |
+| `database` | `string` | Database name for saga state and log collections. Required. |
 
-- Configuration-based registration catches failures and throws SagaException with a generic deserialization error message.
-- The integration registers IMongoDatabase through a transient factory delegate.
-- State writes are implemented as delete-then-insert, not atomic update.
-- Saga type identity is persisted as Type.FullName string and used for filtering reads.
-- MongoSagaState resolves runtime Type by scanning loaded AppDomain assemblies.
-- MongoSagaLogData resolves ISagaLogData.Type from Assembly.GetEntryAssembly(), which can be null in some host/test scenarios.
+The section name changed to `sagaMongo` with `SagaMongoOptions.Position`. Use that name in new hosts and updated documentation.
 
-## Source-Accurate Capability Map
+## Decision Matrix For Agents
 
-### Builder integration and wiring
+| Goal | Preferred API | Why |
+|---|---|---|
+| Configure persistence from application config | `saga.UseMongoPersistence(configuration)` | Reads `sagaMongo` section from host `IConfiguration` |
+| Configure persistence from explicit options | `saga.UseMongoPersistence(new SagaMongoOptions { ... })` | Useful in tests and scenarios with programmatic configuration |
+| Replace default in-memory persistence | `AddSaga(s => s.UseMongoPersistence(…))` | Keeps saga action contracts unchanged; only the persistence layer is replaced |
+| Ensure state and logs survive restarts | Mongo-backed `ISagaStateRepository` and `ISagaLog` | Documents survive process restarts and multi-instance deployment |
 
-- Extends ISagaBuilder with Mongo persistence overloads.
-- Supports both IConfiguration-driven and explicit option-driven setup.
-- Registers Mongo-backed implementations for saga log and state repository.
+## Behavior Notes / Constraints
 
-Files:
+- `UseMongoPersistence` must be called inside the `AddSaga` builder callback; calling it after `AddSaga` returns has no effect.
+- `connectionString` and `database` are both required; missing or empty values throw `SagaException` at startup.
+- Payload and state objects are serialized to BSON; breaking changes to saga message or state contracts can make stored documents unreadable.
+- MongoDB permissions must include read and write access on the target database and the saga collections.
 
-- [src/Genocs.Saga.Integrations.MongoDB/Extensions.cs](src/Genocs.Saga.Integrations.MongoDB/Extensions.cs)
-- [src/Genocs.Saga.Integrations.MongoDB/SagaMongoOption.cs](src/Genocs.Saga.Integrations.MongoDB/SagaMongoOption.cs)
+## Public Capability Map
 
-### Saga state persistence in MongoDB
-
-- Stores state records in SagaData collection.
-- Reads by saga ID and saga type full name.
-- Persists state object payload and saga state enum values.
-
-Files:
-
-- [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaStateRepository.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaStateRepository.cs)
-- [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaState.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaState.cs)
-
-### Saga log persistence in MongoDB
-
-- Stores message logs in SagaLog collection.
-- Reads log stream for specific saga ID and saga type.
-- Persists created-at timestamp and original message payload.
-
-Files:
-
-- [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLog.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLog.cs)
-- [src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLogData.cs](src/Genocs.Saga.Integrations.MongoDB/Persistence/MongoSagaLogData.cs)
-
-### Core saga contract interoperability
-
-- Integrates through ISagaBuilder customization hooks.
-- Implements ISagaStateRepository and ISagaLog contracts expected by Genocs.Saga managers.
-
-Files:
-
-- [src/Genocs.Saga/ISagaBuilder.cs](src/Genocs.Saga/ISagaBuilder.cs)
-- [src/Genocs.Saga/ISagaStateRepository.cs](src/Genocs.Saga/ISagaStateRepository.cs)
-- [src/Genocs.Saga/ISagaLog.cs](src/Genocs.Saga/ISagaLog.cs)
+| Capability | Surface |
+|---|---|
+| Configure Mongo persistence from host configuration | `UseMongoPersistence(ISagaBuilder, IConfiguration)` |
+| Configure Mongo persistence from explicit settings | `UseMongoPersistence(ISagaBuilder, SagaMongoOptions)` |
+| Durable saga state storage | `ISagaStateRepository` backed by `MongoSagaStateRepository` |
+| Durable saga log storage | `ISagaLog` backed by `MongoSagaLog` |
 
 ## Dependencies
 
-From [src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj](src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj):
+- `Genocs.Saga`
+- `MongoDB.Driver`
+- `Microsoft.Extensions.Configuration`
 
-- Genocs.Core (project reference in Debug, package reference in Release)
-- Genocs.Saga (project reference in Debug, package reference in Release)
-- Microsoft.Extensions.Configuration
-- MongoDB.Driver
+## Troubleshooting
 
-## Related Docs
-
-- NuGet package readme: [src/Genocs.Saga.Integrations.MongoDB/README_NUGET.md](src/Genocs.Saga.Integrations.MongoDB/README_NUGET.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Saga.Integrations.MongoDB-Agent-Documentation.md](docs/Genocs.Saga.Integrations.MongoDB-Agent-Documentation.md)
-- Saga package doc: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)
+1. Saga still behaves as if using in-memory persistence after adding this package.
+Fix: Ensure `UseMongoPersistence` is called inside the `AddSaga(saga => { ... })` builder callback during startup; calling it after `AddSaga` returns has no effect.
+2. Startup throws `SagaException` while loading saga Mongo settings.
+Fix: Validate that `sagaMongo.connectionString` and `sagaMongo.database` are present and non-empty in `appsettings.json`, and confirm network connectivity and credentials to the MongoDB instance.
+3. Compensation history is missing or unreadable after a deployment update.
+Fix: Maintain backward compatibility in serialized saga message and state contracts across versions; avoid renaming properties or changing types stored in existing saga log documents.

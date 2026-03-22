@@ -11,12 +11,12 @@ namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {
     private readonly IVaultClient _client;
-    private readonly VaultOptions.PkiOptions _options;
+    private readonly HashicorpKeyVaultOptions.PkiOptions _options;
     private readonly CertificateFormat _certificateFormat;
     private readonly PrivateKeyFormat _privateKeyFormat;
     private readonly string _mountPoint;
 
-    public CertificatesIssuer(IVaultClient client, VaultOptions options)
+    public CertificatesIssuer(IVaultClient client, HashicorpKeyVaultOptions options)
     {
         _client = client;
         _options = options.Pki;

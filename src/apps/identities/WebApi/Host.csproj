@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\..\Genocs.Discovery.Consul\Genocs.Discovery.Consul.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.ServiceDiscovery.Consul\Genocs.ServiceDiscovery.Consul.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
     </ItemGroup>
 

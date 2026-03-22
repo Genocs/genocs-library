@@ -14,21 +14,20 @@ namespace Genocs.Http.RestEase;
 
 public static class Extensions
 {
-    private const string SectionName = "restEase";
     private const string RegistryName = "http.restEase";
 
     public static IGenocsBuilder AddServiceClient<T>(
                                                         this IGenocsBuilder builder,
                                                         string serviceName,
-                                                        string sectionName = SectionName,
-                                                        string consulSectionName = "consul",
-                                                        string fabioSectionName = "fabio",
-                                                        string httpClientSectionName = "httpClient")
+                                                        string sectionName = RestEaseOptions.Position,
+                                                        string consulSectionName = ConsulOptions.Position,
+                                                        string fabioSectionName = FabioOptions.Position,
+                                                        string httpClientSectionName = HttpClientOptions.Position)
         where T : class
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = RestEaseOptions.Position;
         }
 
         var restEaseOptions = builder.GetOptions<RestEaseOptions>(sectionName);

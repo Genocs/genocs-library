@@ -1,217 +1,98 @@
 # Genocs.Saga Agent Reference
 
+## Consumer Mode for Agents
+
+- Assume package is installed from NuGet.
+- Do not rely on repository source code access.
+- Prefer stable public APIs and extension methods documented here.
+- If behavior is uncertain, fail safely and request config/package version details.
+
 ## Purpose
 
-This document is optimized for AI-assisted development sessions.
-It prioritizes fast retrieval of:
-
-- What Genocs.Saga is responsible for
-- Which APIs to call for specific goals
-- Where source of truth lives
-- What constraints and runtime behaviors matter
+Genocs.Saga provides the saga orchestration runtime and contracts for long-running distributed workflows. It handles state-machine-style transitions, multi-step processing pipelines (seek → initialize → process → post-process), compensation for rejected flows, and saga action discovery via assembly scanning.
 
 ## Quick Facts
 
 | Key | Value |
 |---|---|
-| Package | Genocs.Saga |
-| Project file | [src/Genocs.Saga/Genocs.Saga.csproj](src/Genocs.Saga/Genocs.Saga.csproj) |
-| Target frameworks | net10.0, net9.0, net8.0 |
-| Primary role | Saga orchestration abstractions and execution pipeline for distributed workflows |
-| Core themes | AddSaga registration, pluggable persistence, saga discovery, coordinated execution, compensation handling, OpenTelemetry trace correlation (Jaeger) |
+| Package | `Genocs.Saga` |
+| Target frameworks | `net10.0`, `net9.0`, `net8.0` |
+| Primary role | Saga orchestration runtime |
+| Typical startup APIs | `AddSaga` |
 
-## Use This Package When
-
-- Implementing long-running workflow orchestration with correlation IDs.
-- Managing saga state transitions from pending to completed/rejected.
-- Running compensation logic for rejected saga flows.
-- Using default in-memory saga state/log persistence.
-- Integrating custom saga persistence through ISagaBuilder.
-- Propagating trace context across services for distributed tracing (Jaeger) via SagaTraceContext.
-
-## Do Not Assume
-
-- AddSaga defaults to in-memory persistence when no build action is provided.
-- Saga instances are discovered from currently loaded AppDomain assemblies only.
-- Rejected saga instances are not reinitialized by SagaInitializer.
-
-## High-Value Entry Points
-
-### Startup and registration
-
-- AddSaga in [src/Genocs.Saga/Extensions.cs](src/Genocs.Saga/Extensions.cs)
-- ISagaBuilder in [src/Genocs.Saga/ISagaBuilder.cs](src/Genocs.Saga/ISagaBuilder.cs)
-- SagaBuilder in [src/Genocs.Saga/Builders/SagaBuilder.cs](src/Genocs.Saga/Builders/SagaBuilder.cs)
-
-### Runtime orchestration pipeline
-
-- ISagaCoordinator in [src/Genocs.Saga/ISagaCoordinator.cs](src/Genocs.Saga/ISagaCoordinator.cs)
-- SagaCoordinator in [src/Genocs.Saga/Managers/SagaCoordinator.cs](src/Genocs.Saga/Managers/SagaCoordinator.cs)
-- SagaInitializer in [src/Genocs.Saga/Managers/SagaInitializer.cs](src/Genocs.Saga/Managers/SagaInitializer.cs)
-- SagaProcessor in [src/Genocs.Saga/Managers/SagaProcessor.cs](src/Genocs.Saga/Managers/SagaProcessor.cs)
-- SagaPostProcessor in [src/Genocs.Saga/Managers/SagaPostProcessor.cs](src/Genocs.Saga/Managers/SagaPostProcessor.cs)
-- SagaSeeker in [src/Genocs.Saga/Managers/SagaSeeker.cs](src/Genocs.Saga/Managers/SagaSeeker.cs)
-
-### Saga contracts and lifecycle types
-
-- ISaga and ISaga<TData> in [src/Genocs.Saga/ISaga.cs](src/Genocs.Saga/ISaga.cs)
-- Saga and Saga<TData> in [src/Genocs.Saga/Saga.cs](src/Genocs.Saga/Saga.cs)
-- ISagaAction and ISagaStartAction in [src/Genocs.Saga/ISagaAction.cs](src/Genocs.Saga/ISagaAction.cs)
-- ISagaStateRepository in [src/Genocs.Saga/ISagaStateRepository.cs](src/Genocs.Saga/ISagaStateRepository.cs)
-- ISagaLog in [src/Genocs.Saga/ISagaLog.cs](src/Genocs.Saga/ISagaLog.cs)
-
-### Default in-memory persistence
-
-- InMemorySagaStateRepository in [src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs](src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs)
-- InMemorySagaLog in [src/Genocs.Saga/Persistence/InMemorySagaLog.cs](src/Genocs.Saga/Persistence/InMemorySagaLog.cs)
-- SagaState in [src/Genocs.Saga/Persistence/SagaState.cs](src/Genocs.Saga/Persistence/SagaState.cs)
-- SagaLogData in [src/Genocs.Saga/Persistence/SagaLogData.cs](src/Genocs.Saga/Persistence/SagaLogData.cs)
-
-### Context and concurrency helpers
-
-- SagaContext in [src/Genocs.Saga/SagaContext.cs](src/Genocs.Saga/SagaContext.cs)
-- SagaContextBuilder in [src/Genocs.Saga/Builders/SagaContextBuilder.cs](src/Genocs.Saga/Builders/SagaContextBuilder.cs)
-- KeyedLocker in [src/Genocs.Saga/Async/KeyedLocker.cs](src/Genocs.Saga/Async/KeyedLocker.cs)
-
-### Telemetry correlation
-
-- SagaTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
-- SagaTraceContext.WithCurrentTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
-- SagaTraceContext.WithTraceContext in [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
-
-## Decision Matrix For Agents
-
-| Goal | Preferred API | Notes |
-|---|---|---|
-| Register saga orchestration with defaults | IServiceCollection.AddSaga() | Uses in-memory log and state repository automatically |
-| Register saga orchestration with custom persistence | AddSaga(build => ...) | Configure ISagaBuilder persistence before registration completes |
-| Process incoming message through all matching saga actions | ISagaCoordinator.ProcessAsync<TMessage>(...) | Runs discovery, initialization, handling, and post-processing |
-| Resolve and initialize saga instance from message | SagaInitializer.TryInitializeAsync | Rejects non-start actions when no state exists |
-| Execute message handler and persist state/log | SagaProcessor.ProcessAsync | Persists state and log in finally block |
-| Trigger completion/rejection hooks and compensation | SagaPostProcessor.ProcessAsync | Runs compensation in reverse log order for rejected state |
-| Register custom log provider | ISagaBuilder.UseSagaLog<TSagaLog>() | Replace default in-memory log implementation |
-| Register custom state repository | ISagaBuilder.UseSagaStateRepository<TRepository>() | Replace default in-memory state store |
-| Propagate trace context from current Activity | SagaTraceContext.WithCurrentTraceContext on ISagaContextBuilder | Links saga to incoming HTTP/message trace when building context |
-| Propagate trace context from message headers | SagaTraceContext.WithTraceContext(traceparent, tracestate) | Use when building context from RabbitMQ/Kafka/HTTP headers |
-
-## Minimal Integration Recipe
-
-### Install
+## Install
 
 ```bash
 dotnet add package Genocs.Saga
 ```
 
-### Setup in Program.cs
+## Minimal Integration Recipe (Program.cs)
 
 ```csharp
 using Genocs.Saga;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddSaga();
 
 var app = builder.Build();
-
 app.Run();
 ```
 
-### Message processing usage
+## Configuration
 
-```csharp
-var coordinator = app.Services.GetRequiredService<ISagaCoordinator>();
-await coordinator.ProcessAsync(message);
-```
+The base package does not define an `appsettings.json` section.
 
-## Behavior Notes That Affect Agent Decisions
+Configuration enters the system through the persistence integration you choose:
 
-- SagaCoordinator serializes processing per saga ID using KeyedLocker to avoid concurrent mutation of the same saga.
-- SagaSeeker merges ISagaAction<TMessage> and ISagaStartAction<TMessage>, then de-duplicates by concrete type.
-- SagaProcessor catches handler exceptions, sets SagaContextError, rejects saga when needed, and still persists state/log.
-- Saga.Reject sets state to Rejected and throws SagaException by design.
-- SagaPostProcessor executes compensation by reading saga logs and replaying messages in descending CreatedAt order.
-- Initial state is created only for ISagaStartAction<TMessage> when no persisted state exists.
-- Saga execution emits OpenTelemetry spans (Saga.Process, Saga.Execute, Saga.Handle, Saga.Compensate) for Jaeger correlation; register Genocs.Telemetry and AddSource("Genocs.Saga") is included.
+| Integration | Section |
+|---|---|
+| Default in-memory persistence | None |
+| `Genocs.Saga.Integrations.MongoDB` | `sagaMongo` |
+| `Genocs.Saga.Integrations.Redis` | `sagaRedis` or an explicitly named serialized section |
 
-## Source-Accurate Capability Map
+Everything else is registration-driven: saga discovery, handlers, and lifecycle behavior are controlled by code and DI registration rather than by base-package settings.
 
-### Registration and saga discovery
+## Decision Matrix For Agents
 
-- Registers the saga coordination pipeline services.
-- Provides default in-memory persistence or custom persistence overrides.
-- Scans loaded assemblies and registers saga interfaces with transient lifetime.
+| Goal | Preferred API | Why |
+|---|---|---|
+| Enable saga runtime with defaults | `AddSaga()` | Registers all runtime services with in-memory state and log |
+| Override persistence provider | `AddSaga(saga => saga.UseSagaStateRepository<T>()...)` | Configures durable state/log storage without changing action contracts |
+| Process a message through the saga pipeline | `ISagaCoordinator.ProcessAsync<TMessage>(message)` | Central runtime entry — runs the full seek/init/process/post pipeline |
+| Supply completion and rejection callbacks | `ISagaCoordinator.ProcessAsync(message, onCompleted, onRejected)` | Hooks into the post-processing result without custom saga logic |
+| Replace state storage | `ISagaBuilder.UseSagaStateRepository<T>()` | Accepts any `ISagaStateRepository` implementation |
+| Replace log storage | `ISagaBuilder.UseSagaLog<T>()` | Accepts any `ISagaLog` implementation |
 
-Files:
+## Behavior Notes / Constraints
 
-- [src/Genocs.Saga/Extensions.cs](src/Genocs.Saga/Extensions.cs)
-- [src/Genocs.Saga/Builders/SagaBuilder.cs](src/Genocs.Saga/Builders/SagaBuilder.cs)
+- Default state and log persistence are in-memory and are lost on process restart.
+- Saga type discovery uses Scrutor assembly scanning over `AppDomain.CurrentDomain.GetAssemblies()` at startup.
+- `ISagaStartAction<T>` must be implemented for the message that initialises a new saga; non-start messages are rejected when no saga state exists.
+- Compensation runs in reverse log order through all recorded saga actions when the saga transitions to rejected state.
+- `ISagaCoordinator.ProcessAsync` is transient-safe; the coordinator and pipeline services are all registered as transient.
 
-### Coordinated execution pipeline
+## Public Capability Map
 
-- Orchestrates message processing through seeker, initializer, processor, and post-processor components.
-- Applies per-saga locking boundary for consistent state transitions.
-- Supports optional completion and rejection callbacks.
-
-Files:
-
-- [src/Genocs.Saga/Managers/SagaCoordinator.cs](src/Genocs.Saga/Managers/SagaCoordinator.cs)
-- [src/Genocs.Saga/Managers/SagaSeeker.cs](src/Genocs.Saga/Managers/SagaSeeker.cs)
-- [src/Genocs.Saga/Async/KeyedLocker.cs](src/Genocs.Saga/Async/KeyedLocker.cs)
-
-### State initialization and persistence updates
-
-- Reads existing saga state and prevents re-entry for rejected sagas.
-- Creates default saga state and data object for start actions.
-- Persists both state and log records after each message handling pass.
-
-Files:
-
-- [src/Genocs.Saga/Managers/SagaInitializer.cs](src/Genocs.Saga/Managers/SagaInitializer.cs)
-- [src/Genocs.Saga/Managers/SagaProcessor.cs](src/Genocs.Saga/Managers/SagaProcessor.cs)
-- [src/Genocs.Saga/Persistence/SagaState.cs](src/Genocs.Saga/Persistence/SagaState.cs)
-- [src/Genocs.Saga/Persistence/SagaLogData.cs](src/Genocs.Saga/Persistence/SagaLogData.cs)
-
-### Rejection and compensation flow
-
-- Invokes custom rejection callback when saga transitions to Rejected.
-- Loads persisted saga logs and invokes compensate handlers in reverse order.
-
-Files:
-
-- [src/Genocs.Saga/Managers/SagaPostProcessor.cs](src/Genocs.Saga/Managers/SagaPostProcessor.cs)
-- [src/Genocs.Saga/ISagaAction.cs](src/Genocs.Saga/ISagaAction.cs)
-
-### Default in-memory persistence implementation
-
-- Stores saga state and log data in process-local lists.
-- Supports read and write operations through repository/log abstractions.
-
-Files:
-
-- [src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs](src/Genocs.Saga/Persistence/InMemorySagaStateRepository.cs)
-- [src/Genocs.Saga/Persistence/InMemorySagaLog.cs](src/Genocs.Saga/Persistence/InMemorySagaLog.cs)
-
-### Telemetry correlation
-
-- Emits ActivitySource spans for Saga.Process, Saga.Execute, Saga.Handle, Saga.Compensate.
-- Extracts W3C traceparent/tracestate from ISagaContext metadata when present.
-- SagaTraceContext provides WithCurrentTraceContext and WithTraceContext for cross-service trace propagation.
-
-Files:
-
-- [src/Genocs.Saga/SagaTelemetry.cs](src/Genocs.Saga/SagaTelemetry.cs)
-- [src/Genocs.Saga/SagaTraceContext.cs](src/Genocs.Saga/SagaTraceContext.cs)
+| Capability | Surface |
+|---|---|
+| Register saga runtime services | `AddSaga` on `IServiceCollection` |
+| Customise persistence providers | `ISagaBuilder` |
+| Coordinate message processing end-to-end | `ISagaCoordinator.ProcessAsync` |
+| Saga state persistence contract | `ISagaStateRepository` |
+| Saga log persistence contract | `ISagaLog` |
+| Define a saga message handler | `ISagaAction<TSaga, TMessage>` |
+| Define a saga-initialising handler | `ISagaStartAction<TSaga, TMessage>` |
 
 ## Dependencies
 
-From [src/Genocs.Saga/Genocs.Saga.csproj](src/Genocs.Saga/Genocs.Saga.csproj):
+- `Microsoft.Extensions.DependencyInjection`
+- `Scrutor`
 
-- Microsoft.Extensions.DependencyInjection
-- Scrutor
+## Troubleshooting
 
-## Related Docs
-
-- NuGet package readme: [src/Genocs.Saga/README_NUGET.md](src/Genocs.Saga/README_NUGET.md)
-- Package readme: [src/Genocs.Saga/README.md](src/Genocs.Saga/README.md)
-- Repository guide: [README.md](README.md)
-- Package documentation: [docs/Genocs.Saga-Agent-Documentation.md](docs/Genocs.Saga-Agent-Documentation.md)
+1. Saga actions are not executed for incoming messages.
+Fix: Confirm that `ISagaAction<TSaga, TMessage>` or `ISagaStartAction` is implemented in a loaded assembly; verify that assembly scanning via `AppDomain.CurrentDomain.GetAssemblies()` includes the target assembly at startup.
+2. Saga state is lost after application restart.
+Fix: Replace the default in-memory persistence by calling `UseSagaStateRepository<T>()` and `UseSagaLog<T>()` on `ISagaBuilder` with a durable integration package such as `Genocs.Saga.Integrations.MongoDB`.
+3. Compensation never executes on rejected workflows.
+Fix: Verify the saga transitions to rejected state (the rejection path must be triggered in the saga action), and ensure saga log persistence is configured and writable so that the log history required for reverse compensation is available.

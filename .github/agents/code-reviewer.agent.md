@@ -1,8 +1,9 @@
 ---
 target: vscode
+name: code-reviewer
 description: Review code for quality and adherence to best practices.
 argument-hint: The user will provide code snippets or files to review.
-tools: ["search/codebase", "search/usages", "vscode/vscodeAPI", "read/problems", "web/fetch", "web/githubRepo", "search"]
+tools: [vscode/vscodeAPI, read/problems, read/readFile, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/usages, web/fetch, web/githubRepo]
 ---
 
 # Code Reviewer Mode

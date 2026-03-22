@@ -17,7 +17,7 @@ public class TelemetryOptions
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// The OpenTelemetry exporter settings.
+    /// The OTLP export telemetry settings.
     /// </summary>
     public OtlpExportOptions? Exporter { get; set; }
 

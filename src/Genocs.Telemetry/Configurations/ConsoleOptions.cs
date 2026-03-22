@@ -1,7 +1,7 @@
 ﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// Console Section Settings.
+/// Console telemetry configuration settings.
 /// </summary>
 public class ConsoleOptions
 {

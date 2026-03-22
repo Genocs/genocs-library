@@ -2,6 +2,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Genocs.Auth.Configurations;
 
+/// <summary>
+/// The options class for configuring JWT (JSON Web Token) authentication in the Genocs authentication library.
+/// </summary>
 public class JwtOptions
 {
     /// <summary>
@@ -14,7 +17,14 @@ public class JwtOptions
     /// </summary>
     public bool Enabled { get; set; }
 
+    /// <summary>
+    /// Gets or sets the endpoints that allow anonymous access.
+    /// </summary>
     public IEnumerable<string>? AllowAnonymousEndpoints { get; set; }
+
+    /// <summary>
+    /// Gets or sets the certificate options for JWT authentication.
+    /// </summary>
     public CertificateOptions? Certificate { get; set; }
 
     /// <summary>
@@ -47,10 +57,18 @@ public class JwtOptions
     public string? Audience { get; set; }
 
     /// <summary>
-    /// This is the Authentication Scheme name.
+    /// The challenge string used in the Authenticate header.
     /// </summary>
     public string Challenge { get; set; } = "Bearer";
+
+    /// <summary>
+    /// The metadata address used to retrieve the OpenID Connect configuration from the authority.
+    /// </summary>
     public string MetadataAddress { get; set; } = "/.well-known/openid-configuration";
+
+    /// <summary>
+    /// It defines whether the token should be saved in the authentication properties after a successful authentication.
+    /// </summary>
     public bool SaveToken { get; set; } = true;
     public bool SaveSigninToken { get; set; }
     public bool RequireAudience { get; set; } = true;
