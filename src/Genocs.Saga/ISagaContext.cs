@@ -7,5 +7,5 @@ public interface ISagaContext
     IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
     ISagaContextMetadata GetMetadata(string key);
     bool TryGetMetadata(string key, out ISagaContextMetadata? metadata);
-    SagaContextError SagaContextError { get; set; }
+    SagaContextError? SagaContextError { get; set; }
 }

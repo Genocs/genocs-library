@@ -6,4 +6,5 @@ public interface ISagaLogData
     Type Type { get; }
     long CreatedAt { get; }
     object Message { get; }
+    SagaLogEntryOutcome Outcome { get; }
 }

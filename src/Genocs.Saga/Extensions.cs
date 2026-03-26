@@ -17,18 +17,26 @@ public static class Extensions
 
         var sagaBuilder = new SagaBuilder(services);
 
-        if (build is null)
-        {
-            sagaBuilder.UseInMemoryPersistence();
-        }
-        else
-        {
-            build(sagaBuilder);
-        }
+        // Safe defaults first, then allow the callback to override registrations.
+        sagaBuilder.UseInMemoryPersistence();
+        build?.Invoke(sagaBuilder);
+
+        ValidatePersistenceRegistration(services);
 
         services.RegisterSagas();
 
         return services;
+    }
+
+    private static void ValidatePersistenceRegistration(IServiceCollection services)
+    {
+        bool hasStateRepository = services.Any(sd => sd.ServiceType == typeof(ISagaStateRepository));
+        bool hasSagaLog = services.Any(sd => sd.ServiceType == typeof(ISagaLog));
+
+        if (!hasStateRepository || !hasSagaLog)
+        {
+            throw new SagaException("Saga persistence is not fully configured. Both ISagaStateRepository and ISagaLog must be registered.");
+        }
     }
 
     private static void RegisterSagas(this IServiceCollection services)

@@ -9,17 +9,19 @@ internal sealed class RedisSagaLogData : ISagaLogData
     public long CreatedAt { get; }
     public object Message { get; }
     public Type MessageType { get; }
+    public SagaLogEntryOutcome Outcome { get; }
 
     [JsonConstructor]
-    public RedisSagaLogData(SagaId id, Type type, long createdAt, object message, Type messageType)
+    public RedisSagaLogData(SagaId id, Type type, long createdAt, object message, Type messageType, SagaLogEntryOutcome outcome)
     {
         Id = id;
         Type = type;
         CreatedAt = createdAt;
         Message = message;
         MessageType = messageType;
+        Outcome = outcome;
     }
 
-    public static ISagaLogData Create(SagaId sagaId, Type sagaType, object message)
-        => new RedisSagaLogData(sagaId, sagaType, DateTimeOffset.Now.ToUnixTimeMilliseconds(), message, message.GetType());
+    public static ISagaLogData Create(SagaId sagaId, Type sagaType, object message, SagaLogEntryOutcome outcome)
+        => new RedisSagaLogData(sagaId, sagaType, DateTimeOffset.Now.ToUnixTimeMilliseconds(), message, message.GetType(), outcome);
 }

@@ -3,7 +3,7 @@
 @bookStoreBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/api/bookstore
 @authorId = 80f5872d-7db0-4072-82e8-23024efeba2c
 @bookId = 5393e1ec-c9fe-4e29-921b-8cd644411376
-@sagaId = 29bf68d9-0725-425e-b569-3f11bde8c032
+@sagaId = 9212c67a-4897-4e2a-8008-6328951cfc86
 
 
 # Saga - start transaction
@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "text": "Mylene_Hermiston",
-    "transactionValue": 10
+    "transactionValue": 15
 }
 
 ###
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 {
     "text": "Mylene_Hermiston",
-    "transactionValue": 10
+    "transactionValue": -5
 }
 
 ###

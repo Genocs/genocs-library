@@ -8,10 +8,11 @@ internal class SagaLogData : ISagaLogData
     public Type Type { get; }
     public long CreatedAt { get; }
     public object Message { get; }
+    public SagaLogEntryOutcome Outcome { get; }
 
-    private SagaLogData(SagaId sagaId, Type sagaType, long createdAt, object message)
-        => (Id, Type, CreatedAt, Message) = (sagaId, sagaType, createdAt, message);
+    private SagaLogData(SagaId sagaId, Type sagaType, long createdAt, object message, SagaLogEntryOutcome outcome)
+        => (Id, Type, CreatedAt, Message, Outcome) = (sagaId, sagaType, createdAt, message, outcome);
 
-    public static ISagaLogData Create(SagaId sagaId, Type sagaType, object message)
-        => new SagaLogData(sagaId, sagaType, DateTimeOffset.Now.GetTimeStamp(), message);
+    public static ISagaLogData Create(SagaId sagaId, Type sagaType, object message, SagaLogEntryOutcome outcome)
+        => new SagaLogData(sagaId, sagaType, DateTimeOffset.Now.GetTimeStamp(), message, outcome);
 }

@@ -21,6 +21,7 @@ internal sealed class MongoSagaLog : ISagaLog
            SagaId = message.Id,
            SagaType = message.Type.FullName,
            Message = message.Message,
-           CreatedAt = message.CreatedAt
+           CreatedAt = message.CreatedAt,
+           Outcome = message.Outcome
        });
 }

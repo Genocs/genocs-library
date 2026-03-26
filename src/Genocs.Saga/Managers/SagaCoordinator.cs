@@ -60,27 +60,27 @@ internal sealed class SagaCoordinator : ISagaCoordinator
         ISagaContext? context = null)
         where TMessage : class
     {
-        context ??= SagaContext.Empty;
+        ISagaContext executionContext = new SagaExecutionContext(context ?? SagaContext.Empty);
         var saga = (ISaga)action;
-        var id = saga.ResolveId(message, context);
+        var id = saga.ResolveId(message, executionContext);
         string sagaType = saga.GetType().Name;
         string messageType = typeof(TMessage).Name;
 
-        using var executeActivity = SagaTelemetry.StartExecuteActivity(context, id, sagaType, messageType);
+        using var executeActivity = SagaTelemetry.StartExecuteActivity(executionContext, id, sagaType, messageType);
 
         using (await Locker.LockAsync(id))
         {
             var (isInitialized, state) = await _initializer.TryInitializeAsync(saga, id, message);
 
-            if (!isInitialized)
+            if (!isInitialized || state == null)
             {
                 return;
             }
 
-            await _processor.ProcessAsync(saga, message, state, context);
-            await _postProcessor.ProcessAsync(saga, message, context, onCompleted, onRejected);
+            await _processor.ProcessAsync(saga, message, state, executionContext);
+            await _postProcessor.ProcessAsync(saga, message, executionContext, onCompleted, onRejected);
 
-            SagaTelemetry.SetSagaOutcome(saga.State, context.SagaContextError);
+            SagaTelemetry.SetSagaOutcome(saga.State, executionContext.SagaContextError);
         }
     }
 }

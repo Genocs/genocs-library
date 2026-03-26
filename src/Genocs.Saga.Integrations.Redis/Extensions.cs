@@ -3,6 +3,7 @@ using Genocs.Saga.Integrations.Redis.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Genocs.Saga.Integrations.Redis;
 
@@ -38,6 +39,13 @@ public static class Extensions
             options.Configuration = settings.Configuration;
             options.InstanceName = settings.InstanceName;
         });
+
+        builder.Services
+            .AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(settings.Configuration!))
+            .AddSingleton(sp => sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase())
+            .AddSingleton<IRedisSagaStateStore>(sp => new RedisSagaStateStore(
+                sp.GetRequiredService<IDatabase>(),
+                settings.InstanceName));
 
         builder.UseSagaLog<RedisSagaLog>();
         builder.UseSagaStateRepository<RedisSagaStateRepository>();

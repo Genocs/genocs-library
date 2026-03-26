@@ -36,7 +36,7 @@ internal sealed class RedisSagaLog : ISagaLog
             {
                 {
                     var message = (sld.Message as JObject)?.ToObject(sld.MessageType);
-                    deserializedSagaLogDatas.Add(new RedisSagaLogData(sld.Id, sld.Type, sld.CreatedAt, message, sld.MessageType));
+                    deserializedSagaLogDatas.Add(new RedisSagaLogData(sld.Id, sld.Type, sld.CreatedAt, message, sld.MessageType, sld.Outcome));
                 }
             });
         }
@@ -53,7 +53,7 @@ internal sealed class RedisSagaLog : ISagaLog
 
         var sagaLogDatas = (await ReadAsync(logData.Id, logData.Type)).ToList();
 
-        var sagaLogData = new RedisSagaLogData(logData.Id, logData.Type, logData.CreatedAt, logData.Message, logData.Message.GetType());
+        var sagaLogData = new RedisSagaLogData(logData.Id, logData.Type, logData.CreatedAt, logData.Message, logData.Message.GetType(), logData.Outcome);
 
         sagaLogDatas.Add(sagaLogData);
 

@@ -23,6 +23,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         var action = (ISagaAction<TMessage>)saga;
         string sagaType = saga.GetType().Name;
         string messageType = typeof(TMessage).Name;
+        SagaLogEntryOutcome outcome = SagaLogEntryOutcome.Completed;
 
         using var handleActivity = SagaTelemetry.StartHandleActivity(saga.Id, sagaType, messageType);
 
@@ -32,6 +33,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         }
         catch (Exception ex)
         {
+            outcome = SagaLogEntryOutcome.Failed;
             context.SagaContextError = new SagaContextError(ex);
 
             if (saga.State is not SagaProcessState.Rejected)
@@ -49,11 +51,11 @@ internal sealed class SagaProcessor : ISagaProcessor
         }
         finally
         {
-            await UpdateSagaAsync(message, saga, state);
+            await UpdateSagaAsync(message, saga, state, outcome);
         }
     }
 
-    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
+    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome)
         where TMessage : class
     {
         var sagaType = saga.GetType();
@@ -61,7 +63,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         object? updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
 
         state.Update(saga.State, updatedSagaData);
-        var logData = SagaLogData.Create(saga.Id, sagaType, message);
+        var logData = SagaLogData.Create(saga.Id, sagaType, message, outcome);
 
         var persistenceTasks = new[]
         {

@@ -21,6 +21,8 @@ internal class MongoSagaLogData : ISagaLogData
 
     public object? Message { get; set; }
 
+    public SagaLogEntryOutcome Outcome { get; set; }
+
     Type? ISagaLogData.Type
         => Assembly.GetEntryAssembly()?.GetType(SagaType);
 }

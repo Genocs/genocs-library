@@ -78,7 +78,7 @@ public class SagaBuilderTests
 
     public class MySagaStateRepository : ISagaStateRepository
     {
-        public Task<ISagaState> ReadAsync(SagaId id, Type type)
+        public Task<ISagaState?> ReadAsync(SagaId id, Type type)
         {
             throw new NotImplementedException();
         }

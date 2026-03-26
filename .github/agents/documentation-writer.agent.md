@@ -1,7 +1,7 @@
 ---
 name: documentation-writer
 description: Agent specializing in creating and improving documentation for codebases, APIs, and software projects. Invoke when asked to document code, generate README files, write API references, create NuGet/npm package docs, produce MCP server manifests, or explain technical concepts in Markdown, XML doc comments, docstrings, or JSDoc.
-tools: [read/readFile, read/viewImage, agent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search]
+tools: [execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/readFile, read/viewImage, agent/runSubagent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/usages]
 ---
 
 # Documentation Writer
