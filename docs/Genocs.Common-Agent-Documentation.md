@@ -4,47 +4,60 @@
 
 - Assume `Genocs.Common` is consumed from NuGet only.
 - Do not assume repository or source-code visibility.
-- Treat documented public interfaces, classes, and attributes as the only safe API surface.
-- If runtime behavior is required, identify the companion Genocs packages before making changes.
+- Treat the package as a contracts-only dependency unless the user explicitly confirms companion runtime packages.
+- Generate abstractions, contracts, DTO-like models, and metadata usage safely.
+- Do not generate runtime wiring, transport code, or persistence behavior unless another package is confirmed.
 
-## Purpose
-
-`Genocs.Common` is a shared contract package. It defines public abstractions for CQRS, domain entities, repositories, paging, notifications, startup conventions, and utility models. It does not provide runtime implementations for those abstractions.
-
-## Quick Facts
+## Package Identity
 
 | Key | Value |
 |---|---|
 | Package | `Genocs.Common` |
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
-| Primary role | Contract and shared-model package |
-| Safe use | Define public contracts and common DTO-like models |
-| Unsafe assumption | Handler execution, repository behavior, or transport integration exists in this package |
+| Primary role | Shared contracts, primitives, and cross-package models |
+| Main value | Stable CQRS, DDD, repository, paging, notification, startup, and metadata abstractions |
+| Runtime implementations included | None |
 
-## Install
+## What This Package Is For
 
-```bash
-dotnet add package Genocs.Common
-```
+Use `Genocs.Common` when you need to:
 
-## Use This Package To
+- define commands, queries, events, and handler contracts
+- define entities, aggregate roots, soft-delete, and auditing contracts
+- standardize repository and unit-of-work abstractions
+- standardize paging and search request and response models
+- reference common service abstractions such as current-user, serializer, jobs, and notifications
+- attach metadata to contracts through attributes such as `MessageAttribute` and `PublicContractAttribute`
 
-- Define `ICommand`, `IQuery<TResult>`, and `IEvent` contracts.
-- Define `IEntity<TKey>` and `IAggregateRoot<TKey>` domain contracts.
-- Standardize paging with `IPagedQuery`, `PagedQueryBase`, and `PagedResult<T>`.
-- Reference stable abstractions such as `ICurrentUser`, `INotificationSender`, and `IJobService`.
-- Apply metadata attributes such as `MessageAttribute` and `PublicContractAttribute`.
+## What This Package Does Not Do By Itself
 
-## Do Not Assume This Package Can
+Do not assume `Genocs.Common` can:
 
-- Execute command, query, or event handlers.
-- Persist entities.
-- Register itself automatically into DI.
-- Send notifications over a transport.
-- Schedule jobs.
-- Host HTTP endpoints.
+- execute commands, queries, or events
+- persist entities or connect to a database
+- register services into dependency injection automatically
+- host HTTP endpoints or middleware
+- send notifications over SignalR, email, SMS, or a broker
+- schedule background jobs
+- populate audit values automatically
+- provide a concrete current-user implementation
 
-## Minimal Valid Usage
+## Safe Default Mental Model
+
+Treat `Genocs.Common` as four things:
+
+1. A contract boundary between domain or application code and infrastructure
+2. A shared language for CQRS and DDD modeling
+3. A place to define reusable request, response, and notification models
+4. A convention layer that companion packages may interpret at runtime
+
+If a user asks for behavior rather than contracts, identify the missing runtime package before generating code.
+
+## Fast Start Recipes
+
+### Recipe 1: Define A Command And Query Contract
+
+Use this when a project needs application-layer contracts only.
 
 ```csharp
 using Genocs.Common.CQRS.Commands;
@@ -57,34 +70,152 @@ public sealed record GetBook(Guid Id) : IQuery<BookDto>;
 public sealed record BookDto(Guid Id, string Title);
 ```
 
-This is valid package usage. It defines contracts only. It does not provide runtime execution.
+Effect:
+- defines compile-time contracts only
+- does not provide execution behavior
+- stays safe for shared domain or application packages
 
-## Decision Matrix For Agents
+### Recipe 2: Model An Aggregate Root Contract
 
-| If you need to... | Use |
+Use this when the domain layer needs identities and domain events without runtime coupling.
+
+```csharp
+using Genocs.Common.CQRS.Events;
+using Genocs.Common.Domain.Entities;
+
+public sealed class Order : IAggregateRoot<Guid>
+{
+    public Guid Id { get; init; }
+    public List<IEvent>? DomainEvents { get; } = [];
+
+    public bool IsTransient() => Id == Guid.Empty;
+}
+```
+
+Use this when the type must stay infrastructure-agnostic.
+
+### Recipe 3: Standardize Paging Contracts
+
+Use this when multiple services or endpoints should share the same paging model.
+
+```csharp
+using Genocs.Common.CQRS.Queries;
+
+public sealed record GetOrders : PagedQueryBase, IQuery<PagedResult<OrderDto>>;
+
+public sealed record OrderDto(Guid Id, decimal Total);
+```
+
+Use this when consistency matters more than runtime behavior.
+
+## Core Entry Points
+
+| API | Use it for | Important behavior | Common mistake |
+|---|---|---|---|
+| `ICommand` | Model a write request | Marker interface only | Assuming it carries execution logic |
+| `IQuery<TResult>` | Model a typed read request | Declares expected result type | Assuming a dispatcher exists automatically |
+| `IEvent` | Model a domain or integration event | Marker interface only | Treating it as brokered messaging by itself |
+| `ICommandHandler<TCommand>` | Define command handling contract | No implementation included | Expecting DI registration from this package |
+| `IQueryHandler<TQuery, TResult>` | Define query handling contract | Async contract only | Assuming query dispatch is available |
+| `IEventHandler<TEvent>` | Define event handling contract | Async contract only | Assuming publish-subscribe infrastructure exists |
+| `IDispatcher` and dispatcher interfaces | Depend on an abstraction | Requires a runtime package to work | Attempting to resolve one without a companion package |
+| `IAggregateRoot<TKey>` | Model a consistency boundary | Includes domain event support | Using it for every entity |
+| `IRepositoryOfEntity<TEntity, TKey>` | Define persistence boundary | Interface only; no provider | Implementing it manually without a storage strategy |
+| `PagedQueryBase` | Reuse paging request shape | Zero-based page numbering | Assuming page 1 is the first page |
+| `PagedResult<T>` | Standardize paged results | Factory helpers available | Treating it as a database paging engine |
+| `MessageAttribute` | Annotate message contracts with transport metadata | Pure metadata | Expecting transport behavior from the attribute |
+| `IInitializer` | Define startup work contract | No executor included here | Assuming startup will run automatically |
+
+## Choosing The Right Surface
+
+| Situation | Prefer |
 |---|---|
-| Model a command contract | `ICommand` |
-| Model a query contract | `IQuery<TResult>` |
-| Model an event contract | `IEvent` |
-| Model a unified dispatcher dependency | `IDispatcher` |
-| Standardize paged request input | `IPagedQuery` or `PagedQueryBase` |
-| Standardize paged response output | `PagedResult<T>` |
-| Model an aggregate root | `IAggregateRoot<TKey>` |
-| Model notification payloads | `INotificationMessage`, `BasicNotification`, `JobNotification` |
+| You only need compile-time CQRS contracts | `ICommand`, `IQuery<TResult>`, `IEvent` |
+| You need a shared paged query shape | `PagedQueryBase` or `PagedQueryWithFilter` |
+| You need a common paged response | `PagedResult<T>` |
+| You need a persistence abstraction | `IRepositoryOfEntity<TEntity, TKey>` and `IUnitOfWork` |
+| You need a shared authenticated-user abstraction | `ICurrentUser` |
+| You need metadata for messages | `MessageAttribute` |
+| You need runtime behavior | Ask for `Genocs.Core` or another concrete companion package |
 
 ## Public Capability Map
 
-- CQRS contracts: `ICommand`, `IQuery<TResult>`, `IEvent`, `IDispatcher`
-- Handler contracts: `ICommandHandler<TCommand>`, `IQueryHandler<TQuery, TResult>`, `IEventHandler<TEvent>`
-- Domain contracts: `IEntity<TKey>`, `IAggregateRoot<TKey>`, auditing interfaces, `ISoftDelete`
-- Persistence contracts: `IRepositoryOfEntity<TEntity, TKey>`, `IUnitOfWork`, `ISupportsExplicitLoading<TEntity, TPrimaryKey>`
-- Paging models: `IPagedQuery`, `PagedQueryBase`, `PagedQueryWithFilter`, `PagedResult<T>`
-- Service abstractions: `ICurrentUser`, `INotificationSender`, `ISerializerService`, `IJobService`
-- Metadata and conventions: `MessageAttribute`, `DecoratorAttribute`, `HiddenAttribute`, `PublicContractAttribute`
+### CQRS Contracts
 
-## Configuration
+- `IMessage`
+- `ICommand`
+- `ICommandHandler<TCommand>`
+- `ICommandDispatcher`
+- `IQuery<TResult>`
+- `IQueryHandler<TQuery, TResult>`
+- `IQueryDispatcher`
+- `IEvent`
+- `IEventHandler<TEvent>`
+- `IEventDispatcher`
+- `IDispatcher`
+- `IRejectedEvent` and `RejectedEvent`
 
-`AppOptions` maps the shared `app` section.
+### Domain And Auditing Contracts
+
+- `IIdentifiable<TKey>`
+- `IEntity<TKey>`
+- `IAggregateRoot<TKey>`
+- `IGeneratesDomainEvents`
+- `ISoftDelete`
+- `IHasCreationTime`, `IHasModificationTime`, `IHasDeletionTime`
+- `ICreationAudited`, `IModificationAudited`, `IDeletionAudited`
+- `IAudited`, `IFullAudited`
+
+### Persistence Contracts
+
+- `IRepository<TEntity, TKey>`
+- `IRepositoryOfEntity<TEntity, TKey>`
+- `IUnitOfWork`
+- `ISupportsExplicitLoading<TEntity, TPrimaryKey>`
+- `IDatabaseInitializer`
+- `ICustomSeeder`
+- `IConnectionStringValidator`
+- `IConnectionStringSecurer`
+
+### Paging And Search
+
+- `IPagedQuery`
+- `PagedQueryBase`
+- `PagedQueryWithFilter`
+- `ISearchRequest`
+- `SearchRequest`
+- `PagedResultBase`
+- `PagedResult<T>`
+- `IPagedFilter<TResult, TQuery>`
+
+### Service Abstractions
+
+- `ICurrentUser`
+- `ISerializerService`
+- `IJobService`
+- `INotificationSender`
+- `INotificationMessage`
+- `IDto`
+
+### Conventions And Metadata
+
+- `IInitializer`
+- `IStartupInitializer`
+- `ISingletonDependency`
+- `ITransientDependency`
+- `IScopedService`
+- `ITransientService`
+- `MessageAttribute`
+- `DecoratorAttribute`
+- `HiddenAttribute`
+- `PublicContractAttribute`
+- `AppOptions`
+- `IServiceId` and `ServiceId`
+- `ITypeList<T>` and `TypeList<T>`
+
+## Configuration Ownership
+
+`Genocs.Common` defines the shared `app` configuration model through `AppOptions`.
 
 ```json
 {
@@ -100,29 +231,99 @@ This is valid package usage. It defines contracts only. It does not provide runt
 }
 ```
 
-This package does not enforce or read this configuration by itself. Companion packages may do so.
+What this package provides:
 
-## Safe Planning Rules
+- the `AppOptions` type
+- a stable shape for shared application metadata
 
-1. If only `Genocs.Common` is referenced, generate contracts, not runtime wiring.
-2. If a user asks for handler execution, ask which runtime package implements the dispatchers.
-3. If a user asks for persistence, ask which storage adapter package is installed.
-4. If a user asks for notifications or jobs, ask for the concrete implementation package or service.
-5. Prefer explicit contracts over inferred conventions when package composition is unclear.
+What this package does not provide:
 
-## Troubleshooting
+- automatic binding
+- automatic validation
+- startup-time consumption of the section
 
-1. Contracts compile but no business logic runs.
-Fix: Add a runtime package that implements and registers dispatchers and handlers.
+Those behaviors come from companion packages such as `Genocs.Core`.
 
-2. Repository interfaces exist but nothing persists.
+## Source-Blind Guardrails For Agents
+
+When you cannot inspect source code, follow these rules:
+
+1. If only `Genocs.Common` is confirmed, generate contracts only.
+2. Do not resolve dispatcher interfaces unless a runtime implementation package is confirmed.
+3. Do not generate repository implementations unless a persistence package is confirmed.
+4. Do not treat marker interfaces as active DI behavior unless a scanner is confirmed.
+5. Do not assume auditing contracts populate values automatically.
+6. Do not assume `MessageAttribute` creates broker subscriptions or queue bindings.
+7. Do not assume notification or job abstractions have a transport or scheduler behind them.
+8. Do not assume `AppOptions` is automatically bound into configuration.
+
+## Agent Decision Checklist
+
+Before generating code that depends on `Genocs.Common`, answer these questions:
+
+1. Is the user asking for contracts only, or for runnable behavior?
+2. Is `Genocs.Core` or another runtime Genocs package also installed?
+3. Is a persistence package such as `Genocs.Persistence.MongoDB` or `Genocs.Persistence.EFCore` installed?
+4. Is a transport implementation available for notifications or events?
+5. Does the host use scanning conventions for marker interfaces, or explicit DI registration?
+6. Does the consumer expect zero-based or one-based paging input?
+
+If any of these answers are unknown, prefer abstractions and ask for the missing package detail.
+
+## Common Tasks And Safe Responses
+
+### Task: "Set up CQRS"
+
+Safe response:
+- define commands, queries, events, and handler interfaces
+- mention that execution requires `Genocs.Core` or another runtime implementation
+
+### Task: "Add repository support"
+
+Safe response:
+- define repository interfaces in the domain or application layer
+- ask which persistence package should implement them
+
+### Task: "Add auditing"
+
+Safe response:
+- apply only the auditing interfaces the system actually intends to populate
+- avoid promising automatic audit behavior
+
+### Task: "Add notifications"
+
+Safe response:
+- define notification contracts and payloads
+- ask which transport or concrete `INotificationSender` implementation is available
+
+### Task: "Register services with marker interfaces"
+
+Safe response:
+- mention that marker interfaces are conventions only
+- ask whether a scanner or registration package is already in place
+
+## Failure Modes And Troubleshooting
+
+1. Contracts compile but nothing runs.
+Fix: Add a runtime package such as `Genocs.Core` that implements and registers dispatchers and startup behavior.
+
+2. Repository interfaces exist but no data is persisted.
 Fix: Add a persistence package such as `Genocs.Persistence.MongoDB` or `Genocs.Persistence.EFCore`.
 
-3. Notifications are modeled but no client receives them.
-Fix: Register a concrete `INotificationSender` implementation and its transport infrastructure.
+3. Notifications are modeled but no consumer receives them.
+Fix: Register a concrete `INotificationSender` implementation and its underlying transport.
 
-4. Auditing contracts are implemented but fields remain empty.
-Fix: Populate those values in application logic, middleware, or persistence infrastructure.
+4. Job abstractions exist but no background work is scheduled.
+Fix: Integrate a concrete scheduler or job-service implementation.
+
+5. Auditing properties remain empty.
+Fix: Populate those values in handlers, middleware, interceptors, or persistence infrastructure.
+
+6. Page numbering looks off by one.
+Fix: Re-check the client contract; `PagedQueryBase` is zero-based.
+
+7. Marker interfaces are present but DI resolution still fails.
+Fix: Confirm that the host uses a scanner or register the services explicitly.
 
 ## Related Packages To Ask About
 
@@ -131,5 +332,13 @@ Fix: Populate those values in application logic, middleware, or persistence infr
 - `Genocs.WebApi.CQRS`
 - `Genocs.Persistence.MongoDB`
 - `Genocs.Persistence.EFCore`
+- `Genocs.Persistence.Redis`
+- `Genocs.Messaging`
+- `Genocs.Messaging.RabbitMQ`
+- `Genocs.Auth`
+- `Genocs.Logging`
+- `Genocs.Telemetry`
 
+## One-Line Recommendation For Agents
 
+If you only know that `Genocs.Common` is installed, generate stable contracts and shared models only. Ask before generating runtime execution, persistence, transport, or host integration code.

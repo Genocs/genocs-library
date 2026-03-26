@@ -2,9 +2,7 @@
 
 ## Overview
 
-**Genocs.Core** is the runtime implementation layer of the Genocs ecosystem. While Genocs.Common defines contracts and abstractions, Genocs.Core provides concrete building blocks for bootstrapping services, wiring in-memory CQRS dispatching, implementing domain entities and aggregates, and enabling repository and auditing foundations for enterprise-grade .NET applications.
-
-This package is designed for modular monoliths and microservices that need a consistent startup pipeline, DDD-friendly primitives, and framework-level utilities without locking application code into a specific infrastructure vendor.
+**Genocs.Core** is the runtime foundation package for Genocs-based applications. It turns the contracts from `Genocs.Common` into executable application behavior by providing a host bootstrap builder, startup initializers, in-memory CQRS dispatchers, concrete domain entity and aggregate base classes, repository foundations, auditing helpers, and reusable utility extensions. Use this package when you want to compose a Genocs application host, model rich domain objects, and wire command, query, and event handlers without choosing infrastructure adapters up front.
 
 [![NuGet](https://img.shields.io/nuget/v/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Genocs.Core.svg)](https://www.nuget.org/packages/Genocs.Core/)
@@ -19,266 +17,267 @@ This package is designed for modular monoliths and microservices that need a con
 
 The library is designed with the following principles in mind:
 
-- **Implementation over Abstraction**: Complements Genocs.Common by turning contracts into executable runtime behaviors
-- **Convention-First Composition**: Uses assembly scanning and extension methods for low-friction setup
-- **DDD and CQRS Ready**: Includes domain and dispatching primitives aligned with clean architecture patterns
-- **Host-Friendly Bootstrapping**: Integrates directly with ASP.NET Core startup and DI APIs
-- **Production-Oriented Defaults**: Health checks, service identity, memory caching, and startup initializers out of the box
+- **Runtime-First Composition**: Provide concrete host and dispatching behavior on top of `Genocs.Common` contracts.
+- **Convention-Based Startup**: Favor extension methods, assembly scanning, and a single builder abstraction to reduce application bootstrap code.
+- **DDD-Oriented Foundations**: Supply entity, aggregate root, domain event, repository, and auditing primitives for domain-centric services.
+- **Incremental Adoption**: Allow teams to start with in-process dispatching and later compose persistence, messaging, and web packages around the same abstractions.
+- **Host Integration With Minimal Friction**: Build on `Microsoft.Extensions.DependencyInjection` and ASP.NET Core primitives rather than introducing a custom runtime model.
 
 ## Core Components
 
 ### 1. Application Builder and Bootstrap Pipeline
 
-Genocs.Core introduces a fluent runtime bootstrap layer through `IGenocsBuilder` and extension methods that scaffold service startup.
+Genocs.Core defines the runtime entry point for Genocs applications through `IGenocsBuilder`, `GenocsBuilder`, and host integration extensions.
 
-- **`IGenocsBuilder`**: Central builder abstraction exposing services, configuration, startup hooks, and build execution
-- **`GenocsBuilder`**: Concrete implementation with duplicate-registration guard and deferred build actions
-- **`AddGenocs(...)`**: Entry point for registering core services and base runtime configuration
-- **`UseGenocs(...)`**: Executes registered startup initializers in application pipeline
-- **`MapDefaultEndpoints(...)`**: Adds root endpoint and liveness/readiness health endpoints
+- **`IGenocsBuilder`**: Central builder contract exposing `Services`, `Configuration`, `WebApplicationBuilder`, build actions, and startup initializer registration.
+- **`GenocsBuilder`**: Concrete builder implementation used by `AddGenocs(...)`.
+- **`AddGenocs(this WebApplicationBuilder)`**: Creates an `IGenocsBuilder`, binds `AppOptions`, adds health checks, memory cache, and a singleton `IServiceId`.
+- **`AddGenocs(this IServiceCollection, IConfiguration?)`**: Enables the same runtime setup outside a `WebApplicationBuilder` host.
+- **`UseGenocs(this IApplicationBuilder)`**: Executes the registered `IStartupInitializer` pipeline.
 
 **Key Features:**
-- Unified startup composition for `WebApplicationBuilder` and `IServiceCollection`
-- Deferred build actions through `AddBuildAction(...)`
-- Startup initializer orchestration with `IStartupInitializer`
-- Built-in health checks (`/healthz`, `/alive`) and root endpoint mapping
-- Service identity registration via `IServiceId`
+- Unified bootstrap entry point for web hosts and plain service collections
+- Deferred build actions executed through `IGenocsBuilder.Build()`
+- Built-in registration of `IStartupInitializer`
+- Default health check setup and in-memory caching
+- `AppOptions`-driven startup banner support via Spectre.Console
 
 **Example Use Cases:**
 ```csharp
-var genocs = builder.AddGenocs();
-genocs.AddInitializer<MyInitializer>();
+using Genocs.Core.Builders;
+
+var builder = WebApplication.CreateBuilder(args);
+
+IGenocsBuilder genocs = builder.AddGenocs();
 genocs.Build();
 
+var app = builder.Build();
 app.UseGenocs();
-app.MapDefaultEndpoints();
 ```
 
-### 2. CQRS Runtime Implementation
+### 2. In-Memory CQRS Registration and Dispatch
 
-Genocs.Core provides in-memory dispatching and handler registration for command, query, and event workflows.
+Genocs.Core provides assembly-scanned handler registration and in-process dispatchers for commands, queries, and events.
 
-#### Commands
+#### Builder-Based Registration
 
-- **`AddCommandHandlers()`**: Registers all command handlers discovered in loaded assemblies
-- **`AddInMemoryCommandDispatcher()`**: Registers `ICommandDispatcher` implementation
-- **`CommandDispatcher`**: Resolves handler per command in a scoped lifetime
+- **`AddCommandHandlers()`**: Registers all loaded `ICommandHandler<TCommand>` implementations as transient services.
+- **`AddQueryHandlers()`**: Registers all loaded `IQueryHandler<TQuery, TResult>` implementations as transient services.
+- **`AddEventHandlers()`**: Registers all loaded `IEventHandler<TEvent>` implementations as transient services.
+- **`AddInMemoryCommandDispatcher()`**: Registers `ICommandDispatcher`.
+- **`AddInMemoryQueryDispatcher()`**: Registers `IQueryDispatcher`.
+- **`AddInMemoryEventDispatcher()`**: Registers `IEventDispatcher`.
 
-#### Queries
+#### ServiceCollection-Based Registration
 
-- **`AddQueryHandlers()`**: Registers query handlers via convention scanning
-- **`AddInMemoryQueryDispatcher()`**: Registers `IQueryDispatcher` implementation
-- **`QueryDispatcher`**: Supports both typed and generic query execution paths
+- **`AddHandlers(string project)`**: Scans loaded assemblies whose names contain the supplied project string and registers command, query, and event handlers as scoped services.
+- **`AddDispatchers()`**: Registers `IDispatcher`, `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher` as singletons.
 
-#### Events
+#### Dispatcher Implementations
 
-- **`AddEventHandlers()`**: Registers event handlers from loaded assemblies
-- **`AddInMemoryEventDispatcher()`**: Registers `IEventDispatcher` implementation
-- **`EventDispatcher`**: Publishes an event to all matching handlers asynchronously
-
-#### Unified Dispatcher
-
-- **`AddDispatchers()`**: Registers `IDispatcher`, `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`
-- **`InMemoryDispatcher`**: Single façade for command send, query execution, and event publish
+- **`CommandDispatcher`**: Creates an async scope and resolves exactly one command handler.
+- **`QueryDispatcher`**: Supports both generic and runtime-resolved query execution.
+- **`EventDispatcher`**: Resolves all matching event handlers and awaits them with `Task.WhenAll`.
+- **`InMemoryDispatcher`**: Unified facade over command, query, and event dispatching.
 
 **Purpose:**
-This runtime CQRS layer enables:
-- In-process command/query/event orchestration
-- Simple modular service composition
-- Test-friendly dispatch boundaries
-- Progressive adoption before introducing external message brokers
+This CQRS layer is designed for in-process orchestration. It gives applications a consistent dispatch boundary before they adopt external messaging, API endpoint adapters, or other runtime modules.
 
-### 3. Domain-Driven Design Building Blocks
+### 3. Domain Entities, Aggregates, and Domain Events
 
-Genocs.Core contains concrete domain types that implement Genocs.Common DDD contracts.
+Genocs.Core supplies concrete base classes that implement the domain contracts declared in `Genocs.Common`.
 
-#### Entities and Aggregates
+- **`Entity` / `Entity<TPrimaryKey>`**: Base entity types with identity storage, transient detection, equality semantics, and string formatting.
+- **`AggregateRoot` / `AggregateRoot<TPrimaryKey>`**: Aggregate root base classes with a `List<IEvent>? DomainEvents` collection.
+- **`DomainEvent`**: Base class for framework-level domain events with a `TriggeredOn` timestamp.
 
-- **`Entity` / `Entity<TKey>`**: Base entity implementations with identity, transient checks, and equality semantics
-- **`AggregateRoot` / `AggregateRoot<TKey>`**: Aggregate roots with in-memory domain event collection
-- **`DomainEvent`**: Base class for domain events with `TriggeredOn` timestamp
-
-**Domain Event Wrappers:**
-- `EntityCreatedEvent<T>`
-- `EntityUpdatedEvent<T>`
-- `EntityDeletedEvent<T>`
+**Entity Lifecycle Event Types:**
+- **`EntityCreatedEvent<TEntity>`** and `EntityCreatedEvent.WithEntity(entity)`
+- **`EntityUpdatedEvent<TEntity>`** and `EntityUpdatedEvent.WithEntity(entity)`
+- **`EntityDeletedEvent<TEntity>`** and `EntityDeletedEvent.WithEntity(entity)`
 
 **Key Features:**
-- Strong identity-based equality behavior
-- Aggregate-level domain event accumulation
-- Soft-delete helpers through entity extensions
-- Typed not-found exception support (`EntityNotFoundException`)
+- Default-ID shortcut types based on `DefaultIdType`
+- Identity-based equality with transient entity safeguards
+- Aggregate-local domain event storage
+- Simple event factory methods for entity lifecycle notifications
 
-### 4. Repository Infrastructure
+### 4. Repository and Persistence Foundations
 
-Genocs.Core includes repository contracts and base implementations for common persistence workflows.
+The package includes two repository layers: Ardalis.Specification-aligned aggregate repositories and a legacy-style generic repository base for entity persistence workflows.
 
-- **`IRepository<T>`**: Read/write repository contract for aggregate roots (Ardalis.Specification-based)
-- **`IReadRepository<T>`**: Read-only repository contract
-- **`IRepositoryWithEvents<T>`**: Repository contract intended to attach domain entity lifecycle events
-- **`IDapperRepository`**: SQL-oriented read abstraction for raw query scenarios
-- **`RepositoryBase<TEntity, TKey>`**: Generic repository base with CRUD, query, and count helpers
+- **`IRepository<T>`**: Read/write repository contract for aggregate roots based on `Ardalis.Specification.IRepositoryBase<T>`.
+- **`IReadRepository<T>`**: Read-only repository contract for aggregate roots.
+- **`IRepositoryWithEvents<T>`**: Marker contract for repositories that add entity lifecycle events to aggregates.
+- **`RepositoryBase<TEntity, TKey>`**: Abstract repository base exposing `GetAll`, lookup, insert, update, delete, and count helpers for `Genocs.Common.Domain.Repositories.IRepository<TEntity, TKey>` implementations.
+- **`IDapperRepository`**: Raw SQL query abstraction for `QueryAsync`, `QueryFirstOrDefaultAsync`, and `QuerySingleAsync`.
 
-**Mapping and Convention Attributes:**
-- **`AutoRepositoryTypesAttribute`**: Describes repository interface/implementation pairs
-- **`TableMappingAttribute`**: Maps domain models to table/collection names
+**Mapping and Convention Support:**
+- **`TableMappingAttribute`**: Associates a class or struct with a table or collection name.
+- **`AutoRepositoryTypesAttribute`**: Declares repository interface and implementation pairs for convention-driven registration scenarios.
 
 **Capabilities:**
-- Shared repository base behavior
-- Specification-friendly repository contracts
-- Async and sync operation patterns
-- Query and mutation orchestration
+- Aggregate-focused repository contracts for new infrastructure packages
+- Reusable CRUD and count behavior for custom repository implementations
+- Specification-compatible repository surface through Ardalis.Specification
+- Optional raw SQL reads via Dapper-style abstractions
 
-### 5. Auditing Infrastructure
+### 5. Auditing and Entity Metadata Helpers
 
-Genocs.Core provides audited entity hierarchies and helper utilities for creation/modification/deletion metadata.
+Genocs.Core includes audited entity hierarchies and helper utilities for populating creation, modification, and deletion metadata.
 
-- **Creation audited types**: `CreationAuditedEntity`, `CreationAuditedAggregateRoot`
-- **Modification audited types**: `AuditedEntity`, `AuditedAggregateRoot`
-- **Full auditing types**: `FullAuditedEntity`, `FullAuditedAggregateRoot`
-- **`EntityAuditingHelper`**: Helper methods for setting creator/modifier metadata
-- **`Trail` / `TrailType`**: Audit trail model and operation type
-- **`IAuditService`**: Contract for retrieving user trails
+- **`CreationAuditedEntity` / `CreationAuditedAggregateRoot`**: Track `CreatedAt` and creator identity.
+- **`AuditedEntity` / `AuditedAggregateRoot`**: Add modification metadata such as `LastUpdate` and `UpdatedBy`.
+- **`FullAuditedEntity` / `FullAuditedAggregateRoot`**: Add soft-delete metadata including `IsDeleted`, `DeletedAt`, and `DeletedBy`.
+- **`EntityAuditingHelper`**: Applies creation and modification audit values to compatible entity interfaces.
+- **`Trail`, `TrailType`, `AuditDto`, `GetMyAuditLogsRequest`**: Types for working with audit trail records.
+- **`IAuditService`**: Contract for querying audit history.
 
 **Features:**
-- Standardized created/updated/deleted metadata model
-- Soft delete support integrated with audit fields
-- Auditable base classes for entities and aggregates
-- Lightweight audit retrieval contract for application services
+- Ready-made audited base classes for domain models
+- Soft-delete-aware entity bases
+- Central helper methods for setting audit properties consistently
+- Audit trail contracts that higher-level packages can implement
 
-### 6. Collections and Utility Extensions
+### 6. Utility Extensions and Helper APIs
 
-Genocs.Core includes reusable extension libraries for common runtime tasks:
+Genocs.Core contains reusable helpers for common runtime tasks.
 
-- **Collections extensions**: list, dictionary, collection, and enumerable helpers
-- **String extensions**: casing, splitting, normalization, prefix/postfix utilities
-- **Object and exception extensions**: convenience conversion and diagnostic helpers
-- **Encryption helpers**: RSA XML import/export helpers for key material workflows
+- **Collection extensions**: `IsNullOrEmpty`, `AddIfNotContains`, dictionary `GetOrDefault`, and dictionary `GetOrAdd`.
+- **String extensions**: Prefix and postfix enforcement, substring helpers, line-ending normalization, occurrence indexing, hashing, and formatting utilities.
+- **Object and exception extensions**: Convenience helpers for casting and exception inspection.
+- **`Encryption`**: RSA XML import and export helpers through `FromXmlFile(...)` and `ToXmlFile(...)`.
 
-**Purpose:**
-These utilities reduce repetitive infrastructure code and provide consistent helper behavior across packages.
+**Operational Value:**
+These helpers reduce duplicated plumbing across Genocs packages and host applications, especially in startup, diagnostics, and infrastructure-adjacent code.
 
-### 7. Exception Model
+### 7. Exception and Failure Model
 
-- **`GenocsException`**: Base exception for framework-specific errors
-- **`EntityNotFoundException`**: Domain-focused not-found exception for repository/entity workflows
+The package defines a small framework-specific exception hierarchy.
+
+- **`GenocsException`**: Base exception for Genocs-specific runtime failures.
+- **`GenocsException.InvalidConfigurationException`**: Nested configuration-specific exception type.
+- **`EntityNotFoundException`**: Entity lookup failure exception carrying entity type and identifier details.
 
 **Benefits:**
-- Consistent exception hierarchy
-- Clear separation between application and framework-level faults
-- Better error classification for handlers and middleware
+- Distinguishes framework failures from business exceptions
+- Standardizes missing-entity behavior in repository workflows
+- Preserves entity type and identifier context for logging and diagnostics
 
-### 8. Startup and Service Identity Utilities
+### 8. Startup Endpoints, Health, and Service Identity
 
-- **`StartupInitializer`**: Executes registered application initializers sequentially
-- **`IStartupInitializer` / `IInitializer` integration**: Controlled startup execution flow
-- **`ServiceId` integration**: Registers a singleton service identity for runtime uniqueness
+`AddGenocs(...)` and the builder extensions configure baseline runtime services that many Genocs hosts use immediately.
 
-**Use Cases:**
-- Warmup routines
-- Seed initialization hooks
-- One-time startup orchestration
-- Service instance traceability
+- **Health checks**: Registers health checks and a default `self` liveness check tagged as `live`.
+- **`MapDefaultEndpoints(this WebApplication)`**: In development only, maps `/`, `/healthz`, and `/alive` as anonymous endpoints.
+- **`MapDefaultEndpoints(this IApplicationBuilder)`**: Maps the same endpoints through endpoint routing without the development guard.
+- **`IServiceId` / `ServiceId`**: Registers a singleton per-process service identity.
+- **`AppOptions` integration**: Reads the `app` configuration section for service name, version, and banner settings.
+
+**Why It Matters:**
+- New services get liveness and readiness endpoints quickly
+- Host identity is available early for diagnostics and distributed tracing
+- Service branding and version output can be controlled from configuration
 
 ## Architecture Integration
 
 ### Bounded Contexts
 
-Genocs.Core supports bounded context implementation through:
-- Aggregate root foundations
-- Repository abstraction and base logic
-- Domain event accumulation in aggregate boundaries
-- Context-specific startup and initialization routines
+The library supports bounded context implementation through:
+- Aggregate root and entity base classes that keep model boundaries explicit
+- Repository contracts that can be implemented per persistence technology
+- Domain event collection at aggregate level
+- Auditing bases that can be selectively applied to specific domain models
 
 ### Microservices
 
-Designed for microservices and modular services:
-- Simple host bootstrapping with `AddGenocs`
-- In-memory CQRS dispatching per service boundary
-- Health endpoints for orchestration and readiness checks
-- Pluggable persistence implementations on top of repository contracts
+Designed for microservices architectures:
+- Builder-driven startup setup keeps service composition consistent across hosts
+- In-memory CQRS dispatching works well inside a single service boundary
+- Health endpoints and service identity simplify container orchestration and diagnostics
+- Infrastructure packages can layer on top of the same core abstractions
 
 ### Clean Architecture
 
 Supports clean architecture principles:
-- Domain-centric base classes and event model
-- Infrastructure-agnostic contracts from Genocs.Common, concrete runtime in Genocs.Core
-- Dependency injection and startup composition at application boundary
-- Clear layering between contracts, runtime orchestration, and adapters
+- Domain models can depend on shared contracts and concrete runtime primitives without taking dependencies on transport or storage adapters
+- Host composition stays in the application boundary through `AddGenocs(...)` and related extensions
+- CQRS separates write, read, and event flows clearly
+- Repository contracts and audited entities can be implemented or extended in infrastructure packages
 
 ## Design Patterns Supported
 
-1. **Builder Pattern**: Fluent startup and service composition
-2. **Repository Pattern**: Data access abstraction and reusable base logic
-3. **Unit of Work-Friendly Design**: Repository base prepared for transactional orchestration
-4. **Command Pattern**: Command dispatching through in-memory dispatcher
-5. **Mediator-Style Dispatching**: Central `IDispatcher` for command/query/event operations
-6. **Observer Pattern**: Event publishing to multiple handlers
-7. **Decorator Awareness**: Handler scanning excludes decorated types through marker attributes
-8. **Template Method Pattern**: Repository base methods with overridable persistence specifics
+1. **Builder Pattern**: `IGenocsBuilder` and `GenocsBuilder` coordinate host composition.
+2. **Repository Pattern**: Aggregate contracts and `RepositoryBase<TEntity, TKey>` support persistence abstractions.
+3. **Command Pattern**: Commands are dispatched through `ICommandDispatcher` and handled by registered handlers.
+4. **Query Pattern**: Queries are executed through `IQueryDispatcher` and typed handlers.
+5. **Observer Pattern**: Events fan out to multiple `IEventHandler<TEvent>` implementations.
+6. **Initializer Pattern**: `IInitializer` and `IStartupInitializer` define startup workflows.
+7. **Specification Pattern**: Aggregate repositories align with Ardalis.Specification.
+8. **Template Method Pattern**: `RepositoryBase<TEntity, TKey>` leaves storage-specific operations abstract while implementing shared behavior.
 
 ## Best Practices
 
-### Builder and Startup
+### Host Composition
 
-- Call `Build()` on `IGenocsBuilder` before application build finalization.
-- Use startup initializers for infrastructure warmup and deterministic boot tasks.
-- Map default endpoints consciously in production to align with security posture.
+- Call `IGenocsBuilder.Build()` before `builder.Build()` so queued build actions run.
+- Use `AddInitializer(IInitializer)` when you already have an initializer instance, and `AddInitializer<TInitializer>()` only after registering `TInitializer` in DI.
+- Treat `AddGenocs(...)` as the first runtime module in your host setup so later packages can build on the registered services.
 
-### CQRS Composition
+### CQRS Registration
 
-- Register handlers only from relevant assemblies for faster startup and clearer boundaries.
-- Keep command handlers focused on state transitions and side effects.
-- Use query handlers for read-only workflows and shape-specific result models.
+- Use builder-based handler registration when all relevant assemblies are already loaded into the AppDomain.
+- Use `AddHandlers("ProjectName")` when you want narrower scanning based on assembly name matching.
+- Keep handlers stateless because builder-based scanning registers them as transient services.
 
 ### Domain and Repositories
 
-- Model aggregates as transaction boundaries and keep invariants inside aggregate methods.
-- Use `RepositoryBase` as a baseline and override where persistence engine specifics are required.
-- Throw `EntityNotFoundException` for absent identity-based lookups to standardize behavior.
+- Use `AggregateRoot` only for true consistency boundaries that own domain events.
+- Reserve `IRepository<T>` and `IReadRepository<T>` for aggregate persistence, not arbitrary projections.
+- Derive from `RepositoryBase<TEntity, TKey>` only when you are implementing a custom repository layer and need the shared CRUD semantics.
 
-### Auditing
+### Health and Configuration
 
-- Favor audited base entities for business-critical aggregates.
-- Populate creator/modifier metadata in a single application-layer strategy.
-- Persist trails for regulated or high-observability domains.
+- Provide the `app` section if you want startup banners and friendly service names.
+- Be deliberate about `MapDefaultEndpoints(...)` in production because the `IApplicationBuilder` overload does not restrict itself to development.
+- Register additional health checks alongside the default liveness check when external dependencies should affect readiness.
 
 ## Usage Scenarios
 
-### Service Bootstrap Standardization
+### Bootstrap a New Genocs Service
 
-- Uniform startup across multiple services
-- Shared health endpoint and service identity setup
-- Reusable initialization workflows
+- Create a single `IGenocsBuilder` through `AddGenocs(...)`
+- Add core runtime modules and build actions before building the host
+- Run startup initializers with `UseGenocs()` after `builder.Build()`
 
-### CQRS-Driven Applications
+### Add In-Process CQRS to a Modular Application
 
-- In-process command/query/event flow
-- Fast evolution from monolith modules to service boundaries
-- Consistent DI-based handler discovery
+- Register command, query, and event handlers by scanning loaded assemblies
+- Resolve dispatchers through DI instead of calling handlers directly
+- Keep application services independent from transport concerns
 
-### Domain-Centric Systems
+### Model Domain Aggregates With Auditing
 
-- Rich domain model implementation with entities and aggregates
-- Domain event capture and later publication
-- Audited entities with soft-delete support
+- Inherit from `AggregateRoot` and one of the audited base classes where appropriate
+- Store lifecycle events in `DomainEvents`
+- Apply auditing helpers or infrastructure code to populate audit fields consistently
 
-### Data Access Foundations
+### Build Custom Persistence Adapters
 
-- Reusable repository base for provider-specific adapters
-- Hybrid repository strategy (specification + Dapper reads)
-- Common exception semantics for missing entities
+- Implement `IRepository<T>` or `IReadRepository<T>` for aggregate-based infrastructure
+- Extend `RepositoryBase<TEntity, TKey>` for custom entity repository implementations
+- Use `IDapperRepository` where raw SQL read models are preferable
 
 ## Dependencies
 
-Genocs.Core depends on:
+Genocs.Core depends on a small set of runtime packages and one framework reference.
 
 - **Genocs.Common**
 - **Spectre.Console**
 - **Ardalis.Specification**
 - **MediatR.Contracts**
 - **Scrutor**
-- **Microsoft.AspNetCore.App** (framework reference)
+- **Microsoft.AspNetCore.App**
 
 ## Installation
 
@@ -288,11 +287,10 @@ dotnet add package Genocs.Core
 
 ## Related Libraries
 
-- **Genocs.Common**: Contracts and abstractions used by Genocs.Core
-- **Genocs.WebApi**: Web API endpoint composition on top of core runtime services
-- **Genocs.Persistence.MongoDB**: MongoDB adapters for repositories and persistence
-- **Genocs.Persistence.EFCore**: EF Core implementations for repository patterns
-- **Genocs.Messaging**: Messaging abstractions and broker integrations for distributed workflows
+- **Genocs.Common**: Provides the contracts and shared abstractions implemented by Genocs.Core.
+- **Genocs.WebApi**: Builds HTTP endpoint composition on top of the core runtime setup.
+- **Genocs.Persistence.MongoDB**: Implements repository and persistence workflows for MongoDB.
+- **Genocs.Persistence.EFCore**: Implements repository and persistence workflows for Entity Framework Core.
 
 ## Support and Documentation
 
@@ -313,4 +311,4 @@ Contributions are welcome! Please read the [Code of Conduct](https://github.com/
 
 **Giovanni Emanuele Nocco**
 
-Enterprise Architect and Software Engineer specializing in .NET, microservices, and distributed systems.
+Creator and maintainer of the Genocs ecosystem, focused on reusable .NET building blocks for microservices and enterprise application development.
