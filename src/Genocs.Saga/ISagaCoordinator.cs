@@ -11,4 +11,7 @@ public interface ISagaCoordinator
         Func<TMessage, ISagaContext, Task>? onRejected = null,
         ISagaContext? context = null)
         where TMessage : class;
+
+    Task RetryCompensationAsync<TSaga>(SagaId sagaId, ISagaContext? context = null)
+        where TSaga : class, ISaga;
 }

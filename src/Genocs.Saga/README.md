@@ -185,6 +185,21 @@ Rejected sagas now persist compensation progress explicitly:
 - `Compensated` when rollback finishes successfully
 - `CompensationFailed` when a compensator throws and manual recovery is required
 
+## Recovery Operations
+
+The coordinator now exposes a baseline operator-facing recovery operation for rollback failures:
+
+```csharp
+await sagaCoordinator.RetryCompensationAsync<SampleSaga>(sagaId);
+```
+
+Use `RetryCompensationAsync<TSaga>(...)` when a saga is already in `CompensationFailed` and you want to retry the remaining rollback work. The retry operation:
+
+- replays log entries still marked `Completed` or `CompensationFailed`
+- skips entries already marked `Compensated`
+- transitions the saga back through `Compensating`
+- ends in `Compensated` on success or `CompensationFailed` again if a compensator still throws
+
 ## Support
 
 - Documentation: https://github.com/Genocs/genocs-library/tree/main/docs

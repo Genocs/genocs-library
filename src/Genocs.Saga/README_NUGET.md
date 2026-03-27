@@ -17,6 +17,8 @@ Use this package to define saga workflows and register saga orchestration servic
 ## Main Entry Points
 
 - `AddSaga`
+- `ISagaCoordinator.ProcessAsync(...)`
+- `ISagaCoordinator.RetryCompensationAsync<TSaga>(...)`
 
 ## Support
 

@@ -13,6 +13,7 @@ public static class Extensions
         services.AddTransient<ISagaSeeker, SagaSeeker>();
         services.AddTransient<ISagaInitializer, SagaInitializer>();
         services.AddTransient<ISagaProcessor, SagaProcessor>();
+        services.AddTransient<ISagaCompensationManager, SagaCompensationManager>();
         services.AddTransient<ISagaPostProcessor, SagaPostProcessor>();
 
         var sagaBuilder = new SagaBuilder(services);

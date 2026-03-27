@@ -71,7 +71,7 @@ That changes the architecture posture in two important ways:
 The remaining concerns are mostly about distributed guarantees and lifecycle completeness rather than basic local correctness:
 
 1. Duplicate delivery handling is now explicitly opt-in through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, but cross-node exactly-once semantics still depend on the persistence backend.
-2. Compensation failure is now persisted as `CompensationFailed`, but retry and operator recovery flows remain undefined.
+2. Compensation failure is now persisted as `CompensationFailed`, and the coordinator now offers a baseline retry path, but broader operator workflows are still undefined.
 3. Discovery, diagnostics, and lifecycle policy remain under-specified for larger modular deployments.
 
 ---
@@ -346,7 +346,7 @@ That closes the “undefined behavior” gap for normal opt-in usage, but it is 
 
 ---
 
-### 10. Compensation failure is durable, but recovery policy is still absent
+### 10. Compensation failure is durable, but recovery policy is still limited
 
 **Status**: Partially resolved by `SAGA-010`
 
@@ -356,16 +356,16 @@ That closes the “undefined behavior” gap for normal opt-in usage, but it is 
 
 The runtime now persists `Compensating`, `Compensated`, and `CompensationFailed` states and updates saga log outcomes as compensation succeeds or fails. That removes the previous blind spot where rollback errors disappeared into transient process memory.
 
-The remaining gap is operational policy rather than visibility.
+The remaining gap is operational policy breadth rather than visibility.
 
 **Impact**
 
 - failed rollback is now observable and queryable
-- there is still no built-in resume, retry, or manual intervention model
+- there is now a baseline retry path for failed compensation, but no richer resume, archive, or workflow-specific intervention model
 
 **Recommended next step**
 
-- define recovery operations and retry rules for `CompensationFailed`
+- expand recovery operations beyond the new retry-compensation baseline and define policy for operator intervention
 
 ---
 
@@ -436,7 +436,7 @@ These are not all bugs, but they are the main reasons the library remains an ear
 
 - duplicate message handling is explicit and baseline-tested
 - concurrent updates fail predictably instead of silently overwriting
-- compensation failure has an observable state, but recovery tooling is still pending
+- compensation failure has an observable state and a baseline retry path, but broader recovery tooling is still pending
 
 ### Phase 3: Lifecycle and Policy Model
 

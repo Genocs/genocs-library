@@ -600,6 +600,10 @@ Reliable saga orchestration often depends on delivery guarantees around message 
 
 Operators need safe recovery primitives for stuck or failed workflows.
 
+**Status note**
+
+The base library now includes a first recovery primitive through `ISagaCoordinator.RetryCompensationAsync<TSaga>(...)` for sagas in `CompensationFailed`. The remaining work is to widen that into a fuller operator toolset.
+
 **Acceptance criteria**
 
 - supported operations such as retry, resume, compensate, or archive are clearly defined

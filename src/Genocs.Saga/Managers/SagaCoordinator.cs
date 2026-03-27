@@ -8,18 +8,21 @@ internal sealed class SagaCoordinator : ISagaCoordinator
     private readonly ISagaInitializer _initializer;
     private readonly ISagaProcessor _processor;
     private readonly ISagaPostProcessor _postProcessor;
+    private readonly ISagaCompensationManager _compensationManager;
     private static readonly KeyedLocker Locker = new();
 
     public SagaCoordinator(
         ISagaSeeker seeker,
         ISagaInitializer initializer,
         ISagaProcessor processor,
-        ISagaPostProcessor postProcessor)
+        ISagaPostProcessor postProcessor,
+        ISagaCompensationManager compensationManager)
     {
         _seeker = seeker;
         _initializer = initializer;
         _processor = processor;
         _postProcessor = postProcessor;
+        _compensationManager = compensationManager;
     }
 
     public Task ProcessAsync<TMessage>(TMessage message, ISagaContext? context = null)
@@ -51,6 +54,10 @@ internal sealed class SagaCoordinator : ISagaCoordinator
             await Task.WhenAll(sagaTasks);
         }
     }
+
+    public Task RetryCompensationAsync<TSaga>(SagaId sagaId, ISagaContext? context = null)
+        where TSaga : class, ISaga
+        => _compensationManager.RetryAsync<TSaga>(sagaId, context);
 
     private async Task ProcessAsync<TMessage>(
         TMessage message,
