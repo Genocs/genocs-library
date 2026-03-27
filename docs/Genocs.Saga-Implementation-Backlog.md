@@ -18,11 +18,13 @@ Implemented:
 - `SAGA-006` Add startup validation for saga persistence registration
 - `SAGA-009` Define idempotency and duplicate-delivery handling
 - `SAGA-010` Model compensation failures explicitly
+- `SAGA-011` Reassess the role of the in-process keyed locker
 
 Next recommended items:
 
 - `SAGA-011` Reassess the role of the in-process keyed locker
 - `SAGA-016` Support explicit assembly registration for saga discovery
+- `SAGA-017` Add startup diagnostics for discovered sagas and bindings
 
 ## Planning Assumptions
 
@@ -349,6 +351,8 @@ Compensation is currently treated as a fire-and-forget replay phase with no dedi
 
 ### `SAGA-011` Reassess the role of the in-process keyed locker
 
+**Status**: Implemented
+
 **Priority**: P2
 
 **Problem**
@@ -653,9 +657,9 @@ Large-scale deployments need partitioning and cleanup policies for saga history.
 
 If the goal is to start implementation immediately, this is the best first slice:
 
-1. `SAGA-011` Reassess the role of the in-process keyed locker
-2. `SAGA-016` Support explicit assembly registration for saga discovery
-3. `SAGA-017` Add startup diagnostics for discovered sagas and bindings
+1. `SAGA-016` Support explicit assembly registration for saga discovery
+2. `SAGA-017` Add startup diagnostics for discovered sagas and bindings
+3. `SAGA-018` Add runtime metrics for saga outcomes and duration
 4. `SAGA-022` Add administrative recovery operations
 
 This sprint addresses the two most serious semantic defects, plus the most likely integration pitfall.

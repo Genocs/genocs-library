@@ -1,3 +1,4 @@
+using Genocs.Saga.Async;
 using Genocs.Saga.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -18,6 +19,7 @@ public class SagaExtensionsTests
 
         provider.GetRequiredService<ISagaStateRepository>().ShouldBeOfType<InMemorySagaStateRepository>();
         provider.GetRequiredService<ISagaLog>().ShouldBeOfType<InMemorySagaLog>();
+        provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<InProcessSagaExecutionLock>();
     }
 
     [Fact]
@@ -31,6 +33,7 @@ public class SagaExtensionsTests
 
         provider.GetRequiredService<ISagaStateRepository>().ShouldBeOfType<MySagaStateRepository>();
         provider.GetRequiredService<ISagaLog>().ShouldBeOfType<InMemorySagaLog>();
+        provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<InProcessSagaExecutionLock>();
     }
 
     [Fact]
@@ -48,6 +51,19 @@ public class SagaExtensionsTests
 
         provider.GetRequiredService<ISagaStateRepository>().ShouldBeOfType<MySagaStateRepository>();
         provider.GetRequiredService<ISagaLog>().ShouldBeOfType<MySagaLog>();
+        provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<InProcessSagaExecutionLock>();
+    }
+
+    [Fact]
+    public void AddSaga_WhenInProcessLockingIsDisabled_ShouldResolveNoOpExecutionLock()
+    {
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSaga(saga => saga.DisableInProcessExecutionLock());
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<NoOpSagaExecutionLock>();
     }
 
     private sealed class MySagaLog : ISagaLog

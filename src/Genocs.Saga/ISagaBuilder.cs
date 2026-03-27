@@ -8,6 +8,10 @@ public interface ISagaBuilder
 
     ISagaBuilder UseInMemoryPersistence();
 
+    ISagaBuilder UseInProcessExecutionLock();
+
+    ISagaBuilder DisableInProcessExecutionLock();
+
     ISagaBuilder UseSagaLog<TSagaLog>()
         where TSagaLog : ISagaLog;
 

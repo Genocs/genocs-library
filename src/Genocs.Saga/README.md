@@ -28,6 +28,14 @@ builder.Services.AddSaga(saga =>
     saga.UseSagaStateRepository<MongoSagaStateRepository>();
     saga.UseSagaLog<MongoSagaLog>();
 });
+
+// Or disable local in-process locking and rely directly on durable-store concurrency
+builder.Services.AddSaga(saga =>
+{
+    saga.UseSagaStateRepository<MongoSagaStateRepository>();
+    saga.UseSagaLog<MongoSagaLog>();
+    saga.DisableInProcessExecutionLock();
+});
 ```
 
 ### 2. Define saga data and messages
@@ -175,6 +183,15 @@ The baseline duplicate-delivery strategy is explicit rather than implicit:
 - or set `SagaContextMetadataKeys.MessageId` on the saga context when message identity comes from transport headers
 
 When a stable identity is present, the saga runtime records it alongside the log entry and skips repeated delivery for the same saga instance.
+
+## Execution Locking
+
+The saga runtime now treats local serialization as a configurable optimization rather than a correctness guarantee.
+
+- `UseInProcessExecutionLock()` keeps the default process-local per-saga lock
+- `DisableInProcessExecutionLock()` removes local serialization and relies on repository concurrency controls instead
+
+This matters most in multi-node deployments. Durable state repositories remain the source of truth for concurrency safety.
 
 ## Compensation Lifecycle
 

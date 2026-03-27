@@ -1,4 +1,5 @@
 using Genocs.Saga.Builders;
+using Genocs.Saga.Async;
 using Genocs.Saga.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -50,6 +51,28 @@ public class SagaBuilderTests
             sd.ServiceType == typeof(ISagaStateRepository) &&
             sd.ImplementationType == typeof(MySagaStateRepository) &&
             sd.Lifetime == ServiceLifetime.Transient);
+    }
+
+    [Fact]
+    public void UseInProcessExecutionLock_Registers_InProcessSagaExecutionLock_As_Singleton()
+    {
+        _builder.UseInProcessExecutionLock();
+
+        _services.ShouldContain(sd =>
+            sd.ServiceType == typeof(ISagaExecutionLock) &&
+            sd.ImplementationType == typeof(InProcessSagaExecutionLock) &&
+            sd.Lifetime == ServiceLifetime.Singleton);
+    }
+
+    [Fact]
+    public void DisableInProcessExecutionLock_Registers_NoOpSagaExecutionLock_As_Singleton()
+    {
+        _builder.DisableInProcessExecutionLock();
+
+        _services.ShouldContain(sd =>
+            sd.ServiceType == typeof(ISagaExecutionLock) &&
+            sd.ImplementationType == typeof(NoOpSagaExecutionLock) &&
+            sd.Lifetime == ServiceLifetime.Singleton);
     }
 
     #region ARRANGE

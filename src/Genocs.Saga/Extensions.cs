@@ -1,3 +1,4 @@
+using Genocs.Saga.Async;
 using System.Reflection;
 using Genocs.Saga.Builders;
 using Genocs.Saga.Managers;
@@ -20,6 +21,7 @@ public static class Extensions
 
         // Safe defaults first, then allow the callback to override registrations.
         sagaBuilder.UseInMemoryPersistence();
+        sagaBuilder.UseInProcessExecutionLock();
         build?.Invoke(sagaBuilder);
 
         ValidatePersistenceRegistration(services);
@@ -33,10 +35,11 @@ public static class Extensions
     {
         bool hasStateRepository = services.Any(sd => sd.ServiceType == typeof(ISagaStateRepository));
         bool hasSagaLog = services.Any(sd => sd.ServiceType == typeof(ISagaLog));
+        bool hasExecutionLock = services.Any(sd => sd.ServiceType == typeof(ISagaExecutionLock));
 
-        if (!hasStateRepository || !hasSagaLog)
+        if (!hasStateRepository || !hasSagaLog || !hasExecutionLock)
         {
-            throw new SagaException("Saga persistence is not fully configured. Both ISagaStateRepository and ISagaLog must be registered.");
+            throw new SagaException("Saga runtime is not fully configured. ISagaStateRepository, ISagaLog, and ISagaExecutionLock must be registered.");
         }
     }
 

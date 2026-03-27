@@ -19,6 +19,8 @@ Use this package to define saga workflows and register saga orchestration servic
 - `AddSaga`
 - `ISagaCoordinator.ProcessAsync(...)`
 - `ISagaCoordinator.RetryCompensationAsync<TSaga>(...)`
+- `ISagaBuilder.UseInProcessExecutionLock()`
+- `ISagaBuilder.DisableInProcessExecutionLock()`
 
 ## Support
 

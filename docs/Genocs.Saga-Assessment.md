@@ -16,6 +16,7 @@ Implemented in the current workspace state:
 - `SAGA-008` optimistic concurrency semantics in state repositories
 - `SAGA-009` baseline duplicate-delivery handling via explicit message identity
 - `SAGA-010` explicit compensation lifecycle states and durable failure markers
+- `SAGA-011` configurable in-process execution locking with durable stores as the correctness boundary
 
 Still open from the highest-priority set at the time of writing:
 
@@ -73,6 +74,7 @@ The remaining concerns are mostly about distributed guarantees and lifecycle com
 1. Duplicate delivery handling is now explicitly opt-in through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, but cross-node exactly-once semantics still depend on the persistence backend.
 2. Compensation failure is now persisted as `CompensationFailed`, and the coordinator now offers a baseline retry path, but broader operator workflows are still undefined.
 3. Discovery, diagnostics, and lifecycle policy remain under-specified for larger modular deployments.
+4. In-process locking is now explicitly configurable and treated as a local optimization rather than a distributed guarantee.
 
 ---
 
@@ -369,6 +371,32 @@ The remaining gap is operational policy breadth rather than visibility.
 
 ---
 
+### 11. The keyed locker is no longer a hidden correctness dependency
+
+**Status**: Resolved by `SAGA-011`
+
+**Severity**: Medium
+
+**Why it matters**
+
+The runtime previously serialized all work for a saga id through a process-local static keyed locker. That improved local determinism, but it also blurred where correctness actually came from.
+
+The runtime now uses an explicit execution-lock abstraction with two important properties:
+
+- the default remains in-process locking for local efficiency and reduced contention
+- hosts can disable it and still rely on repository concurrency semantics for correctness
+
+**Impact**
+
+- local serialization is now an implementation choice rather than an accidental guarantee
+- distributed correctness is documented around persistence concurrency instead of process memory
+
+**Recommended next step**
+
+- add diagnostics that expose which execution-lock mode is active at startup
+
+---
+
 ## Additional Gaps and Missing Capabilities
 
 These are not all bugs, but they are the main reasons the library remains an early-stage implementation rather than a mature saga platform.
@@ -385,6 +413,7 @@ These are not all bugs, but they are the main reasons the library remains an ear
 - no built-in metrics for started, completed, rejected, compensated, or compensation-failed workflows
 - no administration surface for querying current saga state
 - no cleanup or archival policy for finished sagas
+- no startup diagnostics for whether the host is using local execution locking or durable-store-only coordination
 
 ### Evolution gaps
 
@@ -429,7 +458,7 @@ These are not all bugs, but they are the main reasons the library remains an ear
 1. Add versioning to `ISagaState` and repository contracts. Completed.
 2. Introduce optimistic concurrency checks in durable persistence providers. Completed for the built-in, MongoDB, and Redis adapters.
 3. Add idempotency keys or message deduplication support. Completed as a baseline opt-in implementation.
-4. Revisit the in-process `KeyedLocker` so distributed correctness depends on persistence concurrency guarantees, not local locks.
+4. Revisit the in-process `KeyedLocker` so distributed correctness depends on persistence concurrency guarantees, not local locks. Completed.
 5. Add compensation failure handling and durable failure markers. Completed.
 
 **Definition of done**
@@ -437,6 +466,7 @@ These are not all bugs, but they are the main reasons the library remains an ear
 - duplicate message handling is explicit and baseline-tested
 - concurrent updates fail predictably instead of silently overwriting
 - compensation failure has an observable state and a baseline retry path, but broader recovery tooling is still pending
+- in-process locking is configurable and documented as an optimization rather than a correctness boundary
 
 ### Phase 3: Lifecycle and Policy Model
 
@@ -513,4 +543,4 @@ Two viable paths exist:
 - strengthen persistence contracts first
 - make lifecycle, retries, idempotency, and observability first-class concepts
 
-My recommendation is still Option A, but the emphasis should now shift from baseline resilience to operator-facing recovery and discovery. The next meaningful slice is `SAGA-011` and `SAGA-016`, because distributed concurrency boundaries and deterministic discovery are now the most consequential gaps.
+My recommendation is still Option A, but the emphasis should now shift from locking semantics to discovery and diagnostics. The next meaningful slice is `SAGA-016` and `SAGA-017`, because deterministic registration and startup visibility are now the most consequential gaps.

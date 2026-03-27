@@ -4,20 +4,22 @@ namespace Genocs.Saga.Managers;
 
 internal sealed class SagaCoordinator : ISagaCoordinator
 {
+    private readonly ISagaExecutionLock _executionLock;
     private readonly ISagaSeeker _seeker;
     private readonly ISagaInitializer _initializer;
     private readonly ISagaProcessor _processor;
     private readonly ISagaPostProcessor _postProcessor;
     private readonly ISagaCompensationManager _compensationManager;
-    private static readonly KeyedLocker Locker = new();
 
     public SagaCoordinator(
+        ISagaExecutionLock executionLock,
         ISagaSeeker seeker,
         ISagaInitializer initializer,
         ISagaProcessor processor,
         ISagaPostProcessor postProcessor,
         ISagaCompensationManager compensationManager)
     {
+        _executionLock = executionLock;
         _seeker = seeker;
         _initializer = initializer;
         _processor = processor;
@@ -75,7 +77,7 @@ internal sealed class SagaCoordinator : ISagaCoordinator
 
         using var executeActivity = SagaTelemetry.StartExecuteActivity(executionContext, id, sagaType, messageType);
 
-        using (await Locker.LockAsync(id))
+        using (await _executionLock.LockAsync(id))
         {
             var (isInitialized, state) = await _initializer.TryInitializeAsync(saga, id, message);
 
