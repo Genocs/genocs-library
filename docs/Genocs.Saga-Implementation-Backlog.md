@@ -472,6 +472,8 @@ Long-running sagas need time-based behavior, not only message-driven progress.
 
 ### `SAGA-016` Support explicit assembly registration for saga discovery
 
+**Status**: Implemented
+
 **Priority**: P2
 
 **Problem**

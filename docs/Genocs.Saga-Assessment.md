@@ -17,6 +17,7 @@ Implemented in the current workspace state:
 - `SAGA-009` baseline duplicate-delivery handling via explicit message identity
 - `SAGA-010` explicit compensation lifecycle states and durable failure markers
 - `SAGA-011` configurable in-process execution locking with durable stores as the correctness boundary
+- `SAGA-016` explicit assembly registration for deterministic saga discovery
 
 Still open from the highest-priority set at the time of writing:
 
@@ -34,10 +35,10 @@ The core strengths are:
 
 The main remaining risks are now concentrated in distributed-runtime behavior and operational maturity:
 
-- saga discovery still depends on assemblies already being loaded into the `AppDomain`
 - callback ordering still exposes `Rejected` before compensation has completed
 - duplicate delivery handling is now defined as opt-in message-identity deduplication, but it is not yet a distributed exactly-once guarantee
 - compensation failure is now durable and queryable, but there is still no built-in retry or operator recovery workflow
+- convenience discovery still depends on ambient `AppDomain` loading, but hosts can now bypass that by supplying explicit assemblies
 
 My assessment is that the library has moved from starter-kit territory into a credible orchestration core for controlled environments, but it is still not a fully reliable distributed workflow foundation for high-value production paths.
 
@@ -73,7 +74,7 @@ The remaining concerns are mostly about distributed guarantees and lifecycle com
 
 1. Duplicate delivery handling is now explicitly opt-in through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, but cross-node exactly-once semantics still depend on the persistence backend.
 2. Compensation failure is now persisted as `CompensationFailed`, and the coordinator now offers a baseline retry path, but broader operator workflows are still undefined.
-3. Discovery, diagnostics, and lifecycle policy remain under-specified for larger modular deployments.
+3. Discovery diagnostics and lifecycle policy remain under-specified for larger modular deployments.
 4. In-process locking is now explicitly configurable and treated as a local optimization rather than a distributed guarantee.
 
 ---
@@ -397,6 +398,27 @@ The runtime now uses an explicit execution-lock abstraction with two important p
 
 ---
 
+### 12. Saga discovery is now deterministic when hosts opt in
+
+**Status**: Resolved by `SAGA-016`
+
+**Severity**: Medium
+
+**Why it matters**
+
+Registration no longer depends exclusively on whatever assemblies happen to already be loaded into the `AppDomain`. Hosts can now call `AddSaga(params Assembly[] assemblies)` or `AddSaga(Action<ISagaBuilder>, params Assembly[] assemblies)` to make discovery deterministic.
+
+**Impact**
+
+- modular hosts can register saga assemblies deliberately
+- discovery no longer has to rely on incidental load order when the host wants explicit control
+
+**Recommended next step**
+
+- add startup diagnostics that report which assemblies were scanned and which saga/message bindings were discovered
+
+---
+
 ## Additional Gaps and Missing Capabilities
 
 These are not all bugs, but they are the main reasons the library remains an early-stage implementation rather than a mature saga platform.
@@ -410,6 +432,7 @@ These are not all bugs, but they are the main reasons the library remains an ear
 ### Operational gaps
 
 - no startup validation report for discovered sagas and registered persistence providers
+- no startup report of which assemblies were scanned for saga discovery
 - no built-in metrics for started, completed, rejected, compensated, or compensation-failed workflows
 - no administration surface for querying current saga state
 - no cleanup or archival policy for finished sagas

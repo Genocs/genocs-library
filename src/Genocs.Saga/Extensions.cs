@@ -9,6 +9,15 @@ namespace Genocs.Saga;
 public static class Extensions
 {
     public static IServiceCollection AddSaga(this IServiceCollection services, Action<ISagaBuilder>? build = null)
+        => AddSagaInternal(services, build, assemblies: null);
+
+    public static IServiceCollection AddSaga(this IServiceCollection services, params Assembly[] assemblies)
+        => AddSagaInternal(services, build: null, assemblies);
+
+    public static IServiceCollection AddSaga(this IServiceCollection services, Action<ISagaBuilder> build, params Assembly[] assemblies)
+        => AddSagaInternal(services, build, assemblies);
+
+    private static IServiceCollection AddSagaInternal(IServiceCollection services, Action<ISagaBuilder>? build, Assembly[]? assemblies)
     {
         services.AddTransient<ISagaCoordinator, SagaCoordinator>();
         services.AddTransient<ISagaSeeker, SagaSeeker>();
@@ -26,7 +35,7 @@ public static class Extensions
 
         ValidatePersistenceRegistration(services);
 
-        services.RegisterSagas();
+        services.RegisterSagas(assemblies);
 
         return services;
     }
@@ -43,19 +52,31 @@ public static class Extensions
         }
     }
 
-    private static void RegisterSagas(this IServiceCollection services)
+    private static void RegisterSagas(this IServiceCollection services, Assembly[]? assemblies)
         => services.Scan(scan =>
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Assembly> discoveryAssemblies = GetDiscoveryAssemblies(assemblies);
 
             scan
-                .FromAssemblies(assemblies)
+                .FromAssemblies(discoveryAssemblies)
                 .AddClasses(classes => classes.AssignableTo(typeof(ISaga)))
                 .As(t => t
                     .GetTypeInfo()
                     .GetInterfaces(includeInherited: false))
                 .WithTransientLifetime();
         });
+
+    private static IEnumerable<Assembly> GetDiscoveryAssemblies(Assembly[]? assemblies)
+    {
+        if (assemblies is not { Length: > 0 })
+        {
+            return AppDomain.CurrentDomain.GetAssemblies();
+        }
+
+        return assemblies
+            .Where(static assembly => assembly is not null)
+            .Distinct();
+    }
 
     private static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
     {

@@ -29,6 +29,13 @@ builder.Services.AddSaga(saga =>
     saga.UseSagaLog<MongoSagaLog>();
 });
 
+// Or scan only explicit assemblies for deterministic discovery
+builder.Services.AddSaga(typeof(SampleSaga).Assembly);
+
+builder.Services.AddSaga(
+    saga => saga.DisableInProcessExecutionLock(),
+    typeof(SampleSaga).Assembly);
+
 // Or disable local in-process locking and rely directly on durable-store concurrency
 builder.Services.AddSaga(saga =>
 {
@@ -192,6 +199,15 @@ The saga runtime now treats local serialization as a configurable optimization r
 - `DisableInProcessExecutionLock()` removes local serialization and relies on repository concurrency controls instead
 
 This matters most in multi-node deployments. Durable state repositories remain the source of truth for concurrency safety.
+
+## Discovery
+
+Saga discovery now supports two modes:
+
+- convenience discovery through currently loaded `AppDomain` assemblies via `AddSaga()`
+- deterministic discovery through explicit assemblies via `AddSaga(params Assembly[] assemblies)`
+
+Use explicit assemblies in modular hosts or package-based deployments where relying on incidental assembly loading is too fragile.
 
 ## Compensation Lifecycle
 

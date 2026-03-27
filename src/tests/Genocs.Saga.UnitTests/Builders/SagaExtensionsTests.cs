@@ -2,6 +2,7 @@ using Genocs.Saga.Async;
 using Genocs.Saga.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Reflection;
 using Xunit;
 
 namespace Genocs.Saga.UnitTests.Builders;
@@ -66,6 +67,45 @@ public class SagaExtensionsTests
         provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<NoOpSagaExecutionLock>();
     }
 
+    [Fact]
+    public void AddSaga_WhenExplicitAssemblyContainsSaga_ShouldRegisterIt()
+    {
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSaga(typeof(AssemblyRegisteredSaga).Assembly);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetServices<ISagaStartAction<AssemblyRegisteredMessage>>()
+            .ShouldContain(saga => saga.GetType() == typeof(AssemblyRegisteredSaga));
+    }
+
+    [Fact]
+    public void AddSaga_WhenExplicitAssemblyDoesNotContainSaga_ShouldNotRegisterIt()
+    {
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSaga(typeof(object).Assembly);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetServices<ISagaStartAction<AssemblyRegisteredMessage>>().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AddSaga_WhenBuildCallbackAndAssembliesAreProvided_ShouldApplyBoth()
+    {
+        IServiceCollection services = new ServiceCollection();
+
+        services.AddSaga(saga => saga.DisableInProcessExecutionLock(), typeof(AssemblyRegisteredSaga).Assembly);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetRequiredService<ISagaExecutionLock>().ShouldBeOfType<NoOpSagaExecutionLock>();
+        provider.GetServices<ISagaStartAction<AssemblyRegisteredMessage>>()
+            .ShouldContain(saga => saga.GetType() == typeof(AssemblyRegisteredSaga));
+    }
+
     private sealed class MySagaLog : ISagaLog
     {
         public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
@@ -84,6 +124,17 @@ public class SagaExtensionsTests
             => Task.FromResult<ISagaState?>(null);
 
         public Task WriteAsync(ISagaState state)
+            => Task.CompletedTask;
+    }
+
+    private sealed class AssemblyRegisteredMessage;
+
+    private sealed class AssemblyRegisteredSaga : Saga, ISagaStartAction<AssemblyRegisteredMessage>
+    {
+        public Task HandleAsync(AssemblyRegisteredMessage message, ISagaContext context)
+            => Task.CompletedTask;
+
+        public Task CompensateAsync(AssemblyRegisteredMessage message, ISagaContext context)
             => Task.CompletedTask;
     }
 }
