@@ -14,6 +14,8 @@ Implemented in the current workspace state:
 - `SAGA-006` safe default persistence seeding for `AddSaga(...)`
 - `SAGA-007` explicit versioning on saga state contracts
 - `SAGA-008` optimistic concurrency semantics in state repositories
+- `SAGA-009` baseline duplicate-delivery handling via explicit message identity
+- `SAGA-010` explicit compensation lifecycle states and durable failure markers
 
 Still open from the highest-priority set at the time of writing:
 
@@ -31,10 +33,10 @@ The core strengths are:
 
 The main remaining risks are now concentrated in distributed-runtime behavior and operational maturity:
 
-- duplicate delivery and idempotency are still undefined
-- compensation failure has no durable lifecycle state
 - saga discovery still depends on assemblies already being loaded into the `AppDomain`
 - callback ordering still exposes `Rejected` before compensation has completed
+- duplicate delivery handling is now defined as opt-in message-identity deduplication, but it is not yet a distributed exactly-once guarantee
+- compensation failure is now durable and queryable, but there is still no built-in retry or operator recovery workflow
 
 My assessment is that the library has moved from starter-kit territory into a credible orchestration core for controlled environments, but it is still not a fully reliable distributed workflow foundation for high-value production paths.
 
@@ -57,7 +59,7 @@ This is a reasonable structure, but the failure and concurrency details need tig
 
 ---
 
-## Current Risk Surface After `SAGA-008`
+## Current Risk Surface After `SAGA-010`
 
 The highest-severity correctness defects from the first assessment pass are addressed in the current workspace state.
 
@@ -68,8 +70,8 @@ That changes the architecture posture in two important ways:
 
 The remaining concerns are mostly about distributed guarantees and lifecycle completeness rather than basic local correctness:
 
-1. Duplicate message delivery is still undefined, so the runtime cannot yet guarantee idempotent behavior under at-least-once delivery.
-2. Compensation failure is still not modeled as a first-class durable state.
+1. Duplicate delivery handling is now explicitly opt-in through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, but cross-node exactly-once semantics still depend on the persistence backend.
+2. Compensation failure is now persisted as `CompensationFailed`, but retry and operator recovery flows remain undefined.
 3. Discovery, diagnostics, and lifecycle policy remain under-specified for larger modular deployments.
 
 ---
@@ -321,16 +323,61 @@ This may be acceptable in some systems, but it should be explicit and preferably
 
 ---
 
+### 9. Duplicate delivery handling is now defined, but still best-effort across nodes
+
+**Status**: Partially resolved by `SAGA-009`
+
+**Severity**: Medium
+
+**Why it matters**
+
+The runtime now supports explicit message identity and skips repeated deliveries for the same saga instance when a message implements `ISagaMessageIdentity` or the caller supplies `SagaContextMetadataKeys.MessageId`.
+
+That closes the “undefined behavior” gap for normal opt-in usage, but it is still not a complete exactly-once guarantee across competing nodes because the current log contracts do not reserve a message id before side effects begin.
+
+**Impact**
+
+- duplicate-delivery behavior is now predictable for normal opt-in usage
+- multi-node races can still produce side effects before a duplicate is observed in shared persistence
+
+**Recommended next step**
+
+- add a durable reservation or compare-and-set model for message identity in persistence adapters that need stronger guarantees
+
+---
+
+### 10. Compensation failure is durable, but recovery policy is still absent
+
+**Status**: Partially resolved by `SAGA-010`
+
+**Severity**: Medium
+
+**Why it matters**
+
+The runtime now persists `Compensating`, `Compensated`, and `CompensationFailed` states and updates saga log outcomes as compensation succeeds or fails. That removes the previous blind spot where rollback errors disappeared into transient process memory.
+
+The remaining gap is operational policy rather than visibility.
+
+**Impact**
+
+- failed rollback is now observable and queryable
+- there is still no built-in resume, retry, or manual intervention model
+
+**Recommended next step**
+
+- define recovery operations and retry rules for `CompensationFailed`
+
+---
+
 ## Additional Gaps and Missing Capabilities
 
 These are not all bugs, but they are the main reasons the library remains an early-stage implementation rather than a mature saga platform.
 
 ### Reliability gaps
 
-- no idempotency model for duplicate message delivery
 - no retry policy or retry classification for transient failures
 - no timeout or scheduled-message support for long-running sagas
-- no durable distinction between pending, failed, compensated, and compensation-failed states
+- no durable reservation model for duplicate message delivery across competing nodes
 
 ### Operational gaps
 
@@ -381,15 +428,15 @@ These are not all bugs, but they are the main reasons the library remains an ear
 
 1. Add versioning to `ISagaState` and repository contracts. Completed.
 2. Introduce optimistic concurrency checks in durable persistence providers. Completed for the built-in, MongoDB, and Redis adapters.
-3. Add idempotency keys or message deduplication support.
+3. Add idempotency keys or message deduplication support. Completed as a baseline opt-in implementation.
 4. Revisit the in-process `KeyedLocker` so distributed correctness depends on persistence concurrency guarantees, not local locks.
-5. Add compensation failure handling and durable failure markers.
+5. Add compensation failure handling and durable failure markers. Completed.
 
 **Definition of done**
 
-- duplicate message handling is explicit
+- duplicate message handling is explicit and baseline-tested
 - concurrent updates fail predictably instead of silently overwriting
-- compensation failure has an observable, recoverable state
+- compensation failure has an observable state, but recovery tooling is still pending
 
 ### Phase 3: Lifecycle and Policy Model
 
@@ -466,4 +513,4 @@ Two viable paths exist:
 - strengthen persistence contracts first
 - make lifecycle, retries, idempotency, and observability first-class concepts
 
-My recommendation is still Option A, but the emphasis should now shift from concurrency mechanics to workflow resilience. The next meaningful slice is `SAGA-009` and `SAGA-010`, because duplicate delivery and compensation failure are now the most consequential gaps.
+My recommendation is still Option A, but the emphasis should now shift from baseline resilience to operator-facing recovery and discovery. The next meaningful slice is `SAGA-011` and `SAGA-016`, because distributed concurrency boundaries and deterministic discovery are now the most consequential gaps.

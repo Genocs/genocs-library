@@ -29,7 +29,7 @@ internal sealed class SagaInitializer : ISagaInitializer
 
             state = CreateSagaState(id, sagaType, dataType);
         }
-        else if (state.State is SagaProcessState.Rejected or SagaProcessState.Completed)
+        else if (state.State is not SagaProcessState.Pending)
         {
             return (false, null);
         }

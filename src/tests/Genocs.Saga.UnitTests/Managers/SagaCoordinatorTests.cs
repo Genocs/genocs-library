@@ -23,7 +23,7 @@ public class SagaCoordinatorTests
         SagaSeeker seeker = new(serviceProvider);
         SagaInitializer initializer = new(repository);
         SagaProcessor processor = new(repository, log);
-        SagaPostProcessor postProcessor = new(log);
+        SagaPostProcessor postProcessor = new(log, repository);
         SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
 
         ISagaContext context = SagaContext.Empty;
@@ -69,7 +69,7 @@ public class SagaCoordinatorTests
         SagaSeeker seeker = new(serviceProvider);
         SagaInitializer initializer = new(repository);
         SagaProcessor processor = new(repository, log);
-        SagaPostProcessor postProcessor = new(log);
+        SagaPostProcessor postProcessor = new(log, repository);
         SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
 
         ISagaContext startContext = SagaContext.Create()
@@ -92,7 +92,7 @@ public class SagaCoordinatorTests
 
         var logEntries = (await log.ReadAsync("saga-1", typeof(TwoStepSaga))).OrderBy(l => l.CreatedAt).ToList();
         logEntries.Count.ShouldBe(2);
-        logEntries[0].Outcome.ShouldBe(SagaLogEntryOutcome.Completed);
+        logEntries[0].Outcome.ShouldBe(SagaLogEntryOutcome.Compensated);
         logEntries[1].Outcome.ShouldBe(SagaLogEntryOutcome.Failed);
     }
 
@@ -112,7 +112,7 @@ public class SagaCoordinatorTests
         SagaSeeker seeker = new(serviceProvider);
         SagaInitializer initializer = new(repository);
         SagaProcessor processor = new(repository, log);
-        SagaPostProcessor postProcessor = new(log);
+        SagaPostProcessor postProcessor = new(log, repository);
         SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
 
         ISagaContext inputContext = SagaContext.Create()
@@ -165,7 +165,7 @@ public class SagaCoordinatorTests
         SagaSeeker seeker = new(serviceProvider);
         SagaInitializer initializer = new(repository);
         SagaProcessor processor = new(repository, log);
-        SagaPostProcessor postProcessor = new(log);
+        SagaPostProcessor postProcessor = new(log, repository);
         SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
 
         ISagaContext context = SagaContext.Create()
@@ -196,7 +196,7 @@ public class SagaCoordinatorTests
         SagaSeeker seeker = new(serviceProvider);
         SagaInitializer initializer = new(new AlwaysConflictingSagaStateRepository());
         SagaProcessor processor = new(new AlwaysConflictingSagaStateRepository(), new InMemorySagaLog());
-        SagaPostProcessor postProcessor = new(new InMemorySagaLog());
+        SagaPostProcessor postProcessor = new(new InMemorySagaLog(), new AlwaysConflictingSagaStateRepository());
         SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
 
         ISagaContext context = SagaContext.Create()
@@ -207,6 +207,116 @@ public class SagaCoordinatorTests
         await Should.ThrowAsync<SagaConcurrencyException>(() => coordinator.ProcessAsync(new ConcurrencyConflictMessage(), context: context));
     }
 
+    [Fact]
+    public async Task ProcessAsync_WhenDuplicateMessageIdIsProcessed_ShouldSkipSecondDelivery()
+    {
+        ServiceCollection services = new();
+        services.AddSingleton<IdempotentSaga>();
+        services.AddSingleton<ISagaStartAction<IdempotentMessage>>(sp => sp.GetRequiredService<IdempotentSaga>());
+
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        InMemorySagaStateRepository repository = new();
+        InMemorySagaLog log = new();
+        SagaSeeker seeker = new(serviceProvider);
+        SagaInitializer initializer = new(repository);
+        SagaProcessor processor = new(repository, log);
+        SagaPostProcessor postProcessor = new(log, repository);
+        SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
+
+        ISagaContext context = SagaContext.Create()
+            .WithSagaId("duplicate-saga")
+            .WithOriginator("tests")
+            .Build();
+
+        IdempotentMessage message = new("msg-1");
+
+        await coordinator.ProcessAsync(message, context: context);
+        await coordinator.ProcessAsync(message, context: context);
+
+        IdempotentSaga saga = serviceProvider.GetRequiredService<IdempotentSaga>();
+        saga.HandleCalls.ShouldBe(1);
+
+        var logEntries = (await log.ReadAsync("duplicate-saga", typeof(IdempotentSaga))).ToList();
+        logEntries.Count.ShouldBe(1);
+        logEntries[0].MessageId.ShouldBe("msg-1");
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenCompensationSucceeds_ShouldPersistCompensatedState()
+    {
+        ServiceCollection services = new();
+        services.AddSingleton<CompensatingSaga>();
+        services.AddSingleton<ISagaStartAction<CompensatingStartMessage>>(sp => sp.GetRequiredService<CompensatingSaga>());
+        services.AddSingleton<ISagaAction<CompensatingFailMessage>>(sp => sp.GetRequiredService<CompensatingSaga>());
+
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        InMemorySagaStateRepository repository = new();
+        InMemorySagaLog log = new();
+        SagaSeeker seeker = new(serviceProvider);
+        SagaInitializer initializer = new(repository);
+        SagaProcessor processor = new(repository, log);
+        SagaPostProcessor postProcessor = new(log, repository);
+        SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
+
+        ISagaContext context = SagaContext.Create()
+            .WithSagaId("compensated-saga")
+            .WithOriginator("tests")
+            .Build();
+
+        await coordinator.ProcessAsync(new CompensatingStartMessage("start-1"), context: context);
+        await coordinator.ProcessAsync(new CompensatingFailMessage("fail-1"), context: context);
+
+        ISagaState? persisted = await repository.ReadAsync("compensated-saga", typeof(CompensatingSaga));
+        persisted.ShouldNotBeNull();
+        persisted.State.ShouldBe(SagaProcessState.Compensated);
+
+        var logEntries = (await log.ReadAsync("compensated-saga", typeof(CompensatingSaga))).OrderBy(l => l.CreatedAt).ToList();
+        logEntries.Count.ShouldBe(2);
+        logEntries[0].Outcome.ShouldBe(SagaLogEntryOutcome.Compensated);
+        logEntries[1].Outcome.ShouldBe(SagaLogEntryOutcome.Failed);
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenCompensationFails_ShouldPersistCompensationFailedState()
+    {
+        ServiceCollection services = new();
+        services.AddSingleton<CompensationFailureSaga>();
+        services.AddSingleton<ISagaStartAction<CompensationFailureStartMessage>>(sp => sp.GetRequiredService<CompensationFailureSaga>());
+        services.AddSingleton<ISagaAction<CompensationFailureTriggerMessage>>(sp => sp.GetRequiredService<CompensationFailureSaga>());
+
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        InMemorySagaStateRepository repository = new();
+        InMemorySagaLog log = new();
+        SagaSeeker seeker = new(serviceProvider);
+        SagaInitializer initializer = new(repository);
+        SagaProcessor processor = new(repository, log);
+        SagaPostProcessor postProcessor = new(log, repository);
+        SagaCoordinator coordinator = new(seeker, initializer, processor, postProcessor);
+
+        ISagaContext context = SagaContext.Create()
+            .WithSagaId("compensation-failure-saga")
+            .WithOriginator("tests")
+            .Build();
+
+        await coordinator.ProcessAsync(new CompensationFailureStartMessage("start-1"), context: context);
+
+        SagaException exception = await Should.ThrowAsync<SagaException>(() => coordinator.ProcessAsync(new CompensationFailureTriggerMessage("fail-1"), context: context));
+
+        exception.InnerException.ShouldBeOfType<InvalidOperationException>();
+
+        ISagaState? persisted = await repository.ReadAsync("compensation-failure-saga", typeof(CompensationFailureSaga));
+        persisted.ShouldNotBeNull();
+        persisted.State.ShouldBe(SagaProcessState.CompensationFailed);
+
+        var logEntries = (await log.ReadAsync("compensation-failure-saga", typeof(CompensationFailureSaga))).OrderBy(l => l.CreatedAt).ToList();
+        logEntries.Count.ShouldBe(2);
+        logEntries[0].Outcome.ShouldBe(SagaLogEntryOutcome.CompensationFailed);
+        logEntries[1].Outcome.ShouldBe(SagaLogEntryOutcome.Failed);
+    }
+
     private sealed class FailingMessage;
     private sealed class StartMessage;
     private sealed class FailingFollowUpMessage;
@@ -214,6 +324,11 @@ public class SagaCoordinatorTests
     private sealed class CompletedStartMessage;
     private sealed class CompletedFollowUpMessage;
     private sealed class ConcurrencyConflictMessage;
+    private sealed record IdempotentMessage(string MessageId) : ISagaMessageIdentity;
+    private sealed record CompensatingStartMessage(string MessageId) : ISagaMessageIdentity;
+    private sealed record CompensatingFailMessage(string MessageId) : ISagaMessageIdentity;
+    private sealed record CompensationFailureStartMessage(string MessageId) : ISagaMessageIdentity;
+    private sealed record CompensationFailureTriggerMessage(string MessageId) : ISagaMessageIdentity;
 
     private sealed class ThrowingSaga : Saga, ISagaStartAction<FailingMessage>
     {
@@ -309,6 +424,54 @@ public class SagaCoordinatorTests
             => Task.CompletedTask;
 
         public Task CompensateAsync(ConcurrencyConflictMessage message, ISagaContext context)
+            => Task.CompletedTask;
+    }
+
+    private sealed class IdempotentSaga : Saga, ISagaStartAction<IdempotentMessage>
+    {
+        public int HandleCalls { get; private set; }
+
+        public Task HandleAsync(IdempotentMessage message, ISagaContext context)
+        {
+            HandleCalls++;
+            return Task.CompletedTask;
+        }
+
+        public Task CompensateAsync(IdempotentMessage message, ISagaContext context)
+            => Task.CompletedTask;
+    }
+
+    private sealed class CompensatingSaga : Saga,
+        ISagaStartAction<CompensatingStartMessage>,
+        ISagaAction<CompensatingFailMessage>
+    {
+        public Task HandleAsync(CompensatingStartMessage message, ISagaContext context)
+            => Task.CompletedTask;
+
+        public Task CompensateAsync(CompensatingStartMessage message, ISagaContext context)
+            => Task.CompletedTask;
+
+        public Task HandleAsync(CompensatingFailMessage message, ISagaContext context)
+            => throw new InvalidOperationException("Compensation should run.");
+
+        public Task CompensateAsync(CompensatingFailMessage message, ISagaContext context)
+            => Task.CompletedTask;
+    }
+
+    private sealed class CompensationFailureSaga : Saga,
+        ISagaStartAction<CompensationFailureStartMessage>,
+        ISagaAction<CompensationFailureTriggerMessage>
+    {
+        public Task HandleAsync(CompensationFailureStartMessage message, ISagaContext context)
+            => Task.CompletedTask;
+
+        public Task CompensateAsync(CompensationFailureStartMessage message, ISagaContext context)
+            => throw new InvalidOperationException("Compensation failure.");
+
+        public Task HandleAsync(CompensationFailureTriggerMessage message, ISagaContext context)
+            => throw new InvalidOperationException("Trigger rejection.");
+
+        public Task CompensateAsync(CompensationFailureTriggerMessage message, ISagaContext context)
             => Task.CompletedTask;
     }
 

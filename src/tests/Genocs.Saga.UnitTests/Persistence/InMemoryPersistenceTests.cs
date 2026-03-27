@@ -90,6 +90,20 @@ public class InMemoryPersistenceTests
         }
     }
 
+    [Fact]
+    public async Task InMemorySagaLog_WhenUpdatingOutcome_ShouldPersistUpdatedStatus()
+    {
+        InMemorySagaLog log = new();
+        SagaLogData entry = SagaLogData.Create("log-1", typeof(TestSaga), new TestMessage(42), SagaLogEntryOutcome.Completed, "msg-42");
+
+        await log.WriteAsync(entry);
+        await log.UpdateOutcomeAsync("log-1", typeof(TestSaga), entry.EntryId, SagaLogEntryOutcome.Compensated);
+
+        ISagaLogData persisted = (await log.ReadAsync("log-1", typeof(TestSaga))).Single();
+        persisted.Outcome.ShouldBe(SagaLogEntryOutcome.Compensated);
+        persisted.MessageId.ShouldBe("msg-42");
+    }
+
     private sealed class TestSaga : Saga;
 
     private sealed record TestMessage(int Value);

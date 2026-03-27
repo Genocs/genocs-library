@@ -16,11 +16,13 @@ Implemented:
 - `SAGA-004` Make terminal-state behavior explicit and safe by default
 - `SAGA-005` Make in-memory state and log repositories thread-safe
 - `SAGA-006` Add startup validation for saga persistence registration
+- `SAGA-009` Define idempotency and duplicate-delivery handling
+- `SAGA-010` Model compensation failures explicitly
 
 Next recommended items:
 
-- `SAGA-009` Define idempotency and duplicate-delivery handling
-- `SAGA-010` Model compensation failures explicitly
+- `SAGA-011` Reassess the role of the in-process keyed locker
+- `SAGA-016` Support explicit assembly registration for saga discovery
 
 ## Planning Assumptions
 
@@ -295,6 +297,8 @@ Distributed correctness cannot rely on the in-process locker.
 
 ### `SAGA-009` Define idempotency and duplicate-delivery handling
 
+**Status**: Implemented
+
 **Priority**: P1
 
 **Problem**
@@ -318,6 +322,8 @@ The runtime has no built-in model for duplicate message delivery.
 - `SAGA-007`
 
 ### `SAGA-010` Model compensation failures explicitly
+
+**Status**: Implemented
 
 **Priority**: P1
 
@@ -643,10 +649,10 @@ Large-scale deployments need partitioning and cleanup policies for saga history.
 
 If the goal is to start implementation immediately, this is the best first slice:
 
-1. `SAGA-001` Introduce durable step outcome tracking
-2. `SAGA-002` Exclude failed current steps from compensation replay
-3. `SAGA-007` Add versioning to saga state contracts
-4. `SAGA-008` Introduce optimistic concurrency semantics in repositories
+1. `SAGA-011` Reassess the role of the in-process keyed locker
+2. `SAGA-016` Support explicit assembly registration for saga discovery
+3. `SAGA-017` Add startup diagnostics for discovered sagas and bindings
+4. `SAGA-022` Add administrative recovery operations
 
 This sprint addresses the two most serious semantic defects, plus the most likely integration pitfall.
 
@@ -662,6 +668,7 @@ Do not market the base library as production-ready until at least these tasks ar
 - `SAGA-006`
 - `SAGA-007`
 - `SAGA-008`
+- `SAGA-009`
 - `SAGA-010`
 
 That set establishes minimum correctness, concurrency safety, and recoverability.

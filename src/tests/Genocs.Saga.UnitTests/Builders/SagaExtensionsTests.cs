@@ -57,6 +57,9 @@ public class SagaExtensionsTests
 
         public Task WriteAsync(ISagaLogData message)
             => Task.CompletedTask;
+
+        public Task UpdateOutcomeAsync(SagaId id, Type type, string entryId, SagaLogEntryOutcome outcome)
+            => Task.CompletedTask;
     }
 
     private sealed class MySagaStateRepository : ISagaStateRepository

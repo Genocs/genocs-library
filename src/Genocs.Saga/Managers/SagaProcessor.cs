@@ -1,4 +1,5 @@
 using Genocs.Saga.Persistence;
+using Genocs.Saga.Utils;
 
 namespace Genocs.Saga.Managers;
 
@@ -23,9 +24,15 @@ internal sealed class SagaProcessor : ISagaProcessor
         var action = (ISagaAction<TMessage>)saga;
         string sagaType = saga.GetType().Name;
         string messageType = typeof(TMessage).Name;
+        string? messageId = SagaMessageIdentityResolver.Resolve(message, context);
         SagaLogEntryOutcome outcome = SagaLogEntryOutcome.Completed;
 
         using var handleActivity = SagaTelemetry.StartHandleActivity(saga.Id, sagaType, messageType);
+
+        if (await HasAlreadyProcessedAsync(saga.Id, saga.GetType(), messageId).ConfigureAwait(false))
+        {
+            return;
+        }
 
         try
         {
@@ -51,11 +58,22 @@ internal sealed class SagaProcessor : ISagaProcessor
         }
         finally
         {
-            await UpdateSagaAsync(message, saga, state, outcome);
+            await UpdateSagaAsync(message, saga, state, outcome, messageId);
         }
     }
 
-    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome)
+    private async Task<bool> HasAlreadyProcessedAsync(SagaId sagaId, Type sagaType, string? messageId)
+    {
+        if (string.IsNullOrWhiteSpace(messageId))
+        {
+            return false;
+        }
+
+        IEnumerable<ISagaLogData> existingEntries = await _log.ReadAsync(sagaId, sagaType).ConfigureAwait(false);
+        return existingEntries.Any(entry => string.Equals(entry.MessageId, messageId, StringComparison.Ordinal));
+    }
+
+    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome, string? messageId)
         where TMessage : class
     {
         var sagaType = saga.GetType();
@@ -63,7 +81,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         object? updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
 
         state.Update(saga.State, updatedSagaData);
-        var logData = SagaLogData.Create(saga.Id, sagaType, message, outcome);
+        SagaLogData logData = SagaLogData.Create(saga.Id, sagaType, message, outcome, messageId);
 
         var persistenceTasks = new[]
         {

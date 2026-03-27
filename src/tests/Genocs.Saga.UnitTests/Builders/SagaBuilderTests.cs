@@ -74,6 +74,11 @@ public class SagaBuilderTests
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateOutcomeAsync(SagaId id, Type type, string entryId, SagaLogEntryOutcome outcome)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class MySagaStateRepository : ISagaStateRepository

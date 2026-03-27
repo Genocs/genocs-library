@@ -6,6 +6,8 @@ Saga pattern abstractions for distributed workflow orchestration. Supports `net1
 
 Genocs.Saga provides a lightweight orchestration framework for implementing the saga pattern in distributed systems. Sagas coordinate multi-step workflows that can span multiple services or components. When a step fails, the saga runs compensation logic in reverse order to undo completed steps.
 
+Duplicate delivery handling is opt-in. If a message implements `ISagaMessageIdentity`, or the caller provides `SagaContextMetadataKeys.MessageId` in saga context metadata, the runtime will skip repeated deliveries for the same saga instance and message identity.
+
 ## Installation
 
 ```bash
@@ -40,7 +42,7 @@ public class SagaData
 }
 
 public record StartTransaction(string Text, int TransactionValue);
-public record CompleteTransaction(string Text);
+public record CompleteTransaction(string MessageId, string Text) : ISagaMessageIdentity;
 ```
 
 ### 3. Implement a saga
@@ -102,7 +104,7 @@ public class OrderService
             .Build();
 
         await _sagaCoordinator.ProcessAsync(
-            new CompleteTransaction("Order completed"),
+            new CompleteTransaction("order-complete-1", "Order completed"),
             onCompleted: (m, ctx) => { /* success */ return Task.CompletedTask; },
             onRejected: (m, ctx) => { /* failure */ return Task.CompletedTask; },
             context: context);
@@ -159,10 +161,29 @@ var context = SagaContext.Create()
 | `ISaga` | Base saga contract |
 | `ISagaAction<TMessage>` | Handle and compensate messages |
 | `ISagaStartAction<TMessage>` | First action that creates the saga |
+| `ISagaMessageIdentity` | Opt-in message identity for duplicate-delivery handling |
 | `ISagaContext` | Context passed to saga actions |
 | `ISagaContextBuilder` | Build saga context with metadata |
 | `Saga<TData>` | Base class for sagas with typed data |
-| `SagaProcessState` | Pending, Completed, Rejected |
+| `SagaProcessState` | Pending, Completed, Rejected, Compensating, Compensated, CompensationFailed |
+
+## Duplicate Delivery Handling
+
+The baseline duplicate-delivery strategy is explicit rather than implicit:
+
+- implement `ISagaMessageIdentity` on a message type when the message already owns a stable identity
+- or set `SagaContextMetadataKeys.MessageId` on the saga context when message identity comes from transport headers
+
+When a stable identity is present, the saga runtime records it alongside the log entry and skips repeated delivery for the same saga instance.
+
+## Compensation Lifecycle
+
+Rejected sagas now persist compensation progress explicitly:
+
+- `Rejected` while the original handling failure is being recorded
+- `Compensating` while completed steps are replayed in reverse order
+- `Compensated` when rollback finishes successfully
+- `CompensationFailed` when a compensator throws and manual recovery is required
 
 ## Support
 

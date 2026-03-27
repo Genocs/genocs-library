@@ -9,4 +9,7 @@ public enum SagaProcessState : byte
     Pending = 0,
     Completed = 1,
     Rejected = 2,
+    Compensating = 3,
+    Compensated = 4,
+    CompensationFailed = 5,
 }

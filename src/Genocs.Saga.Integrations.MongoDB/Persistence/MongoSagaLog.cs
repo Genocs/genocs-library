@@ -18,10 +18,24 @@ internal sealed class MongoSagaLog : ISagaLog
     public async Task WriteAsync(ISagaLogData message)
        => await _collection.InsertOneAsync(new MongoSagaLogData
        {
+           EntryId = message.EntryId,
            SagaId = message.Id,
            SagaType = message.Type.FullName,
            Message = message.Message,
            CreatedAt = message.CreatedAt,
+           MessageId = message.MessageId,
            Outcome = message.Outcome
        });
+
+    public async Task UpdateOutcomeAsync(SagaId id, Type type, string entryId, SagaLogEntryOutcome outcome)
+    {
+        UpdateResult result = await _collection.UpdateOneAsync(
+            sld => sld.SagaId == id.Id && sld.SagaType == type.FullName && sld.EntryId == entryId,
+            Builders<MongoSagaLogData>.Update.Set(sld => sld.Outcome, outcome));
+
+        if (result.MatchedCount == 0)
+        {
+            throw new SagaException($"Saga log entry '{entryId}' was not found for '{type.FullName}' and id '{id.Id}'.");
+        }
+    }
 }
