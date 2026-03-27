@@ -415,7 +415,7 @@ Registration no longer depends exclusively on whatever assemblies happen to alre
 
 **Recommended next step**
 
-- add startup diagnostics that report which assemblies were scanned and which saga/message bindings were discovered
+- add runtime metrics for saga outcomes and duration
 
 ---
 
@@ -431,12 +431,10 @@ These are not all bugs, but they are the main reasons the library remains an ear
 
 ### Operational gaps
 
-- no startup validation report for discovered sagas and registered persistence providers
-- no startup report of which assemblies were scanned for saga discovery
+- startup diagnostics now report discovered sagas, bindings, scanned assemblies, and active persistence registrations
 - no built-in metrics for started, completed, rejected, compensated, or compensation-failed workflows
 - no administration surface for querying current saga state
 - no cleanup or archival policy for finished sagas
-- no startup diagnostics for whether the host is using local execution locking or durable-store-only coordination
 
 ### Evolution gaps
 

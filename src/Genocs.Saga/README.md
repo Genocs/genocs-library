@@ -209,6 +209,8 @@ Saga discovery now supports two modes:
 
 Use explicit assemblies in modular hosts or package-based deployments where relying on incidental assembly loading is too fragile.
 
+At startup, the package now emits a diagnostics report that lists the scanned assemblies, discovered saga types, their message bindings, and the active state repository, log, and execution-lock registrations. The same data is also available from DI through `SagaRegistrationDiagnostics`.
+
 ## Compensation Lifecycle
 
 Rejected sagas now persist compensation progress explicitly:

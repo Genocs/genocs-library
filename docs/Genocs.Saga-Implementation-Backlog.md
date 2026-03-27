@@ -496,6 +496,8 @@ Discovery currently depends on AppDomain load order.
 
 ### `SAGA-017` Add startup diagnostics for discovered sagas and bindings
 
+**Status**: Implemented
+
 **Priority**: P2
 
 **Problem**
