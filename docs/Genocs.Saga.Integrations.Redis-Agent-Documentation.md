@@ -9,7 +9,7 @@
 
 ## Purpose
 
-`Genocs.Saga.Integrations.Redis` replaces default in-memory saga persistence with Redis-backed saga state and saga log storage for distributed deployments.
+`Genocs.Saga.Integrations.Redis` replaces default in-memory saga persistence with Redis-backed saga state and saga log storage for distributed deployments. The current implementation uses compare-and-set semantics for saga state writes and a serialized log payload stored through Redis-backed distributed cache services.
 
 ## Quick Facts
 
@@ -32,16 +32,18 @@ dotnet add package Genocs.Saga.Integrations.Redis
 using Genocs.Saga;
 using Genocs.Saga.Integrations.Redis;
 using Genocs.Saga.Integrations.Redis.Configurations;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var redisSettings = builder.Configuration
+	.GetSection(SagaRedisOptions.Position)
+	.Get<SagaRedisOptions>()
+	?? throw new InvalidOperationException("Missing sagaRedis configuration.");
+
 builder.Services.AddSaga(saga =>
 {
-    saga.UseRedisPersistence(new SagaRedisOptions
-    {
-        Configuration = "localhost:6379",
-        InstanceName = "genocs-saga"
-    });
+    saga.UseRedisPersistence(redisSettings);
 });
 
 var app = builder.Build();
@@ -50,7 +52,7 @@ app.Run();
 
 ## Configuration
 
-Use `SagaRedisOptions` directly or provide a configuration section value that deserializes into that type.
+Use `SagaRedisOptions` directly for normal hosts. The string-plus-configuration overload is available, but it expects the section value itself to be serialized JSON rather than a normal nested configuration object.
 
 ```json
 {
@@ -75,21 +77,28 @@ The current options type is `SagaRedisOptions` and its default section name is `
 | Goal | Preferred API |
 |---|---|
 | Configure Redis persistence with explicit values | `UseRedisPersistence(ISagaBuilder, SagaRedisOptions)` |
-| Configure Redis persistence from app configuration | `UseRedisPersistence(ISagaBuilder, string, IConfiguration)` |
+| Configure Redis persistence from a normal `appsettings.json` object | Bind `SagaRedisOptions` in the host, then call `UseRedisPersistence(ISagaBuilder, SagaRedisOptions)` |
+| Configure Redis persistence from a JSON string section value | `UseRedisPersistence(ISagaBuilder, string, IConfiguration)` |
 | Replace in-memory saga persistence | Call `UseRedisPersistence(...)` inside `AddSaga(...)` |
 | Keep saga action contracts unchanged | Use Redis integration only at registration time |
 
 ## Behavior Notes / Constraints
 
 - Must be configured inside `AddSaga(...)` registration.
-- Configuration overload expects a section value format that can be deserialized into `SagaRedisOptions`.
+- The `UseRedisPersistence(ISagaBuilder, string, IConfiguration)` overload reads `configuration.GetSection(sectionName).Value`, so it expects that section value to already contain serialized JSON. It does not bind nested child properties.
+- For standard nested `appsettings.json` sections, bind `SagaRedisOptions` in the host and pass the options overload instead.
+- Saga state writes use optimistic concurrency through Redis compare-and-set semantics in `RedisSagaStateStore`.
+- Saga log updates rewrite the serialized log payload for the saga key; they do not use per-entry compare-and-set semantics.
 - Persisted payload compatibility affects rehydration after contract changes.
 
 ## Public Capability Map
 
-- Builder extensions for Redis persistence registration.
-- Redis-backed `ISagaStateRepository` implementation.
-- Redis-backed `ISagaLog` implementation.
+| Capability | Surface |
+|---|---|
+| Register Redis persistence from explicit options | `UseRedisPersistence(ISagaBuilder, SagaRedisOptions)` |
+| Register Redis persistence from a JSON string configuration value | `UseRedisPersistence(ISagaBuilder, string, IConfiguration)` |
+| Redis-backed versioned saga state storage | `ISagaStateRepository` backed by `RedisSagaStateRepository` |
+| Redis-backed outcome-aware saga log storage | `ISagaLog` backed by `RedisSagaLog` |
 
 ## Dependencies
 
@@ -103,6 +112,6 @@ The current options type is `SagaRedisOptions` and its default section name is `
 1. Saga data is not shared across service instances.
 Fix: Verify Redis connectivity and ensure `UseRedisPersistence(...)` is called in startup.
 2. Startup throws during Redis settings binding.
-Fix: Validate the configuration section value format and required fields (`configuration`, `instanceName`).
+Fix: If you use `UseRedisPersistence(ISagaBuilder, string, IConfiguration)`, validate that the selected section value is serialized JSON, not a nested object. For normal `appsettings.json` sections, bind `SagaRedisOptions` in the host and call the options overload instead.
 3. Saga state or log payloads fail to rehydrate after deployment.
 Fix: Keep serialized saga contracts backward-compatible when evolving message and state types.

@@ -15,10 +15,11 @@ It provides:
 
 - DI registration for saga runtime services
 - Message-to-saga dispatch through `ISagaCoordinator`
-- Saga lifecycle primitives such as `Pending`, `Completed`, and `Rejected`
+- Saga lifecycle primitives such as `Pending`, `Completed`, `Rejected`, `Compensating`, `Compensated`, and `CompensationFailed`
 - Start-action and compensation contracts
 - Context propagation, including trace metadata
 - Pluggable state and log persistence contracts
+- Deterministic opt-in discovery plus startup diagnostics
 
 It does not provide a transport, scheduler, or message broker. Your application must call the coordinator when a message or command arrives.
 
@@ -46,8 +47,9 @@ It does not provide a transport, scheduler, or message broker. Your application 
 
 - The package listens to queues, topics, or HTTP endpoints by itself.
 - Passing `null` context gives stable saga correlation. By default it creates an empty context with a new saga id.
-- `AddSaga(saga => { })` keeps the default in-memory persistence. It does not.
-- Completion is a global terminal state that blocks all later messages. Only rejected state is blocked by the current runtime.
+- `AddSaga(saga => { })` removes the safe defaults. It does not. The runtime seeds in-memory persistence and in-process execution locking before applying the callback.
+- `onRejected` means compensation has already completed. It does not. The rejection hook runs before compensation replay.
+- Completed or compensated sagas are reopened by default. They are not. The current initializer processes only persisted `Pending` instances.
 - Local locking is distributed. Concurrency is serialized per saga id only inside the current process.
 
 ## Install
@@ -85,7 +87,8 @@ Use this processing sequence when reasoning about behavior:
 6. The runtime executes `HandleAsync`.
 7. State and log entries are persisted.
 8. If the saga is `Completed`, the completion callback runs.
-9. If the saga is `Rejected`, the rejection callback runs and compensation replays logged messages in reverse order.
+9. If the saga is `Rejected`, the rejection callback runs first, then compensation replays only previously completed log entries in reverse order.
+10. If compensation fails, the saga moves to `CompensationFailed` and `ISagaCoordinator.RetryCompensationAsync(...)` can resume recovery later.
 
 ## Core Public APIs
 
@@ -94,8 +97,12 @@ Use this processing sequence when reasoning about behavior:
 | API | Use it for |
 |---|---|
 | `IServiceCollection.AddSaga()` | Register the runtime with built-in in-memory state and log storage |
-| `IServiceCollection.AddSaga(Action<ISagaBuilder>)` | Register the runtime and explicitly choose persistence |
+| `IServiceCollection.AddSaga(Action<ISagaBuilder>)` | Register the runtime, keep the safe defaults, and optionally override persistence or locking |
+| `IServiceCollection.AddSaga(params Assembly[] assemblies)` | Register the runtime and discover saga types from explicit assemblies |
+| `IServiceCollection.AddSaga(Action<ISagaBuilder>, params Assembly[] assemblies)` | Register the runtime with explicit discovery plus custom persistence or locking |
 | `ISagaBuilder.UseInMemoryPersistence()` | Explicitly register in-memory state and log storage |
+| `ISagaBuilder.UseInProcessExecutionLock()` | Keep per-saga local serialization inside the current process |
+| `ISagaBuilder.DisableInProcessExecutionLock()` | Disable the local execution lock and rely on repository concurrency semantics |
 | `ISagaBuilder.UseSagaStateRepository<TRepository>()` | Plug in a custom `ISagaStateRepository` |
 | `ISagaBuilder.UseSagaLog<TSagaLog>()` | Plug in a custom `ISagaLog` |
 
@@ -105,6 +112,7 @@ Use this processing sequence when reasoning about behavior:
 |---|---|
 | `ISagaCoordinator.ProcessAsync<TMessage>(TMessage, ISagaContext?)` | Process a message through all matching sagas |
 | `ISagaCoordinator.ProcessAsync<TMessage>(TMessage, onCompleted, onRejected, ISagaContext?)` | Process a message and attach result hooks |
+| `ISagaCoordinator.RetryCompensationAsync<TSaga>(SagaId, ISagaContext?)` | Retry a saga that is currently in `CompensationFailed` |
 
 ### Saga Authoring
 
@@ -134,8 +142,8 @@ Use this processing sequence when reasoning about behavior:
 |---|---|
 | `ISagaStateRepository` | Read and write current saga state |
 | `ISagaLog` | Read and write the chronological message log used for compensation |
-| `ISagaState` | Represent the persisted lifecycle state and typed payload |
-| `ISagaLogData` | Represent a persisted log entry |
+| `ISagaState` | Represent the persisted lifecycle state, typed payload, and version |
+| `ISagaLogData` | Represent a persisted log entry, including entry id, message id, and outcome |
 
 ## Recommended Integration Pattern
 
@@ -285,28 +293,35 @@ Configuration comes from the persistence provider you install:
 |---|---|---|
 | Start quickly with defaults | `AddSaga()` | Best for local development and tests |
 | Use durable persistence | `AddSaga(saga => saga.UseMongoPersistence(...))` or `UseRedisPersistence(...)` | Keep provider registration inside the callback |
+| Discover saga types deterministically | `AddSaga(assemblies)` or `AddSaga(build, assemblies)` | Avoid reliance on ambient `AppDomain` load order |
 | Use a custom storage implementation | `UseSagaStateRepository<T>()` plus `UseSagaLog<T>()` | Register both state and log components |
+| Disable local per-saga locking | `DisableInProcessExecutionLock()` | Use only when durable repositories provide the required concurrency guarantees |
 | Process a saga message | `ISagaCoordinator.ProcessAsync(message, context)` | The package does not poll transports on its own |
 | Attach success and failure hooks | `ISagaCoordinator.ProcessAsync(message, onCompleted, onRejected, context)` | Rejection hook runs before compensation |
+| Retry a failed compensation pass | `RetryCompensationAsync<TSaga>(sagaId, context)` | Valid only for sagas persisted in `CompensationFailed` |
 | Correlate messages to an existing saga | `SagaContext.Create().WithSagaId(...).WithOriginator(...).Build()` | Strongly preferred over `null` context |
 | Propagate distributed trace data | `WithCurrentTraceContext()` or `WithTraceContext(...)` | Adds W3C metadata to saga context |
+| Enable best-effort duplicate detection | Implement `ISagaMessageIdentity` or set `SagaContextMetadataKeys.MessageId` | Duplicate handling depends on a stable message id |
 | Start a new saga from a message | Implement `ISagaStartAction<TMessage>` | Non-start actions cannot create state |
 | Override default saga correlation | Override `ResolveId(object, ISagaContext)` | Needed when correlation should come from the message body instead of `context.SagaId` |
 
 ## Behavior Notes That Change Integration Decisions
 
-- `AddSaga()` with no callback registers in-memory state and log storage automatically.
-- `AddSaga(saga => { ... })` does not add default persistence. If the callback is empty, the runtime is registered without `ISagaStateRepository` and `ISagaLog` implementations.
-- Saga discovery scans assemblies already loaded in `AppDomain.CurrentDomain` at registration time. Keep saga classes in assemblies that are referenced and loaded by the host.
+- `AddSaga()` with no callback registers in-memory state and log storage automatically and enables the in-process execution lock.
+- `AddSaga(saga => { ... })` seeds the same safe defaults first, then applies the callback so custom persistence or locking can override the last registration.
+- Saga discovery now supports explicit assembly overloads. If you use the convenience overloads, discovery still scans assemblies already loaded in `AppDomain.CurrentDomain` at registration time.
 - Every discovered saga type that implements the incoming message contract is processed. If multiple saga classes handle the same message type, they all run.
-- Matching sagas are processed concurrently, while each individual saga id is locally serialized through an in-process keyed lock.
+- Matching sagas are processed concurrently, while each individual saga id is locally serialized through the configured `ISagaExecutionLock`. The default implementation is in-process only.
 - The default `ResolveId(...)` implementation uses `context.SagaId`. If you omit context and do not override `ResolveId`, each call effectively uses a new id from `SagaContext.Empty`.
 - `SagaContext.Create().Build()` requires both `SagaId` and `Originator`. Missing either value throws `InvalidOperationException`.
 - Context metadata keys must be unique. Duplicate keys throw `SagaException` when the context is created.
 - If state does not exist and the handler is not an `ISagaStartAction<TMessage>`, the runtime skips that saga silently for that message.
+- If a stable message id is supplied through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, the processor skips duplicate deliveries already recorded for the same saga instance.
 - If a handler throws, the runtime stores the exception in `ISagaContext.SagaContextError`, rejects the saga if needed, persists state and log entries, then invokes rejection handling.
-- Compensation uses the persisted saga log in reverse chronological order and calls `CompensateAsync` for each recorded message.
-- A rejected saga is not re-initialized for later messages. A completed saga can still be loaded again by the current runtime.
+- Compensation uses the persisted saga log in reverse chronological order, but only replays entries whose outcome is currently `Completed`.
+- Failed compensation updates the log entry outcome to `CompensationFailed`, moves the saga to `CompensationFailed`, and can later be retried through `RetryCompensationAsync<TSaga>(...)`.
+- Only sagas persisted in `Pending` are re-initialized for normal processing. `Completed`, `Rejected`, `Compensating`, `Compensated`, and `CompensationFailed` are terminal for the normal message pipeline.
+- The package emits startup diagnostics through a hosted service that logs scanned assemblies, discovered saga bindings, and the active state repository, log, and execution-lock implementations.
 - The package emits `Activity` spans for processing, execution, handling, and compensation. No extra package configuration is required, but your host must have tracing configured to export them.
 
 ## Observability Notes
@@ -335,10 +350,12 @@ Useful tags include:
 |---|---|
 | Runtime registration | `AddSaga`, `ISagaBuilder` |
 | Message execution | `ISagaCoordinator.ProcessAsync(...)` |
+| Recovery | `ISagaCoordinator.RetryCompensationAsync(...)` |
 | Saga implementation | `Saga`, `Saga<TData>`, `ISaga`, `ISaga<TData>`, `ISagaAction<TMessage>`, `ISagaStartAction<TMessage>` |
 | Correlation context | `SagaContext`, `ISagaContext`, `ISagaContextBuilder`, `ISagaContextMetadata` |
 | Trace propagation | `SagaTraceContext` |
 | Persistence abstraction | `ISagaStateRepository`, `ISagaLog`, `ISagaState`, `ISagaLogData` |
+| Discovery diagnostics | `SagaRegistrationDiagnostics` |
 | Lifecycle state | `SagaProcessState`, `SagaException`, `SagaContextError` |
 
 ## Dependencies
@@ -357,26 +374,38 @@ Direct package dependencies:
 ## Troubleshooting
 
 1. Messages reach the host, but no saga runs.
-Fix: Confirm the saga class implements `ISagaAction<TMessage>` or `ISagaStartAction<TMessage>`, inherits from `Saga` or `Saga<TData>`, and lives in an assembly that is already loaded when `AddSaga(...)` executes.
+Fix: Confirm the saga class implements `ISagaAction<TMessage>` or `ISagaStartAction<TMessage>`, inherits from `Saga` or `Saga<TData>`, and is either already loaded when `AddSaga(...)` executes or supplied through the explicit assembly overloads. Check startup diagnostics logs for the discovered bindings.
 
-2. The runtime throws because `ISagaStateRepository` or `ISagaLog` is missing.
-Fix: Use `AddSaga()` for the default in-memory setup, or register both persistence pieces inside the `AddSaga(saga => { ... })` callback. Do not pass an empty callback.
+2. The runtime starts, but still uses in-memory persistence instead of the provider you expected.
+Fix: Register `UseMongoPersistence(...)`, `UseRedisPersistence(...)`, or your custom `UseSagaStateRepository<T>()` and `UseSagaLog<T>()` calls inside the `AddSaga(saga => { ... })` callback. If you omit them, the seeded in-memory defaults remain active.
 
 3. Follow-up messages create new saga instances instead of continuing the existing workflow.
 Fix: Pass a context built with the same `SagaId`, or override `ResolveId(...)` to derive the id from the message payload.
 
 4. A message for an existing workflow appears to be ignored.
-Fix: If the saga state does not exist yet, only a handler implementing `ISagaStartAction<TMessage>` can create it. If the saga is already rejected, later messages are ignored by the runtime.
+Fix: If the saga state does not exist yet, only a handler implementing `ISagaStartAction<TMessage>` can create it. If the persisted state is no longer `Pending` such as `Completed`, `Rejected`, `Compensated`, or `CompensationFailed`, the normal message pipeline skips it.
 
-5. Compensation never runs.
-Fix: Compensation runs only when the saga state becomes `Rejected`. Ensure the handler throws or calls `Reject(...)`, and verify the saga log implementation is registered and writable.
+5. Compensation never runs, or compensation retry throws.
+Fix: Compensation runs only when the saga state becomes `Rejected`. Ensure the handler throws or calls `Reject(...)`, and verify the saga log implementation is registered and writable. `RetryCompensationAsync<TSaga>(...)` works only for sagas already persisted in `CompensationFailed`.
 
-6. Building the context throws before processing starts.
+6. Duplicate deliveries are unexpectedly reprocessed.
+Fix: Supply a stable message id by implementing `ISagaMessageIdentity` on the message or by adding `SagaContextMetadataKeys.MessageId` to the context metadata. Without that identifier, the runtime treats deliveries as distinct.
+
+7. Building the context throws before processing starts.
 Fix: Provide both `SagaId` and `Originator`, and avoid duplicate metadata keys when calling `WithMetadata(...)`.
 
-7. Traces are missing from distributed telemetry.
+8. Startup reports no saga types discovered.
+Fix: Use `AddSaga(assemblies)` or `AddSaga(build, assemblies)` for deterministic discovery in modular hosts, and verify the startup diagnostics log output.
+
+9. Traces are missing from distributed telemetry.
 Fix: Configure tracing in the host and propagate trace metadata into the saga context with `WithCurrentTraceContext()` or `WithTraceContext(...)`.
 
 ## Version Awareness
 
-The current repository changelog shows recent unreleased documentation standardization work for NuGet readmes, but no package-specific API changes were identified for `Genocs.Saga` in the local workspace state.
+Recent saga changes in git history materially changed the package behavior and status:
+
+- `b50ded56` added baseline duplicate-delivery handling and outcome-aware saga logs.
+- `d8b2fc3c` added explicit compensation management and `RetryCompensationAsync<TSaga>(...)`.
+- `aba7a06d` introduced configurable in-process execution locking.
+- `4162c6e8` added explicit assembly overloads for deterministic saga discovery.
+- `99d79699` added startup registration diagnostics and logging.

@@ -9,7 +9,7 @@
 
 ## Purpose
 
-Genocs.Saga.Integrations.MongoDB replaces the default in-memory saga persistence in `Genocs.Saga` with durable MongoDB-backed storage for both saga state and saga logs. It exposes two `UseMongoPersistence` extension methods on `ISagaBuilder` — one that reads from `IConfiguration` and one that accepts an explicit `SagaMongoOptions` object — both registering `MongoSagaStateRepository` and `MongoSagaLog` implementations transparently.
+Genocs.Saga.Integrations.MongoDB replaces the default in-memory saga persistence in `Genocs.Saga` with durable MongoDB-backed storage for both saga state and saga logs. It exposes two `UseMongoPersistence` extension methods on `ISagaBuilder` — one that reads from `IConfiguration` and one that accepts an explicit `SagaMongoOptions` object — and registers `MongoSagaStateRepository` plus `MongoSagaLog` for the saga runtime.
 
 ## Quick Facts
 
@@ -19,6 +19,8 @@ Genocs.Saga.Integrations.MongoDB replaces the default in-memory saga persistence
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
 | Primary role | MongoDB-backed saga state and log persistence |
 | Typical startup APIs | `AddSaga` + `UseMongoPersistence` |
+| Default configuration section | `sagaMongo` |
+| Collection names | `SagaData`, `SagaLog` |
 
 ## Install
 
@@ -60,8 +62,8 @@ Use the `sagaMongo` section in `appsettings.json`.
 | Setting | Type | Description |
 |---|---|---|
 | `enabled` | `bool` | Option flag available in the model. Registration still depends on calling `UseMongoPersistence(...)`. |
-| `connectionString` | `string` | MongoDB connection string for saga persistence. Required. |
-| `database` | `string` | Database name for saga state and log collections. Required. |
+| `connectionString` | `string` | MongoDB connection string used to create `MongoClient`. |
+| `database` | `string` | Database name used for the `SagaData` and `SagaLog` collections. |
 
 The section name changed to `sagaMongo` with `SagaMongoOptions.Position`. Use that name in new hosts and updated documentation.
 
@@ -77,8 +79,12 @@ The section name changed to `sagaMongo` with `SagaMongoOptions.Position`. Use th
 ## Behavior Notes / Constraints
 
 - `UseMongoPersistence` must be called inside the `AddSaga` builder callback; calling it after `AddSaga` returns has no effect.
-- `connectionString` and `database` are both required; missing or empty values throw `SagaException` at startup.
+- The configuration overload binds `SagaMongoOptions` from the `sagaMongo` section and wraps binding failures as a generic `SagaException` with the message `Could not deserialize given appsettings.`.
+- The package does not add dedicated options validation for `connectionString` or `database`; invalid or missing values can still surface later when the Mongo database dependency is resolved.
+- Saga state writes use optimistic concurrency through the persisted `Version` field, so stale writes fail instead of silently overwriting newer state.
+- Saga log entries persist `EntryId`, `MessageId`, and `Outcome` so the core runtime can support duplicate-delivery checks and compensation lifecycle tracking.
 - Payload and state objects are serialized to BSON; breaking changes to saga message or state contracts can make stored documents unreadable.
+- Compensation and recovery depend on the host being able to deserialize persisted state and message types during rehydration.
 - MongoDB permissions must include read and write access on the target database and the saga collections.
 
 ## Public Capability Map
@@ -87,8 +93,8 @@ The section name changed to `sagaMongo` with `SagaMongoOptions.Position`. Use th
 |---|---|
 | Configure Mongo persistence from host configuration | `UseMongoPersistence(ISagaBuilder, IConfiguration)` |
 | Configure Mongo persistence from explicit settings | `UseMongoPersistence(ISagaBuilder, SagaMongoOptions)` |
-| Durable saga state storage | `ISagaStateRepository` backed by `MongoSagaStateRepository` |
-| Durable saga log storage | `ISagaLog` backed by `MongoSagaLog` |
+| Durable versioned saga state storage | `ISagaStateRepository` backed by `MongoSagaStateRepository` |
+| Durable outcome-aware saga log storage | `ISagaLog` backed by `MongoSagaLog` |
 
 ## Dependencies
 
@@ -100,7 +106,7 @@ The section name changed to `sagaMongo` with `SagaMongoOptions.Position`. Use th
 
 1. Saga still behaves as if using in-memory persistence after adding this package.
 Fix: Ensure `UseMongoPersistence` is called inside the `AddSaga(saga => { ... })` builder callback during startup; calling it after `AddSaga` returns has no effect.
-2. Startup throws `SagaException` while loading saga Mongo settings.
-Fix: Validate that `sagaMongo.connectionString` and `sagaMongo.database` are present and non-empty in `appsettings.json`, and confirm network connectivity and credentials to the MongoDB instance.
+2. Startup or the first saga operation throws `SagaException` while loading saga Mongo settings.
+Fix: Validate that the `sagaMongo` section binds correctly, and confirm `connectionString`, `database`, network connectivity, and MongoDB credentials. The package wraps binding failures with a generic deserialization error message rather than detailed option validation output.
 3. Compensation history is missing or unreadable after a deployment update.
 Fix: Maintain backward compatibility in serialized saga message and state contracts across versions; avoid renaming properties or changing types stored in existing saga log documents.

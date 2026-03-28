@@ -16,15 +16,19 @@ Implemented:
 - `SAGA-004` Make terminal-state behavior explicit and safe by default
 - `SAGA-005` Make in-memory state and log repositories thread-safe
 - `SAGA-006` Add startup validation for saga persistence registration
+- `SAGA-007` Add versioning to saga state contracts
+- `SAGA-008` Introduce optimistic concurrency semantics in repositories
 - `SAGA-009` Define idempotency and duplicate-delivery handling
 - `SAGA-010` Model compensation failures explicitly
 - `SAGA-011` Reassess the role of the in-process keyed locker
+- `SAGA-016` Support explicit assembly registration for saga discovery
+- `SAGA-017` Add startup diagnostics for discovered sagas and bindings
 
 Next recommended items:
 
-- `SAGA-011` Reassess the role of the in-process keyed locker
-- `SAGA-016` Support explicit assembly registration for saga discovery
-- `SAGA-017` Add startup diagnostics for discovered sagas and bindings
+- `SAGA-018` Add runtime metrics for saga outcomes and duration
+- `SAGA-019` Build a deterministic saga test harness
+- `SAGA-022` Add administrative recovery operations
 
 ## Planning Assumptions
 
@@ -661,12 +665,12 @@ Large-scale deployments need partitioning and cleanup policies for saga history.
 
 If the goal is to start implementation immediately, this is the best first slice:
 
-1. `SAGA-016` Support explicit assembly registration for saga discovery
-2. `SAGA-017` Add startup diagnostics for discovered sagas and bindings
-3. `SAGA-018` Add runtime metrics for saga outcomes and duration
-4. `SAGA-022` Add administrative recovery operations
+1. `SAGA-018` Add runtime metrics for saga outcomes and duration
+2. `SAGA-019` Build a deterministic saga test harness
+3. `SAGA-022` Add administrative recovery operations
+4. `SAGA-020` Define serializer and schema-evolution strategy
 
-This sprint addresses the two most serious semantic defects, plus the most likely integration pitfall.
+This sprint addresses the largest remaining operational and evolution gaps after the core safety and discovery work already landed.
 
 ## Exit Criteria for “Production-Ready Core”
 
@@ -684,3 +688,5 @@ Do not market the base library as production-ready until at least these tasks ar
 - `SAGA-010`
 
 That set establishes minimum correctness, concurrency safety, and recoverability.
+
+The current workspace state meets this minimum baseline. The remaining work is now about operator tooling, policy modeling, and stronger distributed-runtime guarantees.

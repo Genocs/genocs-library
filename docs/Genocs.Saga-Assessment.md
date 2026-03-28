@@ -18,6 +18,7 @@ Implemented in the current workspace state:
 - `SAGA-010` explicit compensation lifecycle states and durable failure markers
 - `SAGA-011` configurable in-process execution locking with durable stores as the correctness boundary
 - `SAGA-016` explicit assembly registration for deterministic saga discovery
+- `SAGA-017` startup diagnostics for discovered sagas, bindings, and active runtime components
 
 Still open from the highest-priority set at the time of writing:
 
@@ -37,8 +38,9 @@ The main remaining risks are now concentrated in distributed-runtime behavior an
 
 - callback ordering still exposes `Rejected` before compensation has completed
 - duplicate delivery handling is now defined as opt-in message-identity deduplication, but it is not yet a distributed exactly-once guarantee
-- compensation failure is now durable and queryable, but there is still no built-in retry or operator recovery workflow
-- convenience discovery still depends on ambient `AppDomain` loading, but hosts can now bypass that by supplying explicit assemblies
+- compensation failure is now durable and queryable, and there is a baseline retry path, but there is still no richer operator recovery workflow
+- convenience discovery still depends on ambient `AppDomain` loading unless hosts opt into explicit assemblies, although startup diagnostics now make discovery failures visible much earlier
+- there are still no built-in runtime metrics for saga outcomes and durations
 
 My assessment is that the library has moved from starter-kit territory into a credible orchestration core for controlled environments, but it is still not a fully reliable distributed workflow foundation for high-value production paths.
 
@@ -61,7 +63,7 @@ This is a reasonable structure, but the failure and concurrency details need tig
 
 ---
 
-## Current Risk Surface After `SAGA-010`
+## Current Risk Surface After `SAGA-017`
 
 The highest-severity correctness defects from the first assessment pass are addressed in the current workspace state.
 
@@ -69,13 +71,15 @@ That changes the architecture posture in two important ways:
 
 - the base runtime now has explicit state versioning and can detect stale writes instead of silently overwriting state
 - the in-memory implementation now behaves much closer to a real repository by returning snapshots rather than shared mutable references
+- startup diagnostics now make saga discovery, bindings, and active runtime registrations visible during host startup
 
-The remaining concerns are mostly about distributed guarantees and lifecycle completeness rather than basic local correctness:
+The remaining concerns are mostly about distributed guarantees, recovery breadth, and operational completeness rather than basic local correctness:
 
 1. Duplicate delivery handling is now explicitly opt-in through `ISagaMessageIdentity` or `SagaContextMetadataKeys.MessageId`, but cross-node exactly-once semantics still depend on the persistence backend.
 2. Compensation failure is now persisted as `CompensationFailed`, and the coordinator now offers a baseline retry path, but broader operator workflows are still undefined.
-3. Discovery diagnostics and lifecycle policy remain under-specified for larger modular deployments.
+3. Default discovery still relies on ambient assembly loading unless hosts deliberately use the explicit assembly overloads.
 4. In-process locking is now explicitly configurable and treated as a local optimization rather than a distributed guarantee.
+5. Runtime metrics and first-class lifecycle policy abstractions are still missing.
 
 ---
 
@@ -244,6 +248,8 @@ This is a usability pitfall that will produce avoidable runtime failures.
 
 ### 6. Saga discovery depends on assemblies already loaded into the AppDomain
 
+**Status**: Partially resolved by `SAGA-016` and `SAGA-017`
+
 **Severity**: Medium
 
 **Why it matters**
@@ -263,9 +269,9 @@ This becomes a real pitfall as soon as the library is used across multiple proje
 
 **Recommended fix**
 
-- Allow explicit assembly registration: `AddSaga(params Assembly[] assemblies)`.
+- Prefer explicit assembly registration: `AddSaga(params Assembly[] assemblies)`.
 - Keep the current scan as a convenience overload, not the only discovery strategy.
-- Add startup diagnostics that list discovered saga types.
+- Use the startup diagnostics output to confirm discovered saga types and bindings during host startup.
 
 ---
 
@@ -394,7 +400,7 @@ The runtime now uses an explicit execution-lock abstraction with two important p
 
 **Recommended next step**
 
-- add diagnostics that expose which execution-lock mode is active at startup
+- build runtime metrics for saga outcomes and durations so operator visibility extends beyond startup diagnostics
 
 ---
 
@@ -564,4 +570,4 @@ Two viable paths exist:
 - strengthen persistence contracts first
 - make lifecycle, retries, idempotency, and observability first-class concepts
 
-My recommendation is still Option A, but the emphasis should now shift from locking semantics to discovery and diagnostics. The next meaningful slice is `SAGA-016` and `SAGA-017`, because deterministic registration and startup visibility are now the most consequential gaps.
+My recommendation is still Option A, but the emphasis should now shift from discovery toward operational visibility and recovery breadth. The next meaningful slice is `SAGA-018` and `SAGA-022`, with `SAGA-019` close behind, because metrics, richer recovery operations, and a deterministic test harness are now the most consequential gaps.
