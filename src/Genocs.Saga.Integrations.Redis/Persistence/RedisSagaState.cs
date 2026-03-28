@@ -4,7 +4,7 @@ namespace Genocs.Saga.Integrations.Redis.Persistence;
 
 internal sealed class RedisSagaState : ISagaState
 {
-    public SagaId? Id { get; }
+    public SagaId? Id { get; set; }
     public Type Type { get; }
     public SagaProcessState State { get; private set; }
     public object? Data { get; private set; }

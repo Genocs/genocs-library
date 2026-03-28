@@ -13,7 +13,7 @@ using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Saga;
-using Genocs.Saga.Integrations.MongoDB;
+using Genocs.Saga.Integrations.Redis;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.OpenApi;
@@ -47,7 +47,7 @@ gnxBuilder.Build();
 // Add services to the container.
 var services = builder.Services;
 
-services.AddSaga(x => x.UseMongoPersistence(builder.Configuration, "mongodb"))
+services.AddSaga(x => x.UseRedisPersistence(builder.Configuration, "redis"))
     .AddCors(options =>
     {
         options.AddDefaultPolicy(builder =>

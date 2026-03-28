@@ -21,6 +21,8 @@ public static class Extensions
 
     public static ISagaBuilder UseMongoPersistence(this ISagaBuilder builder, IConfiguration configuration, string sectionName = MongoOptions.Position)
     {
+        MongoOptions settings = ResolveSettings(configuration, sectionName);
+
         return builder.UseMongoPersistence(GetDatabase);
 
         IMongoDatabase GetDatabase(IServiceProvider serviceProvider)
@@ -32,7 +34,6 @@ public static class Extensions
                     sectionName = MongoOptions.Position;
                 }
 
-                var settings = ResolveSettings(configuration, sectionName);
                 if (!MongoOptions.IsValid(settings))
                 {
                     throw new InvalidConfigurationException(DeserializationError);

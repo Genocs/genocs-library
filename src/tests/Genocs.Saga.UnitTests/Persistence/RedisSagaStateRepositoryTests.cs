@@ -20,6 +20,8 @@ public class RedisSagaStateRepositoryTests
 
         ISagaState? persisted = await repository.ReadAsync("saga-1", typeof(TestSaga));
         persisted.ShouldNotBeNull();
+        persisted.Id.ShouldNotBeNull();
+        persisted.Id.Value.Id.ShouldBe("saga-1");
         persisted.Version.ShouldBe(1);
         persisted.State.ShouldBe(SagaProcessState.Pending);
     }
@@ -53,6 +55,15 @@ public class RedisSagaStateRepositoryTests
 
         exception.Message.ShouldContain("stored version is 2");
         currentState.Version.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task DeserializeRedisSagaState_ShouldDeserializeCorrectly()
+    {
+        string cachedSagaState = @"{""Id"":{""Id"":""1e7badd1-350b-4d52-9e14-61bd0ac14b57""},""Type"":""Genocs.Library.Demo.WebApi.Sagas.SampleSaga, Genocs.Library.Demo.WebApi, Version=9.0.0.0, Culture=neutral, PublicKeyToken=null"",""State"":0,""Data"":{""IsStartTransaction"":true,""IsCompleteTransaction"":false,""TransactionValue"":10,""IsEnded"":false,""MessageId"":""3d2b9216-1d9c-442d-93c0-c06c1049a452"",""IsSagaCompleted"":false},""Version"":1,""DataType"":""Genocs.Library.Demo.WebApi.Sagas.SagaData, Genocs.Library.Demo.WebApi, Version=9.0.0.0, Culture=neutral, PublicKeyToken=null""}";
+        RedisSagaState? state = JsonConvert.DeserializeObject<RedisSagaState>(cachedSagaState);
+
+        state.Id.Value.Id.ShouldBe("1e7badd1-350b-4d52-9e14-61bd0ac14b57");
     }
 
     private static string Serialize(RedisSagaState state)

@@ -1,11 +1,8 @@
 ﻿namespace Genocs.Saga;
 
-public readonly struct SagaId
+public readonly struct SagaId(string id)
 {
-    public string Id { get; }
-
-    private SagaId(string id)
-        => Id = id;
+    public string Id { get; } = id;
 
     public static implicit operator string(SagaId sagaId)
         => sagaId.Id;
