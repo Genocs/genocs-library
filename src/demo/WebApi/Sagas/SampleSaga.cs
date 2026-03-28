@@ -18,9 +18,10 @@ public class SampleSaga(ILogger<SampleSaga> logger,
 
     public Task HandleAsync(StartTransaction message, ISagaContext context)
     {
-        Data.IsStartTransaction = true;
         _logger.LogInformation("StartTransaction reached!");
 
+        Data.IsStartTransaction = true;
+        Data.MessageId = message.MessageId;
         Data.TransactionValue = message.TransactionValue;
 
         CompleteSaga();

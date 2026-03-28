@@ -1,4 +1,5 @@
 ﻿using Genocs.Common.CQRS.Events;
+using Genocs.Saga;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
 
@@ -8,10 +9,12 @@ public sealed class StartSagaCommand
     public int TransactionValue { get; set; }
 }
 
-public class StartTransaction
+public class StartTransaction : ISagaMessageIdentity
 {
     public string? Text { get; set; }
     public int TransactionValue { get; set; }
+
+    public string MessageId => Guid.NewGuid().ToString();
 }
 
 public class CompleteTransaction
