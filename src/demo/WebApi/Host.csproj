@@ -22,6 +22,7 @@
         <ProjectReference Include="..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
         <ProjectReference Include="..\..\Genocs.Saga\Genocs.Saga.csproj" />
+        <ProjectReference Include="..\..\Genocs.Saga.Integrations.MongoDB\Genocs.Saga.Integrations.MongoDB.csproj" />
         <ProjectReference Include="..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
     </ItemGroup>
 
@@ -35,6 +36,7 @@
         <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta002" />
         <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta002" />
         <PackageReference Include="Genocs.Saga" Version="9.0.0-beta002" />
+        <PackageReference Include="Genocs.Saga.Integrations.MongoDB" Version="9.0.0-beta002" />
         <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta002" />
     </ItemGroup>
 

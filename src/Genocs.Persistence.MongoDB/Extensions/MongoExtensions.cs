@@ -30,11 +30,7 @@ public static class MongoExtensions
     /// <param name="seederType">The seeder name.</param>
     /// <param name="registerConventions">Defines if setup the MongoDB standard Conventions.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongo(
-                                          this IGenocsBuilder builder,
-                                          string sectionName = MongoOptions.Position,
-                                          Type? seederType = null,
-                                          bool registerConventions = true)
+    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, string sectionName = MongoOptions.Position, Type? seederType = null, bool registerConventions = true)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -62,11 +58,7 @@ public static class MongoExtensions
     /// <param name="seederType">The sender type.</param>
     /// <param name="registerConventions">Enable default mongoDB Conventions. Default value is 'true'.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongo(
-                                          this IGenocsBuilder builder,
-                                          MongoOptions options,
-                                          Type? seederType = null,
-                                          bool registerConventions = true)
+    public static IGenocsBuilder AddMongo(this IGenocsBuilder builder, MongoOptions options, Type? seederType = null, bool registerConventions = true)
     {
         if (!builder.TryRegister(MongoOptions.Position))
         {
@@ -143,9 +135,7 @@ public static class MongoExtensions
     /// <param name="builder">The Genocs builder.</param>
     /// <param name="collectionName">The collection name where to store data.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongoRepository<TEntity, TKey>(
-                                                                    this IGenocsBuilder builder,
-                                                                    string collectionName)
+    public static IGenocsBuilder AddMongoRepository<TEntity, TKey>(this IGenocsBuilder builder, string collectionName)
         where TEntity : IEntity<TKey>
     {
         builder.Services.AddTransient<IMongoBaseRepository<TEntity, TKey>>(sp =>
@@ -164,11 +154,13 @@ public static class MongoExtensions
     /// <param name="sectionName">The Genocs builder.</param>
     /// <param name="registerConventions">The Genocs builder.</param>
     /// <returns>The Genocs builder.</returns>
-    public static IGenocsBuilder AddMongoWithRegistration(
-                                              this IGenocsBuilder builder,
-                                              string sectionName = MongoOptions.Position,
-                                              bool registerConventions = true)
+    public static IGenocsBuilder AddMongoWithRegistration(this IGenocsBuilder builder, string sectionName = MongoOptions.Position, bool registerConventions = true)
     {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = MongoOptions.Position;
+        }
+
         AddMongo(builder, sectionName, null, registerConventions);
 
         var section = builder.Configuration?.GetSection(sectionName);
