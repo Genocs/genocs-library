@@ -162,7 +162,7 @@ Use these public types for pageable APIs and query contracts:
 - **`IPagedQuery`**: Page index, page size, sorting, and order metadata.
 - **`PagedQueryBase`**: Reusable base implementation for pageable request models.
 - **`PagedQueryWithFilter`**: Pageable request model with a simple string filter.
-- **`ISearchRequest`**: Search query contract with `q` and `MaxItems`.
+- **`ISearchRequest`**: Search query contract with `SearchTerm` and `MaxItems` (`q` remains as a compatibility alias).
 - **`SearchRequest`**: Basic implementation of `ISearchRequest`.
 - **`PagedResultBase`**: Common response paging metadata.
 - **`PagedResult<T>`**: Typed paged result with `Items` and helper factory methods.
@@ -223,10 +223,10 @@ The attributes do not perform behavior on their own. They become meaningful only
 
 ### Use Shared Utility Types
 
-These types are small but useful for consumers:
+-These types are small but useful for consumers:
 
-- **`AppOptions`**: Shared options model for the `app` configuration section.
-- **`IServiceId`** and **`ServiceId`**: Per-instance GUID-based service identity.
+- **`AppOptions`**: Shared options model for the `app` configuration section. Properties are immutable after binding (init-only).
+- **`IServiceId`** and **`ServiceId`**: Per-instance GUID-based service identity. Now located in the `Genocs.Common.Services` namespace (moved from `Genocs.Common.Builders`).
 - **`ITypeList`** and **`TypeList`**: Type collections constrained to a base type.
 - **`Extensions`**: Reflection-based helpers that create default instances and populate default property values.
 

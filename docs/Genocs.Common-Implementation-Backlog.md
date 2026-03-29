@@ -282,9 +282,10 @@ Obsolete duplicates:
 **Dependencies**
 - none
 
+
 ### `COMMON-013` Remove DI lifetime coupling from service abstractions
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
 
@@ -316,9 +317,18 @@ Obsolete duplicates:
 
 ### `COMMON-014` Rename `ISearchRequest.q` to a C#-idiomatic property
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
+
+**Resolution**
+
+`ISearchRequest` and `SearchRequest` now expose `SearchTerm` as the canonical PascalCase property. A `q` alias is preserved for backward compatibility so existing consumers do not break while migrating.
+
+**Migration Notes**
+
+- Use `SearchTerm` for all new code and updated consumers.
+- Keep HTTP query-string mapping concerns (for example `q`) in endpoint/controller binding configuration rather than domain contracts.
 
 **Problem**
 
@@ -347,9 +357,18 @@ The `q` property violates C# naming conventions and pushes transport-specific qu
 
 ### `COMMON-015` Make `AppOptions` immutable after binding
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
+
+**Resolution**
+
+All properties on `AppOptions` are now `init`-only, making the options object immutable after binding. This ensures configuration stability and prevents accidental mutation at runtime.
+
+**Migration Notes**
+
+- Update any code that attempts to mutate `AppOptions` properties after construction; this will now result in a compile-time error.
+- Configuration binding (e.g., via `IOptions<AppOptions>`) remains compatible with `init`-only properties in .NET 8.0+.
 
 **Problem**
 
@@ -377,30 +396,29 @@ The `q` property violates C# naming conventions and pushes transport-specific qu
 
 ### `COMMON-016` Move `ServiceId` into a semantically correct namespace
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
 
 **Problem**
 
-`IServiceId` and `ServiceId` live in `Genocs.Common.Builders`, which misrepresents their role and makes discovery harder.
+`IServiceId` and `ServiceId` previously lived in `Genocs.Common.Builders`, which misrepresented their role and made discovery harder. They now reside in `Genocs.Common.Services`.
 
 **Scope**
 
-- choose the target namespace such as `Genocs.Common.Services` or `Genocs.Common.Runtime`
-- preserve type discoverability with compatibility shims if needed
-- update docs and examples
+- Moved `IServiceId` and `ServiceId` to the `Genocs.Common.Services` namespace.
+- Updated documentation and examples to reflect the new location.
 
 **Likely touch points**
 
-- [src/Genocs.Common/Builders/IServiceId.cs](src/Genocs.Common/Builders/IServiceId.cs)
-- [src/Genocs.Common/Builders/ServiceId.cs](src/Genocs.Common/Builders/ServiceId.cs)
+- [src/Genocs.Common/Services/IServiceId.cs](src/Genocs.Common/Services/IServiceId.cs)
+- [src/Genocs.Common/Services/ServiceId.cs](src/Genocs.Common/Services/ServiceId.cs)
 - documentation files under [docs](docs)
 
 **Acceptance criteria**
 
-- service identity types live in a namespace that matches their purpose
-- consumers have a clear upgrade path if namespaces change
+- Service identity types live in a namespace that matches their purpose (`Genocs.Common.Services`).
+- Consumers have a clear upgrade path if namespaces change (documented here).
 
 **Dependencies**
 

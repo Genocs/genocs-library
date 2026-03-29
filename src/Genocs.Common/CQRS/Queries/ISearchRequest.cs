@@ -6,7 +6,17 @@
 public interface ISearchRequest
 {
     /// <summary>
-    /// The search query used for full-text search.
+    /// The search term used for full-text search.
+    /// </summary>
+    string SearchTerm
+    {
+        get => q;
+        set => q = value;
+    }
+
+    /// <summary>
+    /// Compatibility alias for legacy query binding.
+    /// Use <see cref="SearchTerm"/> in new code.
     /// </summary>
     string q { get; set; }
 

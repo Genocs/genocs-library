@@ -6,9 +6,19 @@
 public class SearchRequest : ISearchRequest
 {
     /// <summary>
-    /// The search query used for full-text search.
+    /// The search term used for full-text search.
     /// </summary>
-    public string q { get; set; } = string.Empty;
+    public string SearchTerm { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Compatibility alias for legacy query binding.
+    /// Use <see cref="SearchTerm"/> in new code.
+    /// </summary>
+    public string q
+    {
+        get => SearchTerm;
+        set => SearchTerm = value;
+    }
 
     /// <summary>
     /// The maximum number of items to return.

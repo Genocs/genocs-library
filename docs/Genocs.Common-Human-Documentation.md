@@ -117,6 +117,7 @@ The query namespace contains contracts and helper models for paged read workflow
 **Capabilities:**
 - `IPagedQuery` for page, size, sort, and order metadata
 - `PagedQueryBase` and `PagedQueryWithFilter` for reusable request models
+- `ISearchRequest` and `SearchRequest` with `SearchTerm` as the canonical search property (`q` kept as a compatibility alias)
 - `PagedResultBase` and `PagedResult<T>` for consistent paged responses
 
 ### 5. Events, Notifications, and Application Services
@@ -173,8 +174,8 @@ The library exposes metadata attributes and generic type helpers used by higher-
 
 This package also includes a small set of reusable primitives for configuration and runtime identity.
 
-- **`AppOptions`**: Binds the `app` configuration section with service name, instance, version, and display flags.
-- **`IServiceId` / `ServiceId`**: Provides a per-instance GUID-based service identifier.
+- **`AppOptions`**: Binds the `app` configuration section with service name, instance, version, and display flags. Properties are immutable after binding (init-only).
+- **`IServiceId` / `ServiceId`**: Provides a per-instance GUID-based service identifier. Now located in the `Genocs.Common.Services` namespace (moved from `Genocs.Common.Builders`).
 - **`ITypeList` / `TypeList`**: Stores and validates types constrained to a base type.
 
 ## Architecture Integration
