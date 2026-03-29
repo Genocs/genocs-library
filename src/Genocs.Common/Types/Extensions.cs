@@ -9,6 +9,8 @@ namespace Genocs.Common.Types;
 /// </summary>
 public static class Extensions
 {
+    private const int MaxObjectGraphDepth = 10;
+
     /// <summary>
     /// GetDefaultInstance.
     /// </summary>
@@ -23,7 +25,7 @@ public static class Extensions
 
         var defaultValueCache = new Dictionary<Type, object?>();
 
-        if (TryGetDefaultValue(type, out object? instance, defaultValueCache))
+        if (TryGetDefaultValue(type, out object? instance, defaultValueCache, depth: 0))
         {
             return instance;
         }
@@ -38,17 +40,22 @@ public static class Extensions
     /// <param name="instance">The instance for which to set the default values.</param>
     /// <returns>The instance with its properties set to their default values.</returns>
     public static object SetDefaultInstanceProperties(this object instance)
-        => SetDefaultInstanceProperties(instance, []);
+        => SetDefaultInstanceProperties(instance, [], depth: 0);
 
-    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
+    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache, int depth)
     {
         defaultValueCache ??= [];
 
+        if (depth >= MaxObjectGraphDepth)
+        {
+            return instance;
+        }
+
         var type = instance.GetType();
 
-        foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance))
+        foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            if (TryGetDefaultValue(propertyInfo.PropertyType, out object? defaultValue, defaultValueCache))
+            if (TryGetDefaultValue(propertyInfo.PropertyType, out object? defaultValue, defaultValueCache, depth + 1))
             {
                 SetValue(propertyInfo, instance, defaultValue);
             }
@@ -57,8 +64,15 @@ public static class Extensions
         return instance;
     }
 
-    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object?> defaultValueCache)
+    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object?> defaultValueCache, int depth)
     {
+        if (depth > MaxObjectGraphDepth)
+        {
+            defaultValue = null;
+
+            return false;
+        }
+
         if (defaultValueCache.TryGetValue(type, out defaultValue))
         {
             return true;
@@ -127,7 +141,7 @@ public static class Extensions
 
         defaultValueCache[type] = defaultValue;
 
-        SetDefaultInstanceProperties(defaultValue, defaultValueCache);
+        SetDefaultInstanceProperties(defaultValue, defaultValueCache, depth);
 
         return true;
     }

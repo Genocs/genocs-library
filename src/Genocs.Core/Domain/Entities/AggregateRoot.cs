@@ -12,8 +12,15 @@ public class AggregateRoot<TPrimaryKey>
     [NotMapped]
     public virtual List<IEvent>? DomainEvents { get; }
 
+    IReadOnlyCollection<IEvent> IGeneratesDomainEvents.DomainEvents => DomainEvents;
+
     public AggregateRoot()
     {
         DomainEvents = [];
+    }
+
+    public void ClearDomainEvents()
+    {
+        DomainEvents?.Clear();
     }
 }

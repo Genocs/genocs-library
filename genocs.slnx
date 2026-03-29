@@ -41,6 +41,7 @@
     <Project Path="src/tests/Genocs.Messaging.Tracing.UnitTests/Genocs.Messaging.Tracing.UnitTests.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />

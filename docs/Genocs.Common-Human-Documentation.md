@@ -27,6 +27,7 @@ The library is designed with the following principles in mind:
 
 ### 1. Domain Modeling Contracts
 
+
 Genocs.Common provides the core interfaces used to model entities and aggregate roots in a DDD-style domain.
 
 - **`IIdentifiable<TKey>`**: Minimal typed identity contract reused by entity abstractions.
@@ -35,6 +36,7 @@ Genocs.Common provides the core interfaces used to model entities and aggregate 
 - **`IAggregateRoot`**: Marker contract for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Aggregate root with typed identity and domain event support.
 - **`IGeneratesDomainEvents`**: Exposes a `List<IEvent>? DomainEvents` collection for aggregate-level event tracking.
+- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first repository contract for CRUD and queries. All methods are asynchronous and accept a `CancellationToken`. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit. Synchronous methods have been removed for safety and modern .NET compatibility.
 
 **Key Features:**
 - Explicit aggregate root boundaries

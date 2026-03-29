@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Domain.Entities;
-using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDB.Repositories;
@@ -170,4 +169,9 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
 
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().Where(predicate).AnyAsync(cancellationToken);
+
+    public Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

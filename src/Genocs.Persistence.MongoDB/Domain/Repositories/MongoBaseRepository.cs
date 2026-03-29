@@ -8,15 +8,10 @@ using MongoDB.Driver.Linq;
 
 namespace Genocs.Persistence.MongoDB.Domain.Repositories;
 
-internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity, TKey>
+internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, string collectionName) : IMongoBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
-    public MongoBaseRepository(IMongoDatabase database, string collectionName)
-    {
-        Collection = database.GetCollection<TEntity>(collectionName);
-    }
-
-    public IMongoCollection<TEntity> Collection { get; }
+    public IMongoCollection<TEntity> Collection { get; } = database.GetCollection<TEntity>(collectionName);
 
     /// <summary>
     /// It returns the Mongo Collection as Queryable.
@@ -85,13 +80,13 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task DeleteAsync(TKey id, CancellationToken cancellationToken = default)
-        => DeleteAsync(e => e.Id.Equals(id));
+        => DeleteAsync(e => e.Id.Equals(id), cancellationToken);
 
     public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Collection.DeleteOneAsync(predicate);
+        => Collection.DeleteOneAsync(predicate, cancellationToken);
 
     public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Collection.Find(predicate).AnyAsync();
+        => Collection.Find(predicate).AnyAsync(cancellationToken);
 
     public IQueryable<TEntity> GetAll()
         => Collection.AsQueryable();
@@ -100,7 +95,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
         => GetAll();
 
     public List<TEntity> GetAllList()
-        => Collection.AsQueryable().ToList();
+        => [.. Collection.AsQueryable()];
 
     public async Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().ToListAsync();
@@ -119,16 +114,16 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
     {
         if (predicate == null)
         {
-            return await GetAllListAsync();
+            return await GetAllListAsync(cancellationToken);
         }
 
-        return await Collection.Find(predicate).ToListAsync();
+        return await Collection.Find(predicate).ToListAsync(cancellationToken);
     }
 
-    public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
-    {
-        throw new NotImplementedException();
-    }
+    //public T Query<T>(Func<IQueryable<TEntity>, T> queryMethod)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     public TEntity Get(TKey id)
         => Collection.Find(c => c.Id.Equals(id)).First();
@@ -138,8 +133,8 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
 
     public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        var result = await Collection.FindAsync(predicate);
-        return await result.SingleAsync();
+        var result = await Collection.FindAsync(predicate, cancellationToken: cancellationToken);
+        return await result.SingleAsync(cancellationToken);
     }
 
     public TEntity? FirstOrDefault(TKey id)
@@ -147,8 +142,8 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
 
     public async Task<TEntity?> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
     {
-        var result = await Collection.FindAsync(c => c.Id.Equals(id));
-        return await result.FirstOrDefaultAsync();
+        var result = await Collection.FindAsync(c => c.Id.Equals(id), cancellationToken: cancellationToken);
+        return await result.FirstOrDefaultAsync(cancellationToken);
     }
 
     public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -156,8 +151,8 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
 
     public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        var result = await Collection.FindAsync(predicate);
-        return await result.FirstOrDefaultAsync();
+        var result = await Collection.FindAsync(predicate, cancellationToken: cancellationToken);
+        return await result.FirstOrDefaultAsync(cancellationToken);
     }
 
     public TEntity? Load(TKey id)
@@ -171,7 +166,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
 
     public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Collection.InsertOneAsync(entity);
+        await Collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
         return entity;
     }
 
@@ -179,7 +174,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
         => Insert(entity).Id;
 
     public async Task<TKey> InsertAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => (await InsertAsync(entity)).Id;
+        => (await InsertAsync(entity, cancellationToken)).Id;
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
@@ -189,7 +184,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
 
     public async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Collection.ReplaceOneAsync(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        await Collection.ReplaceOneAsync(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
         return entity;
     }
 
@@ -197,7 +192,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
         => InsertOrUpdate(entity).Id;
 
     public async Task<TKey> InsertOrUpdateAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => (await InsertOrUpdateAsync(entity)).Id;
+        => (await InsertOrUpdateAsync(entity, cancellationToken)).Id;
 
     public TEntity Update(TEntity entity)
     {
@@ -228,7 +223,7 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
             throw new ArgumentNullException(nameof(entity));
         }
 
-        return DeleteAsync(entity.Id);
+        return DeleteAsync(entity.Id, cancellationToken);
     }
 
     public void Delete(TKey id)
@@ -252,28 +247,32 @@ internal class MongoBaseRepository<TEntity, TKey> : IMongoBaseRepository<TEntity
         => (int)Collection.EstimatedDocumentCount();
 
     public async Task<int> CountAsync(CancellationToken cancellationToken = default)
-        => (int)await Collection.EstimatedDocumentCountAsync();
+        => (int)await Collection.EstimatedDocumentCountAsync(cancellationToken: cancellationToken);
 
     public int Count(Expression<Func<TEntity, bool>> predicate)
         => (int)Collection.CountDocuments(predicate);
 
     public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => (int)await Collection.EstimatedDocumentCountAsync();
+        => (int)await Collection.EstimatedDocumentCountAsync(cancellationToken: cancellationToken);
 
     public long LongCount()
         => Collection.EstimatedDocumentCount();
 
     public async Task<long> LongCountAsync(CancellationToken cancellationToken = default)
-        => await Collection.EstimatedDocumentCountAsync();
+        => await Collection.EstimatedDocumentCountAsync(cancellationToken: cancellationToken);
 
     public long LongCount(Expression<Func<TEntity, bool>> predicate)
         => Collection.CountDocuments(predicate);
 
     public async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => await Collection.CountDocumentsAsync(predicate);
+        => await Collection.CountDocumentsAsync(predicate, cancellationToken: cancellationToken);
 
-    Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+    async Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var result = await Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), entity, cancellationToken: cancellationToken);
+        return entity;
     }
+
+    public async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+        => await Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync(cancellationToken);
 }

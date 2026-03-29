@@ -80,6 +80,7 @@ public class TypeList<TBaseType> : ITypeList<TBaseType>
     /// <inheritdoc/>
     public void Insert(int index, Type item)
     {
+        CheckType(item);
         _typeList.Insert(index, item);
     }
 

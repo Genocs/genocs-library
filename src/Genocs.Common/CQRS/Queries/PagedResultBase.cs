@@ -33,7 +33,7 @@ public abstract class PagedResultBase
     /// <summary>
     /// Gets whether there are previous pages.
     /// </summary>
-    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasPreviousPage => CurrentPage > 0;
 
     /// <summary>
     /// Default constructor.

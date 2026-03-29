@@ -115,10 +115,11 @@ Choose these auditing interfaces only when you need the corresponding metadata:
 
 ### Define Persistence Contracts
 
+
 Use these contracts to define repository boundaries without committing to a database engine:
 
 - **`IRepository<TEntity, TKey>`**: Marker repository interface.
-- **`IRepositoryOfEntity<TEntity, TKey>`**: Full CRUD and query-oriented repository contract.
+- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first CRUD and query-oriented repository contract. All methods are asynchronous and accept a `CancellationToken`. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
 - **`IUnitOfWork`**: Commit boundary with `Task<int> Save()`.
 - **`ISupportsExplicitLoading<TEntity, TPrimaryKey>`**: Explicit loading for related data.
 - **`IDatabaseInitializer`**: Database startup initialization.
@@ -127,7 +128,11 @@ Use these contracts to define repository boundaries without committing to a data
 - **`IConnectionStringSecurer`**: Safe connection string masking.
 
 **Important:**
-`Genocs.Common` does not implement any repository or unit-of-work behavior. It only defines the shape your infrastructure package should implement.
+`Genocs.Common` does not implement any repository or unit-of-work behavior. It only defines the shape your infrastructure package should implement. All repository contracts are now async-only; synchronous methods have been removed for safety and modern .NET compatibility.
+
+**Migration Guidance:**
+- Update all repository implementations to remove synchronous methods and use async signatures.
+- Consumers should use `await repository.GetByIdAsync(id, cancellationToken)` and handle `null` for not-found cases.
 
 ### Define Commands, Queries, And Events
 

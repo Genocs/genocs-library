@@ -21,4 +21,9 @@ internal sealed class ServiceBusMessageDispatcher : ICommandDispatcher, IEventDi
     public Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default)
         where T : class, IEvent
         => _busPublisher.PublishAsync(@event, _accessor.CorrelationContext);
+
+    Task<TResult> ICommandDispatcher.SendAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }
