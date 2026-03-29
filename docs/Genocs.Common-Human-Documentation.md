@@ -125,10 +125,10 @@ This package defines contracts for system events, UI or client notifications, an
 
 - **`IEvent` / `IEventHandler<TEvent>` / `IEventDispatcher`**: Core event publishing contracts.
 - **`IRejectedEvent` / `RejectedEvent`**: Standardized rejection event shape with `Reason` and `Code`.
-- **`INotificationMessage` / `INotificationSender`**: Notification transport abstractions for broadcast, group, and user delivery.
+- **`INotificationMessage` / `INotificationSender`**: Notification transport abstractions for broadcast, group, and user delivery. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 - **`ICurrentUser`**: Abstraction for authenticated user context, claims, tenant, and role checks.
-- **`IJobService`**: Contract for enqueueing, scheduling, deleting, and requeueing background jobs.
-- **`ISerializerService`**: Serialization and deserialization abstraction.
+- **`IJobService`**: Contract for enqueueing, scheduling, deleting, and requeueing background jobs. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
+- **`ISerializerService`**: Serialization and deserialization abstraction. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 - **`IDto`**: Marker interface for DTO types.
 
 **Features:**
@@ -138,14 +138,16 @@ This package defines contracts for system events, UI or client notifications, an
 
 ### 6. Service Lifetimes and Startup Conventions
 
-Genocs.Common includes marker interfaces that support convention-based registration and controlled startup execution.
+Genocs.Common now uses a canonical set of DI marker interfaces in the `Genocs.Common.Dependency` namespace:
 
-- **`ISingletonDependency`**: Marker for singleton registration by scanning.
-- **`ITransientDependency`**: Marker for transient registration by scanning.
-- **`IScopedService`**: Scoped service lifetime marker.
-- **`ITransientService`**: Transient service lifetime marker.
+- **`ISingletonDependency`**: Marker for singleton registration by scanning (canonical).
+- **`ITransientDependency`**: Marker for transient registration by scanning (canonical).
+- **`IScopedDependency`**: Marker for scoped registration (canonical, new).
 - **`IInitializer`**: Async initialization contract for boot tasks.
 - **`IStartupInitializer`**: Aggregates multiple `IInitializer` instances into a startup pipeline.
+
+**Obsolete:**
+- `IScopedService` and `ITransientService` (in `Genocs.Common.Interfaces`) are now obsolete and inherit from the canonical markers. Use only the canonical marker interfaces for new code.
 
 **Benefits:**
 - Consistent lifetime conventions across packages

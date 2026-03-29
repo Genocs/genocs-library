@@ -5,7 +5,7 @@ namespace Genocs.Common.Interfaces;
 /// <summary>
 /// This interface is used to send notifications.
 /// </summary>
-public interface INotificationSender : ITransientService
+public interface INotificationSender
 {
     Task BroadcastAsync(INotificationMessage notification, CancellationToken cancellationToken = default);
     Task BroadcastAsync(INotificationMessage notification, IEnumerable<string> excludedConnectionIds, CancellationToken cancellationToken = default);

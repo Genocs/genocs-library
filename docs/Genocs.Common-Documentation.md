@@ -175,16 +175,19 @@ Use these public types for pageable APIs and query contracts:
 
 ### Use Cross-Cutting Service Contracts
 
+
+### Use Cross-Cutting Service Contracts
+
 Use these interfaces when your application layer needs a stable abstraction but not a concrete implementation:
 
 - **`ICurrentUser`**: Read authenticated user information, claims, tenant, and role membership.
 - **`IDto`**: Marker interface for DTOs.
-- **`IJobService`**: Enqueue, schedule, delete, and requeue background jobs.
-- **`INotificationSender`**: Send notifications to all users, groups, or selected users.
-- **`ISerializerService`**: Serialize and deserialize values.
+- **`IJobService`**: Enqueue, schedule, delete, and requeue background jobs. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
+- **`INotificationSender`**: Send notifications to all users, groups, or selected users. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
+- **`ISerializerService`**: Serialize and deserialize values. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 
 **Important:**
-These are not built-in services. The package assumes your host application or another Genocs package will provide implementations.
+These are not built-in services. The package assumes your host application or another Genocs package will provide implementations. Service lifetimes should be assigned at registration time in your DI container, not by interface inheritance.
 
 ### Use Notification Models
 
@@ -199,18 +202,21 @@ These types standardize notification payloads:
 
 ### Use Conventions, Startup Hooks, And Metadata
 
+
 Use these types to support convention-based composition:
 
-- **`ISingletonDependency`**: Marker for singleton registration conventions.
-- **`ITransientDependency`**: Marker for transient registration conventions.
-- **`IScopedService`**: Marker for scoped service registration.
-- **`ITransientService`**: Marker for transient service registration.
+- **`ISingletonDependency`**: Marker for singleton registration conventions (canonical, in `Genocs.Common.Dependency`).
+- **`ITransientDependency`**: Marker for transient registration conventions (canonical, in `Genocs.Common.Dependency`).
+- **`IScopedDependency`**: Marker for scoped registration (canonical, in `Genocs.Common.Dependency`).
 - **`IInitializer`**: Boot-time initialization contract.
 - **`IStartupInitializer`**: Aggregates multiple initializers.
 - **`MessageAttribute`**: Message metadata for exchange, topic, queue, queue type, error queue, and subscription ID.
 - **`DecoratorAttribute`**: Decorator marker for scanners or registration rules.
 - **`HiddenAttribute`**: Property-level hide marker.
 - **`PublicContractAttribute`**: Marks a class as a public contract.
+
+**Obsolete:**
+- `IScopedService` and `ITransientService` (in `Genocs.Common.Interfaces`) are now obsolete and inherit from the canonical markers. Use only the canonical marker interfaces for new code.
 
 **Important:**
 The attributes do not perform behavior on their own. They become meaningful only when another package or your own code reads them.

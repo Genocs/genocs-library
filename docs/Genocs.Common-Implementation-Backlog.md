@@ -255,36 +255,31 @@ The `IRepositoryOfEntity<TEntity, TKey>` contract is now async-first. All synchr
 
 ### `COMMON-012` Consolidate DI lifetime markers into one namespace and model
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
 
-**Problem**
+**Resolution**
 
-The package has two overlapping marker systems across `Genocs.Common.Dependency` and `Genocs.Common.Interfaces`, creating ambiguity for scanners and consumers.
+All DI lifetime marker interfaces are now consolidated under the `Genocs.Common.Dependency` namespace:
 
-**Scope**
+- `ISingletonDependency` (singleton)
+- `ITransientDependency` (transient)
+- `IScopedDependency` (scoped, new)
 
-- define the canonical lifetime marker set
-- add missing symmetry if retained, such as `IScopedDependency`
-- obsolete duplicate markers with clear migration messaging
+Obsolete duplicates:
+- `IScopedService` and `ITransientService` in `Genocs.Common.Interfaces` are now marked `[Obsolete]` and inherit from the canonical marker.
 
-**Likely touch points**
-
-- [src/Genocs.Common/Dependency/ISingletonDependency.cs](src/Genocs.Common/Dependency/ISingletonDependency.cs)
-- [src/Genocs.Common/Dependency/ITransientDependency.cs](src/Genocs.Common/Dependency/ITransientDependency.cs)
-- [src/Genocs.Common/Interfaces/IScopedService.cs](src/Genocs.Common/Interfaces/IScopedService.cs)
-- [src/Genocs.Common/Interfaces/ITransientService.cs](src/Genocs.Common/Interfaces/ITransientService.cs)
-- documentation files under [docs](docs)
+**Migration Notes**
+- Use only the canonical marker interfaces from `Genocs.Common.Dependency` for new code.
+- Update any usages of `IScopedService` or `ITransientService` to the new canonical markers.
 
 **Acceptance criteria**
-
-- there is one canonical DI marker model
-- duplicate markers are either removed or explicitly obsolete
-- scanners can implement one predictable convention set
+- There is one canonical DI marker model.
+- Duplicate markers are either removed or explicitly obsolete.
+- Scanners can implement one predictable convention set.
 
 **Dependencies**
-
 - none
 
 ### `COMMON-013` Remove DI lifetime coupling from service abstractions

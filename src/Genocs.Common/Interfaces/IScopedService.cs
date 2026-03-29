@@ -1,6 +1,10 @@
+using System;
+using Genocs.Common.Dependency;
+
 namespace Genocs.Common.Interfaces;
 
 /// <summary>
-/// Interface for scoped services.
+/// [Obsolete] Use <see cref=\"IScopedDependency\"/> from Genocs.Common.Dependency instead.
 /// </summary>
-public interface IScopedService;
+[Obsolete("Use IScopedDependency from Genocs.Common.Dependency instead.")]
+public interface IScopedService : IScopedDependency;

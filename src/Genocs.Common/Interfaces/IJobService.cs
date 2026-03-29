@@ -7,7 +7,7 @@ namespace Genocs.Common.Interfaces;
 /// TODO: This interface is used to define the methods for job scheduling and management.
 /// Will be used in the future.
 /// </summary>
-public interface IJobService : ITransientService
+public interface IJobService
 {
     string Enqueue(Expression<Action> methodCall);
 
