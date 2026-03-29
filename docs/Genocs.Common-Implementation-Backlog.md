@@ -486,19 +486,19 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-019` Make `IDispatcher` an explicit composite of specialized dispatchers
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
 
 **Problem**
 
-`IDispatcher` duplicates specialized dispatcher members without formally extending the specialized interfaces.
+`IDispatcher` duplicated specialized dispatcher members without formally extending the specialized interfaces.
 
 **Scope**
 
-- refactor `IDispatcher` to inherit from `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`
-- ensure any new result-returning command methods from `COMMON-007` are represented consistently
-- document intended use of the aggregate interface versus specialized interfaces
+- Refactored `IDispatcher` to inherit from `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`.
+- Ensured result-returning command methods from `COMMON-007` are represented through interface composition.
+- Updated documentation to clarify intended use of the aggregate interface versus specialized interfaces.
 
 **Likely touch points**
 
@@ -509,8 +509,8 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 **Acceptance criteria**
 
-- `IDispatcher` is a true aggregate abstraction, not a disconnected copy
-- consumers can register one implementation against all intended dispatcher contracts
+- `IDispatcher` is a true aggregate abstraction, not a disconnected copy.
+- Consumers can register one implementation against all intended dispatcher contracts.
 
 **Dependencies**
 
@@ -522,19 +522,19 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-020` Make out-of-range paging behavior explicit
 
-**Status**: Planned
+**Status**: Implemented & tested (March 2026)
 
 **Priority**: P3
 
 **Problem**
 
-`PagedResultBase` silently clamps `currentPage` to `totalPages`, which hides caller mistakes and can return misleading metadata.
+`PagedResultBase` now throws an `ArgumentOutOfRangeException` if `currentPage` is negative or greater than or equal to `totalPages`, making caller mistakes explicit and preventing misleading metadata. This replaces the previous silent clamping behavior.
 
 **Scope**
 
-- choose the desired behavior: throw, preserve requested page, or return a documented empty result strategy
-- update constructors and factory methods accordingly
-- add tests for edge conditions such as empty result sets and oversized page requests
+- Throw `ArgumentOutOfRangeException` for negative or oversized page requests in `PagedResultBase` constructor.
+- Update all factory methods to use the new contract.
+- Add unit tests for negative, oversized, and edge-case page requests.
 
 **Likely touch points**
 
@@ -544,8 +544,9 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 **Acceptance criteria**
 
-- out-of-range page handling is explicit and documented
-- callers can reason about the returned page metadata without hidden clamping
+- Out-of-range page handling is explicit and documented (exception thrown).
+- Callers can reason about the returned page metadata without hidden clamping.
+- Unit tests verify exception is thrown for invalid input.
 
 **Dependencies**
 

@@ -51,7 +51,12 @@ public abstract class PagedResultBase
     /// <param name="totalResults">The total number of results.</param>
     protected PagedResultBase(int currentPage, int resultsPerPage, int totalPages, long totalResults)
     {
-        CurrentPage = currentPage > totalPages ? totalPages : currentPage;
+        if (currentPage < 0 || currentPage >= totalPages)
+        {
+            throw new ArgumentOutOfRangeException(nameof(currentPage), $"Requested page {currentPage} is out of range. Total pages: {totalPages}.");
+        }
+
+        CurrentPage = currentPage;
         ResultsPerPage = resultsPerPage;
         TotalPages = totalPages;
         TotalResults = totalResults;

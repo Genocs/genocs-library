@@ -150,7 +150,7 @@ Use these contracts for CQRS-oriented applications:
 - **`IEventHandler<TEvent>`**: Async event handler contract.
 - **`IEventHandlerLegacy<T>`**: Legacy event handler shape.
 - **`IEventDispatcher`**: Event publish contract.
-- **`IDispatcher`**: Unified abstraction for send, publish, and query.
+- **`IDispatcher`**: Unified abstraction that composes `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`.
 
 **Important:**
 Dispatchers are interfaces only. If you have only `Genocs.Common`, you can define contracts but you cannot execute them until another package provides implementations.
@@ -164,7 +164,7 @@ Use these public types for pageable APIs and query contracts:
 - **`PagedQueryWithFilter`**: Pageable request model with a simple string filter.
 - **`ISearchRequest`**: Search query contract with `SearchTerm` and `MaxItems` (`q` remains as a compatibility alias).
 - **`SearchRequest`**: Basic implementation of `ISearchRequest`.
-- **`PagedResultBase`**: Common response paging metadata.
+- **`PagedResultBase`**: Common response paging metadata. Throws if the requested page is out of range (negative or >= total pages).
 - **`PagedResult<T>`**: Typed paged result with `Items` and helper factory methods.
 - **`IPagedFilter<TResult, TQuery>`**: Filter contract that returns a `PagedResult<TResult>`.
 

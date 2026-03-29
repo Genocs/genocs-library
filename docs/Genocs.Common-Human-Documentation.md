@@ -125,6 +125,7 @@ The query namespace contains contracts and helper models for paged read workflow
 This package defines contracts for system events, UI or client notifications, and a few common app-level services.
 
 - **`IEvent` / `IEventHandler<TEvent>` / `IEventDispatcher`**: Core event publishing contracts.
+- **`IDispatcher`**: Composite dispatcher abstraction that inherits command, query, and event dispatch contracts.
 - **`IRejectedEvent` / `RejectedEvent`**: Standardized rejection event shape with `Reason` and `Code`.
 - **`INotificationMessage` / `INotificationSender`**: Notification transport abstractions for broadcast, group, and user delivery. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 - **`ICurrentUser`**: Abstraction for authenticated user context, claims, tenant, and role checks.
