@@ -455,30 +455,30 @@ All properties on `AppOptions` are now `init`-only, making the options object im
 
 ### `COMMON-018` Relocate and clarify connection-string contracts
 
-**Status**: Planned
+**Status**: Implemented & documented (March 2026)
 
 **Priority**: P2
 
 **Problem**
 
-Connection-string validation and masking are infrastructure concerns but currently live under a domain namespace with weak nullability semantics.
+Connection-string validation and masking are infrastructure concerns but previously lived under a domain namespace with weak nullability semantics. They now reside in `Genocs.Common.Persistence`.
 
 **Scope**
 
-- move the contracts to a more appropriate namespace such as `Genocs.Common.Persistence` or `Genocs.Common.Infrastructure`
-- clarify nullability and provider-unknown behavior
-- align names and docs with actual usage expectations
+- Moved the contracts to the `Genocs.Common.Persistence` namespace.
+- Clarified nullability and provider-unknown behavior.
+- Aligned names and docs with actual usage expectations.
 
 **Likely touch points**
 
-- [src/Genocs.Common/Domain/ConnectionString/IConnectionStringValidator.cs](src/Genocs.Common/Domain/ConnectionString/IConnectionStringValidator.cs)
-- [src/Genocs.Common/Domain/ConnectionString/IConnectionStringSecurer.cs](src/Genocs.Common/Domain/ConnectionString/IConnectionStringSecurer.cs)
+- [src/Genocs.Common/Persistence/IConnectionStringValidator.cs](src/Genocs.Common/Persistence/IConnectionStringValidator.cs)
+- [src/Genocs.Common/Persistence/IConnectionStringSecurer.cs](src/Genocs.Common/Persistence/IConnectionStringSecurer.cs)
 - documentation files under [docs](docs)
 
 **Acceptance criteria**
 
-- connection-string contracts are not positioned as domain abstractions
-- return-value semantics are explicitly documented and reflected in nullability annotations
+- Connection-string contracts are not positioned as domain abstractions.
+- Return-value semantics are explicitly documented and reflected in nullability annotations.
 
 **Dependencies**
 

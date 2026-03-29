@@ -87,8 +87,8 @@ The package defines persistence-facing abstractions without choosing a storage t
 
 #### Connection String Contracts
 
-- **`IConnectionStringValidator`**: Validates provider-specific connection strings.
-- **`IConnectionStringSecurer`**: Removes or masks sensitive data before logging or display.
+- **`IConnectionStringValidator`**: Validates provider-specific connection strings. Now located in the `Genocs.Common.Persistence` namespace (moved from `Genocs.Common.Domain.ConnectionString`).
+- **`IConnectionStringSecurer`**: Removes or masks sensitive data before logging or display. Now located in the `Genocs.Common.Persistence` namespace (moved from `Genocs.Common.Domain.ConnectionString`).
 
 **Purpose:**
 These contracts allow the domain and application layers to define data-access expectations once, then bind them to MongoDB, EF Core, or custom implementations elsewhere in the Genocs stack.

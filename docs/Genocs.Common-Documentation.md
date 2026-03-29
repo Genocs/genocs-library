@@ -124,8 +124,8 @@ Use these contracts to define repository boundaries without committing to a data
 - **`ISupportsExplicitLoading<TEntity, TPrimaryKey>`**: Explicit loading for related data.
 - **`IDatabaseInitializer`**: Database startup initialization.
 - **`ICustomSeeder`**: Data seeding hook.
-- **`IConnectionStringValidator`**: Connection string validation.
-- **`IConnectionStringSecurer`**: Safe connection string masking.
+- **`IConnectionStringValidator`**: Connection string validation. Now located in the `Genocs.Common.Persistence` namespace (moved from `Genocs.Common.Domain.ConnectionString`).
+- **`IConnectionStringSecurer`**: Safe connection string masking. Now located in the `Genocs.Common.Persistence` namespace (moved from `Genocs.Common.Domain.ConnectionString`).
 
 **Important:**
 `Genocs.Common` does not implement any repository or unit-of-work behavior. It only defines the shape your infrastructure package should implement. All repository contracts are now async-only; synchronous methods have been removed for safety and modern .NET compatibility.
