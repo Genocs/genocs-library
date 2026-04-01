@@ -79,16 +79,12 @@ public sealed class GenocsBuilder : IGenocsBuilder
         });
 
     /// <summary>
-    /// Build the Genocs application.
+    /// Executes deferred build actions against the final application service provider.
     /// </summary>
-    /// <remarks>
-    /// Remember to call the Build on the application builder.
-    /// </remarks>
-    /// <returns>The Service Provider to be used for chaining.</returns>
-    public IServiceProvider Build()
+    /// <param name="serviceProvider">The final application service provider.</param>
+    public void Build(IServiceProvider serviceProvider)
     {
-        var serviceProvider = _services.BuildServiceProvider();
-        _buildActions.ForEach(a => a(serviceProvider));
-        return serviceProvider;
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        _buildActions.ForEach(action => action(serviceProvider));
     }
 }

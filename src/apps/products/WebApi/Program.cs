@@ -58,11 +58,8 @@ IGenocsBuilder gnxBuilder = await builder
                                         .AddOpenApiDocs()
                                         .AddRabbitMQAsync();
 
-// Build the Genocs builder
-gnxBuilder.Build();
-
-// Build the Application
 var app = builder.Build();
+gnxBuilder.Build(app.Services);
 
 app.UseGenocs()
     .UseCorrelationContextLogging()

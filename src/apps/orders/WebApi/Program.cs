@@ -58,10 +58,11 @@ IGenocsBuilder gnxBuilder = await builder
 
 gnxBuilder.AddMessageOutbox(o => o.AddMongo())
         .AddWebApi()
-        .AddOpenApiDocs()
-        .Build();
+        .AddOpenApiDocs();
 
 var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
 
 app.UseGenocs()
     .UseCorrelationContextLogging()

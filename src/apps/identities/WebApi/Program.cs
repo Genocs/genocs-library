@@ -18,13 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host
         .UseLogging();
 
-(await builder
+IGenocsBuilder gnxBuilder = await builder
         .AddGenocs()
         .AddJwt()
         .AddWebApi()
-        .AddCoreAsync()).Build();
+        .AddCoreAsync();
 
 var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
 
 // Setup the Core services. The order matters, please keep it as is.
 app.UseCore();

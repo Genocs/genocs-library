@@ -45,8 +45,8 @@ internal class Startup(IConfiguration configuration)
         await builder.AddRabbitMQAsync();
 
         builder.AddSecurity()
-            .AddWebApi()
-            .Build();
+            .AddWebApi();
+            //.Build();
 
         services.AddReverseProxy()
                 .LoadFromConfig(Configuration.GetSection("ReverseProxy"));

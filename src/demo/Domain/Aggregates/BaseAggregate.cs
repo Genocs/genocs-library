@@ -3,7 +3,7 @@ using Genocs.Core.Domain.Entities;
 using Genocs.Persistence.MongoDB.Domain.Entities;
 using MongoDB.Bson;
 
-namespace Genocs.Core.Demo.Domain.Aggregates;
+namespace Genocs.Library.Demo.Domain.Aggregates;
 
 /// <summary>
 /// Base aggregate class used for all entities.
@@ -20,5 +20,5 @@ public class BaseAggregate : AggregateRoot<ObjectId>, IMongoEntity, IHasCreation
     /// <summary>
     /// Creation time of this entity.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 }

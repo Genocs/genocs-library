@@ -12,8 +12,6 @@ using Genocs.WebApi.OpenApi;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 
-// using Genocs.Persistence.EFCore.Extensions;
-
 StaticLogger.EnsureInitialized();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +20,7 @@ builder.Host
         .UseAzureKeyVault()
         .UseLogging();
 
-builder
+IGenocsBuilder gnxBuilder = builder
     .AddGenocs()
     .AddOpenIdJwt()
     .AddTelemetry()
@@ -31,8 +29,7 @@ builder
     //.AddEFCorePersistence()
     .AddApplicationServices()
     .AddWebApi()
-    .AddOpenApiDocs()
-    .Build();
+    .AddOpenApiDocs();
 
 var services = builder.Services;
 
@@ -57,6 +54,8 @@ services.AddCustomMassTransit(builder.Configuration);
 services.AddFirebaseAuthorization(builder.Configuration);
 
 var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
 
 // Use it only  in case you are using EF Core
 //await app.Services.InitializeDatabasesAsync();

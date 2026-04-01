@@ -1,4 +1,4 @@
-using Genocs.Common.Builders;
+using Genocs.Common.Services;
 using Genocs.Core.Builders;
 using Genocs.Http;
 using Genocs.Http.Configurations;
@@ -132,6 +132,7 @@ public static class Extensions
 
         string pingEndpoint = string.IsNullOrWhiteSpace(options.PingEndpoint) ? string.Empty :
             options.PingEndpoint.StartsWith("/") ? options.PingEndpoint : $"/{options.PingEndpoint}";
+
         if (pingEndpoint.EndsWith("/"))
         {
             pingEndpoint = pingEndpoint.Substring(0, pingEndpoint.Length - 1);
@@ -140,6 +141,7 @@ public static class Extensions
         string scheme = options.Address.StartsWith("http", StringComparison.InvariantCultureIgnoreCase)
             ? string.Empty
             : "http://";
+
         var check = new ServiceCheck
         {
             Interval = ParseTime(options.PingInterval),
@@ -147,6 +149,7 @@ public static class Extensions
             Http = $"{scheme}{options.Address}{(options.Port > 0 ? $":{options.Port}" : string.Empty)}" +
                    $"{pingEndpoint}"
         };
+
         registration.Checks = new[] { check };
 
         return registration;

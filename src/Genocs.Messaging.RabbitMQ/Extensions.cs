@@ -1,3 +1,5 @@
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Genocs.Core.Builders;
 using Genocs.Messaging.RabbitMQ.Clients;
 using Genocs.Messaging.RabbitMQ.Contexts;
@@ -11,9 +13,8 @@ using Genocs.Messaging.RabbitMQ.Subscribers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using RabbitMQ.Client;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.Messaging.RabbitMQ;
 
@@ -59,7 +60,7 @@ public static class Extensions
             throw new ArgumentException("RabbitMQ hostnames are not specified.", nameof(options.HostNames));
         }
 
-        ILogger<IRabbitMQClient> logger;
+        ILogger<IRabbitMQClient> logger = NullLogger<IRabbitMQClient>.Instance;
         using (var serviceProvider = builder.Services.BuildServiceProvider())
         {
             logger = serviceProvider.GetRequiredService<ILogger<IRabbitMQClient>>();

@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
-using Genocs.Core.Demo.Domain.Aggregates;
 using Genocs.Library.Demo.Contracts;
+using Genocs.Library.Demo.Domain.Aggregates;
 using Genocs.Library.Demo.Masstransit.WebApi.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -69,12 +69,7 @@ public class ServiceBusMassTransitController : ControllerBase
     public async Task<IActionResult> PostOrderSubmitted()
     {
         // Publish an event with MassTransit
-        await _publishEndpoint.Publish<OrderSubmitted>(new
-        {
-            MerchantId = "0988656",
-            OldStatus = "Approved",
-            Status = "Rejected"
-        });
+        await _publishEndpoint.Publish(new OrderSubmitted(Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
         _logger.LogInformation("OrderSubmitted Sent");
 

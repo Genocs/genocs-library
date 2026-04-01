@@ -5,23 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Genocs.Messaging.Outbox.Outbox;
 
-internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAccessor
+internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMemoryMessageOutbox> logger) : IMessageOutbox, IMessageOutboxAccessor
 {
     private readonly ConcurrentDictionary<string, bool> _inboxMessages = new();
 
     private readonly ConcurrentDictionary<string, OutboxMessage> _outboxMessages = new();
 
-    private readonly ILogger<InMemoryMessageOutbox> _logger;
-    private readonly int _expiry;
+    private readonly ILogger<InMemoryMessageOutbox> _logger = logger;
+    private readonly int _expiry = options.Expiry;
 
-    public InMemoryMessageOutbox(OutboxOptions options, ILogger<InMemoryMessageOutbox> logger)
-    {
-        _logger = logger;
-        _expiry = options.Expiry;
-        Enabled = options.Enabled;
-    }
-
-    public bool Enabled { get; }
+    public bool Enabled { get; } = options.Enabled;
 
     public async Task HandleAsync(string messageId, Func<Task> handler, CancellationToken cancellationToken = default)
     {

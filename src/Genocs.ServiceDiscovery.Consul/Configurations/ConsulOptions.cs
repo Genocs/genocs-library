@@ -33,4 +33,28 @@ public class ConsulOptions
     {
         public bool Enabled { get; set; }
     }
+
+    public static bool IsValid(ConsulOptions options)
+    {
+        if (options is null)
+        {
+            return false;
+        }
+
+        if (!options.Enabled)
+        {
+            return true;
+        }
+
+        if (string.IsNullOrWhiteSpace(options.Url)
+            || string.IsNullOrWhiteSpace(options.Address)
+            || string.IsNullOrWhiteSpace(options.PingEndpoint))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

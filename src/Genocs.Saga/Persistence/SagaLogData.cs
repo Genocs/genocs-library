@@ -2,7 +2,7 @@ using Genocs.Saga.Utils;
 
 namespace Genocs.Saga.Persistence;
 
-internal class SagaLogData : ISagaLogData
+internal sealed class SagaLogData : ISagaLogData
 {
     public string EntryId { get; }
     public SagaId Id { get; }

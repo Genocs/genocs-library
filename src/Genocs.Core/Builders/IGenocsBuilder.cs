@@ -49,10 +49,8 @@ public interface IGenocsBuilder
         where TInitializer : IInitializer;
 
     /// <summary>
-    /// Creates and returns a service provider that can be used to resolve registered services.
+    /// Executes deferred build actions against the final application service provider.
     /// </summary>
-    /// <remarks>This method is typically used in dependency injection scenarios to obtain service instances
-    /// as needed.</remarks>
-    /// <returns>An <see cref="IServiceProvider"/> instance that provides access to the configured services.</returns>
-    IServiceProvider Build();
+    /// <param name="serviceProvider">The final application service provider.</param>
+    void Build(IServiceProvider serviceProvider);
 }

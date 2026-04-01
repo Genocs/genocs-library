@@ -50,9 +50,9 @@ services.AddSignalR();
 services.AddTransient<IHubWrapper, HubWrapper>();
 services.AddTransient<IHubService, HubService>();
 
-gnxBuilder.Build();
-
 var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
 
 app.UseGenocs()
     .UseCorrelationContextLogging()

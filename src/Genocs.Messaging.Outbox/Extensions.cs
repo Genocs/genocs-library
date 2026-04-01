@@ -19,10 +19,7 @@ public static class Extensions
     /// <param name="configure">The action method to setup the IMessageOutboxConfigurator.</param>
     /// <param name="sectionName">The secton name. Default is 'outbox'.</param>
     /// <returns>The Genocs builder. You can use it for chain commands.</returns>
-    public static IGenocsBuilder AddMessageOutbox(
-                                                  this IGenocsBuilder builder,
-                                                  Action<IMessageOutboxConfigurator>? configure = null,
-                                                  string sectionName = SectionName)
+    public static IGenocsBuilder AddMessageOutbox(this IGenocsBuilder builder, Action<IMessageOutboxConfigurator>? configure = null, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {

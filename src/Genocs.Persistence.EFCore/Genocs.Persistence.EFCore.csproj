@@ -30,15 +30,15 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
         <!--MS SQL-->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
         <!--SQLite-->
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
         <!--MySQL-->
         <!-- NOTE: Pomelo.EntityFrameworkCore.MySql does not yet support EF Core 10. -->
         <!-- Uncomment when available: <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="10.0.*" /> -->
         <!--MongoDB-->
-        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="10.0.0" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="10.0.1" />
         <!--PostgreSQL-->
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
         <!--Oracle-->

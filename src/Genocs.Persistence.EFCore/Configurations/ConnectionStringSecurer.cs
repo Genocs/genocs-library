@@ -1,4 +1,4 @@
-using Genocs.Common.Domain.ConnectionString;
+using Genocs.Common.Persistence;
 using Genocs.Persistence.EFCore.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;

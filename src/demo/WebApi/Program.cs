@@ -34,15 +34,13 @@ IGenocsBuilder gnxBuilder = builder
     .AddWebApi()
     .AddOpenApiDocs()
     .AddBookStoreDbContext()
-    .AddMongo()
+    .AddMongoWithRegistration()
     .AddCommandHandlers()
     .AddEventHandlers()
     .AddQueryHandlers()
     .AddMessageOutbox(o => o.AddMongo());
 
 await gnxBuilder.AddRabbitMQAsync();
-
-gnxBuilder.Build();
 
 // Add services to the container.
 var services = builder.Services;
@@ -63,6 +61,8 @@ services.MapSecurityFeatures();
 
 var app = builder.Build();
 
+gnxBuilder.Build(app.Services);
+
 app.UseGenocs()
     .UseCorrelationContextLogging()
     .UseOpenApiDocs()
@@ -71,7 +71,7 @@ app.UseGenocs()
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
-    .UseAccessTokenValidator()// Used to validate the access token In RealTime
+    .UseAccessTokenValidator()
     .UseRabbitMQ()
     .SubscribeEvent<TransactionCompleted>();
 
