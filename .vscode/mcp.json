@@ -27,6 +27,15 @@
 				"genocs/mcp"
 			],
 			"env": {}
+		},
+		"genocs-mcp-server-library": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"docs/agentic"
+			]
 		}
 	},
 	"inputs": []
