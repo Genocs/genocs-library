@@ -359,15 +359,17 @@ And document minimum/maximum bounds.
 
 #### ISSUE-19: `IDatabaseInitializer` Contains Commented-Out Tenant-Scoped Method
 
+**Status:** Resolved (April 2026)
+
 **File:** `src/Genocs.Common/Persistence/Initialization/IDatabaseInitializer.cs`
 
 ```csharp
 // Task InitializeApplicationDbForTenantAsync(GNXTenantInfo tenant, CancellationToken cancellationToken = default);
 ```
 
-Dead commented-out code with a concrete type reference (`GNXTenantInfo`) leaks implementation details into a public contract. This is either unfinished multi-tenancy work or a design that was dropped.
+Dead commented-out code with a concrete type reference (`GNXTenantInfo`) leaked implementation details into a public contract. This has now been removed from `Genocs.Common`.
 
-**Fix:** Remove the comment. If multi-tenancy support is required, design it as a separate interface (`ITenantDatabaseInitializer`) when the `GNXTenantInfo` type becomes publicly available.
+**Fix:** Removed the comment from `IDatabaseInitializer`. Finbuckle + EF Core multi-tenancy is now hosted in a dedicated package (`Genocs.Persistence.EFCore.MultiTenancy`) to keep shared contracts dependency-free.
 
 ---
 

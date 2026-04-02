@@ -8,6 +8,7 @@ using Genocs.Persistence.EFCore.Common;
 using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Context;
 using Genocs.Persistence.EFCore.Initialization;
+using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Genocs.Persistence.EFCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,11 +26,11 @@ public static class EFCoreExtensions
 
     public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder)
     {
-        // Bind the configuration section to the DatabaseSettings class
+        // Bind the configuration section to the DatabaseOptions class
         // and validate it
         builder.Services
-            .AddOptions<DatabaseSettings>()
-            .BindConfiguration(nameof(DatabaseSettings))
+            .AddOptions<DatabaseOptions>()
+            .BindConfiguration(nameof(DatabaseOptions))
             .PostConfigure(databaseSettings =>
             {
                 _logger.Information("Current DB Provider: {dbProvider}", databaseSettings.DBProvider);
@@ -41,7 +42,7 @@ public static class EFCoreExtensions
         builder.Services
             .AddDbContext<ApplicationDbContext>((p, m) =>
             {
-                var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+                var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
             })
             .AddTransient<IDatabaseInitializer, DatabaseInitializer>()

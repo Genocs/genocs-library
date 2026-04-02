@@ -62,7 +62,6 @@
   <Project Path="src/Genocs.Auth/Genocs.Auth.csproj" />
   <Project Path="src/Genocs.Common/Genocs.Common.csproj" />
   <Project Path="src/Genocs.Core/Genocs.Core.csproj" />
-  <Project Path="src/Genocs.ServiceDiscovery.Consul/Genocs.ServiceDiscovery.Consul.csproj" />
   <Project Path="src/Genocs.Http.RestEase/Genocs.Http.RestEase.csproj" />
   <Project Path="src/Genocs.Http/Genocs.Http.csproj" />
   <Project Path="src/Genocs.LoadBalancing.Fabio/Genocs.LoadBalancing.Fabio.csproj" />
@@ -83,6 +82,7 @@
   <Project Path="src/Genocs.Secrets.AzureKeyVault/Genocs.Secrets.AzureKeyVault.csproj" />
   <Project Path="src/Genocs.Secrets.HashicorpKeyVault/Genocs.Secrets.HashicorpKeyVault.csproj" />
   <Project Path="src/Genocs.Security/Genocs.Security.csproj" />
+  <Project Path="src/Genocs.ServiceDiscovery.Consul/Genocs.ServiceDiscovery.Consul.csproj" />
   <Project Path="src/Genocs.Telemetry/Genocs.Telemetry.csproj" />
   <Project Path="src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj" />
   <Project Path="src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj" />

@@ -426,13 +426,23 @@ All properties on `AppOptions` are now `init`-only, making the options object im
 
 ### `COMMON-017` Remove dead multi-tenant comment leakage from persistence initialization contracts
 
-**Status**: Planned
+**Status**: Implemented & documented (April 2026)
 
 **Priority**: P2
 
 **Problem**
 
 `IDatabaseInitializer` contains a commented-out tenant-specific method referencing a non-public concrete type.
+
+**Resolution**
+
+Removed the commented tenant-specific method from `IDatabaseInitializer` so `Genocs.Common` remains clean and contract-only. Multi-tenancy implementation is now intentionally isolated in `Genocs.Persistence.EFCore.MultiTenancy`, a dedicated package that integrates Finbuckle for EF Core scenarios.
+
+**Migration Notes**
+
+- Keep `Genocs.Common` free of multitenancy runtime dependencies.
+- Use `Genocs.Persistence.EFCore.MultiTenancy` for Finbuckle-based tenant strategy and store registration.
+- Keep tenant-specific database initialization concerns in infrastructure packages or hosts, not in shared contracts.
 
 **Scope**
 

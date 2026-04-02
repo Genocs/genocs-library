@@ -59,6 +59,9 @@ services.AddSaga(x => x.UseRedisPersistence(builder.Configuration, "redis"))
 
 services.MapSecurityFeatures();
 
+// Add Finbuckle multitenancy registration
+services.AddDemoFinbuckleMultiTenancy(builder.Configuration);
+
 var app = builder.Build();
 
 gnxBuilder.Build(app.Services);

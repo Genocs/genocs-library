@@ -129,10 +129,7 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureSsl(
-                                    ConnectionFactory connectionFactory,
-                                    RabbitMQOptions options,
-                                    ILogger<IRabbitMQClient> logger)
+    private static void ConfigureSsl(ConnectionFactory connectionFactory, RabbitMQOptions options, ILogger<IRabbitMQClient> logger)
     {
         if (options.Ssl is null || string.IsNullOrWhiteSpace(options.Ssl.ServerName))
         {

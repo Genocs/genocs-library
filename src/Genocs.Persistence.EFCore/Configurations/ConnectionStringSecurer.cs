@@ -14,9 +14,9 @@ namespace Genocs.Persistence.EFCore.Configurations;
 public class ConnectionStringSecurer : IConnectionStringSecurer
 {
     private const string HiddenValueDefault = "*******";
-    private readonly DatabaseSettings _dbSettings;
+    private readonly DatabaseOptions _dbSettings;
 
-    public ConnectionStringSecurer(IOptions<DatabaseSettings> dbSettings) =>
+    public ConnectionStringSecurer(IOptions<DatabaseOptions> dbSettings) =>
         _dbSettings = dbSettings.Value;
 
     public string? MakeSecure(string? connectionString, string? dbProvider)

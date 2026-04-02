@@ -13,10 +13,10 @@ namespace Genocs.Persistence.EFCore.Configurations;
 
 internal class ConnectionStringValidator : IConnectionStringValidator
 {
-    private readonly DatabaseSettings _dbSettings;
+    private readonly DatabaseOptions _dbSettings;
     private readonly ILogger<ConnectionStringValidator> _logger;
 
-    public ConnectionStringValidator(IOptions<DatabaseSettings> dbSettings, ILogger<ConnectionStringValidator> logger)
+    public ConnectionStringValidator(IOptions<DatabaseOptions> dbSettings, ILogger<ConnectionStringValidator> logger)
     {
         _dbSettings = dbSettings.Value;
         _logger = logger;

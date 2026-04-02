@@ -146,3 +146,10 @@ It contains ready-to-run requests for:
 - listing/creating authors,
 - listing/creating/updating/deleting books,
 - and retrieving resources by id.
+
+## Demo host integration for Finbuckle multitenancy
+
+- Add Finbuckle multitenancy registration via `AddDemoFinbuckleMultiTenancy` in `Program.cs`.
+- See `Extensions/MultiTenancyExtensions.cs` for demo registration logic.
+- To enable EF Core store for tenants, uncomment the relevant line in `MultiTenancyExtensions.cs` and configure your `TenantInfo` and `BookStoreDbContext` accordingly.
+- For advanced scenarios, see the main library docs and the infrastructure-only `TenantDatabaseInitializer` in the multitenancy package.

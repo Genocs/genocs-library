@@ -1,4 +1,5 @@
-﻿using Genocs.Common.Persistence.Initialization;
+﻿using Genocs.Persistence.EFCore.MultiTenancy;
+using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -32,5 +33,10 @@ internal class DatabaseInitializer : IDatabaseInitializer
         // Then run the initialization in the new scope
         await scope.ServiceProvider.GetRequiredService<ApplicationDbInitializer>()
             .InitializeAsync(cancellationToken);
+    }
+
+    public Task InitializeApplicationDbForTenantAsync(GNXTenantInfo tenant, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

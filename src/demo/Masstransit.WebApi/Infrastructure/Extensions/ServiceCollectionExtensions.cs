@@ -1,7 +1,7 @@
-﻿using Genocs.Common.Persistence.Initialization;
-using Genocs.Core.Builders;
+﻿using Genocs.Core.Builders;
 using Genocs.Library.Demo.Masstransit.WebApi.Configurations;
 using Genocs.Messaging.RabbitMQ;
+using Genocs.Persistence.EFCore.Persistence.Initialization;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 
