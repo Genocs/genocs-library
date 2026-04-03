@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apps.fullname" . }}-apigateway
+  labels:
+    app: apigateway
+    chart: {{ include "apps.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: apigateway
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: apigateway
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: apigateway
+          image: "{{ .Values.apigateway.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apigateway.service.port }}
+              name: http
+              protocol: TCP
+          env:
+            # Example: inject secrets as env vars if needed
+          resources:
+            {}
+      imagePullSecrets:
+        []

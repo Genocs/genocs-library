@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apps.fullname" . }}-products
+  labels:
+    app: products
+    chart: {{ include "apps.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: products
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: products
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: products
+          image: "{{ .Values.products.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.products.service.port }}
+              name: http
+              protocol: TCP
+          env:
+            # Example: inject secrets as env vars if needed
+          resources:
+            {}
+      imagePullSecrets:
+        []

@@ -1,0 +1,16 @@
+The Genocs enterprise microservices suite is deployed as:
+- apigateway
+- identities
+- products
+- orders
+- notifications
+
+Each service is exposed on port 8080 by default.
+
+To port-forward a service (example for apigateway):
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=apigateway,release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME 8080:8080
+  echo "Visit http://127.0.0.1:8080 to use apigateway"
+
+Repeat for other services by changing the app label.

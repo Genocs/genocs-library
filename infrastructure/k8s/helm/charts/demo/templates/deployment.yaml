@@ -32,30 +32,55 @@ spec:
             - name: http
               containerPort: {{ .Values.deployment.containerPort }}
               protocol: TCP
+          env:
+            - name: ConnectionStrings__BookStore
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-sqlserver
+                  key: connectionString
+            - name: mongodb__connectionString
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-mongodb
+                  key: connectionString
+            - name: redis__configuration
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-redis
+                  key: configuration
+            - name: rabbitmq__username
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-rabbitmq
+                  key: username
+            - name: rabbitmq__password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-rabbitmq
+                  key: password
+            - name: rabbitmq__hostnames
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-rabbitmq
+                  key: hostnames
+            - name: rabbitmq__port
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "demo.fullname" . }}-rabbitmq
+                  key: port
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.probes.liveness.path }}
+              port: {{ .Values.probes.liveness.port }}
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.probes.readiness.path }}
+              port: {{ .Values.probes.readiness.port }}
           {{- end }}
-          env:
-            {{- $root := . }}
-            {{- range $ref, $values := .Values.secrets }}
-            {{- range $key, $value := $values }}
-            - name: {{ $ref }}_{{ $key }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "demo.fullname" $root }}-{{ $ref | lower }}
-                  key: {{ $key }}
-            {{- end }}
-            {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml . | indent 8 }}
     {{- end }}

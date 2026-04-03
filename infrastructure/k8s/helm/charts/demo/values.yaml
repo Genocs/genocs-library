@@ -1,6 +1,9 @@
 # Default values for demo.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+tolerations: []
+affinity: {}
+
 fullnameOverride: demo
 replicaCount: 1
 image:
@@ -8,58 +11,45 @@ image:
   tag: stable
   pullPolicy: IfNotPresent
 imagePullSecrets: []
-  # Optionally specify an array of imagePullSecrets.
-  # Secrets must be manually created in the namespace.
-  # ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  #
-  # This uses credentials from secret "myRegistryKeySecretName".
-  # - name: myRegistryKeySecretName
+
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 deployment:
-  containerPort: 80
+  containerPort: 8080
 
 probes:
-  enabled: false
+  enabled: true
+  liveness:
+    path: /alive
+    port: 8080
+  readiness:
+    path: /healthz
+    port: 8080
 
 ingress:
   enabled: false
   annotations: {}
-    # kubernetes.io/tls-acme: "true"
   path: /
-  # hosts:
-  #   - chart-example.local
+  hosts: []
   tls: []
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
-secrets: {}
-  # Optionally specify a set of secret objects whose values
-  # will be injected as environment variables by default.
-  # You should add this section to a file like secrets.yaml
-  # that is explicitly NOT committed to source code control
-  # and then include it as part of your helm install step.
-  # ref: https://kubernetes.io/docs/concepts/configuration/secret/
-  #
-  # This creates a secret "mysecret" and injects "mypassword"
-  # as the environment variable mysecret_mypassword=password.
-  # mysecret:
-  #   mypassword: password
+
+# Example secrets for connection strings and credentials
+secrets:
+  mongodb:
+    connectionString: "mongodb://user:password@mongo:27017/demo_webapi"
+  redis:
+    configuration: "localhost:6379"
+  rabbitmq:
+    username: "guest"
+    password: "guest"
+    hostnames: "rabbitmq"
+    port: "5672"
+  sqlserver:
+    connectionString: "Server=sqlserver;Database=Genocs.BookStore.Demo;User Id=sa;Password=yourStrong(!)Password;"
+
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}

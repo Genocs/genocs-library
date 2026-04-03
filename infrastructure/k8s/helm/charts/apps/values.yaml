@@ -1,0 +1,82 @@
+# Global values for all services
+image:
+  tag: stable
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# Service-specific configuration
+apigateway:
+  image:
+    repository: apigateway
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  secrets: {}
+
+products:
+  image:
+    repository: products
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  secrets: {}
+
+orders:
+  image:
+    repository: orders
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  secrets: {}
+
+notifications:
+  image:
+    repository: notifications
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  secrets: {}
+
+identities:
+  image:
+    repository: identities
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  secrets: {}

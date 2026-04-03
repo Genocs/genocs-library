@@ -1,0 +1,5 @@
+apiVersion: v2
+name: apps
+version: 0.1.0
+description: Helm chart for the Genocs enterprise microservices suite (ApiGateway, Identities, Products, Orders, Notifications)
+type: application

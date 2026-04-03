@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apps.fullname" . }}-identities
+  labels:
+    app: identities
+    chart: {{ include "apps.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: identities
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: identities
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: identities
+          image: "{{ .Values.identities.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.identities.service.port }}
+              name: http
+              protocol: TCP
+          env:
+            # Example: inject secrets as env vars if needed
+          resources:
+            {}
+      imagePullSecrets:
+        []
