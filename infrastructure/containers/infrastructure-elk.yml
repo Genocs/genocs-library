@@ -35,7 +35,7 @@ services:
       - genocs
 
   headPlugin:
-    image: 'mobz/elasticsearch-head:5'
+    image: mobz/elasticsearch-head:5
     container_name: head
     ports:
       - 9100:9100
