@@ -8,7 +8,7 @@ namespace Genocs.Common.Interfaces;
 public interface ICurrentUser
 {
     /// <summary>
-    /// The user id.
+    /// The display name or username of the current user.
     /// </summary>
     string? Name { get; }
 

@@ -118,10 +118,12 @@ Use this when consistency matters more than runtime behavior.
 | `ICommandHandler<TCommand>` | Define command handling contract | No implementation included | Expecting DI registration from this package |
 | `IQueryHandler<TQuery, TResult>` | Define query handling contract | Async contract only | Assuming query dispatch is available |
 | `IEventHandler<TEvent>` | Define event handling contract | Async contract only | Assuming publish-subscribe infrastructure exists |
+| `IRejectedEvent` and `RejectedEvent` | Represent integration-style failures | Prefer structured codes (`category.subject.reason`) and shared `Error` alignment | Using unstructured ad hoc codes that are hard to classify |
 | `IDispatcher` and dispatcher interfaces | Depend on an abstraction | Requires a runtime package to work | Attempting to resolve one without a companion package |
 | `IAggregateRoot<TKey>` | Model a consistency boundary | Includes domain event support | Using it for every entity |
+| `IEntity` | Check persistence lifecycle state | Prefer `IsNew()` for new code; `IsTransient()` remains for compatibility | Confusing entity lifecycle checks with DI service lifetimes |
 | `IRepositoryOfEntity<TEntity, TKey>` | Define persistence boundary | Interface only; no provider | Implementing it manually without a storage strategy |
-| `PagedQueryBase` | Reuse paging request shape | Zero-based page numbering | Assuming page 1 is the first page |
+| `PagedQueryBase` | Reuse paging request shape | Zero-based page numbering with defaults (`Page=0`, `Results=10`); recommended `Results` max is 100 | Assuming page 1 is the first page or skipping downstream bounds validation |
 | `PagedResult<T>` | Standardize paged results | Factory helpers available | Treating it as a database paging engine |
 | `MessageAttribute` | Annotate message contracts with transport metadata | Pure metadata | Expecting transport behavior from the attribute |
 | `IInitializer` | Define startup work contract | No executor included here | Assuming startup will run automatically |

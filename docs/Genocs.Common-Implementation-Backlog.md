@@ -11,6 +11,11 @@ The backlog is ordered for execution, not by namespace.
 Implemented:
 
 - M1 (COMMON-001 to COMMON-004): Complete and validated as of March 2026
+- COMMON-021: Implemented and documented as of April 2026
+- COMMON-022: Implemented and documented as of April 2026
+- COMMON-023: Implemented and documented as of April 2026
+- COMMON-024: Implemented and documented as of April 2026
+- COMMON-025: Implemented and documented as of April 2026
 
 Next recommended items:
 
@@ -32,7 +37,7 @@ Next recommended items:
 | M2 | Domain and CQRS contract hardening | `COMMON-005` to `COMMON-011` |
 | M3 | Consistency and namespace cleanup | `COMMON-012` to `COMMON-019` |
 | M4 | Paging, DDD, and error-model completeness | `COMMON-020` to `COMMON-025` |
-| M5 | Platform capability expansion | `COMMON-026` to `COMMON-032` |
+| M5 | Platform capability expansion | `COMMON-027` to `COMMON-032` |
 
 ## Execution Order
 
@@ -564,9 +569,20 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-021` Add defaults and documented bounds for paged queries
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+`PagedQueryBase` now sets explicit defaults (`Page = 0`, `Results = 10`) and documents paging semantics and bounds. `IPagedQuery` documentation now defines minimum and recommended bounds (`Page >= 0`, `Results >= 1`, recommended `Results <= 100`) while keeping enforcement in downstream handlers or infrastructure validators.
+
+Unit tests were added to validate defaults and to explicitly document that `Genocs.Common` remains contract-level and does not enforce hard bounds directly.
+
+**Migration Notes**
+
+- Consumers can omit `Page` and `Results` in request models and rely on default values from `PagedQueryBase`.
+- Continue applying concrete validation in API/application/infrastructure layers to enforce hard limits.
 
 **Problem**
 
@@ -595,9 +611,23 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-022` Clarify entity lifecycle semantics and naming
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+`IEntity` now provides `IsNew()` as the preferred lifecycle semantic for not-yet-persisted entities, while keeping `IsTransient()` as a backward-compatible alias. This clarifies intent and avoids confusion with DI lifetime terminology.
+
+Documentation across consumer, human, and agent references now guides new code toward `IsNew()` while preserving migration safety.
+
+Unit tests validate that `IsNew()` mirrors `IsTransient()` behavior for existing implementations.
+
+**Migration Notes**
+
+- Existing `IEntity` implementations remain valid and require no changes.
+- Prefer `IsNew()` in new consumer code.
+- Keep `IsTransient()` for compatibility where already in use.
 
 **Problem**
 
@@ -624,9 +654,28 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-023` Provide an optional entity base with identity-based equality
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+Added `EntityBase<TKey>` to `Genocs.Common.Domain.Entities` as an optional base class for canonical identity-based equality semantics.
+
+The base implementation:
+
+- uses entity identity for equality when entities are persisted,
+- treats two transient/new entities as non-equal unless they are the same reference,
+- preserves type-safety by requiring assignable entity types,
+- supports common numeric transient semantics for `int` and `long` keys (`<= 0` is transient).
+
+Unit tests validate equality behavior for same identity, different identities, transient entities, unrelated types, and numeric transient semantics.
+
+**Migration Notes**
+
+- Existing interface-only entities remain valid and do not require migration.
+- Consumers can adopt `EntityBase<TKey>` incrementally when they want shared equality behavior.
+- Keep interface-only implementations when custom equality semantics are required.
 
 **Problem**
 
@@ -655,9 +704,29 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-024` Standardize structured rejection and error codes
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+`IRejectedEvent` is now aligned with the shared `Error` model from `COMMON-008` via an `Error` view (`Error.Code`, `Error.Message`) and `RejectedEvent` supports direct creation from an `Error` instance.
+
+Added `RejectionCode` helper with a documented structured convention: `category.subject.reason`.
+
+`RejectedEvent.For(string)` now emits structured codes (for example, `rejection.create_order.failed`) to make classification consistent across services.
+
+Unit tests validate:
+
+- `IRejectedEvent` to `Error` mapping,
+- `RejectedEvent.For(Error)` behavior,
+- structured code generation and parsing.
+
+**Migration Notes**
+
+- Existing consumers of `Reason` and `Code` remain compatible.
+- Prefer structured codes generated with `RejectionCode` for new code.
+- For cross-cutting concerns, map structured codes consistently in HTTP responses, message headers, and telemetry tags.
 
 **Problem**
 
@@ -686,9 +755,27 @@ Connection-string validation and masking are infrastructure concerns but previou
 
 ### `COMMON-025` Tighten notification contract validity
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+Notification contract validity has been tightened:
+
+- `BasicNotification.Message` now rejects null/empty/whitespace payloads.
+- `JobNotification.Message` now rejects null/empty/whitespace payloads.
+- `JobNotification.Progress` now enforces the documented range `0` to `100`.
+
+`ICurrentUser.Name` XML documentation has been corrected to describe display name/username semantics rather than user-id semantics.
+
+Focused unit tests validate message payload checks and progress range enforcement.
+
+**Migration Notes**
+
+- Consumers sending empty notification messages should now provide meaningful message text.
+- Consumers setting progress outside `0..100` must normalize values before assignment.
+- No API shape changes were introduced to notification types beyond validation behavior.
 
 **Problem**
 
@@ -719,36 +806,6 @@ Notification models allow semantically invalid instances such as empty `BasicNot
 ---
 
 ## M5: Platform Capability Expansion
-
-### `COMMON-026` Add multi-tenancy contracts
-
-**Status**: Planned
-
-**Priority**: P4
-
-**Problem**
-
-The package hints at future tenant-aware infrastructure, but it has no formal cross-cutting tenant abstractions.
-
-**Scope**
-
-- add `ITenantContext` and `ITenantInfo`
-- keep the model transport- and persistence-neutral
-- document how hosts and infrastructure packages should populate these abstractions
-
-**Likely touch points**
-
-- new tenant contracts under [src/Genocs.Common](src/Genocs.Common)
-- documentation files under [docs](docs)
-
-**Acceptance criteria**
-
-- tenant identity and tenant metadata have stable shared contracts
-- no concrete multitenant implementation types leak into `Genocs.Common`
-
-**Dependencies**
-
-- `COMMON-017`
 
 ### `COMMON-027` Add outbox and transactional event contracts
 

@@ -24,7 +24,7 @@
 				"run",
 				"-i",
 				"--rm",
-				"genocs/mcp"
+				"genocs-mcp-server:2.0.0"
 			],
 			"env": {}
 		},

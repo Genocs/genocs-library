@@ -31,8 +31,9 @@ The library is designed with the following principles in mind:
 Genocs.Common provides the core interfaces used to model entities and aggregate roots in a DDD-style domain.
 
 - **`IIdentifiable<TKey>`**: Minimal typed identity contract reused by entity abstractions.
-- **`IEntity`**: Base entity contract with `IsTransient()` for persistence-state checks.
+- **`IEntity`**: Base entity contract with `IsNew()` for persistence-state checks (`IsTransient()` is retained as a compatibility alias).
 - **`IEntity<TKey>`**: Typed entity contract that composes `IIdentifiable<TKey>`.
+- **`EntityBase<TKey>`**: Optional base class that provides canonical identity-based equality semantics.
 - **`IAggregateRoot`**: Marker contract for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Aggregate root with typed identity and domain event support.
 - **`IGeneratesDomainEvents`**: Exposes a `List<IEvent>? DomainEvents` collection for aggregate-level event tracking.
@@ -42,6 +43,12 @@ Genocs.Common provides the core interfaces used to model entities and aggregate 
 - Explicit aggregate root boundaries
 - Typed identities through `IEntity<TKey>`
 - Domain event collection on aggregates
+- Lifecycle checks can use `IsNew()` as the preferred, unambiguous naming for not-yet-persisted entities.
+- Optional `EntityBase<TKey>` avoids repeated equality boilerplate in consumer entities.
+
+**When to use `EntityBase<TKey>` vs interfaces only:**
+- Use interfaces only when your domain model needs complete control over equality semantics.
+- Use `EntityBase<TKey>` when identity-based equality is desired and you want one canonical implementation for persisted and transient entities.
 
 **Example Use Cases:**
 ```csharp
@@ -120,13 +127,20 @@ The query namespace contains contracts and helper models for paged read workflow
 - `ISearchRequest` and `SearchRequest` with `SearchTerm` as the canonical search property (`q` kept as a compatibility alias)
 - `PagedResultBase` and `PagedResult<T>` for consistent paged responses
 
+**Paging defaults and bounds:**
+- `Page` is zero-based and defaults to `0` (first page).
+- `Results` defaults to `10`, minimum valid value is `1`, and recommended maximum is `100`.
+- `OrderBy` and `SortOrder` are optional; `SortOrder` should be `ASC` or `DESC` when provided.
+- `Genocs.Common` defines the contract and defaults only; downstream handlers, API validators, or infrastructure should enforce hard limits.
+
 ### 5. Events, Notifications, and Application Services
 
 This package defines contracts for system events, UI or client notifications, and a few common app-level services.
 
 - **`IEvent` / `IEventHandler<TEvent>` / `IEventDispatcher`**: Core event publishing contracts.
 - **`IDispatcher`**: Composite dispatcher abstraction that inherits command, query, and event dispatch contracts.
-- **`IRejectedEvent` / `RejectedEvent`**: Standardized rejection event shape with `Reason` and `Code`.
+- **`IRejectedEvent` / `RejectedEvent`**: Standardized rejection event shape with `Reason`, structured `Code`, and `Error` alignment.
+- **`RejectionCode`**: Structured helper for generating and parsing `category.subject.reason` rejection codes.
 - **`INotificationMessage` / `INotificationSender`**: Notification transport abstractions for broadcast, group, and user delivery. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 - **`ICurrentUser`**: Abstraction for authenticated user context, claims, tenant, and role checks.
 - **`IJobService`**: Contract for enqueueing, scheduling, deleting, and requeueing background jobs. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
@@ -137,6 +151,11 @@ This package defines contracts for system events, UI or client notifications, an
 - `BasicNotification` with severity labels
 - `JobNotification` for job progress updates
 - `StatsChangedNotification` as a marker notification message
+
+**Notification contract validity:**
+- `BasicNotification.Message` and `JobNotification.Message` should always contain meaningful text.
+- `JobNotification.Progress` is constrained to the documented range of `0` to `100`.
+- Treat `ICurrentUser.Name` as display/username data, not as the user identifier.
 
 ### 6. Service Lifetimes and Startup Conventions
 
@@ -235,6 +254,7 @@ Supports clean architecture principles:
 - Keep commands focused on state changes and queries focused on data retrieval.
 - Return `PagedResult<T>` for pageable endpoints to keep result contracts consistent.
 - Use `RejectedEvent` only for integration-style failure signaling, not as a substitute for domain validation.
+- Use structured rejection codes (`category.subject.reason`) so failures can be classified consistently across HTTP, messaging headers, and telemetry tags.
 
 ### Conventions and Metadata
 

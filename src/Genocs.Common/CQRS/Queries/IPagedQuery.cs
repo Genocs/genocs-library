@@ -6,13 +6,21 @@
 public interface IPagedQuery : IQuery
 {
     /// <summary>
-    /// Page to query zero indexed.
+    /// Page to query, zero-indexed.
     /// </summary>
+    /// <remarks>
+    /// Minimum valid value is 0.
+    /// </remarks>
     int Page { get; }
 
     /// <summary>
-    /// Number of results. Aka page size.
+    /// Number of results, also known as page size.
     /// </summary>
+    /// <remarks>
+    /// Minimum valid value is 1.
+    /// Recommended maximum is 100.
+    /// Validation should be enforced by handlers or infrastructure validators.
+    /// </remarks>
     int Results { get; }
 
     /// <summary>

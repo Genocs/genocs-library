@@ -624,8 +624,6 @@ docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-fi
 # Run with docker compose
 docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d
 
-
-
 # Build webapi Docker image
 docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
 

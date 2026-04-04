@@ -90,8 +90,9 @@ If you are an AI agent using this package from NuGet and cannot inspect source c
 Use these contracts when defining your domain model:
 
 - **`IIdentifiable<TKey>`**: Minimal identity contract.
-- **`IEntity`**: Base entity contract with `IsTransient()`.
+- **`IEntity`**: Base entity contract with `IsNew()` (preferred) and `IsTransient()` (compatibility alias).
 - **`IEntity<TKey>`**: Entity with typed identifier.
+- **`EntityBase<TKey>`**: Optional reusable base class that implements identity-based equality semantics for entities.
 - **`IAggregateRoot`**: Marker interface for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Typed aggregate root with domain event support.
 - **`IGeneratesDomainEvents`**: Exposes aggregate-generated events.
@@ -112,6 +113,8 @@ Choose these auditing interfaces only when you need the corresponding metadata:
 - Use `IAggregateRoot<TKey>` for true transaction boundaries.
 - Keep `DomainEvents` on aggregates, not on all entities.
 - Apply full auditing only if the consumer application will actually populate the fields.
+- Prefer `IsNew()` in new code for lifecycle checks; keep `IsTransient()` for backward compatibility with existing implementations.
+- Use `EntityBase<TKey>` when you want canonical identity-based equality semantics without re-implementing `Equals` and `GetHashCode` in each entity type.
 
 ### Define Persistence Contracts
 
@@ -151,9 +154,19 @@ Use these contracts for CQRS-oriented applications:
 - **`IEventHandlerLegacy<T>`**: Legacy event handler shape.
 - **`IEventDispatcher`**: Event publish contract.
 - **`IDispatcher`**: Unified abstraction that composes `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`.
+- **`IRejectedEvent` / `RejectedEvent`**: Rejection event model with `Reason`, structured `Code`, and `Error` alignment.
+- **`RejectionCode`**: Structured code helper using the convention `category.subject.reason`.
 
 **Important:**
 Dispatchers are interfaces only. If you have only `Genocs.Common`, you can define contracts but you cannot execute them until another package provides implementations.
+
+**Rejection code convention:**
+- Use structured rejection codes in the format `category.subject.reason` (for example: `rejection.create_order.failed`).
+- `RejectedEvent` is aligned with the shared `Error` model (`Error.Code`, `Error.Message`) for consistent failure handling.
+- Suggested cross-cutting mapping:
+  - HTTP: map `reason` segment to status categories (for example `validation_failed` -> `400`, `not_found` -> `404`, `failed` -> `500`).
+  - Messaging: keep the full code in message headers to preserve machine-readable classification.
+  - Telemetry: use the code as a stable tag (`error.code`) for aggregation and alerting.
 
 ### Standardize Paging And Search
 
@@ -172,6 +185,12 @@ Use these public types for pageable APIs and query contracts:
 - Use `PagedQueryBase` for request DTOs you control.
 - Use `PagedResult<T>` for consistent output from read-model endpoints.
 - Keep page numbering zero-based because `PagedQueryBase` and `PagedResultBase` are documented that way.
+
+**Paging defaults and bounds:**
+- `Page` defaults to `0` (first page) and should be greater than or equal to `0`.
+- `Results` defaults to `10` and should be greater than or equal to `1`.
+- Recommended maximum for `Results` is `100`.
+- `Genocs.Common` keeps paging contracts validation-library neutral; enforce hard bounds in handlers, endpoint validators, or infrastructure adapters.
 
 ### Use Cross-Cutting Service Contracts
 
@@ -199,6 +218,12 @@ These types standardize notification payloads:
 - **`JobNotification`**: Notification with `Message`, `JobId`, and `Progress`.
 - **`StatsChangedNotification`**: Marker notification type.
 - **`NotificationConstants`**: Shared notification constants such as `NotificationFromServer`.
+
+**Validation guidance:**
+- `BasicNotification.Message` must be meaningful (non-empty, non-whitespace).
+- `JobNotification.Message` must be meaningful (non-empty, non-whitespace).
+- `JobNotification.Progress` must be in the range `0` to `100`.
+- `ICurrentUser.Name` represents display name or username semantics, not user identifier semantics.
 
 ### Use Conventions, Startup Hooks, And Metadata
 
