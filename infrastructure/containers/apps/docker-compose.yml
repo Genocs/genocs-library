@@ -4,7 +4,7 @@ services:
     hostname: apigateway
     container_name: apigateway
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - consul__url=${CONSUL_URL}
       - consul__address=apigateway
       - consul__port=8080
@@ -28,7 +28,7 @@ services:
     hostname: identities-service
     container_name: identities-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - consul__url=${CONSUL_URL}
       - consul__address=identities-service
       - consul__port=8080
@@ -48,7 +48,7 @@ services:
     hostname: products-service
     container_name: products-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - consul__url=${CONSUL_URL}
       - consul__address=products-service
       - consul__port=8080
@@ -69,7 +69,7 @@ services:
     hostname: orders-service
     container_name: orders-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - consul__url=${CONSUL_URL}
       - consul__address=orders-service
       - consul__port=8080
@@ -91,7 +91,7 @@ services:
     hostname: notifications-service
     container_name: notifications-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIROMENT}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - consul__url=${CONSUL_URL}
       - consul__address=notifications-service
       - consul__port=8080

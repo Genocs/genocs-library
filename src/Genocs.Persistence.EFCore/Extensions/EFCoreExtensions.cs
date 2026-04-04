@@ -45,7 +45,7 @@ public static class EFCoreExtensions
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
             })
-            .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
+            .AddTransient<Persistence.Initialization.IDatabaseInitializer, DatabaseInitializer>()
             .AddTransient<ApplicationDbInitializer>()
             .AddTransient<ApplicationDbSeeder>()
             .AddServices(typeof(ICustomSeeder), ServiceLifetime.Transient)

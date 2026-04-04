@@ -49,10 +49,22 @@ public static class Extensions
     /// <param name="app">The application builder.</param>
     /// <returns>The application builder.</returns>
     public static IApplicationBuilder UseGenocs(this IApplicationBuilder app)
+        => UseGenocsAsync(app).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Run the application initializer asynchronously.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>The application builder.</returns>
+    public static async Task<IApplicationBuilder> UseGenocsAsync(this IApplicationBuilder app, CancellationToken cancellationToken = default)
     {
-        using var scope = app.ApplicationServices.CreateScope();
+        ArgumentNullException.ThrowIfNull(app);
+
+        await using var scope = app.ApplicationServices.CreateAsyncScope();
         var initializer = scope.ServiceProvider.GetRequiredService<IStartupInitializer>();
-        Task.Run(() => initializer.InitializeAsync()).GetAwaiter().GetResult();
+        await initializer.InitializeAsync(cancellationToken);
+
         return app;
     }
 
@@ -105,13 +117,11 @@ public static class Extensions
         {
             endpoints.MapGet("/", async context =>
             {
-                // Get the Entry Assembly Name and Version
-                // Check performance implications of calling this method
                 string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-                string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
-                string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+                string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+                string message = $"Service {serviceName ?? assemblyVersion} is running";
 
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
+                await context.Response.WriteAsync(serviceName ?? message);
             });
 
             // All health checks must pass for app to be considered ready to accept traffic after starting
@@ -143,13 +153,11 @@ public static class Extensions
 
         app.MapGet("/", async context =>
         {
-            // Get the Entry Assembly Name and Version
-            // Check performance implications of calling this method
             string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
-            string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+            string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+            string message = $"Service {serviceName ?? assemblyVersion} is running";
 
-            await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
+            await context.Response.WriteAsync(serviceName ?? message);
         }).AllowAnonymous();
 
         // All health checks must pass for app to be considered ready to accept traffic after starting
