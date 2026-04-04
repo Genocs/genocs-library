@@ -1,6 +1,7 @@
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commons;
 using Genocs.Core.CQRS.Commands.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,12 +19,8 @@ public static class Extensions
     /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddCommandHandlers(this IGenocsBuilder builder)
     {
-        builder.Services.Scan(s =>
-            s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
-                    .WithoutAttribute<DecoratorAttribute>())
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
+        var assemblies = HandlerRegistration.GetCandidateAssemblies();
+        builder.Services.AddHandlerRegistrations(assemblies, typeof(ICommandHandler<>), ServiceLifetime.Transient);
 
         return builder;
     }

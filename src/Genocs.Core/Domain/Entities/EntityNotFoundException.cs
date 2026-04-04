@@ -8,6 +8,9 @@ namespace Genocs.Core.Domain.Entities;
 [Serializable]
 public class EntityNotFoundException : GenocsException
 {
+    private static readonly Type UnknownEntityType = typeof(object);
+    private static readonly object UnknownEntityId = "<unknown>";
+
     /// <summary>
     /// Type of the entity.
     /// </summary>
@@ -21,7 +24,7 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(Type entityType, object id)
+    public EntityNotFoundException(Type entityType, object? id)
         : this(entityType, id, null)
     {
 
@@ -30,11 +33,13 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(Type entityType, object id, Exception? innerException)
+    public EntityNotFoundException(Type entityType, object? id, Exception? innerException)
         : base($"There is no such an entity. Entity type: {entityType.FullName}, id: {id}", innerException)
     {
+        ArgumentNullException.ThrowIfNull(entityType);
+
         EntityType = entityType;
-        Id = id;
+        Id = id ?? UnknownEntityId;
     }
 
     /// <summary>
@@ -44,6 +49,8 @@ public class EntityNotFoundException : GenocsException
     public EntityNotFoundException(string message)
         : base(message)
     {
+        EntityType = UnknownEntityType;
+        Id = UnknownEntityId;
     }
 
     /// <summary>
@@ -54,6 +61,8 @@ public class EntityNotFoundException : GenocsException
     public EntityNotFoundException(string message, Exception? innerException)
         : base(message, innerException)
     {
+        EntityType = UnknownEntityType;
+        Id = UnknownEntityId;
 
     }
 }

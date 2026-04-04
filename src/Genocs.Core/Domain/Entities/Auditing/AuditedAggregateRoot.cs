@@ -41,7 +41,7 @@ public abstract class AuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggregat
     /// Reference to the creator user of this entity.
     /// </summary>
     [ForeignKey("CreatorUserId")]
-    public virtual TUser? CreatorUser { get; set; }
+    public virtual TUser CreatorUser { get; set; } = default!;
 
     /// <summary>
     /// Reference to the last modifier user of this entity.

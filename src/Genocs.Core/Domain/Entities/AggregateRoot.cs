@@ -10,17 +10,12 @@ public class AggregateRoot<TPrimaryKey>
     : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
 {
     [NotMapped]
-    public virtual List<IEvent>? DomainEvents { get; }
+    public virtual List<IEvent> DomainEvents { get; } = [];
 
     IReadOnlyCollection<IEvent> IGeneratesDomainEvents.DomainEvents => DomainEvents;
 
-    public AggregateRoot()
-    {
-        DomainEvents = [];
-    }
-
     public void ClearDomainEvents()
     {
-        DomainEvents?.Clear();
+        DomainEvents.Clear();
     }
 }

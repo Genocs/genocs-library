@@ -1,10 +1,10 @@
 using System.Data;
+using Genocs.Common.Dependency;
 using Genocs.Common.Domain.Entities;
-using Genocs.Common.Interfaces;
 
 namespace Genocs.Core.Domain.Repositories;
 
-public interface IDapperRepository : ITransientService
+public interface IDapperRepository : ITransientDependency
 {
     /// <summary>
     /// Get an <see cref="IReadOnlyList{T}"/> using raw sql string with parameters.

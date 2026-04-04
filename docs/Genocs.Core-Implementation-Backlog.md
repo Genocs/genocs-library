@@ -13,6 +13,11 @@ Implemented:
 - `CORE-001`: Implemented and validated with unit tests (April 2026)
 - `CORE-002`: Implemented and validated with unit tests (April 2026)
 - `CORE-003`: Implemented and validated with unit tests (April 2026)
+- `CORE-004`: Implemented and validated with unit tests (April 2026)
+- `CORE-005`: Implemented and validated with unit tests (April 2026)
+- `CORE-006`: Implemented and validated with unit tests (April 2026)
+- `CORE-007`: Implemented and validated with unit tests (April 2026)
+- `CORE-008`: Implemented and validated with unit tests (April 2026)
 
 Assessment baseline:
 
@@ -21,7 +26,7 @@ Assessment baseline:
 
 Next recommended items:
 
-- Start M1 (`CORE-001` to `CORE-004`) to remove startup/runtime correctness risks
+- Start M3 (`CORE-009` to `CORE-012`) for repository and auditing model cleanup after M1/M2 baseline hardening
 
 ## Planning Assumptions
 
@@ -174,7 +179,15 @@ Unit tests verify typed dispatch, polymorphic dispatch, null-guard behaviour, mi
 
 ### `CORE-004` Make handler registration deterministic and explicit
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Unified handler registration through a shared `HandlerRegistration` helper used by `AddHandlers(project)`, `AddCommandHandlers`, `AddEventHandlers`, and `AddQueryHandlers`. The helper now provides deterministic assembly ordering (`FullName` ordinal sort), optional project filtering as explicit opt-in behavior, and duplicate-safe registration (`RegistrationStrategy.Skip`).
+
+All command/query/event handlers now register with the same transient lifetime across all entry points. Unit tests validate project-filter behavior, duplicate prevention on repeated registration calls, and lifetime consistency for both `IServiceCollection` and `IGenocsBuilder` registration paths.
+
+**Original Priority**: P0
 
 **Priority**: P0
 
@@ -211,7 +224,15 @@ Genocs.Core exposes multiple registration paths with inconsistent scope/lifetime
 
 ### `CORE-005` Make aggregate domain-event collections non-null by contract
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Updated `AggregateRoot<TPrimaryKey>` so `DomainEvents` is initialized inline as a non-null list (`List<IEvent> = []`) and `ClearDomainEvents()` now clears the collection directly without null checks. This aligns runtime behavior with the `IGeneratesDomainEvents` contract (`Never null; always a read-only collection` via interface projection).
+
+Added unit tests for initialization, explicit-interface projection, and clear semantics to ensure the collection remains non-null and behaviorally stable.
+
+**Original Priority**: P1
 
 **Priority**: P1
 
@@ -243,7 +264,21 @@ Genocs.Core exposes multiple registration paths with inconsistent scope/lifetime
 
 ### `CORE-006` Fix `EntityNotFoundException` nullability and construction invariants
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Enforced constructor invariants so `EntityType` and `Id` are always initialized across all construction paths:
+
+- type-based constructors now accept nullable `id` and normalize null to a stable sentinel (`"<unknown>"`)
+- message-based constructors initialize `EntityType` to `typeof(object)` and `Id` to `"<unknown>"`
+- type-based constructors guard `entityType` with `ArgumentNullException.ThrowIfNull`
+
+This removes the uninitialized-property warnings in `EntityNotFoundException` and avoids nullability pressure at repository call sites passing potentially nullable keys.
+
+Added constructor-focused unit tests to validate all overloads (including inner exceptions) produce consistent state.
+
+**Original Priority**: P1
 
 **Priority**: P1
 
@@ -272,7 +307,22 @@ String-only constructors do not initialize `EntityType` and `Id`, producing non-
 
 ### `CORE-007` Resolve auditing nullability mismatches against `Genocs.Common` interfaces
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Aligned `CreatorUser` nullability in Core audited models with `Genocs.Common` auditing contracts by changing creator navigation properties from nullable to non-nullable (`TUser`) in the four generic base types:
+
+- `CreationAuditedEntity<TPrimaryKey, TUser>`
+- `AuditedEntity<TPrimaryKey, TUser>`
+- `CreationAuditedAggregateRoot<TPrimaryKey, TUser>`
+- `AuditedAggregateRoot<TPrimaryKey, TUser>`
+
+Each property is now initialized with `default!` to preserve model-binding/ORM materialization behavior while satisfying interface nullability.
+
+Added focused unit tests that validate creator-user assignment and projection through `ICreationAudited<TUser>` and `IAudited<TUser>` across both entity and aggregate-root hierarchies.
+
+**Original Priority**: P1
 
 **Priority**: P1
 
@@ -304,7 +354,18 @@ Audited entity/aggregate implementations expose nullable user navigation propert
 
 ### `CORE-008` Remove obsolete DI marker usage from Core contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Replaced obsolete `ITransientService` inheritance with the canonical `ITransientDependency` marker from `Genocs.Common.Dependency` in the remaining Core contracts:
+
+- `IDapperRepository`
+- `IAuditService`
+
+Updated namespaces accordingly and validated the change with the Core unit test suite and source scan (no remaining `ITransientService` usage in `src/Genocs.Core`).
+
+**Original Priority**: P1
 
 **Priority**: P1
 

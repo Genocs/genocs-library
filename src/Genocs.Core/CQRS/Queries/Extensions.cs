@@ -1,6 +1,7 @@
 ﻿using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commons;
 using Genocs.Core.CQRS.Queries.Dispatchers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,12 +19,8 @@ public static class Extensions
     /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddQueryHandlers(this IGenocsBuilder builder)
     {
-        builder.Services.Scan(s =>
-            s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>))
-                    .WithoutAttribute<DecoratorAttribute>())
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
+        var assemblies = HandlerRegistration.GetCandidateAssemblies();
+        builder.Services.AddHandlerRegistrations(assemblies, typeof(IQueryHandler<,>), ServiceLifetime.Transient);
 
         return builder;
     }

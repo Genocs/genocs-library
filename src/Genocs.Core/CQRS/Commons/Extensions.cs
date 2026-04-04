@@ -23,27 +23,12 @@ public static class Extensions
     /// <returns>The service collection. You can use it for chain commands.</returns>
     public static IServiceCollection AddHandlers(this IServiceCollection services, string project)
     {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(x => x.FullName?.Contains(project) == true)
-            .ToArray();
+        var assemblies = HandlerRegistration.GetCandidateAssemblies(project);
 
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
+        services
+            .AddHandlerRegistrations(assemblies, typeof(ICommandHandler<>), ServiceLifetime.Transient)
+            .AddHandlerRegistrations(assemblies, typeof(IEventHandler<>), ServiceLifetime.Transient)
+            .AddHandlerRegistrations(assemblies, typeof(IQueryHandler<,>), ServiceLifetime.Transient);
 
         return services;
     }
