@@ -1,8 +1,7 @@
 using Genocs.Common.CQRS.Commands;
-using Genocs.Common.Types;
 using Genocs.Core.Builders;
-using Genocs.Core.CQRS.Commons;
 using Genocs.Core.CQRS.Commands.Dispatchers;
+using Genocs.Core.CQRS.Commons;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Core.CQRS.Commands;
@@ -32,6 +31,7 @@ public static class Extensions
     /// <returns>The Genocs builder. You can use it for chain commands.</returns>
     public static IGenocsBuilder AddInMemoryCommandDispatcher(this IGenocsBuilder builder)
     {
+        builder.Services.EmitDispatcherRegistrationDiagnostics(typeof(ICommandDispatcher), typeof(ICommandHandler<>));
         builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
         return builder;
     }

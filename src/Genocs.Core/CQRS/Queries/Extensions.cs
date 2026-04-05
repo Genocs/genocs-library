@@ -32,6 +32,7 @@ public static class Extensions
     /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddInMemoryQueryDispatcher(this IGenocsBuilder builder)
     {
+        builder.Services.EmitDispatcherRegistrationDiagnostics(typeof(IQueryDispatcher), typeof(IQueryHandler<,>));
         builder.Services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
         return builder;

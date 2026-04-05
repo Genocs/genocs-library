@@ -22,6 +22,8 @@ Implemented:
 - `CORE-010`: Implemented and validated with unit tests (April 2026)
 - `CORE-011`: Implemented and validated with unit tests (April 2026)
 - `CORE-012`: Implemented and validated with unit tests (April 2026)
+- `CORE-013`: Implemented and validated with unit tests (April 2026)
+- `CORE-014`: Implemented and validated with unit tests (April 2026)
 
 Assessment baseline:
 
@@ -598,9 +600,22 @@ Added focused unit tests for explicit-configuration, pre-registered configuratio
 
 ### `CORE-013` Harden RSA XML helper failure model and input handling
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+Hardened `Encryption.FromXmlFile` and `Encryption.ToXmlFile` with explicit input guards and structured RSA XML validation.
+
+Runtime behavior changes:
+
+- argument checks now throw `ArgumentNullException` / `ArgumentException` for invalid inputs
+- missing files throw `FileNotFoundException`
+- malformed XML, invalid root element, missing required nodes, and invalid base64 node values throw `FormatException`
+- cryptographic import failures throw `CryptographicException` with contextual messaging
+
+Added focused unit tests covering malformed XML and incomplete RSA key documents, plus successful valid-key import.
 
 **Problem**
 
@@ -628,9 +643,21 @@ Added focused unit tests for explicit-configuration, pre-registered configuratio
 
 ### `CORE-014` Add startup/CQRS registration diagnostics hooks
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+Added an opt-in diagnostics module for Core startup and CQRS registration paths:
+
+- introduced `AddCoreDiagnostics(...)` for both `IGenocsBuilder` and `IServiceCollection`
+- added `CoreDiagnosticsState` and `CoreDiagnosticsOptions` to collect lightweight runtime diagnostics
+- instrumented handler scanning to report discovered handler candidates
+- added warning-level diagnostics when dispatchers are registered without corresponding handler registrations
+- instrumented startup initializer registration/execution flow to surface registered initializers and execution counts
+
+Added focused unit tests validating empty-handler warning signals and startup initializer diagnostics visibility.
 
 **Problem**
 

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Genocs.Common.Types;
+using Genocs.Core.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 
@@ -36,8 +37,23 @@ internal static class HandlerRegistration
         var candidateAssemblies = assemblies.ToArray();
         if (candidateAssemblies.Length == 0)
         {
+            CoreDiagnosticsRuntime.Info(services, $"No assemblies discovered for handler interface '{handlerInterfaceType.Name}'.");
             return services;
         }
+
+        int discoveredHandlerTypes = candidateAssemblies
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type =>
+                type is { IsAbstract: false, IsInterface: false }
+                && type.GetInterfaces().Any(@interface =>
+                    @interface.IsGenericType
+                    && @interface.GetGenericTypeDefinition() == handlerInterfaceType))
+            .Distinct()
+            .Count();
+
+        CoreDiagnosticsRuntime.Info(
+            services,
+            $"Discovered {discoveredHandlerTypes} candidate handler type(s) for '{handlerInterfaceType.Name}' across {candidateAssemblies.Length} assembly(ies).");
 
         services.Scan(scan =>
         {

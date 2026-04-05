@@ -1,5 +1,4 @@
 using Genocs.Common.CQRS.Events;
-using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commons;
 using Genocs.Core.CQRS.Events.Dispatchers;
@@ -32,6 +31,7 @@ public static class Extensions
     /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddInMemoryEventDispatcher(this IGenocsBuilder builder)
     {
+        builder.Services.EmitDispatcherRegistrationDiagnostics(typeof(IEventDispatcher), typeof(IEventHandler<>));
         builder.Services.AddSingleton<IEventDispatcher, EventDispatcher>();
         return builder;
     }
@@ -56,6 +56,7 @@ public static class Extensions
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddInMemoryEventDispatcher(this IServiceCollection services)
     {
+        services.EmitDispatcherRegistrationDiagnostics(typeof(IEventDispatcher), typeof(IEventHandler<>));
         services.AddSingleton<IEventDispatcher, EventDispatcher>();
         return services;
     }

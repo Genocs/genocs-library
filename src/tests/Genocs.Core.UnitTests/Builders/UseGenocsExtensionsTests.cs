@@ -1,6 +1,7 @@
 using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -41,6 +42,26 @@ public class UseGenocsExtensionsTests
         Assert.Same(expected, ex);
     }
 
+    [Fact]
+    public async Task StartupInitializer_EmitsDiagnostics_WhenEnabled()
+    {
+        var services = new ServiceCollection();
+        IGenocsBuilder builder = services.AddGenocs(new ConfigurationBuilder().Build()).AddCoreDiagnostics();
+        builder.AddInitializer(new TestInitializer());
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        builder.Build(provider);
+
+        IStartupInitializer startupInitializer = provider.GetRequiredService<IStartupInitializer>();
+        await startupInitializer.InitializeAsync();
+
+        CoreDiagnosticsState diagnostics = provider.GetRequiredService<CoreDiagnosticsState>();
+
+        Assert.Contains(diagnostics.Messages, m => m.Contains("Registered startup initializer instance", StringComparison.Ordinal));
+        Assert.Contains(diagnostics.Messages, m => m.Contains("Startup initializer added", StringComparison.Ordinal));
+        Assert.Contains(diagnostics.Messages, m => m.Contains("Executing 1 startup initializer(s).", StringComparison.Ordinal));
+    }
+
     private sealed class TestStartupInitializer : IStartupInitializer
     {
         public bool InitializeCalled { get; private set; }
@@ -72,5 +93,11 @@ public class UseGenocsExtensionsTests
 
         public Task InitializeAsync(CancellationToken cancellationToken = default)
             => Task.FromException(_exception);
+    }
+
+    private sealed class TestInitializer : IInitializer
+    {
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 }

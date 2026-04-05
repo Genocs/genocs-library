@@ -9,6 +9,14 @@ namespace Genocs.Core.Builders;
 public class StartupInitializer : IStartupInitializer
 {
     private readonly IList<IInitializer> _initializers = [];
+    private readonly CoreDiagnosticsOptions? _diagnosticsOptions;
+    private readonly CoreDiagnosticsState? _diagnosticsState;
+
+    public StartupInitializer(CoreDiagnosticsOptions? diagnosticsOptions = null, CoreDiagnosticsState? diagnosticsState = null)
+    {
+        _diagnosticsOptions = diagnosticsOptions;
+        _diagnosticsState = diagnosticsState;
+    }
 
     /// <summary>
     /// Add new initializer if not present.
@@ -22,6 +30,11 @@ public class StartupInitializer : IStartupInitializer
         }
 
         _initializers.AddIfNotContains(initializer);
+
+        if (_diagnosticsOptions?.Enabled == true)
+        {
+            _diagnosticsState?.AddInfo($"Startup initializer added: '{initializer.GetType().FullName}'.");
+        }
     }
 
     /// <summary>
@@ -31,6 +44,11 @@ public class StartupInitializer : IStartupInitializer
     /// <returns>The task.</returns>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
+        if (_diagnosticsOptions?.Enabled == true)
+        {
+            _diagnosticsState?.AddInfo($"Executing {_initializers.Count} startup initializer(s).");
+        }
+
         foreach (var initializer in _initializers)
         {
             await initializer.InitializeAsync(cancellationToken);

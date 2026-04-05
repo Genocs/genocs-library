@@ -39,7 +39,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
 
         _buildActions = [];
         _services.TryAddSingleton(Configuration);
-        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
+        _services.AddSingleton<IStartupInitializer, StartupInitializer>();
     }
 
     private GenocsBuilder(WebApplicationBuilder builder)
@@ -49,7 +49,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
 
         _services = builder.Services;
         _buildActions = [];
-        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
+        _services.AddSingleton<IStartupInitializer, StartupInitializer>();
     }
 
     public static IGenocsBuilder Create(WebApplicationBuilder builder)
@@ -85,6 +85,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
         {
             var startupInitializer = sp.GetRequiredService<IStartupInitializer>();
             startupInitializer.AddInitializer(initializer);
+            CoreDiagnosticsRuntime.Info(sp, $"Registered startup initializer instance '{initializer.GetType().FullName}'.");
         });
 
     public void AddInitializer<TInitializer>()
@@ -94,6 +95,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
             var initializer = sp.GetRequiredService<TInitializer>();
             var startupInitializer = sp.GetRequiredService<IStartupInitializer>();
             startupInitializer.AddInitializer(initializer);
+            CoreDiagnosticsRuntime.Info(sp, $"Registered startup initializer type '{typeof(TInitializer).FullName}'.");
         });
 
     /// <summary>

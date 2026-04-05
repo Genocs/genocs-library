@@ -73,6 +73,22 @@ public class HandlerRegistrationExtensionsTests
         Assert.Equal(ServiceLifetime.Transient, queryDescriptor.Lifetime);
     }
 
+    [Fact]
+    public void AddDispatchers_WithDiagnosticsEnabled_EmitsWarnings_WhenNoHandlersRegistered()
+    {
+        var services = new ServiceCollection();
+        services.AddCoreDiagnostics();
+
+        services.AddDispatchers();
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        CoreDiagnosticsState diagnostics = provider.GetRequiredService<CoreDiagnosticsState>();
+
+        Assert.Contains(diagnostics.Messages, m => m.Contains("ICommandDispatcher registered with no command handlers discovered.", StringComparison.Ordinal));
+        Assert.Contains(diagnostics.Messages, m => m.Contains("IEventDispatcher registered with no event handlers discovered.", StringComparison.Ordinal));
+        Assert.Contains(diagnostics.Messages, m => m.Contains("IQueryDispatcher registered with no query handlers discovered.", StringComparison.Ordinal));
+    }
+
     public sealed record TestCommand : ICommand;
 
     public sealed class TestCommandHandler : ICommandHandler<TestCommand>

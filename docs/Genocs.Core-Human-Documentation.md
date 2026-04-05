@@ -34,6 +34,7 @@ Genocs.Core defines the runtime entry point for Genocs applications through `IGe
 - **`AddGenocs(this WebApplicationBuilder)`**: Creates an `IGenocsBuilder`, binds `AppOptions`, adds health checks, memory cache, and a singleton `IServiceId`.
 - **`AddGenocs(this IServiceCollection, IConfiguration?)`**: Enables the same runtime setup outside a `WebApplicationBuilder` host.
 - **`UseGenocs(this IApplicationBuilder)`**: Executes the registered `IStartupInitializer` pipeline.
+- **`AddCoreDiagnostics(...)`**: Opt-in diagnostics for startup and CQRS registration events.
 
 For `IServiceCollection` hosts, configuration resolution is deterministic and does not create temporary service providers: Genocs uses the explicit `IConfiguration` argument first, then any pre-registered `IConfiguration` singleton, otherwise an empty configuration root.
 
@@ -43,6 +44,7 @@ For `IServiceCollection` hosts, configuration resolution is deterministic and do
 - Built-in registration of `IStartupInitializer`
 - Default health check setup and in-memory caching
 - `AppOptions`-driven startup banner support via Spectre.Console
+- Optional diagnostics state (`CoreDiagnosticsState`) for handler discovery and startup initializer visibility
 
 **Example Use Cases:**
 ```csharp
@@ -153,6 +155,8 @@ Genocs.Core contains reusable helpers for common runtime tasks.
 - **String extensions**: Prefix and postfix enforcement, substring helpers, line-ending normalization, occurrence indexing, hashing, and formatting utilities.
 - **Object and exception extensions**: Convenience helpers for casting and exception inspection.
 - **`Encryption`**: RSA XML import and export helpers through `FromXmlFile(...)` and `ToXmlFile(...)`.
+
+Legacy `<RSAKeyValue>` XML key support remains available for backward compatibility. New integrations should prefer modern key material formats and storage patterns, while XML import paths are kept with strict validation and explicit failure types.
 
 **Operational Value:**
 These helpers reduce duplicated plumbing across Genocs packages and host applications, especially in startup, diagnostics, and infrastructure-adjacent code.
