@@ -122,7 +122,8 @@ Use this when consistency matters more than runtime behavior.
 | `IDispatcher` and dispatcher interfaces | Depend on an abstraction | Requires a runtime package to work | Attempting to resolve one without a companion package |
 | `IAggregateRoot<TKey>` | Model a consistency boundary | Includes domain event support | Using it for every entity |
 | `IEntity` | Check persistence lifecycle state | Prefer `IsNew()` for new code; `IsTransient()` remains for compatibility | Confusing entity lifecycle checks with DI service lifetimes |
-| `IRepositoryOfEntity<TEntity, TKey>` | Define persistence boundary | Interface only; no provider | Implementing it manually without a storage strategy |
+| `IRepositoryOfEntity<TEntity, TKey>` | Define the default persistence boundary | Provider-agnostic contract; no `IQueryable` exposure | Depending on it for provider-backed query composition |
+| `IQueryableRepository<TEntity, TKey>` | Opt into provider-backed querying | Use only in infrastructure/composition layers that intentionally expose `IQueryable<TEntity>` | Pulling it into general domain or application contracts |
 | `PagedQueryBase` | Reuse paging request shape | Zero-based page numbering with defaults (`Page=0`, `Results=10`); recommended `Results` max is 100 | Assuming page 1 is the first page or skipping downstream bounds validation |
 | `PagedResult<T>` | Standardize paged results | Factory helpers available | Treating it as a database paging engine |
 | `MessageAttribute` | Annotate message contracts with transport metadata | Pure metadata | Expecting transport behavior from the attribute |
@@ -136,6 +137,7 @@ Use this when consistency matters more than runtime behavior.
 | You need a shared paged query shape | `PagedQueryBase` or `PagedQueryWithFilter` |
 | You need a common paged response | `PagedResult<T>` |
 | You need a persistence abstraction | `IRepositoryOfEntity<TEntity, TKey>` and `IUnitOfWork` |
+| You need provider-backed query composition | `IQueryableRepository<TEntity, TKey>` |
 | You need a shared authenticated-user abstraction | `ICurrentUser` |
 | You need metadata for messages | `MessageAttribute` |
 | You need runtime behavior | Ask for `Genocs.Core` or another concrete companion package |
@@ -172,6 +174,7 @@ Use this when consistency matters more than runtime behavior.
 
 - `IRepository<TEntity, TKey>`
 - `IRepositoryOfEntity<TEntity, TKey>`
+- `IQueryableRepository<TEntity, TKey>`
 - `IUnitOfWork`
 - `ISupportsExplicitLoading<TEntity, TPrimaryKey>`
 - `IDatabaseInitializer`

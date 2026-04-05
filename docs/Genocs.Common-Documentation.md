@@ -122,7 +122,8 @@ Choose these auditing interfaces only when you need the corresponding metadata:
 Use these contracts to define repository boundaries without committing to a database engine:
 
 - **`IRepository<TEntity, TKey>`**: Marker repository interface.
-- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first CRUD and query-oriented repository contract. All methods are asynchronous and accept a `CancellationToken`. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
+- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first CRUD and predicate-query repository contract. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
+- **`IQueryableRepository<TEntity, TKey>`**: Optional extension contract for providers that intentionally expose `IQueryable<TEntity>`.
 - **`IUnitOfWork`**: Commit boundary with `Task<int> Save()`.
 - **`ISupportsExplicitLoading<TEntity, TPrimaryKey>`**: Explicit loading for related data.
 - **`IDatabaseInitializer`**: Database startup initialization.
@@ -136,6 +137,8 @@ Use these contracts to define repository boundaries without committing to a data
 **Migration Guidance:**
 - Update all repository implementations to remove synchronous methods and use async signatures.
 - Consumers should use `await repository.GetByIdAsync(id, cancellationToken)` and handle `null` for not-found cases.
+- Keep domain and application dependencies on `IRepositoryOfEntity<TEntity, TKey>` by default.
+- Only depend on `IQueryableRepository<TEntity, TKey>` when provider-backed query composition is explicitly required.
 
 ### Define Commands, Queries, And Events
 

@@ -11,7 +11,7 @@ namespace Genocs.Core.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Type of the Primary Key for this repository.</typeparam>
-public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
+public abstract class RepositoryBase<TEntity, TKey> : IQueryableRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
     public abstract IQueryable<TEntity> GetAll();

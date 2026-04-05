@@ -11,15 +11,17 @@ The backlog is ordered for execution, not by namespace.
 Implemented:
 
 - M1 (COMMON-001 to COMMON-004): Complete and validated as of March 2026
+- M2 (COMMON-005 to COMMON-011): Complete and validated as of April 2026
 - COMMON-021: Implemented and documented as of April 2026
 - COMMON-022: Implemented and documented as of April 2026
 - COMMON-023: Implemented and documented as of April 2026
 - COMMON-024: Implemented and documented as of April 2026
 - COMMON-025: Implemented and documented as of April 2026
+- COMMON-026: Implemented and validated as of April 2026
 
 Next recommended items:
 
-- Proceed to M2 (COMMON-005 to COMMON-011) after confirming M1 adoption
+- Proceed to M3 (COMMON-012 to COMMON-019) after confirming M2 adoption
 
 ## Planning Assumptions
 
@@ -36,7 +38,7 @@ Next recommended items:
 | M1 | Correctness and safety baseline | `COMMON-001` to `COMMON-004` |
 | M2 | Domain and CQRS contract hardening | `COMMON-005` to `COMMON-011` |
 | M3 | Consistency and namespace cleanup | `COMMON-012` to `COMMON-019` |
-| M4 | Paging, DDD, and error-model completeness | `COMMON-020` to `COMMON-025` |
+| M4 | Paging, DDD, and error-model completeness | `COMMON-020` to `COMMON-026` |
 | M5 | Platform capability expansion | `COMMON-027` to `COMMON-032` |
 
 ## Execution Order
@@ -225,9 +227,23 @@ The `IRepositoryOfEntity<TEntity, TKey>` contract is now async-first. All synchr
 
 ### `COMMON-011` Remove provider leakage from repository query contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P1
+
+**Resolution**
+
+Finished the repository contract split by keeping `IRepositoryOfEntity<TEntity, TKey>` provider-agnostic and introducing a new opt-in `IQueryableRepository<TEntity, TKey>` contract for implementations that intentionally expose provider-backed querying.
+
+`Genocs.Core.Domain.Repositories.RepositoryBase<TEntity, TKey>` and `Genocs.Persistence.MongoDB.Domain.Repositories.IMongoBaseRepository<TEntity, TKey>` now implement the new queryable contract explicitly, so advanced query providers remain supported without forcing `IQueryable` into the default domain-facing abstraction.
+
+Added regression tests in `Genocs.Common.UnitTests` to verify that `IRepositoryOfEntity<TEntity, TKey>` no longer exposes `GetAll()` or `GetAllIncluding(...)`, while `IQueryableRepository<TEntity, TKey>` retains both methods.
+
+**Migration Notes**
+
+- Domain and application code should depend on `IRepositoryOfEntity<TEntity, TKey>` by default.
+- Provider-backed implementations that need `IQueryable` should implement `IQueryableRepository<TEntity, TKey>` instead.
+- Existing consumers that depend on `GetAll()` or `GetAllIncluding(...)` should update their dependency type from `IRepositoryOfEntity<TEntity, TKey>` to `IQueryableRepository<TEntity, TKey>` until specification-based contracts arrive in `COMMON-028`.
 
 **Problem**
 
@@ -249,6 +265,11 @@ The `IRepositoryOfEntity<TEntity, TKey>` contract is now async-first. All synchr
 
 - the default domain repository no longer requires `IQueryable` support
 - consumers have a documented migration path for advanced querying
+
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
@@ -798,6 +819,48 @@ Notification models allow semantically invalid instances such as empty `BasicNot
 
 - notification contracts discourage or prevent invalid payloads
 - XML documentation accurately describes the public surface
+
+**Dependencies**
+
+- none
+
+### `COMMON-026` Normalize analyzer and XML documentation baseline for Common
+
+**Status**: Implemented & tested (April 2026)
+
+**Priority**: P3
+
+**Resolution**
+
+Cleaned the active `Genocs.Common` warning set by fixing malformed XML documentation in obsolete marker interfaces, replacing unresolved auditing `cref` targets with the actual `IEntity` contract, and expanding single-line CQRS event marker interfaces to satisfy StyleCop.
+
+Added a project-scoped warning policy in `Directory.Build.props` that treats compiler and analyzer warnings as errors for `Genocs.Common`, preventing warning regressions during local builds and CI.
+
+**Problem**
+
+`Genocs.Common` built successfully but emitted repeated XML documentation and StyleCop warnings, which reduced signal-to-noise and masked future regressions in the shared contract package.
+
+**Scope**
+
+- resolve the current warning set in `Genocs.Common`
+- codify a no-new-warnings policy for the package in local builds and CI
+- keep the fix limited to public-contract documentation and analyzer compliance
+
+**Likely touch points**
+
+- [src/Genocs.Common/Interfaces](src/Genocs.Common/Interfaces)
+- [src/Genocs.Common/Domain/Entities/Auditing](src/Genocs.Common/Domain/Entities/Auditing)
+- [src/Genocs.Common/CQRS/Events/IEvent.cs](src/Genocs.Common/CQRS/Events/IEvent.cs)
+- [Directory.Build.props](Directory.Build.props)
+
+**Acceptance criteria**
+
+- `Genocs.Common` builds warning-clean or with explicitly documented accepted exceptions
+- CI policy prevents warning regression for touched Common files
+
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
 
 **Dependencies**
 

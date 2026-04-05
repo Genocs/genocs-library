@@ -37,7 +37,8 @@ Genocs.Common provides the core interfaces used to model entities and aggregate 
 - **`IAggregateRoot`**: Marker contract for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Aggregate root with typed identity and domain event support.
 - **`IGeneratesDomainEvents`**: Exposes a `List<IEvent>? DomainEvents` collection for aggregate-level event tracking.
-- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first repository contract for CRUD and queries. All methods are asynchronous and accept a `CancellationToken`. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit. Synchronous methods have been removed for safety and modern .NET compatibility.
+- **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first, provider-agnostic repository contract for CRUD and query-by-predicate operations. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
+- **`IQueryableRepository<TEntity, TKey>`**: Optional extension contract for provider-backed implementations that intentionally expose `IQueryable<TEntity>` for advanced querying.
 
 **Key Features:**
 - Explicit aggregate root boundaries
@@ -80,7 +81,8 @@ The package defines persistence-facing abstractions without choosing a storage t
 #### Repository Access
 
 - **`IRepository<TEntity, TKey>`**: Marker interface for repository registration by convention.
-- **`IRepositoryOfEntity<TEntity, TKey>`**: Full repository contract with query, lookup, insert, update, and delete operations.
+- **`IRepositoryOfEntity<TEntity, TKey>`**: Default CRUD and predicate-query contract for domain-facing repository dependencies.
+- **`IQueryableRepository<TEntity, TKey>`**: Opt-in repository contract for infrastructure packages that intentionally expose provider-backed querying.
 
 #### Unit of Work and Loading
 
@@ -247,6 +249,7 @@ Supports clean architecture principles:
 
 - Expose repositories from domain or application layers, then implement them in infrastructure packages.
 - Prefer `IRepositoryOfEntity<TEntity, TKey>` for aggregate persistence, not for arbitrary read models.
+- Use `IQueryableRepository<TEntity, TKey>` only in infrastructure or composition layers that genuinely need provider-backed query composition.
 - Use `ISupportsExplicitLoading<TEntity, TPrimaryKey>` only when your implementation genuinely supports it.
 
 ### CQRS Usage
@@ -261,6 +264,7 @@ Supports clean architecture principles:
 - Use marker interfaces consistently across a solution so scanning rules stay predictable.
 - Put `MessageAttribute` on public message contracts, not on implementation details.
 - Use `TypeList` when you need assembly-discovered types constrained to a known base type.
+- Keep `Genocs.Common` warning-clean. Shared build settings treat warnings as errors for the `Genocs.Common` project so XML documentation, compiler, and analyzer regressions fail fast during local builds and CI.
 
 ## Usage Scenarios
 

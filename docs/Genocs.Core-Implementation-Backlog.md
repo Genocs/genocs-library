@@ -24,15 +24,17 @@ Implemented:
 - `CORE-012`: Implemented and validated with unit tests (April 2026)
 - `CORE-013`: Implemented and validated with unit tests (April 2026)
 - `CORE-014`: Implemented and validated with unit tests (April 2026)
+- `CORE-015`: Implemented and validated with build policy enforcement (April 2026)
 
 Assessment baseline:
 
-- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug` passes with 1 test
-- Genocs.Core builds with 26 warnings (nullability, obsolete contracts, analyzer/style issues)
+- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo` passes with 50 tests
+- `dotnet build src/Genocs.Core/Genocs.Core.csproj -c Debug --nologo` shows `Genocs.Core` warning-clean across target frameworks
+- remaining build warnings currently come from `Genocs.Common` and stay outside the `Genocs.Core` baseline
 
 Next recommended items:
 
-- Continue M3 with `CORE-010` to `CORE-012` after async-first repository baseline was established in `CORE-009`
+- Start M5 with `CORE-016` to broaden regression coverage around the stabilized Core runtime paths
 
 ## Planning Assumptions
 
@@ -686,9 +688,15 @@ When handler scanning or initializer registration misconfigures, Core currently 
 
 ### `CORE-015` Normalize analyzer and nullability baseline for Core
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P3
+
+**Resolution**
+
+Validated that `Genocs.Core` now builds warning-clean across `net8.0`, `net9.0`, and `net10.0`. The remaining solution warnings observed during a project build come from the referenced `Genocs.Common` project and are explicitly outside this backlog item's scope.
+
+Added a project-scoped warning policy in `Directory.Build.props` that treats compiler and analyzer warnings as errors for `Genocs.Core`, preventing warning regressions during local builds and CI without changing the baseline for other packages.
 
 **Problem**
 
@@ -710,6 +718,10 @@ Current Core build emits multiple warnings (nullability and StyleCop), reducing 
 
 - Core builds warning-clean or with explicitly documented accepted exceptions
 - CI policy prevents warning regression for touched Core files
+
+**Validation**
+
+- `dotnet build src/Genocs.Core/Genocs.Core.csproj -c Debug --nologo`
 
 **Dependencies**
 

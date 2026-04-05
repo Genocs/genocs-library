@@ -73,4 +73,16 @@
         <!-- Enable Build Acceleration in Visual Studio. -->
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Genocs.Core'">
+        <!-- Keep Genocs.Core warning-clean so compiler and analyzer regressions fail fast during local builds and CI. -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Genocs.Common'">
+        <!-- Keep Genocs.Common warning-clean so compiler and analyzer regressions fail fast during local builds and CI. -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    </PropertyGroup>
 </Project>

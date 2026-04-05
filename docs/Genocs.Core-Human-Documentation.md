@@ -251,6 +251,7 @@ Supports clean architecture principles:
 - Provide the `app` section if you want startup banners and friendly service names.
 - Be deliberate about `MapDefaultEndpoints(...)` in production because the `IApplicationBuilder` overload does not restrict itself to development.
 - Register additional health checks alongside the default liveness check when external dependencies should affect readiness.
+- Keep `Genocs.Core` warning-clean. Shared build settings treat warnings as errors for the `Genocs.Core` project so compiler, nullability, and analyzer regressions fail fast during local builds and CI.
 
 ## Usage Scenarios
 

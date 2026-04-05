@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using Genocs.Common.Domain.Entities;
 
@@ -316,4 +317,27 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     #endregion
+}
+
+/// <summary>
+/// Optional repository contract for providers that intentionally expose an <see cref="IQueryable{T}"/> surface.
+/// Prefer <see cref="IRepositoryOfEntity{TEntity, TKey}"/> in domain and application code unless provider-backed composition is required.
+/// </summary>
+/// <typeparam name="TEntity">Main entity type this repository works on.</typeparam>
+/// <typeparam name="TKey">Primary key type of the entity.</typeparam>
+public interface IQueryableRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+    where TEntity : IEntity<TKey>
+{
+    /// <summary>
+    /// Exposes the provider-backed queryable source for advanced querying scenarios.
+    /// </summary>
+    /// <returns>The queryable entity source.</returns>
+    IQueryable<TEntity> GetAll();
+
+    /// <summary>
+    /// Exposes the provider-backed queryable source with eager-loading hints when supported by the implementation.
+    /// </summary>
+    /// <param name="propertySelectors">Navigation members to include.</param>
+    /// <returns>The queryable entity source.</returns>
+    IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
 }
