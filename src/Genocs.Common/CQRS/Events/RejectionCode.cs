@@ -62,7 +62,7 @@ public static class RejectionCode
             }
         }
 
-        string normalized = new string(buffer);
+        string normalized = new(buffer);
         while (normalized.Contains("__", StringComparison.Ordinal))
         {
             normalized = normalized.Replace("__", "_", StringComparison.Ordinal);

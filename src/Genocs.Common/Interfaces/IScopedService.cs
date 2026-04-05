@@ -1,4 +1,3 @@
-using System;
 using Genocs.Common.Dependency;
 
 namespace Genocs.Common.Interfaces;

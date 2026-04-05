@@ -1,5 +1,4 @@
 ﻿using Genocs.Common.CQRS.Queries;
-using Genocs.Common.Types;
 using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commons;
 using Genocs.Core.CQRS.Queries.Dispatchers;

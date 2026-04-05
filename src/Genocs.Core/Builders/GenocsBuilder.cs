@@ -12,7 +12,7 @@ namespace Genocs.Core.Builders;
 /// </summary>
 public sealed class GenocsBuilder : IGenocsBuilder
 {
-    private readonly ConcurrentDictionary<string, bool> _registry = new ConcurrentDictionary<string, bool>();
+    private readonly ConcurrentDictionary<string, bool> _registry = new();
     private readonly List<Action<IServiceProvider>> _buildActions;
     private readonly IServiceCollection _services;
     IServiceCollection IGenocsBuilder.Services => _services;
