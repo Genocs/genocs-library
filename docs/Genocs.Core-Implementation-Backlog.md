@@ -25,16 +25,18 @@ Implemented:
 - `CORE-013`: Implemented and validated with unit tests (April 2026)
 - `CORE-014`: Implemented and validated with unit tests (April 2026)
 - `CORE-015`: Implemented and validated with build policy enforcement (April 2026)
+- `CORE-016`: Implemented and validated with expanded runtime regression coverage (April 2026)
+- `CORE-017`: Implemented and validated with integration-style DI wiring coverage (April 2026)
 
 Assessment baseline:
 
-- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo` passes with 50 tests
+- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo` passes with 83 tests
 - `dotnet build src/Genocs.Core/Genocs.Core.csproj -c Debug --nologo` shows `Genocs.Core` warning-clean across target frameworks
 - remaining build warnings currently come from `Genocs.Common` and stay outside the `Genocs.Core` baseline
 
 Next recommended items:
 
-- Start M5 with `CORE-016` to broaden regression coverage around the stabilized Core runtime paths
+- Continue M5 with `CORE-018` to define the Core vNext package boundary and deprecation roadmap
 
 ## Planning Assumptions
 
@@ -737,9 +739,22 @@ Current Core build emits multiple warnings (nullability and StyleCop), reducing 
 
 ### `CORE-016` Expand Genocs.Core unit-test coverage beyond encryption hash helper
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Expanded Genocs.Core runtime coverage with focused unit tests across startup sequencing, dispatcher execution paths, and entity equality semantics.
+
+Added tests:
+
+- `StartupInitializerSequencingTests` for registration order, cancellation propagation, and failure-short-circuit behavior
+- `CommandDispatcherTests` for successful dispatch, missing-handler failures, handler exception propagation, and scoped handler resolution
+- `EventDispatcherTests` for single/multi-handler publish behavior, null-event validation, no-handler behavior, exception propagation, and scoped handler resolution
+- `EntityEqualityTests` for transient vs persistent equality semantics, hash code behavior, and HashSet deduplication expectations
+
+These additions complement existing coverage for endpoint mapping, query dispatch, aggregate domain events, auditing helpers, and repository async flow so the M1 and M2 runtime-hardening paths now have direct regression protection.
 
 **Problem**
 
@@ -762,6 +777,10 @@ Current unit coverage is effectively limited to one MD5 extension test, leaving 
 - Core tests cover startup, dispatching, entity semantics, and endpoint behavior
 - regression tests exist for each M1 and M2 behavior change
 
+**Validation**
+
+- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `CORE-001`
@@ -771,9 +790,27 @@ Current unit coverage is effectively limited to one MD5 extension test, leaving 
 
 ### `CORE-017` Add integration tests for DI scanning and dispatcher wiring
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added integration-style tests in `Genocs.Core.UnitTests` that host a real `IServiceCollection`/`ServiceProvider` graph and validate registration and dispatch behavior end-to-end.
+
+Added tests:
+
+- `DispatcherWiringIntegrationTests` to validate:
+	- explicit project-filter scanning via `AddHandlers("Genocs.Core.UnitTests")`
+	- full AppDomain scanning via `AddCommandHandlers` / `AddEventHandlers` / `AddQueryHandlers`
+	- successful command/event/query dispatch through `IDispatcher`
+	- expected missing-handler failures when project filter excludes candidate assemblies
+- `StartupInitializerWiringIntegrationTests` to validate:
+	- deferred initializer registration through `IGenocsBuilder.AddInitializer(...)`
+	- initializer execution order after `builder.Build(serviceProvider)`
+	- runtime startup path execution through `UseGenocsAsync()`
+
+This closes the gap between pure unit behavior checks and container-wiring/runtime registration checks for Core CQRS and startup bootstrap paths.
 
 **Problem**
 
@@ -796,6 +833,10 @@ Runtime behavior depends on assembly scanning and DI wiring that are not exercis
 - integration tests fail on handler registration regressions
 - startup and dispatch wiring behaviors are validated end-to-end
 
+**Validation**
+
+- `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo --filter "DispatcherWiringIntegrationTests|StartupInitializerWiringIntegrationTests"`
+
 **Dependencies**
 
 - `CORE-004`
@@ -816,6 +857,10 @@ Genocs.Core currently mixes foundational runtime concerns, legacy repository bas
 - define which APIs remain Core baseline vs move to companion packages
 - publish deprecation guidance for legacy/overlapping abstractions
 - align roadmap with Genocs.Common and persistence package evolution
+
+**Working artifact**
+
+- [docs/Genocs.Core-vNext-Dependency-Impact.md](docs/Genocs.Core-vNext-Dependency-Impact.md): dependency map, breaking-change ledger, and per-project migration tracker for the vNext stream
 
 **Likely touch points**
 
