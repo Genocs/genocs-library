@@ -96,6 +96,7 @@ Use these contracts when defining your domain model:
 - **`IAggregateRoot`**: Marker interface for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Typed aggregate root with domain event support.
 - **`IGeneratesDomainEvents`**: Exposes aggregate-generated events.
+- **`IVersioned`**: Minimal optimistic-concurrency contract (`long Version`) for version-aware persistence flows.
 - **`ISoftDelete`**: Adds `IsDeleted` for soft deletion workflows.
 
 Choose these auditing interfaces only when you need the corresponding metadata:
@@ -112,6 +113,7 @@ Choose these auditing interfaces only when you need the corresponding metadata:
 **Guidance:**
 - Use `IAggregateRoot<TKey>` for true transaction boundaries.
 - Keep `DomainEvents` on aggregates, not on all entities.
+- Use `IVersioned` when persistence adapters must perform optimistic concurrency checks.
 - Apply full auditing only if the consumer application will actually populate the fields.
 - Prefer `IsNew()` in new code for lifecycle checks; keep `IsTransient()` for backward compatibility with existing implementations.
 - Use `EntityBase<TKey>` when you want canonical identity-based equality semantics without re-implementing `Equals` and `GetHashCode` in each entity type.
@@ -124,6 +126,9 @@ Use these contracts to define repository boundaries without committing to a data
 - **`IRepository<TEntity, TKey>`**: Marker repository interface.
 - **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first CRUD and predicate-query repository contract. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
 - **`IQueryableRepository<TEntity, TKey>`**: Optional extension contract for providers that intentionally expose `IQueryable<TEntity>`.
+- **`ISpecification<TEntity>`**: Provider-agnostic specification contract for filtering, includes, ordering, paging, and no-tracking intent.
+- **`IProjectionSpecification<TEntity, TResult>`**: Projection-enabled specification contract.
+- **`ISpecificationRepository<TEntity, TKey>`**: Optional extension repository contract for specification-driven queries.
 - **`IUnitOfWork`**: Commit boundary with `Task<int> Save()`.
 - **`ISupportsExplicitLoading<TEntity, TPrimaryKey>`**: Explicit loading for related data.
 - **`IDatabaseInitializer`**: Database startup initialization.
@@ -139,6 +144,7 @@ Use these contracts to define repository boundaries without committing to a data
 - Consumers should use `await repository.GetByIdAsync(id, cancellationToken)` and handle `null` for not-found cases.
 - Keep domain and application dependencies on `IRepositoryOfEntity<TEntity, TKey>` by default.
 - Only depend on `IQueryableRepository<TEntity, TKey>` when provider-backed query composition is explicitly required.
+- Depend on `ISpecificationRepository<TEntity, TKey>` when you need provider-neutral query composition (includes, ordering, paging, projection) without exposing provider-specific APIs.
 
 ### Define Commands, Queries, And Events
 
@@ -153,15 +159,23 @@ Use these contracts for CQRS-oriented applications:
 - **`IQueryHandler<TQuery, TResult>`**: Async query handler contract.
 - **`IQueryDispatcher`**: Query execution contract.
 - **`IEvent`**: Event marker.
+- **`IIntegrationEvent`** and **`ITransactionalEvent`**: Integration-event markers, with `ITransactionalEvent` signaling durable outbox publication intent.
+- **`IOutboxMessage<TIntegrationEvent>`** and **`IOutboxMessage`**: Durable outbox envelope contracts.
+- **`IOutboxDispatcher`**: Contract for enqueueing integration events into an outbox.
 - **`IEventHandler<TEvent>`**: Async event handler contract.
 - **`IEventHandlerLegacy<T>`**: Legacy event handler shape.
 - **`IEventDispatcher`**: Event publish contract.
 - **`IDispatcher`**: Unified abstraction that composes `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher`.
 - **`IRejectedEvent` / `RejectedEvent`**: Rejection event model with `Reason`, structured `Code`, and `Error` alignment.
 - **`RejectionCode`**: Structured code helper using the convention `category.subject.reason`.
+- **`ValidationError`**, **`ValidationResult`**, and **`IValidator<T>`**: Validation contracts for pipeline-friendly, library-neutral validation outcomes.
 
 **Important:**
 Dispatchers are interfaces only. If you have only `Genocs.Common`, you can define contracts but you cannot execute them until another package provides implementations.
+
+Outbox contracts are also interfaces only. `IOutboxDispatcher` models durable publication intent and must be implemented by a runtime package (for example, a messaging or persistence adapter).
+
+Validation contracts are also library-neutral primitives only. `IValidator<T>` defines contract shape, while concrete validation engines (for example, FluentValidation adapters) should live in host or companion runtime packages.
 
 **Rejection code convention:**
 - Use structured rejection codes in the format `category.subject.reason` (for example: `rejection.create_order.failed`).
@@ -178,10 +192,15 @@ Use these public types for pageable APIs and query contracts:
 - **`IPagedQuery`**: Page index, page size, sorting, and order metadata.
 - **`PagedQueryBase`**: Reusable base implementation for pageable request models.
 - **`PagedQueryWithFilter`**: Pageable request model with a simple string filter.
+- **`ICursorQuery`**: Cursor-based query contract with opaque continuation token and limit.
+- **`CursorQueryBase`**: Reusable base implementation for cursor-based request models.
+- **`ISoftDeleteFilter`**: Query contract for opting into soft-deleted record visibility.
+- **`SoftDeleteFilterBase`**: Reusable request model base that defaults to excluding soft-deleted records.
 - **`ISearchRequest`**: Search query contract with `SearchTerm` and `MaxItems` (`q` remains as a compatibility alias).
 - **`SearchRequest`**: Basic implementation of `ISearchRequest`.
 - **`PagedResultBase`**: Common response paging metadata. Throws if the requested page is out of range (negative or >= total pages).
 - **`PagedResult<T>`**: Typed paged result with `Items` and helper factory methods.
+- **`CursorPagedResult<T>`**: Cursor-window response model with opaque next/previous cursor metadata.
 - **`IPagedFilter<TResult, TQuery>`**: Filter contract that returns a `PagedResult<TResult>`.
 
 **Guidance:**
@@ -194,6 +213,15 @@ Use these public types for pageable APIs and query contracts:
 - `Results` defaults to `10` and should be greater than or equal to `1`.
 - Recommended maximum for `Results` is `100`.
 - `Genocs.Common` keeps paging contracts validation-library neutral; enforce hard bounds in handlers, endpoint validators, or infrastructure adapters.
+
+**Cursor paging defaults and bounds:**
+- `Limit` defaults to `10` and should be greater than or equal to `1`.
+- Cursor tokens are intentionally opaque and provider-specific; shared contracts should treat them as pass-through values.
+- Keep cursor encoding and decoding concerns in infrastructure or endpoint layers.
+
+**Soft-delete filter defaults:**
+- `IncludeDeleted` defaults to `false` in `SoftDeleteFilterBase`.
+- Standard handlers should exclude deleted rows unless `IncludeDeleted` is explicitly set to `true`.
 
 ### Use Cross-Cutting Service Contracts
 

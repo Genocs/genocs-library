@@ -115,6 +115,9 @@ Use this when consistency matters more than runtime behavior.
 | `ICommand` | Model a write request | Marker interface only | Assuming it carries execution logic |
 | `IQuery<TResult>` | Model a typed read request | Declares expected result type | Assuming a dispatcher exists automatically |
 | `IEvent` | Model a domain or integration event | Marker interface only | Treating it as brokered messaging by itself |
+| `ITransactionalEvent` | Mark integration events for durable outbox intent | Contract-only marker | Assuming it provides storage or dispatch behavior |
+| `IOutboxMessage<TIntegrationEvent>` | Model durable publication intent envelope | Includes message id, correlation id, timestamp, and integration payload contract | Binding it to a concrete broker or serializer in shared contracts |
+| `IOutboxDispatcher` | Depend on durable outbox enqueue abstraction | Requires runtime implementation package | Assuming enqueue behavior exists with `Genocs.Common` alone |
 | `ICommandHandler<TCommand>` | Define command handling contract | No implementation included | Expecting DI registration from this package |
 | `IQueryHandler<TQuery, TResult>` | Define query handling contract | Async contract only | Assuming query dispatch is available |
 | `IEventHandler<TEvent>` | Define event handling contract | Async contract only | Assuming publish-subscribe infrastructure exists |
@@ -122,10 +125,18 @@ Use this when consistency matters more than runtime behavior.
 | `IDispatcher` and dispatcher interfaces | Depend on an abstraction | Requires a runtime package to work | Attempting to resolve one without a companion package |
 | `IAggregateRoot<TKey>` | Model a consistency boundary | Includes domain event support | Using it for every entity |
 | `IEntity` | Check persistence lifecycle state | Prefer `IsNew()` for new code; `IsTransient()` remains for compatibility | Confusing entity lifecycle checks with DI service lifetimes |
+| `IVersioned` | Expose optimistic concurrency token | Minimal `long Version` contract for compare-and-swap persistence flows | Encoding persistence-provider concurrency details into shared contracts |
 | `IRepositoryOfEntity<TEntity, TKey>` | Define the default persistence boundary | Provider-agnostic contract; no `IQueryable` exposure | Depending on it for provider-backed query composition |
 | `IQueryableRepository<TEntity, TKey>` | Opt into provider-backed querying | Use only in infrastructure/composition layers that intentionally expose `IQueryable<TEntity>` | Pulling it into general domain or application contracts |
+| `ISpecification<TEntity>` | Model provider-neutral query intent | Encodes filter/include/order/paging intent without provider APIs | Treating it as an executable query engine |
+| `ISpecificationRepository<TEntity, TKey>` | Query via specifications | Provider-agnostic composition surface for advanced queries | Replacing all simple CRUD dependencies with specification-only flows |
 | `PagedQueryBase` | Reuse paging request shape | Zero-based page numbering with defaults (`Page=0`, `Results=10`); recommended `Results` max is 100 | Assuming page 1 is the first page or skipping downstream bounds validation |
+| `CursorQueryBase` | Reuse cursor request shape | Opaque cursor token + limit defaults (`Limit=10`) | Parsing cursor tokens in shared contract code |
+| `CursorPagedResult<T>` | Standardize cursor-window responses | Carries opaque next/previous tokens and window count | Treating cursor tokens as provider-neutral structured objects |
+| `ISoftDeleteFilter` and `SoftDeleteFilterBase` | Standardize soft-delete visibility intent | `IncludeDeleted` defaults to hidden-deleted behavior | Ignoring request-level deleted visibility intent in query handlers |
 | `PagedResult<T>` | Standardize paged results | Factory helpers available | Treating it as a database paging engine |
+| `ValidationResult` and `ValidationError` | Standardize validation failures | Library-neutral failure shape for pipelines and APIs | Reusing framework-specific validation objects in domain contracts |
+| `IValidator<T>` | Define async validation contract | Contract-only abstraction (`ValidateAsync`) | Expecting built-in FluentValidation behavior from `Genocs.Common` |
 | `MessageAttribute` | Annotate message contracts with transport metadata | Pure metadata | Expecting transport behavior from the attribute |
 | `IInitializer` | Define startup work contract | No executor included here | Assuming startup will run automatically |
 
@@ -135,9 +146,14 @@ Use this when consistency matters more than runtime behavior.
 |---|---|
 | You only need compile-time CQRS contracts | `ICommand`, `IQuery<TResult>`, `IEvent` |
 | You need a shared paged query shape | `PagedQueryBase` or `PagedQueryWithFilter` |
+| You need cursor-based request/response contracts | `ICursorQuery`, `CursorQueryBase`, and `CursorPagedResult<T>` |
+| You need a standard soft-delete visibility switch | `ISoftDeleteFilter` or `SoftDeleteFilterBase` |
 | You need a common paged response | `PagedResult<T>` |
+| You need standardized validation failures in pipelines | `ValidationResult`, `ValidationError`, and optionally `IValidator<T>` |
+| You need optimistic-concurrency token contracts | `IVersioned` |
 | You need a persistence abstraction | `IRepositoryOfEntity<TEntity, TKey>` and `IUnitOfWork` |
 | You need provider-backed query composition | `IQueryableRepository<TEntity, TKey>` |
+| You need provider-neutral advanced query composition | `ISpecificationRepository<TEntity, TKey>` with `ISpecification<TEntity>` |
 | You need a shared authenticated-user abstraction | `ICurrentUser` |
 | You need metadata for messages | `MessageAttribute` |
 | You need runtime behavior | Ask for `Genocs.Core` or another concrete companion package |
@@ -154,6 +170,11 @@ Use this when consistency matters more than runtime behavior.
 - `IQueryHandler<TQuery, TResult>`
 - `IQueryDispatcher`
 - `IEvent`
+- `IIntegrationEvent`
+- `ITransactionalEvent`
+- `IOutboxMessage<TIntegrationEvent>`
+- `IOutboxMessage`
+- `IOutboxDispatcher`
 - `IEventHandler<TEvent>`
 - `IEventDispatcher`
 - `IDispatcher`
@@ -165,6 +186,7 @@ Use this when consistency matters more than runtime behavior.
 - `IEntity<TKey>`
 - `IAggregateRoot<TKey>`
 - `IGeneratesDomainEvents`
+- `IVersioned`
 - `ISoftDelete`
 - `IHasCreationTime`, `IHasModificationTime`, `IHasDeletionTime`
 - `ICreationAudited`, `IModificationAudited`, `IDeletionAudited`
@@ -175,6 +197,9 @@ Use this when consistency matters more than runtime behavior.
 - `IRepository<TEntity, TKey>`
 - `IRepositoryOfEntity<TEntity, TKey>`
 - `IQueryableRepository<TEntity, TKey>`
+- `ISpecification<TEntity>`
+- `IProjectionSpecification<TEntity, TResult>`
+- `ISpecificationRepository<TEntity, TKey>`
 - `IUnitOfWork`
 - `ISupportsExplicitLoading<TEntity, TPrimaryKey>`
 - `IDatabaseInitializer`
@@ -187,11 +212,22 @@ Use this when consistency matters more than runtime behavior.
 - `IPagedQuery`
 - `PagedQueryBase`
 - `PagedQueryWithFilter`
+- `ICursorQuery`
+- `CursorQueryBase`
+- `ISoftDeleteFilter`
+- `SoftDeleteFilterBase`
 - `ISearchRequest`
 - `SearchRequest`
 - `PagedResultBase`
 - `PagedResult<T>`
+- `CursorPagedResult<T>`
 - `IPagedFilter<TResult, TQuery>`
+
+### Validation Contracts
+
+- `ValidationError`
+- `ValidationResult`
+- `IValidator<T>`
 
 ### Service Abstractions
 

@@ -18,10 +18,16 @@ Implemented:
 - COMMON-024: Implemented and documented as of April 2026
 - COMMON-025: Implemented and documented as of April 2026
 - COMMON-026: Implemented and validated as of April 2026
+- COMMON-027: Implemented and validated as of April 2026
+- COMMON-028: Implemented and validated as of April 2026
+- COMMON-029: Implemented and validated as of April 2026
+- COMMON-030: Implemented and validated as of April 2026
+- COMMON-031: Implemented and validated as of April 2026
+- COMMON-032: Implemented and validated as of April 2026
 
 Next recommended items:
 
-- Proceed to M3 (COMMON-012 to COMMON-019) after confirming M2 adoption
+- M5 contract expansion is complete (`COMMON-027` to `COMMON-032`); proceed with downstream package adoption and migration validation
 
 ## Planning Assumptions
 
@@ -872,9 +878,19 @@ Added a project-scoped warning policy in `Directory.Build.props` that treats com
 
 ### `COMMON-027` Add outbox and transactional event contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added a transport-neutral outbox contract family in `Genocs.Common.CQRS.Events`:
+
+- `ITransactionalEvent` as a marker for integration events that require durable outbox publication intent.
+- `IOutboxMessage<TIntegrationEvent>` and non-generic `IOutboxMessage` to represent a durable envelope with message identity, correlation, capture time, and integration-event payload.
+- `IOutboxDispatcher` to model outbox enqueue intent without binding to a broker, storage engine, or serializer implementation.
+
+Added unit tests in `Genocs.Common.UnitTests` to validate interface composition and generic constraints.
 
 **Problem**
 
@@ -897,15 +913,32 @@ The platform has outbox-oriented packages, but `Genocs.Common` lacks a shared co
 - the outbox pattern has a package-level contract foundation
 - integration-event publication intent can be modeled without binding to a concrete broker or store
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `COMMON-009`
 
 ### `COMMON-028` Add specification pattern contracts for provider-agnostic querying
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added provider-agnostic specification contracts and an opt-in repository surface:
+
+- `ISpecification<TEntity>` for filtering, includes, ordering, paging, and no-tracking intent.
+- `IProjectionSpecification<TEntity, TResult>` for projection-based queries.
+- `ISpecificationRepository<TEntity, TKey>` for specification-driven listing, projection, single-result lookup, and aggregate counting.
+
+The new contracts remain neutral to persistence implementations and can be consumed by EF Core, MongoDB, and other adapters without embedding provider-specific APIs into `Genocs.Common`.
+
+Added focused unit tests to validate contract composition and expected specification members.
 
 **Problem**
 
@@ -928,15 +961,32 @@ The repository layer needs a provider-neutral way to express filtering, includes
 - consumers can express query intent without exposing `IQueryable`
 - the resulting abstraction is implementable across the main Genocs persistence adapters
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `COMMON-011`
 
 ### `COMMON-029` Add cursor-based paging contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added cursor-based paging contracts under `Genocs.Common.CQRS.Queries`:
+
+- `ICursorQuery` for opaque cursor token, limit, and optional ordering metadata.
+- `CursorQueryBase` with defaults (`Limit = 10`) and contract-level neutrality.
+- `CursorPagedResult<T>` with opaque cursor metadata (`NextCursor`, `PreviousCursor`) and result-window semantics (`ReturnedCount`, `HasMore`).
+
+The contracts intentionally avoid datastore-specific cursor encoding assumptions and keep token semantics opaque to consumers.
+
+Added focused unit tests for defaults, token opacity, cursor metadata, and empty-window behavior.
 
 **Problem**
 
@@ -958,15 +1008,36 @@ Offset-based paging is insufficient for high-volume and append-heavy datasets co
 - the package supports both offset and cursor pagination models
 - cursor contracts are neutral about encoding and persistence implementation
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - none
 
 ### `COMMON-030` Add validation result contracts for pipeline-friendly validation
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added shared validation contracts under `Genocs.Common.Validation`:
+
+- `ValidationError` for structured member-level failure details (`PropertyName`, `ErrorCode`, `ErrorMessage`).
+- `ValidationResult` for standard validation outcome semantics with `IsValid`, `IsInvalid`, and `Errors`.
+- `IValidator<T>` as a minimal async validation abstraction for pipeline composition without a hard dependency on FluentValidation.
+
+Added focused unit tests to validate success/failure semantics and async validator contract shape.
+
+**Migration Notes**
+
+- Keep runtime validators in host or companion packages; `Genocs.Common` only defines contracts.
+- Map FluentValidation (or other engines) results into `ValidationResult`/`ValidationError` at integration boundaries.
+- Use stable `ErrorCode` values so handlers, APIs, and telemetry can classify validation failures consistently.
 
 **Problem**
 
@@ -989,15 +1060,36 @@ The platform relies on validation, but `Genocs.Common` has no standard validatio
 - validation failures have one standard shape across the ecosystem
 - no external validation library dependency is introduced in the common package
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `COMMON-008`
 
 ### `COMMON-031` Add optimistic concurrency version contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added a minimal versioning contract under `Genocs.Common.Domain.Entities`:
+
+- `IVersioned` with `long Version` for persistence-agnostic optimistic concurrency checks.
+
+The contract is intentionally transport-neutral and does not prescribe persistence mechanics. It allows adapters to implement compare-and-swap semantics using their native concurrency primitives while keeping application/domain code on one shared shape.
+
+Added focused unit tests validating the contract property shape and composition with `IEntity<TKey>`.
+
+**Migration Notes**
+
+- Persistence adapters should treat `Version` as the expected concurrency token for updates.
+- Increment `Version` only when a state-changing write is successfully persisted.
+- Keep conflict detection and retry policies in infrastructure/application layers, not in `Genocs.Common` contracts.
 
 **Problem**
 
@@ -1018,15 +1110,35 @@ There is no shared contract for aggregate versioning, which complicates optimist
 - optimistic concurrency can be expressed uniformly across persistence adapters
 - the version contract is minimal and transport-neutral
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `COMMON-023`
 
 ### `COMMON-032` Add soft-delete query filter contracts
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P4
+
+**Resolution**
+
+Added soft-delete query visibility contracts under `Genocs.Common.CQRS.Queries`:
+
+- `ISoftDeleteFilter` with `IncludeDeleted` to standardize opt-in deleted-record visibility.
+- `SoftDeleteFilterBase` as a reusable request model base with default hidden-deleted behavior (`IncludeDeleted = false`).
+
+Added focused unit tests validating default behavior, explicit opt-in behavior, and public contract shape.
+
+**Migration Notes**
+
+- Query handlers should exclude soft-deleted records by default unless `IncludeDeleted` is explicitly enabled.
+- Use `IncludeDeleted = true` for administrative, audit, or restore workflows.
+- Keep provider-specific filtering expressions in persistence adapters while mapping request intent through `ISoftDeleteFilter`.
 
 **Problem**
 
@@ -1048,6 +1160,11 @@ There is no shared contract for aggregate versioning, which complicates optimist
 - consumers have a standard contract for including or excluding soft-deleted rows in queries
 - the abstraction is compatible with both offset and specification-based query models
 
+**Validation**
+
+- `dotnet build src/Genocs.Common/Genocs.Common.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - `COMMON-028`
@@ -1064,6 +1181,10 @@ There is no shared contract for aggregate versioning, which complicates optimist
 ## Cross-Package Coordination
 
 The following packages are likely affected by M2 through M5 work and should be assessed before implementation begins:
+
+Working artifact for vNext dependency and migration tracking:
+
+- [docs/Genocs.Common-vNext-Dependency-Impact.md](docs/Genocs.Common-vNext-Dependency-Impact.md)
 
 - `Genocs.Core`
 - `Genocs.WebApi`

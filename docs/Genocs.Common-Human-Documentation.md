@@ -37,6 +37,7 @@ Genocs.Common provides the core interfaces used to model entities and aggregate 
 - **`IAggregateRoot`**: Marker contract for aggregate roots.
 - **`IAggregateRoot<TKey>`**: Aggregate root with typed identity and domain event support.
 - **`IGeneratesDomainEvents`**: Exposes a `List<IEvent>? DomainEvents` collection for aggregate-level event tracking.
+- **`IVersioned`**: Minimal optimistic-concurrency contract with `long Version`.
 - **`IRepositoryOfEntity<TEntity, TKey>`**: Async-first, provider-agnostic repository contract for CRUD and query-by-predicate operations. Retrieval methods such as `GetByIdAsync` return `null` if not found, making not-found semantics explicit.
 - **`IQueryableRepository<TEntity, TKey>`**: Optional extension contract for provider-backed implementations that intentionally expose `IQueryable<TEntity>` for advanced querying.
 
@@ -45,6 +46,7 @@ Genocs.Common provides the core interfaces used to model entities and aggregate 
 - Typed identities through `IEntity<TKey>`
 - Domain event collection on aggregates
 - Lifecycle checks can use `IsNew()` as the preferred, unambiguous naming for not-yet-persisted entities.
+- `IVersioned` enables one shared version token shape for compare-and-swap persistence updates.
 - Optional `EntityBase<TKey>` avoids repeated equality boilerplate in consumer entities.
 
 **When to use `EntityBase<TKey>` vs interfaces only:**
@@ -83,6 +85,9 @@ The package defines persistence-facing abstractions without choosing a storage t
 - **`IRepository<TEntity, TKey>`**: Marker interface for repository registration by convention.
 - **`IRepositoryOfEntity<TEntity, TKey>`**: Default CRUD and predicate-query contract for domain-facing repository dependencies.
 - **`IQueryableRepository<TEntity, TKey>`**: Opt-in repository contract for infrastructure packages that intentionally expose provider-backed querying.
+- **`ISpecification<TEntity>`**: Provider-agnostic query intent contract for filtering, includes, ordering, paging, and no-tracking options.
+- **`IProjectionSpecification<TEntity, TResult>`**: Projection-capable specification contract.
+- **`ISpecificationRepository<TEntity, TKey>`**: Optional repository extension for specification-based querying.
 
 #### Unit of Work and Loading
 
@@ -126,8 +131,11 @@ The query namespace contains contracts and helper models for paged read workflow
 **Capabilities:**
 - `IPagedQuery` for page, size, sort, and order metadata
 - `PagedQueryBase` and `PagedQueryWithFilter` for reusable request models
+- `ICursorQuery` and `CursorQueryBase` for cursor-based request models with opaque continuation tokens
+- `ISoftDeleteFilter` and `SoftDeleteFilterBase` for standard deleted-record visibility controls
 - `ISearchRequest` and `SearchRequest` with `SearchTerm` as the canonical search property (`q` kept as a compatibility alias)
 - `PagedResultBase` and `PagedResult<T>` for consistent paged responses
+- `CursorPagedResult<T>` for cursor-window responses with next and previous continuation tokens
 
 **Paging defaults and bounds:**
 - `Page` is zero-based and defaults to `0` (first page).
@@ -135,14 +143,27 @@ The query namespace contains contracts and helper models for paged read workflow
 - `OrderBy` and `SortOrder` are optional; `SortOrder` should be `ASC` or `DESC` when provided.
 - `Genocs.Common` defines the contract and defaults only; downstream handlers, API validators, or infrastructure should enforce hard limits.
 
+**Cursor paging defaults and bounds:**
+- `Limit` defaults to `10`, minimum valid value is `1`, and recommended maximum is `100`.
+- Cursor tokens are opaque by design and should not be parsed in shared contract code.
+- Cursor token encoding/decoding belongs to infrastructure adapters and API layers.
+
+**Soft-delete filter defaults:**
+- `IncludeDeleted` defaults to `false` in `SoftDeleteFilterBase`, so standard queries hide deleted rows.
+- Set `IncludeDeleted = true` for administrative, audit, or restore-focused query flows.
+
 ### 5. Events, Notifications, and Application Services
 
 This package defines contracts for system events, UI or client notifications, and a few common app-level services.
 
 - **`IEvent` / `IEventHandler<TEvent>` / `IEventDispatcher`**: Core event publishing contracts.
+- **`IIntegrationEvent` / `ITransactionalEvent`**: Integration-event markers where `ITransactionalEvent` indicates durable outbox publication intent.
+- **`IOutboxMessage<TIntegrationEvent>` / `IOutboxMessage`**: Contract for durable outbox event envelopes.
+- **`IOutboxDispatcher`**: Contract for enqueueing integration events into an outbox workflow.
 - **`IDispatcher`**: Composite dispatcher abstraction that inherits command, query, and event dispatch contracts.
 - **`IRejectedEvent` / `RejectedEvent`**: Standardized rejection event shape with `Reason`, structured `Code`, and `Error` alignment.
 - **`RejectionCode`**: Structured helper for generating and parsing `category.subject.reason` rejection codes.
+- **`ValidationError` / `ValidationResult` / `IValidator<T>`**: Standard validation contracts for passing failures through command/query pipelines.
 - **`INotificationMessage` / `INotificationSender`**: Notification transport abstractions for broadcast, group, and user delivery. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
 - **`ICurrentUser`**: Abstraction for authenticated user context, claims, tenant, and role checks.
 - **`IJobService`**: Contract for enqueueing, scheduling, deleting, and requeueing background jobs. **Note:** As of March 2026, this interface no longer inherits a DI lifetime marker. Lifetime is now an infrastructure concern.
@@ -153,6 +174,15 @@ This package defines contracts for system events, UI or client notifications, an
 - `BasicNotification` with severity labels
 - `JobNotification` for job progress updates
 - `StatsChangedNotification` as a marker notification message
+
+**Outbox contract boundaries:**
+- `IOutboxDispatcher` is contract-only in `Genocs.Common`.
+- Storage, transport, and serializer behavior belongs to companion runtime packages.
+
+**Validation contract boundaries:**
+- `IValidator<T>` is intentionally minimal and async-first (`ValidateAsync`).
+- `ValidationResult` and `ValidationError` standardize failure shape, but do not enforce a specific validation library.
+- Keep concrete validators and pipeline behaviors in host applications or companion packages.
 
 **Notification contract validity:**
 - `BasicNotification.Message` and `JobNotification.Message` should always contain meaningful text.
@@ -243,6 +273,7 @@ Supports clean architecture principles:
 
 - Use `IAggregateRoot<TKey>` only for true transaction boundaries.
 - Keep domain events on aggregates, not on every entity type.
+- Use `IVersioned` on entities or aggregates that require optimistic concurrency enforcement.
 - Apply auditing interfaces only where the extra metadata is required.
 
 ### Repository Design
@@ -250,12 +281,14 @@ Supports clean architecture principles:
 - Expose repositories from domain or application layers, then implement them in infrastructure packages.
 - Prefer `IRepositoryOfEntity<TEntity, TKey>` for aggregate persistence, not for arbitrary read models.
 - Use `IQueryableRepository<TEntity, TKey>` only in infrastructure or composition layers that genuinely need provider-backed query composition.
+- Use `ISpecificationRepository<TEntity, TKey>` for provider-neutral query composition and keep provider-specific behavior inside persistence adapters.
 - Use `ISupportsExplicitLoading<TEntity, TPrimaryKey>` only when your implementation genuinely supports it.
 
 ### CQRS Usage
 
 - Keep commands focused on state changes and queries focused on data retrieval.
 - Return `PagedResult<T>` for pageable endpoints to keep result contracts consistent.
+- Respect `ISoftDeleteFilter.IncludeDeleted` in read handlers where entities implement `ISoftDelete`.
 - Use `RejectedEvent` only for integration-style failure signaling, not as a substitute for domain validation.
 - Use structured rejection codes (`category.subject.reason`) so failures can be classified consistently across HTTP, messaging headers, and telemetry tags.
 

@@ -23,6 +23,10 @@ Required for every intentional break:
 - list impacted projects and migration owner
 - add/update tests proving the new expected behavior
 
+Related definitions:
+- [docs/Genocs.Core-vNext-Owner-Definitions.md](docs/Genocs.Core-vNext-Owner-Definitions.md)
+- [docs/Genocs.Core-vNext-Migration-State-Definitions.md](docs/Genocs.Core-vNext-Migration-State-Definitions.md)
+
 ## Core Dependency Baseline
 
 Source of truth for this section:
@@ -117,24 +121,26 @@ Use this as the source of truth for package migration work.
 
 Track each direct dependent until green on vNext branch.
 
-| Project | Category | Expected Impact | Migration State | Validation Command |
-|---|---|---|---|---|
-| Genocs.Http | Direct dependent | Medium | Not started | dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo |
-| Genocs.Logging | Direct dependent | Medium | Not started | dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo |
-| Genocs.Messaging | Direct dependent | High | Not started | dotnet build src/Genocs.Messaging/Genocs.Messaging.csproj -c Debug --nologo |
-| Genocs.Messaging.AzureServiceBus | Direct dependent | High | Not started | dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo |
-| Genocs.Metrics | Direct dependent | Medium | Not started | dotnet build src/Genocs.Metrics/Genocs.Metrics.csproj -c Debug --nologo |
-| Genocs.Persistence.EFCore | Direct dependent | High | Not started | dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo |
-| Genocs.Persistence.MongoDB | Direct dependent | High | Not started | dotnet build src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj -c Debug --nologo |
-| Genocs.Persistence.Redis | Direct dependent | High | Not started | dotnet build src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj -c Debug --nologo |
-| Genocs.Saga.Integrations.MongoDB | Direct dependent | Medium | Not started | dotnet build src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj -c Debug --nologo |
-| Genocs.Saga.Integrations.Redis | Direct dependent | Medium | Not started | dotnet build src/Genocs.Saga.Integrations.Redis/Genocs.Saga.Integrations.Redis.csproj -c Debug --nologo |
-| Genocs.Secrets.AzureKeyVault | Direct dependent | Medium | Not started | dotnet build src/Genocs.Secrets.AzureKeyVault/Genocs.Secrets.AzureKeyVault.csproj -c Debug --nologo |
-| Genocs.Secrets.HashicorpKeyVault | Direct dependent | Medium | Not started | dotnet build src/Genocs.Secrets.HashicorpKeyVault/Genocs.Secrets.HashicorpKeyVault.csproj -c Debug --nologo |
-| Genocs.Security | Direct dependent | Medium | Not started | dotnet build src/Genocs.Security/Genocs.Security.csproj -c Debug --nologo |
-| Genocs.Telemetry | Direct dependent | Medium | Not started | dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo |
-| Genocs.WebApi | Direct dependent | High | Not started | dotnet build src/Genocs.WebApi/Genocs.WebApi.csproj -c Debug --nologo |
-| Genocs.WebApi.Security | Direct dependent | High | Not started | dotnet build src/Genocs.WebApi.Security/Genocs.WebApi.Security.csproj -c Debug --nologo |
+Owner and state values in this table use the definition files listed above.
+
+| Project | Category | Primary Owner | Expected Impact | Migration State | Validation Command |
+|---|---|---|---|---|---|
+| Genocs.Http | Direct dependent | CORE | Medium | QUEUED-W1 | dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo |
+| Genocs.Logging | Direct dependent | OBS | Medium | QUEUED-W1 | dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo |
+| Genocs.Messaging | Direct dependent | MSG | High | QUEUED-W1 | dotnet build src/Genocs.Messaging/Genocs.Messaging.csproj -c Debug --nologo |
+| Genocs.Messaging.AzureServiceBus | Direct dependent | MSG | High | QUEUED-W1 | dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo |
+| Genocs.Metrics | Direct dependent | OBS | Medium | QUEUED-W1 | dotnet build src/Genocs.Metrics/Genocs.Metrics.csproj -c Debug --nologo |
+| Genocs.Persistence.EFCore | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo |
+| Genocs.Persistence.MongoDB | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj -c Debug --nologo |
+| Genocs.Persistence.Redis | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj -c Debug --nologo |
+| Genocs.Saga.Integrations.MongoDB | Direct dependent | PERSIST | Medium | QUEUED-W1 | dotnet build src/Genocs.Saga.Integrations.MongoDB/Genocs.Saga.Integrations.MongoDB.csproj -c Debug --nologo |
+| Genocs.Saga.Integrations.Redis | Direct dependent | PERSIST | Medium | QUEUED-W1 | dotnet build src/Genocs.Saga.Integrations.Redis/Genocs.Saga.Integrations.Redis.csproj -c Debug --nologo |
+| Genocs.Secrets.AzureKeyVault | Direct dependent | SEC | Medium | QUEUED-W1 | dotnet build src/Genocs.Secrets.AzureKeyVault/Genocs.Secrets.AzureKeyVault.csproj -c Debug --nologo |
+| Genocs.Secrets.HashicorpKeyVault | Direct dependent | SEC | Medium | QUEUED-W1 | dotnet build src/Genocs.Secrets.HashicorpKeyVault/Genocs.Secrets.HashicorpKeyVault.csproj -c Debug --nologo |
+| Genocs.Security | Direct dependent | SEC | Medium | QUEUED-W1 | dotnet build src/Genocs.Security/Genocs.Security.csproj -c Debug --nologo |
+| Genocs.Telemetry | Direct dependent | OBS | Medium | QUEUED-W1 | dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo |
+| Genocs.WebApi | Direct dependent | WEBAPI | High | QUEUED-W1 | dotnet build src/Genocs.WebApi/Genocs.WebApi.csproj -c Debug --nologo |
+| Genocs.WebApi.Security | Direct dependent | WEBAPI | High | QUEUED-W1 | dotnet build src/Genocs.WebApi.Security/Genocs.WebApi.Security.csproj -c Debug --nologo |
 
 ## Change Documentation Rules
 
