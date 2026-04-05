@@ -110,6 +110,11 @@ public static class Extensions
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+        var environment = app.ApplicationServices.GetService<IHostEnvironment>();
+        if (environment?.IsDevelopment() != true)
+        {
+            return app;
+        }
 
         app.UseEndpoints(endpoints =>
         {

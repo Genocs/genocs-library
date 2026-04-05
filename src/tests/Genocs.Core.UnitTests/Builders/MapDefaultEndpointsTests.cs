@@ -71,12 +71,29 @@ public class MapDefaultEndpointsTests
         Assert.True(response.IsSuccessStatusCode);
     }
 
-    private static async Task<IHost> BuildHostAsync(Action<IServiceCollection> configureServices)
+    [Fact]
+    public async Task Endpoints_AreNotMapped_InNonDevelopmentEnvironment()
+    {
+        using IHost host = await BuildHostAsync(_ => { }, Environments.Production);
+
+        using HttpClient client = host.GetTestClient();
+
+        HttpResponseMessage rootResponse = await client.GetAsync("/");
+        HttpResponseMessage healthzResponse = await client.GetAsync("/healthz");
+        HttpResponseMessage aliveResponse = await client.GetAsync("/alive");
+
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, rootResponse.StatusCode);
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, healthzResponse.StatusCode);
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, aliveResponse.StatusCode);
+    }
+
+    private static async Task<IHost> BuildHostAsync(Action<IServiceCollection> configureServices, string environmentName = "Development")
     {
         IHost host = Host.CreateDefaultBuilder()
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseTestServer();
+                webBuilder.UseEnvironment(environmentName);
                 webBuilder.Configure(app =>
                 {
                     app.UseRouting();
