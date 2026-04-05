@@ -32,8 +32,7 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     /// </summary>
     protected CreationAuditedEntity()
     {
-        // CreationTime = Clock.Now;
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
 }
 

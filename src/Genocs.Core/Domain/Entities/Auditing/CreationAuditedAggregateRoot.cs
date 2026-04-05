@@ -34,8 +34,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     /// </summary>
     protected CreationAuditedAggregateRoot()
     {
-        // CreationTime = Clock.Now; // Manage time zone
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
 }
 

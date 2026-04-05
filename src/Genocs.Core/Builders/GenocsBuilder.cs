@@ -3,6 +3,7 @@ using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Genocs.Core.Builders;
 
@@ -34,9 +35,10 @@ public sealed class GenocsBuilder : IGenocsBuilder
     private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
         _services = services;
-        Configuration = configuration;
+        Configuration = ResolveConfiguration(services, configuration);
 
         _buildActions = [];
+        _services.TryAddSingleton(Configuration);
         _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
     }
 
@@ -55,6 +57,22 @@ public sealed class GenocsBuilder : IGenocsBuilder
 
     public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);
+
+    private static IConfiguration ResolveConfiguration(IServiceCollection services, IConfiguration? explicitConfiguration)
+    {
+        if (explicitConfiguration is not null)
+        {
+            return explicitConfiguration;
+        }
+
+        var descriptor = services.LastOrDefault(service => service.ServiceType == typeof(IConfiguration));
+        if (descriptor?.ImplementationInstance is IConfiguration existingConfiguration)
+        {
+            return existingConfiguration;
+        }
+
+        return new ConfigurationBuilder().Build();
+    }
 
     public bool TryRegister(string name)
         => _registry.TryAdd(name, true);

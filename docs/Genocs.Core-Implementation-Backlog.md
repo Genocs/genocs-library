@@ -18,6 +18,10 @@ Implemented:
 - `CORE-006`: Implemented and validated with unit tests (April 2026)
 - `CORE-007`: Implemented and validated with unit tests (April 2026)
 - `CORE-008`: Implemented and validated with unit tests (April 2026)
+- `CORE-009`: Implemented and validated with unit tests (April 2026)
+- `CORE-010`: Implemented and validated with unit tests (April 2026)
+- `CORE-011`: Implemented and validated with unit tests (April 2026)
+- `CORE-012`: Implemented and validated with unit tests (April 2026)
 
 Assessment baseline:
 
@@ -26,7 +30,7 @@ Assessment baseline:
 
 Next recommended items:
 
-- Start M3 (`CORE-009` to `CORE-012`) for repository and auditing model cleanup after M1/M2 baseline hardening
+- Continue M3 with `CORE-010` to `CORE-012` after async-first repository baseline was established in `CORE-009`
 
 ## Planning Assumptions
 
@@ -401,7 +405,33 @@ Core contracts still reference obsolete markers (for example `ITransientService`
 
 ### `CORE-009` Plan and execute async-first repository migration in Core
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Implemented Phase 1 of the async-first migration as a non-breaking foundation and documented the versioned migration path.
+
+Code changes:
+
+- Added async-first override hooks in `RepositoryBase<TEntity, TKey>` and routed public async methods through them:
+	- `GetAllListCoreAsync`
+	- `FirstOrDefaultByIdCoreAsync`
+	- `FirstOrDefaultCoreAsync`
+	- `SingleCoreAsync`
+	- `CountCoreAsync`
+	- `LongCountCoreAsync`
+- Added `GetByIdAsync` to align Core base behavior with `Genocs.Common` repository expectations.
+- Preserved existing sync methods and signatures for compatibility.
+
+Documentation:
+
+- Added phased migration and versioning guidance in [docs/Genocs.Core-Repository-Migration-Plan.md](docs/Genocs.Core-Repository-Migration-Plan.md).
+
+Validation:
+
+- Added unit tests to verify async public methods flow through async-first hooks in [src/tests/Genocs.Core.UnitTests/Domain/Repositories/RepositoryBaseAsyncFlowTests.cs](src/tests/Genocs.Core.UnitTests/Domain/Repositories/RepositoryBaseAsyncFlowTests.cs).
+
+**Original Priority**: P2
 
 **Priority**: P2
 
@@ -435,7 +465,26 @@ Core contracts still reference obsolete markers (for example `ITransientService`
 
 ### `CORE-010` Restore deterministic creation-audit behavior
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
+
+**Resolution**
+
+Restored deterministic audit timestamp behavior and aligned it to UTC semantics:
+
+- `EntityAuditingHelper.SetCreationAuditProperties` now sets `CreatedAt` when missing
+- `EntityAuditingHelper.SetModificationAuditProperties` now sets `LastUpdate` using UTC
+- `CreationAuditedEntity<TPrimaryKey>` and `CreationAuditedAggregateRoot<TPrimaryKey>` constructors now initialize `CreatedAt` with `DateTime.UtcNow`
+
+Also simplified the helper’s null-safety flow and preserved the existing behavior when `userId` is unavailable (creation/modification user IDs are not force-set).
+
+Added focused unit tests for creation and modification flows, including:
+
+- set-when-missing behavior for `CreatedAt`
+- no override when `CreatedAt` is already present
+- UTC-kind assertions for both creation and modification timestamps
+- unknown-user behavior for creator/updater IDs
+
+**Original Priority**: P2
 
 **Priority**: P2
 
@@ -466,9 +515,15 @@ Core contracts still reference obsolete markers (for example `ITransientService`
 
 ### `CORE-011` Eliminate dead commented multi-tenancy blocks from Core runtime helpers
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P2
+
+**Resolution**
+
+Removed legacy commented multi-tenancy and infrastructure scaffolding from `RepositoryBase<TEntity, TKey>`, including dead `using` directives, dormant interface fragments, and an empty static constructor that only contained commented code.
+
+Added explicit documentation guidance that multi-tenancy behavior is intentionally owned by companion packages, not by commented placeholders in Core runtime helpers.
 
 **Problem**
 
@@ -497,9 +552,21 @@ Core contains large commented multi-tenancy and legacy infrastructure blocks in 
 
 ### `CORE-012` Improve startup option resolution without ad hoc service-provider creation
 
-**Status**: Planned
+**Status**: Implemented & tested (April 2026)
 
 **Priority**: P2
+
+**Resolution**
+
+Made configuration resolution deterministic for `AddGenocs(IServiceCollection, IConfiguration?)` by selecting one source-of-truth at builder creation time:
+
+- explicit `IConfiguration` argument when provided
+- otherwise, an existing `IConfiguration` singleton instance already registered in `IServiceCollection`
+- otherwise, an empty configuration root (`new ConfigurationBuilder().Build()`)
+
+`GetOptions<TModel>(IGenocsBuilder, sectionName)` now reads only `builder.Configuration` and no longer creates a temporary service provider.
+
+Added focused unit tests for explicit-configuration, pre-registered configuration, and no-configuration fallback paths.
 
 **Problem**
 

@@ -35,6 +35,8 @@ Genocs.Core defines the runtime entry point for Genocs applications through `IGe
 - **`AddGenocs(this IServiceCollection, IConfiguration?)`**: Enables the same runtime setup outside a `WebApplicationBuilder` host.
 - **`UseGenocs(this IApplicationBuilder)`**: Executes the registered `IStartupInitializer` pipeline.
 
+For `IServiceCollection` hosts, configuration resolution is deterministic and does not create temporary service providers: Genocs uses the explicit `IConfiguration` argument first, then any pre-registered `IConfiguration` singleton, otherwise an empty configuration root.
+
 **Key Features:**
 - Unified bootstrap entry point for web hosts and plain service collections
 - Deferred build actions executed through `IGenocsBuilder.Build()`
@@ -122,6 +124,8 @@ The package includes two repository layers: Ardalis.Specification-aligned aggreg
 - Specification-compatible repository surface through Ardalis.Specification
 - Optional raw SQL reads via Dapper-style abstractions
 
+Core repository runtime helpers intentionally exclude inline multi-tenancy branches and legacy infrastructure placeholders. Multi-tenancy policy belongs in dedicated companion packages so repository behavior stays deterministic and provider-agnostic.
+
 ### 5. Auditing and Entity Metadata Helpers
 
 Genocs.Core includes audited entity hierarchies and helper utilities for populating creation, modification, and deletion metadata.
@@ -138,6 +142,8 @@ Genocs.Core includes audited entity hierarchies and helper utilities for populat
 - Soft-delete-aware entity bases
 - Central helper methods for setting audit properties consistently
 - Audit trail contracts that higher-level packages can implement
+
+Auditing helpers keep cross-cutting behavior focused on audit metadata assignment. Tenant resolution and tenancy policy should be composed by infrastructure packages that implement multi-tenancy concerns explicitly.
 
 ### 6. Utility Extensions and Helper APIs
 

@@ -93,13 +93,11 @@ public static class Extensions
     public static TModel GetOptions<TModel>(this IGenocsBuilder builder, string sectionName)
         where TModel : new()
     {
-        if (builder.Configuration != null)
-        {
-            return builder.Configuration.GetOptions<TModel>(sectionName);
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
-        using var serviceProvider = builder.Services.BuildServiceProvider();
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        IConfiguration configuration = builder.Configuration
+            ?? throw new InvalidOperationException("Configuration is not available on the current Genocs builder instance.");
+
         return configuration.GetOptions<TModel>(sectionName);
     }
 
