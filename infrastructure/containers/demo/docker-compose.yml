@@ -4,7 +4,7 @@ services:
     hostname: demo-webapi-service
     container_name: demo-webapi-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - mongodb__connectionString=mongodb://mongodb:27017
       - seq__url=http://seq
@@ -23,7 +23,7 @@ services:
     hostname: demo-masstransit-webapi-service
     container_name: demo-masstransit-webapi-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - mongodb__connectionString=mongodb://mongodb:27017
       - seq__url=http://seq
@@ -42,7 +42,17 @@ services:
     hostname: demo-masstransit-worker-service
     container_name: demo-masstransit-worker-service
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - mongodb__connectionString=mongodb://mongodb:27017
+      - seq__url=http://seq
+      - exporter__otlpEndpoint=http://jaeger
+
+  demo-servicebus-worker-service:
+    image: genocs/demo-servicebus-worker:${IMAGE_VERSION}
+    hostname: demo-servicebus-worker-service
+    container_name: demo-servicebus-worker-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - mongodb__connectionString=mongodb://mongodb:27017
       - seq__url=http://seq
       - exporter__otlpEndpoint=http://jaeger

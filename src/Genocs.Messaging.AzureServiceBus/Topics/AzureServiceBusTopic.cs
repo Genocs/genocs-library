@@ -245,7 +245,8 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
     {
         _processor!.ProcessMessageAsync += async (args) =>
         {
-            string eventName = $"{args.Message.Subject}{EVENT_SUFFIX}";
+            // Subject must match Subscribe<T> key (typeof(T).Name); see PublishAsync Subject.
+            string eventName = args.Message.Subject ?? string.Empty;
             using var processingActivity = StartConsumerActivity(args.Message, eventName);
             string messageData = args.Message.Body.ToString();
 
@@ -367,9 +368,22 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
                     if (handler != null)
                     {
                         var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-                        object? command = JsonSerializer.Deserialize(message, eventType!);
-                        var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType!);
-                        await (Task)concreteType.GetMethod("HandleEvent")!.Invoke(handler, new object[] { command! })!;
+                        if (eventType is null)
+                        {
+                            _logger.LogError("No registered event type matches subject '{EventName}'", eventName);
+                            continue;
+                        }
+
+                        object? command = JsonSerializer.Deserialize(message, eventType);
+                        if (command is null)
+                        {
+                            _logger.LogError("Failed to deserialize message for event '{EventName}'", eventName);
+                            continue;
+                        }
+
+                        var legacyType = typeof(IEventHandlerLegacy<>).MakeGenericType(eventType);
+                        await (Task)legacyType.GetMethod(nameof(IEventHandlerLegacy<IEvent>.HandleEvent))!
+                            .Invoke(handler, new[] { command })!;
                     }
                 }
             }

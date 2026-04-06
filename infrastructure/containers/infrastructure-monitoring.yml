@@ -54,6 +54,7 @@ services:
 
   prometheus:
     build: ./prometheus
+    hostname: prometheus
     container_name: prometheus
     ports:
       - 9090:9090
@@ -64,6 +65,7 @@ services:
 
   seq:
     image: datalust/seq:latest
+    hostname: seq
     container_name: seq
     ports:
       - 5341:5341 # ingestion

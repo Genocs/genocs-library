@@ -13,3 +13,8 @@ services:
     build:
       context: ../../../
       dockerfile: ./src/demo/Masstransit.Worker/Dockerfile
+
+  demo-servicebus-worker-service:
+    build:
+      context: ../../../
+      dockerfile: ./src/demo/ServiceBus.Worker/Dockerfile

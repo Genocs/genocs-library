@@ -1,11 +1,9 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Use the official .NET runtime as base image
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+# Use the official .NET runtime as base image (Worker services don't need ASP.NET)
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -22,22 +20,18 @@ COPY ["global.json", "global.json"]
 # Copy project files and restore dependencies
 COPY ["src/demo/Contracts/Contracts.csproj", "src/Contracts/"]
 COPY ["src/demo/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/demo/Domain.EFCore/Domain.EFCore.csproj", "src/Domain.EFCore/"]
-COPY ["src/demo/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
-COPY ["src/demo/WebApi/Host.csproj", "src/WebApi/"]
-
+COPY ["src/demo/ServiceBus.Worker/Host.csproj", "src/ServiceBus.Worker/"]
 
 # Restore dependencies in a separate layer for better caching
-RUN dotnet restore "src/WebApi/Host.csproj"
+RUN dotnet restore "src/ServiceBus.Worker/Host.csproj"
+
 # Copy source code
 COPY ["src/demo/Contracts/", "src/Contracts/"]
 COPY ["src/demo/Domain/", "src/Domain/"]
-COPY ["src/demo/Domain.EFCore/", "src/Domain.EFCore/"]
-COPY ["src/demo/Infrastructure/", "src/Infrastructure/"]
-COPY ["src/demo/WebApi/", "src/WebApi/"]
+COPY ["src/demo/ServiceBus.Worker/", "src/ServiceBus.Worker/"]
 
 # Build the application
-WORKDIR "/src/src/WebApi"
+WORKDIR "/src/src/ServiceBus.Worker"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish the application
@@ -49,4 +43,4 @@ RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Library.Demo.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Library.Demo.ServiceBus.Worker.dll"]

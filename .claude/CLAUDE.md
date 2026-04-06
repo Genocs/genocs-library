@@ -101,7 +101,7 @@ Each folder under `src/` is an independent NuGet package. Key packages:
 | `Genocs.Persistence.EFCore` | EF Core repository pattern |
 | `Genocs.Persistence.Redis` | Redis cache integration |
 | `Genocs.Saga` | Saga/state machine orchestration |
-| `Genocs.Discovery.Consul` | Consul service discovery |
+| `Genocs.ServiceDiscovery.Consul` | Consul service discovery |
 | `Genocs.LoadBalancing.Fabio` | Fabio load balancer integration |
 | `Genocs.Secrets.*` | Azure Key Vault & HashiCorp Vault |
 | `Genocs.Tracing.Jaeger.RabbitMQ` | Distributed tracing via Jaeger |

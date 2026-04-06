@@ -1,16 +1,34 @@
 #!/bin/bash
 
-# Print a message to the console
+set -e
+
 echo "Building and running Web Apps Docker images with Docker Compose..."
 
-cd ./infrastructure/containers/apps
-# Build with docker compose
-docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
+cd ./infrastructure/containers/apps || {
+  echo "Error: could not change to infrastructure/containers/apps. Run this script from the repository root." >&2
+  exit 1
+}
 
-# Run with docker compose
-docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d
+ENV_FILE="./.env"
+if [ ! -f "$ENV_FILE" ]; then
+  echo "Error: $ENV_FILE not found in $(pwd)." >&2
+  echo "Create it from the example: cp .env.example .env" >&2
+  exit 1
+fi
 
-# Go back to the root directory
-cd ../../../
+if ! docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build; then
+  echo "Error: Docker Compose build failed." >&2
+  exit 1
+fi
 
-echo "Web App Docker images built and running successfully."
+if ! docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d; then
+  echo "Error: Docker Compose up failed." >&2
+  exit 1
+fi
+
+cd ../../../ || {
+  echo "Error: could not return to the repository root directory." >&2
+  exit 1
+}
+
+echo "🐳 Ship it! Your containers are up—unlike that one colleague who is still \"getting coffee.\""

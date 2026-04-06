@@ -1,7 +1,7 @@
-﻿using Genocs.Common.CQRS.Events;
+using Genocs.Common.CQRS.Events;
 using Genocs.Library.Demo.Contracts;
 
-namespace Genocs.Library.Demo.WebApi.Handlers;
+namespace Genocs.Library.Demo.ServiceBus.Worker.Handlers;
 
 public class TransactionCompletedHandler(ILogger<TransactionCompletedHandler> logger) : IEventHandler<TransactionCompleted>
 {

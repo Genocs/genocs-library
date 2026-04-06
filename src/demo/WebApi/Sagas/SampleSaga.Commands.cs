@@ -1,4 +1,4 @@
-﻿using Genocs.Common.CQRS.Events;
+﻿using Genocs.Library.Demo.Contracts;
 using Genocs.Saga;
 
 namespace Genocs.Library.Demo.WebApi.Sagas;
@@ -21,12 +21,6 @@ public class CompleteTransaction
 {
     public string? Text { get; set; }
     public int TransactionValue { get; set; }
-}
-
-public sealed class TransactionCompleted : IEvent
-{
-    public string? Text { get; init; }
-    public int TransactionValue { get; init; }
 }
 
 public static class CommandsExtensions

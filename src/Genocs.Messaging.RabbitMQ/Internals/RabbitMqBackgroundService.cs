@@ -168,8 +168,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             var queueArguments = deadLetterEnabled
                 ? new Dictionary<string, object>
                 {
-                    {"x-dead-letter-exchange", deadLetterExchange},
-                    {"x-dead-letter-routing-key", deadLetterQueue},
+                    { "x-dead-letter-exchange", deadLetterExchange},
+                    { "x-dead-letter-routing-key", deadLetterQueue},
                 }
                 : new Dictionary<string, object>();
 
@@ -463,8 +463,11 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                     }
                 }
 
-                _logger.LogError("Handling a message: {MessageName} with ID: {MessageId}, Correlation ID: " +
-                                 "{CorrelationId} failed", messageName, messageId, correlationId);
+                _logger.LogError(
+                    "Handling a message: {MessageName} with ID: {MessageId}, Correlation ID: {CorrelationId} failed",
+                    messageName,
+                    messageId,
+                    correlationId);
 
                 if (failedMessage is not null && !failedMessage.MoveToDeadLetter)
                 {

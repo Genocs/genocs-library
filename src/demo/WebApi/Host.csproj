@@ -43,6 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
         <ProjectReference Include="..\Domain.EFCore\Domain.EFCore.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />

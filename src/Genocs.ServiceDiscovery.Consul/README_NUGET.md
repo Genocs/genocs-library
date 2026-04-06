@@ -1,4 +1,4 @@
-# Genocs.Discovery.Consul
+# Genocs.ServiceDiscovery.Consul
 
 ![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
@@ -7,7 +7,7 @@ Consul-based service discovery integration for Genocs applications. Supports `ne
 ## Installation
 
 ```bash
-dotnet add package Genocs.Discovery.Consul
+dotnet add package Genocs.ServiceDiscovery.Consul
 ```
 
 ## Getting Started

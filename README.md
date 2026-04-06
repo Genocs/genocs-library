@@ -678,19 +678,15 @@ The build and run process can be done by using docker-compose.
 
 Pre-requisites:
 - Docker
+> __NOTE__
+>
+> **Before running the solution remember to check**
+> **if the infrastructure services were setup**
 
-```bash
 
 ```bash
 # Build and run with docker compose
 ./scripts/build-and-run-apps-docker-images.sh
-
-
-# *** Before running the solution remember to check ***
-# *** if the infrastructure services were setup     ***
-
-# Run with docker compose
-docker compose -f ./src/apps/docker-compose.yml --env-file ./.env --project-name genocs up -d
 
 # Clean Docker cache (optional)
 docker builder prune
