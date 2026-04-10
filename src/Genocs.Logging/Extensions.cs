@@ -59,6 +59,11 @@ public static class Extensions
                                    LoggerConfiguration loggerConfiguration,
                                    string environmentName)
     {
+        if (!loggerOptions.Enabled)
+        {
+            return;
+        }
+
         LoggingLevelSwitch.MinimumLevel = GetLogEventLevel(loggerOptions.Level);
 
         loggerConfiguration.Enrich.FromLogContext()
@@ -154,13 +159,13 @@ public static class Extensions
         }
 
         // seq
-        if (seqOptions.Enabled)
+        if (seqOptions.Enabled && !string.IsNullOrWhiteSpace(seqOptions.Url))
         {
-            loggerConfiguration.WriteTo.Seq(seqOptions.Url!, apiKey: seqOptions.ApiKey);
+            loggerConfiguration.WriteTo.Seq(seqOptions.Url, apiKey: seqOptions.ApiKey);
         }
 
         // loki
-        if (lokiOptions.Enabled)
+        if (lokiOptions.Enabled && !string.IsNullOrWhiteSpace(lokiOptions.Url))
         {
             if (lokiOptions.LokiUsername is not null && lokiOptions.LokiPassword is not null)
             {
@@ -171,7 +176,7 @@ public static class Extensions
                 };
 
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url!,
+                    lokiOptions.Url,
                     credentials: auth,
                     batchPostingLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
@@ -180,7 +185,7 @@ public static class Extensions
             else
             {
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url!,
+                    lokiOptions.Url,
                     batchPostingLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
@@ -205,8 +210,8 @@ public static class Extensions
             : LogEventLevel.Information;
 
     /// <summary>
-    /// Adds the CorrelationContextLoggingMiddleware to the pipeline.
-    /// Remember to add the UseCorrelationContextLogging() method to configure the middleware in the pipeline.
+    /// Registers CorrelationContextLoggingMiddleware and binds logger options used by payload capture.
+    /// Call UseCorrelationContextLogging() to activate it in the HTTP pipeline.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
     /// <returns>The Genocs builder.</returns>
@@ -220,8 +225,8 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Adds the CorrelationContextLoggingMiddleware to the pipeline.
-    /// Be sure to add the AddCorrelationContextLogging() method to register the middleware.
+    /// Adds CorrelationContextLoggingMiddleware to the HTTP request pipeline.
+    /// Requires AddCorrelationContextLogging() to be called during service registration.
     /// </summary>
     /// <param name="app">The application builder.</param>
     /// <returns>The application builder.</returns>
@@ -241,21 +246,34 @@ public static class Extensions
         if (service is null)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsync("ILoggingService is not registered. Add UseLogging() to your Program.cs.");
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync("""{"error":"ILoggingService is not registered. Add UseLogging() to your Program.cs."}""");
             return;
         }
 
         string level = context.Request.Query["level"].ToString();
 
-        if (string.IsNullOrEmpty(level))
+        string validLevels = string.Join(", ", Enum.GetNames<LogEventLevel>());
+
+        if (string.IsNullOrWhiteSpace(level))
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsync("Invalid value for logging level.");
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync($"{{\"error\":\"Missing 'level' query parameter. Valid values: {validLevels}.\"}}");
+            return;
+        }
+
+        if (!Enum.TryParse<LogEventLevel>(level, ignoreCase: true, out var logLevel))
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync($"{{\"error\":\"Invalid log level '{level}'. Valid values: {validLevels}.\"}}");
             return;
         }
 
         service.SetLoggingLevel(level);
-
         context.Response.StatusCode = StatusCodes.Status200OK;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync($"{{\"level\":\"{logLevel}\"}}");
     }
 }

@@ -38,7 +38,6 @@ Do not assume `Genocs.Logging` can:
 - decorate query handlers
 - register CQRS handlers for you
 - sanitize secrets or redact payloads automatically
-- make MongoDB logging work just because `mongo.enabled` exists
 - replace the need for `Genocs.Telemetry` when distributed tracing is required
 
 ## Safe Default Mental Model
@@ -145,7 +144,7 @@ If you want actual message templates, register an `IMessageToLogTemplateMapper` 
 | `builder.Host.UseLogging()` | Configure Serilog for the host | Reads `logger` and `app` sections and registers `ILoggingService` | Calling it after `builder.Build()` |
 | `MapLogLevelHandler()` | Expose runtime level-switch endpoint | Maps a `POST` endpoint that changes the shared `LoggingLevelSwitch` | Sending `GET` requests or forgetting `UseLogging()` |
 | `AddCorrelationContextLogging()` | Register correlation middleware and options | Adds `CorrelationContextLoggingMiddleware` and stores `LoggerOptions` | Forgetting to also call `UseCorrelationContextLogging()` |
-| `UseCorrelationContextLogging()` | Put correlation middleware into the pipeline | Captures Activity baggage and optional request or response payloads | Using it without registering it first |
+| `UseCorrelationContextLogging()` | Put correlation middleware into the pipeline | Captures Activity baggage and request payload in scope; response payload is captured after pipeline completion and added as an Activity tag | Using it without registering it first |
 | `AddCommandHandlersLogging()` | Decorate command handlers with logging | Decorates handlers found in the target assembly | Assuming it registers handlers themselves |
 | `AddEventHandlersLogging()` | Decorate event handlers with logging | Decorates handlers found in the target assembly | Assuming query handlers are covered too |
 | `IMessageToLogTemplateMapper` | Supply log templates for CQRS decorator logs | If absent, decorators silently emit no template-based logs | Assuming logs will appear without a mapper |
@@ -194,7 +193,6 @@ If you want actual message templates, register an `IMessageToLogTemplateMapper` 
 - `SeqOptions`
 - `LokiOptions`
 - `AzureOptions`
-- `MongoOptions`
 - `HttpPayloadOptions`
 
 ## Configuration Ownership
@@ -259,10 +257,6 @@ What this package actively uses:
 - `azure.*`
 - `httpPayload.*`
 
-What exists but is not implemented as a sink here:
-
-- `mongo.enabled`
-
 The package also reads the shared `app` section from `Genocs.Common.AppOptions` for enrichment fields such as application, instance, and version.
 
 ## Source-Blind Guardrails For Agents
@@ -274,9 +268,8 @@ When you cannot inspect source code, follow these rules:
 3. Do not enable payload capture by default.
 4. Do not promise query-handler logging; only command and event decorators exist.
 5. Do not assume `IMessageToLogTemplateMapper` is registered automatically.
-6. Do not assume `mongo.enabled` activates a MongoDB sink.
-7. Do not assume tracing or metrics are emitted just because console flags mention them.
-8. Do not assume runtime level switching affects every deployed instance in a distributed environment.
+6. Do not assume tracing or metrics are emitted just because console flags mention them.
+7. Do not assume runtime level switching affects every deployed instance in a distributed environment.
 
 ## Agent Decision Checklist
 
@@ -344,13 +337,10 @@ Fix: Register it with `AddCorrelationContextLogging()` and add it to the pipelin
 Fix: Confirm handlers are already registered, confirm the correct assembly is decorated, and register an `IMessageToLogTemplateMapper` if template-based logs are expected.
 
 6. Request or response bodies are missing from logs.
-Fix: Check `httpPayload.enabled`, the capture flags, and whether the response content type matches `allowedContentTypes`.
+Fix: Check `httpPayload.enabled`, capture flags, and strict media-type allowlist matching. Request body is available in request scope, while response body is captured after pipeline completion as `http.response.body` activity tag.
 
 7. Payload logs are too large or expose sensitive data.
-Fix: Disable payload capture, reduce `maxBodyLength`, tighten `allowedContentTypes`, or exclude sensitive properties at the sink level.
-
-8. `mongo.enabled` has no effect.
-Fix: This package currently does not configure a MongoDB sink from that option.
+Fix: Disable payload capture, reduce `maxBodyLength`, tighten `allowedContentTypes`, or exclude sensitive properties at the sink level. Values less than or equal to `0` are normalized and very large values are capped to bounded limits.
 
 ## Related Packages To Ask About
 

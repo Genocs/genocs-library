@@ -12,7 +12,7 @@
 /// <item><term>BatchPostingLimit</term></item>
 /// <item><term>QueueLimit</term></item>
 /// <item><term>Period</term></item>
-/// </list> 
+/// </list>
 /// <list type="bullet"><listheader>The excluded options are:</listheader>
 /// <item><term>Labels</term></item>
 /// <item><term>FiltrationMode</term></item>

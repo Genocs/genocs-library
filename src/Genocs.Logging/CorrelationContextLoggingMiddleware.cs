@@ -3,12 +3,19 @@ using System.Text;
 using Genocs.Logging.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Genocs.Logging;
 
 public class CorrelationContextLoggingMiddleware : IMiddleware
 {
+    private const int DefaultMaxBodyLength = 4096;
+    private const int MaxSupportedBodyLength = 16384;
+    private static readonly string[] DefaultAllowedContentTypes =
+    [
+        "application/json",
+        "application/*+json"
+    ];
+
     private readonly ILogger<CorrelationContextLoggingMiddleware> _logger;
     private readonly HttpPayloadOptions _payloadOptions;
 
@@ -17,7 +24,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         LoggerOptions loggerOptions)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _payloadOptions = loggerOptions?.HttpPayload ?? new HttpPayloadOptions();
+        _payloadOptions = NormalizePayloadOptions(loggerOptions?.HttpPayload ?? new HttpPayloadOptions());
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -64,7 +71,8 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
                 string? responseBody = await ReadResponseBodyAsync(context.Response, responseBuffer);
                 if (!string.IsNullOrWhiteSpace(responseBody))
                 {
-                    scopeData["HttpResponseBody"] = responseBody;
+                    // Response payload is only available after the request pipeline completes,
+                    // so enrich the activity instead of mutating the request scope state.
                     Activity.Current?.SetTag("http.response.body", responseBody);
                 }
             }
@@ -107,37 +115,63 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
     private bool IsCaptureCandidate(string? contentType)
     {
-        if (string.IsNullOrWhiteSpace(contentType))
+        string? mediaType = NormalizeContentType(contentType);
+        if (string.IsNullOrWhiteSpace(mediaType))
         {
             return false;
         }
 
-        string normalized = contentType.ToLowerInvariant();
-
         foreach (string allowed in _payloadOptions.AllowedContentTypes)
         {
-            if (string.IsNullOrWhiteSpace(allowed))
+            string? pattern = NormalizeContentType(allowed);
+            if (string.IsNullOrWhiteSpace(pattern))
             {
                 continue;
             }
 
-            string pattern = allowed.ToLowerInvariant();
-
-            if (pattern.EndsWith("/*", StringComparison.Ordinal))
-            {
-                string prefix = pattern[..^1];
-                if (normalized.StartsWith(prefix, StringComparison.Ordinal))
-                {
-                    return true;
-                }
-            }
-
-            if (pattern.Contains("*+json", StringComparison.Ordinal) && normalized.EndsWith("+json", StringComparison.Ordinal))
+            if (pattern.Equals("*/*", StringComparison.Ordinal))
             {
                 return true;
             }
 
-            if (normalized.Contains(pattern, StringComparison.Ordinal))
+            if (pattern.EndsWith("/*", StringComparison.Ordinal))
+            {
+                int slashIndex = pattern.IndexOf('/', StringComparison.Ordinal);
+                if (slashIndex < 0)
+                {
+                    continue;
+                }
+
+                string prefix = pattern[..(slashIndex + 1)];
+                if (mediaType.StartsWith(prefix, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                continue;
+            }
+
+            if (pattern.Contains("*+", StringComparison.Ordinal))
+            {
+                int wildcardIndex = pattern.IndexOf('*', StringComparison.Ordinal);
+                int plusIndex = pattern.IndexOf('+', StringComparison.Ordinal);
+                if (wildcardIndex < 0 || plusIndex < 0 || plusIndex <= wildcardIndex)
+                {
+                    continue;
+                }
+
+                string prefix = pattern[..wildcardIndex];
+                string suffix = pattern[plusIndex..];
+                if (mediaType.StartsWith(prefix, StringComparison.Ordinal)
+                    && mediaType.EndsWith(suffix, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                continue;
+            }
+
+            if (string.Equals(mediaType, pattern, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -148,7 +182,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
     private string Truncate(string payload)
     {
-        if (string.IsNullOrEmpty(payload) || _payloadOptions.MaxBodyLength <= 0)
+        if (string.IsNullOrEmpty(payload))
         {
             return string.Empty;
         }
@@ -159,5 +193,48 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         }
 
         return payload[.._payloadOptions.MaxBodyLength];
+    }
+
+    private static HttpPayloadOptions NormalizePayloadOptions(HttpPayloadOptions source)
+    {
+        int maxBodyLength = source.MaxBodyLength <= 0
+            ? DefaultMaxBodyLength
+            : Math.Min(source.MaxBodyLength, MaxSupportedBodyLength);
+
+        var allowedContentTypes = source.AllowedContentTypes
+            .Select(NormalizeContentType)
+            .Where(static contentType => !string.IsNullOrWhiteSpace(contentType))
+            .Select(static contentType => contentType!)
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        return new HttpPayloadOptions
+        {
+            Enabled = source.Enabled,
+            CaptureRequestBody = source.CaptureRequestBody,
+            CaptureResponseBody = source.CaptureResponseBody,
+            MaxBodyLength = maxBodyLength,
+            AllowedContentTypes = allowedContentTypes.Length == 0
+                ? [.. DefaultAllowedContentTypes]
+                : allowedContentTypes
+        };
+    }
+
+    private static string? NormalizeContentType(string? contentType)
+    {
+        if (string.IsNullOrWhiteSpace(contentType))
+        {
+            return null;
+        }
+
+        string candidate = contentType;
+        int separatorIndex = candidate.IndexOf(';', StringComparison.Ordinal);
+        if (separatorIndex >= 0)
+        {
+            candidate = candidate[..separatorIndex];
+        }
+
+        candidate = candidate.Trim().ToLowerInvariant();
+        return candidate.Contains('/', StringComparison.Ordinal) ? candidate : null;
     }
 }

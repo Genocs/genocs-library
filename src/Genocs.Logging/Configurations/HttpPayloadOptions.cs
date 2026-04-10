@@ -31,8 +31,6 @@ public class HttpPayloadOptions
     public ICollection<string> AllowedContentTypes { get; set; } = new[]
     {
         "application/json",
-        "application/xml",
-        "text/",
         "application/*+json"
     };
 }
