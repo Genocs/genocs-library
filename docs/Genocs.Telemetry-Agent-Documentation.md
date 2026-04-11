@@ -42,7 +42,7 @@ Do not assume `Genocs.Telemetry` can:
 - register custom `ActivitySource` names beyond the built-in sources and wildcard listener it already configures
 - give you log shipping without a `WebApplicationBuilder` host context
 - replace `Genocs.Logging` for bootstrap logging, Seq, file sinks, or Serilog-based host logging
-- enable MongoDB metrics or MongoDB logs through `telemetry.mongoDB.enableMetrics` or `telemetry.mongoDB.enableLogging`
+- configure MongoDB metrics or MongoDB logs through `telemetry.mongoDB`; this section is tracing-only
 
 ## Safe Default Mental Model
 
@@ -182,7 +182,7 @@ Use this when MongoDB driver operations should appear as traces.
 Important behavior:
 
 - MongoDB support in this package is tracing-only
-- `enableMetrics` and `enableLogging` exist on the option type but are not used by the registration code
+- `telemetry.mongoDB` supports `enabled` and `enableTracing` only
 - the repository sample appsettings files mostly use a separate root `mongodb` section for persistence packages, which does not configure `Genocs.Telemetry` by itself
 
 ### Recipe 5: Keep SQL Text Scrubbed
@@ -405,11 +405,6 @@ What this package actively uses:
 - `telemetry.sqlClient.enabled`
 - `telemetry.sqlClient.enableStatementText`
 
-What exists on option types but is not actively used in the current registration code:
-
-- `telemetry.mongoDB.enableMetrics`
-- `telemetry.mongoDB.enableLogging`
-
 ## Relationship With Genocs.Logging
 
 `Genocs.Telemetry` and `Genocs.Logging` are complementary, not interchangeable.
@@ -512,7 +507,7 @@ When you cannot inspect source code, follow these rules:
 2. Do not assume a follow-up `UseTelemetry()` call exists. This package is registration-only.
 3. Do not assume Jaeger export is exposed just because the package references Jaeger dependencies.
 4. Do not assume SQL tracing is always on. `telemetry.sqlClient.enabled` can disable SQL client instrumentation.
-5. Do not assume `telemetry.mongoDB.enableMetrics` or `telemetry.mongoDB.enableLogging` do anything today.
+5. Do not assume `telemetry.mongoDB` supports metrics or logging flags; MongoDB configuration is tracing-only.
 6. Do not assume OpenTelemetry logs are configured in non-web builder scenarios. They depend on `builder.WebApplicationBuilder?.Logging`.
 7. Do not assume the root `mongodb` or `mongoDb` section configures Telemetry. MongoDB tracing lives under `telemetry.mongoDB`.
 8. Do not assume enabling `enableStatementText` is harmless. It can expose SQL text and sensitive data.

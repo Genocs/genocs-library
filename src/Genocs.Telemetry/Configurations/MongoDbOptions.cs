@@ -14,14 +14,4 @@ public class MongoDbOptions
     /// It defines whether the MongoDB tracing are enabled or not.
     /// </summary>
     public bool EnableTracing { get; set; }
-
-    /// <summary>
-    /// It defines whether the MongoDB metrics are enabled or not.
-    /// </summary>
-    public bool EnableMetrics { get; set; }
-
-    /// <summary>
-    /// It defines whether the MongoDB logging are enabled or not.
-    /// </summary>
-    public bool EnableLogging { get; set; }
 }

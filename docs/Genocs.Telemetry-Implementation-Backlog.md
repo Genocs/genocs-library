@@ -13,7 +13,7 @@ Observed baseline (April 2026):
 - Genocs.Telemetry builds successfully for net10.0, net9.0, and net8.0.
 - A dedicated Genocs.Telemetry unit test project exists under src/tests.
 - SQL statement text scrubbing is implemented through a custom activity processor when telemetry.sqlClient.enableStatementText is false.
-- telemetry.sqlClient.enabled semantics are now enforced at runtime; telemetry.mongoDB.enableMetrics and telemetry.mongoDB.enableLogging remain no-op flags.
+- telemetry.sqlClient.enabled semantics are now enforced at runtime; telemetry.mongoDB now exposes only enabled and enableTracing.
 - Export path configuration can overlap with Genocs.Logging and create duplicated log ingestion when both packages export logs to the same backend.
 
 Next recommended items:
@@ -109,19 +109,19 @@ SqlClient instrumentation is always added, while telemetry.sqlClient.enabled exi
 
 ### TELEMETRY-002 Clarify or remove non-implemented MongoDB options
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P1
 
 **Problem**
 
-MongoDbOptions exposes enableMetrics and enableLogging but runtime code only uses enableTracing.
+MongoDbOptions exposed enableMetrics and enableLogging but runtime code only used enableTracing.
 
 **Scope**
 
-- choose direction: remove/deprecate no-op properties or implement real behavior
-- document explicit no-op semantics if properties are retained
-- add tests and docs so consumers are not misled
+- remove non-implemented MongoDB option flags from public configuration contract
+- align docs so `telemetry.mongoDB` is clearly tracing-only
+- verify package build and telemetry tests remain green
 
 **Likely touch points**
 
@@ -136,6 +136,17 @@ MongoDbOptions exposes enableMetrics and enableLogging but runtime code only use
 **Dependencies**
 
 - none
+
+**Implementation notes**
+
+- Removed `EnableMetrics` and `EnableLogging` from `MongoDbOptions`.
+- Kept MongoDB telemetry contract focused on `enabled` + `enableTracing`.
+- Updated telemetry agent documentation to remove stale no-op-option guidance.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 ### TELEMETRY-003 Add deterministic overlap policy for log exporters
 
