@@ -11,9 +11,9 @@ The backlog follows the same execution-oriented model used by Genocs.Logging and
 Observed baseline (April 2026):
 
 - Genocs.Telemetry builds successfully for net10.0, net9.0, and net8.0.
-- There is no dedicated Genocs.Telemetry unit test project under src/tests.
+- A dedicated Genocs.Telemetry unit test project exists under src/tests.
 - SQL statement text scrubbing is implemented through a custom activity processor when telemetry.sqlClient.enableStatementText is false.
-- Telemetry options contain flags that are not consistently enforced at runtime (for example telemetry.sqlClient.enabled, telemetry.mongoDB.enableMetrics, telemetry.mongoDB.enableLogging).
+- telemetry.sqlClient.enabled semantics are now enforced at runtime; telemetry.mongoDB.enableMetrics and telemetry.mongoDB.enableLogging remain no-op flags.
 - Export path configuration can overlap with Genocs.Logging and create duplicated log ingestion when both packages export logs to the same backend.
 
 Next recommended items:
@@ -66,7 +66,7 @@ Next recommended items:
 
 ### TELEMETRY-001 Enforce telemetry.sqlClient.enabled semantics
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P0
 
@@ -94,6 +94,18 @@ SqlClient instrumentation is always added, while telemetry.sqlClient.enabled exi
 **Dependencies**
 
 - none
+
+**Implementation notes**
+
+- `telemetry.sqlClient.enabled` is now authoritative for SQL client tracing registration.
+- SQL client tracing remains enabled by default when `telemetry.sqlClient` is omitted to preserve backward compatibility.
+- SQL statement text scrubbing now runs only when SQL client tracing is enabled and `telemetry.sqlClient.enableStatementText` is `false`.
+- Added focused unit tests in `src/tests/Genocs.Telemetry.UnitTests` for enabled/disabled SQL instrumentation semantics.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 ### TELEMETRY-002 Clarify or remove non-implemented MongoDB options
 

@@ -79,7 +79,8 @@ public static class OpenTelemetryExtensions
 
     private static void ConfigureTracing(TracerProviderBuilder tracing, TelemetryOptions options)
     {
-        bool enableSqlStatementText = options.SqlClient?.EnableStatementText == true;
+        bool enableSqlClientTracing = IsSqlClientTracingEnabled(options);
+        bool scrubSqlStatementText = ShouldScrubSqlStatementText(options);
 
         tracing
             .AddAspNetCoreInstrumentation(aspNetCore =>
@@ -93,13 +94,17 @@ public static class OpenTelemetryExtensions
             {
                 httpClient.RecordException = true;
                 httpClient.EnrichWithException = EnrichExceptionActivity;
-            })
-            .AddSqlClientInstrumentation(sqlClient =>
+            });
+
+        if (enableSqlClientTracing)
+        {
+            tracing.AddSqlClientInstrumentation(sqlClient =>
             {
                 sqlClient.RecordException = true;
             });
+        }
 
-        if (!enableSqlStatementText)
+        if (scrubSqlStatementText)
         {
             tracing.AddProcessor(new StripSqlStatementTextProcessor());
         }
@@ -152,6 +157,12 @@ public static class OpenTelemetryExtensions
             logging.AddAzureMonitorLogExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
         }
     }
+
+    internal static bool IsSqlClientTracingEnabled(TelemetryOptions options)
+        => options.SqlClient?.Enabled != false;
+
+    internal static bool ShouldScrubSqlStatementText(TelemetryOptions options)
+        => IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
 
     private static bool TryGetEnabledExporter(TelemetryOptions options, [NotNullWhen(true)] out OtlpExportOptions? exporterOptions)
     {

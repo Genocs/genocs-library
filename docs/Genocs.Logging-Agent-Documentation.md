@@ -345,6 +345,49 @@ Fix: Disable payload capture, reduce `maxBodyLength`, tighten `allowedContentTyp
 8. Correlation baggage is missing or appears truncated.
 Fix: Correlation baggage enrichment is intentionally bounded. Only the first 32 entries are added to scope, keys are capped at 64 characters, values are capped at 256 characters, and duplicate normalized keys are ignored.
 
+## Migration Notes (Runtime Behavior Changes)
+
+These notes apply when upgrading from older `Genocs.Logging` behavior to the hardened behavior set delivered across `LOGGING-005` to `LOGGING-013`.
+
+### Required review before rollout
+
+1. Validate all enabled sink endpoints (`seq.url`, `loki.url`) are present and valid URIs.
+2. Confirm `logger.enabled` behavior is aligned with host intent and environment overrides.
+3. Verify runtime level-switch clients use `POST` and parse the documented response contract.
+4. Re-check `excludePaths` and `excludeProperties` values against exact matching semantics.
+5. Re-evaluate payload capture settings (`httpPayload.enabled`, capture flags, allowlist, `maxBodyLength`) for production safety.
+6. Audit Activity baggage producers for bounded key/value sizes and entry counts.
+
+### Behavior deltas and operator impact
+
+1. Enabled but invalid sink settings are skipped with diagnostics instead of risking startup failure.
+2. Top-level logging enablement semantics are now explicit and should be treated as authoritative host configuration.
+3. Runtime log-level endpoint behavior is formalized, including explicit invalid-input handling.
+4. Exclusion filters use one documented matching model and may no longer match previously ambiguous partial values.
+5. Request and response payload capture is explicitly bounded; invalid or extreme body length settings are normalized.
+6. Response payload enrichment remains post-pipeline and is represented as Activity tag data, not in-request scope state.
+7. Correlation baggage enrichment is bounded (entry count, key length, value length, duplicate-key handling).
+
+### Recommended validation after upgrade
+
+1. Run host startup with each target environment configuration and confirm all expected sinks initialize.
+2. Execute integration checks for `MapLogLevelHandler()` success and invalid-level cases.
+3. Exercise representative API calls and verify request/response payload capture behavior and truncation boundaries.
+4. Verify exclusion filters suppress only intended paths/properties.
+5. Confirm downstream log consumers parse current payload and endpoint response shapes.
+
+## Release-Note Checklist For Logging Behavior Changes
+
+When releasing any `Genocs.Logging` change that can alter runtime observability behavior, include all of the following:
+
+1. A concise Behavior Change summary in `CHANGELOG.md`.
+2. A Migration Impact section listing who is affected (hosts, operators, dashboards, automation).
+3. Configuration delta details (keys added/removed/changed, defaults, normalization rules).
+4. API contract delta details for endpoints such as `MapLogLevelHandler()`.
+5. Backward-compatibility statement and any required rollout actions.
+6. Validation commands and expected results for maintainers.
+7. Links to the relevant tests that cover new or changed behavior.
+
 ## Related Packages To Ask About
 
 - `Genocs.Core`

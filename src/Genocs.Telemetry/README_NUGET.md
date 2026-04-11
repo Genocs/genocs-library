@@ -32,6 +32,7 @@ Configuration example:
   "telemetry": {
     "enabled": true,
     "sqlClient": {
+      "enabled": true,
       "enableStatementText": false
     },
     "exporter": {
@@ -43,7 +44,12 @@ Configuration example:
 }
 ```
 
+`telemetry.sqlClient.enabled` controls whether SQL client tracing instrumentation is registered.
+When omitted, it defaults to `true` for backward compatibility.
+
 `telemetry.sqlClient.enableStatementText` is disabled by default. Enable it only when SQL query text (`db.query.text`/`db.statement`) collection is explicitly required.
+
+SQL instrumentation ownership remains in `Genocs.Telemetry`; `Genocs.Logging` handles Serilog-based log sinks and does not register SQL tracing instrumentation.
 
 Azure Application Insights (logs + metrics + traces, non-overlapping):
 

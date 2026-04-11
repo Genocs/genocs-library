@@ -6,9 +6,10 @@ namespace Genocs.Telemetry.Configurations;
 public class SqlClientOptions
 {
     /// <summary>
-    /// It defines whether the section is enabled or not.
+    /// Enables SQL client tracing instrumentation.
+    /// Defaults to true to preserve backward compatibility for existing adopters.
     /// </summary>
-    public bool Enabled { get; set; }
+    public bool Enabled { get; set; } = true;
 
     /// <summary>
     /// Enables SQL command text (`db.query.text` / `db.statement`) on telemetry spans.

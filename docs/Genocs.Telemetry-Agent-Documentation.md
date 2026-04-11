@@ -42,7 +42,6 @@ Do not assume `Genocs.Telemetry` can:
 - register custom `ActivitySource` names beyond the built-in sources and wildcard listener it already configures
 - give you log shipping without a `WebApplicationBuilder` host context
 - replace `Genocs.Logging` for bootstrap logging, Seq, file sinks, or Serilog-based host logging
-- disable SQL client instrumentation with `telemetry.sqlClient.enabled`
 - enable MongoDB metrics or MongoDB logs through `telemetry.mongoDB.enableMetrics` or `telemetry.mongoDB.enableLogging`
 
 ## Safe Default Mental Model
@@ -203,7 +202,8 @@ Use this when SQL spans are useful but raw SQL text should not be exported.
 
 Important behavior:
 
-- SQL client instrumentation is always added by `AddTelemetry()`
+- SQL client instrumentation is added when `telemetry.sqlClient.enabled` is either omitted or set to `true`
+- set `telemetry.sqlClient.enabled` to `false` to disable SQL client instrumentation registration
 - when `enableStatementText` is `false`, a custom processor removes `db.query.text` and `db.statement` tags before export
 - this reduces the risk of leaking sensitive SQL or parameterized business data into observability backends
 
@@ -217,7 +217,7 @@ Important behavior:
 | `ConsoleOptions` | Configure console export | Enables console export per signal | Treating it as a production sink by default |
 | `AzureOptions` | Configure Azure Monitor export | Enables Azure export per signal when the connection string exists | Assuming `enabled = true` is enough without a connection string |
 | `MongoDbOptions` | Configure MongoDB telemetry behavior | Only `enabled` and `enableTracing` affect runtime behavior today | Assuming metrics or logging are implemented for MongoDB |
-| `SqlClientOptions` | Configure SQL telemetry behavior | Only `enableStatementText` changes behavior in this package | Assuming `sqlClient.enabled` disables SQL instrumentation |
+| `SqlClientOptions` | Configure SQL telemetry behavior | `enabled` controls SQL tracing registration; `enableStatementText` controls SQL text scrubbing | Assuming logging package settings control SQL tracing |
 
 ## Instrumentation Semantics
 
@@ -402,13 +402,13 @@ What this package actively uses:
 - `telemetry.azure.*`
 - `telemetry.mongoDB.enabled`
 - `telemetry.mongoDB.enableTracing`
+- `telemetry.sqlClient.enabled`
 - `telemetry.sqlClient.enableStatementText`
 
 What exists on option types but is not actively used in the current registration code:
 
 - `telemetry.mongoDB.enableMetrics`
 - `telemetry.mongoDB.enableLogging`
-- `telemetry.sqlClient.enabled`
 
 ## Relationship With Genocs.Logging
 
@@ -511,7 +511,7 @@ When you cannot inspect source code, follow these rules:
 1. Do not assume `AddTelemetry()` always registers anything. It no-ops when `app.service` is empty or `telemetry.enabled` is `false`.
 2. Do not assume a follow-up `UseTelemetry()` call exists. This package is registration-only.
 3. Do not assume Jaeger export is exposed just because the package references Jaeger dependencies.
-4. Do not assume `telemetry.sqlClient.enabled` disables SQL client instrumentation. The current code always adds SQL client tracing.
+4. Do not assume SQL tracing is always on. `telemetry.sqlClient.enabled` can disable SQL client instrumentation.
 5. Do not assume `telemetry.mongoDB.enableMetrics` or `telemetry.mongoDB.enableLogging` do anything today.
 6. Do not assume OpenTelemetry logs are configured in non-web builder scenarios. They depend on `builder.WebApplicationBuilder?.Logging`.
 7. Do not assume the root `mongodb` or `mongoDb` section configures Telemetry. MongoDB tracing lives under `telemetry.mongoDB`.
@@ -596,8 +596,8 @@ Fix: Add `telemetry.mongoDB.enabled = true` and `telemetry.mongoDB.enableTracing
 4. SQL spans appear without raw SQL text.
 Fix: This is expected when `telemetry.sqlClient.enableStatementText = false`. Enable it only after a data-exposure review.
 
-5. `telemetry.sqlClient.enabled = false` does not stop SQL tracing.
-Fix: The current package code ignores that flag. SQL client instrumentation is always added.
+5. `telemetry.sqlClient.enabled = false` stops SQL tracing as expected.
+Fix: Ensure this flag is set under `telemetry.sqlClient` and that the service was restarted with updated configuration.
 
 6. Azure export is configured but nothing is sent.
 Fix: Confirm `telemetry.azure.enabled = true`, the per-signal flags are enabled, and the Azure connection string is non-empty.

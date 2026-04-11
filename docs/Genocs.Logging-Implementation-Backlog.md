@@ -20,12 +20,13 @@ Observed baseline (April 2026):
 - `Genocs.Logging.UnitTests` has 27 passing tests covering CQRS decorator registration, host startup guards, middleware payload timing/limits/no-buffering/baggage guardrail semantics, sink safety, and level endpoint parsing (April 2026).
 - M4 `LOGGING-015` implemented and validated as of April 2026.
 - M4 `LOGGING-016` implemented and validated as of April 2026.
+- M4 `LOGGING-017` implemented and validated as of April 2026.
 - `Genocs.Logging.IntegrationTests` has 3 host-level passing tests covering `MapLogLevelHandler`, `UseLogging`, and correlation middleware request/response flows (April 2026).
 - `InternalsVisibleTo` is configured so the test project can access and test `internal` extension methods.
 
 Next recommended items:
 
-- Continue with M4 migration/quality tasks (`LOGGING-017` to `LOGGING-018`).
+- Continue with M4 quality gate task (`LOGGING-018`).
 
 ## Planning Assumptions
 
@@ -553,7 +554,7 @@ Some comments and package guidance still imply broader capabilities than current
 
 ### `LOGGING-017` Add migration notes for runtime behavior changes
 
-**Status**: Not started
+**Status**: Implemented & validated (April 2026)
 
 **Priority**: P2
 
@@ -581,7 +582,7 @@ Upcoming hardening tasks can alter runtime observability behavior and should be 
 
 ### `LOGGING-018` Establish package-level quality gate for new warnings/tests
 
-**Status**: Not started
+**Status**: Implemented & validated (April 2026)
 
 **Priority**: P2
 
@@ -591,9 +592,9 @@ Without package-specific quality gates, warning regressions and coverage gaps ca
 
 **Scope**
 
-- enforce no-new-warning policy for `Genocs.Logging`
+- enforce no-new-warning policy for `Genocs.Logging` (see `src/Genocs.Logging/Directory.Build.props`)
 - ensure logging tests execute in CI test workflows
-- document expected validation commands for maintainers
+- document expected validation commands for maintainers (see `validate-logging.mk`)
 
 **Likely touch points**
 
@@ -608,8 +609,9 @@ Without package-specific quality gates, warning regressions and coverage gaps ca
 
 **Validation**
 
-- `dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo`
-- `dotnet test <logging-tests-csproj> -c Debug --nologo`
+- `dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo` (warnings are errors)
+- `dotnet test src/tests/Genocs.Logging.UnitTests/Genocs.Logging.UnitTests.csproj -c Debug --nologo --no-build`
+- Or use: `make -f validate-logging.mk validate-logging`
 
 **Dependencies**
 
