@@ -10,6 +10,82 @@ namespace Genocs.Logging.UnitTests.Host;
 public class CorrelationContextLoggingMiddlewareTests
 {
     [Fact]
+    public async Task InvokeAsync_WithLargeBaggage_EnforcesEntryLimit()
+    {
+        var logger = new TestLogger<CorrelationContextLoggingMiddleware>();
+        var options = new LoggerOptions
+        {
+            HttpPayload = new HttpPayloadOptions
+            {
+                Enabled = false,
+                CaptureRequestBody = false,
+                CaptureResponseBody = false
+            }
+        };
+
+        var middleware = new CorrelationContextLoggingMiddleware(logger, options);
+        var context = new DefaultHttpContext();
+
+        using var activity = new Activity("request");
+        activity.Start();
+
+        for (int index = 0; index < 40; index++)
+        {
+            activity.AddBaggage($"bg-{index:00}", $"value-{index:00}");
+        }
+
+        await middleware.InvokeAsync(context, _ =>
+        {
+            logger.LogInformation("Inside pipeline");
+            return Task.CompletedTask;
+        });
+
+        var record = Assert.Single(logger.Records);
+        int baggageCount = record.ScopeValues.Keys.Count(key => key.StartsWith("bg-", StringComparison.Ordinal));
+        Assert.Equal(32, baggageCount);
+    }
+
+    [Fact]
+    public async Task InvokeAsync_WithLongBaggageKeyAndValue_TruncatesBoth()
+    {
+        var logger = new TestLogger<CorrelationContextLoggingMiddleware>();
+        var options = new LoggerOptions
+        {
+            HttpPayload = new HttpPayloadOptions
+            {
+                Enabled = false,
+                CaptureRequestBody = false,
+                CaptureResponseBody = false
+            }
+        };
+
+        var middleware = new CorrelationContextLoggingMiddleware(logger, options);
+        var context = new DefaultHttpContext();
+
+        string longKey = new('k', 90);
+        string longValue = new('v', 300);
+
+        using var activity = new Activity("request");
+        activity.Start();
+        activity.AddBaggage(longKey, longValue);
+
+        await middleware.InvokeAsync(context, _ =>
+        {
+            logger.LogInformation("Inside pipeline");
+            return Task.CompletedTask;
+        });
+
+        var record = Assert.Single(logger.Records);
+
+        string expectedKey = new('k', 64);
+        Assert.True(record.ScopeValues.TryGetValue(expectedKey, out object? value));
+
+        string? capturedValue = value as string;
+        Assert.NotNull(capturedValue);
+        Assert.Equal(256, capturedValue.Length);
+    }
+
+    [Fact]
     public async Task InvokeAsync_WithContentTypeParameters_StillCapturesMatchingPayload()
     {
         var logger = new TestLogger<CorrelationContextLoggingMiddleware>();

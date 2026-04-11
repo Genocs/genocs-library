@@ -63,6 +63,14 @@ Optional payload capture can be enabled via:
 - Response payload is captured after request pipeline completion and is exposed only through `http.response.body` activity tag.
 - When payload capture is disabled, middleware avoids request/response buffering paths.
 
+### Correlation Baggage Guardrails
+
+- Baggage enrichment is bounded to prevent unbounded scope growth in high-throughput scenarios.
+- Maximum baggage items added to log scope per request: `32`.
+- Baggage keys are trimmed and capped at `64` characters.
+- Baggage values are capped at `256` characters.
+- Duplicate baggage keys after normalization are ignored.
+
 ## Configuration Notes
 
 - `logger.enabled` defaults to `true`. Set it to `false` to disable sink and enrichment wiring from `Genocs.Logging`.

@@ -10,6 +10,9 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 {
     private const int DefaultMaxBodyLength = 4096;
     private const int MaxSupportedBodyLength = 16384;
+    private const int MaxBaggageItems = 32;
+    private const int MaxBaggageKeyLength = 64;
+    private const int MaxBaggageValueLength = 256;
     private static readonly string[] DefaultAllowedContentTypes =
     [
         "application/json",
@@ -33,13 +36,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
         if (Activity.Current is { } activity)
         {
-            foreach ((string key, string? value) in activity.Baggage)
-            {
-                if (!string.IsNullOrWhiteSpace(key) && value is not null)
-                {
-                    scopeData[key] = value;
-                }
-            }
+            AddBoundedBaggage(scopeData, activity);
         }
 
         if (_payloadOptions.Enabled && _payloadOptions.CaptureRequestBody)
@@ -236,5 +233,42 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
         candidate = candidate.Trim().ToLowerInvariant();
         return candidate.Contains('/', StringComparison.Ordinal) ? candidate : null;
+    }
+
+    private static void AddBoundedBaggage(IDictionary<string, object> scopeData, Activity activity)
+    {
+        int processedItems = 0;
+
+        foreach ((string key, string? value) in activity.Baggage)
+        {
+            if (processedItems >= MaxBaggageItems)
+            {
+                break;
+            }
+
+            if (string.IsNullOrWhiteSpace(key) || value is null)
+            {
+                continue;
+            }
+
+            string normalizedKey = TruncateToLength(key.Trim(), MaxBaggageKeyLength);
+            if (string.IsNullOrWhiteSpace(normalizedKey) || scopeData.ContainsKey(normalizedKey))
+            {
+                continue;
+            }
+
+            scopeData[normalizedKey] = TruncateToLength(value, MaxBaggageValueLength);
+            processedItems++;
+        }
+    }
+
+    private static string TruncateToLength(string input, int maxLength)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return string.Empty;
+        }
+
+        return input.Length <= maxLength ? input : input[..maxLength];
     }
 }

@@ -15,8 +15,9 @@ Observed baseline (April 2026):
 - M2 (`LOGGING-005` to `LOGGING-009`) implemented and validated as of April 2026.
 - M3 `LOGGING-010` implemented and validated as of April 2026.
 - M3 `LOGGING-011` and `LOGGING-012` implemented and validated as of April 2026.
+- M3 `LOGGING-013` implemented and validated as of April 2026.
 - M4 `LOGGING-014` implemented and validated as of April 2026.
-- `Genocs.Logging.UnitTests` has 25 passing tests covering CQRS decorator registration, host startup guards, middleware payload timing/limits/no-buffering semantics, sink safety, and level endpoint parsing (April 2026).
+- `Genocs.Logging.UnitTests` has 27 passing tests covering CQRS decorator registration, host startup guards, middleware payload timing/limits/no-buffering/baggage guardrail semantics, sink safety, and level endpoint parsing (April 2026).
 - M4 `LOGGING-015` implemented and validated as of April 2026.
 - M4 `LOGGING-016` implemented and validated as of April 2026.
 - `Genocs.Logging.IntegrationTests` has 3 host-level passing tests covering `MapLogLevelHandler`, `UseLogging`, and correlation middleware request/response flows (April 2026).
@@ -24,7 +25,7 @@ Observed baseline (April 2026):
 
 Next recommended items:
 
-- Continue with M3 correlation and payload capture robustness (`LOGGING-013`) and M4 migration/quality tasks (`LOGGING-017` to `LOGGING-018`).
+- Continue with M4 migration/quality tasks (`LOGGING-017` to `LOGGING-018`).
 
 ## Planning Assumptions
 
@@ -430,7 +431,7 @@ Correlation middleware should impose near-zero overhead when payload capture fea
 
 ### `LOGGING-013` Ensure correlation baggage enrichment remains safe and bounded
 
-**Status**: Not started
+**Status**: Implemented & validated (April 2026)
 
 **Priority**: P3
 

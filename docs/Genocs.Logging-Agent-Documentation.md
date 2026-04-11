@@ -342,6 +342,9 @@ Fix: Check `httpPayload.enabled`, capture flags, and strict media-type allowlist
 7. Payload logs are too large or expose sensitive data.
 Fix: Disable payload capture, reduce `maxBodyLength`, tighten `allowedContentTypes`, or exclude sensitive properties at the sink level. Values less than or equal to `0` are normalized and very large values are capped to bounded limits.
 
+8. Correlation baggage is missing or appears truncated.
+Fix: Correlation baggage enrichment is intentionally bounded. Only the first 32 entries are added to scope, keys are capped at 64 characters, values are capped at 256 characters, and duplicate normalized keys are ignored.
+
 ## Related Packages To Ask About
 
 - `Genocs.Core`
