@@ -40,4 +40,16 @@ public class TelemetryOptions
     /// SQL client OpenTelemetry settings.
     /// </summary>
     public SqlClientOptions? SqlClient { get; set; }
+
+    /// <summary>
+    /// Enables wildcard activity source collection (`*`).
+    /// Keep disabled unless broad source capture is explicitly required.
+    /// </summary>
+    public bool EnableWildcardActivitySources { get; set; }
+
+    /// <summary>
+    /// Additional activity source names to register for tracing.
+    /// This enables future source onboarding without code changes.
+    /// </summary>
+    public ICollection<string>? ActivitySources { get; set; }
 }

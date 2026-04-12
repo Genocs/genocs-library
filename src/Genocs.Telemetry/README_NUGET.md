@@ -53,6 +53,34 @@ When omitted, it defaults to `true` for backward compatibility.
 
 If `telemetry.exporter.enabled` is `true` and `telemetry.exporter.otlpEndpoint` is missing or invalid, OTLP exporter registration is skipped and a warning is emitted. Startup remains safe and traces/metrics continue with the remaining configured exporters.
 
+## Activity Source Collection Policy
+
+`Genocs.Telemetry` now uses a bounded default source set to reduce unintended trace collection.
+
+Default registered sources:
+
+- `Genocs.Saga`
+- `Genocs.Messaging.RabbitMQ`
+- `Genocs.Messaging.AzureServiceBus`
+
+Future source integration is configuration-driven via `telemetry.activitySources`.
+Wildcard collection is opt-in via `telemetry.enableWildcardActivitySources` and should be used only when broad source capture is explicitly required.
+
+Example:
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "enableWildcardActivitySources": false,
+    "activitySources": [
+      "MyCompany.Payments",
+      "MyCompany.Inventory"
+    ]
+  }
+}
+```
+
 ## Host-Mode Behavior
 
 `Genocs.Telemetry` registers tracing and metrics pipelines in both builder flows:
@@ -85,6 +113,27 @@ For high-throughput workloads, prefer increasing `maxQueueSize` first, then tune
 - Do not split log export between both packages.
 
 This avoids duplicate log ingestion when both packages target the same backend.
+
+## Exporter Conflict Guidance (Azure + OTLP)
+
+`Genocs.Telemetry` allows multiple exporters per signal. This is valid, but should be intentional because it increases export volume and backend cost.
+
+Recommended profiles:
+
+- OTLP-only profile: use OTLP as the single backend for traces/metrics.
+- Azure-only profile: use Azure Monitor as the single backend for traces/metrics.
+- Dual-export profile: use OTLP and Azure together only for migration windows, side-by-side validation, or temporary failover.
+
+Signal-level guidance:
+
+- For normal production, prefer one exporter per signal.
+- If dual export is enabled for traces or metrics, define a time-bound reason and owner.
+- Keep logs out of `Genocs.Telemetry`; log export remains owned by `Genocs.Logging`.
+
+Overlap warning when `Genocs.Logging` is enabled:
+
+- If `Genocs.Logging` exports logs to OTLP or Azure, do not add any telemetry-side log export assumptions in runbooks or config templates.
+- Treat OTLP/Azure in `telemetry` as trace/metric routing only.
 
 ## Non-Overlapping Deployment Templates
 
@@ -158,6 +207,44 @@ Use one of the Jaeger collector OTLP endpoints:
   }
 }
 ```
+
+### Temporary dual export (OTLP + Azure for traces and metrics)
+
+Use this only for controlled migration or backend comparison windows.
+
+```json
+{
+  "logger": {
+    "otlpEndpoint": "http://localhost:4317",
+    "azure": {
+      "enabled": false
+    }
+  },
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": true,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": true
+    },
+    "azure": {
+      "enabled": true,
+      "enableTracing": true,
+      "enableMetrics": true,
+      "connectionString": "InstrumentationKey=<<key>>;IngestionEndpoint=https://<<region>>.in.applicationinsights.azure.com/"
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false
+    }
+  }
+}
+```
+
+When this profile is active, expect duplicate traces and metrics across backends by design.
 
 ## Main Entry Points
 

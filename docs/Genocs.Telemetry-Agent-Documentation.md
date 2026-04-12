@@ -239,12 +239,17 @@ The package does not add Prometheus export or custom application meters on its o
 
 It also listens to:
 
-- all activity sources through `AddSource("*")`
 - `Genocs.Saga`
 - `Genocs.Messaging.RabbitMQ`
 - `Genocs.Messaging.AzureServiceBus`
 
-That wildcard listener is broad by design. Do not assume the package limits trace collection to Genocs-only sources.
+And can add optional sources from configuration:
+
+- `telemetry.activitySources` for explicit source names
+- `telemetry.enableWildcardActivitySources` for `*` (opt-in only)
+
+Default behavior is bounded to the explicit Genocs sources above to reduce unintended trace and cardinality growth.
+Do not enable wildcard source capture unless the deployment requires broad source discovery.
 
 ### Logging
 
@@ -338,6 +343,24 @@ Examples:
 That can be useful intentionally. Do not assume only one exporter may be active.
 
 The real duplication risk is eliminated by keeping log export ownership only in `Genocs.Logging`.
+
+Exporter decision policy:
+
+- Prefer one exporter per signal in steady-state production.
+- Allow OTLP + Azure dual export only for time-bound migration, validation, or controlled fallback.
+- Record the expected extra cost and retention impact before enabling dual export.
+
+Conflict guidance with `Genocs.Logging`:
+
+- If `Genocs.Logging` exports logs to OTLP or Azure, treat `telemetry.exporter` and `telemetry.azure` as trace/metric pipelines only.
+- Do not generate templates that imply telemetry package log ownership.
+- Keep overlap notes explicit in runbooks so operators do not assume duplicate log paths are intended.
+
+Profile examples for agent responses:
+
+- OTLP-only traces/metrics: `telemetry.exporter.enabled=true`, `telemetry.azure.enabled=false`
+- Azure-only traces/metrics: `telemetry.exporter.enabled=false`, `telemetry.azure.enabled=true`
+- Temporary OTLP+Azure traces/metrics: both enabled with a time-boxed migration note
 
 ## Configuration Ownership
 

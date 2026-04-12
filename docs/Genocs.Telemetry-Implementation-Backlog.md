@@ -401,7 +401,7 @@ The package currently references OpenTelemetry.Exporter.Jaeger while registratio
 
 ### TELEMETRY-009 Add explicit exporter conflict guidance for Azure and OTLP
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -424,6 +424,18 @@ Telemetry allows multiple exporters per signal, which is valid but can be accide
 
 - exporter combinations are explicit and operationally predictable
 
+**Implementation notes**
+
+- Added explicit conflict guidance for OTLP and Azure exporter combinations in telemetry package README.
+- Added profile-based examples for OTLP-only, Azure-only, and temporary OTLP+Azure dual-export scenarios.
+- Added overlap warning notes clarifying that when `Genocs.Logging` is enabled, OTLP/Azure telemetry settings are trace/metric pipelines only and log export ownership remains in `Genocs.Logging`.
+- Updated telemetry agent documentation to include the same decision policy and profile guidance.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - TELEMETRY-003
@@ -434,7 +446,7 @@ Telemetry allows multiple exporters per signal, which is valid but can be accide
 
 ### TELEMETRY-010 Constrain wildcard activity source collection
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P1
 
@@ -457,6 +469,18 @@ AddSource("*") can increase noise and cardinality by collecting spans from unint
 **Acceptance criteria**
 
 - source collection strategy is documented, bounded, and testable
+
+**Implementation notes**
+
+- Replaced unconditional `AddSource("*")` registration with a bounded default source set (`Genocs.Saga`, `Genocs.Messaging.RabbitMQ`, `Genocs.Messaging.AzureServiceBus`).
+- Added forward-compatible telemetry options for future source onboarding: `telemetry.activitySources` and `telemetry.enableWildcardActivitySources`.
+- Wildcard source collection is now explicit opt-in and emits warning diagnostics when enabled.
+- Added focused unit tests for default bounded behavior, wildcard opt-in behavior, and custom source merge/normalization behavior.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 

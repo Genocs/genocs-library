@@ -32,6 +32,13 @@ public static class OpenTelemetryExtensions
     private const int OtlpMinMaxExportBatchSize = 1;
     private const int OtlpMaxMaxExportBatchSize = 1024;
 
+    private static readonly string[] DefaultTracingSources =
+    [
+        "Genocs.Saga",
+        "Genocs.Messaging.RabbitMQ",
+        "Genocs.Messaging.AzureServiceBus"
+    ];
+
     /// <summary>
     /// Adds OpenTelemetry services to the Genocs application.
     /// </summary>
@@ -135,11 +142,10 @@ public static class OpenTelemetryExtensions
             tracing.AddMongoDBInstrumentation();
         }
 
-        tracing
-            .AddSource("*")
-            .AddSource("Genocs.Saga")
-            .AddSource("Genocs.Messaging.RabbitMQ")
-            .AddSource("Genocs.Messaging.AzureServiceBus");
+        foreach (string source in GetTracingActivitySources(options))
+        {
+            tracing.AddSource(source);
+        }
 
         if (TryGetEnabledExporter(options, "tracing", out OtlpExportOptions? exporterOptions, out Uri? endpoint) && exporterOptions.EnableTracing)
         {
@@ -169,6 +175,37 @@ public static class OpenTelemetryExtensions
         ArgumentNullException.ThrowIfNull(options);
 
         return IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
+    }
+
+    internal static IReadOnlyCollection<string> GetTracingActivitySources(TelemetryOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        var sources = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (string source in DefaultTracingSources)
+        {
+            sources.Add(source);
+        }
+
+        if (options.ActivitySources is not null)
+        {
+            foreach (string? source in options.ActivitySources)
+            {
+                if (!string.IsNullOrWhiteSpace(source))
+                {
+                    sources.Add(source.Trim());
+                }
+            }
+        }
+
+        if (options.EnableWildcardActivitySources)
+        {
+            sources.Add("*");
+            Trace.TraceWarning("telemetry.enableWildcardActivitySources is enabled. This may increase unintended trace collection and cardinality.");
+        }
+
+        return sources.ToArray();
     }
 
     private static bool TryGetEnabledExporter(

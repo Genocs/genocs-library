@@ -12,6 +12,54 @@ namespace Genocs.Telemetry.UnitTests;
 public class OpenTelemetryExtensionsSqlClientTests
 {
     [Fact]
+    public void GetTracingActivitySources_WhenUsingDefaults_ReturnsBoundedGenocsSources()
+    {
+        var options = new TelemetryOptions();
+
+        IReadOnlyCollection<string> sources = OpenTelemetryExtensions.GetTracingActivitySources(options);
+
+        Assert.Contains("Genocs.Saga", sources);
+        Assert.Contains("Genocs.Messaging.RabbitMQ", sources);
+        Assert.Contains("Genocs.Messaging.AzureServiceBus", sources);
+        Assert.DoesNotContain("*", sources);
+    }
+
+    [Fact]
+    public void GetTracingActivitySources_WhenWildcardEnabled_AddsWildcardSource()
+    {
+        var options = new TelemetryOptions
+        {
+            EnableWildcardActivitySources = true
+        };
+
+        IReadOnlyCollection<string> sources = OpenTelemetryExtensions.GetTracingActivitySources(options);
+
+        Assert.Contains("*", sources);
+    }
+
+    [Fact]
+    public void GetTracingActivitySources_WhenCustomSourcesConfigured_MergesAndNormalizes()
+    {
+        var options = new TelemetryOptions
+        {
+            ActivitySources =
+            [
+                "Custom.App",
+                " custom.app ",
+                "",
+                "  ",
+                "Other.Source"
+            ]
+        };
+
+        IReadOnlyCollection<string> sources = OpenTelemetryExtensions.GetTracingActivitySources(options);
+
+        Assert.Contains("Custom.App", sources);
+        Assert.Contains("Other.Source", sources);
+        Assert.Equal(5, sources.Count);
+    }
+
+    [Fact]
     public void AddTelemetry_WhenBuilderHasNoWebApplicationBuilder_RegistersTracingAndMetricsWithoutThrowing()
     {
         IServiceCollection services = new ServiceCollection();
