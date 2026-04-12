@@ -1,7 +1,7 @@
 ﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// OpenTelemetry Settings.
+/// Top-level telemetry configuration for traces and metrics.
 /// </summary>
 public class TelemetryOptions
 {
@@ -11,28 +11,29 @@ public class TelemetryOptions
     public const string Position = "telemetry";
 
     /// <summary>
-    /// It defines whether the section is enabled or not.
+    /// Enables telemetry registration.
+    /// When disabled, <c>AddTelemetry()</c> returns without registering providers.
     /// </summary>
-    ///
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// The OTLP export telemetry settings.
+    /// OTLP exporter settings for traces and metrics.
     /// </summary>
     public OtlpExportOptions? Exporter { get; set; }
 
     /// <summary>
-    /// Console OpenTelemetry settings.
+    /// Console exporter settings for traces and metrics.
     /// </summary>
     public ConsoleOptions? Console { get; set; }
 
     /// <summary>
-    /// Azure OpenTelemetry settings.
+    /// Azure Monitor exporter settings for traces and metrics.
     /// </summary>
     public AzureOptions? Azure { get; set; }
 
     /// <summary>
-    /// MongoDB OpenTelemetry settings.
+    /// MongoDB tracing settings.
+    /// MongoDB metrics and log export are not configured by this package.
     /// </summary>
     public MongoDbOptions? MongoDB { get; set; }
 
@@ -52,4 +53,16 @@ public class TelemetryOptions
     /// This enables future source onboarding without code changes.
     /// </summary>
     public ICollection<string>? ActivitySources { get; set; }
+
+    /// <summary>
+    /// Enables fallback to request-path derived values when route metadata is unavailable.
+    /// Keep disabled to avoid high-cardinality route tags.
+    /// </summary>
+    public bool EnableRoutePathFallback { get; set; }
+
+    /// <summary>
+    /// Normalizes request-path fallback route values by replacing identifier-like segments.
+    /// Only applies when <see cref="EnableRoutePathFallback" /> is enabled.
+    /// </summary>
+    public bool NormalizeRoutePathFallback { get; set; } = true;
 }

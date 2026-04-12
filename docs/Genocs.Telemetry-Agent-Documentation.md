@@ -38,7 +38,7 @@ Do not assume `Genocs.Telemetry` can:
 
 - expose a `UseTelemetry()` middleware or any required app-pipeline call
 - expose Prometheus scrape endpoints
-- configure a Jaeger exporter directly even though the package references Jaeger-related dependencies
+- configure a Jaeger exporter directly; Jaeger flows are supported through OTLP collector endpoints
 - register custom `ActivitySource` names beyond the built-in sources and wildcard listener it already configures
 - replace Genocs.Logging log exporter responsibilities
 - replace `Genocs.Logging` for bootstrap logging, Seq, file sinks, or Serilog-based host logging
@@ -274,7 +274,10 @@ The package enriches request spans with:
 - `enduser.id` from either:
   - `ClaimTypes.NameIdentifier`
   - `sub`
-- `http.route` from route metadata when available, otherwise from the request path
+- `http.route` from route metadata when available
+- if route metadata is missing, default fallback is `/_unmatched` to keep route cardinality bounded
+- optional request-path fallback can be enabled with `telemetry.enableRoutePathFallback`
+- when request-path fallback is enabled, `telemetry.normalizeRoutePathFallback` (default `true`) replaces identifier-like path segments (for example numeric IDs and GUIDs)
 
 ### Incoming HTTP Responses
 
@@ -291,7 +294,11 @@ The package enriches exception activity data with:
 - `exception.target_site`
 - inner-exception type and message when an inner exception exists
 
-It also sets the span status to `Error` with the exception message.
+Guardrails for exception message payloads:
+
+- control characters are sanitized before tag/status assignment
+- `error.message`, `exception.inner.message`, and span status description are capped at 1024 characters
+- oversized values are truncated with `...(truncated)`
 
 ## Exporter Semantics
 
@@ -361,6 +368,7 @@ Profile examples for agent responses:
 - OTLP-only traces/metrics: `telemetry.exporter.enabled=true`, `telemetry.azure.enabled=false`
 - Azure-only traces/metrics: `telemetry.exporter.enabled=false`, `telemetry.azure.enabled=true`
 - Temporary OTLP+Azure traces/metrics: both enabled with a time-boxed migration note
+- Minimal-overhead profile: disable trace exporters (`telemetry.exporter.enableTracing=false`, `telemetry.console.enableTracing=false`, `telemetry.azure.enableTracing=false`) to keep registration deterministic while skipping custom tracing enrichment and exception recording
 
 ## Configuration Ownership
 
@@ -415,6 +423,10 @@ What this package actively uses:
 - `telemetry.mongoDB.enableTracing`
 - `telemetry.sqlClient.enabled`
 - `telemetry.sqlClient.enableStatementText`
+- `telemetry.enableWildcardActivitySources`
+- `telemetry.activitySources`
+- `telemetry.enableRoutePathFallback`
+- `telemetry.normalizeRoutePathFallback`
 
 ## Relationship With Genocs.Logging
 
@@ -499,7 +511,7 @@ When you cannot inspect source code, follow these rules:
 
 1. Do not assume `AddTelemetry()` always registers anything. It no-ops when `app.service` is empty or `telemetry.enabled` is `false`.
 2. Do not assume a follow-up `UseTelemetry()` call exists. This package is registration-only.
-3. Do not assume Jaeger export is exposed just because the package references Jaeger dependencies.
+3. Do not assume Jaeger export has a dedicated exporter toggle in this package; use OTLP collector endpoints for Jaeger ingestion.
 4. Do not assume SQL tracing is always on. `telemetry.sqlClient.enabled` can disable SQL client instrumentation.
 5. Do not assume `telemetry.mongoDB` supports metrics or logging flags; MongoDB configuration is tracing-only.
 6. Do not assume `Genocs.Telemetry` exports logs. Log export belongs to `Genocs.Logging`.

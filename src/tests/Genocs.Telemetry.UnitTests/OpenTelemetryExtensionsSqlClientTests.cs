@@ -1,6 +1,9 @@
 using Genocs.Core.Builders;
 using Genocs.Telemetry;
 using Genocs.Telemetry.Configurations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
@@ -11,6 +14,220 @@ namespace Genocs.Telemetry.UnitTests;
 
 public class OpenTelemetryExtensionsSqlClientTests
 {
+    [Fact]
+    public void HasEnabledTracingExportPath_WhenAllTracingExportersDisabled_ReturnsFalse()
+    {
+        var options = new TelemetryOptions
+        {
+            Exporter = new OtlpExportOptions
+            {
+                Enabled = false,
+                EnableTracing = false
+            },
+            Console = new ConsoleOptions
+            {
+                Enabled = false,
+                EnableTracing = false
+            },
+            Azure = new AzureOptions
+            {
+                Enabled = false,
+                EnableTracing = false,
+                ConnectionString = null
+            }
+        };
+
+        bool hasExportPath = OpenTelemetryExtensions.HasEnabledTracingExportPath(options);
+
+        Assert.False(hasExportPath);
+    }
+
+    [Fact]
+    public void HasEnabledTracingExportPath_WhenConsoleTracingEnabled_ReturnsTrue()
+    {
+        var options = new TelemetryOptions
+        {
+            Console = new ConsoleOptions
+            {
+                Enabled = true,
+                EnableTracing = true
+            }
+        };
+
+        bool hasExportPath = OpenTelemetryExtensions.HasEnabledTracingExportPath(options);
+
+        Assert.True(hasExportPath);
+    }
+
+    [Fact]
+    public void HasEnabledTracingExportPath_WhenAzureTracingEnabledWithConnectionString_ReturnsTrue()
+    {
+        var options = new TelemetryOptions
+        {
+            Azure = new AzureOptions
+            {
+                Enabled = true,
+                EnableTracing = true,
+                ConnectionString = "InstrumentationKey=test;IngestionEndpoint=https://example"
+            }
+        };
+
+        bool hasExportPath = OpenTelemetryExtensions.HasEnabledTracingExportPath(options);
+
+        Assert.True(hasExportPath);
+    }
+
+    [Fact]
+    public void HasEnabledTracingExportPath_WhenOtlpTracingEnabledWithValidEndpoint_ReturnsTrue()
+    {
+        var options = new TelemetryOptions
+        {
+            Exporter = new OtlpExportOptions
+            {
+                Enabled = true,
+                EnableTracing = true,
+                OtlpEndpoint = "http://localhost:4317"
+            }
+        };
+
+        bool hasExportPath = OpenTelemetryExtensions.HasEnabledTracingExportPath(options);
+
+        Assert.True(hasExportPath);
+    }
+
+    [Fact]
+    public void HasEnabledTracingExportPath_WhenOtlpTracingEnabledWithInvalidEndpoint_ReturnsFalse()
+    {
+        var options = new TelemetryOptions
+        {
+            Exporter = new OtlpExportOptions
+            {
+                Enabled = true,
+                EnableTracing = true,
+                OtlpEndpoint = "not-a-valid-endpoint"
+            }
+        };
+
+        bool hasExportPath = OpenTelemetryExtensions.HasEnabledTracingExportPath(options);
+
+        Assert.False(hasExportPath);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void NormalizeExceptionTagValue_WhenValueIsEmpty_ReturnsNull(string? value)
+    {
+        string? normalized = OpenTelemetryExtensions.NormalizeExceptionTagValue(value, 32);
+
+        Assert.Null(normalized);
+    }
+
+    [Fact]
+    public void NormalizeExceptionTagValue_WhenValueContainsControlCharacters_SanitizesValue()
+    {
+        const string input = "failure\u0001detected\nfor\torder";
+
+        string? normalized = OpenTelemetryExtensions.NormalizeExceptionTagValue(input, 128);
+
+        Assert.Equal("failure detected for order", normalized);
+    }
+
+    [Fact]
+    public void NormalizeExceptionTagValue_WhenValueExceedsMaxLength_TruncatesWithSuffix()
+    {
+        string input = new('x', 40);
+
+        string? normalized = OpenTelemetryExtensions.NormalizeExceptionTagValue(input, 20);
+
+        Assert.NotNull(normalized);
+        Assert.Equal(20, normalized!.Length);
+        Assert.EndsWith("...(truncated)", normalized);
+    }
+
+    [Fact]
+    public void NormalizeExceptionTagValue_WhenMaxLengthIsTooSmall_UsesSuffixSlice()
+    {
+        const string input = "any-error-message";
+
+        string? normalized = OpenTelemetryExtensions.NormalizeExceptionTagValue(input, 5);
+
+        Assert.Equal("...(t", normalized);
+    }
+
+    [Fact]
+    public void ResolveRouteTag_WhenRouteTemplateIsAvailable_UsesRouteTemplate()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Path = "/orders/123";
+
+        var endpoint = new RouteEndpoint(
+            _ => Task.CompletedTask,
+            RoutePatternFactory.Parse("orders/{orderId}"),
+            0,
+            EndpointMetadataCollection.Empty,
+            "orders-route");
+
+        context.SetEndpoint(endpoint);
+
+        var options = new TelemetryOptions();
+
+        string route = OpenTelemetryExtensions.ResolveRouteTag(context, options);
+
+        Assert.Equal("orders/{orderId}", route);
+    }
+
+    [Fact]
+    public void ResolveRouteTag_WhenRouteTemplateIsMissing_UsesBoundedDefaultFallback()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Path = "/orders/123";
+
+        var options = new TelemetryOptions
+        {
+            EnableRoutePathFallback = false
+        };
+
+        string route = OpenTelemetryExtensions.ResolveRouteTag(context, options);
+
+        Assert.Equal("/_unmatched", route);
+    }
+
+    [Fact]
+    public void ResolveRouteTag_WhenPathFallbackAndNormalizationEnabled_NormalizesPath()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Path = "/orders/123/items/550e8400-e29b-41d4-a716-446655440000";
+
+        var options = new TelemetryOptions
+        {
+            EnableRoutePathFallback = true,
+            NormalizeRoutePathFallback = true
+        };
+
+        string route = OpenTelemetryExtensions.ResolveRouteTag(context, options);
+
+        Assert.Equal("/orders/{id}/items/{guid}", route);
+    }
+
+    [Fact]
+    public void ResolveRouteTag_WhenPathFallbackEnabledWithoutNormalization_UsesRawPath()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Path = "/orders/123/items/550e8400-e29b-41d4-a716-446655440000";
+
+        var options = new TelemetryOptions
+        {
+            EnableRoutePathFallback = true,
+            NormalizeRoutePathFallback = false
+        };
+
+        string route = OpenTelemetryExtensions.ResolveRouteTag(context, options);
+
+        Assert.Equal("/orders/123/items/550e8400-e29b-41d4-a716-446655440000", route);
+    }
+
     [Fact]
     public void GetTracingActivitySources_WhenUsingDefaults_ReturnsBoundedGenocsSources()
     {

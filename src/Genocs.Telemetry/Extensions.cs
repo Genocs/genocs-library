@@ -31,6 +31,11 @@ public static class OpenTelemetryExtensions
     private const int OtlpMaxExporterTimeoutMilliseconds = 120000;
     private const int OtlpMinMaxExportBatchSize = 1;
     private const int OtlpMaxMaxExportBatchSize = 1024;
+    private const string RouteFallbackTagValue = "/_unmatched";
+    private const string RouteFallbackTruncatedSegment = "{...}";
+    private const int RouteFallbackMaxSegments = 6;
+    private const int ExceptionMessageTagMaxLength = 1024;
+    private const string ExceptionMessageTruncatedSuffix = "...(truncated)";
 
     private static readonly string[] DefaultTracingSources =
     [
@@ -107,32 +112,44 @@ public static class OpenTelemetryExtensions
         ArgumentNullException.ThrowIfNull(tracing);
         ArgumentNullException.ThrowIfNull(options);
 
+        bool hasEnabledTracingExportPath = HasEnabledTracingExportPath(options);
         bool enableSqlClientTracing = IsSqlClientTracingEnabled(options);
         bool scrubSqlStatementText = ShouldScrubSqlStatementText(options);
 
         tracing
             .AddAspNetCoreInstrumentation(aspNetCore =>
             {
-                aspNetCore.RecordException = true;
-                aspNetCore.EnrichWithHttpRequest = EnrichIncomingRequestActivity;
-                aspNetCore.EnrichWithHttpResponse = EnrichIncomingResponseActivity;
-                aspNetCore.EnrichWithException = EnrichExceptionActivity;
+                aspNetCore.RecordException = hasEnabledTracingExportPath;
+                if (hasEnabledTracingExportPath)
+                {
+                    aspNetCore.EnrichWithHttpRequest = (activity, request) => EnrichIncomingRequestActivity(activity, request, options);
+                    aspNetCore.EnrichWithHttpResponse = (activity, response) => EnrichIncomingResponseActivity(activity, response, options);
+                    aspNetCore.EnrichWithException = EnrichExceptionActivity;
+                }
             })
             .AddHttpClientInstrumentation(httpClient =>
             {
-                httpClient.RecordException = true;
-                httpClient.EnrichWithException = EnrichExceptionActivity;
+                httpClient.RecordException = hasEnabledTracingExportPath;
+                if (hasEnabledTracingExportPath)
+                {
+                    httpClient.EnrichWithException = EnrichExceptionActivity;
+                }
             });
+
+        if (!hasEnabledTracingExportPath)
+        {
+            Trace.TraceInformation("Genocs.Telemetry tracing exporters are disabled. Running in minimal-overhead enrichment mode for tracing instrumentation.");
+        }
 
         if (enableSqlClientTracing)
         {
             tracing.AddSqlClientInstrumentation(sqlClient =>
             {
-                sqlClient.RecordException = true;
+                sqlClient.RecordException = hasEnabledTracingExportPath;
             });
         }
 
-        if (scrubSqlStatementText)
+        if (scrubSqlStatementText && hasEnabledTracingExportPath)
         {
             tracing.AddProcessor(new StripSqlStatementTextProcessor());
         }
@@ -175,6 +192,29 @@ public static class OpenTelemetryExtensions
         ArgumentNullException.ThrowIfNull(options);
 
         return IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
+    }
+
+    internal static bool HasEnabledTracingExportPath(TelemetryOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (options.Console?.Enabled == true && options.Console.EnableTracing)
+        {
+            return true;
+        }
+
+        if (options.Azure?.Enabled == true && options.Azure.EnableTracing && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
+        {
+            return true;
+        }
+
+        if (TryGetEnabledExporter(options, "tracing", out OtlpExportOptions? exporterOptions, out _)
+            && exporterOptions.EnableTracing)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     internal static IReadOnlyCollection<string> GetTracingActivitySources(TelemetryOptions options)
@@ -349,10 +389,12 @@ public static class OpenTelemetryExtensions
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(exception);
 
+        string? normalizedExceptionMessage = NormalizeExceptionTagValue(exception.Message);
+
         // Persist key exception details as span attributes to simplify querying in downstream backends.
-        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetStatus(ActivityStatusCode.Error, normalizedExceptionMessage);
         activity.SetTag("error.type", exception.GetType().FullName);
-        activity.SetTag("error.message", exception.Message);
+        activity.SetTag("error.message", normalizedExceptionMessage);
         activity.SetTag("exception.source", exception.Source);
         activity.SetTag("exception.hresult", exception.HResult);
         activity.SetTag("exception.target_site", exception.TargetSite?.Name);
@@ -360,14 +402,57 @@ public static class OpenTelemetryExtensions
         if (exception.InnerException is not null)
         {
             activity.SetTag("exception.inner.type", exception.InnerException.GetType().FullName);
-            activity.SetTag("exception.inner.message", exception.InnerException.Message);
+            activity.SetTag("exception.inner.message", NormalizeExceptionTagValue(exception.InnerException.Message));
         }
     }
 
-    private static void EnrichIncomingRequestActivity(Activity activity, HttpRequest request)
+    internal static string? NormalizeExceptionTagValue(string? value, int maxLength = ExceptionMessageTagMaxLength)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        if (maxLength <= 0)
+        {
+            return null;
+        }
+
+        string sanitized = SanitizeExceptionTagValue(value);
+        if (sanitized.Length <= maxLength)
+        {
+            return sanitized;
+        }
+
+        if (maxLength <= ExceptionMessageTruncatedSuffix.Length)
+        {
+            return ExceptionMessageTruncatedSuffix[..maxLength];
+        }
+
+        int keepLength = maxLength - ExceptionMessageTruncatedSuffix.Length;
+        return $"{sanitized[..keepLength]}{ExceptionMessageTruncatedSuffix}";
+    }
+
+    private static string SanitizeExceptionTagValue(string value)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+
+        var characters = new char[value.Length];
+        int outputLength = 0;
+
+        foreach (char character in value)
+        {
+            characters[outputLength++] = char.IsControl(character) ? ' ' : character;
+        }
+
+        return new string(characters, 0, outputLength).Trim();
+    }
+
+    private static void EnrichIncomingRequestActivity(Activity activity, HttpRequest request, TelemetryOptions options)
     {
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(options);
 
         activity.SetTag("http.request_id", request.HttpContext.TraceIdentifier);
 
@@ -383,33 +468,103 @@ public static class OpenTelemetryExtensions
             activity.SetTag("enduser.id", userId);
         }
 
-        SetRouteTag(activity, request.HttpContext);
+        SetRouteTag(activity, request.HttpContext, options);
     }
 
-    private static void EnrichIncomingResponseActivity(Activity activity, HttpResponse response)
+    private static void EnrichIncomingResponseActivity(Activity activity, HttpResponse response, TelemetryOptions options)
     {
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(options);
 
         // Route data can be unavailable at request start and become available later in the pipeline.
-        SetRouteTag(activity, response.HttpContext);
+        SetRouteTag(activity, response.HttpContext, options);
     }
 
-    private static void SetRouteTag(Activity activity, HttpContext context)
+    private static void SetRouteTag(Activity activity, HttpContext context, TelemetryOptions options)
     {
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(options);
 
-        string route = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern?.RawText ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(route))
-        {
-            route = context.Request.Path.Value ?? string.Empty;
-        }
+        string route = ResolveRouteTag(context, options);
 
         if (!string.IsNullOrWhiteSpace(route))
         {
             activity.SetTag("http.route", route);
         }
+    }
+
+    internal static string ResolveRouteTag(HttpContext context, TelemetryOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(options);
+
+        string routeTemplate = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern?.RawText ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(routeTemplate))
+        {
+            return routeTemplate;
+        }
+
+        if (!options.EnableRoutePathFallback)
+        {
+            return RouteFallbackTagValue;
+        }
+
+        string requestPath = context.Request.Path.Value ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(requestPath))
+        {
+            return RouteFallbackTagValue;
+        }
+
+        return options.NormalizeRoutePathFallback
+            ? NormalizeRoutePathFallback(requestPath)
+            : requestPath;
+    }
+
+    internal static string NormalizeRoutePathFallback(string requestPath)
+    {
+        if (string.IsNullOrWhiteSpace(requestPath))
+        {
+            return RouteFallbackTagValue;
+        }
+
+        string[] segments = requestPath
+            .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if (segments.Length == 0)
+        {
+            return RouteFallbackTagValue;
+        }
+
+        IEnumerable<string> normalizedSegments = segments
+            .Take(RouteFallbackMaxSegments)
+            .Select(NormalizeRoutePathSegment);
+
+        string normalizedPath = $"/{string.Join('/', normalizedSegments)}";
+        if (segments.Length > RouteFallbackMaxSegments)
+        {
+            normalizedPath = $"{normalizedPath}/{RouteFallbackTruncatedSegment}";
+        }
+
+        return normalizedPath;
+    }
+
+    private static string NormalizeRoutePathSegment(string segment)
+    {
+        if (Guid.TryParse(segment, out _))
+        {
+            return "{guid}";
+        }
+
+        if (long.TryParse(segment, out _))
+        {
+            return "{id}";
+        }
+
+        return segment.Length > 64
+            ? "{value}"
+            : segment;
     }
 
     private static bool TryGetCorrelationId(IHeaderDictionary headers, [NotNullWhen(true)] out string? correlationId)

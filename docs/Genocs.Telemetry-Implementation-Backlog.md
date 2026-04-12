@@ -488,7 +488,7 @@ AddSource("*") can increase noise and cardinality by collecting spans from unint
 
 ### TELEMETRY-011 Harden route and correlation enrichment cardinality
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -505,11 +505,26 @@ Fallback to raw request path can create high-cardinality route tags and hinder a
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
+- [src/Genocs.Telemetry/Configurations/TelemetryOptions.cs](src/Genocs.Telemetry/Configurations/TelemetryOptions.cs)
+- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
 - [docs/Genocs.Telemetry-Agent-Documentation.md](docs/Genocs.Telemetry-Agent-Documentation.md)
 
 **Acceptance criteria**
 
 - route enrichment remains useful without introducing avoidable cardinality explosions
+
+**Implementation notes**
+
+- Added bounded route fallback semantics: when route metadata is absent, `http.route` now defaults to `/_unmatched` instead of raw request path.
+- Added forward-compatible controls in `TelemetryOptions`: `telemetry.enableRoutePathFallback` and `telemetry.normalizeRoutePathFallback`.
+- Added request-path normalization logic for fallback mode that replaces identifier-like segments (numeric IDs and GUIDs) and bounds segment depth.
+- Added focused unit tests for route-template precedence, bounded default fallback, normalized path fallback, and raw path fallback opt-in behavior.
+- Updated telemetry package README and telemetry agent documentation to align with the new cardinality-safe default behavior.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
@@ -517,7 +532,7 @@ Fallback to raw request path can create high-cardinality route tags and hinder a
 
 ### TELEMETRY-012 Add guardrails for exception tag payload size
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P3
 
@@ -540,13 +555,26 @@ Unbounded exception message values can create oversized span attributes and back
 
 - exception enrichment is bounded and predictable under failure storms
 
+**Implementation notes**
+
+- Added bounded exception message handling in telemetry enrichment for `error.message`, `exception.inner.message`, and span status description.
+- Added sanitization for exception message values to replace control characters before export.
+- Added truncation policy with a deterministic 1024-character limit and `...(truncated)` suffix for oversized values.
+- Added focused unit tests for null/empty handling, control-character sanitization, and deterministic truncation behavior.
+- Updated package and agent documentation to capture the new guardrail policy and rationale.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - none
 
 ### TELEMETRY-013 Verify no-op overhead when exporters are disabled
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -563,11 +591,27 @@ When telemetry exporters are disabled, registration and enrichment paths should 
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
+- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
 - [src/tests](src/tests)
 
 **Acceptance criteria**
 
 - disabled exporter profile has documented and validated overhead behavior
+
+**Implementation notes**
+
+- Added explicit tracing export-path detection in runtime (`HasEnabledTracingExportPath`) to differentiate active export mode from no-export mode.
+- Introduced minimal-overhead tracing behavior when exporters are effectively disabled:
+	- skip custom ASP.NET Core and HttpClient exception enrichment delegates
+	- disable tracing exception recording for ASP.NET Core, HttpClient, and SqlClient instrumentation
+	- skip SQL statement scrubbing processor when no tracing export path is active
+- Added focused regression tests for disabled-exporter and enabled-exporter detection across OTLP, console, and Azure profiles.
+- Documented a minimal-overhead configuration profile in package README and telemetry agent guidance.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
@@ -579,7 +623,7 @@ When telemetry exporters are disabled, registration and enrichment paths should 
 
 ### TELEMETRY-014 Introduce dedicated Genocs.Telemetry unit test project
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P0
 
@@ -603,13 +647,24 @@ Telemetry package behavior is not protected by a focused unit test project.
 - telemetry package has focused automated unit coverage
 - critical runtime and config paths are test-protected
 
+**Implementation notes**
+
+- Dedicated telemetry test project exists at `src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj`.
+- The project references `Genocs.Telemetry` directly and contains focused unit tests for option semantics, registration behavior, exporter safety guards, and enrichment hardening behavior.
+- The telemetry test project is wired into the solution at `genocs.slnx`.
+- Current telemetry unit validation is actively exercised via the package-specific test command.
+
+**Validation**
+
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - none
 
 ### TELEMETRY-015 Add integration tests for host registration outcomes
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P1
 
@@ -626,10 +681,26 @@ Some behaviors are best validated in host-level tests, especially signal registr
 
 - [src/tests](src/tests)
 - [src/Genocs.Telemetry](src/Genocs.Telemetry)
+- [genocs.slnx](genocs.slnx)
 
 **Acceptance criteria**
 
 - host registration behaviors are deterministic and integration-tested
+
+**Implementation notes**
+
+- Added dedicated integration test project: `src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj`.
+- Added host-level coverage for `AddTelemetry` registration outcomes:
+	- missing `app.service` does not register OpenTelemetry tracer/meter providers
+	- `telemetry.enabled=false` does not register OpenTelemetry tracer/meter providers
+	- service-collection host mode (without `WebApplicationBuilder`) registers tracing and metrics providers when telemetry is enabled
+- Wired integration test project into solution under `genocs.slnx`.
+- Kept existing telemetry unit tests green as regression validation after integration coverage additions.
+
+**Validation**
+
+- `dotnet test src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
@@ -637,7 +708,7 @@ Some behaviors are best validated in host-level tests, especially signal registr
 
 ### TELEMETRY-016 Align XML docs and README with runtime reality
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -660,6 +731,21 @@ Current guidance can be interpreted as broader capability than runtime behavior 
 **Acceptance criteria**
 
 - package docs match real behavior and overlap boundaries
+
+**Implementation notes**
+
+- Aligned XML documentation comments across telemetry configuration types with current runtime behavior:
+	- clarified exporter and signal semantics for `OtlpExportOptions`, `ConsoleOptions`, and `AzureOptions`
+	- corrected ambiguous wording in `TelemetryOptions` and `MongoDbOptions` to explicitly state tracing-only MongoDB behavior
+	- removed misleading comment phrasing that implied console semantics for Azure flags
+- Updated telemetry agent guidance to remove outdated Jaeger dependency wording and reflect OTLP-based Jaeger ingestion model.
+- Expanded active-configuration usage notes in agent documentation to include current activity-source and route-fallback options.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
@@ -752,5 +838,5 @@ The following packages and hosts are likely affected by telemetry behavior chang
 ## Suggested First Sprint
 
 1. Deliver TELEMETRY-001 through TELEMETRY-004 with build validation.
-2. Add Genocs.Telemetry unit test project and land initial coverage (TELEMETRY-014).
+2. Expand telemetry unit coverage depth over M2 and M3 hardening behaviors (TELEMETRY-014 baseline already in place).
 3. Implement OTLP endpoint hardening (TELEMETRY-005) and overlap-safe exporter templates (TELEMETRY-003 and TELEMETRY-009).

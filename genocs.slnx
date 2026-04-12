@@ -44,6 +44,7 @@
     <Project Path="src/tests/Genocs.Logging.UnitTests/Genocs.Logging.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Messaging.Tracing.IntegrationTests/Genocs.Messaging.Tracing.IntegrationTests.csproj" />
     <Project Path="src/tests/Genocs.Messaging.Tracing.UnitTests/Genocs.Messaging.Tracing.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj" />
     <Project Path="src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj" />
   </Folder>
   <Folder Name="/tests/">

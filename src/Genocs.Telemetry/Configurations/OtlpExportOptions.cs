@@ -6,24 +6,25 @@
 public class OtlpExportOptions
 {
     /// <summary>
-    /// It defines whether the section is enabled or not.
+    /// Enables OTLP exporter registration.
     /// </summary>
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// The Otlp Exporter endpoint.
+    /// OTLP exporter endpoint.
+    /// Must be an absolute HTTP/HTTPS URI when OTLP export is enabled.
     /// </summary>
     public string? OtlpEndpoint { get; set; }
 
     /// <summary>
-    /// The used OtlpExportProtocol.
-    /// It could be [Grpc|HttpProtobuf].
+    /// OTLP export protocol.
+    /// Supported values: <c>Grpc</c> or <c>HttpProtobuf</c>.
     /// </summary>
     public string Protocol { get; set; } = "Grpc";
 
     /// <summary>
-    /// The used ExportProcessorType.
-    /// It could be [Simple|Batch].
+    /// Export processor type.
+    /// Supported values: <c>Simple</c> or <c>Batch</c>.
     /// </summary>
     public string ProcessorType { get; set; } = "Batch";
 
