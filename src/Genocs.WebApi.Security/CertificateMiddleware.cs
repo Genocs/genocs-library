@@ -93,7 +93,7 @@ internal sealed class CertificateMiddleware : IMiddleware
         }
 
         SecurityOptions.CertificateOptions.AclOptions acl;
-        if (_subjects.TryGetValue(certificate.Subject, out string? subject))
+        if (_subjects.TryGetValue(certificate.Subject, out string subject))
         {
             if (!_acl.TryGetValue(subject, out var existingAcl))
             {

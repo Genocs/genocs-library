@@ -18,22 +18,22 @@ public class AppOptions
     /// <summary>
     /// Application name.
     /// </summary>
-    public string? Name { get; init; }
+    public string Name { get; init; }
 
     /// <summary>
     /// Service name.
     /// </summary>
-    public string? Service { get; init; }
+    public string Service { get; init; }
 
     /// <summary>
     /// The instance of the service.
     /// </summary>
-    public string? Instance { get; init; }
+    public string Instance { get; init; }
 
     /// <summary>
     /// The application version.
     /// </summary>
-    public string? Version { get; init; }
+    public string Version { get; init; }
 
     /// <summary>
     /// It defines whether the banner is shown into the console at startup time or not.

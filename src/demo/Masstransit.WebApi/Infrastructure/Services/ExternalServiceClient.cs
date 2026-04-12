@@ -36,7 +36,7 @@ public class ExternalServiceClient : IExternalServiceClient
 
         ArgumentNullException.ThrowIfNull(httpClientSettings);
 
-        string? url = httpClientSettings?.Services?["ca_issuer"];
+        string url = httpClientSettings?.Services?["ca_issuer"];
 
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -73,7 +73,7 @@ public class ExternalServiceClient : IExternalServiceClient
     /// <param name="request">The redemption request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The redemption Response.</returns>
-    public async Task<string?> RedeemAsync(RedemptionRequest request, CancellationToken cancellationToken = default)
+    public async Task<string> RedeemAsync(RedemptionRequest request, CancellationToken cancellationToken = default)
     {
         // SetHeaders(callerId);
         return await _client.PostAsync<string>($"{_url}/redemptions/gift-cards/custom/redeem", request);

@@ -10,11 +10,11 @@ internal sealed class RedisSagaLogData : ISagaLogData
     public long CreatedAt { get; }
     public object Message { get; }
     public Type MessageType { get; }
-    public string? MessageId { get; }
+    public string MessageId { get; }
     public SagaLogEntryOutcome Outcome { get; }
 
     [JsonConstructor]
-    public RedisSagaLogData(string entryId, SagaId id, Type type, long createdAt, object message, Type messageType, string? messageId, SagaLogEntryOutcome outcome)
+    public RedisSagaLogData(string entryId, SagaId id, Type type, long createdAt, object message, Type messageType, string messageId, SagaLogEntryOutcome outcome)
     {
         EntryId = entryId;
         Id = id;
@@ -26,6 +26,6 @@ internal sealed class RedisSagaLogData : ISagaLogData
         Outcome = outcome;
     }
 
-    public static RedisSagaLogData Create(SagaId sagaId, Type sagaType, object message, SagaLogEntryOutcome outcome, string? messageId = null, string? entryId = null)
+    public static RedisSagaLogData Create(SagaId sagaId, Type sagaType, object message, SagaLogEntryOutcome outcome, string messageId = null, string entryId = null)
         => new(entryId ?? Guid.NewGuid().ToString("N"), sagaId, sagaType, DateTimeOffset.Now.ToUnixTimeMilliseconds(), message, message.GetType(), messageId, outcome);
 }

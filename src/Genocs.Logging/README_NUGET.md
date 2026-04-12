@@ -16,6 +16,7 @@ Use this package to wire structured logging, CQRS handler logging behaviors, and
 
 Supported sink families in this package are Console, File, OTLP (logs), Elasticsearch, Seq, Loki, and Azure Application Insights.
 Distributed tracing and metrics export should be handled by Genocs.Telemetry.
+Log export ownership should stay in Genocs.Logging.
 
 ## Main Entry Points
 
@@ -82,6 +83,7 @@ Optional payload capture can be enabled via:
 ## Non-Overlapping Scenarios
 
 Use one logging exporter ownership path per environment to avoid duplicate log ingestion.
+Genocs.Telemetry is traces-and-metrics only and does not wire OpenTelemetry log exporters.
 
 ### Scenario 1: Send Logging, Metrics, and Traces to Azure Application Insights
 

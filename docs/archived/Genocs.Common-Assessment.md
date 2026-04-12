@@ -193,7 +193,7 @@ And extend `ICommandDispatcher` accordingly.
 
 #### ISSUE-10: No `Result<T>` / `Result` Error-Handling Type
 
-There is no standard Result/Either type for representing success-or-failure from handlers without throwing exceptions. All handler contracts return either void Tasks or nullable results. Teams will implement ad-hoc patterns (`bool`, `string? error`, output parameters) across services, breaking the contract-first consistency the library promotes.
+There is no standard Result/Either type for representing success-or-failure from handlers without throwing exceptions. All handler contracts return either void Tasks or nullable results. Teams will implement ad-hoc patterns (`bool`, `string error`, output parameters) across services, breaking the contract-first consistency the library promotes.
 
 **Fix:** Introduce a minimal, framework-free `Result` and `Result<T>` type:
 
@@ -308,7 +308,7 @@ Configuration options loaded from `appsettings.json` should be effectively immut
 **Fix:** Change all setters to `init`:
 ```csharp
 public bool Enabled { get; init; }
-public string? Name { get; init; }
+public string Name { get; init; }
 ```
 
 ---
@@ -378,7 +378,7 @@ Dead commented-out code with a concrete type reference (`GNXTenantInfo`) leaked 
 **File:** `src/Genocs.Common/Domain/ConnectionString/IConnectionStringSecurer.cs`
 
 ```csharp
-string? MakeSecure(string? connectionString, string? dbProvider = null);
+string MakeSecure(string connectionString, string dbProvider = null);
 ```
 
 When a valid connection string is passed in, callers have no guarantee the result is non-null. The interface does not document when null is returned, creating a trust gap. The `IConnectionStringSecurer` concept also does not belong under `Genocs.Common.Domain` — connection string infrastructure is not a domain concern.
@@ -444,7 +444,7 @@ The `For` factory produces codes like `"createorder_error"` which are unstructur
 **File:** `src/Genocs.Common/Notifications/BasicNotification.cs`
 
 ```csharp
-public string? Message { get; set; }
+public string Message { get; set; }
 ```
 
 A notification without a message is semantically meaningless. The nullable annotation and mutable setter make it easy to construct an invalid `BasicNotification`. Use a constructor-enforced required property or `init`-only property.
@@ -471,7 +471,7 @@ Documentation says "between 0 and 100" but no enforcement exists. Consider range
 /// <summary>
 /// The user id.
 /// </summary>
-string? Name { get; }
+string Name { get; }
 ```
 
 The XML doc comment says "user id" but the property is `Name`. This is a copy-paste error in documentation that will confuse consumers.
@@ -579,7 +579,7 @@ Introduce a `ITenantContext` interface and `ITenantInfo` abstraction to formaliz
 ```csharp
 public interface ITenantContext
 {
-    string? TenantId { get; }
+    string TenantId { get; }
     bool IsMultiTenant { get; }
 }
 
@@ -587,7 +587,7 @@ public interface ITenantInfo
 {
     string Id { get; }
     string Name { get; }
-    string? DatabaseConnectionString { get; }
+    string DatabaseConnectionString { get; }
 }
 ```
 

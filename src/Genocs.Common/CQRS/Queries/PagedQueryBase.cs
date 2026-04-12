@@ -27,10 +27,10 @@ public abstract class PagedQueryBase : IPagedQuery
     /// <summary>
     /// The field used to order by.
     /// </summary>
-    public string? OrderBy { get; set; }
+    public string OrderBy { get; set; }
 
     /// <summary>
     /// Type of order. It could be ASC or DESC.
     /// </summary>
-    public string? SortOrder { get; set; }
+    public string SortOrder { get; set; }
 }

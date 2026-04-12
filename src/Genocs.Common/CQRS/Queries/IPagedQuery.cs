@@ -26,10 +26,10 @@ public interface IPagedQuery : IQuery
     /// <summary>
     /// The field used to order by.
     /// </summary>
-    string? OrderBy { get; }
+    string OrderBy { get; }
 
     /// <summary>
     /// Type of order. It could be ASC or DESC.
     /// </summary>
-    string? SortOrder { get; }
+    string SortOrder { get; }
 }

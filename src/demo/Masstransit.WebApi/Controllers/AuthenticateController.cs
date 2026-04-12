@@ -53,8 +53,8 @@ public class AuthenticateController : ControllerBase
         }
 
         string authType = user.FindFirst("auth_type")?.Value ?? "unknown";
-        string? userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        string? userName = user.FindFirst(ClaimTypes.Name)?.Value;
+        string userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string userName = user.FindFirst(ClaimTypes.Name)?.Value;
 
         var response = new AuthenticationResponse
         {
@@ -92,7 +92,7 @@ public class AuthenticateController : ControllerBase
     public IActionResult GetUserInfo()
     {
         var user = HttpContext.User;
-        string? authType = user.Identity?.AuthenticationType;
+        string authType = user.Identity?.AuthenticationType;
 
         // Only allow JWT authentication for this endpoint
         if (authType != "AuthenticationTypes.Federation")
@@ -131,7 +131,7 @@ public class AuthenticateController : ControllerBase
     public IActionResult GetUserInRoleInfo()
     {
         var user = HttpContext.User;
-        string? authType = user.Identity?.AuthenticationType;
+        string authType = user.Identity?.AuthenticationType;
 
         // Only allow JWT authentication for this endpoint
         if (authType != "AuthenticationTypes.Federation")

@@ -16,7 +16,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapGet(path, ctx => context?.Invoke(ctx));
@@ -32,7 +32,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
         where T : class
     {
@@ -50,7 +50,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Action<IEndpointConventionBuilder>?
         endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
         where TRequest : class
     {
@@ -67,7 +67,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapPost(path, ctx => context?.Invoke(ctx));
@@ -83,7 +83,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
         where T : class
     {
@@ -100,7 +100,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapPut(path, ctx => context?.Invoke(ctx));
@@ -116,7 +116,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
         where T : class
     {
@@ -133,7 +133,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
     {
         var builder = _routeBuilder.MapDelete(path, ctx => context?.Invoke(ctx));
@@ -149,7 +149,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string? roles = null,
+        string roles = null,
         params string[] policies)
         where T : class
     {
@@ -161,7 +161,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         return this;
     }
 
-    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder, bool? auth, string? roles, params string[] policies)
+    private static void ApplyAuthRolesAndPolicies(IEndpointConventionBuilder builder, bool? auth, string roles, params string[] policies)
     {
         if (policies?.Any() == true)
         {

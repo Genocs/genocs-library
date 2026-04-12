@@ -57,7 +57,7 @@ public class RabbitMqExchangeInitializer : IInitializer
             }
         }
 
-        foreach (string? exchange in exchanges)
+        foreach (string exchange in exchanges)
         {
             if (string.IsNullOrWhiteSpace(exchange)) continue;
 

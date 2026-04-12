@@ -36,7 +36,7 @@ public class JwtOptions
     /// <summary>
     /// The issuer of the token. This is the entity that issues the token and is responsible for its validity.
     /// </summary>
-    public string? Issuer { get; set; }
+    public string Issuer { get; set; }
 
     /// <summary>
     /// Gets the security key used to validate the issuer's signature in token authentication.
@@ -44,17 +44,17 @@ public class JwtOptions
     /// <remarks>The key should be provided in a format compatible with the authentication mechanism in use,
     /// such as a symmetric or asymmetric key. Ensure that the key is kept secure and not exposed in client
     /// applications.</remarks>
-    public string? IssuerSigningKey { get; set; }
+    public string IssuerSigningKey { get; set; }
 
     /// <summary>
     /// Gets the authority component used for authentication or identification purposes.
     /// </summary>
-    public string? Authority { get; set; }
+    public string Authority { get; set; }
 
     /// <summary>
     /// Gets the intended recipient or audience for the token.
     /// </summary>
-    public string? Audience { get; set; }
+    public string Audience { get; set; }
 
     /// <summary>
     /// The challenge string used in the Authenticate header.
@@ -82,9 +82,9 @@ public class JwtOptions
     /// </summary>
     public int ExpiryMinutes { get; set; } = 60;
     public TimeSpan? Expiry { get; set; }
-    public string? ValidAudience { get; set; }
+    public string ValidAudience { get; set; }
     public IEnumerable<string>? ValidAudiences { get; set; }
-    public string? ValidIssuer { get; set; }
+    public string ValidIssuer { get; set; }
     public IEnumerable<string>? ValidIssuers { get; set; }
     public bool ValidateActor { get; set; }
 
@@ -115,8 +115,8 @@ public class JwtOptions
     /// </summary>
     public bool IncludeErrorDetails { get; set; } = true;
 
-    public string? AuthenticationType { get; set; }
-    public string? NameClaimType { get; set; }
+    public string AuthenticationType { get; set; }
+    public string NameClaimType { get; set; }
 
     /// <summary>
     /// The claim type that will be used to determine the user's roles.
@@ -129,16 +129,16 @@ public class JwtOptions
         /// <summary>
         /// The location of the certificate.
         /// </summary>
-        public string? Location { get; set; }
+        public string Location { get; set; }
 
         /// <summary>
         /// The certificate as a byte array.
         /// </summary>
-        public string? RawData { get; set; }
+        public string RawData { get; set; }
 
         /// <summary>
         /// The certificate password.
         /// </summary>
-        public string? Password { get; set; }
+        public string Password { get; set; }
     }
 }

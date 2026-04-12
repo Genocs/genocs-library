@@ -10,7 +10,7 @@ public interface ICurrentUser
     /// <summary>
     /// The display name or username of the current user.
     /// </summary>
-    string? Name { get; }
+    string Name { get; }
 
     /// <summary>
     /// Gets the user id.
@@ -18,9 +18,9 @@ public interface ICurrentUser
     /// <returns>The default Id Type.</returns>
     DefaultIdType GetUserId();
 
-    string? GetUserEmail();
+    string GetUserEmail();
 
-    string? GetTenant();
+    string GetTenant();
 
     bool IsAuthenticated();
 
@@ -35,5 +35,5 @@ public interface ICurrentUser
     /// Gets the user claims.
     /// </summary>
     /// <returns>List of the claims.</returns>
-    IEnumerable<Claim>? GetUserClaims();
+    IEnumerable<Claim> GetUserClaims();
 }

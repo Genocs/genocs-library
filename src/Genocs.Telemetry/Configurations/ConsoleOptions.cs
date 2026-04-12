@@ -19,9 +19,4 @@ public class ConsoleOptions
     /// It defines whether the console metrics are enabled or not.
     /// </summary>
     public bool EnableMetrics { get; set; }
-
-    /// <summary>
-    /// It defines whether the console logging are enabled or not.
-    /// </summary>
-    public bool EnableLogging { get; set; }
 }

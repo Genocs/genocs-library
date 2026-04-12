@@ -2,7 +2,7 @@ namespace Genocs.Saga.Utils;
 
 internal static class SagaMessageIdentityResolver
 {
-    public static string? Resolve<TMessage>(TMessage message, ISagaContext context)
+    public static string Resolve<TMessage>(TMessage message, ISagaContext context)
         where TMessage : class
     {
         if (message is ISagaMessageIdentity identifiedMessage && !string.IsNullOrWhiteSpace(identifiedMessage.MessageId))

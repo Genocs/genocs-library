@@ -22,5 +22,5 @@ public interface IModificationAudited<TUser> : IModificationAudited
     /// <summary>
     /// Reference to the last modifier user of this entity.
     /// </summary>
-    TUser? UpdatedByUser { get; set; }
+    TUser UpdatedByUser { get; set; }
 }

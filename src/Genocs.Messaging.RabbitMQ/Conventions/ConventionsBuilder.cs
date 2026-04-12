@@ -34,7 +34,7 @@ public class ConventionsBuilder : IConventionsBuilder
 
     public string GetExchange(Type type)
     {
-        string? exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
+        string exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
             ? type.Assembly.GetName().Name
             : _options.Exchange.Name;
 

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Events;
@@ -9,13 +11,13 @@ namespace Genocs.Logging.CQRS;
 
 public static class Extensions
 {
-    public static IGenocsBuilder AddCommandHandlersLogging(this IGenocsBuilder builder, Assembly? assembly = null)
+    public static IGenocsBuilder AddCommandHandlersLogging(this IGenocsBuilder builder, Assembly assembly = null)
         => builder.AddHandlerLogging(typeof(ICommandHandler<>), typeof(CommandHandlerLoggingDecorator<>), assembly);
 
-    public static IGenocsBuilder AddEventHandlersLogging(this IGenocsBuilder builder, Assembly? assembly = null)
+    public static IGenocsBuilder AddEventHandlersLogging(this IGenocsBuilder builder, Assembly assembly = null)
         => builder.AddHandlerLogging(typeof(IEventHandler<>), typeof(EventHandlerLoggingDecorator<>), assembly);
 
-    private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType, Type decoratorType, Assembly? assembly = null)
+    private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType, Type decoratorType, Assembly assembly = null)
     {
         assembly ??= ResolveDefaultAssembly();
 
@@ -29,13 +31,13 @@ public static class Extensions
 
         foreach (var handlerContract in handlerContracts)
         {
-            Type? messageType = handlerContract.GenericTypeArguments.SingleOrDefault();
+            var messageType = handlerContract.GenericTypeArguments.SingleOrDefault();
             if (messageType is null)
             {
                 continue;
             }
 
-            Type closedDecoratorType = decoratorType.MakeGenericType(messageType);
+            var closedDecoratorType = decoratorType.MakeGenericType(messageType);
             builder.Services.TryDecorate(handlerContract, closedDecoratorType);
         }
 

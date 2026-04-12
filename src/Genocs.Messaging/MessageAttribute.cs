@@ -9,17 +9,17 @@ public class MessageAttribute : Attribute
     /// <summary>
     /// The Exchange name.
     /// </summary>
-    public string? Exchange { get; }
+    public string Exchange { get; }
 
     /// <summary>
     /// The Routing Key.
     /// </summary>
-    public string? RoutingKey { get; }
+    public string RoutingKey { get; }
 
     /// <summary>
     /// The Queue name.
     /// </summary>
-    public string? Queue { get; }
+    public string Queue { get; }
 
     /// <summary>
     /// External.
@@ -33,7 +33,7 @@ public class MessageAttribute : Attribute
     /// <param name="routingKey">The Routing Key.</param>
     /// <param name="queue">The Queue name.</param>
     /// <param name="external">Indicates if the message is external.</param>
-    public MessageAttribute(string? exchange = null, string? routingKey = null, string? queue = null, bool external = false)
+    public MessageAttribute(string exchange = null, string routingKey = null, string queue = null, bool external = false)
     {
         Exchange = exchange;
         RoutingKey = routingKey;

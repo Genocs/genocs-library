@@ -5,7 +5,7 @@ namespace Genocs.Identities.Application.DTO;
 /// </summary>
 public class UserDetailsDto : UserDto
 {
-    public string? Email { get; set; }
+    public string Email { get; set; }
     public IEnumerable<string>? Roles { get; set; }
     public IEnumerable<string>? Permissions { get; set; }
 }

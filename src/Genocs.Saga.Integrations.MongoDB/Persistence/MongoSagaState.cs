@@ -6,12 +6,12 @@ internal class MongoSagaState : ISagaState
 {
     [BsonId]
     [BsonElement("Id")]
-    public string? MongoId { get; set; }
+    public string MongoId { get; set; }
 
     [BsonIgnore]
     public SagaId? Id => MongoId;
 
-    public string? SagaType { get; set; }
+    public string SagaType { get; set; }
     public SagaProcessState State { get; set; }
     public object? Data { get; set; }
     public long Version { get; set; }

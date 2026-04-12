@@ -18,15 +18,15 @@ public class ExceptionToResponseMapper : IExceptionToResponseMapper
             _ => new ExceptionResponse(new { code = "error", reason = "There was an error." }, HttpStatusCode.BadRequest)
         };
 
-    private static string? GetCode(Exception exception)
+    private static string GetCode(Exception exception)
     {
         var type = exception.GetType();
-        if (Codes.TryGetValue(type, out string? code))
+        if (Codes.TryGetValue(type, out string code))
         {
             return code;
         }
 
-        string? exceptionCode = exception.GetType().Name.Underscore()?.Replace("_exception", string.Empty);
+        string exceptionCode = exception.GetType().Name.Underscore()?.Replace("_exception", string.Empty);
         if (!string.IsNullOrWhiteSpace(exceptionCode))
         {
             Codes.TryAdd(type, exceptionCode);

@@ -15,6 +15,6 @@ public class SignalROptions
     /// </summary>
     public bool Enabled { get; set; }
 
-    public string? Backplane { get; set; }
-    public string? Hub { get; set; }
+    public string Backplane { get; set; }
+    public string Hub { get; set; }
 }

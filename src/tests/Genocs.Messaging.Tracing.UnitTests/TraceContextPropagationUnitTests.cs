@@ -167,9 +167,9 @@ public class TraceContextPropagationUnitTests
         public Task SendAsync(
             object message,
             IConventions conventions,
-            string? messageId = null,
-            string? correlationId = null,
-            string? spanContext = null,
+            string messageId = null,
+            string correlationId = null,
+            string spanContext = null,
             object? messageContext = null,
             IDictionary<string, object>? headers = null)
             => SendCompletionSource.Task;

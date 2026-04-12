@@ -13,10 +13,10 @@ public class SeqOptions
     /// <summary>
     /// The Seq Url.
     /// </summary>
-    public string? Url { get; set; }
+    public string Url { get; set; }
 
     /// <summary>
     /// The Seq ApiKey.
     /// </summary>
-    public string? ApiKey { get; set; }
+    public string ApiKey { get; set; }
 }

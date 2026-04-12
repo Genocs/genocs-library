@@ -2,7 +2,7 @@
 
 ![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-OpenTelemetry integration helpers for traces, metrics, and logs. Supports `net10.0`, `net9.0`, and `net8.0`.
+OpenTelemetry integration helpers for traces and metrics. Supports `net10.0`, `net9.0`, and `net8.0`.
 
 ## Installation
 
@@ -12,7 +12,7 @@ dotnet add package Genocs.Telemetry
 
 ## Getting Started
 
-Use this package to configure OpenTelemetry pipelines and exporters in Genocs services.
+Use this package to configure OpenTelemetry traces and metrics in Genocs services.
 
 Service registration:
 
@@ -38,7 +38,9 @@ Configuration example:
     "exporter": {
       "enabled": true,
       "otlpEndpoint": "http://localhost:4317",
-      "protocol": "Grpc"
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": true
     }
   }
 }
@@ -49,14 +51,29 @@ When omitted, it defaults to `true` for backward compatibility.
 
 `telemetry.sqlClient.enableStatementText` is disabled by default. Enable it only when SQL query text (`db.query.text`/`db.statement`) collection is explicitly required.
 
-SQL instrumentation ownership remains in `Genocs.Telemetry`; `Genocs.Logging` handles Serilog-based log sinks and does not register SQL tracing instrumentation.
+## Deterministic Log Export Ownership
 
-Azure Application Insights (logs + metrics + traces, non-overlapping):
+`Genocs.Telemetry` does not configure OpenTelemetry log exporters.
 
-When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` to avoid duplicate ingestion.
+- Use `Genocs.Telemetry` for traces and metrics.
+- Use `Genocs.Logging` for log export ownership (OTLP, Azure Application Insights, Seq, Loki, Elasticsearch, file, console).
+- Do not split log export between both packages.
+
+This avoids duplicate log ingestion when both packages target the same backend.
+
+## Non-Overlapping Deployment Templates
+
+### Azure Application Insights (all logs from Genocs.Logging)
 
 ```json
 {
+  "logger": {
+    "azure": {
+      "enabled": true,
+      "connectionString": "InstrumentationKey=<<key>>;IngestionEndpoint=https://<<region>>.in.applicationinsights.azure.com/"
+    },
+    "otlpEndpoint": null
+  },
   "telemetry": {
     "enabled": true,
     "exporter": {
@@ -66,25 +83,27 @@ When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpE
       "enabled": true,
       "enableTracing": true,
       "enableMetrics": true,
-      "enableLogging": true,
       "connectionString": "InstrumentationKey=<<key>>;IngestionEndpoint=https://<<region>>.in.applicationinsights.azure.com/"
     },
     "console": {
       "enabled": false,
       "enableTracing": false,
-      "enableMetrics": false,
-      "enableLogging": false
+      "enableMetrics": false
     }
   }
 }
 ```
 
-Jaeger with OTLP (trace-only) example:
-
-When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpEndpoint=null` so only traces go to Jaeger.
+### Jaeger with OTLP trace-only (logs still owned by Genocs.Logging)
 
 ```json
 {
+  "logger": {
+    "otlpEndpoint": null,
+    "azure": {
+      "enabled": false
+    }
+  },
   "telemetry": {
     "enabled": true,
     "exporter": {
@@ -92,14 +111,17 @@ When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpE
       "otlpEndpoint": "http://localhost:4317",
       "protocol": "Grpc",
       "enableTracing": true,
-      "enableMetrics": false,
-      "enableLogging": false
+      "enableMetrics": false
     },
     "azure": {
       "enabled": false,
       "enableTracing": false,
-      "enableMetrics": false,
-      "enableLogging": false
+      "enableMetrics": false
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false
     }
   }
 }
@@ -108,6 +130,14 @@ When using `Genocs.Logging`, keep `logger.azure.enabled=false` and `logger.otlpE
 ## Main Entry Points
 
 - `AddTelemetry`
+
+## Validation
+
+Run this command before publishing telemetry changes to verify analyzer/nullability baseline remains warning-clean:
+
+```bash
+dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo
+```
 
 ## Support
 

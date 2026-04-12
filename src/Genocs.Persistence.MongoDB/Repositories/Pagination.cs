@@ -12,8 +12,8 @@ public static class Pagination
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(
                                                               this IQueryable<T> collection,
-                                                              string? orderBy,
-                                                              string? sortOrder,
+                                                              string orderBy,
+                                                              string sortOrder,
                                                               int page,
                                                               int resultsPerPage)
     {

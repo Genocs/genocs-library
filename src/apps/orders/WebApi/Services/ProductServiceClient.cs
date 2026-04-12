@@ -38,7 +38,7 @@ public class ProductServiceClient : IProductServiceClient
 
         ArgumentNullException.ThrowIfNull(securityOptions);
 
-        string? url = httpClientOptions?.Services?["products"];
+        string url = httpClientOptions?.Services?["products"];
 
         if (string.IsNullOrWhiteSpace(url))
         {

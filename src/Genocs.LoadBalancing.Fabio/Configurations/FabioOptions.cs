@@ -18,10 +18,10 @@ public class FabioOptions
     /// <summary>
     /// The service url.
     /// </summary>
-    public string? Url { get; set; }
+    public string Url { get; set; }
 
     /// <summary>
     /// Gets or sets the service name.
     /// </summary>
-    public string? Service { get; set; }
+    public string Service { get; set; }
 }

@@ -51,7 +51,7 @@ public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggr
     /// Reference to the deleter user of this entity.
     /// </summary>
     [ForeignKey("DeleterUserId")]
-    public virtual TUser? DeletedByUser { get; set; }
+    public virtual TUser DeletedByUser { get; set; }
 
     /// <summary>
     /// Which user deleted this entity.

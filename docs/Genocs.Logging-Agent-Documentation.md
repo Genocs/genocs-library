@@ -166,7 +166,7 @@ If you want actual message templates, register an `IMessageToLogTemplateMapper` 
 ### Host Logging Bootstrap
 
 - `StaticLogger.EnsureInitialized()`
-- `UseLogging(Action<HostBuilderContext, LoggerConfiguration>? configure = null, string? loggerSectionName = "logger", string? appSectionName = "app")`
+- `UseLogging(Action<HostBuilderContext, LoggerConfiguration>? configure = null, string loggerSectionName = "logger", string appSectionName = "app")`
 - `ILoggingService`
 - `MapLogLevelHandler()`
 

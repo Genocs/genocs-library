@@ -75,7 +75,7 @@ public static class Extensions
         return builder;
     }
 
-    public static void AddConsulHttpClient(this IGenocsBuilder builder, string clientName, string? serviceName)
+    public static void AddConsulHttpClient(this IGenocsBuilder builder, string clientName, string serviceName)
         => builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>(clientName)
             .AddHttpMessageHandler(c => new ConsulServiceDiscoveryMessageHandler(
                 c.GetRequiredService<IConsulServicesRegistry>(),
@@ -84,7 +84,7 @@ public static class Extensions
     private static ServiceRegistration? CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
     {
         bool enabled = options.Enabled;
-        string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
+        string consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
         if (!string.IsNullOrWhiteSpace(consulEnabled))
         {
             enabled = consulEnabled is "true" or "1";

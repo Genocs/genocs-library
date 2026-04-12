@@ -52,7 +52,7 @@ public abstract class FullAuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPri
     /// Reference to the deleter user of this entity.
     /// </summary>
     [ForeignKey("DeleterUserId")]
-    public virtual TUser? DeletedByUser { get; set; }
+    public virtual TUser DeletedByUser { get; set; }
 
     /// <summary>
     /// Which user deleted this entity.

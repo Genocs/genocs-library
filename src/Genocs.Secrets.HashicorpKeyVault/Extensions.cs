@@ -33,7 +33,7 @@ public static class Extensions
     /// <returns>The updated host builder for chaining.</returns>
     public static IHostBuilder UseVault(
                                         this IHostBuilder builder,
-                                        string? keyValuePath = null,
+                                        string keyValuePath = null,
                                         string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
@@ -57,7 +57,7 @@ public static class Extensions
     /// <returns>The updated host builder for chaining.</returns>
     public static IWebHostBuilder UseVault(
                                            this IWebHostBuilder builder,
-                                           string? keyValuePath = null,
+                                           string keyValuePath = null,
                                            string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
@@ -72,7 +72,7 @@ public static class Extensions
                 cfg.AddVaultAsync(options, keyValuePath).GetAwaiter().GetResult();
             });
 
-    private static IServiceCollection AddVault(this IServiceCollection services, string? sectionName)
+    private static IServiceCollection AddVault(this IServiceCollection services, string sectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -138,10 +138,10 @@ public static class Extensions
     private static async Task AddVaultAsync(
                                             this IConfigurationBuilder builder,
                                             HashicorpKeyVaultOptions options,
-                                            string? keyValuePath)
+                                            string keyValuePath)
     {
         VerifyOptions(options);
-        string? kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
+        string kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
         var (client, _) = GetClientAndSettings(options);
         if (!string.IsNullOrWhiteSpace(kvPath) && options.Kv.Enabled)
         {
@@ -225,7 +225,7 @@ public static class Extensions
                                                     IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
 
         var credentials = await client.V1.Secrets.Azure.GetCredentialsAsync(options.RoleName, mountPoint);
 
@@ -243,7 +243,7 @@ public static class Extensions
                                                     IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.Consul.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
@@ -259,7 +259,7 @@ public static class Extensions
                                                         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.Database.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
@@ -283,7 +283,7 @@ public static class Extensions
                                                         IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.RabbitMQ.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>

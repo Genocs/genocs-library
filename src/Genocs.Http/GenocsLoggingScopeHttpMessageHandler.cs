@@ -85,7 +85,7 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
                 return uri;
             }
 
-            string? requestUri = uri?.OriginalString;
+            string requestUri = uri?.OriginalString;
 
             if (string.IsNullOrWhiteSpace(requestUri))
             {

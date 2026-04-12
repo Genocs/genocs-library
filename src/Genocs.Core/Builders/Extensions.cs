@@ -36,7 +36,7 @@ public static class Extensions
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">The configuration.</param>
     /// <returns>The builder to be used for chaining.</returns>
-    public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration? configuration = null)
+    public static IGenocsBuilder AddGenocs(this IServiceCollection services, IConfiguration configuration = null)
     {
         IGenocsBuilder builder = GenocsBuilder.Create(services, configuration);
         Setup(builder);
@@ -120,8 +120,8 @@ public static class Extensions
         {
             endpoints.MapGet("/", async context =>
             {
-                string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-                string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+                string assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+                string serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
                 string message = $"Service {serviceName ?? assemblyVersion} is running";
 
                 await context.Response.WriteAsync(serviceName ?? message);
@@ -156,8 +156,8 @@ public static class Extensions
 
         app.MapGet("/", async context =>
         {
-            string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+            string assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            string serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
             string message = $"Service {serviceName ?? assemblyVersion} is running";
 
             await context.Response.WriteAsync(serviceName ?? message);

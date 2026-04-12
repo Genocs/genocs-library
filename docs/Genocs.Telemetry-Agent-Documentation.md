@@ -15,8 +15,8 @@
 |---|---|
 | Package | `Genocs.Telemetry` |
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
-| Primary role | OpenTelemetry integration for traces, metrics, and logs |
-| Main value | One builder extension that wires OpenTelemetry resource metadata, ASP.NET Core and HttpClient instrumentation, runtime metrics, SQL client tracing, optional MongoDB tracing, and OTLP, Azure, or console exporters |
+| Primary role | OpenTelemetry integration for traces and metrics |
+| Main value | One builder extension that wires OpenTelemetry resource metadata, ASP.NET Core and HttpClient instrumentation, runtime metrics, SQL client tracing, optional MongoDB tracing, and OTLP, Azure, or console exporters for traces and metrics |
 | Requires | `Genocs.Core` and a configured `app.service` value |
 
 ## What This Package Is For
@@ -24,8 +24,8 @@
 Use `Genocs.Telemetry` when you need to:
 
 - register OpenTelemetry from a Genocs host with `AddTelemetry()`
-- export traces, metrics, and optionally logs to OTLP collectors
-- export traces, metrics, and optionally logs to Azure Monitor
+- export traces and metrics to OTLP collectors
+- export traces and metrics to Azure Monitor
 - emit telemetry to the console during development
 - instrument incoming ASP.NET Core requests and outgoing `HttpClient` calls
 - instrument runtime metrics such as GC and thread pool data
@@ -40,7 +40,7 @@ Do not assume `Genocs.Telemetry` can:
 - expose Prometheus scrape endpoints
 - configure a Jaeger exporter directly even though the package references Jaeger-related dependencies
 - register custom `ActivitySource` names beyond the built-in sources and wildcard listener it already configures
-- give you log shipping without a `WebApplicationBuilder` host context
+- replace Genocs.Logging log exporter responsibilities
 - replace `Genocs.Logging` for bootstrap logging, Seq, file sinks, or Serilog-based host logging
 - configure MongoDB metrics or MongoDB logs through `telemetry.mongoDB`; this section is tracing-only
 
@@ -52,7 +52,7 @@ Treat `Genocs.Telemetry` as five things:
 2. An OpenTelemetry resource and exporter setup layer
 3. A package that instruments web requests, outbound HTTP, runtime metrics, and SQL automatically
 4. A span-enrichment layer that adds correlation, route, user, and exception tags
-5. A package that can export OpenTelemetry logs, but only when the host was created from `WebApplicationBuilder`
+5. A package that leaves log export ownership to `Genocs.Logging`
 
 If a user asks for local file logging, Seq logging, or Serilog middleware behavior, identify `Genocs.Logging` as the companion package rather than forcing those concerns into Telemetry.
 
@@ -60,7 +60,7 @@ If a user asks for local file logging, Seq logging, or Serilog middleware behavi
 
 ### Recipe 1: Minimal OTLP Setup
 
-Use this when the service should export traces and metrics to an OTLP collector and optionally logs through OpenTelemetry.
+Use this when the service should export traces and metrics to an OTLP collector.
 
 ```csharp
 using Genocs.Core.Builders;
@@ -93,8 +93,7 @@ Configuration:
       "protocol": "Grpc",
       "processorType": "Batch",
       "enableTracing": true,
-      "enableMetrics": true,
-      "enableLogging": true
+      "enableMetrics": true
     }
   }
 }
@@ -111,7 +110,7 @@ Effect:
 
 ### Recipe 2: Console Telemetry For Development
 
-Use this when developers need immediate local trace, metric, or OpenTelemetry log output.
+Use this when developers need immediate local trace or metric output.
 
 ```json
 {
@@ -123,8 +122,7 @@ Use this when developers need immediate local trace, metric, or OpenTelemetry lo
     "console": {
       "enabled": true,
       "enableTracing": true,
-      "enableMetrics": true,
-      "enableLogging": true
+      "enableMetrics": true
     }
   }
 }
@@ -134,7 +132,7 @@ Use this in development and diagnostics. Do not treat console export as the prim
 
 ### Recipe 3: Azure Monitor Export
 
-Use this when traces, metrics, or logs should go to Azure Monitor.
+Use this when traces or metrics should go to Azure Monitor.
 
 ```json
 {
@@ -147,8 +145,7 @@ Use this when traces, metrics, or logs should go to Azure Monitor.
       "enabled": true,
       "connectionString": "InstrumentationKey=...;IngestionEndpoint=https://...;LiveEndpoint=https://...;ApplicationId=...",
       "enableTracing": true,
-      "enableMetrics": true,
-      "enableLogging": true
+      "enableMetrics": true
     }
   }
 }
@@ -157,7 +154,7 @@ Use this when traces, metrics, or logs should go to Azure Monitor.
 Important behavior:
 
 - Azure export is added only when `azure.enabled` is `true`
-- each signal is controlled independently through `enableTracing`, `enableMetrics`, and `enableLogging`
+- each signal is controlled independently through `enableTracing` and `enableMetrics`
 - an empty Azure connection string disables Azure export even if the section is enabled
 
 ### Recipe 4: MongoDB Trace Instrumentation
@@ -211,7 +208,7 @@ Important behavior:
 
 | API | Use it for | Important behavior | Common mistake |
 |---|---|---|---|
-| `AddTelemetry()` | Register OpenTelemetry traces, metrics, and logs from a Genocs host | Returns immediately if `app.service` is empty or `telemetry.enabled` is `false` | Assuming registration always happens |
+| `AddTelemetry()` | Register OpenTelemetry traces and metrics from a Genocs host | Returns immediately if `app.service` is empty or `telemetry.enabled` is `false` | Assuming registration always happens |
 | `TelemetryOptions` | Configure the `telemetry` section | Owns exporter, console, Azure, MongoDB, and SQL client sub-options | Assuming every option property is actively used |
 | `OtlpExportOptions` | Configure OTLP export | Controls endpoint, protocol, processor type, and per-signal enablement | Assuming OTLP export works without `otlpEndpoint` |
 | `ConsoleOptions` | Configure console export | Enables console export per signal | Treating it as a production sink by default |
@@ -251,16 +248,12 @@ That wildcard listener is broad by design. Do not assume the package limits trac
 
 ### Logging
 
-OpenTelemetry logging is configured only through:
-
-```csharp
-builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(...)
-```
+`Genocs.Telemetry` does not configure log exporters.
 
 Practical consequence:
 
-- if the host was created through `WebApplicationBuilder`, OpenTelemetry log export can be added
-- if the builder exists without a `WebApplicationBuilder`, traces and metrics can still be configured, but OpenTelemetry log export is not wired by this package
+- use `Genocs.Logging` as the single owner for log export wiring
+- keep `Genocs.Telemetry` focused on traces, metrics, instrumentation, and enrichment
 
 ## Span Enrichment Semantics
 
@@ -339,12 +332,12 @@ This package can add more than one exporter for the same signal at the same time
 Examples:
 
 - OTLP traces plus console traces
-- Azure logs plus console logs
+- Azure traces plus console traces
 - OTLP metrics plus Azure metrics
 
 That can be useful intentionally. Do not assume only one exporter may be active.
 
-The real duplication risk appears when `Genocs.Logging` exports the same logs to the same backend that `Genocs.Telemetry` also targets.
+The real duplication risk is eliminated by keeping log export ownership only in `Genocs.Logging`.
 
 ## Configuration Ownership
 
@@ -360,9 +353,7 @@ The real duplication risk appears when `Genocs.Logging` exports the same logs to
     },
     "mongoDB": {
       "enabled": true,
-      "enableTracing": true,
-      "enableMetrics": false,
-      "enableLogging": false
+      "enableTracing": true
     },
     "exporter": {
       "enabled": true,
@@ -371,7 +362,6 @@ The real duplication risk appears when `Genocs.Logging` exports the same logs to
       "processorType": "Batch",
       "enableTracing": true,
       "enableMetrics": true,
-      "enableLogging": true,
       "maxQueueSize": 2048,
       "scheduledDelayMilliseconds": 5000,
       "exporterTimeoutMilliseconds": 30000,
@@ -380,15 +370,13 @@ The real duplication risk appears when `Genocs.Logging` exports the same logs to
     "console": {
       "enabled": true,
       "enableTracing": true,
-      "enableMetrics": true,
-      "enableLogging": true
+      "enableMetrics": true
     },
     "azure": {
       "enabled": false,
       "connectionString": "InstrumentationKey=...;IngestionEndpoint=https://...",
       "enableTracing": false,
-      "enableMetrics": false,
-      "enableLogging": false
+      "enableMetrics": false
     }
   }
 }
@@ -424,39 +412,22 @@ What this package actively uses:
 
 - OpenTelemetry traces
 - OpenTelemetry metrics
-- OpenTelemetry log export through Microsoft logging integration
 - instrumentation and span enrichment
 
 ### Safe Integration Patterns
 
-#### Pattern 1: Logging For Local Sinks, Telemetry For Traces And Metrics
+#### Pattern 1: Logging For Logs, Telemetry For Traces And Metrics
 
 Use this when you want:
 
 - Serilog console, file, or Seq output from `Genocs.Logging`
 - traces and metrics from `Genocs.Telemetry`
-- optionally no OpenTelemetry log export at all
 
 Safe guidance:
 
 - keep `builder.Host.UseLogging()`
 - keep `AddTelemetry()`
-- leave `telemetry.exporter.enableLogging` and `telemetry.azure.enableLogging` disabled if OpenTelemetry log export is not wanted
-
-#### Pattern 2: Unified OTLP Or Azure Logs Through Telemetry
-
-Use this when the target backend should receive logs through OpenTelemetry instead of Serilog sink exporters.
-
-Safe guidance:
-
-- keep `Genocs.Logging` for bootstrap logging and local Serilog concerns if needed
-- use `Genocs.Telemetry` for OTLP or Azure log export
-- disable overlapping OTLP or Azure log export in `Genocs.Logging`
-
-Concrete examples:
-
-- if `telemetry.exporter.enableLogging = true`, avoid also setting `logger.otlpEndpoint` to the same collector unless duplicate log ingestion is intentional
-- if `telemetry.azure.enableLogging = true`, avoid also enabling Azure sink export in `Genocs.Logging` unless duplicate log ingestion is intentional
+- configure OTLP/Azure/Seq/Loki/file/console log outputs only through `Genocs.Logging`
 
 ### Correlation Relationship
 
@@ -508,11 +479,11 @@ When you cannot inspect source code, follow these rules:
 3. Do not assume Jaeger export is exposed just because the package references Jaeger dependencies.
 4. Do not assume SQL tracing is always on. `telemetry.sqlClient.enabled` can disable SQL client instrumentation.
 5. Do not assume `telemetry.mongoDB` supports metrics or logging flags; MongoDB configuration is tracing-only.
-6. Do not assume OpenTelemetry logs are configured in non-web builder scenarios. They depend on `builder.WebApplicationBuilder?.Logging`.
+6. Do not assume `Genocs.Telemetry` exports logs. Log export belongs to `Genocs.Logging`.
 7. Do not assume the root `mongodb` or `mongoDb` section configures Telemetry. MongoDB tracing lives under `telemetry.mongoDB`.
 8. Do not assume enabling `enableStatementText` is harmless. It can expose SQL text and sensitive data.
 9. Do not assume only one telemetry exporter can be enabled. The package allows multiple exporters per signal.
-10. Do not assume it is safe to export the same logs through both `Genocs.Logging` and `Genocs.Telemetry` to the same backend without duplication.
+10. Do not split log export ownership between packages; keep it in `Genocs.Logging`.
 
 ## Agent Decision Checklist
 
@@ -520,14 +491,12 @@ Before generating code that depends on `Genocs.Telemetry`, answer these question
 
 1. Is `app.service` configured with a real service name?
 2. Is `telemetry.enabled` actually intended to turn the feature on in this environment?
-3. Does the host use `WebApplicationBuilder`, meaning OpenTelemetry log export can be wired?
-4. Should logs be exported through OpenTelemetry, through Serilog sinks, or both?
-5. Is SQL statement text safe to emit in this environment?
-6. Is MongoDB tracing actually needed, and is it configured under `telemetry.mongoDB` rather than only under persistence settings?
-7. Should exporters be OTLP, Azure, console, or a deliberate combination?
-8. Is duplicate log export acceptable if `Genocs.Logging` is also configured for the same OTLP or Azure target?
+3. Is log export ownership explicitly assigned to `Genocs.Logging` for this deployment?
+4. Is SQL statement text safe to emit in this environment?
+5. Is MongoDB tracing actually needed, and is it configured under `telemetry.mongoDB` rather than only under persistence settings?
+6. Should exporters be OTLP, Azure, console, or a deliberate combination?
 
-If any answer is unknown, prefer trace and metric export first, keep SQL text scrubbing enabled, and avoid overlapping OpenTelemetry log export with Serilog sinks.
+If any answer is unknown, prefer trace and metric export first, keep SQL text scrubbing enabled, and keep log export in `Genocs.Logging`.
 
 ## Common Tasks And Safe Responses
 
@@ -583,7 +552,7 @@ Safe response:
 Fix: Confirm `app.service` is set and `telemetry.enabled` is `true`. `AddTelemetry()` silently returns otherwise.
 
 2. Traces and metrics work, but OpenTelemetry logs never appear.
-Fix: Confirm the host uses `WebApplicationBuilder` and that a logging exporter is enabled under `telemetry`.
+Fix: This is expected. `Genocs.Telemetry` no longer exports logs. Configure log exporters in `Genocs.Logging`.
 
 3. MongoDB operations are not traced even though Mongo persistence is enabled.
 Fix: Add `telemetry.mongoDB.enabled = true` and `telemetry.mongoDB.enableTracing = true`. The root persistence `mongodb` section is separate.
@@ -601,7 +570,7 @@ Fix: Confirm `telemetry.azure.enabled = true`, the per-signal flags are enabled,
 Fix: Confirm `telemetry.exporter.enabled = true`, `otlpEndpoint` is correct, and the collector accepts the configured protocol.
 
 8. Log volume looks doubled in OTLP or Azure.
-Fix: Check whether both `Genocs.Logging` and `Genocs.Telemetry` are exporting logs to the same backend.
+Fix: Ensure only `Genocs.Logging` is exporting logs and remove duplicate sink targets in logger configuration.
 
 ## Related Packages To Ask About
 
@@ -615,4 +584,4 @@ Fix: Check whether both `Genocs.Logging` and `Genocs.Telemetry` are exporting lo
 
 ## One-Line Recommendation For Agents
 
-If you only know that `Genocs.Telemetry` is installed, generate `AddTelemetry()` with a valid `app.service`, treat the package as registration-only OpenTelemetry infrastructure, keep SQL text scrubbing enabled by default, and coordinate log-export settings carefully with `Genocs.Logging` to avoid duplicate ingestion.
+If you only know that `Genocs.Telemetry` is installed, generate `AddTelemetry()` with a valid `app.service`, treat the package as registration-only OpenTelemetry infrastructure for traces and metrics, keep SQL text scrubbing enabled by default, and keep log export ownership in `Genocs.Logging`.

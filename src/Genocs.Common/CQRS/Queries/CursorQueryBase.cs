@@ -9,7 +9,7 @@ public abstract class CursorQueryBase : ICursorQuery
     /// Opaque cursor token representing the starting point for the query.
     /// Null means the first window.
     /// </summary>
-    public string? Cursor { get; set; }
+    public string Cursor { get; set; }
 
     /// <summary>
     /// Maximum number of results to return.
@@ -24,10 +24,10 @@ public abstract class CursorQueryBase : ICursorQuery
     /// <summary>
     /// Optional field used to order the cursor query.
     /// </summary>
-    public string? OrderBy { get; set; }
+    public string OrderBy { get; set; }
 
     /// <summary>
     /// Optional sort order. Common values are ASC or DESC.
     /// </summary>
-    public string? SortOrder { get; set; }
+    public string SortOrder { get; set; }
 }

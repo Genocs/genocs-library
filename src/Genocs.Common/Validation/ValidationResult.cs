@@ -29,7 +29,7 @@ public sealed class ValidationResult
     /// Initializes a new validation result.
     /// </summary>
     /// <param name="errors">The validation failures. An empty set indicates success.</param>
-    public ValidationResult(IEnumerable<ValidationError>? errors)
+    public ValidationResult(IEnumerable<ValidationError> errors)
     {
         Errors = errors?.ToArray() ?? [];
     }

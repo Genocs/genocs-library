@@ -11,7 +11,7 @@ public interface ISpecification<TEntity>
     /// <summary>
     /// Gets the optional filtering predicate.
     /// </summary>
-    Expression<Func<TEntity, bool>>? Criteria { get; }
+    Expression<Func<TEntity, bool>> Criteria { get; }
 
     /// <summary>
     /// Gets strongly-typed include expressions when supported by the provider.

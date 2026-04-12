@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Logging.Configurations;
@@ -26,9 +30,9 @@ public static class Extensions
 
     public static IHostBuilder UseLogging(
                                           this IHostBuilder hostBuilder,
-                                          Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-                                          string? loggerSectionName = LoggerOptions.Position,
-                                          string? appSectionName = AppOptions.Position)
+                                          Action<HostBuilderContext, LoggerConfiguration> configure = null,
+                                          string loggerSectionName = LoggerOptions.Position,
+                                          string appSectionName = AppOptions.Position)
         => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
@@ -204,7 +208,7 @@ public static class Extensions
         }
     }
 
-    internal static LogEventLevel GetLogEventLevel(string? level)
+    internal static LogEventLevel GetLogEventLevel(string level)
         => Enum.TryParse<LogEventLevel>(level, true, out var logLevel)
             ? logLevel
             : LogEventLevel.Information;

@@ -11,7 +11,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
 
     private readonly IMessagePropertiesAccessor _messagePropertiesAccessor;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly string? _header;
+    private readonly string _header;
 
     public CorrelationIdFactory(
                                 IMessagePropertiesAccessor messagePropertiesAccessor,
@@ -25,7 +25,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
         _header = httpClientOptions.CorrelationIdHeader;
     }
 
-    private static string? CorrelationId
+    private static string CorrelationId
     {
         get => Holder.Value?.Id;
         set
@@ -45,7 +45,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
 
     private class CorrelationIdHolder
     {
-        public string? Id;
+        public string Id;
     }
 
     public string Create()
@@ -55,7 +55,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
             return CorrelationId;
         }
 
-        string? correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
+        string correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
         if (!string.IsNullOrWhiteSpace(correlationId))
         {
             CorrelationId = correlationId;

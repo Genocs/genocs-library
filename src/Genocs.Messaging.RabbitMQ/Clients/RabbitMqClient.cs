@@ -44,9 +44,9 @@ internal sealed class RabbitMQClient : IRabbitMQClient
     public async Task SendAsync(
                                     object message,
                                     IConventions conventions,
-                                    string? messageId = null,
-                                    string? correlationId = null,
-                                    string? spanContext = null,
+                                    string messageId = null,
+                                    string correlationId = null,
+                                    string spanContext = null,
                                     object? messageContext = null,
                                     IDictionary<string, object>? headers = null)
     {
@@ -105,7 +105,7 @@ internal sealed class RabbitMQClient : IRabbitMQClient
         using var producerActivity = StartProducerActivity(conventions, properties, spanContext);
 
         Activity? currentActivity = producerActivity ?? Activity.Current;
-        string? propagatedSpanContext = string.IsNullOrWhiteSpace(spanContext)
+        string propagatedSpanContext = string.IsNullOrWhiteSpace(spanContext)
             ? currentActivity?.Id
             : spanContext;
 
@@ -147,7 +147,7 @@ internal sealed class RabbitMQClient : IRabbitMQClient
         }
     }
 
-    private static Activity? StartProducerActivity(IConventions conventions, IBasicProperties properties, string? fallbackTraceParent)
+    private static Activity? StartProducerActivity(IConventions conventions, IBasicProperties properties, string fallbackTraceParent)
     {
         var tags = new ActivityTagsCollection
         {
@@ -173,14 +173,14 @@ internal sealed class RabbitMQClient : IRabbitMQClient
     private static void IncludeTraceHeaders(
                                             IBasicProperties properties,
                                             Activity? currentActivity,
-                                            string? fallbackTraceParent)
+                                            string fallbackTraceParent)
     {
         if (properties.Headers is null)
         {
             return;
         }
 
-        string? traceParent = string.IsNullOrWhiteSpace(currentActivity?.Id)
+        string traceParent = string.IsNullOrWhiteSpace(currentActivity?.Id)
             ? fallbackTraceParent
             : currentActivity.Id;
 

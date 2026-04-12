@@ -6,10 +6,10 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 {
     private readonly IConsulServicesRegistry _servicesRegistry;
     private readonly ConsulOptions _options;
-    private readonly string? _serviceName;
+    private readonly string _serviceName;
     private readonly bool? _overrideRequestUri;
 
-    public ConsulServiceDiscoveryMessageHandler(IConsulServicesRegistry servicesRegistry, ConsulOptions options, string? serviceName = null, bool? overrideRequestUri = null)
+    public ConsulServiceDiscoveryMessageHandler(IConsulServicesRegistry servicesRegistry, ConsulOptions options, string serviceName = null, bool? overrideRequestUri = null)
     {
         _servicesRegistry = servicesRegistry;
         _options = options;

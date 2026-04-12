@@ -89,7 +89,7 @@ public class DispatcherWiringIntegrationTests
 
         public bool EventHandled { get; set; }
 
-        public string? EventName { get; set; }
+        public string EventName { get; set; }
     }
 
     public sealed record FilterCommand(int Value) : ICommand;

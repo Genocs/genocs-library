@@ -193,7 +193,7 @@ public interface IOrdersApi
     Task<IReadOnlyList<OrderDto>> SearchAsync([Query] OrderSearch query);
 }
 
-public sealed record OrderSearch(string? CustomerId, DateTime From, int[] Statuses);
+public sealed record OrderSearch(string CustomerId, DateTime From, int[] Statuses);
 public sealed record OrderDto(Guid Id, decimal Total);
 ```
 

@@ -34,7 +34,7 @@ public static class ObjectExtensions
             return null;
         }
 
-        string? objString = obj.ToString();
+        string objString = obj.ToString();
 
         if (string.IsNullOrEmpty(objString))
         {

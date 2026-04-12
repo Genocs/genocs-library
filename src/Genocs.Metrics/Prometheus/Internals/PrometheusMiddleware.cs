@@ -7,7 +7,7 @@ internal sealed class PrometheusMiddleware : IMiddleware
 {
     private readonly ISet<string> _allowedHosts;
     private readonly string _endpoint;
-    private readonly string? _apiKey;
+    private readonly string _apiKey;
 
     public PrometheusMiddleware(PrometheusOptions options)
     {

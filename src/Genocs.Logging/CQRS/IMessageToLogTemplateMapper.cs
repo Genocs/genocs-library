@@ -11,6 +11,6 @@ public interface IMessageToLogTemplateMapper
     /// <typeparam name="TMessage">The type of the message.</typeparam>
     /// <param name="message">The message instance.</param>
     /// <returns>The LogTemplate.</returns>
-    HandlerLogTemplate? Map<TMessage>(TMessage message)
+    HandlerLogTemplate Map<TMessage>(TMessage message)
         where TMessage : class;
 }

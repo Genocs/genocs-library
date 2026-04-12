@@ -76,13 +76,13 @@ public class RedisSagaStateRepositoryTests
     private sealed class FakeRedisSagaStateStore : IRedisSagaStateStore
     {
         private readonly Dictionary<string, string> _values = new();
-        private string? _replacementValueOnNextFailure;
+        private string _replacementValueOnNextFailure;
         private bool _failNextCompareAndSet;
 
-        public Task<string?> GetStringAsync(string key)
-            => Task.FromResult(_values.TryGetValue(key, out string? value) ? value : null);
+        public Task<string> GetStringAsync(string key)
+            => Task.FromResult(_values.TryGetValue(key, out string value) ? value : null);
 
-        public Task<bool> CompareAndSetAsync(string key, string? expectedValue, string newValue)
+        public Task<bool> CompareAndSetAsync(string key, string expectedValue, string newValue)
         {
             if (_failNextCompareAndSet)
             {
@@ -97,7 +97,7 @@ public class RedisSagaStateRepositoryTests
                 return Task.FromResult(false);
             }
 
-            bool hasCurrent = _values.TryGetValue(key, out string? currentValue);
+            bool hasCurrent = _values.TryGetValue(key, out string currentValue);
 
             if (expectedValue is null)
             {

@@ -27,7 +27,7 @@ public class UserMiddleware : IMiddleware
             return;
         }
 
-        string? path = context.Request.Path.Value;
+        string path = context.Request.Path.Value;
         if (path is not null && (path.Contains("sign-in") || path.Contains("sign-up")))
         {
             await next(context);

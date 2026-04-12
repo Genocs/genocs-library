@@ -91,8 +91,8 @@ public static class Encryption
 
     private static XmlElement GetRsaRoot(XmlDocument xmlDoc)
     {
-        XmlElement? root = xmlDoc.DocumentElement;
-        if (root is null || !root.Name.Equals("RSAKeyValue", StringComparison.Ordinal))
+        XmlElement root = xmlDoc.DocumentElement;
+        if (root?.Name.Equals("RSAKeyValue", StringComparison.Ordinal) != true)
         {
             throw new FormatException("RSA key XML must contain RSAKeyValue as the document root.");
         }
@@ -108,12 +108,7 @@ public static class Encryption
 
     private static byte[] ReadRequiredNode(XmlElement root, string nodeName)
     {
-        XmlNode? node = root[nodeName];
-        if (node is null)
-        {
-            throw new FormatException($"RSA key XML is missing required node '{nodeName}'.");
-        }
-
+        XmlNode node = root[nodeName] ?? throw new FormatException($"RSA key XML is missing required node '{nodeName}'.");
         if (string.IsNullOrWhiteSpace(node.InnerText))
         {
             throw new FormatException($"RSA key XML node '{nodeName}' cannot be empty.");

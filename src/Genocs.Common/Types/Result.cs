@@ -11,11 +11,11 @@ public sealed record Error(string Code, string Message);
 public class Result
 {
     public bool IsSuccess { get; }
-    public Error? Error { get; }
+    public Error Error { get; }
 
     public bool IsFailure => !IsSuccess;
 
-    protected Result(bool isSuccess, Error? error)
+    protected Result(bool isSuccess, Error error)
     {
         IsSuccess = isSuccess;
         Error = error;
@@ -28,11 +28,11 @@ public class Result
 /// <summary>
 /// Represents the result of an operation with a value, indicating success or failure.
 /// </summary>
-public class Result<T> : Result
+public sealed class Result<T> : Result
 {
-    public T? Value { get; }
+    public T Value { get; }
 
-    private Result(bool isSuccess, T? value, Error? error)
+    private Result(bool isSuccess, T value, Error error)
         : base(isSuccess, error)
     {
         Value = value;

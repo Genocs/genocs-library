@@ -38,11 +38,6 @@ public class OtlpExportOptions
     public bool EnableMetrics { get; set; } = true;
 
     /// <summary>
-    /// Enables OTLP logging export.
-    /// </summary>
-    public bool EnableLogging { get; set; } = true;
-
-    /// <summary>
     /// The maximum queue size for OTLP export.
     /// </summary>
     public int MaxQueueSize { get; set; } = 2048;

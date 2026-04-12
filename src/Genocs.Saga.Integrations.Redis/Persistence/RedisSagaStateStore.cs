@@ -5,18 +5,18 @@ namespace Genocs.Saga.Integrations.Redis.Persistence;
 internal sealed class RedisSagaStateStore : IRedisSagaStateStore
 {
     private readonly IDatabase _database;
-    private readonly string? _instanceName;
+    private readonly string _instanceName;
 
-    public RedisSagaStateStore(IDatabase database, string? instanceName)
+    public RedisSagaStateStore(IDatabase database, string instanceName)
         => (_database, _instanceName) = (database, instanceName);
 
-    public async Task<string?> GetStringAsync(string key)
+    public async Task<string> GetStringAsync(string key)
     {
         RedisValue value = await _database.StringGetAsync(GetKey(key));
         return value.HasValue ? value.ToString() : null;
     }
 
-    public async Task<bool> CompareAndSetAsync(string key, string? expectedValue, string newValue)
+    public async Task<bool> CompareAndSetAsync(string key, string expectedValue, string newValue)
     {
         RedisKey redisKey = GetKey(key);
         ITransaction transaction = _database.CreateTransaction();

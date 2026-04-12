@@ -24,7 +24,7 @@ public class ApiKeyOrJwtAuthorizeAttribute : Attribute, IAuthorizationFilter
         }
 
         // Check for API key in header
-        string? apiKey = context.HttpContext.Request.Headers["x-gnx-apikey"];
+        string apiKey = context.HttpContext.Request.Headers["x-gnx-apikey"];
         if (!string.IsNullOrEmpty(apiKey))
         {
             // API key validation is handled in middleware

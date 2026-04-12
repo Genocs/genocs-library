@@ -15,12 +15,12 @@ public class CursorPagedResult<T>
     /// Opaque token to request the next window.
     /// Null when no further window is available.
     /// </summary>
-    public string? NextCursor { get; }
+    public string NextCursor { get; }
 
     /// <summary>
     /// Opaque token to request the previous window when supported.
     /// </summary>
-    public string? PreviousCursor { get; }
+    public string PreviousCursor { get; }
 
     /// <summary>
     /// Number of records returned in the current window.
@@ -37,7 +37,7 @@ public class CursorPagedResult<T>
     /// </summary>
     protected CursorPagedResult()
     {
-        Items = Enumerable.Empty<T>();
+        Items = [];
         ReturnedCount = 0;
     }
 
@@ -47,7 +47,7 @@ public class CursorPagedResult<T>
     /// <param name="items">Current window items.</param>
     /// <param name="nextCursor">Next cursor token.</param>
     /// <param name="previousCursor">Previous cursor token.</param>
-    protected CursorPagedResult(IEnumerable<T> items, string? nextCursor, string? previousCursor)
+    protected CursorPagedResult(IEnumerable<T> items, string nextCursor, string previousCursor)
     {
         T[] materialized = items?.ToArray() ?? [];
         Items = materialized;
@@ -59,7 +59,7 @@ public class CursorPagedResult<T>
     /// <summary>
     /// Creates a cursor-based result.
     /// </summary>
-    public static CursorPagedResult<T> Create(IEnumerable<T> items, string? nextCursor = null, string? previousCursor = null)
+    public static CursorPagedResult<T> Create(IEnumerable<T> items, string nextCursor = null, string previousCursor = null)
         => new(items, nextCursor, previousCursor);
 
     /// <summary>

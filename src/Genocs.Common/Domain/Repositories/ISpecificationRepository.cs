@@ -25,7 +25,7 @@ public interface ISpecificationRepository<TEntity, TKey> : IRepositoryOfEntity<T
     /// <summary>
     /// Gets the first matching entity or null using a provider-agnostic specification.
     /// </summary>
-    Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
+    Task<TEntity> FirstOrDefaultAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets exactly one matching entity using a provider-agnostic specification.

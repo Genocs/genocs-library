@@ -49,7 +49,7 @@ internal sealed class JwtHandler : IJwtHandler
     /// <param name="claims">The list of claims.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">It is thrown when mandatory data is empty.</exception>
-    public JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
+    public JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
     {
         if (string.IsNullOrWhiteSpace(userId))
         {

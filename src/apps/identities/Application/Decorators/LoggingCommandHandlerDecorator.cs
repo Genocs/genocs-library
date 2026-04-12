@@ -27,10 +27,10 @@ internal sealed class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler
 
     public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {
-        string? correlationId = _correlationIdFactory.Create();
+        string correlationId = _correlationIdFactory.Create();
         using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            string? name = command.GetType().Name.Underscore();
+            string name = command.GetType().Name.Underscore();
             _logger.LogInformation($"Handling a command: '{name}'...");
             await _handler.HandleAsync(command);
         }

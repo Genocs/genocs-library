@@ -8,10 +8,8 @@ using Genocs.Telemetry.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
-using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -27,14 +25,16 @@ public static class OpenTelemetryExtensions
     /// <returns>The updated Genocs builder.</returns>
     public static IGenocsBuilder AddTelemetry(this IGenocsBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         AppOptions appOptions = builder.GetOptions<AppOptions>(AppOptions.Position);
-        if (string.IsNullOrWhiteSpace(appOptions.Service))
+        if (appOptions is null || string.IsNullOrWhiteSpace(appOptions.Service))
         {
             return builder;
         }
 
         TelemetryOptions telemetryOptions = builder.GetOptions<TelemetryOptions>(TelemetryOptions.Position);
-        if (!telemetryOptions.Enabled)
+        if (telemetryOptions is null || !telemetryOptions.Enabled)
         {
             return builder;
         }
@@ -48,13 +48,14 @@ public static class OpenTelemetryExtensions
             .WithMetrics(metrics => ConfigureMetrics(metrics, telemetryOptions))
             .WithTracing(tracing => ConfigureTracing(tracing, telemetryOptions));
 
-        builder.WebApplicationBuilder?.Logging.AddOpenTelemetry(logging => ConfigureLogging(logging, telemetryOptions));
-
         return builder;
     }
 
     private static void ConfigureMetrics(MeterProviderBuilder metrics, TelemetryOptions options)
     {
+        ArgumentNullException.ThrowIfNull(metrics);
+        ArgumentNullException.ThrowIfNull(options);
+
         metrics
             .SetResourceBuilder(ResourceBuilder.CreateDefault())
             .AddAspNetCoreInstrumentation()
@@ -79,6 +80,9 @@ public static class OpenTelemetryExtensions
 
     private static void ConfigureTracing(TracerProviderBuilder tracing, TelemetryOptions options)
     {
+        ArgumentNullException.ThrowIfNull(tracing);
+        ArgumentNullException.ThrowIfNull(options);
+
         bool enableSqlClientTracing = IsSqlClientTracingEnabled(options);
         bool scrubSqlStatementText = ShouldScrubSqlStatementText(options);
 
@@ -136,43 +140,35 @@ public static class OpenTelemetryExtensions
         }
     }
 
-    private static void ConfigureLogging(OpenTelemetryLoggerOptions logging, TelemetryOptions options)
+    internal static bool IsSqlClientTracingEnabled(TelemetryOptions options)
     {
-        logging.IncludeFormattedMessage = true;
-        logging.IncludeScopes = true;
-        logging.ParseStateValues = true;
+        ArgumentNullException.ThrowIfNull(options);
 
-        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableLogging)
-        {
-            logging.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
-        }
-
-        if (options.Console?.Enabled == true && options.Console.EnableLogging)
-        {
-            logging.AddConsoleExporter();
-        }
-
-        if (options.Azure?.Enabled == true && options.Azure.EnableLogging && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
-        {
-            logging.AddAzureMonitorLogExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
-        }
+        return options.SqlClient?.Enabled != false;
     }
 
-    internal static bool IsSqlClientTracingEnabled(TelemetryOptions options)
-        => options.SqlClient?.Enabled != false;
-
     internal static bool ShouldScrubSqlStatementText(TelemetryOptions options)
-        => IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        return IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
+    }
 
     private static bool TryGetEnabledExporter(TelemetryOptions options, [NotNullWhen(true)] out OtlpExportOptions? exporterOptions)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         exporterOptions = options.Exporter;
         return exporterOptions?.Enabled == true && !string.IsNullOrWhiteSpace(exporterOptions.OtlpEndpoint);
     }
 
     private static void ApplyExporterOptions(OtlpExporterOptions otlpOptions, OtlpExportOptions exporterOptions)
     {
-        otlpOptions.Endpoint = new Uri(exporterOptions.OtlpEndpoint!);
+        ArgumentNullException.ThrowIfNull(otlpOptions);
+        ArgumentNullException.ThrowIfNull(exporterOptions);
+        ArgumentException.ThrowIfNullOrWhiteSpace(exporterOptions.OtlpEndpoint);
+
+        otlpOptions.Endpoint = new Uri(exporterOptions.OtlpEndpoint, UriKind.Absolute);
 
         if (Enum.TryParse<OtlpExportProtocol>(exporterOptions.Protocol, true, out OtlpExportProtocol protocol))
         {
@@ -195,6 +191,9 @@ public static class OpenTelemetryExtensions
 
     private static void EnrichExceptionActivity(Activity activity, Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(exception);
+
         // Persist key exception details as span attributes to simplify querying in downstream backends.
         activity.SetStatus(ActivityStatusCode.Error, exception.Message);
         activity.SetTag("error.type", exception.GetType().FullName);
@@ -212,6 +211,9 @@ public static class OpenTelemetryExtensions
 
     private static void EnrichIncomingRequestActivity(Activity activity, HttpRequest request)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(request);
+
         activity.SetTag("http.request_id", request.HttpContext.TraceIdentifier);
 
         if (TryGetCorrelationId(request.Headers, out string? correlationId) && !string.IsNullOrWhiteSpace(correlationId))
@@ -231,16 +233,22 @@ public static class OpenTelemetryExtensions
 
     private static void EnrichIncomingResponseActivity(Activity activity, HttpResponse response)
     {
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(response);
+
         // Route data can be unavailable at request start and become available later in the pipeline.
         SetRouteTag(activity, response.HttpContext);
     }
 
     private static void SetRouteTag(Activity activity, HttpContext context)
     {
-        string? route = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern?.RawText;
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(context);
+
+        string route = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern?.RawText ?? string.Empty;
         if (string.IsNullOrWhiteSpace(route))
         {
-            route = context.Request.Path.Value;
+            route = context.Request.Path.Value ?? string.Empty;
         }
 
         if (!string.IsNullOrWhiteSpace(route))
@@ -251,6 +259,8 @@ public static class OpenTelemetryExtensions
 
     private static bool TryGetCorrelationId(IHeaderDictionary headers, [NotNullWhen(true)] out string? correlationId)
     {
+        ArgumentNullException.ThrowIfNull(headers);
+
         if (TryGetHeaderValue(headers, "x-correlation-id", out correlationId))
         {
             return true;
@@ -272,6 +282,9 @@ public static class OpenTelemetryExtensions
 
     private static bool TryGetHeaderValue(IHeaderDictionary headers, string headerName, [NotNullWhen(true)] out string? value)
     {
+        ArgumentNullException.ThrowIfNull(headers);
+        ArgumentException.ThrowIfNullOrWhiteSpace(headerName);
+
         if (headers.TryGetValue(headerName, out var headerValues))
         {
             string parsedValue = headerValues.ToString();
@@ -290,14 +303,16 @@ public static class OpenTelemetryExtensions
     {
         public override void OnEnd(Activity activity)
         {
+            ArgumentNullException.ThrowIfNull(activity);
+
             // SqlClient currently emits SQL text by default; scrub it unless explicitly enabled.
             if (activity.GetTagItem("db.system.name") is null && activity.GetTagItem("db.system") is null)
             {
                 return;
             }
 
-            activity.SetTag("db.query.text", null);
-            activity.SetTag("db.statement", null);
+            activity.SetTag("db.query.text", (object?)null);
+            activity.SetTag("db.statement", (object?)null);
         }
     }
 }

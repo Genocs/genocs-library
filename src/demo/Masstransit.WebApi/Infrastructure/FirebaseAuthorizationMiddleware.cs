@@ -73,9 +73,9 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
             }
 
             // Extract user information from token
-            string? userId = payload.TryGetValue("user_id", out object? userIdObj) ? userIdObj?.ToString() : string.Empty;
-            string? name = payload.TryGetValue("name", out object? nameObj) ? nameObj?.ToString() : string.Empty;
-            string? email = payload.TryGetValue("email", out object? emailObj) ? emailObj?.ToString() : string.Empty;
+            string userId = payload.TryGetValue("user_id", out object? userIdObj) ? userIdObj?.ToString() : string.Empty;
+            string name = payload.TryGetValue("name", out object? nameObj) ? nameObj?.ToString() : string.Empty;
+            string email = payload.TryGetValue("email", out object? emailObj) ? emailObj?.ToString() : string.Empty;
             bool emailVerified = payload.TryGetValue("email_verified", out object? emailVerifiedObj) &&
                               emailVerifiedObj is bool verified && verified;
 
@@ -187,7 +187,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
         {
             try
             {
-                string? customClaimsJson = customClaimsObj.ToString();
+                string customClaimsJson = customClaimsObj.ToString();
                 if (!string.IsNullOrEmpty(customClaimsJson))
                 {
                     var customClaims = JsonSerializer.Deserialize<Dictionary<string, object>>(customClaimsJson);
@@ -199,7 +199,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                             {
                                 if (roleElement.ValueKind == JsonValueKind.String)
                                 {
-                                    string? role = roleElement.GetString();
+                                    string role = roleElement.GetString();
                                     if (!string.IsNullOrEmpty(role))
                                     {
                                         roles.Add(role);

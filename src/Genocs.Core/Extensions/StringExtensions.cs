@@ -17,7 +17,7 @@ public static partial class StringExtensions
     /// <param name="str">The string.</param>
     /// <param name="c">The char to ensure at the end of the string.</param>
     /// <returns>The modified string if necessary.</returns>
-    public static string? EnsureEndsWith(this string? str, char c)
+    public static string EnsureEndsWith(this string str, char c)
     {
         return EnsureEndsWith(str, c, StringComparison.Ordinal);
     }
@@ -29,7 +29,7 @@ public static partial class StringExtensions
     /// <param name="c">The char to ensure at the end of the string.</param>
     /// <param name="comparisonType">The string comparison type.</param>
     /// <returns>The modified string if necessary.</returns>
-    public static string? EnsureEndsWith(this string? str, char c, StringComparison comparisonType)
+    public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -47,7 +47,7 @@ public static partial class StringExtensions
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
-    public static string? EnsureEndsWith(this string? str, char c, bool ignoreCase, CultureInfo culture)
+    public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -65,7 +65,7 @@ public static partial class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string? EnsureStartsWith(this string? str, char c)
+    public static string EnsureStartsWith(this string str, char c)
     {
         return EnsureStartsWith(str, c, StringComparison.Ordinal);
     }
@@ -73,7 +73,7 @@ public static partial class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string? EnsureStartsWith(this string? str, char c, StringComparison comparisonType)
+    public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -91,7 +91,7 @@ public static partial class StringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string? EnsureStartsWith(this string? str, char c, bool ignoreCase, CultureInfo culture)
+    public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -111,7 +111,7 @@ public static partial class StringExtensions
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length.</exception>
-    public static string? Left(this string? str, int len)
+    public static string Left(this string str, int len)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -129,7 +129,7 @@ public static partial class StringExtensions
     /// <summary>
     /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
     /// </summary>
-    public static string? NormalizeLineEndings(this string? str)
+    public static string NormalizeLineEndings(this string str)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -173,7 +173,7 @@ public static partial class StringExtensions
     /// <param name="str">The string.</param>
     /// <param name="postFixes">one or more postfix.</param>
     /// <returns>Modified string or the same string if it has not any of given postfixes.</returns>
-    public static string? RemovePostFix(this string? str, params string[] postFixes)
+    public static string RemovePostFix(this string str, params string[] postFixes)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -203,7 +203,7 @@ public static partial class StringExtensions
     /// <param name="str">The string.</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes.</returns>
-    public static string? RemovePreFix(this string? str, params string[] preFixes)
+    public static string RemovePreFix(this string str, params string[] preFixes)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -231,7 +231,7 @@ public static partial class StringExtensions
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length.</exception>
-    public static string? Right(this string? str, int len)
+    public static string Right(this string str, int len)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -284,7 +284,7 @@ public static partial class StringExtensions
     /// <param name="str">String to convert.</param>
     /// <param name="invariantCulture">Invariant culture.</param>
     /// <returns>camelCase of the string.</returns>
-    public static string? ToCamelCase(this string? str, bool invariantCulture = true)
+    public static string ToCamelCase(this string str, bool invariantCulture = true)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -305,7 +305,7 @@ public static partial class StringExtensions
     /// <param name="str">String to convert.</param>
     /// <param name="culture">An object that supplies culture-specific casing rules.</param>
     /// <returns>camelCase of the string.</returns>
-    public static string? ToCamelCase(this string? str, CultureInfo culture)
+    public static string ToCamelCase(this string str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -326,7 +326,7 @@ public static partial class StringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="invariantCulture">Invariant culture.</param>
-    public static string? ToSentenceCase(this string? str, bool invariantCulture = false)
+    public static string ToSentenceCase(this string str, bool invariantCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -342,7 +342,7 @@ public static partial class StringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="culture">An object that supplies culture-specific casing rules.</param>
-    public static string? ToSentenceCase(this string? str, CultureInfo culture)
+    public static string ToSentenceCase(this string str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -358,7 +358,7 @@ public static partial class StringExtensions
     /// <typeparam name="T">Type of enum.</typeparam>
     /// <param name="str">String value to convert.</param>
     /// <returns>Returns enum object.</returns>
-    public static T ToEnum<T>(this string? str)
+    public static T ToEnum<T>(this string str)
         where T : struct
     {
         if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
@@ -373,7 +373,7 @@ public static partial class StringExtensions
     /// <param name="str">String value to convert.</param>
     /// <param name="ignoreCase">Ignore case.</param>
     /// <returns>Returns enum object.</returns>
-    public static T ToEnum<T>(this string? str, bool ignoreCase)
+    public static T ToEnum<T>(this string str, bool ignoreCase)
         where T : struct
     {
         if (string.IsNullOrEmpty(str)) throw new ArgumentException("String can not be null or empty!", nameof(str));
@@ -401,7 +401,7 @@ public static partial class StringExtensions
     /// <param name="str">String to convert.</param>
     /// <param name="invariantCulture">Invariant culture.</param>
     /// <returns>PascalCase of the string.</returns>
-    public static string? ToPascalCase(this string? str, bool invariantCulture = true)
+    public static string ToPascalCase(this string str, bool invariantCulture = true)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -422,7 +422,7 @@ public static partial class StringExtensions
     /// <param name="str">String to convert.</param>
     /// <param name="culture">An object that supplies culture-specific casing rules.</param>
     /// <returns>PascalCase of the string.</returns>
-    public static string? ToPascalCase(this string? str, CultureInfo culture)
+    public static string ToPascalCase(this string str, CultureInfo culture)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -441,7 +441,7 @@ public static partial class StringExtensions
     /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
     /// </summary>
     /// <returns>Truncated string if it is too long, otherwise the entire string.</returns>
-    public static string? Truncate(this string? str, int maxLength)
+    public static string Truncate(this string str, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -462,7 +462,7 @@ public static partial class StringExtensions
     /// Returning string can not be longer than maxLength.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null.</exception>
-    public static string? TruncateWithPostfix(this string? str, int maxLength)
+    public static string TruncateWithPostfix(this string str, int maxLength)
     {
         return TruncateWithPostfix(str, maxLength, "...");
     }
@@ -472,7 +472,7 @@ public static partial class StringExtensions
     /// It adds given <paramref name="postfix"/> to end of the string if it's truncated.
     /// Returning string can not be longer than maxLength.
     /// </summary>
-    public static string? TruncateWithPostfix(this string? str, int maxLength, string postfix)
+    public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -502,7 +502,7 @@ public static partial class StringExtensions
     /// </summary>
     /// <param name="str">The input string.</param>
     /// <returns>The output result.</returns>
-    public static string? Underscore(this string? str)
+    public static string Underscore(this string str)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -514,7 +514,7 @@ public static partial class StringExtensions
     }
 
     /// <summary>
-    /// This is a helper method for <see cref="ToSentenceCase(string?, bool)"/> and <see cref="ToSentenceCase(string?, CultureInfo)"/> methods.
+    /// This is a helper method for <see cref="ToSentenceCase(string, bool)"/> and <see cref="ToSentenceCase(string, CultureInfo)"/> methods.
     /// It is used to find the places where a lowercase letter is followed by an uppercase letter in a string.
     /// </summary>
     /// <returns>A <see cref="Regex"/> instance.</returns>

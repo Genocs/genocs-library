@@ -16,9 +16,9 @@ internal class MessagingOptions
 
     internal class EndpointOptions
     {
-        public string? Method { get; set; }
-        public string? Path { get; set; }
-        public string? Exchange { get; set; }
-        public string? RoutingKey { get; set; }
+        public string Method { get; set; }
+        public string Path { get; set; }
+        public string Exchange { get; set; }
+        public string RoutingKey { get; set; }
     }
 }

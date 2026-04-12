@@ -12,9 +12,9 @@ public class WebApiEndpointDefinition
 
 public class WebApiEndpointParameter
 {
-    public string? In { get; set; }
+    public string In { get; set; }
     public Type? Type { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; }
     public object? Example { get; set; }
 }
 

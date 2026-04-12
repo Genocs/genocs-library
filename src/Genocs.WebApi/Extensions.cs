@@ -235,7 +235,7 @@ public static class Extensions
         return data is null ? Task.CompletedTask : response.WriteJsonAsync(data);
     }
 
-    public static Task Created(this HttpResponse response, string? location = null, object? data = null)
+    public static Task Created(this HttpResponse response, string location = null, object? data = null)
     {
         response.StatusCode = 201;
 
@@ -411,7 +411,7 @@ public static class Extensions
         {
             var queryString = HttpUtility.ParseQueryString(request.HttpContext.Request.QueryString.Value);
             values ??= new RouteValueDictionary();
-            foreach (string? key in queryString.AllKeys)
+            foreach (string key in queryString.AllKeys)
             {
                 values.TryAdd(key, queryString[key]);
             }
@@ -423,7 +423,7 @@ public static class Extensions
             return serializer.Deserialize<T>(EmptyJsonObject);
         }
 
-        string? serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
+        string serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
             ?.Replace("\\\"", "\"")
             .Replace("\"{", "{")
             .Replace("}\"", "}")
@@ -454,7 +454,7 @@ public static class Extensions
             return (T)value;
         }
 
-        string? data = value?.ToString();
+        string data = value?.ToString();
         if (string.IsNullOrWhiteSpace(data))
         {
             return default;

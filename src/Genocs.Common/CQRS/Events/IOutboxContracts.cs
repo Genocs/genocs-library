@@ -25,7 +25,7 @@ public interface IOutboxMessage<out TIntegrationEvent>
     /// <summary>
     /// Gets the correlation identifier used to link related operations.
     /// </summary>
-    string? CorrelationId { get; }
+    string CorrelationId { get; }
 
     /// <summary>
     /// Gets the UTC timestamp when the outbox intent was captured.
@@ -55,8 +55,8 @@ public interface IOutboxDispatcher
     /// <returns>A task that represents the asynchronous enqueue operation.</returns>
     Task EnqueueAsync<TIntegrationEvent>(
         TIntegrationEvent integrationEvent,
-        string? messageId = null,
-        string? correlationId = null,
+        string messageId = null,
+        string correlationId = null,
         DateTime? occurredAt = null,
         CancellationToken cancellationToken = default)
         where TIntegrationEvent : class, IIntegrationEvent;

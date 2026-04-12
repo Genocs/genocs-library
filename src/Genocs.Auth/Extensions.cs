@@ -93,7 +93,7 @@ public static class Extensions
         if (options.Certificate is not null)
         {
             X509Certificate2? certificate = null;
-            string? password = options.Certificate.Password;
+            string password = options.Certificate.Password;
             bool hasPassword = !string.IsNullOrWhiteSpace(password);
             if (!string.IsNullOrWhiteSpace(options.Certificate.Location))
             {

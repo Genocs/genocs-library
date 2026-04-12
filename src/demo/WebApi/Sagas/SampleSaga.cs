@@ -72,7 +72,7 @@ public class SampleSaga(ILogger<SampleSaga> logger,
 
     private async Task PublishEventAsync(IMessage message, CancellationToken cancellationToken = default)
     {
-        string? spanContext = System.Diagnostics.Activity.Current?.Id;
+        string spanContext = System.Diagnostics.Activity.Current?.Id;
 
         if (_outbox.Enabled)
         {

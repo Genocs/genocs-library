@@ -15,6 +15,6 @@ public class SecretOptions
     /// <summary>
     /// This is an example of a secret. That should be stored in a secure way.
     /// </summary>
-    public string? Secret { get; set; }
+    public string Secret { get; set; }
 
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Genocs.Logging.Configurations;
 
 /// <summary>

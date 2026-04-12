@@ -69,7 +69,7 @@ public class PublicContractsMiddleware
         foreach (var command in contracts.Where(t => typeof(ICommand).IsAssignableFrom(t)))
         {
             object? instance = command.GetDefaultInstance();
-            string? name = instance?.GetType().Name;
+            string name = instance?.GetType().Name;
 
             if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
@@ -87,7 +87,7 @@ public class PublicContractsMiddleware
                                                     t != typeof(RejectedEvent)))
         {
             object? instance = @event.GetDefaultInstance();
-            string? name = instance?.GetType().Name;
+            string name = instance?.GetType().Name;
 
             if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {

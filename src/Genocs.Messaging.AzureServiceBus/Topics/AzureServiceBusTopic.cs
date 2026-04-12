@@ -312,8 +312,8 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
 
     private static bool TryExtractParentContext(ServiceBusReceivedMessage message, out ActivityContext parentContext)
     {
-        string? traceParent = TryGetApplicationProperty(message, TraceParentHeader);
-        string? traceState = TryGetApplicationProperty(message, TraceStateHeader);
+        string traceParent = TryGetApplicationProperty(message, TraceParentHeader);
+        string traceState = TryGetApplicationProperty(message, TraceStateHeader);
 
         if (string.IsNullOrWhiteSpace(traceParent))
         {
@@ -324,7 +324,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
         return ActivityContext.TryParse(traceParent, traceState, out parentContext);
     }
 
-    private static string? TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
+    private static string TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
     {
         if (!message.ApplicationProperties.TryGetValue(propertyName, out object? value) || value is null)
         {

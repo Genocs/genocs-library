@@ -3,13 +3,13 @@ namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Contracts;
 public sealed record CreateAuthorRequest(
     string FirstName,
     string LastName,
-    string? Biography);
+    string Biography);
 
 public sealed record AuthorResponse(
     Guid Id,
     string FirstName,
     string LastName,
-    string? Biography);
+    string Biography);
 
 public sealed record CreateBookRequest(
     string Title,

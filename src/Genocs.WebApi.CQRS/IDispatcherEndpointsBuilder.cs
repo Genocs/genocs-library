@@ -12,7 +12,7 @@ public interface IDispatcherEndpointsBuilder
                                     Func<HttpContext?, Task>? context = null,
                                     Action<IEndpointConventionBuilder>? endpoint = null,
                                     bool auth = false,
-                                    string? roles = null,
+                                    string roles = null,
                                     params string[] policies);
 
     IDispatcherEndpointsBuilder Get<TQuery, TResult>(
@@ -21,7 +21,7 @@ public interface IDispatcherEndpointsBuilder
                                                         Func<TQuery, TResult?, HttpContext?, Task>? afterDispatch = null,
                                                         Action<IEndpointConventionBuilder>? endpoint = null,
                                                         bool auth = false,
-                                                        string? roles = null,
+                                                        string roles = null,
                                                         params string[] policies)
         where TQuery : class, IQuery<TResult>;
 
@@ -30,7 +30,7 @@ public interface IDispatcherEndpointsBuilder
                                         Func<HttpContext?, Task>? context = null,
                                         Action<IEndpointConventionBuilder>? endpoint = null,
                                         bool auth = false,
-                                        string? roles = null,
+                                        string roles = null,
                                         params string[] policies);
 
     IDispatcherEndpointsBuilder Post<T>(
@@ -39,7 +39,7 @@ public interface IDispatcherEndpointsBuilder
                                             Func<T, HttpContext?, Task>? afterDispatch = null,
                                             Action<IEndpointConventionBuilder>? endpoint = null,
                                             bool auth = false,
-                                            string? roles = null,
+                                            string roles = null,
                                             params string[] policies)
         where T : class, ICommand;
 
@@ -48,7 +48,7 @@ public interface IDispatcherEndpointsBuilder
                                     Func<HttpContext?, Task>? context = null,
                                     Action<IEndpointConventionBuilder>? endpoint = null,
                                     bool auth = false,
-                                    string? roles = null,
+                                    string roles = null,
                                     params string[] policies);
 
     IDispatcherEndpointsBuilder Put<T>(
@@ -57,7 +57,7 @@ public interface IDispatcherEndpointsBuilder
                                         Func<T, HttpContext?, Task>? afterDispatch = null,
                                         Action<IEndpointConventionBuilder>? endpoint = null,
                                         bool auth = false,
-                                        string? roles = null,
+                                        string roles = null,
                                         params string[] policies)
         where T : class, ICommand;
 
@@ -66,7 +66,7 @@ public interface IDispatcherEndpointsBuilder
                                         Func<HttpContext?, Task>? context = null,
                                         Action<IEndpointConventionBuilder>? endpoint = null,
                                         bool auth = false,
-                                        string? roles = null,
+                                        string roles = null,
                                         params string[] policies);
 
     IDispatcherEndpointsBuilder Delete<T>(
@@ -75,7 +75,7 @@ public interface IDispatcherEndpointsBuilder
                                             Func<T, HttpContext?, Task>? afterDispatch = null,
                                             Action<IEndpointConventionBuilder>? endpoint = null,
                                             bool auth = false,
-                                            string? roles = null,
+                                            string roles = null,
                                             params string[] policies)
         where T : class, ICommand;
 }

@@ -13,19 +13,19 @@ public class Trail : Entity<DefaultIdType>
     /// <summary>
     /// The type of trail.
     /// </summary>
-    public string? Type { get; set; }
+    public string Type { get; set; }
 
     /// <summary>
     /// The table name.
     /// </summary>
-    public string? TableName { get; set; }
+    public string TableName { get; set; }
 
     /// <summary>
     /// The date and time of the change.
     /// </summary>
     public DateTime DateTime { get; set; }
-    public string? OldValues { get; set; }
-    public string? NewValues { get; set; }
-    public string? AffectedColumns { get; set; }
-    public string? PrimaryKey { get; set; }
+    public string OldValues { get; set; }
+    public string NewValues { get; set; }
+    public string AffectedColumns { get; set; }
+    public string PrimaryKey { get; set; }
 }

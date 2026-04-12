@@ -14,7 +14,7 @@ Observed baseline (April 2026):
 - A dedicated Genocs.Telemetry unit test project exists under src/tests.
 - SQL statement text scrubbing is implemented through a custom activity processor when telemetry.sqlClient.enableStatementText is false.
 - telemetry.sqlClient.enabled semantics are now enforced at runtime; telemetry.mongoDB now exposes only enabled and enableTracing.
-- Export path configuration can overlap with Genocs.Logging and create duplicated log ingestion when both packages export logs to the same backend.
+- Deterministic log-export ownership is now enforced: Genocs.Telemetry handles traces and metrics, while Genocs.Logging owns logs.
 
 Next recommended items:
 
@@ -32,8 +32,8 @@ Next recommended items:
 
 1. Dual log export overlap:
 - Genocs.Logging can export logs to OTLP and Azure Application Insights.
-- Genocs.Telemetry can also export logs to OTLP and Azure Monitor.
-- Enabling both creates duplicated log ingestion, inflated storage cost, and noisy dashboards.
+- Genocs.Telemetry no longer wires log exporters.
+- Logs should be exported through Genocs.Logging only to avoid duplicate ingestion.
 
 2. Correlation overlap risk:
 - Genocs.Logging correlation middleware enriches log events with request context.
@@ -150,7 +150,7 @@ MongoDbOptions exposed enableMetrics and enableLogging but runtime code only use
 
 ### TELEMETRY-003 Add deterministic overlap policy for log exporters
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P0
 
@@ -179,9 +179,21 @@ Logging and Telemetry packages can export logs to the same OTLP or Azure backend
 
 - none
 
+**Implementation notes**
+
+- Completed overlap assessment across `Genocs.Telemetry` and `Genocs.Logging` runtime/exporter paths.
+- Removed OpenTelemetry log exporter wiring from `Genocs.Telemetry` to establish single-owner behavior.
+- Removed telemetry-side logging flags from telemetry option contracts (`OtlpExportOptions`, `ConsoleOptions`, `AzureOptions`).
+- Updated Telemetry and Logging package docs with explicit ownership guidance and overlap-safe templates.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+
 ### TELEMETRY-004 Normalize analyzer and nullability baseline
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P1
 
@@ -204,9 +216,15 @@ Telemetry should maintain warning-clean quality and avoid nullable or style regr
 
 - Genocs.Telemetry builds warning-clean, or explicit exceptions are documented
 
+**Implementation notes**
+
+- Hardened guard clauses across the telemetry extension surface to make nullability expectations explicit for entry points and enrichment helpers.
+- Added project-level nullable warning enforcement in `Genocs.Telemetry.csproj` via `WarningsAsErrors` to prevent silent nullable regressions.
+- Added a package-level validation section in `README_NUGET.md` with the canonical telemetry build command for maintainers.
+
 **Validation**
 
-- dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
 
 **Dependencies**
 

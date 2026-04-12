@@ -369,7 +369,7 @@ using Genocs.Common.CQRS.Queries;
 
 public sealed class BrowseCustomers : PagedQueryBase, IQuery<PagedResult<CustomerDto>>
 {
-    public string? EmailDomain { get; init; }
+    public string EmailDomain { get; init; }
 }
 ```
 

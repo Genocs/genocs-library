@@ -34,7 +34,7 @@ public class LevelSwitchTests
     [InlineData("Trace")]
     [InlineData("NOTICE")]
     [InlineData("unknown")]
-    public void GetLogEventLevel_WithInvalidOrUnknownLevel_ReturnsInformationDefault(string? input)
+    public void GetLogEventLevel_WithInvalidOrUnknownLevel_ReturnsInformationDefault(string input)
     {
         var result = Extensions.GetLogEventLevel(input);
 

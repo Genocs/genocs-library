@@ -117,7 +117,7 @@ public sealed class LoggingHostIntegrationTests
         });
 
         builder.WebHost.UseTestServer();
-        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string>
         {
             ["app:service"] = "logging-integration-tests",
             ["app:version"] = "1.0.0",

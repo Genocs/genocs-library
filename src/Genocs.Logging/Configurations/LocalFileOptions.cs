@@ -13,10 +13,10 @@ public class LocalFileOptions
     /// <summary>
     /// The path to the local file.
     /// </summary>
-    public string? Path { get; set; }
+    public string Path { get; set; }
 
     /// <summary>
     /// The interval to roll the file. it uses the same values as Serilog.Sinks.File.
     /// </summary>
-    public string? Interval { get; set; }
+    public string Interval { get; set; }
 }

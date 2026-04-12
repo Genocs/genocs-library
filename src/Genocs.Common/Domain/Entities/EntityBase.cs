@@ -37,7 +37,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     }
 
     /// <inheritdoc/>
-    public bool Equals(EntityBase<TKey>? other)
+    public bool Equals(EntityBase<TKey> other)
     {
         if (other is null)
         {
@@ -65,7 +65,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         return obj is EntityBase<TKey> other && Equals(other);
     }
@@ -84,7 +84,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     /// <summary>
     /// Compares two entities for equality.
     /// </summary>
-    public static bool operator ==(EntityBase<TKey>? left, EntityBase<TKey>? right)
+    public static bool operator ==(EntityBase<TKey> left, EntityBase<TKey> right)
     {
         return Equals(left, right);
     }
@@ -92,7 +92,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     /// <summary>
     /// Compares two entities for inequality.
     /// </summary>
-    public static bool operator !=(EntityBase<TKey>? left, EntityBase<TKey>? right)
+    public static bool operator !=(EntityBase<TKey> left, EntityBase<TKey> right)
     {
         return !Equals(left, right);
     }

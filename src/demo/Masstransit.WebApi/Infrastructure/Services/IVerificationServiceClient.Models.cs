@@ -8,13 +8,13 @@ namespace Genocs.Library.Demo.Masstransit.WebApi.Infrastructure.Services;
 public class VerificationApiRequest
 {
     [JsonProperty("type")]
-    public string? Type { get; set; }
+    public string Type { get; set; }
 
     [JsonProperty("joinedDate")]
-    public string? JoinedDate { get; set; }
+    public string JoinedDate { get; set; }
 
     [JsonProperty("email")]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
     [JsonProperty("personDetails")]
     public PersonDetailsRequest? Details { get; set; }
@@ -23,19 +23,19 @@ public class VerificationApiRequest
 public class PersonDetailsRequest
 {
     [JsonProperty("firstName")]
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; }
 
     [JsonProperty("lastName")]
-    public string? LastName { get; set; }
+    public string LastName { get; set; }
 
     [JsonProperty("dob")]
-    public string? DateOfBirth { get; set; }
+    public string DateOfBirth { get; set; }
 
     [JsonProperty("gender")]
-    public string? Gender { get; set; }
+    public string Gender { get; set; }
 
     [JsonProperty("nationality")]
-    public string? Nationality { get; set; }
+    public string Nationality { get; set; }
 }
 
 /// <summary>
@@ -44,22 +44,22 @@ public class PersonDetailsRequest
 public class VerificationApiResponse
 {
     [JsonProperty("id")]
-    public string? Id { get; set; }
+    public string Id { get; set; }
 
     [JsonProperty("createdAt")]
-    public string? CreatedAt { get; set; }
+    public string CreatedAt { get; set; }
 
     [JsonProperty("updatedAt")]
-    public string? UpdatedAt { get; set; }
+    public string UpdatedAt { get; set; }
 
     [JsonProperty("type")]
-    public string? Type { get; set; }
+    public string Type { get; set; }
 
     [JsonProperty("joinedDate")]
-    public string? JoinedDate { get; set; }
+    public string JoinedDate { get; set; }
 
     [JsonProperty("email")]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
     [JsonProperty("personDetails")]
     public PersonDetailsRequest? Details { get; set; }

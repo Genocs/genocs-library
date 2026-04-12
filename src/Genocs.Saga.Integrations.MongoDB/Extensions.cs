@@ -120,7 +120,7 @@ public static class Extensions
             return type.GetElementType() is Type elementType && IsApplicationType(elementType);
         }
 
-        string? assemblyName = type.Assembly.GetName().Name;
+        string assemblyName = type.Assembly.GetName().Name;
         if (string.IsNullOrWhiteSpace(assemblyName))
         {
             return false;

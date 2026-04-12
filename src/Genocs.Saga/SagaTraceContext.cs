@@ -30,7 +30,7 @@ public static class SagaTraceContext
             return builder;
         }
 
-        string? traceParent = activity.Id;
+        string traceParent = activity.Id;
         if (string.IsNullOrEmpty(traceParent))
         {
             return builder;
@@ -38,7 +38,7 @@ public static class SagaTraceContext
 
         builder.WithMetadata(TraceParent, traceParent);
 
-        string? traceState = activity.TraceStateString;
+        string traceState = activity.TraceStateString;
         if (!string.IsNullOrEmpty(traceState))
         {
             builder.WithMetadata(TraceState, traceState);
@@ -54,7 +54,7 @@ public static class SagaTraceContext
     public static ISagaContextBuilder WithTraceContext(
         this ISagaContextBuilder builder,
         string traceParent,
-        string? traceState = null)
+        string traceState = null)
     {
         if (string.IsNullOrWhiteSpace(traceParent))
         {

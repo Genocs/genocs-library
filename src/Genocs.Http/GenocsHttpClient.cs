@@ -35,7 +35,7 @@ public class GenocsHttpClient : IHttpClient
 
         if (!string.IsNullOrWhiteSpace(_settings.CorrelationIdHeader))
         {
-            string? correlationId = correlationIdFactory.Create();
+            string correlationId = correlationIdFactory.Create();
             _client.DefaultRequestHeaders.TryAddWithoutValidation(
                                                                     _settings.CorrelationIdHeader,
                                                                     correlationId);

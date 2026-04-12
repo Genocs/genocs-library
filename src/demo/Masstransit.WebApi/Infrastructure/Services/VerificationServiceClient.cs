@@ -30,7 +30,7 @@ public class VerificationServiceClient : IVerificationServiceClient
 
         ArgumentNullException.ThrowIfNull(httpClientSettings);
 
-        string? url = httpClientSettings?.Services?["user_verifier"];
+        string url = httpClientSettings?.Services?["user_verifier"];
 
         if (string.IsNullOrWhiteSpace(url))
         {

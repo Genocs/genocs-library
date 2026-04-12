@@ -184,7 +184,7 @@ public class WebApiContractTests
                                 id = authorId,
                                 firstName = "Stephen",
                                 lastName = "King",
-                                biography = (string?)null
+                                biography = (string)null
                             },
                         },
                     },
@@ -233,7 +233,7 @@ public class WebApiContractTests
                             id = authorId,
                             firstName = "George R. R.",
                             lastName = "Martin",
-                            biography = (string?)null
+                            biography = (string)null
                         },
                     },
                 });
@@ -293,7 +293,7 @@ public class WebApiContractTests
                             id = authorId,
                             firstName = "J.K.",
                             lastName = "Rowling",
-                            biography = (string?)null
+                            biography = (string)null
                         },
                     },
                 });
@@ -351,7 +351,7 @@ public class WebApiContractTests
                             id = authorId,
                             firstName = "Stephen",
                             lastName = "King",
-                            biography = (string?)null
+                            biography = (string)null
                         },
                     },
                 });

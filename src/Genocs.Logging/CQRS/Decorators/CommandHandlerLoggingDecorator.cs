@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,14 +35,14 @@ internal sealed class CommandHandlerLoggingDecorator<TCommand>(ICommandHandler<T
         }
         catch (Exception ex)
         {
-            string? exceptionTemplate = template.GetExceptionTemplate(ex);
+            string exceptionTemplate = template.GetExceptionTemplate(ex);
 
             Log(command, exceptionTemplate, isError: true);
             throw;
         }
     }
 
-    private void Log(TCommand command, string? message, bool isError = false)
+    private void Log(TCommand command, string message, bool isError = false)
     {
         if (string.IsNullOrEmpty(message))
         {
@@ -58,7 +61,7 @@ internal sealed class CommandHandlerLoggingDecorator<TCommand>(ICommandHandler<T
 
     private class EmptyMessageToLogTemplateMapper : IMessageToLogTemplateMapper
     {
-        public HandlerLogTemplate? Map<TMessage>(TMessage message)
+        public HandlerLogTemplate Map<TMessage>(TMessage message)
             where TMessage : class => null;
     }
 }

@@ -31,10 +31,10 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
     public async Task Invoke(HttpContext context)
     {
         // Get the apiKey if any
-        string? apiKey = context.Request.Headers["x-gnx-apikey"];
+        string apiKey = context.Request.Headers["x-gnx-apikey"];
 
         // Get JWT authentication if any
-        string? jwt = context.Request.Headers.Authorization;
+        string jwt = context.Request.Headers.Authorization;
 
         // Check if both authentication are in place
         if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(jwt))
@@ -126,7 +126,7 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
         string[] validApiKeys = _configuration.GetSection("Authorization:ApiKeys").Get<string[]>() ?? [];
 
         // For development/testing
-        string? devApiKey = _configuration["Authorization:DevApiKey"];
+        string devApiKey = _configuration["Authorization:DevApiKey"];
 
         bool isOk = validApiKeys.Contains(apiKey) || (!string.IsNullOrWhiteSpace(devApiKey) && devApiKey == apiKey);
 

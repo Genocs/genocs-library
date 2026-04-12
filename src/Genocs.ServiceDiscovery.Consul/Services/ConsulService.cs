@@ -22,7 +22,7 @@ internal sealed class ConsulService : IConsulService
     public Task<HttpResponseMessage> DeregisterServiceAsync(string id)
         => _client.PutAsync(GetEndpoint($"agent/service/deregister/{id}"), EmptyRequest);
 
-    public async Task<IDictionary<string, ServiceAgent>?> GetServiceAgentsAsync(string? service = null)
+    public async Task<IDictionary<string, ServiceAgent>?> GetServiceAgentsAsync(string service = null)
     {
         string filter = string.IsNullOrWhiteSpace(service) ? string.Empty : $"?filter=Service==\"{service}\"";
         var response = await _client.GetAsync(GetEndpoint($"agent/services{filter}"));

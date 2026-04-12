@@ -27,7 +27,7 @@ public class GenocsException : Exception
     /// </summary>
     /// <param name="message">Exception message.</param>
     /// <param name="innerException">Inner exception.</param>
-    public GenocsException(string message, Exception? innerException)
+    public GenocsException(string message, Exception innerException)
         : base(message, innerException)
     {
     }

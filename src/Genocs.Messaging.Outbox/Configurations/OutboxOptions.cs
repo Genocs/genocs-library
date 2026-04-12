@@ -28,17 +28,17 @@ public class OutboxOptions
     /// <summary>
     /// The name of the inbox collection.
     /// </summary>
-    public string? InboxCollection { get; set; }
+    public string InboxCollection { get; set; }
 
     /// <summary>
     /// The name of the outbox collection.
     /// </summary>
-    public string? OutboxCollection { get; set; }
+    public string OutboxCollection { get; set; }
 
     /// <summary>
     /// The type of the outbox.
     /// </summary>
-    public string? Type { get; set; }
+    public string Type { get; set; }
 
     /// <summary>
     /// Indicates whether transactions are disabled.

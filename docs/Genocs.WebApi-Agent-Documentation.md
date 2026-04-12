@@ -104,7 +104,7 @@ app.UseEndpoints(endpoints =>
     });
 });
 
-public sealed record SearchProducts(string? Term, int Page = 0);
+public sealed record SearchProducts(string Term, int Page = 0);
 ```
 
 For `Get<T>` and `Delete<T>`, the package uses query and route binding rather than JSON body binding.

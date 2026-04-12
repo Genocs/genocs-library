@@ -56,7 +56,7 @@ public class GetOptionsExtensionsTests
     private static IConfiguration CreateConfiguration(string serviceName)
     {
         return new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
+            .AddInMemoryCollection(new Dictionary<string, string>
             {
                 [$"{AppOptions.Position}:Name"] = serviceName,
                 [$"{AppOptions.Position}:DisplayBanner"] = "false"

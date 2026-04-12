@@ -29,18 +29,18 @@ public class MetricsOptions
     /// The Prometheus formatter.
     /// Allowed method are: protobuf or (null).
     /// </summary>
-    public string? PrometheusFormatter { get; set; }
+    public string PrometheusFormatter { get; set; }
 
     /*
     /// <summary>
     /// The InfluxDb url.
     /// </summary>
-    public string? InfluxUrl { get; set; }
+    public string InfluxUrl { get; set; }
 
     /// <summary>
     /// The InfluxDb database name.
     /// </summary>
-    public string? Database { get; set; }
+    public string Database { get; set; }
     */
 
     /// <summary>

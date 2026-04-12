@@ -23,7 +23,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
         }
 
         RedisSagaState? state = null;
-        string? cachedSagaState = await _stateStore.GetStringAsync(StateId(sagaId, sagaType));
+        string cachedSagaState = await _stateStore.GetStringAsync(StateId(sagaId, sagaType));
 
         if (!string.IsNullOrWhiteSpace(cachedSagaState))
         {
@@ -52,7 +52,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
         }
 
         string key = StateId(state.Id, state.Type);
-        string? currentSerialized = await _stateStore.GetStringAsync(key);
+        string currentSerialized = await _stateStore.GetStringAsync(key);
         RedisSagaState? current = DeserializeState(currentSerialized);
 
         if (current is null)
@@ -99,7 +99,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
 
     private string StateId(string id, Type type) => $"_state_{id}_{type.GetHashCode()}";
 
-    private static RedisSagaState? DeserializeState(string? serializedState)
+    private static RedisSagaState? DeserializeState(string serializedState)
     {
         if (string.IsNullOrWhiteSpace(serializedState))
         {

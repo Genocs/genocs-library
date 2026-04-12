@@ -19,7 +19,7 @@ public interface IGenocsBuilder
     /// <summary>
     /// Get the configuration.
     /// </summary>
-    IConfiguration? Configuration { get; }
+    IConfiguration Configuration { get; }
 
     /// <summary>
     /// Gets the builder used to configure the web application during startup.
@@ -28,7 +28,7 @@ public interface IGenocsBuilder
     /// to register services, configure middleware, and set up other application settings before the application is
     /// built and run. Accessing this property allows advanced customization of the application's startup
     /// process.</remarks>
-    WebApplicationBuilder? WebApplicationBuilder { get; }
+    WebApplicationBuilder WebApplicationBuilder { get; }
 
     /// <summary>
     /// try to register a service by name.

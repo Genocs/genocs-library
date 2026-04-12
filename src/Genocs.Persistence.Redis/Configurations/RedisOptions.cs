@@ -23,7 +23,7 @@ public class RedisOptions
     /// <summary>
     /// Redis instance.
     /// </summary>
-    public string? Instance { get; set; }
+    public string Instance { get; set; }
 
     /// <summary>
     /// The database Id.

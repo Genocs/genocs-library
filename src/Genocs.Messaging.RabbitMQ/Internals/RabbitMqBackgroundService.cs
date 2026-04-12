@@ -281,8 +281,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
     private bool TryExtractParentContext(IDictionary<string, object>? headers, out ActivityContext parentContext)
     {
-        string? traceParent = TryGetHeaderValue(headers, TraceParentHeader);
-        string? traceState = TryGetHeaderValue(headers, TraceStateHeader);
+        string traceParent = TryGetHeaderValue(headers, TraceParentHeader);
+        string traceState = TryGetHeaderValue(headers, TraceStateHeader);
 
         if (string.IsNullOrWhiteSpace(traceParent))
         {
@@ -298,7 +298,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         return ActivityContext.TryParse(traceParent, traceState, out parentContext);
     }
 
-    private static string? TryGetHeaderValue(IDictionary<string, object>? headers, string headerName)
+    private static string TryGetHeaderValue(IDictionary<string, object>? headers, string headerName)
     {
         if (headers is null || string.IsNullOrWhiteSpace(headerName))
         {
@@ -359,7 +359,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                                         bool deadLetterEnabled)
     {
         int currentRetry = 0;
-        string? messageName = message.GetType().Name.Underscore();
+        string messageName = message.GetType().Name.Underscore();
         var retryPolicy = Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(_retries, _ => TimeSpan.FromSeconds(_retryInterval));

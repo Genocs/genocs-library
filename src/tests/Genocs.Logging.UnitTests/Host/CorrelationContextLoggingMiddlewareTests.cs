@@ -80,7 +80,7 @@ public class CorrelationContextLoggingMiddlewareTests
         string expectedKey = new('k', 64);
         Assert.True(record.ScopeValues.TryGetValue(expectedKey, out object? value));
 
-        string? capturedValue = value as string;
+        string capturedValue = value as string;
         Assert.NotNull(capturedValue);
         Assert.Equal(256, capturedValue.Length);
     }
@@ -147,7 +147,7 @@ public class CorrelationContextLoggingMiddlewareTests
         });
 
         var record = Assert.Single(logger.Records);
-        string? captured = record.ScopeValues["HttpRequestBody"] as string;
+        string captured = record.ScopeValues["HttpRequestBody"] as string;
         Assert.NotNull(captured);
         Assert.Equal(4096, captured.Length);
     }

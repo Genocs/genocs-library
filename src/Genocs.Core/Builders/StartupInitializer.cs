@@ -9,10 +9,10 @@ namespace Genocs.Core.Builders;
 public class StartupInitializer : IStartupInitializer
 {
     private readonly IList<IInitializer> _initializers = [];
-    private readonly CoreDiagnosticsOptions? _diagnosticsOptions;
-    private readonly CoreDiagnosticsState? _diagnosticsState;
+    private readonly CoreDiagnosticsOptions _diagnosticsOptions;
+    private readonly CoreDiagnosticsState _diagnosticsState;
 
-    public StartupInitializer(CoreDiagnosticsOptions? diagnosticsOptions = null, CoreDiagnosticsState? diagnosticsState = null)
+    public StartupInitializer(CoreDiagnosticsOptions diagnosticsOptions = null, CoreDiagnosticsState diagnosticsState = null)
     {
         _diagnosticsOptions = diagnosticsOptions;
         _diagnosticsState = diagnosticsState;

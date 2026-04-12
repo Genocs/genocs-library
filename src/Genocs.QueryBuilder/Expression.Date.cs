@@ -17,7 +17,7 @@ public static partial class ExpressionBuilder
     {
         // Compose the expression tree that represents the parameter to the predicate.
         Expression propertyExp = pe;
-        foreach (string? member in propertyName.Split('.'))
+        foreach (string member in propertyName.Split('.'))
         {
             propertyExp = Expression.PropertyOrField(propertyExp, member);
         }

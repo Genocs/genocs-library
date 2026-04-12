@@ -53,7 +53,7 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        string? spanContext = System.Diagnostics.Activity.Current?.Id;
+        string spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {

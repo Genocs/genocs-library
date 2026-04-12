@@ -24,7 +24,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         var action = (ISagaAction<TMessage>)saga;
         string sagaType = saga.GetType().Name;
         string messageType = typeof(TMessage).Name;
-        string? messageId = SagaMessageIdentityResolver.Resolve(message, context);
+        string messageId = SagaMessageIdentityResolver.Resolve(message, context);
         SagaLogEntryOutcome outcome = SagaLogEntryOutcome.Completed;
 
         using var handleActivity = SagaTelemetry.StartHandleActivity(saga.Id, sagaType, messageType);
@@ -62,7 +62,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         }
     }
 
-    private async Task<bool> HasAlreadyProcessedAsync(SagaId sagaId, Type sagaType, string? messageId)
+    private async Task<bool> HasAlreadyProcessedAsync(SagaId sagaId, Type sagaType, string messageId)
     {
         if (string.IsNullOrWhiteSpace(messageId))
         {
@@ -73,7 +73,7 @@ internal sealed class SagaProcessor : ISagaProcessor
         return existingEntries.Any(entry => string.Equals(entry.MessageId, messageId, StringComparison.Ordinal));
     }
 
-    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome, string? messageId)
+    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome, string messageId)
         where TMessage : class
     {
         var sagaType = saga.GetType();

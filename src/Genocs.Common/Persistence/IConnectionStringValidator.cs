@@ -11,5 +11,5 @@ public interface IConnectionStringValidator
     /// <param name="connectionString">The Connection string.</param>
     /// <param name="dbProvider">The Database provider name.</param>
     /// <returns>True in case of validated otherwise False.</returns>
-    bool TryValidate(string connectionString, string? dbProvider = null);
+    bool TryValidate(string connectionString, string dbProvider = null);
 }
