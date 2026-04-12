@@ -8,17 +8,17 @@ public class JsonWebToken
     /// <summary>
      /// Gets or sets the access token unique identifier.
      /// </summary>
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// Gets or sets the access token.
     /// </summary>
-    public string AccessToken { get; set; }
+    public string? AccessToken { get; set; }
 
     /// <summary>
     /// Gets or sets the refresh token.
     /// </summary>
-    public string RefreshToken { get; set; }
+    public string? RefreshToken { get; set; }
 
     /// <summary>
     /// Gets or sets the access token expiration.

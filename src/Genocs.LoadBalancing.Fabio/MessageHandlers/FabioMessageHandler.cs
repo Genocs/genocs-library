@@ -7,7 +7,7 @@ internal sealed class FabioMessageHandler : DelegatingHandler
     private readonly FabioOptions _settings;
     private readonly string _servicePath;
 
-    public FabioMessageHandler(FabioOptions settings, string serviceName = null)
+    public FabioMessageHandler(FabioOptions settings, string? serviceName = null)
     {
         if (string.IsNullOrWhiteSpace(settings.Url))
         {

@@ -10,12 +10,24 @@ namespace Genocs.Http;
 /// <summary>
 /// The Http client extensions.
 /// </summary>
+/// <remarks>
+/// Use <see cref="IHttpClientBuilder"/> (for example <c>ConfigureHttpClient</c>) to set <see cref="System.Net.Http.HttpClient.BaseAddress"/>
+/// when callers pass relative URI strings to <see cref="IHttpClient"/>.
+/// </remarks>
 public static class Extensions
 {
     private const string SectionName = "httpClient";
     private const string RegistryName = "http.client";
     private const string ClientName = "genocs";
 
+    /// <summary>
+    /// Registers the typed <see cref="IHttpClient"/>, <see cref="HttpClientOptions"/>, serializers, and optional correlation factories.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="clientName">The named <see cref="HttpClient"/> registration name.</param>
+    /// <param name="maskedRequestUrlParts">Optional URL substrings to mask in logs when request masking is configured.</param>
+    /// <param name="sectionName">Configuration section name for <see cref="HttpClientOptions"/>.</param>
+    /// <param name="httpClientBuilder">Optional configuration for the named typed client; use <c>ConfigureHttpClient</c> to set <see cref="System.Net.Http.HttpClient.BaseAddress"/> when using relative request paths.</param>
     public static IGenocsBuilder AddHttpClient(
                                                 this IGenocsBuilder builder,
                                                 string clientName = ClientName,

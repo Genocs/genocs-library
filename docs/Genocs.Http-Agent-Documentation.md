@@ -28,6 +28,7 @@ Use `Genocs.Http` when you need to:
 - customize JSON serialization and deserialization behavior
 - propagate correlation headers on outbound calls
 - mask sensitive URL fragments in HTTP client logs
+- combine **relative** request paths with a configured **`HttpClient.BaseAddress`**, or pass **absolute** URIs, using normal `System.Uri` rules (no automatic `http://` insertion)
 
 ## What This Package Does Not Do By Itself
 
@@ -37,7 +38,7 @@ Do not assume `Genocs.Http` can:
 - register named downstream clients per service automatically
 - interpret a `restEase` section
 - apply circuit breakers, timeouts, or fallback policies beyond retry logic
-- preserve non-success responses in the plain `GetAsync<T>` or `PostAsync<T>` methods
+- preserve non-success responses in the plain `GetAsync<T>` or `PostAsync<T>` methods (use `*ResultAsync<T>` with a string URI for that behavior)
 - add correlation values unless factories and header names are available
 - log or mask request bodies
 
@@ -83,6 +84,23 @@ Effect:
 
 Use this when the caller needs both the deserialized payload and the raw `HttpResponseMessage`.
 
+Relative path segments require a configured **`HttpClient.BaseAddress`** for the Genocs client (set when registering the typed client):
+
+```csharp
+using Genocs.Core.Builders;
+using Genocs.Http;
+
+IGenocsBuilder genocs = builder.AddGenocs()
+    .AddHttpClient(httpClientBuilder: b =>
+        b.ConfigureHttpClient(c => c.BaseAddress = new Uri("https://catalog.internal/api/v1/")));
+
+genocs.Build();
+```
+
+Complete host registration as in Recipe 1 (`WebApplication.CreateBuilder`, `builder.Build()`, etc.) where applicable.
+
+Then call sites can pass relative URIs:
+
 ```csharp
 using Genocs.Http;
 
@@ -95,7 +113,11 @@ public sealed class CatalogGateway(IHttpClient httpClient)
 public sealed record ProductDto(Guid Id, string Name);
 ```
 
+Alternatively, pass a **full absolute** URI string to `GetResultAsync` (or other helpers) and omit `BaseAddress` for that call.
+
 Use `*ResultAsync` methods when non-success responses should not be turned into exceptions by the public verb helpers.
+
+**Migration note:** Older versions prepended `http://` to strings that did not start with `http`. That behavior is removed; use absolute URIs or `BaseAddress` + relative paths instead.
 
 ### Recipe 3: Customize Serialization
 
@@ -150,7 +172,7 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
 |---|---|---|---|
 | `AddHttpClient(...)` | Register Genocs outbound HTTP support | Registers one typed `IHttpClient` and binds `HttpClientOptions` from configuration | Assuming it registers multiple downstream clients automatically |
 | `RemoveHttpClient()` | Remove the typed `IHttpClient` mapping from the internal registry | Workaround for a typed-client mapping issue | Treating it as normal lifecycle management |
-| `IHttpClient` | Send outbound HTTP requests | Supports raw response, typed result, and `HttpResult<T>` methods | Assuming all methods preserve non-success responses |
+| `IHttpClient` | Send outbound HTTP requests | String URIs follow `System.Uri` rules; relative paths need `BaseAddress`. Supports raw response, typed `*Async<T>`, string `*ResultAsync<T>`, and `HttpRequestMessage` overloads | Assuming every overload preserves non-success responses like `*ResultAsync` |
 | `HttpResult<T>` | Keep a typed payload with the raw response | `HasResult` is false when deserialization did not produce a payload | Assuming it throws on non-success status codes |
 | `IHttpClientSerializer` | Replace request and response serialization behavior | Used for both payload serialization and stream deserialization | Forgetting to register a serializer compatible with the API contract |
 | `SystemTextJsonHttpClientSerializer` | Use default JSON serialization | Uses camelCase, case-insensitive property matching, numeric strings, and camelCase enum text | Assuming it matches every external API by default |
@@ -161,22 +183,24 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
 
 ### Success Handling
 
-- `GetAsync<T>`, `PostAsync<T>`, `PutAsync<T>`, `PatchAsync<T>`, and `DeleteAsync<T>` return `default` when the response is not successful.
-- `GetResultAsync<T>` and the other `*ResultAsync<T>` methods return `HttpResult<T>` even when the status code is not successful.
+- String-based `GetAsync<T>`, `PostAsync<T>`, `PutAsync<T>`, `PatchAsync<T>`, and `DeleteAsync<T>` return `default` when the response is not successful.
+- String-based `GetResultAsync<T>` and the other `*ResultAsync<T>(string, ...)` methods return `HttpResult<T>` even when the status code is not successful.
 - `SendAsync(HttpRequestMessage)` retries and returns the raw `HttpResponseMessage`.
 
 ### Exception Handling
 
-- Public verb methods that internally call the protected `SendAsync(string, Method, ...)` throw when the final response status is not successful.
-- `SendAsync<T>(HttpRequestMessage, ...)` throws `HttpRequestException` for non-success responses so Polly retries can run.
-- Retry logic is exception-driven. If no exception is thrown, Polly does not retry.
+- String-based helpers that use the exception-oriented send path (`GetAsync`, `PostAsync`, typed `GetAsync<T>`, etc.) throw when the final HTTP status is not successful.
+- String-based `*ResultAsync<T>(string, ...)` methods do **not** throw solely because the status code indicates failure; they return `HttpResult<T>` with the raw `HttpResponseMessage`.
+- `SendAsync<T>(HttpRequestMessage, ...)` throws for non-success responses so Polly retries can run on that path.
+- `SendResultAsync<T>(HttpRequestMessage, ...)` preserves non-success responses in `HttpResult<T>` (no throw solely for status).
+- Retry logic is exception-driven on the Polly-wrapped paths. HTTP error status codes are not retried as exceptions on the string `*ResultAsync` path.
 
 ### URI Handling
 
-- Relative-looking URIs are prefixed with `http://` automatically.
-- Fully qualified URIs that already start with `http` are used as provided.
-
-That means a call such as `GetAsync("orders/api/items")` becomes `http://orders/api/items`.
+- String URI arguments must be valid **absolute** or **relative** URIs as accepted by `System.Uri` (`Uri.TryCreate` with `UriKind.RelativeOrAbsolute`). Invalid strings throw `ArgumentException` (`paramName: uri`).
+- **Absolute** URIs (for example `https://api.contoso.com/v1/items`) are sent unchanged; the client does not rewrite schemes or hosts.
+- **Relative** paths (for example `items/5` or `catalog/products/1`) combine with `HttpClient.BaseAddress` when it is configured (typically via `AddHttpClient(..., httpClientBuilder: b => b.ConfigureHttpClient(c => c.BaseAddress = ...))`). This matches standard `HttpClient` / `Uri` resolution; ensure `BaseAddress` ends with `/` when you intend path segments to append predictably.
+- The client does **not** prepend `http://` to strings that lack a scheme. Callers must use an absolute URI or set `BaseAddress` and pass relative paths (see Recipe 2).
 
 ## Configuration Ownership
 
@@ -259,7 +283,7 @@ When you cannot inspect source code, follow these rules:
 
 1. Do not assume `httpClient.type` enables service discovery or load balancing.
 2. Do not assume `httpClient.services` rewrites host names or resolves logical services.
-3. Do not assume non-success responses are preserved unless you use `*ResultAsync<T>` or raw `HttpResponseMessage` methods.
+3. Do not assume non-success responses are preserved unless you use string `*ResultAsync<T>`, `SendResultAsync<T>(HttpRequestMessage, ...)`, or methods that return `HttpResponseMessage` without applying the exception-oriented typed path.
 4. Do not assume retries cover every failure mode; they run on exceptions only.
 5. Do not assume request masking redacts bodies, headers, or arbitrary structured log properties.
 6. Do not assume correlation headers are sent unless header names are configured and value factories are meaningful.
@@ -272,7 +296,7 @@ Before generating code that depends on `Genocs.Http`, answer these questions:
 
 1. Is `Genocs.Core` already installed so `IGenocsBuilder` is available?
 2. Does the caller need exception-based flow or status-aware result handling?
-3. Are downstream URIs absolute, or will the implicit `http://` prefixing be acceptable?
+3. Are downstream URIs absolute, or is `HttpClient.BaseAddress` set so relative paths resolve correctly (there is no implicit `http://` prefix)?
 4. Does the API require custom serialization behavior?
 5. Are correlation headers required, and if so, where do their values come from?
 6. Is masking needed only for URL fragments, or is full payload redaction required from another layer?
@@ -327,8 +351,8 @@ Fix: Configure the header names and register non-empty implementations of `ICorr
 4. URL masking is enabled but logs still show sensitive data.
 Fix: Verify the sensitive values appear in the URL, not in the body or headers, and ensure `requestMasking.urlParts` contains the exact fragments to replace.
 
-5. Requests are going to the wrong scheme.
-Fix: Pass fully qualified `https://...` URIs when HTTPS is required because relative-looking inputs are prefixed with `http://`.
+5. Requests are going to the wrong host or path.
+Fix: Use fully qualified absolute URIs, or set `BaseAddress` on the named client and pass relative paths. Do not rely on implicit scheme prefixing; configure HTTPS explicitly when required.
 
 6. Response content deserializes to `null` unexpectedly.
 Fix: Check the serializer contract, the response body format, and whether the API returned a non-success response that caused a default result.
@@ -346,4 +370,4 @@ Fix: Set `removeCharsetFromContentType` to `true` so JSON payloads omit the char
 
 ## One-Line Recommendation For Agents
 
-If you only know that `Genocs.Http` is installed, generate one typed outbound client through `AddHttpClient()`, prefer `*ResultAsync<T>` when failure inspection matters, and do not promise discovery, advanced resiliency, or redaction features that this package does not implement.
+If you only know that `Genocs.Http` is installed, generate one typed outbound client through `AddHttpClient()`, configure `BaseAddress` when using relative URI strings, prefer `*ResultAsync<T>` when failure inspection matters, and do not promise discovery, advanced resiliency, or redaction features that this package does not implement.

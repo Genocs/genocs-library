@@ -8,7 +8,7 @@ public interface ICursorQuery : IQuery
     /// <summary>
     /// Opaque cursor token representing a continuation position.
     /// </summary>
-    string Cursor { get; }
+    string? Cursor { get; }
 
     /// <summary>
     /// Maximum number of results to return.
@@ -18,10 +18,10 @@ public interface ICursorQuery : IQuery
     /// <summary>
     /// Optional field used to order the cursor query.
     /// </summary>
-    string OrderBy { get; }
+    string? OrderBy { get; }
 
     /// <summary>
     /// Optional sort order. Common values are ASC or DESC.
     /// </summary>
-    string SortOrder { get; }
+    string? SortOrder { get; }
 }

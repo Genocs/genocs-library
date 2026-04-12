@@ -49,7 +49,7 @@ internal sealed class JwtHandler : IJwtHandler
     /// <param name="claims">The list of claims.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">It is thrown when mandatory data is empty.</exception>
-    public JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
+    public JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null)
     {
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -160,8 +160,7 @@ internal sealed class JwtHandler : IJwtHandler
         SecurityTokenDescriptor tokenDescriptor = CreateSecurityTokenDescriptor();
 
         var tokenHandler = new Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler();
-        string token = tokenHandler.CreateToken(tokenDescriptor);
-        return token;
+        return tokenHandler.CreateToken(tokenDescriptor);
     }
 
     /// <summary>
@@ -175,8 +174,8 @@ internal sealed class JwtHandler : IJwtHandler
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.Role, "role")
+                new(ClaimTypes.Name, "username"),
+                new(ClaimTypes.Role, "role")
             }),
             Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), _options.Algorithm)

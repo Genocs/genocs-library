@@ -13,7 +13,7 @@ public interface IJwtHandler
     /// <param name="audience">The audience.</param>
     /// <param name="claims">The claims.</param>
     /// <returns>The JsonWebToken just created.</returns>
-    JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string audience = null, IDictionary<string, IEnumerable<string>>? claims = null);
+    JsonWebToken CreateToken(string userId, IEnumerable<string>? roles = null, string? audience = null, IDictionary<string, IEnumerable<string>>? claims = null);
 
     /// <summary>
     /// Get the JsonWebTokenPayload from the accessToken.

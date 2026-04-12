@@ -185,7 +185,7 @@ public class GenocsHttpClient : IHttpClient
 
     protected virtual async Task<HttpResult<T>> SendResultAsync<T>(string uri, Method method, HttpContent? content = null, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
     {
-        var response = await SendAsync(uri, method, content, cancellationToken);
+        var response = await SendAllowingNonSuccessStatusAsync(uri, method, content, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             return new HttpResult<T>(default!, response);
@@ -197,31 +197,68 @@ public class GenocsHttpClient : IHttpClient
         return new HttpResult<T>(result, response);
     }
 
+    /// <summary>
+    /// Sends a string-based request and returns the response without throwing on non-success status codes.
+    /// Retries apply only to the transport send (exceptions), not to HTTP error status codes.
+    /// </summary>
+    protected virtual Task<HttpResponseMessage> SendAllowingNonSuccessStatusAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
+        => SendWithRetryAsync(uri, method, content, throwOnNonSuccessStatus: false, cancellationToken);
+
     protected virtual Task<HttpResponseMessage> SendAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
-        => Policy.Handle<Exception>()
+        => SendWithRetryAsync(uri, method, content, throwOnNonSuccessStatus: true, cancellationToken);
+
+    private Task<HttpResponseMessage> SendWithRetryAsync(
+        string uri,
+        Method method,
+        HttpContent? content,
+        bool throwOnNonSuccessStatus,
+        CancellationToken cancellationToken)
+    {
+        var requestUri = ParseRequestUri(uri);
+        return Policy.Handle<Exception>()
             .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
             .ExecuteAsync(async () =>
             {
-                string requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
-
                 var result = await GetResponseAsync(requestUri, method, content, cancellationToken) ?? throw new HttpRequestException("The Http request failed.");
 
-                if (!result.IsSuccessStatusCode)
+                if (throwOnNonSuccessStatus && !result.IsSuccessStatusCode)
                 {
                     throw new Exception($"The Http request failed with status code {result.StatusCode}.");
                 }
 
                 return result;
             });
+    }
 
-    protected virtual Task<HttpResponseMessage> GetResponseAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Parses a request URI string without mutating host-like inputs.
+    /// Absolute URIs (for example <c>https://api.example.com/v1</c>) are sent as-is.
+    /// Relative URIs (for example <c>orders/42</c> or <c>/orders/42</c>) are passed to <see cref="HttpClient"/> and combine with
+    /// <see cref="HttpClient.BaseAddress"/> when it is configured.
+    /// </summary>
+    /// <param name="uri">An absolute URI, or a relative reference accepted by <see cref="Uri"/>.</param>
+    /// <returns>The parsed <see cref="Uri"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="uri"/> is not a valid absolute or relative URI.</exception>
+    protected static Uri ParseRequestUri(string uri)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(uri);
+        var trimmed = uri.Trim();
+        if (!Uri.TryCreate(trimmed, UriKind.RelativeOrAbsolute, out var requestUri))
+        {
+            throw new ArgumentException("The value is not a valid absolute or relative URI.", nameof(uri));
+        }
+
+        return requestUri;
+    }
+
+    protected virtual Task<HttpResponseMessage> GetResponseAsync(Uri requestUri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
         => method switch
         {
-            Method.Get => _client.GetAsync(uri, cancellationToken),
-            Method.Post => _client.PostAsync(uri, content, cancellationToken),
-            Method.Put => _client.PutAsync(uri, content, cancellationToken),
-            Method.Patch => _client.PatchAsync(uri, content, cancellationToken),
-            Method.Delete => _client.DeleteAsync(uri, cancellationToken),
+            Method.Get => _client.GetAsync(requestUri, cancellationToken),
+            Method.Post => _client.PostAsync(requestUri, content, cancellationToken),
+            Method.Put => _client.PutAsync(requestUri, content, cancellationToken),
+            Method.Patch => _client.PatchAsync(requestUri, content, cancellationToken),
+            Method.Delete => _client.DeleteAsync(requestUri, cancellationToken),
             _ => throw new InvalidOperationException($"Unsupported Http method: {method}")
         };
 

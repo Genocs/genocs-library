@@ -8,17 +8,7 @@ public interface ISearchRequest
     /// <summary>
     /// The search term used for full-text search.
     /// </summary>
-    string SearchTerm
-    {
-        get => q;
-        set => q = value;
-    }
-
-    /// <summary>
-    /// Compatibility alias for legacy query binding.
-    /// Use <see cref="SearchTerm"/> in new code.
-    /// </summary>
-    string q { get; set; }
+    string? SearchTerm { get; set; }
 
     /// <summary>
     /// The maximum number of items to return.

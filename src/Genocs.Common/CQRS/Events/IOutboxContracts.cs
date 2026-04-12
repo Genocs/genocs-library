@@ -55,8 +55,8 @@ public interface IOutboxDispatcher
     /// <returns>A task that represents the asynchronous enqueue operation.</returns>
     Task EnqueueAsync<TIntegrationEvent>(
         TIntegrationEvent integrationEvent,
-        string messageId = null,
-        string correlationId = null,
+        string? messageId = null,
+        string? correlationId = null,
         DateTime? occurredAt = null,
         CancellationToken cancellationToken = default)
         where TIntegrationEvent : class, IIntegrationEvent;

@@ -37,7 +37,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     }
 
     /// <inheritdoc/>
-    public bool Equals(EntityBase<TKey> other)
+    public bool Equals(EntityBase<TKey>? other)
     {
         if (other is null)
         {
@@ -65,7 +65,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>, IEquatable<EntityBase<TK
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is EntityBase<TKey> other && Equals(other);
     }

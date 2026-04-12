@@ -31,10 +31,10 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
     public async Task Invoke(HttpContext context)
     {
         // Get the apiKey if any
-        string apiKey = context.Request.Headers["x-gnx-apikey"];
+        string? apiKey = context.Request.Headers["x-gnx-apikey"];
 
         // Get JWT authentication if any
-        string jwt = context.Request.Headers.Authorization;
+        string? jwt = context.Request.Headers.Authorization;
 
         // Check if both authentication are in place
         if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(jwt))
