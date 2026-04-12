@@ -121,6 +121,13 @@ This avoids duplicate log ingestion when both packages target the same backend.
 
 ### Jaeger with OTLP trace-only (logs still owned by Genocs.Logging)
 
+Jaeger ingestion is supported via OTLP collector endpoints. `Genocs.Telemetry` uses `OpenTelemetry.Exporter.OpenTelemetryProtocol` for this flow and does not require a direct Jaeger exporter package.
+
+Use one of the Jaeger collector OTLP endpoints:
+
+- gRPC: `http://localhost:4317` with `"protocol": "Grpc"`
+- HTTP/protobuf: `http://localhost:4318` with `"protocol": "HttpProtobuf"`
+
 ```json
 {
   "logger": {

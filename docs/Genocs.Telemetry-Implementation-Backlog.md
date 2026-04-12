@@ -361,7 +361,7 @@ OpenTelemetry log export is only wired when WebApplicationBuilder is available, 
 
 ### TELEMETRY-008 Rationalize unused Jaeger exporter dependency
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P3
 
@@ -383,6 +383,17 @@ The package currently references OpenTelemetry.Exporter.Jaeger while registratio
 **Acceptance criteria**
 
 - dependency set reflects actual runtime/exporter behavior
+
+**Implementation notes**
+
+- Verified telemetry runtime wiring does not call `AddJaegerExporter` and exports traces through OTLP exporter configuration.
+- Removed direct `OpenTelemetry.Exporter.Jaeger` package reference from `Genocs.Telemetry.csproj`.
+- Updated README guidance to document Jaeger visualization through OTLP collector endpoints (`4317` gRPC / `4318` HTTP-protobuf).
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 
