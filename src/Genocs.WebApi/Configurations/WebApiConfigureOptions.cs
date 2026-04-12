@@ -8,7 +8,7 @@ namespace Genocs.WebApi.Configurations;
 /// <param name="options">The WebApiOptions.</param>
 public class WebApiConfigureOptions(IOptions<WebApiOptions> options) : IConfigureNamedOptions<WebApiOptions>
 {
-    public void Configure(string name, WebApiOptions options)
+    public void Configure(string? name, WebApiOptions options)
     {
         Configure(options);
     }
