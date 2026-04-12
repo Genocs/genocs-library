@@ -278,7 +278,7 @@ Invalid telemetry.exporter.otlpEndpoint values can fail with startup exceptions 
 
 ### TELEMETRY-006 Validate exporter batch settings bounds
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -303,13 +303,25 @@ Exporter queue and batch settings are directly applied without sanity bounds, en
 - invalid batch settings are normalized or rejected predictably
 - docs describe supported ranges and defaults
 
+**Implementation notes**
+
+- Added batch-setting bounds validation before OTLP exporter options are applied.
+- Out-of-range queue, delay, timeout, and batch-size values now fall back to safe defaults with warning diagnostics.
+- Added guard to ensure effective `maxExportBatchSize` does not exceed effective `maxQueueSize`.
+- Added focused unit tests for in-range pass-through and out-of-range fallback normalization behavior.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
+
 **Dependencies**
 
 - TELEMETRY-005
 
 ### TELEMETRY-007 Formalize host-mode behavior for OpenTelemetry logs
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P2
 
@@ -331,6 +343,17 @@ OpenTelemetry log export is only wired when WebApplicationBuilder is available, 
 **Acceptance criteria**
 
 - host-mode log export behavior is explicit, deterministic, and test-covered
+
+**Implementation notes**
+
+- Added explicit runtime diagnostics in telemetry registration that host mode does not change log-export ownership.
+- Documented host-mode behavior for `WebApplicationBuilder` and `IServiceCollection` hosts in package README guidance.
+- Added unit tests that validate telemetry registration for service-collection host mode and assert tracing/metrics registration remains active without log exporter wiring.
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 **Dependencies**
 

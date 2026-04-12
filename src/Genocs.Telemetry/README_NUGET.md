@@ -53,6 +53,29 @@ When omitted, it defaults to `true` for backward compatibility.
 
 If `telemetry.exporter.enabled` is `true` and `telemetry.exporter.otlpEndpoint` is missing or invalid, OTLP exporter registration is skipped and a warning is emitted. Startup remains safe and traces/metrics continue with the remaining configured exporters.
 
+## Host-Mode Behavior
+
+`Genocs.Telemetry` registers tracing and metrics pipelines in both builder flows:
+
+- `WebApplicationBuilder` hosts
+- `IServiceCollection` + `IConfiguration` hosts
+
+OpenTelemetry log exporters are not configured by `Genocs.Telemetry` in either host mode.
+If you need OTLP or Azure log export, configure it through `Genocs.Logging`.
+
+## OTLP Batch Settings Bounds
+
+`telemetry.exporter` batch processor settings are validated before wiring exporters.
+
+- `maxQueueSize`: supported range `512-65536`, fallback `2048`
+- `scheduledDelayMilliseconds`: supported range `100-60000`, fallback `5000`
+- `exporterTimeoutMilliseconds`: supported range `1000-120000`, fallback `30000`
+- `maxExportBatchSize`: supported range `1-1024`, fallback `512`
+
+If `maxExportBatchSize` resolves to a value greater than `maxQueueSize`, it is reduced to a safe fallback and a warning is emitted.
+
+For high-throughput workloads, prefer increasing `maxQueueSize` first, then tune `maxExportBatchSize` and timeouts incrementally while observing exporter backpressure and dropped-span metrics.
+
 ## Deterministic Log Export Ownership
 
 `Genocs.Telemetry` does not configure OpenTelemetry log exporters.

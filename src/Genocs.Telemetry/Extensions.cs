@@ -18,6 +18,20 @@ namespace Genocs.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
+    private const int OtlpDefaultMaxQueueSize = 2048;
+    private const int OtlpDefaultScheduledDelayMilliseconds = 5000;
+    private const int OtlpDefaultExporterTimeoutMilliseconds = 30000;
+    private const int OtlpDefaultMaxExportBatchSize = 512;
+
+    private const int OtlpMinMaxQueueSize = 512;
+    private const int OtlpMaxMaxQueueSize = 65536;
+    private const int OtlpMinScheduledDelayMilliseconds = 100;
+    private const int OtlpMaxScheduledDelayMilliseconds = 60000;
+    private const int OtlpMinExporterTimeoutMilliseconds = 1000;
+    private const int OtlpMaxExporterTimeoutMilliseconds = 120000;
+    private const int OtlpMinMaxExportBatchSize = 1;
+    private const int OtlpMaxMaxExportBatchSize = 1024;
+
     /// <summary>
     /// Adds OpenTelemetry services to the Genocs application.
     /// </summary>
@@ -38,6 +52,9 @@ public static class OpenTelemetryExtensions
         {
             return builder;
         }
+
+        bool hasWebApplicationBuilder = builder.WebApplicationBuilder is not null;
+        Trace.TraceInformation($"Genocs.Telemetry configures OpenTelemetry traces and metrics only. OpenTelemetry log export is not wired by this package and remains owned by Genocs.Logging. Host mode: {(hasWebApplicationBuilder ? "WebApplicationBuilder" : "ServiceCollection-only")}.");
 
         builder.Services
             .AddOpenTelemetry()
@@ -209,6 +226,9 @@ public static class OpenTelemetryExtensions
         ArgumentNullException.ThrowIfNull(exporterOptions);
         ArgumentNullException.ThrowIfNull(endpoint);
 
+        (int maxQueueSize, int scheduledDelayMilliseconds, int exporterTimeoutMilliseconds, int maxExportBatchSize) =
+            NormalizeOtlpBatchSettings(exporterOptions);
+
         otlpOptions.Endpoint = endpoint;
 
         if (Enum.TryParse<OtlpExportProtocol>(exporterOptions.Protocol, true, out OtlpExportProtocol protocol))
@@ -223,11 +243,68 @@ public static class OpenTelemetryExtensions
 
         otlpOptions.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
         {
-            MaxQueueSize = exporterOptions.MaxQueueSize,
-            ScheduledDelayMilliseconds = exporterOptions.ScheduledDelayMilliseconds,
-            ExporterTimeoutMilliseconds = exporterOptions.ExporterTimeoutMilliseconds,
-            MaxExportBatchSize = exporterOptions.MaxExportBatchSize
+            MaxQueueSize = maxQueueSize,
+            ScheduledDelayMilliseconds = scheduledDelayMilliseconds,
+            ExporterTimeoutMilliseconds = exporterTimeoutMilliseconds,
+            MaxExportBatchSize = maxExportBatchSize
         };
+    }
+
+    internal static (int MaxQueueSize, int ScheduledDelayMilliseconds, int ExporterTimeoutMilliseconds, int MaxExportBatchSize)
+        NormalizeOtlpBatchSettings(OtlpExportOptions exporterOptions)
+    {
+        ArgumentNullException.ThrowIfNull(exporterOptions);
+
+        int maxQueueSize = NormalizeExporterBatchSetting(
+            settingName: nameof(OtlpExportOptions.MaxQueueSize),
+            configuredValue: exporterOptions.MaxQueueSize,
+            minimum: OtlpMinMaxQueueSize,
+            maximum: OtlpMaxMaxQueueSize,
+            fallbackValue: OtlpDefaultMaxQueueSize);
+
+        int scheduledDelayMilliseconds = NormalizeExporterBatchSetting(
+            settingName: nameof(OtlpExportOptions.ScheduledDelayMilliseconds),
+            configuredValue: exporterOptions.ScheduledDelayMilliseconds,
+            minimum: OtlpMinScheduledDelayMilliseconds,
+            maximum: OtlpMaxScheduledDelayMilliseconds,
+            fallbackValue: OtlpDefaultScheduledDelayMilliseconds);
+
+        int exporterTimeoutMilliseconds = NormalizeExporterBatchSetting(
+            settingName: nameof(OtlpExportOptions.ExporterTimeoutMilliseconds),
+            configuredValue: exporterOptions.ExporterTimeoutMilliseconds,
+            minimum: OtlpMinExporterTimeoutMilliseconds,
+            maximum: OtlpMaxExporterTimeoutMilliseconds,
+            fallbackValue: OtlpDefaultExporterTimeoutMilliseconds);
+
+        int maxExportBatchSize = NormalizeExporterBatchSetting(
+            settingName: nameof(OtlpExportOptions.MaxExportBatchSize),
+            configuredValue: exporterOptions.MaxExportBatchSize,
+            minimum: OtlpMinMaxExportBatchSize,
+            maximum: OtlpMaxMaxExportBatchSize,
+            fallbackValue: OtlpDefaultMaxExportBatchSize);
+
+        if (maxExportBatchSize > maxQueueSize)
+        {
+            int safeFallbackBatchSize = Math.Min(OtlpDefaultMaxExportBatchSize, maxQueueSize);
+            Trace.TraceWarning(
+                $"telemetry.exporter.{nameof(OtlpExportOptions.MaxExportBatchSize)} ({maxExportBatchSize}) cannot be greater than telemetry.exporter.{nameof(OtlpExportOptions.MaxQueueSize)} ({maxQueueSize}). Using fallback value {safeFallbackBatchSize}.");
+            maxExportBatchSize = safeFallbackBatchSize;
+        }
+
+        return (maxQueueSize, scheduledDelayMilliseconds, exporterTimeoutMilliseconds, maxExportBatchSize);
+    }
+
+    private static int NormalizeExporterBatchSetting(string settingName, int configuredValue, int minimum, int maximum, int fallbackValue)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(settingName);
+
+        if (configuredValue >= minimum && configuredValue <= maximum)
+        {
+            return configuredValue;
+        }
+
+        Trace.TraceWarning($"telemetry.exporter.{settingName} value '{configuredValue}' is outside supported range [{minimum}, {maximum}]. Using fallback value {fallbackValue}.");
+        return fallbackValue;
     }
 
     private static void EnrichExceptionActivity(Activity activity, Exception exception)

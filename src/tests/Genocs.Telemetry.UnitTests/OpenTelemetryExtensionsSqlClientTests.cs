@@ -1,11 +1,103 @@
+using Genocs.Core.Builders;
 using Genocs.Telemetry;
 using Genocs.Telemetry.Configurations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using Xunit;
 
 namespace Genocs.Telemetry.UnitTests;
 
 public class OpenTelemetryExtensionsSqlClientTests
 {
+    [Fact]
+    public void AddTelemetry_WhenBuilderHasNoWebApplicationBuilder_RegistersTracingAndMetricsWithoutThrowing()
+    {
+        IServiceCollection services = new ServiceCollection();
+        IConfiguration configuration = CreateTelemetryConfiguration();
+
+        IGenocsBuilder builder = services.AddGenocs(configuration);
+
+        Assert.Null(builder.WebApplicationBuilder);
+
+        IGenocsBuilder updatedBuilder = builder.AddTelemetry();
+
+        Assert.Same(builder, updatedBuilder);
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(TracerProvider));
+        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(MeterProvider));
+    }
+
+    [Fact]
+    public void AddTelemetry_WhenUsingServiceCollectionBuilder_DoesNotRegisterOpenTelemetryLogProvider()
+    {
+        IServiceCollection services = new ServiceCollection();
+        IConfiguration configuration = CreateTelemetryConfiguration();
+
+        IGenocsBuilder builder = services.AddGenocs(configuration);
+
+        builder.AddTelemetry();
+
+        Assert.DoesNotContain(
+            services,
+            descriptor => descriptor.ImplementationType?.FullName?.Contains("OpenTelemetryLoggerProvider", StringComparison.Ordinal) == true);
+    }
+
+    [Fact]
+    public void NormalizeOtlpBatchSettings_WhenValuesAreWithinBounds_UsesConfiguredValues()
+    {
+        var options = new OtlpExportOptions
+        {
+            MaxQueueSize = 4096,
+            ScheduledDelayMilliseconds = 2000,
+            ExporterTimeoutMilliseconds = 45000,
+            MaxExportBatchSize = 256
+        };
+
+        (int maxQueueSize, int scheduledDelayMilliseconds, int exporterTimeoutMilliseconds, int maxExportBatchSize) =
+            OpenTelemetryExtensions.NormalizeOtlpBatchSettings(options);
+
+        Assert.Equal(4096, maxQueueSize);
+        Assert.Equal(2000, scheduledDelayMilliseconds);
+        Assert.Equal(45000, exporterTimeoutMilliseconds);
+        Assert.Equal(256, maxExportBatchSize);
+    }
+
+    [Fact]
+    public void NormalizeOtlpBatchSettings_WhenValuesAreOutOfRange_UsesFallbackDefaults()
+    {
+        var options = new OtlpExportOptions
+        {
+            MaxQueueSize = -1,
+            ScheduledDelayMilliseconds = 0,
+            ExporterTimeoutMilliseconds = 500000,
+            MaxExportBatchSize = 0
+        };
+
+        (int maxQueueSize, int scheduledDelayMilliseconds, int exporterTimeoutMilliseconds, int maxExportBatchSize) =
+            OpenTelemetryExtensions.NormalizeOtlpBatchSettings(options);
+
+        Assert.Equal(2048, maxQueueSize);
+        Assert.Equal(5000, scheduledDelayMilliseconds);
+        Assert.Equal(30000, exporterTimeoutMilliseconds);
+        Assert.Equal(512, maxExportBatchSize);
+    }
+
+    [Fact]
+    public void NormalizeOtlpBatchSettings_WhenBatchSizeExceedsQueueSize_UsesSafeFallback()
+    {
+        var options = new OtlpExportOptions
+        {
+            MaxQueueSize = 600,
+            MaxExportBatchSize = 900
+        };
+
+        (int maxQueueSize, _, _, int maxExportBatchSize) = OpenTelemetryExtensions.NormalizeOtlpBatchSettings(options);
+
+        Assert.Equal(600, maxQueueSize);
+        Assert.Equal(512, maxExportBatchSize);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -113,5 +205,21 @@ public class OpenTelemetryExtensionsSqlClientTests
         bool scrubEnabled = OpenTelemetryExtensions.ShouldScrubSqlStatementText(options);
 
         Assert.False(scrubEnabled);
+    }
+
+    private static IConfiguration CreateTelemetryConfiguration()
+    {
+        Dictionary<string, string?> settings = new()
+        {
+            ["app:service"] = "telemetry-test-service",
+            ["telemetry:enabled"] = "true",
+            ["telemetry:exporter:enabled"] = "false",
+            ["telemetry:console:enabled"] = "false",
+            ["telemetry:azure:enabled"] = "false"
+        };
+
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(settings)
+            .Build();
     }
 }
