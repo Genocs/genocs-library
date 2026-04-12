@@ -62,9 +62,9 @@ public static class OpenTelemetryExtensions
             .AddRuntimeInstrumentation()
             .AddHttpClientInstrumentation();
 
-        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableMetrics)
+        if (TryGetEnabledExporter(options, "metrics", out OtlpExportOptions? exporterOptions, out Uri? endpoint) && exporterOptions.EnableMetrics)
         {
-            metrics.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
+            metrics.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions, endpoint));
         }
 
         if (options.Console?.Enabled == true && options.Console.EnableMetrics)
@@ -124,9 +124,9 @@ public static class OpenTelemetryExtensions
             .AddSource("Genocs.Messaging.RabbitMQ")
             .AddSource("Genocs.Messaging.AzureServiceBus");
 
-        if (TryGetEnabledExporter(options, out OtlpExportOptions? exporterOptions) && exporterOptions.EnableTracing)
+        if (TryGetEnabledExporter(options, "tracing", out OtlpExportOptions? exporterOptions, out Uri? endpoint) && exporterOptions.EnableTracing)
         {
-            tracing.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions));
+            tracing.AddOtlpExporter(otlpOptions => ApplyExporterOptions(otlpOptions, exporterOptions, endpoint));
         }
 
         if (options.Console?.Enabled == true && options.Console.EnableTracing)
@@ -154,21 +154,62 @@ public static class OpenTelemetryExtensions
         return IsSqlClientTracingEnabled(options) && options.SqlClient?.EnableStatementText != true;
     }
 
-    private static bool TryGetEnabledExporter(TelemetryOptions options, [NotNullWhen(true)] out OtlpExportOptions? exporterOptions)
+    private static bool TryGetEnabledExporter(
+        TelemetryOptions options,
+        string signal,
+        [NotNullWhen(true)] out OtlpExportOptions? exporterOptions,
+        [NotNullWhen(true)] out Uri? endpoint)
     {
         ArgumentNullException.ThrowIfNull(options);
+        ArgumentException.ThrowIfNullOrWhiteSpace(signal);
 
         exporterOptions = options.Exporter;
-        return exporterOptions?.Enabled == true && !string.IsNullOrWhiteSpace(exporterOptions.OtlpEndpoint);
+        endpoint = null;
+
+        if (exporterOptions?.Enabled != true)
+        {
+            return false;
+        }
+
+        if (!TryParseOtlpEndpoint(exporterOptions.OtlpEndpoint, out endpoint))
+        {
+            Trace.TraceWarning($"Skipping OpenTelemetry {signal} exporter registration because telemetry.exporter.otlpEndpoint is invalid: '{exporterOptions.OtlpEndpoint ?? "<null>"}'.");
+            return false;
+        }
+
+        return true;
     }
 
-    private static void ApplyExporterOptions(OtlpExporterOptions otlpOptions, OtlpExportOptions exporterOptions)
+    internal static bool TryParseOtlpEndpoint(string? endpoint, [NotNullWhen(true)] out Uri? endpointUri)
+    {
+        endpointUri = null;
+
+        if (string.IsNullOrWhiteSpace(endpoint))
+        {
+            return false;
+        }
+
+        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? parsedUri))
+        {
+            return false;
+        }
+
+        if (parsedUri.Scheme is not ("http" or "https"))
+        {
+            return false;
+        }
+
+        endpointUri = parsedUri;
+        return true;
+    }
+
+    private static void ApplyExporterOptions(OtlpExporterOptions otlpOptions, OtlpExportOptions exporterOptions, Uri endpoint)
     {
         ArgumentNullException.ThrowIfNull(otlpOptions);
         ArgumentNullException.ThrowIfNull(exporterOptions);
-        ArgumentException.ThrowIfNullOrWhiteSpace(exporterOptions.OtlpEndpoint);
+        ArgumentNullException.ThrowIfNull(endpoint);
 
-        otlpOptions.Endpoint = new Uri(exporterOptions.OtlpEndpoint, UriKind.Absolute);
+        otlpOptions.Endpoint = endpoint;
 
         if (Enum.TryParse<OtlpExportProtocol>(exporterOptions.Protocol, true, out OtlpExportProtocol protocol))
         {

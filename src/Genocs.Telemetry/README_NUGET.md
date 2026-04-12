@@ -51,6 +51,8 @@ When omitted, it defaults to `true` for backward compatibility.
 
 `telemetry.sqlClient.enableStatementText` is disabled by default. Enable it only when SQL query text (`db.query.text`/`db.statement`) collection is explicitly required.
 
+If `telemetry.exporter.enabled` is `true` and `telemetry.exporter.otlpEndpoint` is missing or invalid, OTLP exporter registration is skipped and a warning is emitted. Startup remains safe and traces/metrics continue with the remaining configured exporters.
+
 ## Deterministic Log Export Ownership
 
 `Genocs.Telemetry` does not configure OpenTelemetry log exporters.

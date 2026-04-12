@@ -236,7 +236,7 @@ Telemetry should maintain warning-clean quality and avoid nullable or style regr
 
 ### TELEMETRY-005 Guard invalid OTLP endpoint configuration
 
-**Status**: Not started
+**Status**: Implemented (validated April 2026)
 
 **Priority**: P1
 
@@ -260,9 +260,21 @@ Invalid telemetry.exporter.otlpEndpoint values can fail with startup exceptions 
 - invalid OTLP endpoint does not crash startup
 - behavior is deterministic and documented
 
+**Implementation notes**
+
+- Added endpoint validation before OTLP exporter wiring in telemetry registration flow.
+- Registration now skips OTLP exporter wiring when `telemetry.exporter.otlpEndpoint` is missing or invalid.
+- Added diagnostics via warning emission to make invalid endpoint handling visible without failing startup.
+- Added focused unit tests for valid and invalid OTLP endpoint parsing behavior.
+
 **Dependencies**
 
 - TELEMETRY-004
+
+**Validation**
+
+- `dotnet build src/Genocs.Telemetry/Genocs.Telemetry.csproj -c Debug --nologo`
+- `dotnet test src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj -c Debug --nologo`
 
 ### TELEMETRY-006 Validate exporter batch settings bounds
 
