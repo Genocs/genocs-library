@@ -2,6 +2,8 @@ using System.Data;
 using System.Data.Common;
 using Genocs.Library.Demo.Domain.EFCore.BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Library.Demo.Domain.EFCore.BookStore.Data;
@@ -68,7 +70,14 @@ public static class BookStoreDatabaseInitializer
             return;
         }
 
-        List<string> appliedMigrations = dbContext.Database.GetAppliedMigrations().ToList();
+        IRelationalDatabaseCreator databaseCreator = dbContext.Database.GetInfrastructure().GetRequiredService<IRelationalDatabaseCreator>();
+        bool databaseExists = await databaseCreator.ExistsAsync(cancellationToken);
+        if (!databaseExists)
+        {
+            return;
+        }
+
+        List<string> appliedMigrations = [.. dbContext.Database.GetAppliedMigrations()];
         if (appliedMigrations.Count > 0)
         {
             return;

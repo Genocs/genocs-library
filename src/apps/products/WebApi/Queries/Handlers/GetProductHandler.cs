@@ -4,7 +4,7 @@ using Genocs.Products.WebApi.DTO;
 
 namespace Genocs.Products.WebApi.Queries.Handlers;
 
-public class GetProductHandler : IQueryHandler<GetProduct, ProductDto>
+public class GetProductHandler : IQueryHandler<GetProduct, ProductDto?>
 {
     private readonly IMongoBaseRepository<Domain.Product, Guid> _repository;
 

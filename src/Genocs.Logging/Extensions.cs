@@ -240,10 +240,6 @@ public static class Extensions
         return app;
     }
 
-    [Obsolete("Use UseCorrelationContextLogging().")]
-    public static IApplicationBuilder UserCorrelationContextLogging(this IApplicationBuilder app)
-        => app.UseCorrelationContextLogging();
-
     private static async Task LevelSwitch(HttpContext context)
     {
         var service = context.RequestServices.GetService<ILoggingService>();
