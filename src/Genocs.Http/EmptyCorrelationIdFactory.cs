@@ -12,5 +12,5 @@ internal class EmptyCorrelationIdFactory : ICorrelationIdFactory
     /// CorrelationIdFactory, empty implementation.
     /// </summary>
     /// <returns>A string representing the correlation ID, or null if not available.</returns>
-    public string Create() => default;
+    public string? Create() => null;
 }

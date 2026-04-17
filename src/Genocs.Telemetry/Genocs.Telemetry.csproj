@@ -20,6 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Builders\**" />
+      <EmbeddedResource Remove="Builders\**" />
+      <None Remove="Builders\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.6.0" />
         <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0" />
@@ -29,10 +35,6 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Builders\" />
     </ItemGroup>
 
     <ItemGroup>

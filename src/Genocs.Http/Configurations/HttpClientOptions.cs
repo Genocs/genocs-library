@@ -19,7 +19,7 @@ public class HttpClientOptions
     /// It defines if set consul as service discovery or Fabio as load balancer.
     /// Allowed values are: consul, Fabio.
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
 
     /// <summary>
     /// It defines the number of retries for each request.
@@ -27,18 +27,24 @@ public class HttpClientOptions
     public int Retries { get; set; }
 
     /// <summary>
+    /// It defines whether non-idempotent methods (POST, PUT, PATCH) are eligible for retries.
+    /// Default is false to avoid replaying write operations unexpectedly.
+    /// </summary>
+    public bool RetryUnsafeHttpMethods { get; set; }
+
+    /// <summary>
     /// It defines the list of services to be registered.
     /// </summary>
     public IDictionary<string, string>? Services { get; set; }
     public RequestMaskingOptions? RequestMasking { get; set; }
     public bool RemoveCharsetFromContentType { get; set; }
-    public string CorrelationContextHeader { get; set; }
-    public string CorrelationIdHeader { get; set; }
+    public string CorrelationContextHeader { get; set; } = string.Empty;
+    public string CorrelationIdHeader { get; set; } = string.Empty;
 
     public class RequestMaskingOptions
     {
         public bool Enabled { get; set; }
         public IEnumerable<string>? UrlParts { get; set; }
-        public string MaskTemplate { get; set; }
+        public string MaskTemplate { get; set; } = string.Empty;
     }
 }

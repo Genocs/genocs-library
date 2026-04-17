@@ -13,7 +13,7 @@ Observed baseline (April 2026, source review plus follow-up implementation):
 - Genocs.Http targets net10.0, net9.0, and net8.0.
 - `AddHttpClient(...)` registers a single typed `IHttpClient` backed by `GenocsHttpClient`.
 - The package provides a default `System.Text.Json` serializer through `SystemTextJsonHttpClientSerializer`.
-- Retry behavior is implemented directly inside `GenocsHttpClient` via Polly `WaitAndRetryAsync`.
+- Retry behavior is implemented in `GenocsHttpClient` with HTTP-aware, transport-focused Polly conditions (**HTTP-005 done**): retries are limited to transient send failures, non-success HTTP status codes are not retried by default, and POST/PUT/PATCH retries require explicit opt-in.
 - String-based `*ResultAsync<T>(...)` flows use a dedicated non-throwing send path (`SendAllowingNonSuccessStatusAsync` / shared `SendWithRetryAsync`); non-success responses are returned in `HttpResult<T>` without throwing solely for HTTP error status codes (**HTTP-001 done**).
 - `HttpRequestMessage` overloads retry the same request instance, which is unsafe after a request has already been sent.
 - Public `HttpClientOptions` fields `enabled`, `type`, and `services` exist in the configuration contract, but runtime registration in this package does not consume them.
@@ -38,7 +38,8 @@ Observed baseline (April 2026, source review plus follow-up implementation):
 
 Next recommended items:
 
-- Continue **M1**: **HTTP-003** and **HTTP-004** (configuration contract, correlation nullability).
+- Complete remaining **M1** item: **HTTP-003** (configuration contract alignment).
+- Continue **M2**: **HTTP-006** to **HTTP-008** (request-message replay safety, cancellation, response lifecycle).
 
 ## Planning Assumptions
 
@@ -238,7 +239,7 @@ Previously, `GenocsHttpClient` prepended `http://` to any URI string that did no
 
 ### HTTP-004 Normalize nullability and correlation factory contracts
 
-**Status**: Not started (assessed April 2026)
+**Status**: Completed (implemented April 2026)
 
 **Priority**: P1
 
@@ -282,13 +283,33 @@ Previously, `GenocsHttpClient` prepended `http://` to any URI string that did no
 
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 
+**Dependent activities outside Genocs.Http (tracking)**
+
+The HTTP-004 nullable contract update is implemented in `Genocs.Http`. The following downstream activities should be tracked to keep dependent projects aligned with the new `ICorrelationIdFactory`/`ICorrelationContextFactory` semantics (`string?` output allowed):
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/LogContextMiddleware.cs` | Guard log enrichment when correlation ID is null or whitespace (decide: omit property vs generate fallback ID). | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/MessagingMiddleware.cs` | Ensure message correlation ID handling is explicit when factory output is missing (generate deterministic fallback before publish). | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/CustomForwarderHttpClientFactory.cs` | Add conditional header propagation for `x-correlation-id` (avoid sending blank header values). | Not started |
+| Identities (`src/apps/identities`) | `Application/Services/MessageBroker.cs` | Handle nullable correlation ID before passing to outbox/bus publisher APIs; define fallback behavior. | Not started |
+| Identities (`src/apps/identities`) | `Application/Logging/LogContextMiddleware.cs` | Make log context enrichment resilient to nullable correlation IDs. | Not started |
+| Identities (`src/apps/identities`) | `Application/Decorators/LoggingCommandHandlerDecorator.cs`, `Application/Decorators/LoggingEventHandlerDecorator.cs` | Apply nullable-safe correlation handling in decorator log scopes. | Not started |
+| Identities (`src/apps/identities`) | `Application/CorrelationIdFactory.cs` | Decide and document contract intent: keep non-null guarantee (implementation returns `string`) or align signature/docs to nullable interface explicitly. | Not started |
+| Companion HTTP clients | `src/Genocs.ServiceDiscovery.Consul/Http/ConsulHttpClient.cs`, `src/Genocs.LoadBalancing.Fabio/Http/FabioHttpClient.cs` | Add/verify regression tests asserting missing correlation values do not produce outbound headers through inherited `GenocsHttpClient` behavior. | Not started |
+
+**Suggested validation for dependent activities**
+
+- `dotnet build src/apps/apigateway/WebApi/Host.csproj -c Debug --nologo`
+- `dotnet build src/apps/identities/Application/Application.csproj -c Debug --nologo`
+
 ---
 
 ## M2: Retry Safety, Cancellation Correctness, and Response Lifecycle Hardening
 
 ### HTTP-005 Replace blanket exception retry with HTTP-aware resilience behavior
 
-**Status**: Not started (assessed April 2026)
+**Status**: Completed (implemented April 2026)
 
 **Priority**: P0
 
@@ -332,9 +353,32 @@ The current retry policy handles every `Exception`, including non-transient fail
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Replaced blanket `Policy.Handle<Exception>()` retries with HTTP-aware transport retry policy in `GenocsHttpClient`.
+	- Retries now target transient send failures (`HttpRequestException` retry predicate + `IOException`).
+	- Non-success status codes are surfaced to callers without being used to trigger retries.
+	- Typed `HttpRequestMessage` flows no longer retry deserialization failures because deserialization is outside the retry boundary.
+- **Method-aware behavior**: Added `HttpClientOptions.RetryUnsafeHttpMethods` (default `false`) so `POST`/`PUT`/`PATCH` retries are explicit opt-in.
+- **Consumer docs**: Updated `README_NUGET.md` retry semantics and configuration guidance (`httpClient.retries`, `httpClient.retryUnsafeHttpMethods`).
+- **Tests**: Added `RetryBehaviorTests` in `Genocs.Http.UnitTests` covering transient retry behavior, unsafe-method default/opt-in behavior, non-success no-retry behavior, and no retry on deserialization errors.
+
+**Dependent activities outside Genocs.Http (tracking)**
+
+HTTP-005 changes retry semantics and defaults. The following downstream activities should be tracked to align service behavior and operational expectations:
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/appsettings.json` | Review `httpClient.retries` usage and decide whether write operations require `httpClient.retryUnsafeHttpMethods=true` for this service. | Not started |
+| Products (`src/apps/products`) | `WebApi/appsettings.json` | Validate write-call resilience expectations with new default (no POST/PUT/PATCH retries unless opted in). | Not started |
+| Orders (`src/apps/orders`) | `WebApi/appsettings.json` | Reassess retry ownership between Genocs.Http and any pipeline-level resilience to avoid compounded retries. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/appsettings.json` | Confirm write flows tolerate transport failures under conservative retry defaults; opt in explicitly only if idempotency safeguards exist. | Not started |
+| Identities (`src/apps/identities`) | `WebApi/appsettings.json`, `Application/Extensions.cs` | Verify Application/WebApi compositions have consistent retry intent and update configuration/docs if write retries must be enabled. | Not started |
+| Demo hosts | `src/demo/WebApi/appsettings.json`, `src/demo/ServiceBus.Worker/appsettings.json`, `src/demo/Masstransit.WebApi/appsettings.json`, `src/demo/Masstransit.Worker/appsettings.json` | Update sample configuration/docs to reflect new retry defaults and optional `retryUnsafeHttpMethods`. | Not started |
+
 ### HTTP-006 Stop retrying the same `HttpRequestMessage` instance
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P0
 
@@ -376,9 +420,28 @@ The `SendAsync(HttpRequestMessage, ...)`, `SendAsync<T>(HttpRequestMessage, ...)
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Removed internal Polly replay for `HttpRequestMessage` overloads in `GenocsHttpClient` (`SendAsync(HttpRequestMessage, ...)`, `SendAsync<T>(HttpRequestMessage, ...)`, `SendResultAsync<T>(HttpRequestMessage, ...)`). Each call now sends the provided request instance once.
+- **API docs**: Updated `IHttpClient` XML documentation to make the single-send request-message model explicit.
+- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit request-message retry semantics.
+- **Tests**: Extended `RetryBehaviorTests` with request-message transport failure coverage (including a content-bearing POST request) asserting there is no replay retry for the same message instance.
+
+**Dependent activities outside Genocs.Http (tracking)**
+
+HTTP-006 changes the resilience model for call sites that build and pass `HttpRequestMessage` directly. The following downstream activities should be tracked:
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Audit custom `HttpRequestMessage` call sites and move retry ownership to `HttpClientFactory` handlers where replay-safe behavior is needed. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Validate write-path idempotency and add explicit resilience handlers for any custom request-message flows. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*` | Reassess outbound message/client wrappers that construct `HttpRequestMessage` to ensure expected retry policy still exists at pipeline level. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Confirm notification dispatch call paths using `HttpRequestMessage` are resilient through handler policies, not Genocs.Http internal replay. | Not started |
+| Demo hosts | `src/demo/**` outbound integration classes | Update demo guidance to show where retry is configured when using custom `HttpRequestMessage` APIs. | Not started |
+
 ### HTTP-007 Preserve cancellation semantics and avoid retrying cancellations
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P1
 
@@ -419,9 +482,28 @@ Because retries handle all exceptions, user-triggered cancellation and some time
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Updated retry evaluation to treat cancellation-driven `HttpRequestException` failures as non-retryable by checking the exception chain for `OperationCanceledException`.
+- **Runtime**: Completed cancellation-token propagation for string typed response materialization (`DeserializeJsonFromStream<T>` now receives the caller token in `SendAsync<T>(string, ...)`).
+- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) to state cancellation behavior explicitly.
+- **Tests**: Extended `RetryBehaviorTests` with coverage for immediate cancellation (no retries), cancellation wrapped in `HttpRequestException` (no retries), and token propagation to serializer paths.
+
+**Dependent activities outside Genocs.Http (tracking)**
+
+HTTP-007 tightens cancellation semantics. The following downstream activities should be tracked:
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Ensure any explicit retry wrappers skip `OperationCanceledException`/`TaskCanceledException` and preserve caller cancellation intent. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Verify outbound application-service calls pass request tokens end-to-end (controller -> service -> `IHttpClient`) without substituting `CancellationToken.None`. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Audit timeout/cancellation handling to avoid wrapping cancellation as generic transient errors that trigger unrelated retries. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Confirm long-running notification fan-out paths honor cancellation and terminate promptly when upstream token is canceled. | Not started |
+| Demo hosts | `src/demo/**` integration call sites | Update demo recipes to show passing `CancellationToken` through typed calls and avoiding cancellation retries in custom resilience handlers. | Not started |
+
 ### HTTP-008 Dispose transient responses and separate send failures from payload failures
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P1
 
@@ -463,13 +545,32 @@ Typed methods deserialize response bodies without disposing the `HttpResponseMes
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Typed methods that return `T?` now dispose transient `HttpResponseMessage` instances in both success and non-success paths (`SendAsync<T>(string, ...)`, `SendAsync<T>(HttpRequestMessage, ...)`).
+- **Runtime**: Payload materialization remains outside the retry boundary for string typed helpers, so deserialization failures fail once without transport replay.
+- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit response ownership guidance.
+- **Tests**: Extended `RetryBehaviorTests` with coverage for response disposal in typed flows and no-retry behavior for string-URI deserialization failures.
+
+**Dependent activities outside Genocs.Http (tracking)**
+
+HTTP-008 changes response lifecycle and ownership expectations. The following downstream activities should be tracked:
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Audit typed outbound wrappers to ensure they do not retain or double-dispose responses that are now disposed inside `T?` methods. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Verify no call sites expect to access response metadata after typed `T?` calls; migrate those paths to `HttpResult<T>` or raw-response APIs where needed. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Confirm payload materialization errors are treated as single-attempt failures in any external resilience wrappers and not reclassified as retryable transport faults. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Validate background notification flows do not leak response resources when using typed helper methods under high-throughput dispatch. | Not started |
+| Demo hosts | `src/demo/**` outbound integration examples | Update examples to clarify when to choose typed `T?`, `HttpResult<T>`, or raw `HttpResponseMessage` based on response ownership needs. | Not started |
+
 ---
 
 ## M3: DI Composition, Logging Integration, and Extensibility Hardening
 
 ### HTTP-009 Remove `BuildServiceProvider()` from registration flow
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P1
 
@@ -509,6 +610,26 @@ Typed methods deserialize response bodies without disposing the `HttpResponseMes
 
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
+
+**Delivered**
+
+- **Runtime**: Removed temporary provider creation from `Extensions.AddHttpClient(...)`; registration no longer resolves services during setup.
+- **Runtime**: Switched fallback factory registration to additive DI primitives (`TryAddSingleton`) for `ICorrelationContextFactory` and `ICorrelationIdFactory`.
+- **Tests**: Added `ExtensionsRegistrationTests` covering both behaviors:
+	- custom correlation factories are not instantiated during registration
+	- empty fallback factories are registered only when custom factories are missing
+
+**Dependent activities outside Genocs.Http (tracking)**
+
+HTTP-009 changes registration composition behavior and reduces side effects at startup. The following downstream activities should be tracked:
+
+| Project | Affected files | Follow-up activity | Status |
+|---|---|---|---|
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Verify startup order assumptions do not rely on early factory instantiation side effects from HTTP registration. | Not started |
+| Products (`src/apps/products`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Confirm custom correlation factory registrations continue to take precedence and no duplicate fallback behavior is assumed. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Validate composition with additional DI modules to ensure no module depended on AddHttpClient creating an intermediate provider. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Re-check initialization diagnostics/logging that may have previously observed early correlation-factory construction. | Not started |
+| Demo hosts | `src/demo/**/Program.cs` | Align demo startup guidance with additive registration behavior and no temporary provider creation. | Not started |
 
 ### HTTP-010 Stop replacing global `IHttpMessageHandlerBuilderFilter`
 

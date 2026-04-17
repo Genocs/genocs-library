@@ -692,16 +692,6 @@ Pre-requisites:
 docker builder prune
 ```
 
-Some useful commands to manage the application:
-
-```bash
-# Build docker image one by one
-./src/apps/scripts/build-images.sh
-
-# Build the images with docker compose and push to Dockerhub
-./src/apps/scripts/build-and-push-images.sh
-```
-
 ## **_Kubernetes_**
 
 ### KubeCtl
@@ -710,19 +700,19 @@ You can deploy the application on Kubernetes cluster by using kubectl.
 
 ```bash
 # Build images
-./src/apps/scripts/deploy-k8s.sh
+./scripts/deploy-k8s.sh
 ```
 
 ### Helm chart
 
 You can deploy the application on Kubernetes cluster by using Helm chart.
 
-Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
+Inside the folder **./infrastructure/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
 
 The command below allows to install the Helm chart by using MicroK8s.
 
 ```bash
-cd ./src/apps/k8s/helm
+cd ./infrastructure/k8s/helm
 microk8s helm install genocs ./gnxchart
 ```
 

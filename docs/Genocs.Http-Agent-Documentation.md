@@ -185,15 +185,17 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
 
 - String-based `GetAsync<T>`, `PostAsync<T>`, `PutAsync<T>`, `PatchAsync<T>`, and `DeleteAsync<T>` return `default` when the response is not successful.
 - String-based `GetResultAsync<T>` and the other `*ResultAsync<T>(string, ...)` methods return `HttpResult<T>` even when the status code is not successful.
-- `SendAsync(HttpRequestMessage)` retries and returns the raw `HttpResponseMessage`.
+- `SendAsync(HttpRequestMessage)` sends once and returns the raw `HttpResponseMessage`.
+- Typed methods that return `T?` consume and dispose transient responses; methods returning `HttpResponseMessage` or `HttpResult<T>` leave response ownership with the caller.
 
 ### Exception Handling
 
 - String-based helpers that use the exception-oriented send path (`GetAsync`, `PostAsync`, typed `GetAsync<T>`, etc.) throw when the final HTTP status is not successful.
 - String-based `*ResultAsync<T>(string, ...)` methods do **not** throw solely because the status code indicates failure; they return `HttpResult<T>` with the raw `HttpResponseMessage`.
-- `SendAsync<T>(HttpRequestMessage, ...)` throws for non-success responses so Polly retries can run on that path.
+- `SendAsync<T>(HttpRequestMessage, ...)` throws for non-success responses and does not retry by replaying the same request instance.
 - `SendResultAsync<T>(HttpRequestMessage, ...)` preserves non-success responses in `HttpResult<T>` (no throw solely for status).
-- Retry logic is exception-driven on the Polly-wrapped paths. HTTP error status codes are not retried as exceptions on the string `*ResultAsync` path.
+- Retry logic is exception-driven on the Polly-wrapped string-URI helper paths. HTTP error status codes are not retried as exceptions on the string `*ResultAsync` path.
+- Cancellation-driven failures are not retried; cancellation should terminate work immediately.
 
 ### URI Handling
 

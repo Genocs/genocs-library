@@ -437,7 +437,7 @@ public static class OpenTelemetryExtensions
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
-        var characters = new char[value.Length];
+        char[] characters = new char[value.Length];
         int outputLength = 0;
 
         foreach (char character in value)

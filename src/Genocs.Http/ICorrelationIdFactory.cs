@@ -9,5 +9,5 @@ public interface ICorrelationIdFactory
     /// Create a correlationId.
     /// </summary>
     /// <returns>A string representing the correlation ID, or null if not available.</returns>
-    string Create();
+    string? Create();
 }

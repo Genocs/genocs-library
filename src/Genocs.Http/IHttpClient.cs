@@ -75,6 +75,7 @@ public interface IHttpClient
     /// <summary>
     /// It sends the Http request and returns the Http response message. This method allows for sending custom Http requests
     /// and provides a cancellation token to cancel the operation if needed.
+    /// The provided <see cref="HttpRequestMessage"/> instance is sent once per call and is not replayed by internal retries.
     /// </summary>
     /// <param name="request">The Http request message.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
@@ -83,6 +84,7 @@ public interface IHttpClient
 
     /// <summary>
     /// Sends a custom request and deserializes the body on success; throws when the response status is not successful.
+    /// The provided <see cref="HttpRequestMessage"/> instance is sent once per call and is not replayed by internal retries.
     /// </summary>
     /// <typeparam name="T">The type to be send.</typeparam>
     /// <param name="request">The request.</param>
@@ -93,6 +95,7 @@ public interface IHttpClient
 
     /// <summary>
     /// Sends a custom request and returns a result wrapper that preserves non-success HTTP status codes (no throw solely for status).
+    /// The provided <see cref="HttpRequestMessage"/> instance is sent once per call and is not replayed by internal retries.
     /// </summary>
     /// <typeparam name="T">The type to be send.</typeparam>
     /// <param name="request">The request.</param>

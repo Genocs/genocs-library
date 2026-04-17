@@ -8,12 +8,12 @@ public sealed class RequestUriTests
 {
     private sealed class StubCorrelationContextFactory : ICorrelationContextFactory
     {
-        public string Create() => string.Empty;
+        public string? Create() => string.Empty;
     }
 
     private sealed class StubCorrelationIdFactory : ICorrelationIdFactory
     {
-        public string Create() => string.Empty;
+        public string? Create() => string.Empty;
     }
 
     private sealed class CapturingHandler : HttpMessageHandler

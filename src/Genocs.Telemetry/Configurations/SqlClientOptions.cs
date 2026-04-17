@@ -15,5 +15,5 @@ public class SqlClientOptions
     /// Enables SQL command text (`db.query.text` / `db.statement`) on telemetry spans.
     /// Keep disabled by default to reduce the risk of exposing sensitive data.
     /// </summary>
-    public bool EnableStatementText { get; set; } = false;
+    public bool EnableStatementText { get; set; }
 }
