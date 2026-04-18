@@ -13,7 +13,7 @@ on:
         description: "Packages Version"
 
         # Default value if no value is explicitly provided
-        default: "9.0.0-beta003"
+        default: "9.0.0-beta004"
 
         # Input has to be provided for the workflow to run
         required: true
