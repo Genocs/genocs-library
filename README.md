@@ -432,7 +432,10 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "Token"
     ],
     "console": {
-      "enabled": false
+      "enabled": false,
+      "enableStructured": false,
+      "enableTracing": false,
+      "enableMetrics": false
     },
     "elk": {
       "enabled": false,

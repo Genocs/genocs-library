@@ -121,6 +121,7 @@ Use this when developers need immediate local trace or metric output.
     "enabled": true,
     "console": {
       "enabled": true,
+      "enableStructured": true,
       "enableTracing": true,
       "enableMetrics": true
     }
@@ -400,6 +401,7 @@ Profile examples for agent responses:
     },
     "console": {
       "enabled": true,
+      "enableStructured": true,
       "enableTracing": true,
       "enableMetrics": true
     },

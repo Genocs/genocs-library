@@ -12,6 +12,8 @@ services:
       - logger__seq__enabled=true
       - logger__seq__url=${SEQ_URL}
       - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
       - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
@@ -40,6 +42,8 @@ services:
       - logger__seq__enabled=true
       - logger__seq__url=${SEQ_URL}
       - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
       - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
@@ -64,6 +68,8 @@ services:
       - logger__seq__enabled=true
       - logger__seq__url=${SEQ_URL}
       - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
       - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
@@ -89,6 +95,8 @@ services:
       - logger__seq__enabled=true
       - logger__seq__url=${SEQ_URL}
       - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
       - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
@@ -115,6 +123,8 @@ services:
       - logger__seq__enabled=true
       - logger__seq__url=${SEQ_URL}
       - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
       - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
