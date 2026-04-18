@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "apps.fullname" . }}-notifications
+  name: notifications-service
   labels:
     app: notifications
     chart: {{ include "apps.chart" . }}

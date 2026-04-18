@@ -1,16 +1,23 @@
 The Genocs enterprise microservices suite is deployed as:
-- apigateway
-- identities
-- products
-- orders
-- notifications
+  - apigateway            (image: {{ .Values.apigateway.image.repository }}:{{ .Values.image.tag }})
+  - identities-service    (image: {{ .Values.identities.image.repository }}:{{ .Values.image.tag }})
+  - products-service      (image: {{ .Values.products.image.repository }}:{{ .Values.image.tag }})
+  - orders-service        (image: {{ .Values.orders.image.repository }}:{{ .Values.image.tag }})
+  - notifications-service (image: {{ .Values.notifications.image.repository }}:{{ .Values.image.tag }})
 
-Each service is exposed on port 8080 by default.
+Each service is exposed on port 8080 inside the cluster and is reachable
+via its short Service name (e.g. http://apigateway:8080). This mirrors the
+hostnames defined in infrastructure/containers/apps/docker-compose.yml, so
+the apigateway reverse-proxy and the orders -> products http client will
+resolve without further configuration.
 
-To port-forward a service (example for apigateway):
+Infrastructure dependencies (mongodb, seq, jaeger, consul, fabio) are NOT
+installed by this chart and must exist in the cluster. Override their URLs
+via values.yaml -> env.* if your addresses differ.
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=apigateway,release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 8080:8080
-  echo "Visit http://127.0.0.1:8080 to use apigateway"
+To port-forward the api gateway:
 
-Repeat for other services by changing the app label.
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} \
+    -l "app=apigateway,release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 5500:8080
+  echo "Visit http://127.0.0.1:5500"

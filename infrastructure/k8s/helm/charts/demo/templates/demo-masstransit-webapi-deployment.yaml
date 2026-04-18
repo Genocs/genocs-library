@@ -1,35 +1,37 @@
+{{- if .Values.demoMasstransitWebapi.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "apps.fullname" . }}-identities
+  name: {{ .Values.demoMasstransitWebapi.name }}
   labels:
-    app: identities
-    chart: {{ include "apps.chart" . }}
+    app: {{ .Values.demoMasstransitWebapi.name }}
+    chart: {{ include "demo.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: identities
+      app: {{ .Values.demoMasstransitWebapi.name }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: identities
+        app: {{ .Values.demoMasstransitWebapi.name }}
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: identities
-          image: "{{ .Values.identities.image.repository }}:{{ .Values.image.tag }}"
+        - name: {{ .Values.demoMasstransitWebapi.name }}
+          image: "{{ .Values.demoMasstransitWebapi.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.identities.service.port }}
+            - containerPort: {{ .Values.demoMasstransitWebapi.containerPort }}
               name: http
               protocol: TCP
           env:
-            {{- include "apps.commonEnv" (dict "root" . "consulAddress" .Values.identities.consulAddress) | nindent 12 }}
-          {{- include "apps.probes" .Values.identities | nindent 10 }}
+            {{- include "demo.commonEnv" . | nindent 12 }}
+            {{- include "demo.webapiEnv" .Values.demoMasstransitWebapi | nindent 12 }}
+          {{- include "demo.probes" .Values.demoMasstransitWebapi | nindent 10 }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       {{- with .Values.imagePullSecrets }}
@@ -48,3 +50,4 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
       {{- end }}
+{{- end }}

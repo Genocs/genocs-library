@@ -1,35 +1,31 @@
+{{- if .Values.demoMasstransitWorker.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "apps.fullname" . }}-identities
+  name: {{ .Values.demoMasstransitWorker.name }}
   labels:
-    app: identities
-    chart: {{ include "apps.chart" . }}
+    app: {{ .Values.demoMasstransitWorker.name }}
+    chart: {{ include "demo.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: identities
+      app: {{ .Values.demoMasstransitWorker.name }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: identities
+        app: {{ .Values.demoMasstransitWorker.name }}
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: identities
-          image: "{{ .Values.identities.image.repository }}:{{ .Values.image.tag }}"
+        - name: {{ .Values.demoMasstransitWorker.name }}
+          image: "{{ .Values.demoMasstransitWorker.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: {{ .Values.identities.service.port }}
-              name: http
-              protocol: TCP
           env:
-            {{- include "apps.commonEnv" (dict "root" . "consulAddress" .Values.identities.consulAddress) | nindent 12 }}
-          {{- include "apps.probes" .Values.identities | nindent 10 }}
+            {{- include "demo.commonEnv" . | nindent 12 }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       {{- with .Values.imagePullSecrets }}
@@ -48,3 +44,4 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
       {{- end }}
+{{- end }}

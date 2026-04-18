@@ -28,8 +28,25 @@ spec:
               name: http
               protocol: TCP
           env:
-            # Example: inject secrets as env vars if needed
+            {{- include "apps.commonEnv" (dict "root" . "consulAddress" .Values.orders.consulAddress) | nindent 12 }}
+            - name: httpClient__services__products
+              value: {{ .Values.orders.httpClient.services.products | quote }}
+          {{- include "apps.probes" .Values.orders | nindent 10 }}
           resources:
-            {}
+{{ toYaml .Values.resources | indent 12 }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        []
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}

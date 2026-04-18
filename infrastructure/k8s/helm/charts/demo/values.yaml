@@ -1,53 +1,75 @@
-# Default values for demo.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-tolerations: []
-affinity: {}
+# Default values for the Genocs demo chart.
+# Mirrors infrastructure/containers/demo/docker-compose.yml.
 
-fullnameOverride: demo
-replicaCount: 1
 image:
-  repository: demo
   tag: stable
   pullPolicy: IfNotPresent
+
+replicaCount: 1
+
 imagePullSecrets: []
 
-service:
-  type: ClusterIP
-  port: 8080
-
-deployment:
-  containerPort: 8080
-
-probes:
-  enabled: true
-  liveness:
-    path: /alive
-    port: 8080
-  readiness:
-    path: /healthz
-    port: 8080
-
-ingress:
-  enabled: false
-  annotations: {}
-  path: /
-  hosts: []
-  tls: []
-
-# Example secrets for connection strings and credentials
-secrets:
+# Shared environment used by every demo service (matches the repeated
+# environment block in docker-compose.yml). Infrastructure components
+# (mongodb, seq, jaeger) are assumed to already exist in the cluster.
+env:
+  aspnetcoreEnvironment: Development
   mongodb:
-    connectionString: "mongodb://user:password@mongo:27017/demo_webapi"
-  redis:
-    configuration: "localhost:6379"
-  rabbitmq:
-    username: "guest"
-    password: "guest"
-    hostnames: "rabbitmq"
-    port: "5672"
-  sqlserver:
-    connectionString: "Server=sqlserver;Database=Genocs.BookStore.Demo;User Id=sa;Password=yourStrong(!)Password;"
+    connectionString: "mongodb://mongodb:27017"
+  seq:
+    url: "http://seq"
+  exporter:
+    otlpEndpoint: "http://jaeger"
+
+# --- Web APIs ------------------------------------------------------------
+# HTTP-facing services: get a Deployment AND a Service.
+demoWebapi:
+  enabled: true
+  name: demo-webapi-service
+  image:
+    repository: genocs/demo-webapi
+  service:
+    port: 8080
+  containerPort: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+demoMasstransitWebapi:
+  enabled: true
+  name: demo-masstransit-webapi-service
+  image:
+    repository: genocs/demo-masstransit-webapi
+  service:
+    port: 8080
+  containerPort: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+# --- Workers -------------------------------------------------------------
+# Background workers: Deployment only (no Service).
+demoMasstransitWorker:
+  enabled: true
+  name: demo-masstransit-worker-service
+  image:
+    repository: genocs/demo-masstransit-worker
+
+demoServicebusWorker:
+  enabled: true
+  name: demo-servicebus-worker-service
+  image:
+    repository: genocs/demo-servicebus-worker
 
 resources: {}
 nodeSelector: {}

@@ -1,0 +1,21 @@
+{{- if .Values.demoMasstransitWebapi.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.demoMasstransitWebapi.name }}
+  labels:
+    app: {{ .Values.demoMasstransitWebapi.name }}
+    chart: {{ include "demo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.demoMasstransitWebapi.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.demoMasstransitWebapi.name }}
+    release: {{ .Release.Name }}
+{{- end }}

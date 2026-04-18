@@ -1,14 +1,46 @@
-# Global values for all services
+# Default values for the Genocs enterprise microservices suite.
+# Mirrors infrastructure/containers/apps/docker-compose.yml.
+
 image:
   tag: stable
   pullPolicy: IfNotPresent
 
 replicaCount: 1
 
-# Service-specific configuration
+imagePullSecrets: []
+
+# Shared environment used by every service (equivalent to the repeated
+# environment block in docker-compose.yml). Infrastructure components
+# (consul, fabio, seq, jaeger, mongodb) are assumed to already exist in
+# the cluster and are referenced by their service name.
+env:
+  aspnetcoreEnvironment: Development
+  consul:
+    url: "http://consul:8500"
+    port: "8080"
+  fabio:
+    url: "http://fabio:9999"
+  logger:
+    seq:
+      enabled: true
+      url: "http://seq"
+      apiKey: ""
+    httpPayload:
+      enabled: true
+      captureRequestBody: true
+  telemetry:
+    exporter:
+      enabled: true
+      otlpEndpoint: "http://jaeger:4317"
+  mongodb:
+    connectionString: "mongodb://mongo:27017"
+
+# Per-service configuration. `consulAddress` matches the `consul__address`
+# env var (and the in-cluster Service name) used by each microservice.
 apigateway:
   image:
-    repository: apigateway
+    repository: genocs/apigateway
+  consulAddress: apigateway
   service:
     port: 8080
   probes:
@@ -19,56 +51,17 @@ apigateway:
     readiness:
       path: /healthz
       port: 8080
-  secrets: {}
-
-products:
-  image:
-    repository: products
-  service:
-    port: 8080
-  probes:
-    enabled: true
-    liveness:
-      path: /alive
-      port: 8080
-    readiness:
-      path: /healthz
-      port: 8080
-  secrets: {}
-
-orders:
-  image:
-    repository: orders
-  service:
-    port: 8080
-  probes:
-    enabled: true
-    liveness:
-      path: /alive
-      port: 8080
-    readiness:
-      path: /healthz
-      port: 8080
-  secrets: {}
-
-notifications:
-  image:
-    repository: notifications
-  service:
-    port: 8080
-  probes:
-    enabled: true
-    liveness:
-      path: /alive
-      port: 8080
-    readiness:
-      path: /healthz
-      port: 8080
-  secrets: {}
+  reverseProxy:
+    clusters:
+      identities: "http://identities-service:8080"
+      products: "http://products-service:8080"
+      orders: "http://orders-service:8080"
+      notifications: "http://notifications-service:8080"
 
 identities:
   image:
-    repository: identities
+    repository: genocs/identities-webapi
+  consulAddress: identities-service
   service:
     port: 8080
   probes:
@@ -79,4 +72,56 @@ identities:
     readiness:
       path: /healthz
       port: 8080
-  secrets: {}
+
+products:
+  image:
+    repository: genocs/products-webapi
+  consulAddress: products-service
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+orders:
+  image:
+    repository: genocs/orders-webapi
+  consulAddress: orders-service
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+  httpClient:
+    services:
+      products: "http://products-service:8080"
+
+notifications:
+  image:
+    repository: genocs/notifications-webapi
+  consulAddress: notifications-service
+  service:
+    port: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

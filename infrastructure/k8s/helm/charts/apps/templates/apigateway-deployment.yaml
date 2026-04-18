@@ -28,8 +28,31 @@ spec:
               name: http
               protocol: TCP
           env:
-            # Example: inject secrets as env vars if needed
+            {{- include "apps.commonEnv" (dict "root" . "consulAddress" .Values.apigateway.consulAddress) | nindent 12 }}
+            - name: reverseProxy__clusters__identities-cluster__destinations__destination1__address
+              value: {{ .Values.apigateway.reverseProxy.clusters.identities | quote }}
+            - name: reverseProxy__clusters__products-cluster__destinations__destination1__address
+              value: {{ .Values.apigateway.reverseProxy.clusters.products | quote }}
+            - name: reverseProxy__clusters__orders-cluster__destinations__destination1__address
+              value: {{ .Values.apigateway.reverseProxy.clusters.orders | quote }}
+            - name: reverseProxy__clusters__notifications-cluster__destinations__destination1__address
+              value: {{ .Values.apigateway.reverseProxy.clusters.notifications | quote }}
+          {{- include "apps.probes" .Values.apigateway | nindent 10 }}
           resources:
-            {}
+{{ toYaml .Values.resources | indent 12 }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        []
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}
