@@ -60,11 +60,9 @@ public static class Extensions
             throw new ArgumentException("RabbitMQ hostnames are not specified.", nameof(options.HostNames));
         }
 
+        // Do not build a temporary service provider during registration.
+        // Runtime components resolve their own typed loggers from the final container.
         ILogger<IRabbitMQClient> logger = NullLogger<IRabbitMQClient>.Instance;
-        using (var serviceProvider = builder.Services.BuildServiceProvider())
-        {
-            logger = serviceProvider.GetRequiredService<ILogger<IRabbitMQClient>>();
-        }
 
         builder.Services.AddSingleton<IContextProvider, ContextProvider>();
         builder.Services.AddSingleton<ICorrelationContextAccessor>(new CorrelationContextAccessor());

@@ -30,6 +30,7 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
         }
 
         _logger.LogTrace($"Received a message with id: '{messageId}' to be processed.");
+
         if (_inboxMessages.ContainsKey(messageId))
         {
             _logger.LogTrace($"Message with id: '{messageId}' was already processed.");
@@ -37,7 +38,9 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
         }
 
         _logger.LogTrace($"Processing a message with id: '{messageId}'...");
+
         await handler();
+
         if (!_inboxMessages.TryAdd(messageId, true))
         {
             _logger.LogError($"There was an error when processing a message with id: '{messageId}'.");
@@ -50,15 +53,15 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
     }
 
     public Task SendAsync<T>(
-                             T message,
-                             string originatedMessageId = null,
-                             string messageId = null,
-                             string correlationId = null,
-                             string spanContext = null,
-                             object? messageContext = null,
-                             IDictionary<string, object>? headers = null,
-                             CancellationToken cancellationToken = default)
-        where T : class
+        T message,
+        string? originatedMessageId = null,
+        string? messageId = null,
+        string? correlationId = null,
+        string? spanContext = null,
+        object? messageContext = null,
+        IDictionary<string, object?>? headers = null,
+        CancellationToken cancellationToken = default)
+            where T : class
     {
         if (!Enabled)
         {
@@ -73,12 +76,13 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
             CorrelationId = correlationId,
             SpanContext = spanContext,
             MessageContextType = messageContext?.GetType().AssemblyQualifiedName,
-            Headers = (Dictionary<string, object>)headers,
+            Headers = (Dictionary<string, object?>?)headers ?? [],
             Message = message,
             MessageContext = messageContext,
             MessageType = message?.GetType().AssemblyQualifiedName,
             SentAt = DateTime.UtcNow
         };
+
         _outboxMessages.TryAdd(outboxMessage.Id, outboxMessage);
 
         return Task.CompletedTask;
@@ -93,7 +97,7 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
     {
         foreach (var message in outboxMessages)
         {
-            message.ProcessedAt = DateTime.UtcNow;
+            message.SetProcessed();
         }
 
         RemoveExpiredMessages();
@@ -103,7 +107,7 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
 
     Task IMessageOutboxAccessor.ProcessAsync(OutboxMessage message)
     {
-        message.ProcessedAt = DateTime.UtcNow;
+        message.SetProcessed();
         RemoveExpiredMessages();
 
         return Task.CompletedTask;

@@ -133,7 +133,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
                     ? EmptyJsonObject
                     : JsonSerializer.Serialize(messageContext, SerializerOptions),
             MessageContextType = messageContext?.GetType().AssemblyQualifiedName,
-            Headers = (Dictionary<string, object>)headers,
+            Headers = (Dictionary<string, object?>?)headers ?? [],
             SerializedMessage = message is null
                 ? EmptyJsonObject
                 : JsonSerializer.Serialize(message, SerializerOptions),
@@ -151,8 +151,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
             if (om.MessageContextType is not null)
             {
                 var messageContextType = Type.GetType(om.MessageContextType);
-                om.MessageContext = JsonSerializer.Deserialize(om.SerializedMessageContext, messageContextType,
-                    SerializerOptions);
+                om.MessageContext = JsonSerializer.Deserialize(om.SerializedMessageContext, messageContextType, SerializerOptions);
             }
 
             if (om.MessageType is not null)
@@ -162,6 +161,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
             }
 
             return om;
+
         }).ToList();
     }
 

@@ -16,14 +16,15 @@ internal sealed class ServiceBusMessageDispatcher : ICommandDispatcher, IEventDi
 
     public Task SendAsync<T>(T command, CancellationToken cancellationToken = default)
         where T : class, ICommand
-        => _busPublisher.SendAsync(command, _accessor.CorrelationContext);
+        => _busPublisher.SendAsync(command, _accessor.CorrelationContext, cancellationToken);
 
     public Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default)
         where T : class, IEvent
-        => _busPublisher.PublishAsync(@event, _accessor.CorrelationContext);
+        => _busPublisher.PublishAsync(@event, _accessor.CorrelationContext, cancellationToken);
 
     Task<TResult> ICommandDispatcher.SendAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException(
+            $"Result-returning commands are not supported by the service-bus dispatcher. Use an in-process command dispatcher for request/response command handling. Command: {typeof(TCommand).Name}, Result: {typeof(TResult).Name}.");
     }
 }

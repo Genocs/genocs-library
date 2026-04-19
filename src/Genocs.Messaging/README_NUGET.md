@@ -14,6 +14,8 @@ dotnet add package Genocs.Messaging
 
 Use this package to integrate broker-agnostic command and event dispatching abstractions in Genocs services.
 
+Dispatcher methods forward `CancellationToken` to the underlying publisher for both command and event paths.
+
 ## Main Entry Points
 
 - `AddServiceBusCommandDispatcher`
