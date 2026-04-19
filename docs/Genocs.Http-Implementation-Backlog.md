@@ -18,7 +18,7 @@ Observed baseline (April 2026, source review plus follow-up implementation):
 - `HttpRequestMessage` overloads retry the same request instance, which is unsafe after a request has already been sent.
 - Public `HttpClientOptions` fields `enabled`, `type`, and `services` exist in the configuration contract, but runtime registration in this package does not consume them.
 - Correlation fallback factories return null through non-nullable `string` contracts.
-- `src/tests/Genocs.Http.UnitTests` exists with regression tests for string `*ResultAsync`, request URI / `BaseAddress` behavior, and more; broader coverage remains under **HTTP-013**.
+- `src/tests/Genocs.Http.UnitTests` exists with regression tests for string `*ResultAsync`, request URI / `BaseAddress`, retry boundaries, cancellation semantics, correlation header propagation, masking behavior, and DI registration composition; remaining HTTP-013 work is to keep this suite complete as new fixes land and ensure explicit CI/solution execution coverage.
 - String request URIs use `System.Uri` rules only: no implicit `http://` prefix; relative paths combine with `HttpClient.BaseAddress` (**HTTP-002 done**).
 
 **Improvements delivered with HTTP-001 (April 2026)**
@@ -39,7 +39,7 @@ Observed baseline (April 2026, source review plus follow-up implementation):
 Next recommended items:
 
 - Complete remaining **M1** item: **HTTP-003** (configuration contract alignment).
-- Continue **M2**: **HTTP-006** to **HTTP-008** (request-message replay safety, cancellation, response lifecycle).
+- Continue **M4**: **HTTP-013** to **HTTP-016** (test execution guarantees, documentation alignment, and quality gates).
 
 ## Planning Assumptions
 
@@ -633,7 +633,7 @@ HTTP-009 changes registration composition behavior and reduces side effects at s
 
 ### HTTP-010 Stop replacing global `IHttpMessageHandlerBuilderFilter`
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P0
 
@@ -650,8 +650,8 @@ When request masking is enabled, Genocs.Http uses `Replace(...)` for `IHttpMessa
 **Likely touch points**
 
 - [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- [src/Genocs.Http/GenocsHttpLoggingFilter.cs](src/Genocs.Http/GenocsHttpLoggingFilter.cs)
 - [src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs](src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs)
+- [src/tests/Genocs.Http.UnitTests/ExtensionsRegistrationTests.cs](src/tests/Genocs.Http.UnitTests/ExtensionsRegistrationTests.cs)
 
 **Acceptance criteria**
 
@@ -674,9 +674,16 @@ When request masking is enabled, Genocs.Http uses `Replace(...)` for `IHttpMessa
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Removed global `IHttpMessageHandlerBuilderFilter` replacement from `Extensions.AddHttpClient(...)`; request masking no longer replaces framework or package-added filters.
+- **Runtime**: Request masking now uses additive, named-client registration via `IHttpClientBuilder.AddHttpMessageHandler(...)`, scoped to the Genocs typed client configured by `clientName`.
+- **Code cleanup**: Removed `GenocsHttpLoggingFilter` because masking is now attached directly to the target client pipeline.
+- **Tests**: Extended `ExtensionsRegistrationTests` with regression coverage asserting existing global filters are preserved and masking handler injection is scoped to the intended named client only.
+
 ### HTTP-011 Make correlation header propagation request-scoped
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P1
 
@@ -696,6 +703,8 @@ Correlation values are added to `HttpClient.DefaultRequestHeaders` in the typed-
 - [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
 - [src/Genocs.Http/ICorrelationContextFactory.cs](src/Genocs.Http/ICorrelationContextFactory.cs)
 - [src/Genocs.Http/ICorrelationIdFactory.cs](src/Genocs.Http/ICorrelationIdFactory.cs)
+- [src/Genocs.Http/GenocsCorrelationHeadersHttpMessageHandler.cs](src/Genocs.Http/GenocsCorrelationHeadersHttpMessageHandler.cs)
+- [src/tests/Genocs.Http.UnitTests/CorrelationHeadersTests.cs](src/tests/Genocs.Http.UnitTests/CorrelationHeadersTests.cs)
 
 **Acceptance criteria**
 
@@ -719,9 +728,17 @@ Correlation values are added to `HttpClient.DefaultRequestHeaders` in the typed-
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Moved correlation header propagation out of `GenocsHttpClient` constructor (`HttpClient.DefaultRequestHeaders`) into a dedicated per-request delegating handler (`GenocsCorrelationHeadersHttpMessageHandler`).
+- **Runtime**: Registered correlation propagation additively on the Genocs typed client pipeline via `IHttpClientBuilder.AddHttpMessageHandler(...)` in `Extensions.AddHttpClient(...)`.
+- **Header precedence**: The request-scoped handler preserves caller intent by not overwriting correlation headers when they are already present on `HttpRequestMessage`.
+- **Missing values**: When configured header names are empty, or factory outputs are null/whitespace, no correlation header is emitted.
+- **Tests**: Expanded `CorrelationHeadersTests` with coverage for null/whitespace omission, non-empty propagation, caller-supplied header precedence, and per-request value generation.
+
 ### HTTP-012 Harden URL masking behavior and define redaction semantics
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P2
 
@@ -742,6 +759,7 @@ Request masking currently performs raw string replacement across the full URI an
 - [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
 - [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
+- [src/tests/Genocs.Http.UnitTests/RequestMaskingTests.cs](src/tests/Genocs.Http.UnitTests/RequestMaskingTests.cs)
 
 **Acceptance criteria**
 
@@ -764,36 +782,48 @@ Request masking currently performs raw string replacement across the full URI an
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Runtime**: Reworked masking in `GenocsLoggingScopeHttpMessageHandler` to use exact-token replacement over the logged URI string instead of rewriting and reparsing `Uri` instances.
+- **Semantics**: Masking applies to logging output only (request URI is not mutated). Matching is `StringComparison.Ordinal`, and all occurrences are replaced across path/query/fragment text.
+- **Safety**: Mask replacement output is no longer parsed as `Uri`, so non-URI-safe templates cannot throw during log rendering.
+- **Tests**: Added `RequestMaskingTests` coverage for repeated token masking across path/query and non-throw behavior when `maskTemplate` is not URI-safe.
+- **Docs**: Updated README and agent guidance with explicit masking boundaries and deterministic replacement semantics.
+
 ---
 
 ## M4: Tests, Documentation, Migration Guidance, and Quality Gates
 
-### HTTP-013 Add a dedicated Genocs.Http unit test project
+### HTTP-013 Keep dedicated Genocs.Http unit tests complete and CI-wired
 
-**Status**: Partially started (April 2026): [src/tests/Genocs.Http.UnitTests](../src/tests/Genocs.Http.UnitTests) exists with HTTP-001 `*ResultAsync` coverage; remaining scope below.
+**Status**: In progress (reevaluated April 2026): [src/tests/Genocs.Http.UnitTests](../src/tests/Genocs.Http.UnitTests) is established and now covers HTTP-001, HTTP-002, HTTP-005, HTTP-006, HTTP-007, HTTP-008, HTTP-009, HTTP-010, HTTP-011, and HTTP-012 behavior. Remaining scope focuses on explicit solution/CI execution guarantees and ongoing coverage maintenance for future fixes.
 
 **Priority**: P0
 
 **Problem**
 
-Previously no dedicated Genocs.Http test project existed; request, retry, cancellation, and logging semantics were largely unguarded. A project skeleton and initial tests now exist; broader coverage is still required for acceptance.
+Previously no dedicated Genocs.Http test project existed; request, retry, cancellation, and logging semantics were largely unguarded. The dedicated project now exists with broad regression coverage, but it is not consistently represented in solution-driven CI execution paths.
 
 **Scope**
 
 - keep and expand the focused unit test project under `src/tests`
-- cover string-based and `HttpRequestMessage` overloads separately
-- add regression tests for result semantics, URI handling, retry boundaries, cancellation, correlation, and masking
+- keep separate coverage for string-based and `HttpRequestMessage` overloads
+- maintain regression tests for result semantics, URI handling, retry boundaries, cancellation, correlation, and masking
+- ensure solution/CI paths execute Genocs.Http unit tests explicitly (for example via solution inclusion and/or targeted test commands in workflows)
 
 **Likely touch points**
 
-- [src/Genocs.Http/Genocs.Http.csproj](src/Genocs.Http/Genocs.Http.csproj)
-- [Directory.Build.props](Directory.Build.props)
+- [src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj](src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj)
+- [genocs.slnx](genocs.slnx)
+- [.github/workflows/build_and_test.yml](.github/workflows/build_and_test.yml)
+- [.github/workflows/sonar-analysis.yml](.github/workflows/sonar-analysis.yml)
 
 **Acceptance criteria**
 
-- a dedicated Genocs.Http test project exists and runs in CI
-- core contract behaviors are regression-covered before shipping breaking fixes
+- a dedicated Genocs.Http test project exists and is explicitly executed by normal CI paths
+- core contract behaviors stay regression-covered before shipping fixes
 - tests distinguish transport failures from payload-materialization failures
+- future HTTP backlog fixes add or update focused tests in this project as part of done criteria
 
 **Dependencies**
 
@@ -801,12 +831,15 @@ Previously no dedicated Genocs.Http test project existed; request, retry, cancel
 - HTTP-002
 - HTTP-005
 - HTTP-010
+- HTTP-011
+- HTTP-012
 
 **Implementation notes**
 
 - use fake handlers to assert retry counts and sent request shape
 - include coverage for cancellation and response disposal behavior
-- add targeted tests before broad refactors to preserve intended semantics
+- keep request-masking and correlation-header semantics regression-covered
+- treat solution/CI inclusion as part of test-project hardening, not optional follow-up
 
 **Validation**
 
@@ -814,13 +847,13 @@ Previously no dedicated Genocs.Http test project existed; request, retry, cancel
 
 ### HTTP-014 Expand package README to reflect actual runtime behavior
 
-**Status**: Not started (assessed April 2026); **note**: [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) now includes **Response handling** (HTTP-001) and **Request URIs and `BaseAddress`** (HTTP-002)—expand further per scope below.
+**Status**: Done (implemented April 2026)
 
 **Priority**: P1
 
 **Problem**
 
-The package README remains minimal beyond the HTTP-001/HTTP-002 additions: retry rules, correlation semantics, request masking boundaries, and full configuration documentation still need coverage.
+The package README previously under-documented runtime behavior beyond HTTP-001/HTTP-002, especially around configuration ownership, resilience overlap guidance, and operational examples.
 
 **Scope**
 
@@ -856,15 +889,22 @@ The package README remains minimal beyond the HTTP-001/HTTP-002 additions: retry
 
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 
+**Delivered**
+
+- **Consumer docs**: Expanded [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) with an explicit `httpClient` configuration contract, including which fields are actively used by Genocs.Http and which remain package-shared shape (`enabled`, `type`, `services`) pending companion/runtime ownership.
+- **Consumer docs**: Added dedicated examples for `BaseAddress` setup, custom serializer registration, and correlation + request-masking registration.
+- **Consumer docs**: Added explicit resilience-ownership guidance to prevent accidental retry amplification when combining Genocs.Http retries with `IHttpClientBuilder` policies.
+- **Consumer docs**: Added canonical validation commands section for maintainers.
+
 ### HTTP-015 Align agent documentation and add migration guidance for breaking fixes
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P2
 
 **Problem**
 
-The agent reference already contains useful guardrails, but several recommended fixes will change observable behavior such as result handling, URI semantics, and retry boundaries. Those changes require migration notes so generated guidance does not drift from runtime behavior.
+The agent reference previously required alignment updates after the runtime hardening fixes, especially for result semantics, URI behavior, retry boundaries, ownership scope, and migration guidance.
 
 **Scope**
 
@@ -899,15 +939,22 @@ The agent reference already contains useful guardrails, but several recommended 
 
 - documentation review against the merged runtime behavior
 
+**Delivered**
+
+- **Agent docs**: Updated [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) to align with shipped runtime behavior, including correction of typed string `*Async<T>` non-success semantics (exception-oriented path) and updated decision guidance.
+- **Migration guidance**: Added a dedicated migration checklist in [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) covering consumer-visible changes for result handling, URI rules, retry boundaries, request-message replay model, cancellation/ownership, and correlation/masking semantics.
+- **Ownership boundaries**: Added an explicit package ownership boundaries section in [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) clarifying what Genocs.Http owns versus companion/external responsibilities.
+- **Consumer docs alignment**: Added a matching migration-notes section in [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) with a link back to the agent reference for source-blind upgrade guidance.
+
 ### HTTP-016 Add package-level analyzer and nullability quality gates
 
-**Status**: Not started (assessed April 2026)
+**Status**: Done (implemented April 2026)
 
 **Priority**: P2
 
 **Problem**
 
-The repository-wide baseline leaves warnings-as-errors disabled, and Genocs.Http currently carries public nullability inconsistencies. Without a package-level gate, future contract regressions are easy to reintroduce.
+The repository-wide baseline leaves warnings-as-errors disabled. Without a package-level gate, future nullable and analyzer regressions in Genocs.Http can be reintroduced silently.
 
 **Scope**
 
@@ -942,3 +989,17 @@ The repository-wide baseline leaves warnings-as-errors disabled, and Genocs.Http
 
 - `dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo`
 - `dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo`
+
+**Delivered**
+
+- **Runtime quality gate**: Added package-scoped quality-gate configuration in [src/Genocs.Http/Genocs.Http.csproj](src/Genocs.Http/Genocs.Http.csproj):
+	- `WarningsAsErrors` includes `nullable` to fail the build on nullable contract regressions.
+	- `CodeAnalysisTreatWarningsAsErrors=true` to fail on .NET analyzer warnings for Genocs.Http.
+	- explicit analyzer baseline (`EnableNETAnalyzers=true`, `AnalysisLevel=latest`) in package scope.
+- **Maintainer docs**: Added a dedicated "Maintainer quality gates" section in [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) documenting the package-scoped gate and canonical validation commands.
+
+**Reevaluation summary (April 2026)**
+
+- The dedicated project is already present and contains focused suites (`StringResultAsyncTests`, `RequestUriTests`, `RetryBehaviorTests`, `ExtensionsRegistrationTests`, `CorrelationHeadersTests`, `RequestMaskingTests`).
+- The main remaining risk tracked under HTTP-013 is execution drift: `genocs.slnx` currently does not include `src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj`, while some workflows run solution-based test commands.
+- HTTP-013 should therefore track CI/solution wiring consistency plus ongoing regression coverage maintenance, not project creation from scratch.

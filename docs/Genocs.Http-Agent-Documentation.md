@@ -15,7 +15,7 @@
 | Package | `Genocs.Http` |
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
 | Primary role | Outbound HTTP client abstraction and registration layer for Genocs applications |
-| Main value | Typed `IHttpClient` registration, retry-enabled request execution, pluggable serialization, optional correlation header propagation, optional request-URL masking in logs |
+| Main value | Typed `IHttpClient` registration, retry-enabled request execution, pluggable serialization, optional request-scoped correlation header propagation, optional request-URL masking in logs |
 | Requires | `Genocs.Core` for `IGenocsBuilder` integration |
 
 ## What This Package Is For
@@ -26,7 +26,7 @@ Use `Genocs.Http` when you need to:
 - send GET, POST, PUT, PATCH, and DELETE requests through a single abstraction
 - choose between exception-oriented and result-oriented response handling
 - customize JSON serialization and deserialization behavior
-- propagate correlation headers on outbound calls
+- propagate request-scoped correlation headers on outbound calls
 - mask sensitive URL fragments in HTTP client logs
 - combine **relative** request paths with a configured **`HttpClient.BaseAddress`**, or pass **absolute** URIs, using normal `System.Uri` rules (no automatic `http://` insertion)
 
@@ -49,7 +49,7 @@ Treat `Genocs.Http` as four things:
 1. A builder extension that registers one typed `IHttpClient` backed by `HttpClientFactory`
 2. A retrying wrapper around `HttpClient` for common HTTP verbs
 3. A serializer abstraction with a default `System.Text.Json` implementation
-4. An optional logging filter that masks configured URL parts when request masking is enabled
+4. Optional delegating handlers for request-scoped correlation propagation and URL masking
 
 If a user asks for discovery, advanced resiliency, or generated API clients, ask which companion package or external library should provide that behavior.
 
@@ -176,14 +176,14 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
 | `HttpResult<T>` | Keep a typed payload with the raw response | `HasResult` is false when deserialization did not produce a payload | Assuming it throws on non-success status codes |
 | `IHttpClientSerializer` | Replace request and response serialization behavior | Used for both payload serialization and stream deserialization | Forgetting to register a serializer compatible with the API contract |
 | `SystemTextJsonHttpClientSerializer` | Use default JSON serialization | Uses camelCase, case-insensitive property matching, numeric strings, and camelCase enum text | Assuming it matches every external API by default |
-| `ICorrelationContextFactory` | Provide the outbound correlation-context header value | Empty fallback returns `null`-like default string behavior | Assuming correlation data exists without a custom implementation |
-| `ICorrelationIdFactory` | Provide the outbound correlation ID header value | Empty fallback returns null | Assuming a correlation ID will always be sent |
+| `ICorrelationContextFactory` | Provide the outbound correlation-context header value per request | Empty fallback returns null and header emission is skipped | Assuming correlation data exists without a custom implementation |
+| `ICorrelationIdFactory` | Provide the outbound correlation ID header value per request | Empty fallback returns null and header emission is skipped | Assuming a correlation ID will always be sent |
 
 ## Request And Response Semantics
 
 ### Success Handling
 
-- String-based `GetAsync<T>`, `PostAsync<T>`, `PutAsync<T>`, `PatchAsync<T>`, and `DeleteAsync<T>` return `default` when the response is not successful.
+- String-based `GetAsync<T>`, `PostAsync<T>`, `PutAsync<T>`, `PatchAsync<T>`, and `DeleteAsync<T>` use the exception-oriented path and throw when the response is not successful.
 - String-based `GetResultAsync<T>` and the other `*ResultAsync<T>(string, ...)` methods return `HttpResult<T>` even when the status code is not successful.
 - `SendAsync(HttpRequestMessage)` sends once and returns the raw `HttpResponseMessage`.
 - Typed methods that return `T?` consume and dispose transient responses; methods returning `HttpResponseMessage` or `HttpResult<T>` leave response ownership with the caller.
@@ -214,6 +214,7 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
     "enabled": true,
     "type": "consul",
     "retries": 3,
+    "retryUnsafeHttpMethods": false,
     "services": {
       "orders": "http://orders-service"
     },
@@ -232,6 +233,7 @@ This only masks URL fragments in the HTTP client logging pipeline. It does not r
 What this package actively uses:
 
 - `retries`
+- `retryUnsafeHttpMethods`
 - `removeCharsetFromContentType`
 - `correlationContextHeader`
 - `correlationIdHeader`
@@ -246,6 +248,68 @@ What this package defines but does not actively implement by itself:
 - `services`
 
 Treat those latter fields as package-shared configuration shape unless another package explicitly documents runtime behavior for them.
+
+## Package Quality Gates (Maintainers)
+
+Genocs.Http applies package-scoped quality gates in `Genocs.Http.csproj`:
+
+- nullable warnings are treated as errors (`WarningsAsErrors` includes `nullable`)
+- .NET analyzer warnings are treated as errors (`CodeAnalysisTreatWarningsAsErrors=true`)
+
+This is intentionally package-scoped so Genocs.Http public-surface regressions are caught early without forcing the entire repository to adopt the same warning baseline immediately.
+
+## Package Ownership Boundaries
+
+`Genocs.Http` owns:
+
+- typed `IHttpClient` registration (`AddHttpClient(...)`)
+- outbound request execution and retry behavior for string-URI helper paths
+- serializer abstraction and default `System.Text.Json` implementation
+- per-request correlation header enrichment hooks
+- URL masking for HTTP client log URI rendering
+
+`Genocs.Http` does not own by itself:
+
+- service discovery or load-balancing execution from `httpClient.type` / `httpClient.services`
+- advanced resilience orchestration beyond built-in retry behavior (for example circuit breaker, fallback, hedging)
+- request/response body redaction or arbitrary structured log-property redaction
+- downstream service registration topology beyond the single typed `IHttpClient` registration
+
+When users need these capabilities, route guidance to companion packages or external infrastructure explicitly.
+
+## Migration Guide (April 2026)
+
+Use this checklist when upgrading from older Genocs.Http behavior.
+
+1. Result wrappers and non-success status handling
+- Before: some paths could surface non-success responses as exceptions unexpectedly.
+- Now: string `*ResultAsync<T>(...)` methods preserve non-success responses in `HttpResult<T>`.
+- Action: switch status-inspection flows to `*ResultAsync<T>` and inspect `HttpResult<T>.Response`.
+
+2. URI handling and `BaseAddress`
+- Before: host-like strings could be rewritten with an implicit `http://` prefix.
+- Now: no implicit scheme rewrite; URIs follow `System.Uri` absolute/relative rules only.
+- Action: pass absolute URIs explicitly, or set `HttpClient.BaseAddress` and pass relative paths.
+
+3. Retry boundaries and write-method defaults
+- Before: retry behavior could be interpreted as broad exception retry.
+- Now: retries are transport-focused; non-success HTTP statuses and deserialization failures are not retried; `POST`/`PUT`/`PATCH` retries require `retryUnsafeHttpMethods=true`.
+- Action: review write-path resilience and avoid unintended retry amplification with extra pipeline policies.
+
+4. `HttpRequestMessage` overload replay behavior
+- Before: callers could assume internal replay safety for request-message overloads.
+- Now: `HttpRequestMessage` overloads are single-send and do not replay the same request instance.
+- Action: move replay-safe resilience to the handler/pipeline layer if needed.
+
+5. Cancellation and response ownership
+- Before: cancellation/retry and response lifecycle boundaries were less explicit.
+- Now: cancellation-driven failures are not retried; typed methods returning `T?` dispose transient responses.
+- Action: propagate cancellation tokens end-to-end and use `HttpResult<T>` / raw `HttpResponseMessage` when caller-owned response lifecycle is required.
+
+6. Correlation and masking semantics
+- Before: correlation and masking behavior could be interpreted as broad/global mutation.
+- Now: correlation headers are injected per request with caller-header precedence; masking is exact-token URI-log replacement only.
+- Action: keep caller-supplied correlation headers authoritative when needed, and use dedicated redaction solutions for bodies/headers.
 
 ## Public Capability Map
 
@@ -288,7 +352,7 @@ When you cannot inspect source code, follow these rules:
 3. Do not assume non-success responses are preserved unless you use string `*ResultAsync<T>`, `SendResultAsync<T>(HttpRequestMessage, ...)`, or methods that return `HttpResponseMessage` without applying the exception-oriented typed path.
 4. Do not assume retries cover every failure mode; they run on exceptions only.
 5. Do not assume request masking redacts bodies, headers, or arbitrary structured log properties.
-6. Do not assume correlation headers are sent unless header names are configured and value factories are meaningful.
+6. Do not assume correlation headers are sent unless header names are configured and value factories are meaningful, and note that caller-provided request headers take precedence.
 7. Do not assume the package defines timeouts, circuit breakers, fallback policies, or hedging.
 8. Do not assume multiple named typed clients are registered just because `clientName` is configurable.
 
@@ -338,6 +402,7 @@ Safe response:
 Safe response:
 - use `requestMasking` only for URL-part masking
 - ask for a separate logging or redaction solution for bodies and headers
+- explain that masking is exact-token replacement over logged URI text, and replacements are not reparsed as `Uri`
 
 ## Failure Modes And Troubleshooting
 
@@ -345,21 +410,24 @@ Safe response:
 Fix: Use `GetResultAsync<T>` or another `*ResultAsync<T>` overload when the caller must inspect status codes without exception flow.
 
 2. Retries are not happening.
-Fix: Ensure `httpClient.retries` is greater than zero and the failure path actually throws an exception.
+Fix: Ensure `httpClient.retries` is greater than zero, the failure path actually throws an exception, and `httpClient.retryUnsafeHttpMethods=true` is set when expecting retries for `POST`/`PUT`/`PATCH`.
 
 3. Correlation headers are missing.
 Fix: Configure the header names and register non-empty implementations of `ICorrelationContextFactory` or `ICorrelationIdFactory`.
 
-4. URL masking is enabled but logs still show sensitive data.
-Fix: Verify the sensitive values appear in the URL, not in the body or headers, and ensure `requestMasking.urlParts` contains the exact fragments to replace.
+4. Correlation headers look stale or do not match the current request scope.
+Fix: Use factory implementations that resolve values per request context (for example through `IHttpContextAccessor`) and prefer explicit caller-supplied request headers when correlation ownership should be set at the call site.
 
-5. Requests are going to the wrong host or path.
+5. URL masking is enabled but logs still show sensitive data.
+Fix: Verify the sensitive values appear in the URL, not in the body or headers, and ensure `requestMasking.urlParts` contains exact case-sensitive tokens present in the logged URI string.
+
+6. Requests are going to the wrong host or path.
 Fix: Use fully qualified absolute URIs, or set `BaseAddress` on the named client and pass relative paths. Do not rely on implicit scheme prefixing; configure HTTPS explicitly when required.
 
-6. Response content deserializes to `null` unexpectedly.
+7. Response content deserializes to `null` unexpectedly.
 Fix: Check the serializer contract, the response body format, and whether the API returned a non-success response that caused a default result.
 
-7. Content type includes an unwanted charset.
+8. Content type includes an unwanted charset.
 Fix: Set `removeCharsetFromContentType` to `true` so JSON payloads omit the charset parameter.
 
 ## Related Packages To Ask About

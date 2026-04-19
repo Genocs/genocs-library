@@ -8,6 +8,10 @@
         <Title>Genocs Http client abstractions</Title>
         <Description>Http client abstractions and helpers for Genocs applications.</Description>
         <PackageTags>genocs http http-client rest integration</PackageTags>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

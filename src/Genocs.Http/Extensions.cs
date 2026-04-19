@@ -1,9 +1,9 @@
+using System.ComponentModel;
 using Genocs.Core.Builders;
 using Genocs.Http.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Http;
-using System.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace Genocs.Http;
 
@@ -62,12 +62,22 @@ public static class Extensions
         builder.Services.AddSingleton(options);
         builder.Services.AddSingleton<IHttpClientSerializer, SystemTextJsonHttpClientSerializer>();
         var clientBuilder = builder.Services.AddHttpClient<IHttpClient, GenocsHttpClient>(clientName);
+        clientBuilder.AddHttpMessageHandler(serviceProvider =>
+            new GenocsCorrelationHeadersHttpMessageHandler(
+                options,
+                serviceProvider.GetRequiredService<ICorrelationContextFactory>(),
+                serviceProvider.GetRequiredService<ICorrelationIdFactory>()));
+
         httpClientBuilder?.Invoke(clientBuilder);
 
         if (options.RequestMasking?.Enabled == true)
         {
-            builder.Services.Replace(ServiceDescriptor
-                .Singleton<IHttpMessageHandlerBuilderFilter, GenocsHttpLoggingFilter>());
+            clientBuilder.AddHttpMessageHandler(serviceProvider =>
+            {
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                var logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{clientName}.LogicalHandler");
+                return new GenocsLoggingScopeHttpMessageHandler(logger, options);
+            });
         }
 
         return builder;

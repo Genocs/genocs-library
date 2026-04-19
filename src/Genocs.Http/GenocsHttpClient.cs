@@ -23,30 +23,13 @@ public class GenocsHttpClient : IHttpClient
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)
     {
-        _client = client;
-        _settings = settings;
-        _serializer = serializer;
-        if (!string.IsNullOrWhiteSpace(_settings.CorrelationContextHeader))
-        {
-            string? correlationContext = correlationContextFactory.Create();
-            if (!string.IsNullOrWhiteSpace(correlationContext))
-            {
-                _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                        _settings.CorrelationContextHeader,
-                                                                        correlationContext);
-            }
-        }
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
-        if (!string.IsNullOrWhiteSpace(_settings.CorrelationIdHeader))
-        {
-            string? correlationId = correlationIdFactory.Create();
-            if (!string.IsNullOrWhiteSpace(correlationId))
-            {
-                _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                        _settings.CorrelationIdHeader,
-                                                                        correlationId);
-            }
-        }
+        // Correlation headers are now injected per outbound request by GenocsCorrelationHeadersHttpMessageHandler.
+        ArgumentNullException.ThrowIfNull(correlationContextFactory);
+        ArgumentNullException.ThrowIfNull(correlationIdFactory);
     }
 
     public virtual Task<HttpResponseMessage> GetAsync(string uri, CancellationToken cancellationToken = default)
