@@ -7,7 +7,7 @@ public class RabbitMQOptions
     /// </summary>
     public const string Position = "rabbitmq";
 
-    public string ConnectionName { get; set; }
+    public string? ConnectionName { get; set; }
     public IEnumerable<string>? HostNames { get; set; }
     public int Port { get; set; }
     public string VirtualHost { get; set; } = "/";
@@ -23,7 +23,7 @@ public class RabbitMQOptions
     public TimeSpan? MessageProcessingTimeout { get; set; }
     public ushort RequestedChannelMax { get; set; }
     public uint RequestedFrameMax { get; set; }
-    public string ConventionsCasing { get; set; }
+    public string? ConventionsCasing { get; set; }
     public int Retries { get; set; }
     public int RetryInterval { get; set; }
     public bool MessagesPersisted { get; set; }
@@ -35,7 +35,7 @@ public class RabbitMQOptions
     public DeadLetterOptions? DeadLetter { get; set; }
     public QosOptions? Qos { get; set; }
     public ConventionsOptions? Conventions { get; set; }
-    public string SpanContextHeader { get; set; }
+    public string? SpanContextHeader { get; set; }
     public int MaxProducerChannels { get; set; }
     public bool RequeueFailedMessages { get; set; }
 
@@ -52,7 +52,7 @@ public class RabbitMQOptions
     public class ContextOptions
     {
         public bool Enabled { get; set; }
-        public string Header { get; set; }
+        public string? Header { get; set; }
     }
 
     public class ExchangeOptions

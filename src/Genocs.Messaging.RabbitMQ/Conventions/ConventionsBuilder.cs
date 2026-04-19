@@ -10,20 +10,22 @@ public class ConventionsBuilder : IConventionsBuilder
 
     public ConventionsBuilder(RabbitMQOptions options)
     {
-        _options = options;
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+
         _queueTemplate = string.IsNullOrWhiteSpace(_options.Queue?.Template)
             ? "{{assembly}}/{{exchange}}.{{message}}"
-            : options.Queue.Template;
-        _snakeCase = options.ConventionsCasing?.Equals("snakeCase",
+            : _options.Queue.Template;
+
+        _snakeCase = _options.ConventionsCasing?.Equals("snakeCase",
             StringComparison.InvariantCultureIgnoreCase) == true;
     }
 
-    public string GetRoutingKey(Type type)
+    public string? GetRoutingKey(Type type)
     {
         string routingKey = type.Name;
         if (_options.Conventions?.MessageAttribute?.IgnoreRoutingKey is true)
         {
-            return WithCasing(routingKey); ;
+            return WithCasing(routingKey);
         }
 
         var attribute = GeAttribute(type);
@@ -32,9 +34,9 @@ public class ConventionsBuilder : IConventionsBuilder
         return WithCasing(routingKey);
     }
 
-    public string GetExchange(Type type)
+    public string? GetExchange(Type type)
     {
-        string exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
+        string? exchange = string.IsNullOrWhiteSpace(_options.Exchange?.Name)
             ? type.Assembly.GetName().Name
             : _options.Exchange.Name;
 
@@ -49,7 +51,7 @@ public class ConventionsBuilder : IConventionsBuilder
         return WithCasing(exchange);
     }
 
-    public string GetQueue(Type type)
+    public string? GetQueue(Type type)
     {
         var attribute = GeAttribute(type);
         bool? ignoreQueue = _options.Conventions?.MessageAttribute?.IgnoreQueue;
@@ -58,26 +60,28 @@ public class ConventionsBuilder : IConventionsBuilder
             return WithCasing(attribute.Queue);
         }
 
-        var ignoreExchange = _options.Conventions?.MessageAttribute?.IgnoreExchange;
-        var assembly = type.Assembly.GetName().Name;
-        var message = type.Name;
-        var exchange = ignoreExchange is true
+        bool? ignoreExchange = _options.Conventions?.MessageAttribute?.IgnoreExchange;
+        string? assembly = type.Assembly.GetName().Name;
+        string? message = type.Name;
+
+        string? exchange = ignoreExchange is true
             ? _options.Exchange?.Name
             : string.IsNullOrWhiteSpace(attribute?.Exchange)
                 ? _options.Exchange?.Name
                 : attribute.Exchange;
-        var queue = _queueTemplate.Replace("{{assembly}}", assembly)
+
+        string? queue = _queueTemplate.Replace("{{assembly}}", assembly)
             .Replace("{{exchange}}", exchange)
             .Replace("{{message}}", message);
 
         return WithCasing(queue);
     }
 
-    private string WithCasing(string value) => _snakeCase ? SnakeCase(value) : value;
+    private string? WithCasing(string? value) => _snakeCase ? SnakeCase(value) : value;
 
-    private static string SnakeCase(string value)
-        => string.Concat(value.Select((x, i) =>
-                i > 0 && value[i - 1] != '.' && value[i - 1] != '/' && char.IsUpper(x) ? "_" + x : x.ToString()))
+    private static string? SnakeCase(string? value)
+        => string.Concat((value ?? string.Empty).Select((x, i) =>
+                i > 0 && value![i - 1] != '.' && value![i - 1] != '/' && char.IsUpper(x) ? "_" + x : x.ToString()))
             .ToLowerInvariant();
 
     private static MessageAttribute? GeAttribute(MemberInfo type)
