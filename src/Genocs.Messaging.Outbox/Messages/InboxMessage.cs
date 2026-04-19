@@ -4,7 +4,7 @@ namespace Genocs.Messaging.Outbox.Messages;
 
 public sealed class InboxMessage : IEntity<string>
 {
-    public string? Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public DateTime ProcessedAt { get; set; }
     public bool IsTransient() => string.IsNullOrWhiteSpace(Id);
 }

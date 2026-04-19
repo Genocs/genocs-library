@@ -235,3 +235,10 @@ Fix: Verify `rabbitmq.hostNames`, `username`, `password`, and that the broker is
 Fix: Confirm `UseRabbitMQ()` is called after `builder.Build()` and that subscriber registrations are in place before the app starts.
 3. Messages are retried too many times or move to dead-letter unexpectedly.
 Fix: Review `retries`, `retryInterval`, `requeueFailedMessages`, and `deadLetter.enabled` in the `rabbitmq` configuration section.
+
+## Quality Gate
+
+RabbitMQ package quality checks are part of [validate-messaging.mk](../validate-messaging.mk):
+
+- `Genocs.Messaging.RabbitMQ` must build for `net10.0` with `-warnaserror`.
+- Reliability regression coverage is enforced via `Genocs.Messaging.RabbitMQ.UnitTests`, including ack/nack settlement, retry, dead-letter, and scoped-handler execution paths.

@@ -32,3 +32,6 @@ d-build: # docker build images
 d-push: # docker tag and push images
 	@echo tag images as latest and publish
 	bash ./src/apps/scripts/push-images.sh
+
+validate-messaging: # validate messaging packages warning baseline and tests
+	$(MAKE) -f validate-messaging.mk validate-messaging

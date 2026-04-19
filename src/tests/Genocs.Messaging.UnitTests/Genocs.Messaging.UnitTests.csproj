@@ -25,6 +25,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
         <ProjectReference Include="..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
+        <ProjectReference Include="..\..\Genocs.Messaging.AzureServiceBus\Genocs.Messaging.AzureServiceBus.csproj" />
     </ItemGroup>
 
 </Project>

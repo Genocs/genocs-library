@@ -241,7 +241,7 @@ Multiple `BasicAckAsync` and `BasicNackAsync` calls are issued without awaiting 
 
 ### MESSAGING-007 Normalize nullable API contracts in outbox abstractions
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P1
 
@@ -265,9 +265,16 @@ Outbox interfaces and models generate repeated nullable warnings (CS8625, CS8618
 
 - `MESSAGING-006`
 
+**Implementation notes**
+
+- Normalized nullable contracts in [src/Genocs.Messaging.Outbox/IMessageOutbox.cs](src/Genocs.Messaging.Outbox/IMessageOutbox.cs), [src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs](src/Genocs.Messaging.Outbox/Outbox/InMemoryMessageOutbox.cs), and [src/Genocs.Messaging.Outbox.MongoDB/Internals/MongoMessageOutbox.cs](src/Genocs.Messaging.Outbox.MongoDB/Internals/MongoMessageOutbox.cs) so optional message metadata and headers align across interface and implementations.
+- Added safe defaults in [src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs](src/Genocs.Messaging.Outbox/Configurations/OutboxOptions.cs) and tightened lifecycle model nullability in [src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/InboxMessage.cs) and [src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs](src/Genocs.Messaging.Outbox/Messages/OutboxMessage.cs).
+- Hardened outbox processing path in [src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs](src/Genocs.Messaging.Outbox/Processors/OutboxProcessor.cs) for null payload/header handling so publisher calls satisfy non-null generic constraints without warning noise.
+- Validation: `dotnet build src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj -c Debug --nologo`, `dotnet build src/Genocs.Messaging.Outbox.MongoDB/Genocs.Messaging.Outbox.MongoDB.csproj -c Debug --nologo`, and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
+
 ### MESSAGING-008 Define safe default behavior for outbox provider registration
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P1
 
@@ -290,13 +297,20 @@ Defaulting to in-memory outbox when no configurator is provided can lead to acci
 
 - `MESSAGING-007`
 
+**Implementation notes**
+
+- Updated [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs) so `AddMessageOutbox(...)` now fails fast when no configurator callback is supplied, preventing implicit in-memory fallback in production hosts.
+- Added targeted registration tests in [src/tests/Genocs.Messaging.UnitTests/Outbox/OutboxRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/Outbox/OutboxRegistrationExtensionsTests.cs) to lock explicit provider behavior and explicit in-memory development registration.
+- Updated [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md) and [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md) to clearly distinguish development-only in-memory usage from durable production provider guidance.
+- Validation: `dotnet build src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
+
 ---
 
 ## M3: Azure Service Bus Modernization and Contract Alignment
 
 ### MESSAGING-009 Add DI/host registration extensions for Azure Service Bus package
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P1
 
@@ -318,9 +332,17 @@ The Azure Service Bus package currently lacks a clear builder/host registration 
 
 - none
 
+**Implementation notes**
+
+- Added [src/Genocs.Messaging.AzureServiceBus/Extensions.cs](src/Genocs.Messaging.AzureServiceBus/Extensions.cs) with `AddAzureServiceBus(...)` so hosts can register Azure Service Bus queue/topic capabilities via standard Genocs builder extension flow.
+- The new extension binds queue/topic options from configuration, validates required settings for enabled transports, and registers [src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs) without manual internal wiring.
+- Added focused registration tests in [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs) and added Azure Service Bus project reference in [src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj](src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj).
+- Updated package documentation in [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) and migration guidance in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to use extension-based host registration.
+- Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
+
 ### MESSAGING-010 Remove sync-over-async startup in Azure processors
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P1
 
@@ -342,9 +364,17 @@ Queue/topic processors call asynchronous startup with `.GetAwaiter().GetResult()
 
 - `MESSAGING-009`
 
+**Implementation notes**
+
+- Removed constructor-time sync-over-async startup from [src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs) by moving processor start/stop to `IHostedService.StartAsync(...)` and `IHostedService.StopAsync(...)`.
+- Updated [src/Genocs.Messaging.AzureServiceBus/Extensions.cs](src/Genocs.Messaging.AzureServiceBus/Extensions.cs) to register queue/topic transport services as host-managed `IHostedService` instances using shared singleton registrations.
+- Extended [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs) to verify hosted-service registrations are present only when Azure queue/topic transport is enabled.
+- Updated [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) and [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to document async host-managed processor lifecycle.
+- Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo`, `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`, and grep check confirming no `GetAwaiter().GetResult()` remains in Azure Service Bus package sources.
+
 ### MESSAGING-011 Plan migration from legacy handler contracts
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P2
 
@@ -367,13 +397,22 @@ Azure Service Bus consumers currently depend on `ICommandHandlerLegacy<T>` and `
 
 - `MESSAGING-009`
 
+**Implementation notes**
+
+- Added explicit dual-contract migration direction in Azure Service Bus interfaces by introducing modern registration APIs in [src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs) (`ConsumeModern<T, TH>()`) and [src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs) (`SubscribeModern<T, TH>()), while keeping legacy methods with `[Obsolete]` guidance.
+- Implemented adapter-style runtime dispatch in [src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs) so both modern (`ICommandHandler<T>`, `IEventHandler<T>`) and legacy (`ICommandHandlerLegacy<T>`, `IEventHandlerLegacy<T>`) handlers execute correctly during transition.
+- Extended subscription metadata in [src/Genocs.Messaging.AzureServiceBus/Topics/SubscriptionInfo.cs](src/Genocs.Messaging.AzureServiceBus/Topics/SubscriptionInfo.cs) to record contract kind and event type for deterministic modern/legacy invocation.
+- Added migration-contract coverage in [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusHandlerContractMigrationTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusHandlerContractMigrationTests.cs) to assert modern registration APIs exist and legacy APIs are marked obsolete.
+- Updated migration guidance and package docs in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) and [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) with concrete contract direction and migration examples.
+- Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
+
 ---
 
 ## M4: Testability, Docs, and Quality Gates
 
 ### MESSAGING-012 Add package-specific tests for core messaging abstractions
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P0
 
@@ -395,9 +434,15 @@ There is no dedicated unit test project covering `Genocs.Messaging` abstractions
 - `MESSAGING-001`
 - `MESSAGING-002`
 
+**Implementation notes**
+
+- Added core-accessor coverage in [src/tests/Genocs.Messaging.UnitTests/Core/MessagingAccessorsTests.cs](src/tests/Genocs.Messaging.UnitTests/Core/MessagingAccessorsTests.cs) for [src/Genocs.Messaging/CorrelationContextAccessor.cs](src/Genocs.Messaging/CorrelationContextAccessor.cs) and [src/Genocs.Messaging/MessagePropertiesAccessor.cs](src/Genocs.Messaging/MessagePropertiesAccessor.cs), including set/get semantics, null-clearing behavior, and `AsyncLocal` flow across `await` boundaries.
+- Existing CQRS bridge coverage in [src/tests/Genocs.Messaging.UnitTests/CQRS/ServiceBusMessageDispatcherTests.cs](src/tests/Genocs.Messaging.UnitTests/CQRS/ServiceBusMessageDispatcherTests.cs) already validates dispatcher behavior and cancellation-token propagation for command and event dispatch paths, satisfying the remaining acceptance criteria for this task.
+- Validation: `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
+
 ### MESSAGING-013 Add RabbitMQ reliability integration tests
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P0
 
@@ -419,9 +464,18 @@ Critical runtime paths (retry, ack/nack settlement, dead-letter routing, scoped 
 - `MESSAGING-004`
 - `MESSAGING-005`
 
+**Implementation notes**
+
+- Added reliability integration-style coverage in [src/tests/Genocs.Messaging.RabbitMQ.UnitTests/Internals/RabbitMqBackgroundServiceReliabilityIntegrationTests.cs](src/tests/Genocs.Messaging.RabbitMQ.UnitTests/Internals/RabbitMqBackgroundServiceReliabilityIntegrationTests.cs) to validate critical subscriber runtime paths in [src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs](src/Genocs.Messaging.RabbitMQ/Internals/RabbitMqBackgroundService.cs).
+- Added assertions for successful settlement (`BasicAckAsync`) and failure settlement (`BasicNackAsync`) with deterministic behavior under handler exceptions.
+- Added retry-flow coverage using configured `Retries`/`RetryInterval` to verify failed handler invocation retries before final negative settlement.
+- Added dead-letter flow coverage by enabling dead-letter options and mapping failures to `FailedMessage` with `MoveToDeadLetter = true`, verifying dead-letter path settles through nack.
+- Added scoped-resolution coverage to assert per-message scope isolation by resolving unique scoped dependencies for consecutive deliveries.
+- Validation: `dotnet test src/tests/Genocs.Messaging.RabbitMQ.UnitTests/Genocs.Messaging.RabbitMQ.UnitTests.csproj -c Debug --nologo`.
+
 ### MESSAGING-014 Synchronize docs and enforce package warning baselines
 
-**Status**: Proposed
+**Status**: Completed (April 2026)
 
 **Priority**: P1
 
@@ -448,6 +502,14 @@ Documentation and runtime contracts can drift, while warning-heavy baselines red
 
 - `MESSAGING-007`
 - `MESSAGING-011`
+
+**Implementation notes**
+
+- Synchronized messaging package docs and ownership guidance in [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md), [docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md](docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md), and [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md) with current runtime behavior delivered in MESSAGING-007 through MESSAGING-013.
+- Updated package READMEs in [src/Genocs.Messaging/README_NUGET.md](src/Genocs.Messaging/README_NUGET.md), [src/Genocs.Messaging.RabbitMQ/README_NUGET.md](src/Genocs.Messaging.RabbitMQ/README_NUGET.md), [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md), and [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) to align startup/contract expectations and warning-policy references.
+- Added package-level warning baseline enforcement target in [validate-messaging.mk](validate-messaging.mk) and exposed it via [Makefile](Makefile) as `make validate-messaging`.
+- The warning policy gate enforces warning-free `net10.0` builds (`-warnaserror`) for messaging packages and runs messaging regression tests to prevent behavior drift.
+- Validation: `make validate-messaging`.
 
 ## Suggested First Execution Slice
 

@@ -119,13 +119,35 @@ internal sealed class OutboxProcessor : BackgroundService
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            if (message.Message is null)
+            {
+                _logger.LogWarning(
+                    "Skipping outbox message with ID: '{MessageId}' because deserialized payload is null.",
+                    message.Id);
+
+                if (_type == OutboxType.Sequential)
+                {
+                    await outbox.ProcessAsync(message);
+                }
+
+                continue;
+            }
+
+            IDictionary<string, object>? headers = null;
+            if (message.Headers.Count > 0)
+            {
+                headers = message.Headers
+                    .Where(static header => header.Value is not null)
+                    .ToDictionary(static header => header.Key, static header => (object)header.Value!);
+            }
+
             await _publisher.PublishAsync(
                 message.Message,
                 message.Id,
                 message.CorrelationId,
                 message.SpanContext,
                 message.MessageContext,
-                message.Headers,
+                headers,
                 cancellationToken);
 
             if (_type == OutboxType.Sequential)

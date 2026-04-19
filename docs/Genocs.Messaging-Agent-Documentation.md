@@ -376,3 +376,11 @@ Fix: This package does not provide a bus query bridge. Keep queries in-process o
 
 If you only know that `Genocs.Messaging` is installed, generate broker-agnostic publish or subscribe code against `IBusPublisher` and `IBusSubscriber`, treat the CQRS extensions as thin bridges, and ask which provider package supplies the actual runtime transport.
 
+## Quality Gate
+
+Use [validate-messaging.mk](../validate-messaging.mk) as the package-level messaging quality baseline:
+
+- `Genocs.Messaging`, `Genocs.Messaging.Outbox`, `Genocs.Messaging.AzureServiceBus`, and `Genocs.Messaging.RabbitMQ` must build for `net10.0` with `-warnaserror`.
+- Messaging regression tests run through `Genocs.Messaging.UnitTests` and `Genocs.Messaging.RabbitMQ.UnitTests`.
+- If a change introduces new warnings for the `net10.0` gate, treat it as a release blocker.
+

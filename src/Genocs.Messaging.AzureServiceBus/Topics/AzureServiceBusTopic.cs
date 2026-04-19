@@ -5,6 +5,7 @@ using Genocs.Common.CQRS.Events;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Topics.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -13,7 +14,7 @@ namespace Genocs.Messaging.AzureServiceBus.Topics;
 /// <summary>
 /// Azure Service Bus Topic implementation using Azure.Messaging.ServiceBus SDK.
 /// </summary>
-public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
+public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyncDisposable
 {
     private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
     private const string TraceParentHeader = "traceparent";
@@ -27,7 +28,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
     private readonly IServiceProvider _serviceProvider;
     private const string EVENT_SUFFIX = "Event";
     private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
-    private readonly List<Type> _eventTypes;
+    private bool _isProcessorStarted;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureServiceBusTopic"/> using <see cref="IOptions{T}"/>.
@@ -63,7 +64,6 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
         _client = new ServiceBusClient(_options.ConnectionString);
         _sender = _client.CreateSender(_options.TopicName);
         _handlers = new Dictionary<string, List<SubscriptionInfo>>();
-        _eventTypes = new List<Type>();
 
         if (!string.IsNullOrEmpty(_options.SubscriptionName))
         {
@@ -210,35 +210,46 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
     }
 
     /// <summary>
+    /// Subscribes to events on the topic using the modern event handler contract.
+    /// </summary>
+    /// <typeparam name="T">The event type.</typeparam>
+    /// <typeparam name="TH">The event handler type.</typeparam>
+    public void SubscribeModern<T, TH>()
+        where T : class, IEvent
+        where TH : IEventHandler<T>
+    {
+        RegisterSubscription(typeof(T), typeof(TH), usesLegacyContract: false);
+    }
+
+    /// <summary>
     /// Subscribes to events on the topic with a specified handler.
     /// </summary>
     /// <typeparam name="T">The event type.</typeparam>
     /// <typeparam name="TH">The event handler type.</typeparam>
     /// <exception cref="ArgumentException">Thrown when the handler is already registered for the event.</exception>
+    [Obsolete("Subscribe<T,TH>() uses legacy IEventHandlerLegacy<T>. Use SubscribeModern<T,TH>() with IEventHandler<T>. Legacy registration will be removed in a future major release.")]
     public void Subscribe<T, TH>()
         where T : IEvent
         where TH : IEventHandlerLegacy<T>
     {
-        string key = typeof(T).Name;
+        RegisterSubscription(typeof(T), typeof(TH), usesLegacyContract: true);
+    }
+
+    private void RegisterSubscription(Type eventType, Type handlerType, bool usesLegacyContract)
+    {
+        string key = eventType.Name;
         if (!_handlers.ContainsKey(key))
         {
             _handlers.Add(key, []);
         }
 
-        Type handlerType = typeof(TH);
-
         if (_handlers[key].Any(s => s.HandlerType == handlerType))
         {
             throw new ArgumentException(
-                $"Handler Type '{typeof(TH).Name}' already registered for '{key}'", nameof(handlerType));
+                $"Handler Type '{handlerType.Name}' already registered for '{key}'", nameof(handlerType));
         }
 
-        if (!_eventTypes.Contains(typeof(T)))
-        {
-            _eventTypes.Add(typeof(T));
-        }
-
-        _handlers[key].Add(SubscriptionInfo.Typed(handlerType));
+        _handlers[key].Add(SubscriptionInfo.Typed(eventType, handlerType, usesLegacyContract));
     }
 
     private void RegisterSubscriptionClientMessageHandler()
@@ -251,15 +262,37 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
             string messageData = args.Message.Body.ToString();
 
             // Complete the message so that it is not received again.
-            if (await ProcessEvent(eventName, messageData))
+            if (await ProcessEvent(eventName, messageData, args.CancellationToken))
             {
                 await args.CompleteMessageAsync(args.Message);
             }
         };
 
         _processor.ProcessErrorAsync += ExceptionReceivedHandler;
+    }
 
-        _processor.StartProcessingAsync().GetAwaiter().GetResult();
+    /// <inheritdoc />
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        if (_processor is null || _isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StartProcessingAsync(cancellationToken);
+        _isProcessorStarted = true;
+    }
+
+    /// <inheritdoc />
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (_processor is null || !_isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StopProcessingAsync(cancellationToken);
+        _isProcessorStarted = false;
     }
 
     private static void InjectTraceContext(IDictionary<string, object> applicationProperties)
@@ -353,7 +386,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
         return Task.CompletedTask;
     }
 
-    private async Task<bool> ProcessEvent(string eventName, string message)
+    private async Task<bool> ProcessEvent(string eventName, string message, CancellationToken cancellationToken)
     {
         bool processed = false;
         if (_handlers.ContainsKey(eventName))
@@ -367,23 +400,25 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
                     object handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType);
                     if (handler != null)
                     {
-                        var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-                        if (eventType is null)
-                        {
-                            _logger.LogError("No registered event type matches subject '{EventName}'", eventName);
-                            continue;
-                        }
-
-                        object? command = JsonSerializer.Deserialize(message, eventType);
-                        if (command is null)
+                        object? @event = JsonSerializer.Deserialize(message, subscription.EventType);
+                        if (@event is null)
                         {
                             _logger.LogError("Failed to deserialize message for event '{EventName}'", eventName);
                             continue;
                         }
 
-                        var legacyType = typeof(IEventHandlerLegacy<>).MakeGenericType(eventType);
-                        await (Task)legacyType.GetMethod(nameof(IEventHandlerLegacy<IEvent>.HandleEvent))!
-                            .Invoke(handler, new[] { command })!;
+                        if (subscription.UsesLegacyContract)
+                        {
+                            var legacyType = typeof(IEventHandlerLegacy<>).MakeGenericType(subscription.EventType);
+                            await (Task)legacyType.GetMethod(nameof(IEventHandlerLegacy<IEvent>.HandleEvent))!
+                                .Invoke(handler, new[] { @event })!;
+                        }
+                        else
+                        {
+                            var modernType = typeof(IEventHandler<>).MakeGenericType(subscription.EventType);
+                            await (Task)modernType.GetMethod(nameof(IEventHandler<IEvent>.HandleAsync))!
+                                .Invoke(handler, new[] { @event, cancellationToken })!;
+                        }
                     }
                 }
             }
@@ -405,7 +440,11 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IAsyncDisposable
     {
         if (_processor != null)
         {
-            await _processor.StopProcessingAsync();
+            if (_isProcessorStarted)
+            {
+                await StopAsync(CancellationToken.None);
+            }
+
             await _processor.DisposeAsync();
         }
 

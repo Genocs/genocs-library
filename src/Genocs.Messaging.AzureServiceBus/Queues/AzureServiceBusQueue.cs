@@ -3,6 +3,7 @@ using Genocs.Common.CQRS.Commands;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Queues.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace Genocs.Messaging.AzureServiceBus.Queues;
 /// <summary>
 /// Azure Service Bus Queue implementation using Azure.Messaging.ServiceBus SDK.
 /// </summary>
-public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
+public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyncDisposable
 {
     private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
     private const string TraceParentHeader = "traceparent";
@@ -24,9 +25,10 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     private readonly ServiceBusProcessor _processor;
     private readonly AzureServiceBusQueueOptions _options;
     private readonly ILogger<AzureServiceBusQueue> _logger;
-    private readonly Dictionary<string, KeyValuePair<Type, Type>> _handlers = new();
+    private readonly Dictionary<string, CommandHandlerRegistration> _handlers = new();
     private const string COMMAND_SUFFIX = "Command";
     private readonly IServiceProvider _serviceProvider;
+    private bool _isProcessorStarted;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureServiceBusQueue"/> using <see cref="IOptions{T}"/>.
@@ -69,7 +71,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
             AutoCompleteMessages = false
         });
 
-        RegisterQueueMessageHandlerAndProcess();
+        RegisterQueueMessageHandler();
     }
 
     /// <summary>
@@ -131,20 +133,36 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     }
 
     /// <summary>
+    /// Registers a modern command handler for consuming messages from the queue.
+    /// </summary>
+    /// <typeparam name="T">The command type.</typeparam>
+    /// <typeparam name="TH">The command handler type.</typeparam>
+    public void ConsumeModern<T, TH>() where T : class, ICommand where TH : ICommandHandler<T>
+    {
+        RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: false);
+    }
+
+    /// <summary>
     /// Registers a command handler for consuming messages from the queue.
     /// </summary>
     /// <typeparam name="T">The command type.</typeparam>
     /// <typeparam name="TH">The command handler type.</typeparam>
+    [Obsolete("Consume<T,TH>() uses legacy ICommandHandlerLegacy<T>. Use ConsumeModern<T,TH>() with ICommandHandler<T>. Legacy registration will be removed in a future major release.")]
     public void Consume<T, TH>() where T : ICommand where TH : ICommandHandlerLegacy<T>
     {
-        string eventName = typeof(T).Name;
-        if (!_handlers.ContainsKey(eventName))
+        RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: true);
+    }
+
+    private void RegisterHandler(Type commandType, Type handlerType, bool usesLegacyContract)
+    {
+        string commandName = commandType.Name;
+        if (!_handlers.ContainsKey(commandName))
         {
-            _handlers.Add(eventName, new KeyValuePair<Type, Type>(typeof(T), typeof(TH)));
+            _handlers.Add(commandName, new CommandHandlerRegistration(commandType, handlerType, usesLegacyContract));
         }
     }
 
-    private void RegisterQueueMessageHandlerAndProcess()
+    private void RegisterQueueMessageHandler()
     {
         _processor.ProcessMessageAsync += async (args) =>
         {
@@ -153,15 +171,37 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
             string messageData = args.Message.Body.ToString();
 
             // Complete the message so that it is not received again.
-            if (await ProcessQueueMessages(eventName, messageData))
+            if (await ProcessQueueMessages(eventName, messageData, args.CancellationToken))
             {
                 await args.CompleteMessageAsync(args.Message);
             }
         };
 
         _processor.ProcessErrorAsync += ExceptionReceivedHandler;
+    }
 
-        _processor.StartProcessingAsync().GetAwaiter().GetResult();
+    /// <inheritdoc />
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        if (_isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StartProcessingAsync(cancellationToken);
+        _isProcessorStarted = true;
+    }
+
+    /// <inheritdoc />
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (!_isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StopProcessingAsync(cancellationToken);
+        _isProcessorStarted = false;
     }
 
     private static void InjectTraceContext(IDictionary<string, object> applicationProperties)
@@ -248,23 +288,35 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
         activity.SetTag("error.message", exception.Message);
     }
 
-    private async Task<bool> ProcessQueueMessages(string eventName, string message)
+    private async Task<bool> ProcessQueueMessages(string eventName, string message, CancellationToken cancellationToken)
     {
         bool processed = false;
         if (_handlers.ContainsKey(eventName))
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var type = _handlers[eventName];
-                if (type.Key != null && type.Value != null)
+                var registration = _handlers[eventName];
+                var handler = scope.ServiceProvider.GetRequiredService(registration.HandlerType);
+                if (handler != null)
                 {
-                    var handler = scope.ServiceProvider.GetRequiredService(type.Value);
-                    if (handler != null)
+                    object? command = JsonSerializer.Deserialize(message, registration.CommandType);
+                    if (command is null)
                     {
-                        var eventType = type.Key;
-                        var command = JsonSerializer.Deserialize(message, eventType);
-                        var concreteType = typeof(ICommandHandler<>).MakeGenericType(eventType);
-                        await (Task)concreteType.GetMethod("HandleCommand")!.Invoke(handler, new object[] { command! })!;
+                        _logger.LogError("Failed to deserialize message for command '{CommandName}'", eventName);
+                        return false;
+                    }
+
+                    if (registration.UsesLegacyContract)
+                    {
+                        var legacyType = typeof(ICommandHandlerLegacy<>).MakeGenericType(registration.CommandType);
+                        await (Task)legacyType.GetMethod(nameof(ICommandHandlerLegacy<ICommand>.HandleCommand))!
+                            .Invoke(handler, new[] { command })!;
+                    }
+                    else
+                    {
+                        var modernType = typeof(ICommandHandler<>).MakeGenericType(registration.CommandType);
+                        await (Task)modernType.GetMethod(nameof(ICommandHandler<ICommand>.HandleAsync))!
+                            .Invoke(handler, new[] { command, cancellationToken })!;
                     }
                 }
             }
@@ -287,10 +339,16 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     /// </summary>
     public async ValueTask DisposeAsync()
     {
-        await _processor.StopProcessingAsync();
+        if (_isProcessorStarted)
+        {
+            await StopAsync(CancellationToken.None);
+        }
+
         await _processor.DisposeAsync();
         await _sender.DisposeAsync();
         await _client.DisposeAsync();
         GC.SuppressFinalize(this);
     }
+
+    private sealed record CommandHandlerRegistration(Type CommandType, Type HandlerType, bool UsesLegacyContract);
 }

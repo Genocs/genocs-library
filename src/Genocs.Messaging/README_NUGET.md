@@ -16,10 +16,21 @@ Use this package to integrate broker-agnostic command and event dispatching abst
 
 Dispatcher methods forward `CancellationToken` to the underlying publisher for both command and event paths.
 
+`AddServiceBusCommandDispatcher` and `AddServiceBusEventDispatcher` register bus-backed dispatcher bridges only. They do not install a concrete transport implementation by themselves.
+
+Result-returning command dispatch (`ICommandDispatcher.SendAsync<TCommand, TResult>`) is intentionally not supported by the service-bus bridge and throws `NotSupportedException` with guidance to use an in-process dispatcher for request-response command flows.
+
 ## Main Entry Points
 
 - `AddServiceBusCommandDispatcher`
 - `AddServiceBusEventDispatcher`
+
+## Warning Policy
+
+This package follows the messaging quality gate enforced by [validate-messaging.mk](../../validate-messaging.mk):
+
+- `net10.0` build must remain warning-free (`-warnaserror`).
+- Unit tests must pass before merging messaging changes.
 
 ## Support
 

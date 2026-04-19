@@ -14,10 +14,31 @@ dotnet add package Genocs.Messaging.Outbox
 
 Use this package to configure outbox processing and choose an in-memory or persistent outbox implementation.
 
+`AddMessageOutbox` requires explicit provider configuration. The package does not auto-register `AddInMemory()` when no configurator is supplied.
+
+Development-only setup:
+
+```csharp
+builder.AddMessageOutbox(outbox => outbox.AddInMemory());
+```
+
+Production-safe setup should use a durable provider (for example MongoDB outbox):
+
+```csharp
+builder.AddMessageOutbox(outbox => outbox.AddMongo());
+```
+
 ## Main Entry Points
 
 - `AddMessageOutbox`
 - `AddInMemory`
+
+## Warning Policy
+
+Messaging warning baseline validation is enforced through [validate-messaging.mk](../../validate-messaging.mk):
+
+- `net10.0` build must pass with `-warnaserror`.
+- Messaging unit tests are executed as part of the same validation workflow.
 
 ## Support
 

@@ -133,7 +133,11 @@ internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMem
             }
 
             _outboxMessages.TryRemove(id, out _);
-            _inboxMessages.TryRemove(message.OriginatedMessageId, out _);
+
+            if (!string.IsNullOrWhiteSpace(message.OriginatedMessageId))
+            {
+                _inboxMessages.TryRemove(message.OriginatedMessageId, out _);
+            }
         }
     }
 }

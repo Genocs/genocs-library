@@ -22,6 +22,17 @@ public interface IAzureServiceBusTopic
 
     Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters);
 
+    /// <summary>
+    /// Registers a modern event handler contract for topic subscriptions.
+    /// </summary>
+    void SubscribeModern<T, TH>()
+        where T : class, IEvent
+        where TH : IEventHandler<T>;
+
+    /// <summary>
+    /// Registers a legacy event handler contract for topic subscriptions.
+    /// </summary>
+    [Obsolete("Subscribe<T,TH>() uses legacy IEventHandlerLegacy<T>. Use SubscribeModern<T,TH>() with IEventHandler<T>. Legacy registration will be removed in a future major release.")]
     void Subscribe<T, TH>()
         where T : IEvent
         where TH : IEventHandlerLegacy<T>;

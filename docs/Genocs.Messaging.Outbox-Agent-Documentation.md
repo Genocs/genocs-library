@@ -76,7 +76,7 @@ app.Run();
 Important behavior:
 
 - `AddMessageOutbox()` binds `OutboxOptions` from the `outbox` section
-- if no configure callback is supplied, the package calls `AddInMemory()` by default
+- provider registration is explicit; if no configure callback is supplied, startup throws with guidance to configure a provider
 - if `outbox.enabled` is `true`, the package also registers the hosted `OutboxProcessor`
 - the processor requires `IBusPublisher` at runtime
 
@@ -189,7 +189,7 @@ Use `type: "parallel"` only when the selected provider and publish flow can tole
 
 | API | Use it for | Important behavior | Common mistake |
 |---|---|---|---|
-| `AddMessageOutbox(...)` | Register outbox options, provider configuration, and optional background processing | Defaults to `AddInMemory()` when no configure callback is supplied; adds `OutboxProcessor` only when `outbox.enabled` is `true` | Assuming it installs durable storage or a broker client by itself |
+| `AddMessageOutbox(...)` | Register outbox options, provider configuration, and optional background processing | Requires an explicit configure callback; throws when provider configuration is omitted; adds `OutboxProcessor` only when `outbox.enabled` is `true` | Assuming it installs durable storage or a broker client by itself |
 | `AddInMemory()` | Select the built-in in-memory outbox registration path | Registers `IMessageOutbox` with the internal in-memory implementation | Assuming it provides durable multi-instance semantics |
 | `IMessageOutbox.HandleAsync(...)` | Deduplicate inbound message processing by message ID | Skips handler execution when the message ID was already recorded | Assuming this guarantees exactly-once delivery across app restarts with in-memory storage |
 | `IMessageOutbox.SendAsync<T>(...)` | Store an outgoing message for later publication | Stores message metadata such as IDs, headers, and correlation values for the selected provider | Assuming it publishes immediately to the bus |
@@ -414,3 +414,10 @@ Fix: In this package, `Parallel` changes when records are marked processed. It d
 ## One-Line Recommendation For Agents
 
 If you only know that `Genocs.Messaging.Outbox` is installed, generate code that writes through `IMessageOutbox` and treats the package as a base outbox runtime. Ask which durable storage provider and bus provider complete the actual delivery path.
+
+## Quality Gate
+
+Outbox changes are validated through [validate-messaging.mk](../validate-messaging.mk):
+
+- `Genocs.Messaging.Outbox` must build for `net10.0` with `-warnaserror`.
+- Messaging unit tests must pass before merge to guard outbox contract and registration behavior.
