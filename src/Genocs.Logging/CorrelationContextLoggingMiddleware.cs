@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Genocs.Logging.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -27,9 +22,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
     private readonly ILogger<CorrelationContextLoggingMiddleware> _logger;
     private readonly HttpPayloadOptions _payloadOptions;
 
-    public CorrelationContextLoggingMiddleware(
-        ILogger<CorrelationContextLoggingMiddleware> logger,
-        LoggerOptions loggerOptions)
+    public CorrelationContextLoggingMiddleware(ILogger<CorrelationContextLoggingMiddleware> logger, LoggerOptions loggerOptions)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _payloadOptions = NormalizePayloadOptions(loggerOptions?.HttpPayload ?? new HttpPayloadOptions());
@@ -46,7 +39,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
         if (_payloadOptions.Enabled && _payloadOptions.CaptureRequestBody)
         {
-            string requestBody = await ReadRequestBodyAsync(context.Request);
+            string? requestBody = await ReadRequestBodyAsync(context.Request);
             if (!string.IsNullOrWhiteSpace(requestBody))
             {
                 scopeData["HttpRequestBody"] = requestBody;
@@ -70,7 +63,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
             {
                 await next(context);
 
-                string responseBody = await ReadResponseBodyAsync(context.Response, responseBuffer);
+                string? responseBody = await ReadResponseBodyAsync(context.Response, responseBuffer);
                 if (!string.IsNullOrWhiteSpace(responseBody))
                 {
                     // Response payload is only available after the request pipeline completes,
@@ -87,7 +80,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         }
     }
 
-    private async Task<string> ReadRequestBodyAsync(HttpRequest request)
+    private async Task<string?> ReadRequestBodyAsync(HttpRequest request)
     {
         if (!request.Body.CanRead || !IsCaptureCandidate(request.ContentType))
         {
@@ -102,7 +95,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         return Truncate(payload);
     }
 
-    private async Task<string> ReadResponseBodyAsync(HttpResponse response, MemoryStream buffer)
+    private async Task<string?> ReadResponseBodyAsync(HttpResponse response, MemoryStream buffer)
     {
         if (!IsCaptureCandidate(response.ContentType))
         {
@@ -115,9 +108,9 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         return Truncate(payload);
     }
 
-    private bool IsCaptureCandidate(string contentType)
+    private bool IsCaptureCandidate(string? contentType)
     {
-        string mediaType = NormalizeContentType(contentType);
+        string? mediaType = NormalizeContentType(contentType);
         if (string.IsNullOrWhiteSpace(mediaType))
         {
             return false;
@@ -125,7 +118,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
 
         foreach (string allowed in _payloadOptions.AllowedContentTypes)
         {
-            string pattern = NormalizeContentType(allowed);
+            string? pattern = NormalizeContentType(allowed);
             if (string.IsNullOrWhiteSpace(pattern))
             {
                 continue;
@@ -222,7 +215,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
         };
     }
 
-    private static string NormalizeContentType(string contentType)
+    private static string? NormalizeContentType(string? contentType)
     {
         if (string.IsNullOrWhiteSpace(contentType))
         {
@@ -244,7 +237,7 @@ public class CorrelationContextLoggingMiddleware : IMiddleware
     {
         int processedItems = 0;
 
-        foreach ((string key, string value) in activity.Baggage)
+        foreach ((string key, string? value) in activity.Baggage)
         {
             if (processedItems >= MaxBaggageItems)
             {

@@ -8,7 +8,7 @@ namespace Genocs.Core.CQRS.Commons;
 
 internal static class HandlerRegistration
 {
-    internal static Assembly[] GetCandidateAssemblies(string project = null)
+    internal static Assembly[] GetCandidateAssemblies(string? project = null)
     {
         IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.FullName));

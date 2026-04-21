@@ -57,8 +57,8 @@ public class RabbitMQOptions
 
     public class ExchangeOptions
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool AutoDelete { get; set; }
@@ -66,7 +66,7 @@ public class RabbitMQOptions
 
     public class QueueOptions
     {
-        public string Template { get; set; }
+        public string? Template { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool Exclusive { get; set; }
@@ -76,8 +76,8 @@ public class RabbitMQOptions
     public class DeadLetterOptions
     {
         public bool Enabled { get; set; }
-        public string Prefix { get; set; }
-        public string Suffix { get; set; }
+        public string? Prefix { get; set; }
+        public string? Suffix { get; set; }
         public bool Declare { get; set; }
         public bool Durable { get; set; }
         public bool Exclusive { get; set; }
@@ -88,9 +88,9 @@ public class RabbitMQOptions
     public class SslOptions
     {
         public bool Enabled { get; set; }
-        public string ServerName { get; set; }
-        public string CertificatePath { get; set; }
-        public string CaCertificatePath { get; set; }
+        public string? ServerName { get; set; }
+        public string? CertificatePath { get; set; }
+        public string? CaCertificatePath { get; set; }
         public IEnumerable<string>? X509IgnoredStatuses { get; set; }
     }
 

@@ -6,7 +6,7 @@ internal sealed class SagaContextBuilder : ISagaContextBuilder
 {
     private readonly List<ISagaContextMetadata> _metadata;
     private SagaId? _sagaId;
-    private string _originator;
+    private string? _originator;
 
     public SagaContextBuilder()
         => _metadata = [];

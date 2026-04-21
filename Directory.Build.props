@@ -32,6 +32,8 @@
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
         </PackageReleaseNotes>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <!--<WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>-->
     </PropertyGroup>
 
     <ItemGroup>

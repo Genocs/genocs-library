@@ -15,17 +15,17 @@ internal class ApplicationDbSeeder
         // {
         //     throw new ArgumentNullException(nameof(multiTenantContextAccessor));
         // }
- 
+
         // if (multiTenantContextAccessor.MultiTenantContext is null)
         // {
         //     throw new ArgumentNullException(nameof(multiTenantContextAccessor.MultiTenantContext));
         // }
- 
+
         // if (multiTenantContextAccessor?.MultiTenantContext?.TenantInfo is null)
         // {
         //     throw new ArgumentNullException(nameof(multiTenantContextAccessor.MultiTenantContext.TenantInfo));
         // }
- 
+
         // _currentTenant = multiTenantContextAccessor.MultiTenantContext.TenantInfo;
         // _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         // _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));

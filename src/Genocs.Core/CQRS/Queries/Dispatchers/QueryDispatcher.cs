@@ -22,18 +22,18 @@ internal sealed class QueryDispatcher : IQueryDispatcher
     public QueryDispatcher(IServiceProvider serviceProvider)
         => _serviceProvider = serviceProvider;
 
-    public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+    public async Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(query);
 
         var invoker = GetOrCreateInvoker(query.GetType(), typeof(TResult));
 
         await using var scope = _serviceProvider.CreateAsyncScope();
-        object boxed = await invoker.InvokeAsync(scope.ServiceProvider, query, cancellationToken);
-        return (TResult)boxed;
+        object? boxed = await invoker.InvokeAsync(scope.ServiceProvider, query, cancellationToken);
+        return (TResult?)boxed;
     }
 
-    public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+    public async Task<TResult?> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TResult>
     {
         ArgumentNullException.ThrowIfNull(query);
@@ -58,7 +58,7 @@ internal sealed class QueryDispatcher : IQueryDispatcher
 
     private interface IQueryHandlerInvoker
     {
-        Task<object> InvokeAsync(IServiceProvider sp, object query, CancellationToken cancellationToken);
+        Task<object?> InvokeAsync(IServiceProvider sp, object query, CancellationToken cancellationToken);
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ internal sealed class QueryDispatcher : IQueryDispatcher
     private sealed class QueryHandlerInvoker<TQuery, TResult> : IQueryHandlerInvoker
         where TQuery : class, IQuery<TResult>
     {
-        public async Task<object> InvokeAsync(IServiceProvider sp, object query, CancellationToken cancellationToken)
+        public async Task<object?> InvokeAsync(IServiceProvider sp, object query, CancellationToken cancellationToken)
         {
             var handler = sp.GetRequiredService<IQueryHandler<TQuery, TResult>>();
             return await handler.HandleAsync((TQuery)query, cancellationToken);

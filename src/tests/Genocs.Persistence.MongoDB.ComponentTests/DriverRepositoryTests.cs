@@ -1,58 +1,147 @@
-﻿using Testcontainers.MsSql;
+using System.Diagnostics;
+using Genocs.Common.Domain.Entities;
+using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.MongoDB;
+using Genocs.Persistence.MongoDB.Domain.Repositories;
+using MongoDB.Driver;
+using Testcontainers.MongoDb;
 
 namespace Genocs.Persistence.MongoDB.ComponentTests;
 
-// 1. Implement IAsyncLifetime to handle Docker container startup/shutdown
-public class DriverRepositoryTests : IAsyncLifetime
+public sealed class DriverRepositoryTests : IAsyncLifetime
 {
-    // Define the container (Real SQL Server 2025)
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2025-latest")
+    private readonly MongoDbContainer _mongoContainer = new MongoDbBuilder("mongo:7.0")
         .Build();
 
-    [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
+    private MongoBaseRepositoryOfType<DriverEntity, Guid> _repository = default!;
+
+    public static bool IsDockerAvailable => DockerEnvironment.IsAvailable;
+
     public async ValueTask InitializeAsync()
     {
-        // This creates the Docker container on the fly
-        await _dbContainer.StartAsync(CancellationToken.None);
+        await _mongoContainer.StartAsync();
+
+        var mongoClient = new MongoClient(_mongoContainer.GetConnectionString());
+        var database = mongoClient.GetDatabase($"genocs_component_tests_{Guid.NewGuid():N}");
+        var provider = new TestMongoDatabaseProvider(mongoClient, database);
+
+        _repository = new MongoBaseRepositoryOfType<DriverEntity, Guid>(provider);
     }
 
-    [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
     public async ValueTask DisposeAsync()
     {
-        // This kills the container after tests finish (Cleanup)
-        await _dbContainer.DisposeAsync();
+        await _mongoContainer.DisposeAsync();
     }
 
-    [Fact(Skip = "Skipping since Docker is not available onto github build agent.")]
-    public async ValueTask SaveDriver_ShouldPersistToDatabase()
+    [Fact(Skip = "Requires Docker daemon to run MongoDB container.", SkipUnless = nameof(IsDockerAvailable))]
+    public async Task AddAsync_ThenGetByIdAsync_PersistsDocumentInMongoDb()
     {
-        // Arrange: Get the connection string from the running container
-        string connectionString = _dbContainer.GetConnectionString();
+        var entity = new DriverEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = "John Doe",
+            Status = "Available",
+        };
 
-        Assert.NotNull(connectionString);
-        Assert.NotEmpty(connectionString);
+        await _repository.AddAsync(entity);
 
-        //// Setup EF Core to use the Container
-        //var options = new DbContextOptionsBuilder<UberDbContext>()
-        //    .UseSqlServer(connectionString)
-        //    .Options;
+        DriverEntity reloaded = await _repository.GetByIdAsync(entity.Id);
 
-        //// Apply Migrations (Important: Creates tables in the fresh container)
-        //using (var context = new UberDbContext(options))
-        //{
-        //    await context.Database.MigrateAsync();
+        Assert.NotNull(reloaded);
+        Assert.Equal(entity.Id, reloaded.Id);
+        Assert.Equal("John Doe", reloaded.Name);
+        Assert.Equal("Available", reloaded.Status);
+    }
 
-        //    // Act
-        //    context.Drivers.Add(new Driver { Name = "John Doe", Status = "Available" });
-        //    await context.SaveChangesAsync();
-        //}
+    [Fact(Skip = "Requires Docker daemon to run MongoDB container.", SkipUnless = nameof(IsDockerAvailable))]
+    public async Task UpdateAndDelete_PersistsMutationAndRemovalInMongoDb()
+    {
+        var entity = new DriverEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = "Jane Doe",
+            Status = "Busy",
+        };
 
-        //// Assert: Verify with a NEW context instance to ensure it wasn't just in RAM
-        //using (var context = new UberDbContext(options))
-        //{
-        //    var driver = await context.Drivers.FirstAsync();
-        //    Assert.Equal("John Doe", driver.Name);
-        //    Assert.Equal("Available", driver.Status);
-        //}
+        await _repository.AddAsync(entity);
+
+        entity.Status = "Available";
+        _repository.Update(entity);
+
+        DriverEntity updated = await _repository.GetByIdAsync(entity.Id);
+        Assert.Equal("Available", updated.Status);
+
+        _repository.Delete(entity.Id);
+
+        DriverEntity? deleted = _repository.FirstOrDefault(entity.Id);
+        Assert.Null(deleted);
+    }
+
+    [TableMapping("drivers_component")]
+    private sealed class DriverEntity : IEntity<Guid>
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public string Status { get; set; } = string.Empty;
+
+        public bool IsTransient() => Id == Guid.Empty;
+    }
+
+    private sealed class TestMongoDatabaseProvider(IMongoClient mongoClient, IMongoDatabase database) : IMongoDatabaseProvider
+    {
+        public IMongoClient MongoClient { get; } = mongoClient;
+
+        public IMongoDatabase Database { get; } = database;
+    }
+
+    private static class DockerEnvironment
+    {
+        public static bool IsAvailable { get; } = CheckDockerAvailability();
+
+        private static bool CheckDockerAvailability()
+        {
+            try
+            {
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "docker",
+                        Arguments = "info --format '{{.ServerVersion}}'",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    },
+                };
+
+                if (!process.Start())
+                {
+                    return false;
+                }
+
+                if (!process.WaitForExit(5000))
+                {
+                    try
+                    {
+                        process.Kill(true);
+                    }
+                    catch
+                    {
+                        // Best effort: process may have already exited.
+                    }
+
+                    return false;
+                }
+
+                return process.ExitCode == 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

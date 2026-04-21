@@ -47,5 +47,5 @@ public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimary
     /// Reference to the last modifier user of this entity.
     /// </summary>
     [ForeignKey("LastModifierUserId")]
-    public virtual TUser UpdatedByUser { get; set; }
+    public virtual TUser? UpdatedByUser { get; set; }
 }

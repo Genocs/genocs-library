@@ -91,7 +91,7 @@ public static class Encryption
 
     private static XmlElement GetRsaRoot(XmlDocument xmlDoc)
     {
-        XmlElement root = xmlDoc.DocumentElement;
+        XmlElement? root = xmlDoc.DocumentElement;
         if (root?.Name.Equals("RSAKeyValue", StringComparison.Ordinal) != true)
         {
             throw new FormatException("RSA key XML must contain RSAKeyValue as the document root.");

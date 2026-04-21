@@ -30,7 +30,7 @@ public static class SagaTraceContext
             return builder;
         }
 
-        string traceParent = activity.Id;
+        string? traceParent = activity.Id;
         if (string.IsNullOrEmpty(traceParent))
         {
             return builder;
@@ -38,7 +38,7 @@ public static class SagaTraceContext
 
         builder.WithMetadata(TraceParent, traceParent);
 
-        string traceState = activity.TraceStateString;
+        string? traceState = activity.TraceStateString;
         if (!string.IsNullOrEmpty(traceState))
         {
             builder.WithMetadata(TraceState, traceState);
@@ -51,10 +51,7 @@ public static class SagaTraceContext
     /// Adds trace context from W3C headers to the saga context builder.
     /// Use when building context from message headers (e.g. RabbitMQ, Kafka, HTTP).
     /// </summary>
-    public static ISagaContextBuilder WithTraceContext(
-        this ISagaContextBuilder builder,
-        string traceParent,
-        string traceState = null)
+    public static ISagaContextBuilder WithTraceContext(this ISagaContextBuilder builder, string traceParent, string? traceState = null)
     {
         if (string.IsNullOrWhiteSpace(traceParent))
         {

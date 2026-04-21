@@ -33,7 +33,7 @@ public class EntityNotFoundException : GenocsException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(Type entityType, object id, Exception innerException)
+    public EntityNotFoundException(Type entityType, object id, Exception? innerException)
         : base($"There is no such an entity. Entity type: {entityType.FullName}, id: {id}", innerException)
     {
         ArgumentNullException.ThrowIfNull(entityType);
@@ -58,7 +58,7 @@ public class EntityNotFoundException : GenocsException
     /// </summary>
     /// <param name="message">Exception message.</param>
     /// <param name="innerException">Inner exception.</param>
-    public EntityNotFoundException(string message, Exception innerException)
+    public EntityNotFoundException(string message, Exception? innerException)
         : base(message, innerException)
     {
         EntityType = UnknownEntityType;

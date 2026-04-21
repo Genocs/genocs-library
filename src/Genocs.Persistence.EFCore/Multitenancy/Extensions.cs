@@ -129,11 +129,11 @@ public static class Extensions
         {
             if (context is not HttpContext httpContext)
             {
-                return Task.FromResult((string)null);
+                return Task.FromResult((string?)null);
             }
 
             httpContext.Request.Query.TryGetValue(queryStringKey, out var tenantIdParam);
 
-            return Task.FromResult((string)tenantIdParam.ToString());
+            return Task.FromResult((string?)tenantIdParam.ToString());
         });
 }

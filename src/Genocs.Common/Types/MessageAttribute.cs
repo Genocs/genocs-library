@@ -14,12 +14,12 @@ namespace Genocs.Common.Types;
 /// <param name="subscriptionId">The subscription ID.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class MessageAttribute(
-                        string exchange = null,
-                        string topic = null,
-                        string queue = null,
-                        string queueType = null,
-                        string errorQueue = null,
-                        string subscriptionId = null) : Attribute
+                        string? exchange = null,
+                        string? topic = null,
+                        string? queue = null,
+                        string? queueType = null,
+                        string? errorQueue = null,
+                        string? subscriptionId = null) : Attribute
 {
     /// <summary>
     /// The Exchange used by the system.

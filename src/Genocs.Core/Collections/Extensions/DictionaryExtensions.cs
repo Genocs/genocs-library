@@ -15,13 +15,13 @@ public static class DictionaryExtensions
     /// <returns>True if key does exists in the dictionary.</returns>
     internal static bool TryGetValue<T>(this IDictionary<string, object> dictionary, string key, out T value)
     {
-        if (dictionary.TryGetValue(key, out object valueObj) && valueObj is T t)
+        if (dictionary.TryGetValue(key, out object? valueObj) && valueObj is T t)
         {
             value = t;
             return true;
         }
 
-        value = default;
+        value = default!;
         return false;
     }
 

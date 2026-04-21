@@ -29,7 +29,7 @@ public class MetricsOptions
     /// The Prometheus formatter.
     /// Allowed method are: protobuf or (null).
     /// </summary>
-    public string PrometheusFormatter { get; set; }
+    public string? PrometheusFormatter { get; set; }
 
     /*
     /// <summary>

@@ -8,7 +8,7 @@ public class GNXTenantInfo : TenantInfo
     {
     }
 
-    public GNXTenantInfo(string id, string name, string connectionString, string adminEmail, string issuer = null)
+    public GNXTenantInfo(string id, string name, string? connectionString, string adminEmail, string? issuer = null)
     {
         Id = id;
         Identifier = id;
@@ -31,7 +31,7 @@ public class GNXTenantInfo : TenantInfo
     /// <summary>
     /// Used by AzureAd Authorization to store the AzureAd Tenant Issuer to map against.
     /// </summary>
-    public string Issuer { get; set; }
+    public string? Issuer { get; set; }
 
     public void AddValidity(int months) =>
         ValidUpTo = ValidUpTo.AddMonths(months);

@@ -7,14 +7,14 @@ public sealed class BookStoreDbContextFactory : IDesignTimeDbContextFactory<Book
 {
     public BookStoreDbContext CreateDbContext(string[] args)
     {
-        //IConfigurationRoot configuration = new ConfigurationBuilder()
+        // IConfigurationRoot configuration = new ConfigurationBuilder()
         //    .SetBasePath(Directory.GetCurrentDirectory())
         //    .AddJsonFile("appsettings.json", optional: true)
         //    .AddJsonFile("appsettings.Development.json", optional: true)
         //    .AddEnvironmentVariables()
         //    .Build();
 
-        //string connectionString = configuration.GetConnectionString("BookStore")
+        // string connectionString = configuration.GetConnectionString("BookStore")
         //    ?? "Server=(localdb)\\MSSQLLocalDB;Database=Genocs.BookStore.Demo;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
         DbContextOptionsBuilder<BookStoreDbContext> optionsBuilder = new();

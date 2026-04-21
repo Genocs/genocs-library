@@ -24,57 +24,57 @@ public class OpenApiOptions
     /// <summary>
     /// The name of the API.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// The title of the API. You can use this field to set the title by using markdown.
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// The version of the API.
     /// </summary>
-    public string Version { get; set; }
+    public string? Version { get; set; }
 
     /// <summary>
     /// The description of the API. You can use this field to set the description by using markdown.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// The route prefix of the API.
     /// </summary>
-    public string RoutePrefix { get; set; }
+    public string? RoutePrefix { get; set; }
 
     /// <summary>
     /// The contact name of the API.
     /// </summary>
-    public string ContactName { get; set; }
+    public string? ContactName { get; set; }
 
     /// <summary>
     /// The contact email of the API.
     /// </summary>
-    public string ContactEmail { get; set; }
+    public string? ContactEmail { get; set; }
 
     /// <summary>
     /// The contact URL of the API.
     /// </summary>
-    public string ContactUrl { get; set; }
+    public string? ContactUrl { get; set; }
 
     /// <summary>
     /// The license name of the API.
     /// </summary>
-    public string LicenseName { get; set; }
+    public string? LicenseName { get; set; }
 
     /// <summary>
     /// The license URL of the API.
     /// </summary>
-    public string LicenseUrl { get; set; }
+    public string? LicenseUrl { get; set; }
 
     /// <summary>
     /// The terms of service of the API. you can use this field to set the terms of service by using markdown or as url link.
     /// </summary>
-    public string TermsOfService { get; set; }
+    public string? TermsOfService { get; set; }
 
     /// <summary>
     /// The flag to include security. By using this flag, you can include the security information in the Swagger document.
@@ -95,11 +95,11 @@ public class OpenApiOptions
         /// <summary>
         /// The URL of the server.
         /// </summary>
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// The description of the server.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

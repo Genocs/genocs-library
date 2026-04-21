@@ -21,13 +21,13 @@ internal static class SagaTelemetry
             return false;
         }
 
-        string traceParent = traceParentMeta.Value as string;
+        string? traceParent = traceParentMeta.Value as string;
         if (string.IsNullOrWhiteSpace(traceParent))
         {
             return false;
         }
 
-        string traceState = null;
+        string? traceState = null;
         if (context.TryGetMetadata(SagaTraceContext.TraceState, out var traceStateMeta) && traceStateMeta is not null)
         {
             traceState = traceStateMeta.Value as string;

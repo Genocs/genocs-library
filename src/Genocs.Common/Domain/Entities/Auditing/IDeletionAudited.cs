@@ -21,5 +21,5 @@ public interface IDeletionAudited<TUser> : IDeletionAudited
     /// <summary>
     /// Reference to the deleter user of this entity.
     /// </summary>
-    TUser DeletedByUser { get; set; }
+    TUser? DeletedByUser { get; set; }
 }

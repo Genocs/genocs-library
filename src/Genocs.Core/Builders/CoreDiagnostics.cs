@@ -25,14 +25,14 @@ public sealed class CoreDiagnosticsState
 
 public static class CoreDiagnosticsExtensions
 {
-    public static IGenocsBuilder AddCoreDiagnostics(this IGenocsBuilder builder, Action<CoreDiagnosticsOptions> configure = null)
+    public static IGenocsBuilder AddCoreDiagnostics(this IGenocsBuilder builder, Action<CoreDiagnosticsOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
         builder.Services.AddCoreDiagnostics(configure);
         return builder;
     }
 
-    public static IServiceCollection AddCoreDiagnostics(this IServiceCollection services, Action<CoreDiagnosticsOptions> configure = null)
+    public static IServiceCollection AddCoreDiagnostics(this IServiceCollection services, Action<CoreDiagnosticsOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(services);
 

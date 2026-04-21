@@ -18,7 +18,7 @@ public class AppOptions
     /// <summary>
     /// Application name.
     /// </summary>
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     /// <summary>
     /// Service name.

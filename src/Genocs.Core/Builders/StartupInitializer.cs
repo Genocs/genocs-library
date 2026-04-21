@@ -6,17 +6,11 @@ namespace Genocs.Core.Builders;
 /// <summary>
 /// StartupInitializer implementation.
 /// </summary>
-public class StartupInitializer : IStartupInitializer
+public class StartupInitializer(CoreDiagnosticsOptions? diagnosticsOptions = null, CoreDiagnosticsState? diagnosticsState = null) : IStartupInitializer
 {
     private readonly IList<IInitializer> _initializers = [];
-    private readonly CoreDiagnosticsOptions _diagnosticsOptions;
-    private readonly CoreDiagnosticsState _diagnosticsState;
-
-    public StartupInitializer(CoreDiagnosticsOptions diagnosticsOptions = null, CoreDiagnosticsState diagnosticsState = null)
-    {
-        _diagnosticsOptions = diagnosticsOptions;
-        _diagnosticsState = diagnosticsState;
-    }
+    private readonly CoreDiagnosticsOptions? _diagnosticsOptions = diagnosticsOptions;
+    private readonly CoreDiagnosticsState? _diagnosticsState = diagnosticsState;
 
     /// <summary>
     /// Add new initializer if not present.

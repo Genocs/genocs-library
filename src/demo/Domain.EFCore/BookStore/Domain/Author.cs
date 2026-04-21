@@ -8,9 +8,9 @@ public class Author
 
     public string LastName { get; set; } = string.Empty;
 
-    public string Biography { get; set; }
+    public string? Biography { get; set; }
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
-    public ICollection<BookAuthor> BookAuthors { get; } = new List<BookAuthor>();
+    public ICollection<BookAuthor> BookAuthors { get; } = [];
 }

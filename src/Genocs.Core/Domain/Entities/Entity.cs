@@ -48,7 +48,7 @@ public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || obj is not Entity<TPrimaryKey>)
         {

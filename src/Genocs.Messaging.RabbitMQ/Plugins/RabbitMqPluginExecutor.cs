@@ -13,8 +13,7 @@ internal sealed class RabbitMqPluginsExecutor : IRabbitMqPluginsExecutor
         _serviceProvider = serviceProvider;
     }
 
-    public async Task ExecuteAsync(Func<object, object, BasicDeliverEventArgs, Task> successor,
-        object message, object correlationContext, BasicDeliverEventArgs args)
+    public async Task ExecuteAsync(Func<object, object, BasicDeliverEventArgs, Task> successor, object message, object correlationContext, BasicDeliverEventArgs args)
     {
         var chains = _registry.Get();
 
@@ -28,13 +27,7 @@ internal sealed class RabbitMqPluginsExecutor : IRabbitMqPluginsExecutor
 
         foreach (var chain in chains)
         {
-            var plugin = _serviceProvider.GetService(chain.PluginType);
-
-            if (plugin is null)
-            {
-                throw new InvalidOperationException($"RabbitMq plugin of type {chain.PluginType.Name} was not registered");
-            }
-
+            object? plugin = _serviceProvider.GetService(chain.PluginType) ?? throw new InvalidOperationException($"RabbitMq plugin of type {chain.PluginType.Name} was not registered");
             plugins.AddLast(plugin as IRabbitMqPlugin);
         }
 

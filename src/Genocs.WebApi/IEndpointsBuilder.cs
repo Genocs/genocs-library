@@ -10,7 +10,7 @@ public interface IEndpointsBuilder
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies);
 
     IEndpointsBuilder Get<T>(
@@ -18,7 +18,7 @@ public interface IEndpointsBuilder
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies)
         where T : class;
 
@@ -27,7 +27,7 @@ public interface IEndpointsBuilder
         Func<TRequest, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies)
         where TRequest : class;
 
@@ -36,7 +36,7 @@ public interface IEndpointsBuilder
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies);
 
     IEndpointsBuilder Post<T>(
@@ -44,7 +44,7 @@ public interface IEndpointsBuilder
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies)
         where T : class;
 
@@ -53,7 +53,7 @@ public interface IEndpointsBuilder
         Func<HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies);
 
     IEndpointsBuilder Put<T>(
@@ -61,7 +61,7 @@ public interface IEndpointsBuilder
         Func<T, HttpContext?, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies)
         where T : class;
 
@@ -70,15 +70,9 @@ public interface IEndpointsBuilder
         Func<HttpContext?, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies);
 
-    IEndpointsBuilder Delete<T>(
-        string path,
-        Func<T, HttpContext?, Task>? context = null,
-        Action<IEndpointConventionBuilder>? endpoint = null,
-        bool auth = false,
-        string roles = null,
-        params string[] policies)
+    IEndpointsBuilder Delete<T>(string path, Func<T, HttpContext?, Task>? context = null, Action<IEndpointConventionBuilder>? endpoint = null, bool auth = false, string? roles = null, params string[] policies)
         where T : class;
 }

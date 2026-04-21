@@ -94,7 +94,7 @@ public static class MongoExtensions
             return new MongoClient(clientSettings);
         });
 
-        builder.Services.AddTransient(sp =>
+        builder.Services.AddSingleton<IMongoDatabase>(sp =>
         {
             var options = sp.GetRequiredService<MongoOptions>();
             var client = sp.GetRequiredService<IMongoClient>();
@@ -121,7 +121,7 @@ public static class MongoExtensions
         if (registerConventions && !_conventionsRegistered)
         {
             _conventionsRegistered = true;
-            ServiceCollectionExtensions.RegisterConventions();
+            ServiceCollectionExtensions.RegisterConventions(options.GuidRepresentationMode);
         }
 
         return builder;

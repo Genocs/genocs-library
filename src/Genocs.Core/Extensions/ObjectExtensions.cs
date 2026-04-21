@@ -26,7 +26,7 @@ public static class ObjectExtensions
     /// <param name="obj">Object to be converted.</param>
     /// <typeparam name="T">Type of the target object.</typeparam>
     /// <returns>Converted object.</returns>
-    public static T? To<T>(this object obj)
+    public static T? To<T>(this object? obj)
         where T : struct
     {
         if (obj == null)
@@ -34,7 +34,7 @@ public static class ObjectExtensions
             return null;
         }
 
-        string objString = obj.ToString();
+        string? objString = obj.ToString();
 
         if (string.IsNullOrEmpty(objString))
         {

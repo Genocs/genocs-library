@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,14 +32,14 @@ internal sealed class EventHandlerLoggingDecorator<TEvent>(IEventHandler<TEvent>
         }
         catch (Exception ex)
         {
-            string exceptionTemplate = template.GetExceptionTemplate(ex);
+            string? exceptionTemplate = template.GetExceptionTemplate(ex);
 
             Log(@event, exceptionTemplate, isError: true);
             throw;
         }
     }
 
-    private void Log(TEvent @event, string message, bool isError = false)
+    private void Log(TEvent @event, string? message, bool isError = false)
     {
         if (string.IsNullOrEmpty(message))
         {
@@ -64,7 +61,7 @@ internal sealed class EventHandlerLoggingDecorator<TEvent>(IEventHandler<TEvent>
     /// </summary>
     private class EmptyMessageToLogTemplateMapper : IMessageToLogTemplateMapper
     {
-        public HandlerLogTemplate Map<TMessage>(TMessage message)
+        public HandlerLogTemplate? Map<TMessage>(TMessage message)
             where TMessage : class => null;
     }
 }

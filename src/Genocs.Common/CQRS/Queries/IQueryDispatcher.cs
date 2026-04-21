@@ -12,7 +12,7 @@ public interface IQueryDispatcher
     /// <param name="query">The query.</param>
     /// <param name="cancellationToken">The Cancellation token.</param>
     /// <returns>The query result.</returns>
-    Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
+    Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// QueryAsync.
@@ -22,6 +22,6 @@ public interface IQueryDispatcher
     /// <param name="query">The query object instance.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The query result.</returns>
-    Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+    Task<TResult?> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TResult>;
 }

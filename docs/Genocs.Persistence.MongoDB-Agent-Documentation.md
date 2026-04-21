@@ -19,6 +19,39 @@
 | Main value | `AddMongo(...)`, `AddMongoWithRegistration(...)`, `IMongoRepository<TEntity>`, `IMongoBaseRepository<TEntity, TKey>`, `IMongoSessionFactory`, and startup seeding through `IMongoInitializer` |
 | Requires | `Genocs.Core` and MongoDB |
 
+## Current Implementation Status (April 2026)
+
+The following backlog tasks are completed and reflected by the current package behavior:
+
+- `MONGO-001`: Removed runtime `NotImplementedException` paths from repository APIs.
+- `MONGO-002`: Removed sync-over-async and fire-and-forget write behavior from critical repository paths.
+- `MONGO-003`: Aligned repository contract nullability and hidden-member semantics (`override`/contract shape).
+- `MONGO-004`: Unified `IMongoClient`/`IMongoDatabase` composition so provider, session factory, and repositories use one DI-managed client pipeline.
+- `MONGO-005`: Seeding guard now tracks per database key (`connectionString|database`) with retry-safe behavior after failures.
+- `MONGO-006`: GUID serializer strategy defaults to `Standard` with explicit compatibility mode (`CSharpLegacy`).
+- `MONGO-007`: Removed unfinished built-in encryption surface from package runtime composition.
+- `MONGO-008`: Added executable unit tests covering repository contracts, registration behavior, and initializer guard behavior.
+- `MONGO-009`: Replaced SQL-based component test scaffold with MongoDB Testcontainers integration tests using environment-driven skip conditions.
+
+## Agent Execution Protocol
+
+Use this protocol when generating or modifying code for this package:
+
+1. Detect registration path first:
+- `AddMongoWithRegistration()` for `ObjectId` + `IMongoEntity` path.
+- `AddMongo()` + `AddMongoRepository<TEntity, TKey>(collectionName)` for custom key path.
+2. Detect collection mapping strategy:
+- `TableMappingAttribute`/type-name for default `IMongoRepository<TEntity>` path.
+- explicit `collectionName` for `IMongoBaseRepository<TEntity, TKey>` path.
+3. Detect startup behavior requirements:
+- if seeding is required, ensure both `genocs.Build()` and `app.UseGenocs()` are present.
+- if not required, keep `mongoDb.seed` disabled.
+4. Detect serialization compatibility requirements:
+- use `mongoDb.guidRepresentationMode = Standard` unless legacy data compatibility is explicitly required.
+5. Avoid unsupported assumptions:
+- do not generate built-in encryption configuration for this package.
+- do not generate partial-update semantics for repository updates.
+
 ## What This Package Is For
 
 Use `Genocs.Persistence.MongoDB` when you need to:
@@ -106,7 +139,7 @@ Effect:
 
 - registers `MongoOptions` as a singleton
 - registers `IMongoClient` as a singleton
-- registers `IMongoDatabase` as a transient service
+- registers `IMongoDatabase` as a singleton service
 - registers `IMongoInitializer`, `IMongoSeeder`, `IMongoSessionFactory`, and `IMongoDatabaseProvider`
 - adds the Mongo initializer into the Genocs startup initializer pipeline
 
@@ -235,8 +268,9 @@ Configuration:
 
 Important behavior:
 
-- seeding is guarded by a static process-wide flag
-- it runs at most once per process lifetime, not once per scope or once per database name
+- seeding is guarded per database key (`connectionString|database`)
+- the same database key seeds once per process, but different database keys seed independently
+- failed seeding clears the guard key so a subsequent startup attempt can retry deterministically
 
 ## Core Entry Points
 
@@ -249,7 +283,7 @@ Important behavior:
 | `RegisterMongoRepositories(assembly, lifetime)` | Scan and register custom repository implementations | Scans assembly dependencies and registers implementations as their interfaces | Assuming it registers the package's built-in generic repository |
 | `IMongoRepository<TEntity>` | Use the default `ObjectId` repository contract | Requires `TEntity : IMongoEntity` | Using it for `Guid` or `string` keys |
 | `IMongoBaseRepository<TEntity, TKey>` | Use the Mongo-specific generic repository contract | Adds async predicate, paging, and existence methods on top of the base repository contract | Assuming behavior is identical across the package's two concrete repository implementations |
-| `IMongoDatabaseProvider` | Access `MongoClient` and `Database` together | Internally creates its own `MongoClient` and `IMongoDatabase` instance from options | Assuming it shares object identity with the DI-registered `IMongoClient` singleton |
+| `IMongoDatabaseProvider` | Access `MongoClient` and `Database` together | Uses DI-registered `IMongoClient` and `MongoOptions` to resolve `IMongoDatabase` | Assuming it creates its own client instance separate from DI |
 | `IMongoSessionFactory.CreateAsync()` | Start a MongoDB client session | Uses the DI-registered `IMongoClient` singleton | Assuming transactions work on every MongoDB deployment |
 | `IMongoSeeder` | Provide startup seed logic | Runs only through `IMongoInitializer` | Forgetting that the host must run Genocs startup initializers |
 
@@ -312,12 +346,17 @@ When conventions are enabled, the package registers these global conventions and
 
 - decimal as `Decimal128`
 - nullable decimal as `Decimal128`
-- `GuidSerializer(GuidRepresentation.CSharpLegacy)`
+- `GuidSerializer(GuidRepresentation.Standard)` by default
 - camelCase element names
 - ignored extra elements on deserialization
 - enum values serialized as strings
 
 These are process-wide serializer settings, not per-database settings.
+
+GUID representation behavior:
+
+- default mode is `GuidRepresentation.Standard`
+- compatibility mode `CSharpLegacy` is available through `mongoDb.guidRepresentationMode`
 
 ## Configuration Ownership
 
@@ -330,7 +369,8 @@ These are process-wide serializer settings, not per-database settings.
         "database": "orders",
         "enableTracing": true,
         "seed": false,
-        "setRandomDatabaseSuffix": false
+                "setRandomDatabaseSuffix": false,
+                "guidRepresentationMode": "Standard"
     }
 }
 ```
@@ -350,14 +390,7 @@ What each field does:
 - `enableTracing`: subscribes the Mongo driver diagnostics activity subscriber
 - `seed`: enables startup seeding through `IMongoInitializer`
 - `setRandomDatabaseSuffix`: appends a random GUID suffix to the configured database name before registration
-
-### Encryption Options
-
-The package also defines `MongoEncryptionOptions` in the `mongoDbEncryption` section, but the only wiring that would apply those options is commented out in `MongoDatabaseProvider`.
-
-Safe guidance:
-
-- treat `mongoDbEncryption` as not currently active runtime functionality in this package
+- `guidRepresentationMode`: chooses BSON GUID strategy (`Standard` default, `CSharpLegacy` compatibility)
 
 ## Public Capability Map
 
@@ -371,7 +404,6 @@ Safe guidance:
 ### Options
 
 - `MongoOptions`
-- `MongoEncryptionOptions`
 
 ### Repositories
 
@@ -408,8 +440,8 @@ When you cannot inspect source code, follow these rules:
 6. Do not assume updates are partial; they are full replacements.
 7. Do not assume seeding runs unless the host executes the Genocs startup initializer pipeline.
 8. Do not assume BSON conventions are local to one host module. They are global process-wide registrations.
-9. Do not assume `IMongoDatabaseProvider.MongoClient` is the same object instance as the DI-registered `IMongoClient` singleton.
-10. Do not assume `mongoDbEncryption` is active. The encryption integration path is commented out.
+9. `IMongoDatabaseProvider.MongoClient` is sourced from the DI-registered `IMongoClient` singleton; treat it as the same composition pipeline.
+10. Do not assume built-in client-side field encryption support exists in this package.
 11. Do not assume transaction support exists unless MongoDB is configured to support sessions and transactions.
 
 ## Agent Decision Checklist
@@ -423,7 +455,7 @@ Before generating code that depends on `Genocs.Persistence.MongoDB`, answer thes
 5. Should no-match async lookups throw or return null in the chosen repository path?
 6. Does the app need raw driver access or a repository abstraction?
 7. Is MongoDB transaction support actually available in the deployment topology?
-8. Is startup seeding required, and can it safely run only once per process?
+8. Is startup seeding required, and can it safely run once per database key (`connectionString|database`) in the current process?
 9. Does the app rely on a specific GUID representation or BSON convention that might conflict with the package defaults?
 
 If any answer is unknown, prefer the smallest registration path and be explicit about collection names and repository type choices.
@@ -501,11 +533,14 @@ Fix: Verify that `orderBy` matches an actual property name on the document type.
 7. Mongo transactions fail even though session creation works.
 Fix: Confirm the MongoDB deployment supports transactions. Session support alone does not guarantee transaction support.
 
-8. Encryption settings have no effect.
-Fix: The package defines `MongoEncryptionOptions`, but the client-side encryption wiring is currently commented out.
+8. MongoDB encryption configuration appears missing.
+Fix: This package no longer exposes built-in encryption configuration surface; implement encryption externally in application composition if required.
 
 9. Another library sees unexpected Mongo serialization behavior.
 Fix: Re-check the process-wide BSON conventions and serializers registered by this package.
+
+10. Provider/session/repository behavior appears inconsistent across execution paths.
+Fix: Verify everything is resolved through DI (`IMongoClient`, `IMongoDatabase`, `IMongoDatabaseProvider`, `IMongoSessionFactory`) and avoid manual client construction in app code.
 
 ## Related Packages To Ask About
 

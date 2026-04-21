@@ -22,7 +22,7 @@ internal class ConnectionStringValidator : IConnectionStringValidator
         _logger = logger;
     }
 
-    public bool TryValidate(string connectionString, string dbProvider = null)
+    public bool TryValidate(string connectionString, string? dbProvider = null)
     {
         if (string.IsNullOrWhiteSpace(dbProvider))
         {
@@ -47,7 +47,7 @@ internal class ConnectionStringValidator : IConnectionStringValidator
                     var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);
                     break;
 
-                //case DbProviderKeys.Oracle:
+                // case DbProviderKeys.Oracle:
                 //    var oralclecs = new OracleConnectionStringBuilder(connectionString);
                 //    break;
 

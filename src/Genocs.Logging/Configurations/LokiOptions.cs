@@ -36,7 +36,7 @@ public class LokiOptions
     /// <summary>
     /// The Uri at which the Loki instance can be found.
     /// </summary>
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     /// <summary>
     /// The maximum number of events to post in a single batch. Default value is 1000.
@@ -56,10 +56,10 @@ public class LokiOptions
     /// <summary>
     /// Username used for Grafana Loki authorization.
     /// </summary>
-    public string LokiUsername { get; set; }
+    public string? LokiUsername { get; set; }
 
     /// <summary>
     /// Password used for Grafana Loki authorization.
     /// </summary>
-    public string LokiPassword { get; set; }
+    public string? LokiPassword { get; set; }
 }

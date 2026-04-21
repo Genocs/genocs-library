@@ -255,10 +255,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         await channel.BasicConsumeAsync(conventions.Queue, false, consumer);
     }
 
-    private Activity? StartConsumerActivity(
-                                            BasicDeliverEventArgs args,
-                                            IMessageSubscriber messageSubscriber,
-                                            IConventions conventions)
+    private Activity? StartConsumerActivity(BasicDeliverEventArgs args, IMessageSubscriber messageSubscriber, IConventions conventions)
     {
         ActivityContext parentContext = default;
         TryExtractParentContext(args.BasicProperties.Headers, out parentContext);

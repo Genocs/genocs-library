@@ -30,7 +30,7 @@ public static class Extensions
     private const string SectionName = "webApi";
     private const string RegistryName = "webApi";
     private const string EmptyJsonObject = "{}";
-    private const string LocationHeader = "Location";
+    private const string LocationHeader = "location";
 
     private const string JsonContentType = "application/json";
     private static readonly byte[] InvalidJsonRequestBytes = Encoding.UTF8.GetBytes("An invalid JSON was sent.");
@@ -203,7 +203,7 @@ public static class Extensions
 
     private static TModel Bind<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> expression, object value)
     {
-        if (!(expression.Body is MemberExpression memberExpression))
+        if (expression.Body is not MemberExpression memberExpression)
         {
             memberExpression = ((UnaryExpression)expression.Body).Operand as MemberExpression;
         }
@@ -235,7 +235,7 @@ public static class Extensions
         return data is null ? Task.CompletedTask : response.WriteJsonAsync(data);
     }
 
-    public static Task Created(this HttpResponse response, string location = null, object? data = null)
+    public static Task Created(this HttpResponse response, string? location = null, object? data = null)
     {
         response.StatusCode = 201;
 
@@ -410,7 +410,7 @@ public static class Extensions
         if (request.HasQueryString())
         {
             var queryString = HttpUtility.ParseQueryString(request.HttpContext.Request.QueryString.Value);
-            values ??= new RouteValueDictionary();
+            values ??= [];
             foreach (string key in queryString.AllKeys)
             {
                 values.TryAdd(key, queryString[key]);
@@ -423,12 +423,17 @@ public static class Extensions
             return serializer.Deserialize<T>(EmptyJsonObject);
         }
 
-        string serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
+        string? serialized = serializer.Serialize(values.ToDictionary(k => k.Key, k => k.Value))
             ?.Replace("\\\"", "\"")
             .Replace("\"{", "{")
             .Replace("}\"", "}")
             .Replace("\"[", "[")
             .Replace("]\"", "]");
+
+        if (string.IsNullOrWhiteSpace(serialized))
+        {
+            return default!;
+        }
 
         return serializer.Deserialize<T>(serialized);
     }
@@ -439,7 +444,7 @@ public static class Extensions
     private static bool HasRouteData(this HttpRequest request)
         => request.HttpContext.GetRouteData().Values.Any();
 
-    public static string Args(this HttpContext context, string key)
+    public static string? Args(this HttpContext context, string key)
         => context.Args<string>(key);
 
     public static T? Args<T>(this HttpContext context, string key)
@@ -454,13 +459,13 @@ public static class Extensions
             return (T)value;
         }
 
-        string data = value?.ToString();
+        string? data = value?.ToString();
         if (string.IsNullOrWhiteSpace(data))
         {
             return default;
         }
 
-        return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(data);
+        return (T?)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(data);
     }
 
     private class EmptyExceptionToResponseMapper : IExceptionToResponseMapper

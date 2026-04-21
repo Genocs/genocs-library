@@ -67,17 +67,20 @@ public static partial class ExpressionBuilder
                 }
                 else
                 {
-                    string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
-                    switch (conditionOperator)
+                    if (searchExpression != null)
                     {
-                        case "and":
-                            searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
-                            break;
-                        case "or":
-                            searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
-                            break;
-                        default:
-                            break;
+                        string conditionOperator = operatorIndexes[count - 1].Operator.Trim();
+                        switch (conditionOperator)
+                        {
+                            case "and":
+                                searchExpression = Expression.AndAlso(searchExpression, methodCallExpression);
+                                break;
+                            case "or":
+                                searchExpression = Expression.OrElse(searchExpression, methodCallExpression);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }

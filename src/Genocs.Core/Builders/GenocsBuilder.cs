@@ -32,7 +32,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">The IConfiguration.</param>
-    private GenocsBuilder(IServiceCollection services, IConfiguration configuration)
+    private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
         _services = services;
         Configuration = ResolveConfiguration(services, configuration);
@@ -55,10 +55,10 @@ public sealed class GenocsBuilder : IGenocsBuilder
     public static IGenocsBuilder Create(WebApplicationBuilder builder)
         => new GenocsBuilder(builder);
 
-    public static IGenocsBuilder Create(IServiceCollection services, IConfiguration configuration = null)
+    public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);
 
-    private static IConfiguration ResolveConfiguration(IServiceCollection services, IConfiguration explicitConfiguration)
+    private static IConfiguration ResolveConfiguration(IServiceCollection services, IConfiguration? explicitConfiguration)
     {
         if (explicitConfiguration is not null)
         {

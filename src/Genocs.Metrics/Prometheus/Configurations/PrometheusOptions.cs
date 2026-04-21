@@ -18,12 +18,12 @@ public class PrometheusOptions
     /// <summary>
     /// The Prometheus endpoint.
     /// </summary>
-    public string Endpoint { get; set; }
+    public string? Endpoint { get; set; }
 
     /// <summary>
     /// The Prometheus ApiKey.
     /// </summary>
-    public string ApiKey { get; set; }
+    public string? ApiKey { get; set; }
 
     /// <summary>
     /// The Prometheus AllowedHosts.

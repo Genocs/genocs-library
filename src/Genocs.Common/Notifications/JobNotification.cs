@@ -34,7 +34,7 @@ public class JobNotification : INotificationMessage
     /// </summary>
     /// <remarks>The job identifier can be used to track the status and results of a job operation. This
     /// property may be null if the job has not been assigned an identifier.</remarks>
-    public string JobId { get; set; }
+    public string? JobId { get; set; }
 
     /// <summary>
     /// Gets or sets the progress percentage of the operation.

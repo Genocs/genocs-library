@@ -86,12 +86,12 @@ public abstract class RepositoryBase<TEntity, TKey> : IQueryableRepository<TEnti
         return SingleCoreAsync(predicate, cancellationToken);
     }
 
-    public virtual TEntity FirstOrDefault(TKey id)
+    public virtual TEntity? FirstOrDefault(TKey id)
     {
         return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
     }
 
-    public virtual Task<TEntity> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
     {
         return FirstOrDefaultByIdCoreAsync(id, cancellationToken);
     }
@@ -100,17 +100,17 @@ public abstract class RepositoryBase<TEntity, TKey> : IQueryableRepository<TEnti
     /// Async-first extension point for key-based lookup.
     /// The default implementation preserves legacy behavior by delegating to the synchronous path.
     /// </summary>
-    protected virtual Task<TEntity> FirstOrDefaultByIdCoreAsync(TKey id, CancellationToken cancellationToken = default)
+    protected virtual Task<TEntity?> FirstOrDefaultByIdCoreAsync(TKey id, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(FirstOrDefault(id));
     }
 
-    public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+    public virtual TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
     {
         return GetAll().FirstOrDefault(predicate);
     }
 
-    public virtual Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return FirstOrDefaultCoreAsync(predicate, cancellationToken);
     }
@@ -119,7 +119,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IQueryableRepository<TEnti
     /// Async-first extension point for predicate-based lookup.
     /// The default implementation preserves legacy behavior by delegating to the synchronous path.
     /// </summary>
-    protected virtual Task<TEntity> FirstOrDefaultCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    protected virtual Task<TEntity?> FirstOrDefaultCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(FirstOrDefault(predicate));
     }
