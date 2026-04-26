@@ -32,6 +32,13 @@ public class TelemetryOptions
     public AzureOptions? Azure { get; set; }
 
     /// <summary>
+    /// Prometheus scraping endpoint settings.
+    /// When enabled, the OpenTelemetry MeterProvider is augmented with a Prometheus exporter
+    /// and the scraping endpoint can be mapped via <c>MapPrometheus()</c>.
+    /// </summary>
+    public PrometheusOptions? Prometheus { get; set; }
+
+    /// <summary>
     /// MongoDB tracing settings.
     /// MongoDB metrics and log export are not configured by this package.
     /// </summary>

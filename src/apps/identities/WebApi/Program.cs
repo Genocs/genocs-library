@@ -7,6 +7,7 @@ using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Queries;
 using Genocs.Identities.Application.Services;
 using Genocs.Logging;
+using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.CQRS;
 using Serilog;
@@ -33,6 +34,9 @@ app.UseCore();
 
 // Map default endpoints to provide support for health checks
 app.MapDefaultEndpoints();
+
+// Map the Prometheus scraping endpoint when enabled in configuration.
+app.MapPrometheus();
 
 app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<SignIn>(

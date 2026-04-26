@@ -1,7 +1,6 @@
 using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Messaging.RabbitMQ;
-using Genocs.Metrics.Prometheus;
 using Genocs.Security;
 using Genocs.Telemetry;
 using Genocs.WebApi;
@@ -39,8 +38,7 @@ internal class Startup(IConfiguration configuration)
                             .AddGenocs(Configuration)
                             .AddTelemetry()
                             .AddMongoWithRegistration()
-                            .AddJwt()
-                            .AddPrometheus();
+                            .AddJwt();
 
         await builder.AddRabbitMQAsync();
 
@@ -94,6 +92,7 @@ internal class Startup(IConfiguration configuration)
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapPrometheus();
             endpoints.MapReverseProxy();
         });
     }

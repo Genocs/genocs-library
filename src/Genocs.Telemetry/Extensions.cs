@@ -5,6 +5,8 @@ using Azure.Monitor.OpenTelemetry.Exporter;
 using Genocs.Common.Configurations;
 using Genocs.Core.Builders;
 using Genocs.Telemetry.Configurations;
+using Genocs.Telemetry.Internals;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +70,14 @@ public static class OpenTelemetryExtensions
         bool hasWebApplicationBuilder = builder.WebApplicationBuilder is not null;
         Trace.TraceInformation($"Genocs.Telemetry configures OpenTelemetry traces and metrics only. OpenTelemetry log export is not wired by this package and remains owned by Genocs.Logging. Host mode: {(hasWebApplicationBuilder ? "WebApplicationBuilder" : "ServiceCollection-only")}.");
 
+        // Prometheus is exposed through the OpenTelemetry MeterProvider as a plug-in exporter,
+        // controlled by the telemetry.prometheus configuration sub-section.
+        if (IsPrometheusEnabled(telemetryOptions, out PrometheusOptions? prometheusOptions))
+        {
+            builder.Services.AddSingleton(prometheusOptions);
+            builder.Services.AddSingleton<PrometheusMiddleware>();
+        }
+
         builder.Services
             .AddOpenTelemetry()
             .ConfigureResource(resource => resource
@@ -78,6 +88,63 @@ public static class OpenTelemetryExtensions
             .WithTracing(tracing => ConfigureTracing(tracing, telemetryOptions));
 
         return builder;
+    }
+
+    /// <summary>
+    /// Adds the Prometheus auth-gate middleware to the HTTP pipeline. Safe to call
+    /// unconditionally: when <c>telemetry.prometheus.enabled</c> is false (or the
+    /// telemetry section is disabled), the call is a no-op.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <returns>The application builder, for chaining.</returns>
+    public static IApplicationBuilder UsePrometheus(this IApplicationBuilder app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+
+        PrometheusOptions? options = app.ApplicationServices.GetService<PrometheusOptions>();
+        if (options is null || !options.Enabled)
+        {
+            return app;
+        }
+
+        return app.UseMiddleware<PrometheusMiddleware>();
+    }
+
+    /// <summary>
+    /// Maps the Prometheus scraping endpoint (defaults to <c>/metrics</c>) on the supplied
+    /// endpoint route builder. Safe to call unconditionally: when
+    /// <c>telemetry.prometheus.enabled</c> is false, the call is a no-op.
+    /// </summary>
+    /// <param name="endpoints">The endpoint route builder.</param>
+    /// <returns>The endpoint route builder, for chaining.</returns>
+    public static IEndpointRouteBuilder MapPrometheus(this IEndpointRouteBuilder endpoints)
+    {
+        ArgumentNullException.ThrowIfNull(endpoints);
+
+        PrometheusOptions? options = endpoints.ServiceProvider.GetService<PrometheusOptions>();
+        if (options is null || !options.Enabled)
+        {
+            return endpoints;
+        }
+
+        endpoints.MapPrometheusScrapingEndpoint(NormalizePrometheusEndpoint(options.Endpoint));
+        return endpoints;
+    }
+
+    internal static string NormalizePrometheusEndpoint(string? endpoint)
+    {
+        if (string.IsNullOrWhiteSpace(endpoint))
+        {
+            return PrometheusOptions.DefaultEndpoint;
+        }
+
+        return endpoint.StartsWith('/') ? endpoint : $"/{endpoint}";
+    }
+
+    private static bool IsPrometheusEnabled(TelemetryOptions options, [NotNullWhen(true)] out PrometheusOptions? prometheusOptions)
+    {
+        prometheusOptions = options.Prometheus;
+        return prometheusOptions?.Enabled == true;
     }
 
     private static void ConfigureMetrics(MeterProviderBuilder metrics, TelemetryOptions options)
@@ -104,6 +171,11 @@ public static class OpenTelemetryExtensions
         if (options.Azure?.Enabled == true && options.Azure.EnableMetrics && !string.IsNullOrWhiteSpace(options.Azure.ConnectionString))
         {
             metrics.AddAzureMonitorMetricExporter(azure => azure.ConnectionString = options.Azure.ConnectionString);
+        }
+
+        if (options.Prometheus?.Enabled == true)
+        {
+            metrics.AddPrometheusExporter();
         }
     }
 

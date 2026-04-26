@@ -2,7 +2,9 @@ using System.Diagnostics;
 using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDB;
+using Genocs.Persistence.MongoDB.Configurations;
 using Genocs.Persistence.MongoDB.Domain.Repositories;
+using Genocs.Persistence.MongoDB.Extensions;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
 
@@ -10,6 +12,9 @@ namespace Genocs.Persistence.MongoDB.ComponentTests;
 
 public sealed class DriverRepositoryTests : IAsyncLifetime
 {
+    private static readonly object ConventionsLock = new();
+    private static bool _conventionsRegistered;
+
     private readonly MongoDbContainer _mongoContainer = new MongoDbBuilder("mongo:7.0")
         .Build();
 
@@ -19,6 +24,8 @@ public sealed class DriverRepositoryTests : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
+        EnsureMongoConventionsRegistered();
+
         await _mongoContainer.StartAsync();
 
         var mongoClient = new MongoClient(_mongoContainer.GetConnectionString());
@@ -26,6 +33,26 @@ public sealed class DriverRepositoryTests : IAsyncLifetime
         var provider = new TestMongoDatabaseProvider(mongoClient, database);
 
         _repository = new MongoBaseRepositoryOfType<DriverEntity, Guid>(provider);
+    }
+
+    private static void EnsureMongoConventionsRegistered()
+    {
+        if (_conventionsRegistered)
+        {
+            return;
+        }
+
+        lock (ConventionsLock)
+        {
+            if (_conventionsRegistered)
+            {
+                return;
+            }
+
+            // Align component test serialization behavior with runtime AddMongo defaults.
+            ServiceCollectionExtensions.RegisterConventions(MongoGuidRepresentationMode.Standard);
+            _conventionsRegistered = true;
+        }
     }
 
     public async ValueTask DisposeAsync()

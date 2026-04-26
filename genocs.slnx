@@ -80,7 +80,6 @@
   <Project Path="src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj" />
   <Project Path="src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj" />
   <Project Path="src/Genocs.Messaging/Genocs.Messaging.csproj" />
-  <Project Path="src/Genocs.Metrics/Genocs.Metrics.csproj" />
   <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
   <Project Path="src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj" />
   <Project Path="src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj" />

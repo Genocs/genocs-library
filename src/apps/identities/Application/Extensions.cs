@@ -116,6 +116,7 @@ public static class Extensions
             .UseMongo()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
+            .UsePrometheus()
             .UseRabbitMQ()
             .SubscribeCommand<CreateUser>()
             .SubscribeCommand<CreateAdmin>()

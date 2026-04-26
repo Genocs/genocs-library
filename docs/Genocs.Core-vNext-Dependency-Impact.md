@@ -45,7 +45,6 @@ Library packages:
 - Genocs.Logging
 - Genocs.Messaging
 - Genocs.Messaging.AzureServiceBus
-- Genocs.Metrics
 - Genocs.Persistence.EFCore
 - Genocs.Persistence.MongoDB
 - Genocs.Persistence.Redis
@@ -129,7 +128,6 @@ Owner and state values in this table use the definition files listed above.
 | Genocs.Logging | Direct dependent | OBS | Medium | QUEUED-W1 | dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo |
 | Genocs.Messaging | Direct dependent | MSG | High | QUEUED-W1 | dotnet build src/Genocs.Messaging/Genocs.Messaging.csproj -c Debug --nologo |
 | Genocs.Messaging.AzureServiceBus | Direct dependent | MSG | High | QUEUED-W1 | dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo |
-| Genocs.Metrics | Direct dependent | OBS | Medium | QUEUED-W1 | dotnet build src/Genocs.Metrics/Genocs.Metrics.csproj -c Debug --nologo |
 | Genocs.Persistence.EFCore | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo |
 | Genocs.Persistence.MongoDB | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj -c Debug --nologo |
 | Genocs.Persistence.Redis | Direct dependent | PERSIST | High | QUEUED-W1 | dotnet build src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj -c Debug --nologo |

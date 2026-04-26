@@ -317,9 +317,71 @@ Use this profile when instrumentation is kept on for compatibility, but trace ex
 }
 ```
 
+## Prometheus Plugin
+
+Prometheus is exposed as a built-in plug-in on top of the OpenTelemetry MeterProvider. The
+formerly-separate `Genocs.Metrics` package is no longer required — installing
+`Genocs.Telemetry` and enabling the `telemetry.prometheus` sub-section is enough.
+
+When enabled, `AddTelemetry()`:
+
+- Adds the `OpenTelemetry.Exporter.Prometheus.AspNetCore` exporter to the meter provider.
+- Registers the auth-gating middleware used by `UsePrometheus()`.
+
+Configuration:
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "prometheus": {
+      "enabled": true,
+      "endpoint": "/metrics",
+      "apiKey": null,
+      "allowedHosts": []
+    }
+  }
+}
+```
+
+Settings:
+
+- `enabled`: master switch for the Prometheus plug-in. Defaults to `false`.
+- `endpoint`: scraping path. Defaults to `/metrics`. Always normalized to start with `/`.
+- `apiKey`: optional API key. When set, callers must pass `?apiKey=<value>` on the scraping endpoint.
+- `allowedHosts`: optional list of allowed hosts (or `x-forwarded-for` values). When set, only matching callers may scrape. If both `apiKey` and `allowedHosts` are empty, the endpoint is open to any caller.
+
+Pipeline wiring:
+
+```csharp
+using Genocs.Telemetry;
+
+var app = builder.Build();
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Auth-gate middleware (no-op when telemetry.prometheus.enabled is false).
+app.UsePrometheus();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+
+    // Map the Prometheus scraping endpoint (no-op when telemetry.prometheus.enabled is false).
+    endpoints.MapPrometheus();
+});
+```
+
+`UsePrometheus()` and `MapPrometheus()` are safe to call unconditionally: when the plug-in is
+disabled, both calls are no-ops.
+
 ## Main Entry Points
 
 - `AddTelemetry`
+- `UsePrometheus` (extension on `IApplicationBuilder`)
+- `MapPrometheus` (extension on `IEndpointRouteBuilder`)
 
 ## Validation
 

@@ -57,11 +57,13 @@ gnxBuilder.Build(app.Services);
 app.UseGenocs()
     .UseCorrelationContextLogging()
     .UseErrorHandler()
+    .UsePrometheus()
     .UseRouting()
     .UseEndpoints(r =>
     {
         r.MapControllers();
         r.MapHub<GenocsHub>("/notificationHub");
+        r.MapPrometheus();
     })
     .UseDispatcherEndpoints(endpoints => endpoints
         .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))

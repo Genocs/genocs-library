@@ -140,7 +140,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
         return new OpenApiSchema
         {
             Type = JsonSchemaType.String,
-            //Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
+            // Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
         };
     }
 
@@ -149,7 +149,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
         return new OpenApiSchema
         {
             Type = JsonSchemaType.String,
-            //Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
+            // Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
         };
     }
 #else

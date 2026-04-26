@@ -3,7 +3,6 @@ using Genocs.Auth;
 using Genocs.Core.Builders;
 using Genocs.Library.Demo.Masstransit.WebApi.Infrastructure.Extensions;
 using Genocs.Logging;
-using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.AzureKeyVault;
 using Genocs.Telemetry;
@@ -25,7 +24,6 @@ IGenocsBuilder gnxBuilder = builder
     .AddOpenIdJwt()
     .AddTelemetry()
     .AddMongoWithRegistration()
-    .AddPrometheus()
     //.AddEFCorePersistence()
     .AddApplicationServices()
     .AddWebApi()
@@ -82,6 +80,7 @@ app.UseMiddleware<JwtOrApiKeyAuthenticationMiddleware>();
 app.UsePrometheus();
 
 app.MapControllers();
+app.MapPrometheus();
 
 await app.RunAsync();
 

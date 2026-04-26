@@ -55,7 +55,6 @@ High-impact transitive package dependents (via Genocs.Core):
 - Genocs.Logging
 - Genocs.Messaging
 - Genocs.Messaging.AzureServiceBus
-- Genocs.Metrics
 - Genocs.Persistence.EFCore
 - Genocs.Persistence.MongoDB
 - Genocs.Persistence.Redis
@@ -145,7 +144,6 @@ Owner and state values in this table use the definition files listed above.
 | Genocs.Logging | Transitive package dependent | COMMON | Medium | QUEUED-W2 | dotnet build src/Genocs.Logging/Genocs.Logging.csproj -c Debug --nologo |
 | Genocs.Messaging | Transitive package dependent | MSG | High | QUEUED-W2 | dotnet build src/Genocs.Messaging/Genocs.Messaging.csproj -c Debug --nologo |
 | Genocs.Messaging.AzureServiceBus | Transitive package dependent | MSG | High | QUEUED-W2 | dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo |
-| Genocs.Metrics | Transitive package dependent | COMMON | Medium | QUEUED-W2 | dotnet build src/Genocs.Metrics/Genocs.Metrics.csproj -c Debug --nologo |
 | Genocs.Persistence.EFCore | Transitive package dependent | PERSIST | High | QUEUED-W2 | dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo |
 | Genocs.Persistence.MongoDB | Transitive package dependent | PERSIST | High | QUEUED-W2 | dotnet build src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj -c Debug --nologo |
 | Genocs.Persistence.Redis | Transitive package dependent | PERSIST | High | QUEUED-W2 | dotnet build src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj -c Debug --nologo |

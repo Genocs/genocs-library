@@ -9,7 +9,6 @@ using Genocs.Logging;
 using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
-using Genocs.Metrics.Prometheus;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Persistence.Redis;
 using Genocs.Products.WebApi;
@@ -51,7 +50,6 @@ IGenocsBuilder gnxBuilder = await builder
                                         .AddInMemoryCommandDispatcher()
                                         .AddInMemoryEventDispatcher()
                                         .AddInMemoryQueryDispatcher()
-                                        .AddPrometheus()
                                         .AddRedis()
                                         .AddMessageOutbox(o => o.AddMongo())
                                         .AddWebApi()
@@ -67,7 +65,11 @@ app.UseGenocs()
     .UsePrometheus()
     .UseRouting()
     .UseCertificateAuthentication()
-    .UseEndpoints(r => r.MapControllers())
+    .UseEndpoints(r =>
+    {
+        r.MapControllers();
+        r.MapPrometheus();
+    })
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get<BrowseProducts, PagedResult<ProductDto>>("products")
         .Get<GetProduct, ProductDto>("products/{productId}")

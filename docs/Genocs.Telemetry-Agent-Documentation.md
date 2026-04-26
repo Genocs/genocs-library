@@ -6,7 +6,9 @@
 - Do not assume repository or source-code visibility.
 - Treat documented extension methods and configuration types as the only safe API surface.
 - Generate OpenTelemetry registration, configuration, and observability guidance only.
-- Do not invent middleware, endpoint mapping, Prometheus scraping endpoints, Jaeger-specific registration methods, or custom instrumentation hooks that this package does not expose.
+- Do not invent Jaeger-specific registration methods or custom instrumentation hooks that this package does not expose.
+- The package does expose a Prometheus plug-in (exporter, auth-gate middleware, scraping-endpoint mapping); use only the documented `UsePrometheus()` / `MapPrometheus()` extensions.
+- There is no `UseTelemetry()` middleware. Aside from the optional Prometheus pipeline calls, `AddTelemetry()` is registration-only.
 - If package composition is unclear, ask whether `Genocs.Core` is already installed because `AddTelemetry()` extends `IGenocsBuilder`.
 
 ## Package Identity
@@ -16,8 +18,9 @@
 | Package | `Genocs.Telemetry` |
 | Target frameworks | `net10.0`, `net9.0`, `net8.0` |
 | Primary role | OpenTelemetry integration for traces and metrics |
-| Main value | One builder extension that wires OpenTelemetry resource metadata, ASP.NET Core and HttpClient instrumentation, runtime metrics, SQL client tracing, optional MongoDB tracing, and OTLP, Azure, or console exporters for traces and metrics |
+| Main value | One builder extension that wires OpenTelemetry resource metadata, ASP.NET Core and HttpClient instrumentation, runtime metrics, SQL client tracing, optional MongoDB tracing, and OTLP, Azure, console, or Prometheus exporters for traces and metrics |
 | Requires | `Genocs.Core` and a configured `app.service` value |
+| Optional pipeline calls | `UsePrometheus()` / `MapPrometheus()` only when `telemetry.prometheus.enabled = true` |
 
 ## What This Package Is For
 
@@ -26,6 +29,7 @@ Use `Genocs.Telemetry` when you need to:
 - register OpenTelemetry from a Genocs host with `AddTelemetry()`
 - export traces and metrics to OTLP collectors
 - export traces and metrics to Azure Monitor
+- expose metrics on a Prometheus scraping endpoint via the built-in plug-in
 - emit telemetry to the console during development
 - instrument incoming ASP.NET Core requests and outgoing `HttpClient` calls
 - instrument runtime metrics such as GC and thread pool data
@@ -36,8 +40,8 @@ Use `Genocs.Telemetry` when you need to:
 
 Do not assume `Genocs.Telemetry` can:
 
-- expose a `UseTelemetry()` middleware or any required app-pipeline call
-- expose Prometheus scrape endpoints
+- expose a `UseTelemetry()` middleware or any other required app-pipeline call (the only optional pipeline calls are `UsePrometheus()` and `MapPrometheus()`, and only when the Prometheus plug-in is enabled)
+- expose a Prometheus exporter or scraping endpoint when `telemetry.prometheus.enabled` is `false` (the plug-in is fully opt-in via configuration)
 - configure a Jaeger exporter directly; Jaeger flows are supported through OTLP collector endpoints
 - register custom `ActivitySource` names beyond the built-in sources and wildcard listener it already configures
 - replace Genocs.Logging log exporter responsibilities
@@ -46,13 +50,14 @@ Do not assume `Genocs.Telemetry` can:
 
 ## Safe Default Mental Model
 
-Treat `Genocs.Telemetry` as five things:
+Treat `Genocs.Telemetry` as six things:
 
 1. A single builder extension: `AddTelemetry()`
-2. An OpenTelemetry resource and exporter setup layer
+2. An OpenTelemetry resource and exporter setup layer (OTLP, Console, Azure Monitor, Prometheus)
 3. A package that instruments web requests, outbound HTTP, runtime metrics, and SQL automatically
 4. A span-enrichment layer that adds correlation, route, user, and exception tags
-5. A package that leaves log export ownership to `Genocs.Logging`
+5. A Prometheus plug-in that surfaces OTel metrics on a scraping endpoint, opt-in via configuration and exposed via two pipeline extensions (`UsePrometheus()` and `MapPrometheus()`)
+6. A package that leaves log export ownership to `Genocs.Logging`
 
 If a user asks for local file logging, Seq logging, or Serilog middleware behavior, identify `Genocs.Logging` as the companion package rather than forcing those concerns into Telemetry.
 
@@ -183,7 +188,71 @@ Important behavior:
 - `telemetry.mongoDB` supports `enabled` and `enableTracing` only
 - the repository sample appsettings files mostly use a separate root `mongodb` section for persistence packages, which does not configure `Genocs.Telemetry` by itself
 
-### Recipe 5: Keep SQL Text Scrubbed
+### Recipe 5: Expose Metrics on a Prometheus Scraping Endpoint
+
+Use this when an in-cluster Prometheus instance must scrape OpenTelemetry metrics from the service.
+
+```csharp
+using Genocs.Core.Builders;
+using Genocs.Telemetry;
+
+var builder = WebApplication.CreateBuilder(args);
+
+IGenocsBuilder genocs = builder
+    .AddGenocs()
+    .AddTelemetry();
+
+var app = builder.Build();
+genocs.Build(app.Services);
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Auth-gate middleware (no-op when telemetry.prometheus.enabled is false).
+app.UsePrometheus();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+
+    // Scraping endpoint (no-op when telemetry.prometheus.enabled is false).
+    endpoints.MapPrometheus();
+});
+
+app.Run();
+```
+
+Configuration:
+
+```json
+{
+  "app": {
+    "service": "orders-api"
+  },
+  "telemetry": {
+    "enabled": true,
+    "prometheus": {
+      "enabled": true,
+      "endpoint": "/metrics",
+      "apiKey": null,
+      "allowedHosts": []
+    }
+  }
+}
+```
+
+Important behavior:
+
+- `AddTelemetry()` adds the Prometheus exporter to the OpenTelemetry MeterProvider when `telemetry.prometheus.enabled = true`.
+- The Prometheus plug-in shares the same metric pipeline with the other configured metric exporters (OTLP, Azure, Console). Multiple metric exporters per signal are allowed.
+- `endpoint` is normalized to start with `/`. The default is `/metrics`.
+- When `apiKey` is set, callers must include `?apiKey=<value>` on the scraping request; otherwise the response is `404`.
+- When `allowedHosts` is non-empty, only callers whose `Host` header (or `x-forwarded-for`) matches a listed value are allowed; mismatches return `404`.
+- When both `apiKey` and `allowedHosts` are empty, the auth-gate middleware is a transparent no-op and the endpoint is open.
+- `UsePrometheus()` and `MapPrometheus()` are safe to call unconditionally; both are no-ops when the plug-in is disabled.
+
+### Recipe 6: Keep SQL Text Scrubbed
 
 Use this when SQL spans are useful but raw SQL text should not be exported.
 
@@ -209,11 +278,14 @@ Important behavior:
 
 | API | Use it for | Important behavior | Common mistake |
 |---|---|---|---|
-| `AddTelemetry()` | Register OpenTelemetry traces and metrics from a Genocs host | Returns immediately if `app.service` is empty or `telemetry.enabled` is `false` | Assuming registration always happens |
-| `TelemetryOptions` | Configure the `telemetry` section | Owns exporter, console, Azure, MongoDB, and SQL client sub-options | Assuming every option property is actively used |
+| `AddTelemetry()` | Register OpenTelemetry traces and metrics from a Genocs host | Returns immediately if `app.service` is empty or `telemetry.enabled` is `false`; also wires the Prometheus exporter and middleware when `telemetry.prometheus.enabled` is `true` | Assuming registration always happens |
+| `UsePrometheus()` | Add the Prometheus auth-gate middleware to the HTTP pipeline | Extension on `IApplicationBuilder`. No-op when `telemetry.prometheus.enabled` is `false` | Assuming a separate `AddPrometheus()` builder call is required (no longer exists) |
+| `MapPrometheus()` | Map the Prometheus scraping endpoint | Extension on `IEndpointRouteBuilder`. No-op when `telemetry.prometheus.enabled` is `false`. Endpoint defaults to `/metrics` | Hard-coding a different scraping path or skipping the call when other endpoint mappings exist |
+| `TelemetryOptions` | Configure the `telemetry` section | Owns exporter, console, Azure, Prometheus, MongoDB, and SQL client sub-options | Assuming every option property is actively used |
 | `OtlpExportOptions` | Configure OTLP export | Controls endpoint, protocol, processor type, and per-signal enablement | Assuming OTLP export works without `otlpEndpoint` |
 | `ConsoleOptions` | Configure console export | Enables console export per signal | Treating it as a production sink by default |
 | `AzureOptions` | Configure Azure Monitor export | Enables Azure export per signal when the connection string exists | Assuming `enabled = true` is enough without a connection string |
+| `PrometheusOptions` | Configure the Prometheus plug-in | Controls `enabled`, `endpoint`, `apiKey`, and `allowedHosts` for the scraping endpoint | Assuming a top-level `prometheus` section is read (it must live under `telemetry.prometheus`) |
 | `MongoDbOptions` | Configure MongoDB telemetry behavior | Only `enabled` and `enableTracing` affect runtime behavior today | Assuming metrics or logging are implemented for MongoDB |
 | `SqlClientOptions` | Configure SQL telemetry behavior | `enabled` controls SQL tracing registration; `enableStatementText` controls SQL text scrubbing | Assuming logging package settings control SQL tracing |
 
@@ -227,7 +299,9 @@ Important behavior:
 - .NET runtime
 - `HttpClient`
 
-The package does not add Prometheus export or custom application meters on its own.
+The package does not add custom application meters on its own.
+
+Prometheus export is provided as a built-in plug-in and is opt-in via `telemetry.prometheus.enabled`. When enabled, `AddTelemetry()` adds an `OpenTelemetry.Exporter.Prometheus.AspNetCore` exporter to the meter provider and registers the auth-gate middleware. Exposing the scraping endpoint still requires the host to call `app.UsePrometheus()` (auth gate) and `endpoints.MapPrometheus()` (endpoint mapping). Both calls are safe no-ops when the plug-in is disabled.
 
 ### Tracing
 
@@ -338,6 +412,32 @@ Azure exporters are added independently per signal when:
 - the specific signal flag is enabled
 - `telemetry.azure.connectionString` is not empty
 
+### Prometheus
+
+The Prometheus exporter is added to the OpenTelemetry MeterProvider when:
+
+- `telemetry.prometheus.enabled = true`
+
+Prometheus is metrics-only. When the plug-in is enabled, `AddTelemetry()`:
+
+- adds `AddPrometheusExporter()` to the meter provider
+- registers `PrometheusOptions` and the `PrometheusMiddleware` auth gate as DI services
+
+Exposing the scraping endpoint requires both pipeline calls in the host:
+
+- `app.UsePrometheus()` adds the auth-gate middleware
+- `endpoints.MapPrometheus()` maps the scraping endpoint at `telemetry.prometheus.endpoint` (default `/metrics`)
+
+Both calls are no-ops when `telemetry.prometheus.enabled` is `false`, so they are safe to leave in place across environments.
+
+Auth-gate behavior:
+
+- when neither `apiKey` nor `allowedHosts` is configured, the middleware is a transparent no-op
+- when `apiKey` is set, callers must pass `?apiKey=<value>` on the scraping endpoint; otherwise the response is `404`
+- when `allowedHosts` is non-empty, only callers whose `Host` (or `x-forwarded-for`) matches a listed value are allowed; mismatches return `404`
+
+Prometheus does not affect tracing.
+
 ### Multiple Exporters
 
 This package can add more than one exporter for the same signal at the same time.
@@ -347,6 +447,7 @@ Examples:
 - OTLP traces plus console traces
 - Azure traces plus console traces
 - OTLP metrics plus Azure metrics
+- OTLP metrics plus Prometheus scraping
 
 That can be useful intentionally. Do not assume only one exporter may be active.
 
@@ -410,6 +511,12 @@ Profile examples for agent responses:
       "connectionString": "InstrumentationKey=...;IngestionEndpoint=https://...",
       "enableTracing": false,
       "enableMetrics": false
+    },
+    "prometheus": {
+      "enabled": false,
+      "endpoint": "/metrics",
+      "apiKey": null,
+      "allowedHosts": []
     }
   }
 }
@@ -421,6 +528,10 @@ What this package actively uses:
 - `telemetry.exporter.*`
 - `telemetry.console.*`
 - `telemetry.azure.*`
+- `telemetry.prometheus.enabled`
+- `telemetry.prometheus.endpoint`
+- `telemetry.prometheus.apiKey`
+- `telemetry.prometheus.allowedHosts`
 - `telemetry.mongoDB.enabled`
 - `telemetry.mongoDB.enableTracing`
 - `telemetry.sqlClient.enabled`
@@ -429,6 +540,8 @@ What this package actively uses:
 - `telemetry.activitySources`
 - `telemetry.enableRoutePathFallback`
 - `telemetry.normalizeRoutePathFallback`
+
+Note: a top-level `prometheus` section is no longer read. The Prometheus plug-in lives strictly under `telemetry.prometheus`. The previously separate `Genocs.Metrics` package and its `AddPrometheus()` builder method have been removed.
 
 ## Relationship With Genocs.Logging
 
@@ -489,12 +602,18 @@ Do not assume:
 
 - `AddTelemetry()`
 
+### Pipeline Extensions (Prometheus plug-in only)
+
+- `UsePrometheus()` (extension on `IApplicationBuilder`)
+- `MapPrometheus()` (extension on `IEndpointRouteBuilder`)
+
 ### Configuration Types
 
 - `TelemetryOptions`
 - `OtlpExportOptions`
 - `ConsoleOptions`
 - `AzureOptions`
+- `PrometheusOptions`
 - `MongoDbOptions`
 - `SqlClientOptions`
 
@@ -505,6 +624,7 @@ Do not assume:
 - runtime metrics
 - SQL client tracing
 - optional MongoDB tracing
+- optional Prometheus metric scraping endpoint
 - request, response, exception, route, correlation, and user-id span enrichment
 
 ## Source-Blind Guardrails For Agents
@@ -512,15 +632,18 @@ Do not assume:
 When you cannot inspect source code, follow these rules:
 
 1. Do not assume `AddTelemetry()` always registers anything. It no-ops when `app.service` is empty or `telemetry.enabled` is `false`.
-2. Do not assume a follow-up `UseTelemetry()` call exists. This package is registration-only.
+2. Do not assume a `UseTelemetry()` call exists. The only optional pipeline calls are `UsePrometheus()` and `MapPrometheus()`, and only when the Prometheus plug-in is enabled.
 3. Do not assume Jaeger export has a dedicated exporter toggle in this package; use OTLP collector endpoints for Jaeger ingestion.
 4. Do not assume SQL tracing is always on. `telemetry.sqlClient.enabled` can disable SQL client instrumentation.
 5. Do not assume `telemetry.mongoDB` supports metrics or logging flags; MongoDB configuration is tracing-only.
 6. Do not assume `Genocs.Telemetry` exports logs. Log export belongs to `Genocs.Logging`.
 7. Do not assume the root `mongodb` or `mongoDb` section configures Telemetry. MongoDB tracing lives under `telemetry.mongoDB`.
 8. Do not assume enabling `enableStatementText` is harmless. It can expose SQL text and sensitive data.
-9. Do not assume only one telemetry exporter can be enabled. The package allows multiple exporters per signal.
+9. Do not assume only one telemetry exporter can be enabled. The package allows multiple exporters per signal, including Prometheus alongside OTLP/Azure/Console for metrics.
 10. Do not split log export ownership between packages; keep it in `Genocs.Logging`.
+11. Do not assume a top-level `prometheus` section is read; the plug-in configuration must be nested under `telemetry.prometheus`.
+12. Do not invent an `AddPrometheus()` builder call. The previous `Genocs.Metrics` package has been removed; Prometheus is now configuration-driven inside `AddTelemetry()`.
+13. Do not assume `MapPrometheus()` is automatic. The host must call `endpoints.MapPrometheus()` (and `app.UsePrometheus()` for auth gating) to expose the scraping endpoint.
 
 ## Agent Decision Checklist
 
@@ -531,7 +654,8 @@ Before generating code that depends on `Genocs.Telemetry`, answer these question
 3. Is log export ownership explicitly assigned to `Genocs.Logging` for this deployment?
 4. Is SQL statement text safe to emit in this environment?
 5. Is MongoDB tracing actually needed, and is it configured under `telemetry.mongoDB` rather than only under persistence settings?
-6. Should exporters be OTLP, Azure, console, or a deliberate combination?
+6. Should exporters be OTLP, Azure, console, Prometheus, or a deliberate combination?
+7. If Prometheus is enabled, are `app.UsePrometheus()` and `endpoints.MapPrometheus()` both wired in the HTTP pipeline, and is the scraping endpoint protected by `apiKey` or `allowedHosts` when reachable from outside the cluster?
 
 If any answer is unknown, prefer trace and metric export first, keep SQL text scrubbing enabled, and keep log export in `Genocs.Logging`.
 
@@ -559,6 +683,15 @@ Safe response:
 - enable `telemetry.azure`
 - provide a valid connection string
 - enable only the needed signals
+
+### Task: "Expose metrics to Prometheus"
+
+Safe response:
+
+- set `telemetry.prometheus.enabled = true` and choose an endpoint (default `/metrics`)
+- in the HTTP pipeline, call `app.UsePrometheus()` (auth gate) and `endpoints.MapPrometheus()` (endpoint mapping)
+- if the endpoint is reachable from outside a private network, set `apiKey` or `allowedHosts` (or both)
+- expect Prometheus to coexist with other metric exporters (OTLP, Azure, Console) without conflict
 
 ### Task: "Instrument MongoDB"
 
@@ -609,6 +742,15 @@ Fix: Confirm `telemetry.exporter.enabled = true`, `otlpEndpoint` is correct, and
 8. Log volume looks doubled in OTLP or Azure.
 Fix: Ensure only `Genocs.Logging` is exporting logs and remove duplicate sink targets in logger configuration.
 
+9. The Prometheus scraping endpoint returns `404`.
+Fix: Confirm `telemetry.prometheus.enabled = true`, the host calls both `app.UsePrometheus()` and `endpoints.MapPrometheus()`, the request path matches `telemetry.prometheus.endpoint`, and that any configured `apiKey` or `allowedHosts` constraints are satisfied by the caller.
+
+10. Metrics appear in OTLP but not on Prometheus (or vice versa).
+Fix: Each metric exporter is registered independently. Confirm both `telemetry.exporter` (or `telemetry.azure`) and `telemetry.prometheus` are enabled when dual export is intended; they share the same MeterProvider but each has its own enable flag.
+
+11. Code references `using Genocs.Metrics.Prometheus;` or `.AddPrometheus()` and no longer compiles.
+Fix: The standalone `Genocs.Metrics` package has been removed. Replace the using directive with `using Genocs.Telemetry;`, remove the `.AddPrometheus()` call from the builder chain, and move the JSON `prometheus` section under `telemetry.prometheus`.
+
 ## Related Packages To Ask About
 
 - `Genocs.Core`
@@ -621,4 +763,4 @@ Fix: Ensure only `Genocs.Logging` is exporting logs and remove duplicate sink ta
 
 ## One-Line Recommendation For Agents
 
-If you only know that `Genocs.Telemetry` is installed, generate `AddTelemetry()` with a valid `app.service`, treat the package as registration-only OpenTelemetry infrastructure for traces and metrics, keep SQL text scrubbing enabled by default, and keep log export ownership in `Genocs.Logging`.
+If you only know that `Genocs.Telemetry` is installed, generate `AddTelemetry()` with a valid `app.service`, treat the package as registration-only OpenTelemetry infrastructure for traces and metrics (plus an opt-in Prometheus plug-in exposed through `UsePrometheus()` and `MapPrometheus()`), keep SQL text scrubbing enabled by default, and keep log export ownership in `Genocs.Logging`.

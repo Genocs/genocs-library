@@ -473,9 +473,30 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "validateLifetime": true,
     "expiry": "01:00:00"
   },
-  "prometheus": {
-    "enabled": false,
-    "endpoint": "/metrics"
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": false,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": true
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false
+    },
+    "azure": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "connectionString": "InstrumentationKey=<<your_instrumentation_key>>;IngestionEndpoint=https://<<your_region>>.in.applicationinsights.azure.com/"
+    },
+    "prometheus": {
+      "enabled": false,
+      "endpoint": "/metrics"
+    }
   },
   "mongodb": {
     "connectionString": "mongodb://localhost:27017",

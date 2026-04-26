@@ -10,7 +10,6 @@ using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
-using Genocs.Metrics.Prometheus;
 using Genocs.Orders.WebApi;
 using Genocs.Orders.WebApi.Commands;
 using Genocs.Orders.WebApi.Domain;
@@ -52,7 +51,6 @@ IGenocsBuilder gnxBuilder = await builder
                                     .AddInMemoryCommandDispatcher()
                                     .AddInMemoryEventDispatcher()
                                     .AddInMemoryQueryDispatcher()
-                                    .AddPrometheus()
                                     .AddRedis()
                                     .AddRabbitMQAsync();
 
@@ -70,7 +68,11 @@ app.UseGenocs()
     .UsePrometheus()
     .UseRouting()
     .UseCertificateAuthentication()
-    .UseEndpoints(r => r.MapControllers())
+    .UseEndpoints(r =>
+    {
+        r.MapControllers();
+        r.MapPrometheus();
+    })
     .UseDispatcherEndpoints(endpoints => endpoints
         .Get<GetOrder, OrderDto>("orders/{orderId}")
         .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
