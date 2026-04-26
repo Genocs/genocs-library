@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-worker
+  namespace: gnx-apps
   labels:
     app: demo-worker
+
 spec:
   selector:
     matchLabels:
@@ -36,6 +38,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: demo-worker
+  namespace: gnx-apps
+
 spec:
   # type: LoadBalancer
   ports:

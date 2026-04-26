@@ -617,9 +617,13 @@ dotnet run --project ./src/demo/Masstransit.Worker
 
 You can build the Demo application by using Docker and push the images to Dockerhub, so you can use them to deploy the application on Kubernetes cluster or other cloud platforms.
 ```bash
-# Build and run with docker compose
+# OPTION 1. 
+#Build and run with docker compose
+# One shot command to build and run the demo application with docker compose
 ./scripts/build-and-run-demo-docker-images.sh
 
+# OPTION 2.
+# Step by step commands to build and run the demo application with docker compose
 cd ./infrastructure/containers/apps
 # Build with docker compose
 docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
