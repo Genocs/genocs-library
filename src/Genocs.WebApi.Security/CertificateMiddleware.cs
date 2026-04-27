@@ -31,7 +31,7 @@ internal sealed class CertificateMiddleware : IMiddleware
 
         _options = options.Certificate;
 
-        _allowedHosts = new HashSet<string>(_options.AllowedHosts ?? Array.Empty<string>());
+        _allowedHosts = [.. _options.AllowedHosts ?? Array.Empty<string>()];
         _validateAcl = _options.Acl is not null && _options.Acl.Any();
         _skipRevocationCheck = options.Certificate.SkipRevocationCheck;
 
@@ -50,9 +50,10 @@ internal sealed class CertificateMiddleware : IMiddleware
                 }
 
                 string subject = key.StartsWith("CN=") ? key : $"CN={key}";
+
                 if (_options.AllowSubdomains)
                 {
-                    foreach (string domain in options.Certificate.AllowedDomains ?? Enumerable.Empty<string>())
+                    foreach (string domain in options.Certificate.AllowedDomains ?? [])
                     {
                         _subjects.Add($"{subject}.{domain}", key);
                     }
@@ -93,7 +94,8 @@ internal sealed class CertificateMiddleware : IMiddleware
         }
 
         SecurityOptions.CertificateOptions.AclOptions acl;
-        if (_subjects.TryGetValue(certificate.Subject, out string subject))
+
+        if (_subjects.TryGetValue(certificate.Subject, out string? subject))
         {
             if (!_acl.TryGetValue(subject, out var existingAcl))
             {
@@ -185,7 +187,7 @@ internal sealed class CertificateMiddleware : IMiddleware
             return true;
         }
 
-        return context.Request.Headers.TryGetValue("x-forwarded-for", out var forwardedFor) &&
+        return context.Request.Headers.TryGetValue("x-forwarded-for", out Microsoft.Extensions.Primitives.StringValues forwardedFor) &&
                _allowedHosts.Contains(forwardedFor);
     }
 }

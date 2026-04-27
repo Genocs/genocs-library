@@ -71,7 +71,9 @@ docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs u
 # Database extras: Redis + PostgreSQL
 docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genocs up -d
 
-# Monitoring: Prometheus, Grafana, InfluxDB, Jaeger, Seq
+# Monitoring (default: Prometheus, Grafana, Jaeger, Seq + node-exporter / cAdvisor / mongodb-exporter)
+# Aspire Dashboard is an opt-in alternative OTLP collector. Enable with: --profile aspire
+# To repoint apps from Jaeger to Aspire, set JAEGER_URL=http://aspire_dashboard:18889 in .env
 docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
 ```
 

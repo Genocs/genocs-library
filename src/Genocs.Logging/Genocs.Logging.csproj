@@ -15,11 +15,11 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta005" />
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta006" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="3.1.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />

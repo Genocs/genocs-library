@@ -6,7 +6,7 @@ public sealed class KeyedLocker
 
     private SemaphoreSlim GetOrCreate(object key)
     {
-        RefCounted<SemaphoreSlim> item;
+        RefCounted<SemaphoreSlim>? item;
 
         lock (SemaphoreSlims)
         {

@@ -42,7 +42,11 @@ public class DispatcherEndpointsBuilder(IEndpointsBuilder builder) : IDispatcher
             }
 
             await afterDispatch(query, result, ctx);
-        }, endpoint, auth, roles, policies);
+        },
+        endpoint,
+        auth,
+        roles,
+        policies);
 
         return this;
     }

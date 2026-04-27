@@ -30,7 +30,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The entity if found; otherwise, null.</returns>
     public Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default)
-        => GetAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), cancellationToken);
+        => Collection.Find(Builders<TEntity>.Filter.Eq(e => e.Id, id)).SingleOrDefaultAsync(cancellationToken);
 
     public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => Collection.Find(predicate).SingleOrDefaultAsync(cancellationToken);
@@ -59,7 +59,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     /// <returns>The updated entity.</returns>
     public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await UpdateAsync(entity, e => EqualityComparer<TKey>.Default.Equals(e.Id, entity.Id), cancellationToken);
+        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id), entity, cancellationToken: cancellationToken);
         return entity;
     }
 
@@ -80,7 +80,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task DeleteAsync(TKey id, CancellationToken cancellationToken = default)
-        => DeleteAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, id), cancellationToken);
+        => Collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq(e => e.Id, id), cancellationToken);
 
     public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => Collection.DeleteOneAsync(predicate, cancellationToken);
@@ -121,7 +121,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     }
 
     public TEntity Get(TKey id)
-        => Collection.Find(c => EqualityComparer<TKey>.Default.Equals(c.Id, id)).First();
+        => Collection.Find(Builders<TEntity>.Filter.Eq(c => c.Id, id)).First();
 
     public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         => Collection.Find(predicate).Single();
@@ -173,13 +173,13 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
-        Collection.ReplaceOne(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        Collection.ReplaceOne(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity, new ReplaceOptions { IsUpsert = true });
         return entity;
     }
 
     public async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Collection.ReplaceOneAsync(c => c.Id!.Equals(entity.Id), entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
+        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
         return entity;
     }
 
@@ -191,7 +191,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
 
     public TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOne(c => c.Id!.Equals(entity.Id), entity);
+        Collection.ReplaceOne(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity);
         return entity;
     }
 
@@ -243,7 +243,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
             throw new ArgumentNullException(nameof(id));
         }
 
-        Collection.DeleteOne(c => c.Id!.Equals(id));
+        Collection.DeleteOne(Builders<TEntity>.Filter.Eq(c => c.Id, id));
     }
 
     public void Delete(Expression<Func<TEntity, bool>> predicate)
@@ -279,10 +279,10 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
 
     async Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        await Collection.ReplaceOneAsync(e => EqualityComparer<TKey>.Default.Equals(e.Id, entity.Id), entity, cancellationToken: cancellationToken);
+        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id), entity, cancellationToken: cancellationToken);
         return entity;
     }
 
     public async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
-        => (await Collection.Find(e => EqualityComparer<TKey>.Default.Equals(e.Id, id)).SingleOrDefaultAsync(cancellationToken))!;
+        => (await Collection.Find(Builders<TEntity>.Filter.Eq(e => e.Id, id)).SingleOrDefaultAsync(cancellationToken))!;
 }

@@ -274,8 +274,7 @@ public static class Extensions
             : builder.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = routePrefix;
-                c.SwaggerEndpoint($"/{routePrefix}/{options.Name}/swagger.json".FormatEmptyRoutePrefix(),
-                    options.Title);
+                c.SwaggerEndpoint($"/{routePrefix}/{options.Name}/swagger.json".FormatEmptyRoutePrefix(), options.Title);
             });
     }
 

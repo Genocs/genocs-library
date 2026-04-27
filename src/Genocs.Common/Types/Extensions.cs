@@ -23,7 +23,7 @@ public static class Extensions
             return string.Empty;
         }
 
-        var defaultValueCache = new Dictionary<Type, object>();
+        var defaultValueCache = new Dictionary<Type, object?>();
 
         if (TryGetDefaultValue(type, out object? instance, defaultValueCache, depth: 0))
         {
@@ -42,7 +42,7 @@ public static class Extensions
     public static object SetDefaultInstanceProperties(this object instance)
         => SetDefaultInstanceProperties(instance, [], depth: 0);
 
-    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object> defaultValueCache, int depth)
+    private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache, int depth)
     {
         defaultValueCache ??= [];
 
@@ -64,7 +64,7 @@ public static class Extensions
         return instance;
     }
 
-    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object> defaultValueCache, int depth)
+    private static bool TryGetDefaultValue(Type type, out object? defaultValue, Dictionary<Type, object?> defaultValueCache, int depth)
     {
         if (depth > MaxObjectGraphDepth)
         {

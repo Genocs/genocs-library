@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta005" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta006" />
     </ItemGroup>
 
     <ItemGroup>

@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta005" />
+        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta006" />
     </ItemGroup>
 
 </Project>

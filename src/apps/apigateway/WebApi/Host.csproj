@@ -26,15 +26,15 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Security" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta005" />
-        <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta005" />
+        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Security" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta006" />
     </ItemGroup>
 
     <ItemGroup>

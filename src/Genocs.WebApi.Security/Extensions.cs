@@ -20,10 +20,7 @@ public static class Extensions
     /// <param name="sectionName">The section name. Default is name is 'security'. Double check it's in place.</param>
     /// <param name="permissionValidatorType">The Certificate permission validation.</param>
     /// <returns></returns>
-    public static IGenocsBuilder AddCertificateAuthentication(
-                                                                this IGenocsBuilder builder,
-                                                                string sectionName = SectionName,
-                                                                Type? permissionValidatorType = null)
+    public static IGenocsBuilder AddCertificateAuthentication(this IGenocsBuilder builder, string sectionName = SectionName, Type? permissionValidatorType = null)
     {
 
         if (string.IsNullOrWhiteSpace(sectionName))

@@ -243,7 +243,8 @@ docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs u
 # Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
 docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, InfluxDB, Jaeger, Seq)
+# Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, Jaeger, Seq, plus node-exporter / cAdvisor / mongodb-exporter for full metrics coverage).
+# Aspire Dashboard is opt-in via the `aspire` profile - see notes below.
 docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup scaling infrastructure components (Fabio, Consul)
@@ -293,21 +294,36 @@ You can check them locally:
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
 
-- [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
-- [Prometheus](https://prometheus.io/)
-- [Grafana](https://grafana.com/)
-- [InfluxDB](https://www.influxdata.com/)
-- [Jaeger](https://www.jaegertracing.io/)
-- [Seq](https://datalust.co/seq)
+- [Prometheus](https://prometheus.io/) (metrics TSDB + scraper)
+- [Grafana](https://grafana.com/) (dashboards; auto-provisioned with the Prometheus datasource)
+- [Jaeger](https://www.jaegertracing.io/) (default OTLP collector + traces UI)
+- [Seq](https://datalust.co/seq) (structured logs)
+- [node-exporter](https://github.com/prometheus/node_exporter) (host metrics)
+- [cAdvisor](https://github.com/google/cadvisor) (per-container metrics)
+- [mongodb-exporter](https://github.com/percona/mongodb_exporter) (MongoDB metrics)
 
 You can find the console locally at:
 
-- [Aspire](localhost:18888): `localhost:18888`
-- [Prometheus](localhost:9090): `localhost:9090`
-- [Grafana](localhost:3000): `localhost:3000`
-- [InfluxDB](localhost:8086): `localhost:8086`
-- [Jaeger](localhost:16686): `localhost:16686`
-- [Seq](localhost:5341): `localhost:5341`
+- [Prometheus](http://localhost:9090): `localhost:9090`
+- [Grafana](http://localhost:3000): `localhost:3000` — login uses `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` from `.env` (falls back to `admin` / `admin` if unset).
+- [Jaeger](http://localhost:16686): `localhost:16686`
+- [Seq](http://localhost:5380): `localhost:5380`
+
+### Optional: Aspire Dashboard
+
+The Aspire Dashboard is shipped as an alternative OTLP collector + UI. It is **not** started by default; enable it with the `aspire` Docker Compose profile:
+
+```bash
+docker compose -f ./infrastructure-monitoring.yml --profile aspire --env-file ./.env --project-name genocs up -d
+```
+
+To make the Genocs apps export their OTLP traces/metrics to Aspire instead of Jaeger, set in your `.env`:
+
+```text
+JAEGER_URL=http://aspire_dashboard:18889
+```
+
+(the env var name stays `JAEGER_URL` for backwards compatibility; the value points at any OTLP gRPC endpoint.) The Aspire UI is then at [http://localhost:18888](http://localhost:18888).
 
 `infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a `Loadbalancer` (Fabio) and a `Service Discovery` (Consul) components.
 
@@ -339,7 +355,6 @@ volumes:
   redis_data:
   postgres_data:
   mysql_data:
-  influx_data:
   grafana_data:
   jaeger_data:
   seq_data:

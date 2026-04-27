@@ -49,19 +49,17 @@ public static class Extensions
     public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app, bool attributeRequired, string endpoint = "/_contracts")
         => app.UsePublicContracts(endpoint, null, attributeRequired);
 
-    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app,
-        string endpoint = "/_contracts", Type attributeType = null, bool attributeRequired = true)
-        => app.UseMiddleware<PublicContractsMiddleware>(string.IsNullOrWhiteSpace(endpoint) ? "/_contracts" :
-            endpoint.StartsWith("/") ? endpoint : $"/{endpoint}", attributeType ?? typeof(PublicContractAttribute),
-            attributeRequired);
+    public static IApplicationBuilder UsePublicContracts(this IApplicationBuilder app, string endpoint = "/_contracts", Type? attributeType = null, bool attributeRequired = true)
+        => app.UseMiddleware<PublicContractsMiddleware>(string.IsNullOrWhiteSpace(endpoint) ? "/_contracts" : endpoint.StartsWith("/") ? endpoint : $"/{endpoint}", attributeType ?? typeof(PublicContractAttribute), attributeRequired);
 
-    public static Task SendAsync<T>(this HttpContext context, T command) where T : class, ICommand
+    public static Task SendAsync<T>(this HttpContext context, T command)
+        where T : class, ICommand
         => context.RequestServices.GetRequiredService<ICommandDispatcher>().SendAsync(command);
 
-    public static Task<TResult> QueryAsync<TResult>(this HttpContext context, IQuery<TResult> query)
+    public static Task<TResult?> QueryAsync<TResult>(this HttpContext context, IQuery<TResult> query)
         => context.RequestServices.GetRequiredService<IQueryDispatcher>().QueryAsync(query);
 
-    public static Task<TResult> QueryAsync<TQuery, TResult>(this HttpContext context, TQuery query)
+    public static Task<TResult?> QueryAsync<TQuery, TResult>(this HttpContext context, TQuery query)
         where TQuery : class, IQuery<TResult>
         => context.RequestServices.GetRequiredService<IQueryDispatcher>().QueryAsync<TQuery, TResult>(query);
 }

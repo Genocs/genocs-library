@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta005" />
+        <PackageReference Include="Genocs.Core" Version="9.0.0-beta006" />
     </ItemGroup>
 
 
@@ -23,7 +23,7 @@
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         <PackageReference Include="Mapster" Version="7.4.0" />
         <PackageReference Include="MediatR" Version="14.0.0" />
-        <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+        <PackageReference Include="MongoDB.Driver" Version="3.8.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.3" />
     </ItemGroup>

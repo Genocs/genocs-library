@@ -19,7 +19,7 @@ public class SecurityOptions
         /// <summary>
         /// The header name for the certificate.
         /// </summary>
-        public string Header { get; set; }
+        public string? Header { get; set; }
 
         /// <summary>
         /// It defines whether subdomains are allowed.
@@ -61,17 +61,17 @@ public class SecurityOptions
             /// <summary>
             /// The valid issuer for the certificate.
             /// </summary>
-            public string ValidIssuer { get; set; }
+            public string? ValidIssuer { get; set; }
 
             /// <summary>
             /// The valid thumbprint for the certificate.
             /// </summary>
-            public string ValidThumbprint { get; set; }
+            public string? ValidThumbprint { get; set; }
 
             /// <summary>
             /// The valid serial number for the certificate.
             /// </summary>
-            public string ValidSerialNumber { get; set; }
+            public string? ValidSerialNumber { get; set; }
 
             /// <summary>
             /// The list of permissions for the certificate.
