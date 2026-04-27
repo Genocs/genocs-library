@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: actions/download-artifact@v7
         with:
-          github-token: ${{ GITHUB_TOKEN }}
+          github-token: ${{ env.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
           pattern: Genocs*
 

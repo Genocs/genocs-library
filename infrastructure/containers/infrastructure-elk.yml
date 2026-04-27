@@ -52,10 +52,6 @@ services:
         target: /usr/share/logstash/pipeline/logstash.conf
       - source: logstash.yml
         target: /usr/share/logstash/config/logstash.yml
-      - source: logstash.keystore
-        target: /usr/share/logstash/config/logstash.keystore
-      - source: ca.crt
-        target: /usr/share/logstash/config/certs/ca/ca.crt
 
     healthcheck:
       test: bin/logstash -t
@@ -73,3 +69,9 @@ networks:
 volumes:
   es_data:
     driver: local
+
+secrets:
+  logstash.conf:
+    file: ./elk/logstash.conf
+  logstash.yml:
+    file: ./elk/logstash.yml

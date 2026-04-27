@@ -8,6 +8,12 @@
 #   docker compose -f infrastructure.yml --env-file .env --project-name genocs up -d
 #   docker compose -f infrastructure-monitoring.yml --env-file .env --project-name genocs up -d
 #
+# Windows + WSL2 note
+# -------------------
+# For Docker Desktop on Windows with WSL2 integration, include the override file:
+#
+#   docker compose -f infrastructure-monitoring.yml -f infrastructure-monitoring.wsl2.yml --env-file .env --project-name genocs up -d
+#
 # Default stack: Jaeger as the OTLP collector, plus Prometheus / Grafana / Seq
 # and the host/container/MongoDB exporters.
 #
@@ -136,7 +142,7 @@ services:
 
   # Per-container metrics (CPU, memory, network, fs) for everything on the docker host.
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.56.2
+    image: gcr.io/cadvisor/cadvisor@sha256:771a65c7877817cd9bb4c2d9eecb9fd1ac56f370287617658c51a35061efa71a  # no-new-use-public-image-v0.51.0
     hostname: cadvisor
     container_name: cadvisor
     privileged: true

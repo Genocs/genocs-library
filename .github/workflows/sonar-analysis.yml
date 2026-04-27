@@ -64,10 +64,10 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}          
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin \
-            /k:"${{ SONAR_PROJECT_KEY }}" \
-            /o:"${{ SONAR_ORGANIZATION }}" \
-            /d:sonar.token="${{ SONAR_TOKEN }}" \
-            /d:sonar.host.url="${{ SONAR_HOST_URL }}" \
+            /k:"${{ env.SONAR_PROJECT_KEY }}" \
+            /o:"${{ env.SONAR_ORGANIZATION }}" \
+            /d:sonar.token="${{ env.SONAR_TOKEN }}" \
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
             /d:sonar.cs.vstest.reportsPaths="**/*.trx" \
             /d:sonar.exclusions="**/bin/**,**/obj/**,**/Migrations/**,**/*.css,**/*.js" \
@@ -90,7 +90,7 @@ jobs:
       - name: End SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ SONAR_TOKEN }}"
+        run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
 
       - name: Upload Coverage Reports
         if: always()

@@ -269,6 +269,26 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
 
+### Windows + WSL2 (Docker Desktop)
+
+If you are running Docker Desktop on Windows with WSL2 integration, run the compose commands from your WSL terminal in the repository path mounted under `/mnt/<drive>` (or `/d/...` in Git Bash).
+
+Most compose files can be run with the same commands shown above.
+
+For monitoring, use the WSL2 override file to avoid mount propagation issues on Docker Desktop:
+
+```bash
+cd ./infrastructure/containers
+
+# Basic infrastructure
+docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
+
+# Monitoring stack (WSL2-safe)
+docker compose -f ./infrastructure-monitoring.yml -f ./infrastructure-monitoring.wsl2.yml --env-file ./.env --project-name genocs up -d
+```
+
+The override file (`infrastructure-monitoring.wsl2.yml`) removes a Linux-only mount propagation option required on native Linux but unsupported in common Docker Desktop + WSL2 setups.
+
 > **NOTE**:
 >
 > The folder contains a .env.example file with the environment variables used by the docker compose files, remember to update the values based on your needs before running the commands.
