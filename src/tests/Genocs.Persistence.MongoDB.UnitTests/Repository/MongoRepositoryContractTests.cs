@@ -145,7 +145,7 @@ public class MongoRepositoryContractTests
     {
         // Arrange
         var entity = new TestEntity { Id = Guid.NewGuid(), Name = "query" };
-        var repository = CreateMongoBaseRepository(entity, out _);
+        var repository = CreateMongoBaseRepository(entity, out var collection);
 
         // Act
         var result = await repository.FirstOrDefaultAsync(entity.Id);
@@ -153,6 +153,29 @@ public class MongoRepositoryContractTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(entity.Id, result.Id);
+        await collection.Received(1).FindAsync(
+            Arg.Any<FilterDefinition<TestEntity>>(),
+            Arg.Any<FindOptions<TestEntity, TestEntity>>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_ForRepositoryOfType_UsesFilterDefinitionFind()
+    {
+        // Arrange
+        var entity = new TestEntity { Id = Guid.NewGuid(), Name = "filter-lookup" };
+        var repository = CreateMongoBaseRepositoryOfType(entity, out var collection);
+
+        // Act
+        var result = await repository.GetByIdAsync(entity.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(entity.Id, result.Id);
+        await collection.Received(1).FindAsync(
+            Arg.Any<FilterDefinition<TestEntity>>(),
+            Arg.Any<FindOptions<TestEntity, TestEntity>>(),
+            Arg.Any<CancellationToken>());
     }
 
     private static MongoBaseRepository<TestEntity, Guid> CreateMongoBaseRepository(TestEntity entity, out IMongoCollection<TestEntity> collection)

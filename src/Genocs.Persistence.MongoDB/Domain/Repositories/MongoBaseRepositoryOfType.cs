@@ -115,7 +115,8 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// <returns>The entity.</returns>
     public override TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOne(filter: g => g.Id!.Equals(entity.Id), replacement: entity);
+        var filter = Builders<TEntity>.Filter.Eq(g => g.Id, entity.Id);
+        Collection.ReplaceOne(filter: filter, replacement: entity);
         return entity;
     }
 
@@ -171,5 +172,8 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
         => await Collection.AsQueryable().Where(predicate).AnyAsync(cancellationToken);
 
     public override async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
-        => (await Collection.Find(e => e.Id!.Equals(id)).SingleOrDefaultAsync(cancellationToken))!;
+    {
+        var filter = Builders<TEntity>.Filter.Eq(e => e.Id, id);
+        return (await Collection.Find(filter).SingleOrDefaultAsync(cancellationToken))!;
+    }
 }

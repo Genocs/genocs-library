@@ -133,11 +133,12 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     }
 
     public TEntity FirstOrDefault(TKey id)
-        => Collection.Find(c => EqualityComparer<TKey>.Default.Equals(c.Id, id)).FirstOrDefault()!;
+        => Collection.Find(Builders<TEntity>.Filter.Eq(c => c.Id, id)).FirstOrDefault()!;
 
     public async Task<TEntity?> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
     {
-        var result = await Collection.FindAsync(c => EqualityComparer<TKey>.Default.Equals(c.Id, id), cancellationToken: cancellationToken);
+        var filter = Builders<TEntity>.Filter.Eq(c => c.Id, id);
+        var result = await Collection.FindAsync(filter, cancellationToken: cancellationToken);
         return await result.FirstOrDefaultAsync(cancellationToken);
     }
 

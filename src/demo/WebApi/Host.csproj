@@ -28,18 +28,18 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Http" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Saga" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Saga.Integrations.MongoDB" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.Saga.Integrations.Redis" Version="9.0.0-beta006" />
-        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta006" />
+        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Saga" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Saga.Integrations.MongoDB" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.Saga.Integrations.Redis" Version="9.0.0-beta007" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup>

@@ -60,9 +60,9 @@ internal class Startup(IConfiguration configuration)
         {
             cors.AddPolicy("cors", x =>
             {
-                x.WithOrigins("*")
-                    .WithMethods("POST", "PUT", "DELETE")
-                    .WithHeaders("Content-Type", "Authorization");
+                x.AllowAnyOrigin()
+                    .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
+                    .WithHeaders("Content-Type", "Authorization", "x-correlation-id");
             });
         });
 
