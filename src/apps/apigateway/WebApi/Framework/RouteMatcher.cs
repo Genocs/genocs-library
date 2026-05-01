@@ -4,8 +4,13 @@ namespace Genocs.APIGateway.WebApi.Framework;
 
 public class RouteMatcher
 {
-    public RouteValueDictionary Match(string routeTemplate, string requestPath)
+    public RouteValueDictionary? Match(string? routeTemplate, string requestPath)
     {
+        if (string.IsNullOrEmpty(routeTemplate))
+        {
+            return null;
+        }
+
         var template = TemplateParser.Parse(routeTemplate);
         var matcher = new TemplateMatcher(template, GetDefaults(template));
         var values = new RouteValueDictionary();
@@ -18,7 +23,7 @@ public class RouteMatcher
         var result = new RouteValueDictionary();
         foreach (var parameter in parsedTemplate.Parameters)
         {
-            if (parameter.DefaultValue != null)
+            if (parameter.Name != null && parameter.DefaultValue != null)
             {
                 result.Add(parameter.Name, parameter.DefaultValue);
             }

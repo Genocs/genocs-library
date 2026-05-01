@@ -38,3 +38,6 @@ validate-messaging: # validate messaging packages warning baseline and tests
 
 validate-webapi: # validate webapi package warning baseline and tests
 	$(MAKE) -f validate-webapi.mk validate-webapi
+
+validate-webapi-cqrs: # validate webapi cqrs package warning baseline and tests
+	$(MAKE) -f validate-webapi-cqrs.mk validate-webapi-cqrs

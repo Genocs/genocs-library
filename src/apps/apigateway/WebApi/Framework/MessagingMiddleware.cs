@@ -32,7 +32,7 @@ internal class MessagingMiddleware : IMiddleware
         _endpoints = messagingOptions.Value.Endpoints?.Any() is true
             ? messagingOptions.Value.Endpoints.GroupBy(e => e.Method.ToUpperInvariant())
                 .ToDictionary(e => e.Key, e => e.ToList())
-            : new Dictionary<string, List<MessagingOptions.EndpointOptions>>();
+            : [];
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -52,13 +52,14 @@ internal class MessagingMiddleware : IMiddleware
             }
 
             string key = $"{endpoint.Exchange}:{endpoint.RoutingKey}";
+
             if (!Conventions.TryGetValue(key, out var conventions))
             {
                 conventions = new MessageConventions(typeof(object), endpoint.RoutingKey, endpoint.Exchange, null);
                 Conventions.TryAdd(key, conventions);
             }
 
-            string spanContext = System.Diagnostics.Activity.Current?.Id;
+            string? spanContext = System.Diagnostics.Activity.Current?.Id;
             string messageId = DefaultIdType.NewGuid().ToString("N");
             string correlationId = _correlationIdFactory.Create();
             string resourceId = DefaultIdType.NewGuid().ToString("N");

@@ -56,7 +56,7 @@ public static class CoreDiagnosticsExtensions
 
 internal static class CoreDiagnosticsRuntime
 {
-    internal static bool TryGetEnabledState(IServiceCollection services, out CoreDiagnosticsOptions options, out CoreDiagnosticsState state)
+    internal static bool TryGetEnabledState(IServiceCollection services, out CoreDiagnosticsOptions? options, out CoreDiagnosticsState? state)
     {
         options = services
             .LastOrDefault(descriptor => descriptor.ServiceType == typeof(CoreDiagnosticsOptions))
@@ -69,7 +69,7 @@ internal static class CoreDiagnosticsRuntime
         return options?.Enabled == true && state is not null;
     }
 
-    internal static bool TryGetEnabledState(IServiceProvider serviceProvider, out CoreDiagnosticsOptions options, out CoreDiagnosticsState state)
+    internal static bool TryGetEnabledState(IServiceProvider serviceProvider, out CoreDiagnosticsOptions? options, out CoreDiagnosticsState? state)
     {
         options = serviceProvider.GetService<CoreDiagnosticsOptions>();
         state = serviceProvider.GetService<CoreDiagnosticsState>();
@@ -78,7 +78,7 @@ internal static class CoreDiagnosticsRuntime
 
     internal static void Info(IServiceCollection services, string message)
     {
-        if (!TryGetEnabledState(services, out _, out CoreDiagnosticsState state) || state is null)
+        if (!TryGetEnabledState(services, out _, out CoreDiagnosticsState? state) || state is null)
         {
             return;
         }
@@ -88,7 +88,7 @@ internal static class CoreDiagnosticsRuntime
 
     internal static void Warn(IServiceCollection services, string message)
     {
-        if (!TryGetEnabledState(services, out _, out CoreDiagnosticsState state) || state is null)
+        if (!TryGetEnabledState(services, out _, out CoreDiagnosticsState? state) || state is null)
         {
             return;
         }
@@ -98,7 +98,7 @@ internal static class CoreDiagnosticsRuntime
 
     internal static void Info(IServiceProvider serviceProvider, string message)
     {
-        if (!TryGetEnabledState(serviceProvider, out _, out CoreDiagnosticsState state) || state is null)
+        if (!TryGetEnabledState(serviceProvider, out _, out CoreDiagnosticsState? state) || state is null)
         {
             return;
         }

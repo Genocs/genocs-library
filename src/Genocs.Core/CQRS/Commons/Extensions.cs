@@ -84,7 +84,7 @@ public static class Extensions
 
     private static bool ShouldWarnOnEmptyHandlers(IServiceCollection services, Type handlerInterfaceType)
     {
-        if (!CoreDiagnosticsRuntime.TryGetEnabledState(services, out CoreDiagnosticsOptions options, out _)
+        if (!CoreDiagnosticsRuntime.TryGetEnabledState(services, out CoreDiagnosticsOptions? options, out _)
             || options?.WarnOnEmptyHandlerSet != true)
         {
             return false;

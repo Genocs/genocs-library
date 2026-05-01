@@ -65,10 +65,11 @@ app.UseGenocs()
         r.MapHub<GenocsHub>("/notificationHub");
         r.MapPrometheus();
     })
-    .UseDispatcherEndpoints(endpoints => endpoints
-        .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx) => ctx.Response.Created($"notifications/{cmd.NotificationId}")))
     .UseOpenApiDocs()
     .UseRabbitMQ();
+
+app.MapDispatcherEndpoints(endpoints => endpoints
+    .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"notifications/{cmd.NotificationId}")));
 
 app.MapDefaultEndpoints();
 

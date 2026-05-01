@@ -18,17 +18,17 @@ public class AuthenticationResponse
     /// <summary>
     /// The type of authentication used (apikey, firebase, etc.).
     /// </summary>
-    public string AuthenticationType { get; set; }
+    public string? AuthenticationType { get; set; }
 
     /// <summary>
     /// The authenticated user's unique identifier.
     /// </summary>
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 
     /// <summary>
     /// The authenticated user's display name.
     /// </summary>
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     /// <summary>
     /// List of all claims associated with the authenticated user.
@@ -48,17 +48,17 @@ public class UserInfoResponse
     /// <summary>
     /// The user's unique identifier.
     /// </summary>
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 
     /// <summary>
     /// The user's display name.
     /// </summary>
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     /// <summary>
     /// The authentication method used.
     /// </summary>
-    public string AuthenticationType { get; set; }
+    public string? AuthenticationType { get; set; }
 
     /// <summary>
     /// List of all claims associated with the authenticated user.

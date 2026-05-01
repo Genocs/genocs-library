@@ -31,3 +31,10 @@ Claude configuration can be customized to suit specific use cases, allowing agen
 ## Antigravity
 
 The AGENTIC framework supports Antigravity's tools and services, allowing agents to enhance their performance and capabilities. This integration enables agents to utilize Antigravity's resources for various tasks, improving their efficiency and effectiveness in handling complex scenarios.
+
+## Genocs Planning and Assessment Documents
+
+For package modernization planning, use the package-specific assessment and backlog documents under `docs/`.
+
+- `docs/Genocs.WebApi.CQRS-Assessment.md`
+- `docs/Genocs.WebApi.CQRS-Implementation-Backlog.md`

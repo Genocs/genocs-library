@@ -146,7 +146,7 @@ public sealed class TracePipelineIntegrationTests
 
     private static IEnumerable<string> ExtractHeaderValues(Dictionary<string, string> carrier, string key)
     {
-        if (carrier.TryGetValue(key, out string value) && !string.IsNullOrWhiteSpace(value))
+        if (carrier.TryGetValue(key, out string? value) && !string.IsNullOrWhiteSpace(value))
         {
             return [value];
         }

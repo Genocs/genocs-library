@@ -44,17 +44,22 @@ internal class Startup(IConfiguration configuration)
 
         builder.AddSecurity()
             .AddWebApi();
-            //.Build();
+
+        // Complete the configuration of Genocs and build the service provider
+        // .Build();
 
         services.AddReverseProxy()
                 .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
-        //.LoadFromDatabase(Configuration);
 
-        //services.AddAuthorization(options =>
-        //{
-        //    options.AddPolicy("authenticatedUser", policy =>
-        //        policy.RequireAuthenticatedUser());
-        //});
+        // Alternatively, if you want to load the configuration from a database or another source,
+        // you can implement a custom IProxyConfigProvider and register it here. For example:
+        // .LoadFromDatabase(Configuration);
+
+        // services.AddAuthorization(options =>
+        // {
+        //     options.AddPolicy("authenticatedUser", policy =>
+        //         policy.RequireAuthenticatedUser());
+        // });
 
         services.AddCors(cors =>
         {

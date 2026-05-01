@@ -38,26 +38,26 @@ app.MapDefaultEndpoints();
 // Map the Prometheus scraping endpoint when enabled in configuration.
 app.MapPrometheus();
 
-app.UseDispatcherEndpoints(endpoints => endpoints
+app.MapDispatcherEndpoints(endpoints => endpoints
                             .Post<SignIn>(
                                 "sign-in",
-                                afterDispatch: (cmd, ctx) =>
+                                afterDispatch: (cmd, ctx, _) =>
                                 {
-                                    var auth = ctx?.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
-                                    return ctx?.Response.WriteJsonAsync(auth) ?? Task.CompletedTask;
+                                    var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
+                                    return ctx.Response.WriteJsonAsync(auth);
                                 })
                             .Post<CreateUser>(
                                 "sign-up",
-                                afterDispatch: (cmd, ctx) =>
+                                afterDispatch: (cmd, ctx, _) =>
                                 {
-                                    ctx?.Response.Headers.Append("user-id", cmd.UserId.ToString());
+                                    ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                     return Task.CompletedTask;
                                 })
                             .Post<CreateAdmin>(
                                 "onboarding",
-                                afterDispatch: (cmd, ctx) =>
+                                afterDispatch: (cmd, ctx, _) =>
                                 {
-                                    ctx?.Response.Headers.Append("user-id", cmd.UserId.ToString());
+                                    ctx.Response.Headers.Append("user-id", cmd.UserId.ToString());
                                     return Task.CompletedTask;
                                 },
                                 auth: true,
@@ -65,10 +65,10 @@ app.UseDispatcherEndpoints(endpoints => endpoints
                             .Post<RevokeAccessToken>("access-tokens/revoke", auth: true, policies: [Policies.AdminOnly])
                             .Post<UseRefreshToken>(
                                 "refresh-tokens/use",
-                                afterDispatch: (cmd, ctx) =>
+                                afterDispatch: (cmd, ctx, _) =>
                                 {
-                                    var auth = ctx?.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
-                                    return ctx?.Response.WriteJsonAsync(auth) ?? Task.CompletedTask;
+                                    var auth = ctx.RequestServices.GetRequiredService<ITokenStorage>().Get(cmd.Id);
+                                    return ctx.Response.WriteJsonAsync(auth);
                                 })
                             .Post<RevokeRefreshToken>("refresh-tokens/revoke", auth: true, policies: [Policies.AdminOnly])
                             .Get<GetUser, UserDetailsDto>("users/{userId:guid}", auth: true)

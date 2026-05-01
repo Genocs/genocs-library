@@ -17,8 +17,47 @@ Use this package to expose CQRS dispatcher endpoints and optional public contrac
 ## Main Entry Points
 
 - `AddInMemoryDispatcher`
-- `UseDispatcherEndpoints`
+- `MapDispatcherEndpoints`
 - `UsePublicContracts`
+
+## Migration: UseDispatcherEndpoints -> MapDispatcherEndpoints
+
+`UseDispatcherEndpoints(...)` is a legacy API and is now obsolete.
+
+Use route-builder mapping so host middleware ordering stays owned by the application:
+
+Before:
+
+```csharp
+app.UseDispatcherEndpoints(endpoints => endpoints
+	.Post<CreateOrder>("/orders")
+	.Get<GetOrder, OrderDto>("/orders/{id}"));
+```
+
+After:
+
+```csharp
+app.MapDispatcherEndpoints(endpoints => endpoints
+	.Post<CreateOrder>("/orders")
+	.Get<GetOrder, OrderDto>("/orders/{id}"));
+```
+
+Host pipeline concerns such as `UseRouting()`, `UseAuthorization()`, and other middleware should now be configured explicitly in host startup.
+
+Callback signatures are now non-null and cancellation-aware:
+
+- command hooks: `(cmd, httpContext, cancellationToken)`
+- query hooks: `(query, httpContext, cancellationToken)` and `(query, result, httpContext, cancellationToken)`
+
+Dispatch and helper extensions propagate `HttpContext.RequestAborted` to command/query dispatchers.
+
+## Validation
+
+Run package-level validation from repository root:
+
+```bash
+make validate-webapi-cqrs
+```
 
 ## Support
 

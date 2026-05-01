@@ -30,13 +30,13 @@ internal class CustomForwarderHttpClientFactory(CorrelationIdFactory correlation
         }
 
         // TODO: Enable this
-        //if (newClientOptions.ClientCertificate != null)
-        //{
-        //    handler.SslOptions.ClientCertificates = new X509CertificateCollection
-        //    {
-        //        newClientOptions.ClientCertificate
-        //    };
-        //}
+        // if (newClientOptions.ClientCertificate != null)
+        // {
+        //     handler.SslOptions.ClientCertificates = new X509CertificateCollection
+        //     {
+        //         newClientOptions.ClientCertificate
+        //     };
+        // }
 
         if (newClientOptions.MaxConnectionsPerServer != null)
         {
@@ -46,7 +46,7 @@ internal class CustomForwarderHttpClientFactory(CorrelationIdFactory correlation
         if (newClientOptions.DangerousAcceptAnyServerCertificate is true)
         {
             handler.SslOptions.RemoteCertificateValidationCallback =
-                (sender, cert, chain, errors) => cert.Subject == "demo.io";
+                (sender, cert, chain, errors) => cert?.Subject == "demo.io";
         }
 
         return new CustomHttpMessageInvoker(_correlationIdFactory, handler, true);

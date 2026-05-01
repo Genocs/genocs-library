@@ -73,12 +73,13 @@ app.UseGenocs()
         r.MapControllers();
         r.MapPrometheus();
     })
-    .UseDispatcherEndpoints(endpoints => endpoints
-        .Get<GetOrder, OrderDto>("orders/{orderId}")
-        .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx) => ctx.Response.Created($"orders/{cmd.OrderId}")))
     .UseOpenApiDocs()
     .UseRabbitMQ()
     .SubscribeEvent<DeliveryStarted>();
+
+app.MapDispatcherEndpoints(endpoints => endpoints
+    .Get<GetOrder, OrderDto>("orders/{orderId}")
+    .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"orders/{cmd.OrderId}")));
 
 app.MapDefaultEndpoints();
 

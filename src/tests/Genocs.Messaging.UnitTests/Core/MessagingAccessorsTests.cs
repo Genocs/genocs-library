@@ -50,7 +50,7 @@ public sealed class MessagingAccessorsTests
             MessageId = Guid.NewGuid().ToString("N"),
             CorrelationId = Guid.NewGuid().ToString("N"),
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            Headers = new Dictionary<string, object> { ["tenant"] = "alpha" }
+            Headers = new Dictionary<string, object?> { ["tenant"] = "alpha" }
         };
 
         accessor.MessageProperties = messageProperties;
@@ -79,7 +79,7 @@ public sealed class MessagingAccessorsTests
             MessageId = "msg-await",
             CorrelationId = "corr-await",
             Timestamp = 123,
-            Headers = new Dictionary<string, object>()
+            Headers = new Dictionary<string, object?>()
         };
         accessor.MessageProperties = messageProperties;
 

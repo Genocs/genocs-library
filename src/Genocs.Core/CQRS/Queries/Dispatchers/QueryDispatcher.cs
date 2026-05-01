@@ -12,15 +12,12 @@ namespace Genocs.Core.CQRS.Queries.Dispatchers;
 /// The non-generic <see cref="QueryAsync{TResult}"/> overload dispatches through a per-query-type
 /// helper that is created once and cached, so the hot path contains no reflection.
 /// </remarks>
-internal sealed class QueryDispatcher : IQueryDispatcher
+internal sealed class QueryDispatcher(IServiceProvider serviceProvider) : IQueryDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     // one invoker instance per (concrete query type, result type) pair — created once, cached forever
     private static readonly ConcurrentDictionary<(Type Query, Type Result), IQueryHandlerInvoker> _invokerCache = new();
-
-    public QueryDispatcher(IServiceProvider serviceProvider)
-        => _serviceProvider = serviceProvider;
 
     public async Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
     {

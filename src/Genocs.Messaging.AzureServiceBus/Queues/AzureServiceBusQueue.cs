@@ -1,4 +1,6 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using System.Diagnostics;
+using System.Text.Json;
+using Azure.Messaging.ServiceBus;
 using Genocs.Common.CQRS.Commands;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Queues.Interfaces;
@@ -6,8 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
-using System.Text.Json;
 
 namespace Genocs.Messaging.AzureServiceBus.Queues;
 
@@ -16,9 +16,11 @@ namespace Genocs.Messaging.AzureServiceBus.Queues;
 /// </summary>
 public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyncDisposable
 {
-    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
     private const string TraceParentHeader = "traceparent";
     private const string TraceStateHeader = "tracestate";
+    private const string COMMANDSUFFIX = "Command";
+
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
 
     private readonly ServiceBusClient _client;
     private readonly ServiceBusSender _sender;
@@ -26,7 +28,6 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     private readonly AzureServiceBusQueueOptions _options;
     private readonly ILogger<AzureServiceBusQueue> _logger;
     private readonly Dictionary<string, CommandHandlerRegistration> _handlers = new();
-    private const string COMMAND_SUFFIX = "Command";
     private readonly IServiceProvider _serviceProvider;
     private bool _isProcessorStarted;
 
@@ -81,7 +82,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     public async Task SendAsync(ICommand command)
     {
         string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
-        string commandName = command.GetType().Name.Replace(COMMAND_SUFFIX, "");
+        string commandName = command.GetType().Name.Replace(COMMANDSUFFIX, string.Empty);
 
         var message = new ServiceBusMessage(jsonMessage)
         {
@@ -111,7 +112,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     public async Task ScheduleAsync(ICommand command, DateTimeOffset offset)
     {
         string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
-        string commandName = command.GetType().Name.Replace(COMMAND_SUFFIX, "");
+        string commandName = command.GetType().Name.Replace(COMMANDSUFFIX, string.Empty);
 
         var message = new ServiceBusMessage(jsonMessage)
         {
@@ -137,7 +138,9 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     /// </summary>
     /// <typeparam name="T">The command type.</typeparam>
     /// <typeparam name="TH">The command handler type.</typeparam>
-    public void ConsumeModern<T, TH>() where T : class, ICommand where TH : ICommandHandler<T>
+    public void ConsumeModern<T, TH>()
+        where T : class, ICommand
+        where TH : ICommandHandler<T>
     {
         RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: false);
     }
@@ -148,7 +151,9 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     /// <typeparam name="T">The command type.</typeparam>
     /// <typeparam name="TH">The command handler type.</typeparam>
     [Obsolete("Consume<T,TH>() uses legacy ICommandHandlerLegacy<T>. Use ConsumeModern<T,TH>() with ICommandHandler<T>. Legacy registration will be removed in a future major release.")]
-    public void Consume<T, TH>() where T : ICommand where TH : ICommandHandlerLegacy<T>
+    public void Consume<T, TH>()
+        where T : ICommand
+        where TH : ICommandHandlerLegacy<T>
     {
         RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: true);
     }
@@ -166,7 +171,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
     {
         _processor.ProcessMessageAsync += async (args) =>
         {
-            string eventName = $"{args.Message.Subject}{COMMAND_SUFFIX}";
+            string eventName = $"{args.Message.Subject}{COMMANDSUFFIX}";
             using var processingActivity = StartConsumerActivity(args.Message, eventName);
             string messageData = args.Message.Body.ToString();
 
@@ -254,8 +259,8 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
 
     private static bool TryExtractParentContext(ServiceBusReceivedMessage message, out ActivityContext parentContext)
     {
-        string traceParent = TryGetApplicationProperty(message, TraceParentHeader);
-        string traceState = TryGetApplicationProperty(message, TraceStateHeader);
+        string? traceParent = TryGetApplicationProperty(message, TraceParentHeader);
+        string? traceState = TryGetApplicationProperty(message, TraceStateHeader);
 
         if (string.IsNullOrWhiteSpace(traceParent))
         {
@@ -266,7 +271,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
         return ActivityContext.TryParse(traceParent, traceState, out parentContext);
     }
 
-    private static string TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
+    private static string? TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
     {
         if (!message.ApplicationProperties.TryGetValue(propertyName, out object? value) || value is null)
         {
@@ -296,7 +301,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
             using (var scope = _serviceProvider.CreateScope())
             {
                 var registration = _handlers[eventName];
-                var handler = scope.ServiceProvider.GetRequiredService(registration.HandlerType);
+                object handler = scope.ServiceProvider.GetRequiredService(registration.HandlerType);
                 if (handler != null)
                 {
                     object? command = JsonSerializer.Deserialize(message, registration.CommandType);
@@ -329,8 +334,12 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyn
 
     private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)
     {
-        _logger.LogError(args.Exception, "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
-            args.Exception.Message, args.ErrorSource);
+        _logger.LogError(
+            args.Exception,
+            "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
+            args.Exception.Message,
+            args.ErrorSource);
+
         return Task.CompletedTask;
     }
 

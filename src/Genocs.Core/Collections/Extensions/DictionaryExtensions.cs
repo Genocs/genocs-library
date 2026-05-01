@@ -35,7 +35,7 @@ public static class DictionaryExtensions
     /// <returns>Value if found, default if can not found.</returns>
     public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
     {
-        return dictionary.TryGetValue(key, out var obj) ? obj : default;
+        return dictionary.TryGetValue(key, out var obj) ? obj : default!;
     }
 
     /// <summary>

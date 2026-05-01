@@ -7,9 +7,9 @@ internal sealed class CorrelationContextBuilder : ICorrelationContextBuilder
     public CorrelationContext Build(
                                     HttpContext context,
                                     string correlationId,
-                                    string spanContext,
-                                    string name = null,
-                                    string resourceId = null)
+                                    string? spanContext,
+                                    string? name = null,
+                                    string? resourceId = null)
         => new CorrelationContext
         {
             CorrelationId = correlationId,
@@ -21,8 +21,8 @@ internal sealed class CorrelationContextBuilder : ICorrelationContextBuilder
             CreatedAt = DateTime.UtcNow,
             User = new CorrelationContext.UserContext
             {
-                Id = context.User.Identity.Name,
-                IsAuthenticated = context.User.Identity.IsAuthenticated,
+                Id = context.User.Identity?.Name,
+                IsAuthenticated = context.User.Identity?.IsAuthenticated ?? false,
                 Role = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
                 Claims = context.User.Claims.ToDictionary(c => c.Type, c => c.Value)
             }

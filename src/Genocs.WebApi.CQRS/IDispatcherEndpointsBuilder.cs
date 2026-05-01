@@ -9,7 +9,7 @@ public interface IDispatcherEndpointsBuilder
 {
     IDispatcherEndpointsBuilder Get(
         string path,
-        Func<HttpContext?, Task>? context = null,
+        Func<HttpContext, CancellationToken, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -17,8 +17,8 @@ public interface IDispatcherEndpointsBuilder
 
     IDispatcherEndpointsBuilder Get<TQuery, TResult>(
         string path,
-        Func<TQuery, HttpContext?, Task>? beforeDispatch = null,
-        Func<TQuery, TResult?, HttpContext?, Task>? afterDispatch = null,
+        Func<TQuery, HttpContext, CancellationToken, Task>? beforeDispatch = null,
+        Func<TQuery, TResult?, HttpContext, CancellationToken, Task>? afterDispatch = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -27,7 +27,7 @@ public interface IDispatcherEndpointsBuilder
 
     IDispatcherEndpointsBuilder Post(
         string path,
-        Func<HttpContext?, Task>? context = null,
+        Func<HttpContext, CancellationToken, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -35,8 +35,8 @@ public interface IDispatcherEndpointsBuilder
 
     IDispatcherEndpointsBuilder Post<T>(
         string path,
-        Func<T, HttpContext?, Task>? beforeDispatch = null,
-        Func<T, HttpContext?, Task>? afterDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? beforeDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? afterDispatch = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -45,7 +45,7 @@ public interface IDispatcherEndpointsBuilder
 
     IDispatcherEndpointsBuilder Put(
         string path,
-        Func<HttpContext?, Task>? context = null,
+        Func<HttpContext, CancellationToken, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -53,8 +53,8 @@ public interface IDispatcherEndpointsBuilder
 
     IDispatcherEndpointsBuilder Put<T>(
         string path,
-        Func<T, HttpContext?, Task>? beforeDispatch = null,
-        Func<T, HttpContext?, Task>? afterDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? beforeDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? afterDispatch = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,
@@ -62,17 +62,17 @@ public interface IDispatcherEndpointsBuilder
         where T : class, ICommand;
 
     IDispatcherEndpointsBuilder Delete(
-    string path,
-    Func<HttpContext?, Task>? context = null,
-    Action<IEndpointConventionBuilder>? endpoint = null,
-    bool auth = false,
-    string? roles = null,
-    params string[] policies);
+        string path,
+        Func<HttpContext, CancellationToken, Task>? context = null,
+        Action<IEndpointConventionBuilder>? endpoint = null,
+        bool auth = false,
+        string? roles = null,
+        params string[] policies);
 
     IDispatcherEndpointsBuilder Delete<T>(
         string path,
-        Func<T, HttpContext?, Task>? beforeDispatch = null,
-        Func<T, HttpContext?, Task>? afterDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? beforeDispatch = null,
+        Func<T, HttpContext, CancellationToken, Task>? afterDispatch = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
         string? roles = null,

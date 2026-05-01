@@ -80,7 +80,7 @@ genocs.Build();
 
 var app = builder.Build();
 
-app.UseDispatcherEndpoints(endpoints => endpoints
+app.MapDispatcherEndpoints(endpoints => endpoints
     .Post<CreateOrder>("/orders")
     .Get<GetOrder, OrderDto>("/orders/{id}"));
 
@@ -104,14 +104,14 @@ Use this when an endpoint needs audit, validation, or response customization aro
 ```csharp
 using Genocs.WebApi.CQRS;
 
-app.UseDispatcherEndpoints(endpoints => endpoints
+app.MapDispatcherEndpoints(endpoints => endpoints
     .Get<GetOrder, OrderDto>(
         "/orders/{id}",
-        beforeDispatch: async (query, context) =>
+        beforeDispatch: async (query, context, cancellationToken) =>
         {
             await Task.CompletedTask;
         },
-        afterDispatch: async (query, result, context) =>
+        afterDispatch: async (query, result, context, cancellationToken) =>
         {
             if (result is null)
             {
@@ -168,7 +168,8 @@ This endpoint includes commands and events only. It does not include queries.
 | API | Use it for | Important behavior | Common mistake |
 |---|---|---|---|
 | `AddInMemoryDispatcher()` | Register the unified `IDispatcher` facade | Adds `IDispatcher` as a singleton backed by `InMemoryDispatcher` | Assuming it also registers `ICommandDispatcher`, `IQueryDispatcher`, and `IEventDispatcher` |
-| `UseDispatcherEndpoints(...)` | Map CQRS-focused endpoints directly on the app | Calls `UseRouting()`, optionally `UseAuthorization()`, optional custom middleware, then ASP.NET Core `UseEndpoints(...)` | Wrapping it inside another routing pipeline without understanding duplication |
+| `MapDispatcherEndpoints(...)` | Map CQRS-focused endpoints directly on endpoint route builders | Uses host-owned endpoint routing and does not mutate middleware ordering | Assuming it configures `UseRouting()` or `UseAuthorization()` automatically |
+| `UseDispatcherEndpoints(...)` | Legacy compatibility entry point | Obsolete. Delegates to endpoint-route mapping on hosts implementing `IEndpointRouteBuilder` | Treating it as the preferred API for new hosts |
 | `Dispatch(...)` | Add CQRS endpoints inside an existing `IEndpointsBuilder` chain | Builds a `DispatcherEndpointsBuilder` over the current WebApi endpoint builder | Assuming it performs routing or authorization by itself |
 | `UsePublicContracts<T>()` | Expose only types decorated with a specific attribute | Uses the supplied attribute type and defaults to the `/_contracts` endpoint | Assuming it exposes queries too |
 | `UsePublicContracts(bool attributeRequired, string endpoint)` | Expose public contracts with or without attribute filtering | Uses `PublicContractAttribute` when filtering is enabled | Assuming the endpoint updates dynamically as later assemblies load |
@@ -193,6 +194,7 @@ This endpoint includes commands and events only. It does not include queries.
 - The request object is bound by the underlying `Genocs.WebApi` GET binding behavior, which uses route and query values rather than JSON body binding.
 - `beforeDispatch` runs before the query dispatcher is called.
 - `afterDispatch` runs after the query returns and receives the possibly null result.
+- cancellation token parameters are supplied from `HttpContext.RequestAborted`.
 - If `afterDispatch` is omitted and the result is `null`, the endpoint returns `404`.
 - If `afterDispatch` is omitted and the result is not `null`, the endpoint writes the result as JSON.
 
@@ -202,6 +204,7 @@ This endpoint includes commands and events only. It does not include queries.
 - The request object is bound by the underlying `Genocs.WebApi` behavior for that HTTP verb.
 - `beforeDispatch` runs before `ICommandDispatcher.SendAsync(...)`.
 - `afterDispatch` runs after command dispatch completes.
+- cancellation token parameters are supplied from `HttpContext.RequestAborted`.
 - When dispatch succeeds and no custom response is written, the package sets the response status code to `200`.
 - There is no default `201 Created`, `202 Accepted`, or response payload.
 
@@ -229,8 +232,8 @@ Important behavior:
 - it ignores interfaces
 - it excludes `RejectedEvent`
 - it creates default instances of discovered types and serializes those instances
-- duplicate command or event type names across loaded assemblies throw `InvalidOperationException`
-- the contracts snapshot is initialized once and reused statically for the process lifetime
+- duplicate command or event type names use deterministic key fallback (simple name, then full name, then assembly-qualified fragment)
+- the contracts snapshot is scoped to middleware instance initialization, not static process-wide state
 - the response is always JSON and does not perform content negotiation
 - queries are not included
 
@@ -255,6 +258,7 @@ If a user asks for configuration-driven behavior, point them to the underlying p
 ### Registration And Pipeline
 
 - `AddInMemoryDispatcher()`
+- `MapDispatcherEndpoints(...)`
 - `UseDispatcherEndpoints(...)`
 - `Dispatch(...)`
 - `UsePublicContracts<T>()`
@@ -280,6 +284,16 @@ If a user asks for configuration-driven behavior, point them to the underlying p
 ### Middleware
 
 - `PublicContractsMiddleware`
+
+## Maintainer Validation
+
+From repository root, run:
+
+```bash
+make validate-webapi-cqrs
+```
+
+This target validates CQRS package build baseline and executes the CQRS unit test project.
 
 ## Source-Blind Guardrails For Agents
 
@@ -332,7 +346,7 @@ Safe response:
 
 - keep the existing `UseEndpoints(...)` call
 - use `Dispatch(...)` on the current `IEndpointsBuilder`
-- avoid calling `UseDispatcherEndpoints(...)` as a second routing strategy unless needed deliberately
+- avoid mixing legacy `UseDispatcherEndpoints(...)` with route-builder mapping in the same host
 
 ### Task: "Expose message contracts for another agent"
 
@@ -363,14 +377,14 @@ Fix: This is the default behavior. Add `afterDispatch` and write the response ex
 4. The public contracts endpoint is empty or incomplete.
 Fix: Ensure the relevant assemblies are loaded before the middleware initializes, and confirm the attribute filter matches the intended contracts.
 
-5. The public contracts endpoint throws duplicate-name errors.
-Fix: Two loaded command or event types share the same simple type name. Rename one type or avoid loading both into the same process for contract exposure.
+5. The public contracts payload includes fallback keys for duplicate simple names.
+Fix: This is expected behavior. Prefer unique contract type names when external tooling depends on simple-name keys.
 
 6. Authorization metadata is present but requests still behave anonymously or fail unexpectedly.
 Fix: Configure authentication and authorization in the host separately. This package only forwards endpoint authorization metadata.
 
 7. Routing conflicts appear after adding CQRS endpoints.
-Fix: Use one deliberate endpoint-mapping strategy and avoid overlapping paths between `UseDispatcherEndpoints(...)` and other endpoint registrations.
+Fix: Use one deliberate endpoint-mapping strategy and avoid overlapping paths between `MapDispatcherEndpoints(...)` and other endpoint registrations.
 
 ## Related Packages To Ask About
 

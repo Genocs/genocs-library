@@ -27,7 +27,7 @@ public class UserMiddleware : IMiddleware
             return;
         }
 
-        string path = context.Request.Path.Value;
+        string? path = context.Request.Path.Value;
         if (path is not null && (path.Contains("sign-in") || path.Contains("sign-up")))
         {
             await next(context);
@@ -62,7 +62,7 @@ public class UserMiddleware : IMiddleware
             return;
         }
 
-        payload["userId"] = DefaultIdType.Parse(context.User.Identity.Name);
+        payload["userId"] = context.User.Identity?.Name != null ? DefaultIdType.Parse(context.User.Identity!.Name) : default!;
         string json = JsonSerializer.Serialize(payload);
         await using var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
         context.Request.Body = memoryStream;

@@ -73,9 +73,9 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
             }
 
             // Extract user information from token
-            string userId = payload.TryGetValue("user_id", out object? userIdObj) ? userIdObj?.ToString() : string.Empty;
-            string name = payload.TryGetValue("name", out object? nameObj) ? nameObj?.ToString() : string.Empty;
-            string email = payload.TryGetValue("email", out object? emailObj) ? emailObj?.ToString() : string.Empty;
+            string? userId = payload.TryGetValue("user_id", out object? userIdObj) ? userIdObj?.ToString() : string.Empty;
+            string? name = payload.TryGetValue("name", out object? nameObj) ? nameObj?.ToString() : string.Empty;
+            string? email = payload.TryGetValue("email", out object? emailObj) ? emailObj?.ToString() : string.Empty;
             bool emailVerified = payload.TryGetValue("email_verified", out object? emailVerifiedObj) &&
                               emailVerifiedObj is bool verified && verified;
 
@@ -131,7 +131,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
     /// <summary>
     /// Determines user roles based on configuration and business logic.
     /// </summary>
-    private List<string> GetUserRoles(string userId, string email, bool emailVerified, IDictionary<string, object> payload)
+    private List<string> GetUserRoles(string userId, string? email, bool emailVerified, IDictionary<string, object> payload)
     {
         var roles = new HashSet<string>();
 
@@ -183,15 +183,15 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
         }
 
         // Check for custom claims in Firebase token
-        if (payload.TryGetValue("custom_claims", out var customClaimsObj))
+        if (payload.TryGetValue("custom_claims", out object? customClaimsObj))
         {
             try
             {
-                string customClaimsJson = customClaimsObj.ToString();
+                string? customClaimsJson = customClaimsObj?.ToString();
                 if (!string.IsNullOrEmpty(customClaimsJson))
                 {
                     var customClaims = JsonSerializer.Deserialize<Dictionary<string, object>>(customClaimsJson);
-                    if (customClaims != null && customClaims.TryGetValue("roles", out var rolesObj))
+                    if (customClaims != null && customClaims.TryGetValue("roles", out object? rolesObj))
                     {
                         if (rolesObj is JsonElement rolesElement && rolesElement.ValueKind == JsonValueKind.Array)
                         {
@@ -199,7 +199,7 @@ public class FirebaseAuthorizationMiddleware(RequestDelegate next, ILogger<Fireb
                             {
                                 if (roleElement.ValueKind == JsonValueKind.String)
                                 {
-                                    string role = roleElement.GetString();
+                                    string? role = roleElement.GetString();
                                     if (!string.IsNullOrEmpty(role))
                                     {
                                         roles.Add(role);

@@ -98,7 +98,7 @@ public class RedisSagaStateRepositoryTests
                 return Task.FromResult(false);
             }
 
-            bool hasCurrent = _values.TryGetValue(key, out string currentValue);
+            bool hasCurrent = _values.TryGetValue(key, out string? currentValue);
 
             if (expectedValue is null)
             {

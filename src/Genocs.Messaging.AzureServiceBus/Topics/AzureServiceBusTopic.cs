@@ -16,9 +16,10 @@ namespace Genocs.Messaging.AzureServiceBus.Topics;
 /// </summary>
 public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyncDisposable
 {
-    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
     private const string TraceParentHeader = "traceparent";
     private const string TraceStateHeader = "tracestate";
+    private const string EVENTSUFFIX = "Event";
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
 
     private readonly ServiceBusClient _client;
     private readonly ServiceBusSender _sender;
@@ -26,7 +27,6 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
     private readonly AzureServiceBusTopicOptions _options;
     private readonly ILogger<AzureServiceBusTopic> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private const string EVENT_SUFFIX = "Event";
     private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
     private bool _isProcessorStarted;
 
@@ -63,7 +63,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
 
         _client = new ServiceBusClient(_options.ConnectionString);
         _sender = _client.CreateSender(_options.TopicName);
-        _handlers = new Dictionary<string, List<SubscriptionInfo>>();
+        _handlers = [];
 
         if (!string.IsNullOrEmpty(_options.SubscriptionName))
         {
@@ -85,7 +85,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
     /// <param name="event">The event to publish.</param>
     public async Task PublishAsync(IEvent @event)
     {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string eventName = @event.GetType().Name.Replace(EVENTSUFFIX, string.Empty);
         string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
 
         var message = new ServiceBusMessage(jsonMessage)
@@ -115,7 +115,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
     /// <param name="filters">Application properties to attach to the message for subscription filtering.</param>
     public async Task PublishAsync(IEvent @event, Dictionary<string, object> filters)
     {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string eventName = @event.GetType().Name.Replace(EVENTSUFFIX, string.Empty);
         string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
 
         var message = new ServiceBusMessage(jsonMessage)
@@ -150,7 +150,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
     /// <param name="offset">The time at which the message should be enqueued.</param>
     public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset)
     {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string eventName = @event.GetType().Name.Replace(EVENTSUFFIX, string.Empty);
         string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
 
         var message = new ServiceBusMessage(jsonMessage)
@@ -181,7 +181,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
     /// <param name="filters">Application properties to attach to the message for subscription filtering.</param>
     public async Task ScheduleAsync(IEvent @event, DateTimeOffset offset, Dictionary<string, object> filters)
     {
-        string eventName = @event.GetType().Name.Replace(EVENT_SUFFIX, string.Empty);
+        string eventName = @event.GetType().Name.Replace(EVENTSUFFIX, string.Empty);
         string jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
 
         var message = new ServiceBusMessage(jsonMessage)
@@ -345,8 +345,8 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
 
     private static bool TryExtractParentContext(ServiceBusReceivedMessage message, out ActivityContext parentContext)
     {
-        string traceParent = TryGetApplicationProperty(message, TraceParentHeader);
-        string traceState = TryGetApplicationProperty(message, TraceStateHeader);
+        string? traceParent = TryGetApplicationProperty(message, TraceParentHeader);
+        string? traceState = TryGetApplicationProperty(message, TraceStateHeader);
 
         if (string.IsNullOrWhiteSpace(traceParent))
         {
@@ -357,7 +357,7 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
         return ActivityContext.TryParse(traceParent, traceState, out parentContext);
     }
 
-    private static string TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
+    private static string? TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
     {
         if (!message.ApplicationProperties.TryGetValue(propertyName, out object? value) || value is null)
         {
@@ -381,8 +381,12 @@ public class AzureServiceBusTopic : IAzureServiceBusTopic, IHostedService, IAsyn
 
     private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)
     {
-        _logger.LogError(args.Exception, "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
-            args.Exception.Message, args.ErrorSource);
+        _logger.LogError(
+            args.Exception,
+            "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
+            args.Exception.Message,
+            args.ErrorSource);
+
         return Task.CompletedTask;
     }
 

@@ -11,9 +11,7 @@ public class ExternalApiController : ControllerBase
     private readonly ILogger<MassTransitController> _logger;
     private readonly IExternalServiceClient _externalServiceClient;
 
-    public ExternalApiController(
-                                    ILogger<MassTransitController> logger,
-                                    IExternalServiceClient externalServiceClient)
+    public ExternalApiController(ILogger<MassTransitController> logger, IExternalServiceClient externalServiceClient)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _externalServiceClient = externalServiceClient ?? throw new ArgumentNullException(nameof(externalServiceClient));

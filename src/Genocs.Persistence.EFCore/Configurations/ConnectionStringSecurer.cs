@@ -19,7 +19,7 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
     public ConnectionStringSecurer(IOptions<DatabaseOptions> dbSettings) =>
         _dbSettings = dbSettings.Value;
 
-    public string MakeSecure(string connectionString, string dbProvider)
+    public string? MakeSecure(string? connectionString, string? dbProvider)
     {
         if (connectionString == null || string.IsNullOrEmpty(connectionString))
         {

@@ -14,8 +14,8 @@ public class AzureServiceBusQueueOptions
     /// </summary>
     public bool Enabled { get; set; }
 
-    public string ConnectionString { get; set; }
-    public string QueueName { get; set; }
+    public string? ConnectionString { get; set; }
+    public string? QueueName { get; set; }
     public int MaxConcurrentCalls { get; set; } = 20;
     public int PrefetchCount { get; set; } = 100;
     public ServiceBusReceiveMode ReceiveMode { get; set; } = ServiceBusReceiveMode.PeekLock;

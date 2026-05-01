@@ -2,9 +2,9 @@ namespace Genocs.APIGateway.WebApi.Framework;
 
 internal class CorrelationIdFactory
 {
-    private static readonly AsyncLocal<CorrelationIdHolder> Holder = new AsyncLocal<CorrelationIdHolder>();
+    private static readonly AsyncLocal<CorrelationIdHolder> Holder = new();
 
-    private static string CorrelationId
+    private static string? CorrelationId
     {
         get => Holder.Value?.Id;
         set
@@ -24,7 +24,7 @@ internal class CorrelationIdFactory
 
     private class CorrelationIdHolder
     {
-        public string Id;
+        public string? Id;
     }
 
     public string Create()

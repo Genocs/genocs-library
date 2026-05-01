@@ -1,11 +1,10 @@
-using Genocs.Common.CQRS.Commands;
-using Genocs.Common.CQRS.Events;
-using Genocs.Core.CQRS.Events;
-using Genocs.WebApi.Helpers;
-using Microsoft.AspNetCore.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Genocs.Common.CQRS.Commands;
+using Genocs.Common.CQRS.Events;
+using Genocs.WebApi.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Genocs.WebApi.CQRS.Middlewares;
 
@@ -14,7 +13,8 @@ public class PublicContractsMiddleware
     private const string ContentType = "application/json";
     private readonly RequestDelegate _next;
     private readonly string _endpoint;
-    private readonly bool _attributeRequired;
+    private readonly string _serializedContracts;
+    private readonly Func<IEnumerable<Type>>? _contractTypesFactory;
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -24,61 +24,42 @@ public class PublicContractsMiddleware
         WriteIndented = true
     };
 
-    private static readonly ContractTypes Contracts = new();
-    private static int _initialized;
-    private static string _serializedContracts = "{}";
-
-    public PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType, bool attributeRequired)
+    public PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType, bool attributeRequired, Func<IEnumerable<Type>>? contractTypesFactory = null)
     {
         _next = next;
         _endpoint = endpoint;
-        _attributeRequired = attributeRequired;
-        if (_initialized == 1)
-        {
-            return;
-        }
-
-        Load(attributeType);
+        _contractTypesFactory = contractTypesFactory;
+        _serializedContracts = Load(attributeType, attributeRequired, _contractTypesFactory);
     }
 
-    public Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
         if (context.Request.Path != _endpoint)
         {
-            return _next(context);
-        }
-
-        context.Response.ContentType = ContentType;
-        context.Response.WriteAsync(_serializedContracts);
-
-        return Task.CompletedTask;
-    }
-
-    private void Load(Type attributeType)
-    {
-        if (Interlocked.Exchange(ref _initialized, 1) == 1)
-        {
+            await _next(context);
             return;
         }
 
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        var contracts = assemblies.SelectMany(a => a.GetTypes())
-            .Where(t => (!_attributeRequired || t.GetCustomAttribute(attributeType) is not null) && !t.IsInterface)
+        context.Response.ContentType = ContentType;
+        await context.Response.WriteAsync(_serializedContracts);
+    }
+
+    private static string Load(Type attributeType, bool attributeRequired, Func<IEnumerable<Type>>? contractTypesFactory)
+    {
+        var contractTypes = new ContractTypes();
+
+        var contracts = ResolveContractTypes(contractTypesFactory)
+            .Where(t => (!attributeRequired || t.GetCustomAttribute(attributeType) is not null) && !t.IsInterface)
             .ToArray();
 
         foreach (var command in contracts.Where(t => typeof(ICommand).IsAssignableFrom(t)))
         {
             object? instance = command.GetDefaultInstance();
-            string name = instance?.GetType().Name;
+            string? name = ResolveContractName(command, contractTypes.Commands);
 
             if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-                if (Contracts.Commands.ContainsKey(name))
-                {
-                    throw new InvalidOperationException($"Command: '{name}' already exists.");
-                }
-
-                Contracts.Commands[name] = instance;
+                contractTypes.Commands[name] = instance;
             }
 
         }
@@ -87,25 +68,66 @@ public class PublicContractsMiddleware
                                                     t != typeof(RejectedEvent)))
         {
             object? instance = @event.GetDefaultInstance();
-            string name = instance?.GetType().Name;
+            string? name = ResolveContractName(@event, contractTypes.Events);
 
             if (!string.IsNullOrWhiteSpace(name) && instance != null)
             {
-                if (Contracts.Events.ContainsKey(name))
-                {
-                    throw new InvalidOperationException($"Event: '{name}' already exists.");
-                }
-
-                Contracts.Events[name] = instance;
+                contractTypes.Events[name] = instance;
             }
         }
 
-        _serializedContracts = JsonSerializer.Serialize(Contracts, SerializerOptions);
+        return JsonSerializer.Serialize(contractTypes, SerializerOptions);
+    }
+
+    private static IEnumerable<Type> ResolveContractTypes(Func<IEnumerable<Type>>? contractTypesFactory)
+    {
+        if (contractTypesFactory is not null)
+        {
+            return ResolveLoadableTypes(contractTypesFactory);
+        }
+
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(assembly => ResolveLoadableTypes(() => assembly.GetTypes()));
+    }
+
+    private static IEnumerable<Type> ResolveLoadableTypes(Func<IEnumerable<Type>> typeFactory)
+    {
+        try
+        {
+            return typeFactory().Where(type => type is not null);
+        }
+        catch (ReflectionTypeLoadException ex)
+        {
+            return ex.Types.Where(type => type is not null).Cast<Type>();
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    private static string ResolveContractName(Type contractType, IReadOnlyDictionary<string, object> existingContracts)
+    {
+        string simpleName = contractType.Name;
+        if (!existingContracts.ContainsKey(simpleName))
+        {
+            return simpleName;
+        }
+
+        string? fullName = contractType.FullName;
+        if (!string.IsNullOrWhiteSpace(fullName) && !existingContracts.ContainsKey(fullName))
+        {
+            return fullName;
+        }
+
+        string? assemblyName = contractType.Assembly.GetName().Name;
+        return $"{assemblyName}:{fullName ?? simpleName}";
     }
 
     private class ContractTypes
     {
-        public Dictionary<string, object> Commands { get; } = new();
-        public Dictionary<string, object> Events { get; } = new();
+        public Dictionary<string, object> Commands { get; } = [];
+        public Dictionary<string, object> Events { get; } = [];
     }
 }

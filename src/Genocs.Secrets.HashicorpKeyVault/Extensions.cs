@@ -306,8 +306,7 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease,
-        IDictionary<string, string> configuration, IDictionary<string, string> values)
+    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease, IDictionary<string, string> configuration, IDictionary<string, string> values)
     {
         if (lease.Templates is null || !lease.Templates.Any())
         {

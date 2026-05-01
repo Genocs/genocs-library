@@ -3,9 +3,9 @@
 public class User
 {
     public int Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
     public int Age { get; set; }
 
     /// <summary>
@@ -14,12 +14,11 @@ public class User
     public int? Childs { get; set; }
     public DateTime DateOfBirth { get; set; }
     public bool IsActive { get; set; }
-    public string MobileNumber { get; set; }
-    public string MobilePrefix { get; set; }
-    public string MobileLanguage { get; set; }
-    public string CountryOfResidence { get; set; }
-    public string Currency { get; private set; }
-
+    public string? MobileNumber { get; set; }
+    public string? MobilePrefix { get; set; }
+    public string? MobileLanguage { get; set; }
+    public string? CountryOfResidence { get; set; }
+    public string? Currency { get; private set; }
     public Address? Address { get; set; }
 
     public object? this[string propertyName]

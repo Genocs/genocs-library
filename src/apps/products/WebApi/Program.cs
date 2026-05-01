@@ -70,12 +70,13 @@ app.UseGenocs()
         r.MapControllers();
         r.MapPrometheus();
     })
-    .UseDispatcherEndpoints(endpoints => endpoints
-        .Get<BrowseProducts, PagedResult<ProductDto>>("products")
-        .Get<GetProduct, ProductDto>("products/{productId}")
-        .Post<CreateProduct>("products", afterDispatch: (cmd, ctx) => ctx.Response.Created($"products/{cmd.ProductId}")))
     .UseOpenApiDocs()
     .UseRabbitMQ();
+
+app.MapDispatcherEndpoints(endpoints => endpoints
+    .Get<BrowseProducts, PagedResult<ProductDto>>("products")
+    .Get<GetProduct, ProductDto>("products/{productId}")
+    .Post<CreateProduct>("products", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"products/{cmd.ProductId}")));
 
 app.MapDefaultEndpoints();
 
