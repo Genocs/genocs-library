@@ -11,9 +11,8 @@ using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
+using Genocs.Persistence.EFCore.Extensions;
 using Genocs.Persistence.MongoDB.Extensions;
-using Genocs.Saga;
-using Genocs.Saga.Integrations.Redis;
 using Genocs.Telemetry;
 using Genocs.WebApi;
 using Genocs.WebApi.OpenApi;
@@ -33,7 +32,9 @@ IGenocsBuilder gnxBuilder = builder
     .AddCorrelationContextLogging()
     .AddWebApi()
     .AddOpenApiDocs()
+    .AddEFCorePersistence()
     .AddBookStoreDbContext()
+    .AddSagaServices()
     .AddMongoWithRegistration()
     .AddCommandHandlers()
     .AddEventHandlers()
@@ -45,10 +46,10 @@ await gnxBuilder.AddRabbitMQAsync();
 // Add services to the container.
 var services = builder.Services;
 
-services.AddSaga(x => x.UseRedisPersistence(builder.Configuration, "redis"))
-    .AddCors(options =>
+services
+    .AddCors(x =>
     {
-        options.AddDefaultPolicy(builder =>
+        x.AddDefaultPolicy(builder =>
         {
             builder.AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -60,7 +61,7 @@ services.AddSaga(x => x.UseRedisPersistence(builder.Configuration, "redis"))
 services.MapSecurityFeatures();
 
 // Add Finbuckle multitenancy registration
-services.AddDemoFinbuckleMultiTenancy(builder.Configuration);
+services.AddMultiTenancy(builder.Configuration);
 
 var app = builder.Build();
 

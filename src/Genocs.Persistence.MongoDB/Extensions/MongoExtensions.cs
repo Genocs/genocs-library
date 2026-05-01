@@ -10,7 +10,6 @@ using Genocs.Persistence.MongoDB.Seeders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
 namespace Genocs.Persistence.MongoDB.Extensions;
 
@@ -74,32 +73,10 @@ public static class MongoExtensions
 
         if (options.SetRandomDatabaseSuffix)
         {
-            string suffix = $"{Guid.NewGuid():N}";
-            Console.WriteLine($"Setting a random MongoDB database suffix: '{suffix}'.");
-            options.Database = $"{options.Database}_{suffix}";
+            Console.WriteLine($"Setting a random MongoDB database suffix on '{options.Database}'.");
         }
 
-        builder.Services.AddSingleton(options);
-        builder.Services.AddSingleton<IMongoClient>(sp =>
-        {
-            var options = sp.GetRequiredService<MongoOptions>();
-
-            MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(options.ConnectionString);
-
-            if (options.EnableTracing)
-            {
-                clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
-            }
-
-            return new MongoClient(clientSettings);
-        });
-
-        builder.Services.AddSingleton<IMongoDatabase>(sp =>
-        {
-            var options = sp.GetRequiredService<MongoOptions>();
-            var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(options.Database);
-        });
+        builder.Services.AddMongoClient(options);
 
         builder.Services.AddTransient<IMongoInitializer, MongoInitializer>();
         builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();

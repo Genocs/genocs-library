@@ -94,7 +94,7 @@ Add a new migration:
 
 ```bash
 dotnet dotnet-ef migrations add <MigrationName> \
-  --project src/demo/WebApi/Host.csproj \
+  --project src/demo/Domain.EFCore/Domain.EFCore.csproj \
   --startup-project src/demo/WebApi/Host.csproj \
   --context BookStoreDbContext \
   --output-dir BookStore/Migrations
@@ -104,7 +104,7 @@ Apply migrations:
 
 ```bash
 dotnet dotnet-ef database update \
-  --project src/demo/WebApi/Host.csproj \
+  --project src/demo/Domain.EFCore/Domain.EFCore.csproj \
   --startup-project src/demo/WebApi/Host.csproj \
   --context BookStoreDbContext
 ```
@@ -113,7 +113,7 @@ Remove last migration (if not applied to shared DB environments):
 
 ```bash
 dotnet dotnet-ef migrations remove \
-  --project src/demo/WebApi/Host.csproj \
+  --project src/demo/Domain.EFCore/Domain.EFCore.csproj \
   --startup-project src/demo/WebApi/Host.csproj \
   --context BookStoreDbContext
 ```

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Genocs.Common.Domain.Entities;
 using Genocs.Common.Interfaces;
 using Genocs.Common.Persistence;
@@ -24,7 +25,7 @@ public static class EFCoreExtensions
 {
     private static readonly ILogger _logger = Log.ForContext(typeof(EFCoreExtensions));
 
-    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder)
+    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder, params Assembly[] assemblies)
     {
         // Bind the configuration section to the DatabaseOptions class
         // and validate it
@@ -45,22 +46,17 @@ public static class EFCoreExtensions
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
             })
-            .AddTransient<Persistence.Initialization.IDatabaseInitializer, DatabaseInitializer>()
+            .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
             .AddTransient<ApplicationDbInitializer>()
             .AddTransient<ApplicationDbSeeder>()
             .AddServices(typeof(ICustomSeeder), ServiceLifetime.Transient)
             .AddTransient<CustomSeederRunner>()
             .AddTransient<IConnectionStringSecurer, ConnectionStringSecurer>()
             .AddTransient<IConnectionStringValidator, ConnectionStringValidator>()
-            .AddRepositories();
+            .AddRepositories(assemblies);
 
         return builder;
     }
-
-    internal static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddServices(typeof(ITransientService), ServiceLifetime.Transient)
-            .AddServices(typeof(IScopedService), ServiceLifetime.Scoped);
 
     internal static IServiceCollection AddServices(this IServiceCollection services, Type interfaceType, ServiceLifetime lifetime)
     {
@@ -120,26 +116,40 @@ public static class EFCoreExtensions
         };
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    internal static IServiceCollection AddRepositories(this IServiceCollection services, params Assembly[] assemblies)
     {
         // Add Repositories
         services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
 
+        // When no assemblies are explicitly supplied, fall back to the application's entry assembly
+        // so we don't accidentally scan Genocs.Common (where IAggregateRoot is defined) and register nothing.
+        var assembliesToScan = assemblies.Length > 0
+            ? assemblies
+            : Assembly.GetEntryAssembly() is { } entry ? [entry] : Array.Empty<Assembly>();
+
         foreach (var aggregateRootType in
-            typeof(IAggregateRoot).Assembly.GetExportedTypes()
+            assembliesToScan
+                .SelectMany(a => a.GetExportedTypes())
                 .Where(t => typeof(IAggregateRoot).IsAssignableFrom(t) && t.IsClass)
+                .Distinct()
                 .ToList())
         {
             // Add ReadRepositories.
             services.AddScoped(typeof(IReadRepository<>).MakeGenericType(aggregateRootType), sp =>
                 sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)));
 
-            // Decorate the repositories with EventAddingRepositoryDecorators and expose them as IRepositoryWithEvents.
-            services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
-                Activator.CreateInstance(
-                    typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
-                    sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
-                ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            // EventAddingRepositoryDecorator<T> carries a self-referential constraint (IAggregateRoot<T>)
+            // that will be relaxed in EFCORE-017. Until then, only register IRepositoryWithEvents<T>
+            // for types that actually satisfy the constraint to avoid an ArgumentException from MakeGenericType.
+            var selfReferentialType = typeof(IAggregateRoot<>).MakeGenericType(aggregateRootType);
+            if (selfReferentialType.IsAssignableFrom(aggregateRootType))
+            {
+                services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
+                    Activator.CreateInstance(
+                        typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
+                        sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
+                    ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            }
         }
 
         return services;

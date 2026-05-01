@@ -14,14 +14,14 @@ internal class TenantService : ITenantService
     private readonly IMultiTenantStore<GNXTenantInfo> _tenantStore;
     private readonly IConnectionStringSecurer _csSecurer;
     private readonly IDatabaseInitializer _dbInitializer;
-    private readonly IStringLocalizer _t;
+    //private readonly IStringLocalizer _t;
     private readonly DatabaseOptions _dbSettings;
 
     public TenantService(
                         IMultiTenantStore<GNXTenantInfo> tenantStore,
                         IConnectionStringSecurer csSecurer,
                         IDatabaseInitializer dbInitializer,
-                        IStringLocalizer<TenantService> localizer,
+                        //IStringLocalizer<TenantService> localizer,
                         IOptions<DatabaseOptions> dbSettings)
     {
         ArgumentNullException.ThrowIfNull(dbSettings);
@@ -29,7 +29,7 @@ internal class TenantService : ITenantService
         _tenantStore = tenantStore ?? throw new ArgumentNullException(nameof(tenantStore));
         _csSecurer = csSecurer ?? throw new ArgumentNullException(nameof(csSecurer));
         _dbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
-        _t = localizer ?? throw new ArgumentNullException(nameof(localizer));
+        //_t = localizer ?? throw new ArgumentNullException(nameof(localizer));
         _dbSettings = dbSettings.Value ?? throw new ArgumentNullException(nameof(_dbSettings));
     }
 
@@ -77,14 +77,14 @@ internal class TenantService : ITenantService
 
         if (tenant.IsActive)
         {
-            throw new ConflictException(_t["Tenant is already Activated."]);
+            throw new ConflictException("Tenant is already Activated.");
         }
 
         tenant.Activate();
 
         await _tenantStore.TryUpdateAsync(tenant);
 
-        return _t["Tenant {0} is now Activated.", id];
+        return $"Tenant {id} is now Activated.";
     }
 
     public async Task<string> DeactivateAsync(string id)
@@ -92,12 +92,12 @@ internal class TenantService : ITenantService
         var tenant = await GetTenantInfoAsync(id);
         if (!tenant.IsActive)
         {
-            throw new ConflictException(_t["Tenant is already Deactivated."]);
+            throw new ConflictException("Tenant is already Deactivated.");
         }
 
         tenant.Deactivate();
         await _tenantStore.TryUpdateAsync(tenant);
-        return _t["Tenant {0} is now Deactivated.", id];
+        return $"Tenant {id} is now Deactivated.";
     }
 
     public async Task<string> UpdateSubscriptionAsync(string id, DateTime extendedExpiryDate)
@@ -105,10 +105,10 @@ internal class TenantService : ITenantService
         var tenant = await GetTenantInfoAsync(id);
         tenant.SetValidity(extendedExpiryDate);
         await _tenantStore.TryUpdateAsync(tenant);
-        return _t["Tenant {0}'s Subscription Upgraded. Now Valid till {1}.", id, tenant.ValidUpTo];
+        return $"Tenant {id}'s Subscription Upgraded. Now Valid till {tenant.ValidUpTo}.";
     }
 
     private async Task<GNXTenantInfo> GetTenantInfoAsync(string id) =>
         await _tenantStore.TryGetAsync(id)
-            ?? throw new NotFoundException(_t["{0} {1} Not Found.", typeof(GNXTenantInfo).Name, id]);
+            ?? throw new NotFoundException($"{typeof(GNXTenantInfo).Name} {id} Not Found.");
 }

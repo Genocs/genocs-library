@@ -63,7 +63,7 @@ public static class Extensions
             .WithHostStrategy()
             .WithConfigurationStore(configuration, configurationStoreSection);
 
-        return services;
+        //return services;
 
         return services
             .AddDbContext<TenantDbContext>((p, m) =>

@@ -52,6 +52,7 @@
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.QueryBuilder.UnitTests/Genocs.QueryBuilder.UnitTests.csproj" />

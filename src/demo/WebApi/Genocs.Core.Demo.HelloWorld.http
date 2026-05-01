@@ -1,7 +1,7 @@
-@Genocs.Core.Demo.HelloWorld_HostAddress = https://localhost:5070
-@sagaBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/saga
-@bookStoreBaseUrl = {{Genocs.Core.Demo.HelloWorld_HostAddress}}/api/bookstore
-@authorId = 80f5872d-7db0-4072-82e8-23024efeba2c
+@HostAddress = https://localhost:5070
+@sagaBaseUrl = {{HostAddress}}/saga
+@bookStoreBaseUrl = {{HostAddress}}/api/bookstore
+@authorId = 7adf5f22-d24f-436c-af24-5dc9d0f6b453
 @bookId = 5393e1ec-c9fe-4e29-921b-8cd644411376
 @sagaId = 9212c67a-4897-4e2a-8008-6328951cfc86
 
