@@ -41,3 +41,6 @@ validate-webapi: # validate webapi package warning baseline and tests
 
 validate-webapi-cqrs: # validate webapi cqrs package warning baseline and tests
 	$(MAKE) -f validate-webapi-cqrs.mk validate-webapi-cqrs
+
+validate-webapi-openapi: # validate webapi openapi package warning baseline and tests
+	$(MAKE) -f validate-webapi-openapi.mk validate-webapi-openapi

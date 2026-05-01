@@ -60,5 +60,53 @@ internal sealed class OpenApiOptionsBuilder : IOpenApiOptionsBuilder
         return this;
     }
 
+    public IOpenApiOptionsBuilder WithContactEmail(string contactEmail)
+    {
+        _options.ContactEmail = contactEmail;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder WithContactUrl(string contactUrl)
+    {
+        _options.ContactUrl = contactUrl;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder WithLicenseName(string licenseName)
+    {
+        _options.LicenseName = licenseName;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder WithLicenseUrl(string licenseUrl)
+    {
+        _options.LicenseUrl = licenseUrl;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder WithTermsOfService(string termsOfService)
+    {
+        _options.TermsOfService = termsOfService;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder WithServers(IEnumerable<OpenApiOptions.OpenApiServer> servers)
+    {
+        _options.Servers = servers?.ToList();
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder AddServer(string url, string? description = null)
+    {
+        _options.Servers ??= [];
+        _options.Servers.Add(new OpenApiOptions.OpenApiServer
+        {
+            Url = url,
+            Description = description
+        });
+
+        return this;
+    }
+
     public OpenApiOptions Build() => _options;
 }

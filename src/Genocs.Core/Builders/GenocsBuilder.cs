@@ -20,12 +20,12 @@ public sealed class GenocsBuilder : IGenocsBuilder
     /// <summary>
     /// The configuration.
     /// </summary>
-    public IConfiguration Configuration { get; private set; }
+    public IConfiguration? Configuration { get; private set; }
 
     /// <summary>
     /// The web application builder.
     /// </summary>
-    public WebApplicationBuilder WebApplicationBuilder { get; private set; }
+    public WebApplicationBuilder? WebApplicationBuilder { get; private set; }
 
     /// <summary>
     /// The Genocs builder constructor.

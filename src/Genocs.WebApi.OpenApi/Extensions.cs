@@ -6,6 +6,7 @@ using Genocs.WebApi.OpenApi.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 #if NET10_0_OR_GREATER
 using Microsoft.OpenApi;
@@ -57,13 +58,16 @@ public static class Extensions
     /// <returns>The Genocs builder to be used for chain.</returns>
     public static IGenocsBuilder AddOpenApiDocs(this IGenocsBuilder builder, OpenApiOptions settings)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(settings);
+
+        // Keep options available in DI even when docs are disabled so UseOpenApiDocs can no-op safely.
+        builder.Services.AddSingleton(settings);
+
         if (!settings.Enabled || !builder.TryRegister(RegistryName))
         {
             return builder;
         }
-
-        // TODO: Double-check if this is necessary
-        builder.Services.AddSingleton(settings);
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -72,8 +76,6 @@ public static class Extensions
             c.EnableAnnotations();
             c.DocumentFilter<WebApiDocumentFilter>();
 
-#if NET10_0_OR_GREATER
-
             c.SwaggerDoc(
                         settings.Name,
                         new OpenApiInfo
@@ -94,29 +96,6 @@ public static class Extensions
                                 Url = new Uri(settings.LicenseUrl ?? "https://opensource.org/license/mit/")
                             }
                         });
-
-#else
-            c.SwaggerDoc(
-                        settings.Name,
-                        new OpenApiInfo
-                        {
-                            Version = settings.Version,
-                            Title = settings.Title,
-                            Description = settings.Description,
-                            TermsOfService = new Uri(settings.TermsOfService ?? "https://www.genocs.com/terms_and_conditions.html"),
-                            Contact = new OpenApiContact
-                            {
-                                Name = settings.ContactName,
-                                Email = settings.ContactEmail,
-                                Url = new Uri(settings.ContactUrl ?? "https://www.genocs.com")
-                            },
-                            License = new OpenApiLicense
-                            {
-                                Name = settings.LicenseName,
-                                Url = new Uri(settings.LicenseUrl ?? "https://opensource.org/license/mit/")
-                            }
-                        });
-#endif
 
             // This is required to make the custom operation ids work
             // It's required to be used by LangChain tools
@@ -137,59 +116,36 @@ public static class Extensions
             // Add security definition if needed
             if (settings.IncludeSecurity)
             {
-#if NET10_0_OR_GREATER
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
                 });
-
-                /*
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+#if NET10_0_OR_GREATER
+                c.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
                 {
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Name = "Bearer",
-                            Description = "bla bla bla",
-                            Type = SecuritySchemeType.OAuth2,
-                            BearerFormat = "JWT",
-                            Scheme = "oauth2",
-                            In = ParameterLocation.Header
-                        },
-                        new List<string>()
+                        new OpenApiSecuritySchemeReference("Bearer"),
+                        []
                     }
                 });
-                */
-
 #else
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Name = "Bearer",
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            In = ParameterLocation.Header
+                            }
                         },
-                        new List<string>()
+                        []
                     }
                 });
 #endif
@@ -200,13 +156,7 @@ public static class Extensions
             {
                 foreach (var server in settings.Servers)
                 {
-
-#if NET10_0_OR_GREATER
                     c.AddServer(new OpenApiServer() { Url = server.Url, Description = server.Description });
-
-#else
-                    c.AddServer(new OpenApiServer() { Url = server.Url, Description = server.Description });
-#endif
                 }
             }
 
@@ -251,8 +201,16 @@ public static class Extensions
 
     public static IApplicationBuilder UseOpenApiDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<OpenApiOptions>();
-        if (!options.Enabled)
+        ArgumentNullException.ThrowIfNull(builder);
+
+        OpenApiOptions? options = builder.ApplicationServices.GetService<OpenApiOptions>();
+        if (options is null || !options.Enabled)
+        {
+            return builder;
+        }
+
+        // OpenApi docs were not registered on this host, so there is nothing to wire at runtime.
+        if (builder.ApplicationServices.GetService<ISwaggerProvider>() is null)
         {
             return builder;
         }

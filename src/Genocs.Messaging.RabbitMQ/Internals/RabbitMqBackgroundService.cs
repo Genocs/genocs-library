@@ -149,11 +149,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         bool exclusive = _options.Queue?.Exclusive ?? false;
         bool autoDelete = _options.Queue?.AutoDelete ?? false;
 
-        var deadLetterEnabled = _options.DeadLetter?.Enabled is true;
-        var deadLetterExchange = deadLetterEnabled
+        bool deadLetterEnabled = _options.DeadLetter?.Enabled is true;
+        string deadLetterExchange = deadLetterEnabled
             ? $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}"
             : string.Empty;
-        var deadLetterQueue = deadLetterEnabled
+
+        string deadLetterQueue = deadLetterEnabled
             ? $"{_options.DeadLetter.Prefix}{conventions.Queue}{_options.DeadLetter.Suffix}"
             : string.Empty;
 
@@ -171,7 +172,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                     { "x-dead-letter-exchange", deadLetterExchange},
                     { "x-dead-letter-routing-key", deadLetterQueue},
                 }
-                : new Dictionary<string, object>();
+                : [];
 
             await channel.QueueDeclareAsync(conventions.Queue, durable, exclusive, autoDelete, queueArguments);
         }
@@ -183,7 +184,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         {
             if (_options.DeadLetter.Declare)
             {
-                var ttl = _options.DeadLetter.Ttl.HasValue
+                int? ttl = _options.DeadLetter.Ttl.HasValue
                     ? _options.DeadLetter.Ttl <= 0 ? 86400000 : _options.DeadLetter.Ttl
                     : null;
 
@@ -228,19 +229,25 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                 if (_loggerEnabled)
                 {
-                    var messagePayload = _logMessagePayload ? Encoding.UTF8.GetString(args.Body.Span) : string.Empty;
+                    string messagePayload = _logMessagePayload ? Encoding.UTF8.GetString(args.Body.Span) : string.Empty;
+
                     _logger.LogInformation(
                         "Received a message with ID: '{MessageId}', " +
                                            "Correlation ID: '{CorrelationId}', timestamp: {Timestamp}, " +
                                            "queue: {Queue}, routing key: {RoutingKey}, exchange: {Exchange}, payload: {MessagePayload}",
-                        messageId, correlationId, timestamp, conventions.Queue, conventions.RoutingKey, conventions.Exchange, messagePayload);
+                        messageId,
+                        correlationId,
+                        timestamp,
+                        conventions.Queue,
+                        conventions.RoutingKey,
+                        conventions.Exchange,
+                        messagePayload);
                 }
 
                 object correlationContext = BuildCorrelationContext(scope, args);
 
                 Task Next(object m, object ctx, BasicDeliverEventArgs a)
-                    => TryHandleAsync(channel, m, messageId, correlationId, ctx, a,
-                        messageSubscriber.Handle, scope.ServiceProvider, deadLetterEnabled);
+                    => TryHandleAsync(channel, m, messageId, correlationId, ctx, a, messageSubscriber.Handle, scope.ServiceProvider, deadLetterEnabled);
 
                 await _pluginsExecutor.ExecuteAsync(Next, message, correlationContext, args);
             }
@@ -327,7 +334,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         activity.SetTag("error.message", exception.Message);
     }
 
-    private object BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
+    private object? BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
     {
         var messagePropertiesAccessor = scope.ServiceProvider.GetRequiredService<IMessagePropertiesAccessor>();
         messagePropertiesAccessor.MessageProperties = new MessageProperties

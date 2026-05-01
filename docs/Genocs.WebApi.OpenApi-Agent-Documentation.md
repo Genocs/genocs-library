@@ -153,8 +153,7 @@ genocs.Build();
 
 Important limitation:
 
-- the fluent builder does not expose every field from `OpenApiOptions`
-- if the host needs `contactEmail`, `contactUrl`, `licenseName`, `licenseUrl`, `termsOfService`, or `servers`, use configuration or construct `OpenApiOptions` directly
+- the fluent builder now supports the full `OpenApiOptions` surface, including contact email/url, license name/url, terms of service, and server entries
 
 ### Recipe 4: Use The Root Path For Docs
 
@@ -183,10 +182,10 @@ Effect:
 |---|---|---|---|
 | `AddOpenApiDocs()` | Register OpenAPI support from the default `openapi` section | Reads `OpenApiOptions.Position`, which is `openapi` | Assuming it works without `Genocs.WebApi` |
 | `AddOpenApiDocs(string sectionName)` | Register OpenAPI support from a custom section | Returns without registration if the section does not bind to settings | Calling `UseOpenApiDocs()` after registration was skipped |
-| `AddOpenApiDocs(Func<IOpenApiOptionsBuilder, IOpenApiOptionsBuilder>)` | Register common options fluently in code | Builds only the subset of fields exposed by `IOpenApiOptionsBuilder` | Assuming every option in `OpenApiOptions` has a fluent method |
+| `AddOpenApiDocs(Func<IOpenApiOptionsBuilder, IOpenApiOptionsBuilder>)` | Register OpenAPI options fluently in code | Supports the full `OpenApiOptions` surface, including servers and advanced metadata fields | Assuming server metadata must be configured only through raw `OpenApiOptions` |
 | `AddOpenApiDocs(OpenApiOptions settings)` | Register OpenAPI support from a fully materialized options object | No-ops when `settings.Enabled` is `false` or the registry key is already used | Expecting disabled registration to still provide services for `UseOpenApiDocs()` |
 | `UseOpenApiDocs()` | Expose the Swagger JSON document and either Swagger UI or ReDoc | Requires `OpenApiOptions` to have been registered successfully | Calling it when `AddOpenApiDocs(...)` was skipped, disabled, or missing |
-| `IOpenApiOptionsBuilder` | Build common OpenAPI settings fluently | Supports only enablement, ReDoc, name, title, version, description, route prefix, contact name, and security inclusion | Treating it as a complete builder for every option |
+| `IOpenApiOptionsBuilder` | Build OpenAPI settings fluently | Supports complete option coverage, including contact, license, terms, and servers | Forgetting to use `WithServers(...)` or `AddServer(...)` when server metadata is needed |
 
 ## Route And UI Semantics
 
@@ -245,6 +244,26 @@ Practical consequence:
 
 - if the host uses this package, also compose `AddWebApi()` unless you have intentionally registered equivalent services yourself
 - `Genocs.WebApi` endpoint definitions are used to patch request and response metadata into the document
+
+### Query Representation Policy
+
+OpenApi query metadata follows an explicit policy:
+
+- entries marked as `In = "query"` are emitted as OpenAPI query parameters
+- request bodies are reserved for entries marked as `In = "body"`
+- this applies even when the query contract type implements `IQuery`
+
+Migration impact:
+
+- consumers who previously relied on query contracts being emitted as `application/json` request bodies should update clients and examples to send query-string parameters instead
+
+## Maintainer Validation Guidance
+
+Use the package-level quality gate to validate OpenApi changes:
+
+- `dotnet build src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj -f net10.0 -c Debug --nologo -warnaserror -p:BuildProjectReferences=false`
+- `dotnet test src/tests/Genocs.WebApi.OpenApi.UnitTests/Genocs.WebApi.OpenApi.UnitTests.csproj -c Debug --nologo`
+- `make validate-webapi-openapi`
 
 ### XML Comments
 

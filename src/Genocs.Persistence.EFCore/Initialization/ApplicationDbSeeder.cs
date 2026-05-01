@@ -51,7 +51,7 @@ internal class ApplicationDbSeeder
         //         _logger.LogInformation("Seeding {role} Role for '{tenantId}' Tenant.", roleName, _currentTenant.Id);
         //         role = new ApplicationRole(roleName, $"{roleName} Role for {_currentTenant.Id} Tenant");
         //         await _roleManager.CreateAsync(role);
-        //     } 
+        //     }
         //     Assign permissions
         //     if (roleName == GNXRoles.Basic)
         //     {
@@ -59,7 +59,7 @@ internal class ApplicationDbSeeder
         //     }
         //     else if (roleName == GNXRoles.Admin)
         //     {
-        //         await AssignPermissionsToRoleAsync(dbContext, GNXPermissions.Admin, role); 
+        //         await AssignPermissionsToRoleAsync(dbContext, GNXPermissions.Admin, role);
         //         if (_currentTenant.Id == MultitenancyConstants.Root.Id)
         //         {
         //             await AssignPermissionsToRoleAsync(dbContext, GNXPermissions.Root, role);
@@ -111,7 +111,7 @@ internal class ApplicationDbSeeder
         //         NormalizedEmail = _currentTenant.AdminEmail?.ToUpperInvariant(),
         //         NormalizedUserName = adminUserName.ToUpperInvariant(),
         //         IsActive = true
-        //     }; 
+        //     };
         //     _logger.LogInformation("Seeding Default Admin User for '{tenantId}' Tenant.", _currentTenant.Id);
         //     var password = new PasswordHasher<ApplicationUser>();
         //     adminUser.PasswordHash = password.HashPassword(adminUser, MultitenancyConstants.DefaultPassword);

@@ -15,45 +15,6 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
     private const string InBody = "body";
     private const string InQuery = "query";
 
-    private readonly Func<OpenApiPathItem, string, OpenApiOperation?> _getOperation = static (item, path) =>
-    {
-#if NET10_0_OR_GREATER
-        switch (path)
-        {
-            case "GET":
-                item.AddOperation(HttpMethod.Get, new OpenApiOperation());
-                return item.Operations[HttpMethod.Get];
-            case "POST":
-                item.AddOperation(HttpMethod.Post, new OpenApiOperation());
-                return item.Operations[HttpMethod.Post];
-            case "PUT":
-                item.AddOperation(HttpMethod.Put, new OpenApiOperation());
-                return item.Operations[HttpMethod.Put];
-            case "DELETE":
-                item.AddOperation(HttpMethod.Delete, new OpenApiOperation());
-                return item.Operations[HttpMethod.Delete];
-        }
-#else
-        switch (path)
-        {
-            case "GET":
-                item.AddOperation(OperationType.Get, new OpenApiOperation());
-                return item.Operations[OperationType.Get];
-            case "POST":
-                item.AddOperation(OperationType.Post, new OpenApiOperation());
-                return item.Operations[OperationType.Post];
-            case "PUT":
-                item.AddOperation(OperationType.Put, new OpenApiOperation());
-                return item.Operations[OperationType.Put];
-            case "DELETE":
-                item.AddOperation(OperationType.Delete, new OpenApiOperation());
-                return item.Operations[OperationType.Delete];
-        }
-#endif
-
-        return null;
-    };
-
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         var jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
@@ -64,7 +25,11 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
 
             foreach (var methodDefinition in pathDefinition)
             {
-                var operation = _getOperation(pathItem, methodDefinition.Method);
+                if (!TryCreateOperation(pathItem, methodDefinition.Method, out OpenApiOperation operation))
+                {
+                    continue;
+                }
+
                 operation.Responses = [];
                 operation.Parameters = [];
 
@@ -79,7 +44,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
                                 {
                                     "application/json", new OpenApiMediaType()
                                     {
-                                        Schema = GetSchema(parameter, jsonSerializerOptions)
+                                        Schema = GetSchema(parameter, context, jsonSerializerOptions)
                                     }
                                 }
                             }
@@ -87,29 +52,13 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
                     }
                     else if (parameter.In is InQuery)
                     {
-                        if (parameter.Type.GetInterface("IQuery") is not null)
+                        // Policy: query-bound contracts are represented as query parameters, never request bodies.
+                        operation.Parameters.Add(new OpenApiParameter
                         {
-                            operation.RequestBody = new OpenApiRequestBody()
-                            {
-                                Content = new Dictionary<string, OpenApiMediaType>()
-                                {
-                                    {
-                                        "application/json", new OpenApiMediaType
-                                        {
-                                            Schema = GetSchema(parameter, jsonSerializerOptions)
-                                        }
-                                    }
-                                }
-                            };
-                        }
-                        else
-                        {
-                            operation.Parameters.Add(new OpenApiParameter
-                            {
-                                Name = parameter.Name,
-                                Schema = GetSchema(parameter, jsonSerializerOptions)
-                            });
-                        }
+                            Name = string.IsNullOrWhiteSpace(parameter.Name) ? "query" : parameter.Name,
+                            In = ParameterLocation.Query,
+                            Schema = GetSchema(parameter, context, jsonSerializerOptions)
+                        });
                     }
                 }
 
@@ -122,7 +71,7 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
                             {
                                 "application/json", new OpenApiMediaType
                                 {
-                                    Schema = GetSchema(response, jsonSerializerOptions)
+                                    Schema = GetSchema(response, context, jsonSerializerOptions)
                                 }
                             }
                         }
@@ -134,41 +83,94 @@ internal sealed class WebApiDocumentFilter(WebApiEndpointDefinitions definitions
         }
     }
 
-#if NET10_0_OR_GREATER
-    private IOpenApiSchema GetSchema(WebApiEndpointParameter parameter, JsonSerializerOptions options)
+    private static bool TryCreateOperation(OpenApiPathItem pathItem, string method, out OpenApiOperation operation)
     {
-        return new OpenApiSchema
+        operation = new OpenApiOperation();
+
+        switch (method.ToUpperInvariant())
         {
-            Type = JsonSchemaType.String,
-            // Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
-        };
+#if NET10_0_OR_GREATER
+            case "GET":
+                pathItem.AddOperation(HttpMethod.Get, operation);
+                return true;
+            case "POST":
+                pathItem.AddOperation(HttpMethod.Post, operation);
+                return true;
+            case "PUT":
+                pathItem.AddOperation(HttpMethod.Put, operation);
+                return true;
+            case "DELETE":
+                pathItem.AddOperation(HttpMethod.Delete, operation);
+                return true;
+#else
+            case "GET":
+                pathItem.AddOperation(OperationType.Get, operation);
+                return true;
+            case "POST":
+                pathItem.AddOperation(OperationType.Post, operation);
+                return true;
+            case "PUT":
+                pathItem.AddOperation(OperationType.Put, operation);
+                return true;
+            case "DELETE":
+                pathItem.AddOperation(OperationType.Delete, operation);
+                return true;
+#endif
+            default:
+                operation = new OpenApiOperation();
+                return false;
+        }
     }
 
-    private IOpenApiSchema GetSchema(WebApiEndpointResponse response, JsonSerializerOptions options)
+#if NET10_0_OR_GREATER
+    private static IOpenApiSchema GetSchema(WebApiEndpointParameter parameter, DocumentFilterContext context, JsonSerializerOptions _)
     {
-        return new OpenApiSchema
+        return GetSchema(parameter.Type, context);
+    }
+
+    private static IOpenApiSchema GetSchema(WebApiEndpointResponse response, DocumentFilterContext context, JsonSerializerOptions _)
+    {
+        return GetSchema(response.Type, context);
+    }
+
+    private static IOpenApiSchema GetSchema(Type? type, DocumentFilterContext context)
+    {
+        if (type is null)
         {
-            Type = JsonSchemaType.String,
-            // Example = new JsonNode(JsonSerializer.Serialize(parameter.Example, options)
-        };
+            return new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+            };
+        }
+
+        return context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
     }
 #else
-    private OpenApiSchema GetSchema(WebApiEndpointParameter parameter, JsonSerializerOptions jsonSerializerOptions)
+    private static OpenApiSchema GetSchema(WebApiEndpointParameter parameter, DocumentFilterContext context, JsonSerializerOptions jsonSerializerOptions)
     {
-        return new OpenApiSchema
-        {
-            Type = parameter.Type?.Name,
-            Example = new OpenApiString(JsonSerializer.Serialize(parameter.Example, jsonSerializerOptions))
-        };
+        OpenApiSchema schema = GetSchema(parameter.Type, context);
+        schema.Example = new OpenApiString(JsonSerializer.Serialize(parameter.Example, jsonSerializerOptions));
+        return schema;
     }
 
-    private OpenApiSchema GetSchema(WebApiEndpointResponse response, JsonSerializerOptions jsonSerializerOptions)
+    private static OpenApiSchema GetSchema(WebApiEndpointResponse response, DocumentFilterContext context, JsonSerializerOptions jsonSerializerOptions)
     {
-        return new OpenApiSchema
+        OpenApiSchema schema = GetSchema(response.Type, context);
+        schema.Example = new OpenApiString(JsonSerializer.Serialize(response.Example, jsonSerializerOptions));
+        return schema;
+    }
+
+    private static OpenApiSchema GetSchema(Type? type, DocumentFilterContext context)
+    {
+        if (type is null)
         {
-            Type = response.Type?.Name,
-            Example = new OpenApiString(JsonSerializer.Serialize(response.Example, jsonSerializerOptions))
-        };
+            return new OpenApiSchema
+            {
+                Type = "object",
+            };
+        }
+
+        return context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
     }
 #endif
 }

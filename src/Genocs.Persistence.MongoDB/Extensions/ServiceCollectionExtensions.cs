@@ -22,12 +22,15 @@ public static class ServiceCollectionExtensions
                                             typeof(decimal?),
                                             new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
 
-        ConventionRegistry.Register("genocs", new ConventionPack
-        {
-            new CamelCaseElementNameConvention(),
-            new IgnoreExtraElementsConvention(true),
-            new EnumRepresentationConvention(BsonType.String),
-        }, _ => true);
+        ConventionRegistry.Register(
+            "genocs",
+            new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreExtraElementsConvention(true),
+                new EnumRepresentationConvention(BsonType.String),
+            },
+            _ => true);
     }
 
     internal static GuidRepresentation ToGuidRepresentation(MongoGuidRepresentationMode mode)

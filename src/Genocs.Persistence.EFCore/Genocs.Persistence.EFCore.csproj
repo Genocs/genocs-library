@@ -22,7 +22,7 @@
     <ItemGroup>
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="MediatR" Version="14.0.0" />
+        <PackageReference Include="MediatR" Version="14.1.0" />
         <PackageReference Include="MongoDB.Driver" Version="3.8.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.3" />
@@ -47,7 +47,7 @@
         <!--PostgreSQL-->
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
         <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="10.23.26100" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="10.23.26200" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -63,7 +63,7 @@
         <!--PostgreSQL-->
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26100" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26200" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -79,6 +79,6 @@
         <!--PostgreSQL-->
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
         <!--Oracle-->
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.26100" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.26200" />
     </ItemGroup>
 </Project>
