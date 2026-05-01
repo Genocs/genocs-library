@@ -13,5 +13,5 @@ public class AzureOptions
     /// <summary>
     /// The Azure application insights connection string.
     /// </summary>
-    public string ConnectionString { get; set; }
+    public string? ConnectionString { get; set; }
 }

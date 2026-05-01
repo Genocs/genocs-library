@@ -31,10 +31,7 @@ public static class Extensions
     /// <param name="keyValuePath">The key value path.</param>
     /// <param name="sectionName">The section name.</param>
     /// <returns>The updated host builder for chaining.</returns>
-    public static IHostBuilder UseVault(
-                                        this IHostBuilder builder,
-                                        string keyValuePath = null,
-                                        string sectionName = SectionName)
+    public static IHostBuilder UseVault(this IHostBuilder builder, string? keyValuePath = null, string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
@@ -55,10 +52,7 @@ public static class Extensions
     /// <param name="keyValuePath">The key value path.</param>
     /// <param name="sectionName">The section name.</param>
     /// <returns>The updated host builder for chaining.</returns>
-    public static IWebHostBuilder UseVault(
-                                           this IWebHostBuilder builder,
-                                           string keyValuePath = null,
-                                           string sectionName = SectionName)
+    public static IWebHostBuilder UseVault(this IWebHostBuilder builder, string? keyValuePath = null, string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
@@ -135,13 +129,10 @@ public static class Extensions
         }
     }
 
-    private static async Task AddVaultAsync(
-                                            this IConfigurationBuilder builder,
-                                            HashicorpKeyVaultOptions options,
-                                            string keyValuePath)
+    private static async Task AddVaultAsync(this IConfigurationBuilder builder, HashicorpKeyVaultOptions options, string? keyValuePath)
     {
         VerifyOptions(options);
-        string kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
+        string? kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
         var (client, _) = GetClientAndSettings(options);
         if (!string.IsNullOrWhiteSpace(kvPath) && options.Kv.Enabled)
         {
@@ -166,7 +157,7 @@ public static class Extensions
             return;
         }
 
-        var configuration = new Dictionary<string, string>();
+        var configuration = new Dictionary<string, string?>();
         foreach (var (key, lease) in options.Lease)
         {
             if (!lease.Enabled || string.IsNullOrWhiteSpace(lease.Type))
@@ -189,7 +180,7 @@ public static class Extensions
                                        string key,
                                        IVaultClient client,
                                        HashicorpKeyVaultOptions.LeaseOptions options,
-                                       IDictionary<string, string> configuration)
+                                       IDictionary<string, string?> configuration)
         => options.Type.ToLowerInvariant() switch
         {
             "activedirectory" => SetActiveDirectorySecretsAsync(key, client, options, configuration),

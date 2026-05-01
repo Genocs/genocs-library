@@ -191,7 +191,7 @@ This uses `IRequestHandler<TRequest, TResult>`, not the CQRS handler interfaces 
 | `UseEndpoints(...)` | Map endpoints with the Genocs DSL | Calls `UseRouting()`, optional `UseAuthorization()`, optional custom middleware, then ASP.NET Core `UseEndpoints(...)` | Calling `UseRouting()` again around it without understanding pipeline order |
 | `AddErrorHandler<T>()` | Register exception-to-response mapping | Registers `ErrorHandlerMiddleware` and your `IExceptionToResponseMapper` implementation | Assuming it also adds the middleware to the pipeline |
 | `UseErrorHandler()` | Activate exception middleware | Catches exceptions and maps them to JSON or empty responses | Forgetting to register a mapper first |
-| `UseAllForwardedHeaders()` | Accept forwarded headers from proxies | Enables `ForwardedHeaders.All` and optionally clears known networks and proxies | Using it blindly on an untrusted network edge |
+| `UseAllForwardedHeaders()` | Accept forwarded headers from proxies | Enables `ForwardedHeaders.All`; by default it preserves ASP.NET Core trusted proxy/network checks, and optionally clears known networks and proxies when explicitly requested | Using permissive trust mode on an untrusted network edge |
 | `IEndpointsBuilder` | Define GET, POST, PUT, and DELETE endpoints | Supports optional auth, roles, policies, and endpoint customization callbacks | Assuming it covers PATCH, HEAD, or full minimal API surface |
 | `ReadJsonAsync<T>()` | Deserialize a JSON request body | Returns `default` and writes 400 on invalid input; can merge route values into DTO fields | Assuming exceptions bubble instead of a 400 response being written |
 | `ReadQuery<T>()` | Materialize a DTO from route and query values | Uses serializer-based object reconstruction | Assuming full model-binding parity with MVC |
@@ -382,7 +382,7 @@ Fix: Enable `webApi.bindRequestFromRoute` and ensure the DTO uses standard auto-
 Fix: Confirm authentication and authorization services are configured separately in the host. This package only adds endpoint authorization metadata and `AddAuthorization()`.
 
 6. Forwarded headers change client IP or scheme unexpectedly.
-Fix: Re-check proxy trust boundaries before using `UseAllForwardedHeaders()` with cleared known networks and proxies.
+Fix: Keep `UseAllForwardedHeaders()` default strict behavior unless your reverse proxy boundary is trusted; only opt in to `resetKnownNetworksAndProxies: true` for controlled environments.
 
 7. `DispatchAsync<TRequest, TResult>()` cannot resolve a handler.
 Fix: Ensure the relevant assembly is already loaded and contains an `IRequestHandler<TRequest, TResult>` implementation that can be scanned during `AddWebApi()`.
@@ -395,6 +395,14 @@ Fix: Ensure the relevant assembly is already loaded and contains an `IRequestHan
 - `Genocs.Auth`
 - `Genocs.Logging`
 - `Genocs.Telemetry`
+
+## Maintainer Validation Command
+
+When working in the repository, validate package warning baseline and regression tests with:
+
+```bash
+make validate-webapi
+```
 
 ## One-Line Recommendation For Agents
 

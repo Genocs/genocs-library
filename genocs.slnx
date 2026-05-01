@@ -56,6 +56,7 @@
     <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.QueryBuilder.UnitTests/Genocs.QueryBuilder.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Saga.UnitTests/Genocs.Saga.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.WebApi.UnitTests/Genocs.WebApi.UnitTests.csproj" />
   </Folder>
   <Folder Name="/_Solution Items/">
     <File Path=".editorconfig" />

@@ -51,7 +51,7 @@ internal sealed class ErrorHandlerMiddleware(
     private async Task HandleErrorAsync(HttpContext context, Exception exception)
     {
         var exceptionResponse = _exceptionToResponseMapper.Map(exception);
-        context.Response.StatusCode = (int)(exceptionResponse?.StatusCode ?? HttpStatusCode.BadRequest);
+        context.Response.StatusCode = (int)(exceptionResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
         object? response = exceptionResponse?.Response;
         if (response is null)
         {

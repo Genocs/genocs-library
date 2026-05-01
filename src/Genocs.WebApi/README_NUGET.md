@@ -33,12 +33,31 @@ app.UseEndpoints(endpoints =>
 });
 ```
 
+Forwarded headers safety:
+
+- `UseAllForwardedHeaders()` is strict by default and keeps ASP.NET Core trusted network/proxy checks in place.
+- Use `UseAllForwardedHeaders(resetKnownNetworksAndProxies: true)` only when your deployment edge is explicitly trusted and controlled.
+
+Endpoint authorization metadata:
+
+- Endpoints mapped with `IEndpointsBuilder` do not receive implicit anonymous metadata by default.
+- Use `auth`, `roles`, or `policies` parameters for authorization requirements.
+- If explicit anonymous metadata is required, add it through the endpoint convention callback.
+
 ## Main Entry Points
 
 - `AddWebApi`
 - `UseEndpoints`
 - `UseErrorHandler`
 - `UseAllForwardedHeaders`
+
+## Validation
+
+Use the package quality gate to validate warning baseline and regression tests:
+
+```bash
+make validate-webapi
+```
 
 ## Support
 

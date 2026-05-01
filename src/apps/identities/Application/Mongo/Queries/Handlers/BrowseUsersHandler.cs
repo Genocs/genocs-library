@@ -1,11 +1,9 @@
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Queries;
 using Genocs.Identities.Application.DTO;
 using Genocs.Identities.Application.Mongo.Documents;
 using Genocs.Identities.Application.Queries;
 using Genocs.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace Genocs.Identities.Application.Mongo.Queries.Handlers;
 
@@ -13,7 +11,7 @@ public class BrowseUsersHandler(IMongoDatabase database) : IQueryHandler<BrowseU
 {
     private readonly IMongoDatabase _database = database;
 
-    public async Task<PagedDto<UserDto>> HandleAsync(BrowseUsers query, CancellationToken cancellationToken = default)
+    public async Task<PagedDto<UserDto>?> HandleAsync(BrowseUsers query, CancellationToken cancellationToken = default)
     {
         var result = await _database.GetCollection<UserDocument>("users")
             .AsQueryable()

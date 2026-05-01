@@ -63,7 +63,8 @@ public class RedisSagaStateRepositoryTests
         string cachedSagaState = @"{""Id"":{""Id"":""1e7badd1-350b-4d52-9e14-61bd0ac14b57""},""Type"":""Genocs.Library.Demo.WebApi.Sagas.SampleSaga, Genocs.Library.Demo.WebApi, Version=9.0.0.0, Culture=neutral, PublicKeyToken=null"",""State"":0,""Data"":{""IsStartTransaction"":true,""IsCompleteTransaction"":false,""TransactionValue"":10,""IsEnded"":false,""MessageId"":""3d2b9216-1d9c-442d-93c0-c06c1049a452"",""IsSagaCompleted"":false},""Version"":1,""DataType"":""Genocs.Library.Demo.WebApi.Sagas.SagaData, Genocs.Library.Demo.WebApi, Version=9.0.0.0, Culture=neutral, PublicKeyToken=null""}";
         RedisSagaState? state = JsonConvert.DeserializeObject<RedisSagaState>(cachedSagaState);
 
-        state.Id.Value.Id.ShouldBe("1e7badd1-350b-4d52-9e14-61bd0ac14b57");
+        state.ShouldNotBeNull();
+        state.Id!.Value.Id.ShouldBe("1e7badd1-350b-4d52-9e14-61bd0ac14b57");
     }
 
     private static string Serialize(RedisSagaState state)
@@ -76,11 +77,11 @@ public class RedisSagaStateRepositoryTests
     private sealed class FakeRedisSagaStateStore : IRedisSagaStateStore
     {
         private readonly Dictionary<string, string> _values = new();
-        private string _replacementValueOnNextFailure;
+        private string? _replacementValueOnNextFailure;
         private bool _failNextCompareAndSet;
 
-        public Task<string> GetStringAsync(string key)
-            => Task.FromResult(_values.TryGetValue(key, out string value) ? value : null);
+        public Task<string?> GetStringAsync(string key)
+            => Task.FromResult(_values.TryGetValue(key, out string? value) ? value : null);
 
         public Task<bool> CompareAndSetAsync(string key, string expectedValue, string newValue)
         {

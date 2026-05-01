@@ -2,14 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.WebApi.Requests;
 
-public class RequestDispatcher : IRequestDispatcher
+public class RequestDispatcher(IServiceProvider serviceProvider) : IRequestDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public RequestDispatcher(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task<TResult> DispatchAsync<TRequest, TResult>(TRequest request, CancellationToken cancellationToken = default)
         where TRequest : class, IRequest

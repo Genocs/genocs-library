@@ -19,7 +19,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         string? roles = null,
         params string[] policies)
     {
-        var builder = _routeBuilder.MapGet(path, ctx => context?.Invoke(ctx));
+        var builder = _routeBuilder.MapGet(path, ctx => context is null ? Task.CompletedTask : context.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Get, path);
@@ -70,7 +70,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         string? roles = null,
         params string[] policies)
     {
-        var builder = _routeBuilder.MapPost(path, ctx => context?.Invoke(ctx));
+        var builder = _routeBuilder.MapPost(path, ctx => context is null ? Task.CompletedTask : context.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Post, path);
@@ -103,7 +103,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         string? roles = null,
         params string[] policies)
     {
-        var builder = _routeBuilder.MapPut(path, ctx => context?.Invoke(ctx));
+        var builder = _routeBuilder.MapPut(path, ctx => context is null ? Task.CompletedTask : context.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Put, path);
@@ -136,7 +136,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         string? roles = null,
         params string[] policies)
     {
-        var builder = _routeBuilder.MapDelete(path, ctx => context?.Invoke(ctx));
+        var builder = _routeBuilder.MapDelete(path, ctx => context is null ? Task.CompletedTask : context.Invoke(ctx));
         endpoint?.Invoke(builder);
         ApplyAuthRolesAndPolicies(builder, auth, roles, policies);
         AddEndpointDefinition(HttpMethods.Delete, path);
@@ -149,7 +149,7 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
         Func<T, HttpContext, Task>? context = null,
         Action<IEndpointConventionBuilder>? endpoint = null,
         bool auth = false,
-        string roles = null,
+        string? roles = null,
         params string[] policies)
         where T : class
     {
@@ -183,9 +183,6 @@ public class EndpointsBuilder(IEndpointRouteBuilder routeBuilder, WebApiEndpoint
             builder.RequireAuthorization();
             return;
         }
-
-        // I don't like this, but it is the only way to allow anonymous access
-        builder.AllowAnonymous();
     }
 
     private static async Task BuildRequestContext<T>(HttpContext httpContext, Func<T, HttpContext, Task>? context = null)

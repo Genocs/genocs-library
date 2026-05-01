@@ -34,14 +34,9 @@ public static class Extensions
 
     private const string JsonContentType = "application/json";
     private static readonly byte[] InvalidJsonRequestBytes = Encoding.UTF8.GetBytes("An invalid JSON was sent.");
-    private static bool _bindRequestFromRoute;
 
     [Description("By default System JSON serializer is being used. If Newtonsoft JSON serializer is used then it sets Kestrel's and IIS ServerOptions AllowSynchronousIO = true")]
-    public static IGenocsBuilder AddWebApi(
-        this IGenocsBuilder builder,
-        Action<IMvcCoreBuilder>? configureMvc = null,
-        IJsonSerializer? jsonSerializer = null,
-        string sectionName = SectionName)
+    public static IGenocsBuilder AddWebApi(this IGenocsBuilder builder, Action<IMvcCoreBuilder>? configureMvc = null, IJsonSerializer? jsonSerializer = null, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -84,8 +79,6 @@ public static class Extensions
 
         var options = builder.GetOptions<WebApiOptions>(sectionName);
         builder.Services.AddSingleton(options);
-
-        _bindRequestFromRoute = options.BindRequestFromRoute;
 
         var mvcCoreBuilder = builder.Services
                                             .AddLogging()
@@ -167,7 +160,7 @@ public static class Extensions
     public static IApplicationBuilder UseErrorHandler(this IApplicationBuilder builder)
         => builder.UseMiddleware<ErrorHandlerMiddleware>();
 
-    public static IApplicationBuilder UseAllForwardedHeaders(this IApplicationBuilder builder, bool resetKnownNetworksAndProxies = true)
+    public static IApplicationBuilder UseAllForwardedHeaders(this IApplicationBuilder builder, bool resetKnownNetworksAndProxies = false)
     {
         ForwardedHeadersOptions forwardingOptions = new ForwardedHeadersOptions
         {
@@ -176,6 +169,8 @@ public static class Extensions
 
         if (resetKnownNetworksAndProxies)
         {
+            // Why: clearing trusted proxies/networks makes forwarded-header trust permissive.
+            // Keep this behavior explicit and opt-in for controlled reverse-proxy topologies.
 #if NET10_0_OR_GREATER
             forwardingOptions.KnownIPNetworks.Clear();
 #else
@@ -203,9 +198,12 @@ public static class Extensions
 
     private static TModel Bind<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> expression, object value)
     {
-        if (expression.Body is not MemberExpression memberExpression)
+        ArgumentNullException.ThrowIfNull(model);
+
+        MemberExpression? memberExpression = expression.Body as MemberExpression;
+        if (memberExpression is null && expression.Body is UnaryExpression unaryExpression)
         {
-            memberExpression = ((UnaryExpression)expression.Body).Operand as MemberExpression;
+            memberExpression = unaryExpression.Operand as MemberExpression;
         }
 
         if (memberExpression is null)
@@ -246,7 +244,7 @@ public static class Extensions
 
         if (!response.Headers.ContainsKey(LocationHeader))
         {
-            response.Headers.Add(LocationHeader, location);
+            response.Headers[LocationHeader] = location;
         }
 
         return data is null ? Task.CompletedTask : response.WriteJsonAsync(data);
@@ -269,7 +267,7 @@ public static class Extensions
         response.StatusCode = (int)HttpStatusCode.MovedPermanently;
         if (!response.Headers.ContainsKey(LocationHeader))
         {
-            response.Headers.Add(LocationHeader, url);
+            response.Headers[LocationHeader] = url;
         }
 
         return Task.CompletedTask;
@@ -280,7 +278,7 @@ public static class Extensions
         response.StatusCode = (int)HttpStatusCode.PermanentRedirect;
         if (!response.Headers.ContainsKey(LocationHeader))
         {
-            response.Headers.Add(LocationHeader, url);
+            response.Headers[LocationHeader] = url;
         }
 
         return Task.CompletedTask;
@@ -340,7 +338,15 @@ public static class Extensions
         {
             var request = httpContext.Request;
             var payload = await httpContext.RequestServices.GetRequiredService<IJsonSerializer>().DeserializeAsync<T>(request.Body);
-            if (_bindRequestFromRoute && request.HasRouteData())
+            var webApiOptions = httpContext.RequestServices.GetService<WebApiOptions>();
+            bool bindRequestFromRoute = webApiOptions?.BindRequestFromRoute == true;
+
+            if (payload is null)
+            {
+                return default;
+            }
+
+            if (bindRequestFromRoute && request.HasRouteData())
             {
                 var values = request.HttpContext.GetRouteData().Values;
 
@@ -367,16 +373,23 @@ public static class Extensions
                         continue;
                     }
 
+                    string? routeValue = value.ToString();
+                    if (string.IsNullOrWhiteSpace(routeValue))
+                    {
+                        continue;
+                    }
+
                     object? fieldValue = TypeDescriptor
                         .GetConverter(field.FieldType)
-                        .ConvertFromInvariantString(value.ToString());
+                        .ConvertFromInvariantString(routeValue);
 
                     field.SetValue(payload, fieldValue);
                 }
             }
 
             var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(payload, new ValidationContext(payload), results))
+            object payloadObject = payload!;
+            if (Validator.TryValidateObject(payloadObject, new ValidationContext(payloadObject), results))
             {
                 return payload;
             }
@@ -409,10 +422,15 @@ public static class Extensions
 
         if (request.HasQueryString())
         {
-            var queryString = HttpUtility.ParseQueryString(request.HttpContext.Request.QueryString.Value);
+            var queryString = HttpUtility.ParseQueryString(request.HttpContext.Request.QueryString.Value ?? string.Empty);
             values ??= [];
-            foreach (string key in queryString.AllKeys)
+            foreach (string? key in queryString.AllKeys)
             {
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    continue;
+                }
+
                 values.TryAdd(key, queryString[key]);
             }
         }
