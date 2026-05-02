@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:Genocs.Library.Demo.ContractTests.WebApiContractTests.GetSomething_WhenTheTesterSomethingExists_ReturnsTheSomething~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:Genocs.Library.Demo.ContractTests.WebApiContractTests.CreateBook_WithValidRequest_ReturnsCreatedBook~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:Genocs.Library.Demo.ContractTests.WebApiContractTests.GetBookById_WhenBookExists_ReturnsBook~System.Threading.Tasks.Task")]

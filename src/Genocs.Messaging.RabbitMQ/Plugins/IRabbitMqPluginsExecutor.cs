@@ -4,6 +4,5 @@ namespace Genocs.Messaging.RabbitMQ.Plugins;
 
 internal interface IRabbitMqPluginsExecutor
 {
-    Task ExecuteAsync(Func<object, object, BasicDeliverEventArgs, Task> successor,
-        object message, object correlationContext, BasicDeliverEventArgs args);
+    Task ExecuteAsync(Func<object, object, BasicDeliverEventArgs, Task> successor, object message, object correlationContext, BasicDeliverEventArgs args);
 }

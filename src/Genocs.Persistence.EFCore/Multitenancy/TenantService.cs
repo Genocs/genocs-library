@@ -14,22 +14,23 @@ internal class TenantService : ITenantService
     private readonly IMultiTenantStore<GNXTenantInfo> _tenantStore;
     private readonly IConnectionStringSecurer _csSecurer;
     private readonly IDatabaseInitializer _dbInitializer;
-    //private readonly IStringLocalizer _t;
+
+    // private readonly IStringLocalizer _t;
     private readonly DatabaseOptions _dbSettings;
 
     public TenantService(
                         IMultiTenantStore<GNXTenantInfo> tenantStore,
                         IConnectionStringSecurer csSecurer,
                         IDatabaseInitializer dbInitializer,
-                        //IStringLocalizer<TenantService> localizer,
-                        IOptions<DatabaseOptions> dbSettings)
+                        IOptions<DatabaseOptions> dbSettings) // IStringLocalizer<TenantService> localize
     {
         ArgumentNullException.ThrowIfNull(dbSettings);
 
         _tenantStore = tenantStore ?? throw new ArgumentNullException(nameof(tenantStore));
         _csSecurer = csSecurer ?? throw new ArgumentNullException(nameof(csSecurer));
         _dbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
-        //_t = localizer ?? throw new ArgumentNullException(nameof(localizer));
+
+        // _t = localizer ?? throw new ArgumentNullException(nameof(localizer));
         _dbSettings = dbSettings.Value ?? throw new ArgumentNullException(nameof(_dbSettings));
     }
 
@@ -68,7 +69,7 @@ internal class TenantService : ITenantService
             throw;
         }
 
-        return tenant.Id;
+        return tenant.Id!;
     }
 
     public async Task<string> ActivateAsync(string id)

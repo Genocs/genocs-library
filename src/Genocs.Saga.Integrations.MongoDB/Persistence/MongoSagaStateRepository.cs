@@ -30,7 +30,7 @@ internal sealed class MongoSagaStateRepository : ISagaStateRepository
         MongoSagaState persistedState = new()
         {
             MongoId = sagaState.Id.Value.Id,
-            SagaType = sagaState.Type.FullName,
+            SagaType = sagaState.Type?.FullName,
             State = sagaState.State,
             Data = sagaState.Data,
             Version = sagaState.Version + 1

@@ -4,16 +4,10 @@ using VaultSharp;
 
 namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 
-internal sealed class KeyValueSecrets : IKeyValueSecrets
+internal sealed class KeyValueSecrets(IVaultClient client, HashicorpKeyVaultOptions options) : IKeyValueSecrets
 {
-    private readonly IVaultClient _client;
-    private readonly HashicorpKeyVaultOptions _options;
-
-    public KeyValueSecrets(IVaultClient client, HashicorpKeyVaultOptions options)
-    {
-        _client = client;
-        _options = options;
-    }
+    private readonly IVaultClient _client = client;
+    private readonly HashicorpKeyVaultOptions _options = options;
 
     public async Task<T> GetDefaultAsync<T>()
         => await GetAsync<T>(_options.Key);

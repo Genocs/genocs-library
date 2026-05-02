@@ -8,16 +8,16 @@ namespace Genocs.Library.Demo.Masstransit.WebApi.Infrastructure.Services;
 public class IssuingRequest
 {
     [JsonProperty("external_reference")]
-    public string ExternalReference;
+    public string? ExternalReference;
 
     [JsonProperty("loyalty_currency")]
-    public string Currency;
+    public string? Currency;
 
     [JsonProperty("fiat_amount")]
     public decimal Amount;
 
     [JsonProperty("partner_code")]
-    public string PartnerCode;
+    public string? PartnerCode;
 }
 
 /// <summary>
@@ -127,36 +127,71 @@ public class GiftCard
     [JsonProperty("description")]
     public string? Description { get; set; }
 
-    // public int discount_value { get; set; }
-    public string? expiration_policy { get; set; }
-    public string? id { get; set; }
-    public object? image { get; set; }
-    public string? maximum_value { get; set; }
-    public string? minimum_value { get; set; }
-    public string? name { get; set; }
-    public string? provider { get; set; }
-    public string? redeem_instructions_html { get; set; }
-    public string? terms_and_conditions_html { get; set; }
-    public string? terms_and_conditions_url { get; set; }
-    public string? type { get; set; }
+    [JsonProperty("expiration_policy")]
+    public string? ExpirationPolicy { get; set; }
+
+    [JsonProperty("id")]
+    public string? Id { get; set; }
+
+    [JsonProperty("image")]
+    public object? Image { get; set; }
+
+    [JsonProperty("maximum_value")]
+    public string? MaximumValue { get; set; }
+
+    [JsonProperty("minimum_value")]
+    public string? MinimumValue { get; set; }
+
+    [JsonProperty("name")]
+    public string? Name { get; set; }
+
+    [JsonProperty("provider")]
+    public string? Provider { get; set; }
+
+    [JsonProperty("redeem_instructions_html")]
+    public string? RedeemInstructionsHtml { get; set; }
+
+    [JsonProperty("terms_and_conditions_html")]
+    public string? TermsAndConditionsHtml { get; set; }
+
+    [JsonProperty("terms_and_conditions_url")]
+    public string? TermsAndConditionsUrl { get; set; }
+
+    [JsonProperty("type")]
+    public string? Type { get; set; }
 }
 
 public class IssuanceDetails
 {
-    public CustomSettingsData? custom_settings_data { get; set; }
-    public string? external_reference { get; set; }
-    public LoyaltyInformation? loyalty_information { get; set; }
+    [JsonProperty("custom_settings_data")]
+    public CustomSettingsData? CustomSettingsData { get; set; }
+
+    [JsonProperty("external_reference")]
+    public string? ExternalReference { get; set; }
+
+    [JsonProperty("loyalty_information")]
+    public LoyaltyInformation? LoyaltyInformation { get; set; }
 
     // public Metadata metadata { get; set; }
-    public string? original_external_reference { get; set; }
-    public string? original_code { get; set; }
-    public string? partner_code { get; set; }
+    [JsonProperty("original_external_reference")]
+    public string? OriginalExternalReference { get; set; }
+
+    [JsonProperty("original_code")]
+    public string? OriginalCode { get; set; }
+
+    [JsonProperty("partner_code")]
+    public string? PartnerCode { get; set; }
 }
 
 public class LoyaltyInformation
 {
     // public int? loyalty_amount { get; set; }
-    public string? loyalty_currency { get; set; }
-    public string? member_id { get; set; }
-    public string? partner_name { get; set; }
+    [JsonProperty("loyalty_currency")]
+    public string? LoyaltyCurrency { get; set; }
+
+    [JsonProperty("member_id")]
+    public string? MemberId { get; set; }
+
+    [JsonProperty("partner_name")]
+    public string? PartnerName { get; set; }
 }

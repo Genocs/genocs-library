@@ -55,7 +55,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
             return CorrelationId;
         }
 
-        string correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
+        string? correlationId = _messagePropertiesAccessor.MessageProperties?.CorrelationId;
         if (!string.IsNullOrWhiteSpace(correlationId))
         {
             CorrelationId = correlationId;

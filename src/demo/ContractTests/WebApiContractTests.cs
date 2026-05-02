@@ -233,7 +233,7 @@ public class WebApiContractTests
                             id = authorId,
                             firstName = "George R. R.",
                             lastName = "Martin",
-                            biography = (string)null
+                            biography = (string?)null
                         },
                     },
                 });

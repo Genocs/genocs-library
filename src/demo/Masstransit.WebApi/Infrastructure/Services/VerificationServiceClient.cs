@@ -20,17 +20,14 @@ public class VerificationServiceClient : IVerificationServiceClient
     /// <param name="client">The http client.</param>
     /// <param name="httpClientSettings">The http client settings.</param>
     /// <param name="externalServiceSettings">The security settings.</param>
-    public VerificationServiceClient(
-                                IHttpClient client,
-                                HttpClientOptions httpClientSettings,
-                                VerificationServiceOptions externalServiceSettings)
+    public VerificationServiceClient(IHttpClient client, HttpClientOptions httpClientSettings, VerificationServiceOptions externalServiceSettings)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _externalServiceSettings = externalServiceSettings ?? throw new ArgumentNullException(nameof(externalServiceSettings));
 
         ArgumentNullException.ThrowIfNull(httpClientSettings);
 
-        string url = httpClientSettings?.Services?["user_verifier"];
+        string? url = httpClientSettings?.Services?["user_verifier"];
 
         if (string.IsNullOrWhiteSpace(url))
         {
