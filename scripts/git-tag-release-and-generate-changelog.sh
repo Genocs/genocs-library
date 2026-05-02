@@ -26,7 +26,7 @@ fi
 
 echo "Tag name: $tag_name"
 
-if [ "$1" = "-p" ]
+if [[ "$1" = "-p" ]]
   then
     echo ${REPOSITORIES[@]} | sed -E -e 's/[[:blank:]]+/\n/g' | xargs -I {} -n 1 -P 0 sh -c 'printf "========================================================\nUpdating repository: {}\n========================================================\n"; git -C {} pull; git -C {} checkout develop; '
   else

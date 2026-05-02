@@ -10,7 +10,7 @@ cd ./infrastructure/containers/demo || {
 }
 
 ENV_FILE="./.env"
-if [ ! -f "$ENV_FILE" ]; then
+if [[ ! -f "$ENV_FILE" ]]; then
   echo "Error: $ENV_FILE not found in $(pwd)." >&2
   echo "Create it from the example: cp .env.example .env" >&2
   exit 1

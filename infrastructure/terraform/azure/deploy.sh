@@ -27,7 +27,7 @@ print_error() {
 }
 
 # Check if environment is provided
-if [ -z "$1" ]; then
+if [[ -z "$1" ]]; then
     print_error "Environment not specified"
     echo "Usage: $0 <environment> [action]"
     echo "Environments: dev, test, stage, prod"
@@ -55,7 +55,7 @@ fi
 TFVARS_FILE="${ENVIRONMENT}.tfvars"
 
 # Check if tfvars file exists
-if [ ! -f "$TFVARS_FILE" ]; then
+if [[ ! -f "$TFVARS_FILE" ]]; then
     print_error "Configuration file not found: $TFVARS_FILE"
     exit 1
 fi
@@ -85,7 +85,7 @@ SUBSCRIPTION=$(az account show --query name -o tsv)
 print_info "Using Azure subscription: $SUBSCRIPTION"
 
 # Initialize Terraform if needed
-if [ ! -d ".terraform" ]; then
+if [[ ! -d ".terraform" ]]; then
     print_info "Initializing Terraform..."
     terraform init
 fi
@@ -105,10 +105,10 @@ case $ACTION in
         print_info "Plan saved to ${ENVIRONMENT}.tfplan"
         ;;
     apply)
-        if [ -f "${ENVIRONMENT}.tfplan" ]; then
+        if [[ -f "${ENVIRONMENT}.tfplan" ]]; then
             print_warning "Applying existing plan: ${ENVIRONMENT}.tfplan"
             read -p "Continue? (yes/no): " confirm
-            if [ "$confirm" = "yes" ]; then
+            if [[ "$confirm" = "yes" ]]; then
                 terraform apply "${ENVIRONMENT}.tfplan"
                 rm -f "${ENVIRONMENT}.tfplan"
             else
@@ -119,7 +119,7 @@ case $ACTION in
             print_warning "Applying changes for $ENVIRONMENT environment"
             terraform plan -var-file="$TFVARS_FILE"
             read -p "Continue with apply? (yes/no): " confirm
-            if [ "$confirm" = "yes" ]; then
+            if [[ "$confirm" = "yes" ]]; then
                 terraform apply -var-file="$TFVARS_FILE"
             else
                 print_info "Apply cancelled"
@@ -132,7 +132,7 @@ case $ACTION in
     destroy)
         print_warning "This will DESTROY all resources for $ENVIRONMENT environment"
         read -p "Are you absolutely sure? Type 'destroy-$ENVIRONMENT' to confirm: " confirm
-        if [ "$confirm" = "destroy-$ENVIRONMENT" ]; then
+        if [[ "$confirm" = "destroy-$ENVIRONMENT" ]]; then
             terraform destroy -var-file="$TFVARS_FILE"
             print_info "Resources destroyed"
         else

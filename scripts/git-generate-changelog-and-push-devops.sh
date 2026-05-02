@@ -10,7 +10,7 @@ REPOSITORIES=(
 # Usage:
 # If you don't have DevOps repository just create a new repository on GitHub and clone it locally, then run this script from the root of the DevOps repository.
 
-if [ "$1" = "-p" ]
+if [[ "$1" = "-p" ]]
   then
     echo ${REPOSITORIES[@]} | sed -E -e 's/[[:blank:]]+/\n/g' | xargs -I {} -n 1 -P 0 sh -c 'printf "========================================================\nUpdating repository: {}\n========================================================\n"; git -C {} pull; git -C {} checkout develop; '
   else

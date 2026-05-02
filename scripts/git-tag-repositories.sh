@@ -18,7 +18,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ -z "$tag_name" ]; then
+if [[ -z "$tag_name" ]]; then
   echo "Error: -tag parameter is required and must not be empty."
   echo "Usage: $0 -tag <tag_name>"
   exit 1
@@ -26,7 +26,7 @@ fi
 
 echo "Tag name: $tag_name"
 
-if [ "$1" = "-p" ]
+if [[ "$1" = "-p" ]]
   then
     echo ${REPOSITORIES[@]} | sed -E -e 's/[[:blank:]]+/\n/g' | xargs -I {} -n 1 -P 0 sh -c 'printf "========================================================\nUpdating repository: {}\n========================================================\n"; git -C {} pull; git -C {} checkout develop; '
   else
