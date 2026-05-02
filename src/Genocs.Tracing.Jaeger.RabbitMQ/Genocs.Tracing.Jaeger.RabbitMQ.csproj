@@ -10,14 +10,9 @@
 		<PackageTags>genocs tracing jaeger rabbitmq opentelemetry messaging</PackageTags>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+	<ItemGroup>
 		<ProjectReference Include="..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
 		<ProjectReference Include="..\Genocs.Tracing\Genocs.Tracing.csproj" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta007" />
-		<PackageReference Include="Genocs.Tracing" Version="9.0.0-beta007" />
 	</ItemGroup>
 
 </Project>

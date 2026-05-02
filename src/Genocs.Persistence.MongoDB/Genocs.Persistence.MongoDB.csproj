@@ -10,12 +10,8 @@
         <PackageTags>genocs persistence mongodb repository data-access</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,7 +26,6 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>Genocs.Persistence.MongoDB.ComponentTests</_Parameter1>
         </AssemblyAttribute>
-
     </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@ using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
 using Genocs.Persistence.EFCore.Extensions;
+using Genocs.Persistence.EFCore.MultiTenancy;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Telemetry;
 using Genocs.WebApi;
@@ -34,7 +35,7 @@ IGenocsBuilder gnxBuilder = builder
     .AddOpenApiDocs()
     .AddEFCorePersistence()
     .AddBookStoreDbContext()
-    .AddSagaServices()
+    .AddApplicationSaga()
     .AddMongoWithRegistration()
     .AddCommandHandlers()
     .AddEventHandlers()
@@ -42,6 +43,9 @@ IGenocsBuilder gnxBuilder = builder
     .AddMessageOutbox(o => o.AddMongo());
 
 await gnxBuilder.AddRabbitMQAsync();
+
+// Add Finbuckle multitenancy registration
+gnxBuilder.AddApplicationMultiTenancy(builder.Configuration);
 
 // Add services to the container.
 var services = builder.Services;
@@ -59,10 +63,6 @@ services
     .AddControllers();
 
 services.MapSecurityFeatures();
-
-// Add Finbuckle multitenancy registration
-services.AddMultiTenancy(builder.Configuration);
-
 var app = builder.Build();
 
 gnxBuilder.Build(app.Services);
@@ -78,6 +78,8 @@ app.UseGenocs()
     .UseAccessTokenValidator()
     .UseRabbitMQ()
     .SubscribeEvent<TransactionCompleted>();
+
+app.UseMultiTenancy();
 
 await app.UseBookStoreDbContextAsync();
 

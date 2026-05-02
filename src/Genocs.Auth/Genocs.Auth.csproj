@@ -10,12 +10,8 @@
         <PackageTags>genocs auth authentication authorization jwt aspnetcore</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Security\Genocs.Security.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Security" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">

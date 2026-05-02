@@ -10,12 +10,8 @@
         <PackageTags>genocs webapi cqrs aspnetcore commands queries</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta007" />
     </ItemGroup>
 
 </Project>

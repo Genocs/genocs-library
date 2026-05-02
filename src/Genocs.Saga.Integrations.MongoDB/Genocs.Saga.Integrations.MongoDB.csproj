@@ -10,17 +10,10 @@
         <PackageTags>genocs saga mongodb state-management orchestration</PackageTags>
     </PropertyGroup>
 
-
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
         <ProjectReference Include="..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\Genocs.Saga\Genocs.Saga.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta007" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta007" />
-        <PackageReference Include="Genocs.Saga" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup>

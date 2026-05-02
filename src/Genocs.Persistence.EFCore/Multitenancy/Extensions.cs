@@ -3,6 +3,7 @@ using Finbuckle.MultiTenant.Abstractions;
 using Finbuckle.MultiTenant.EntityFrameworkCore.Stores.EFCoreStore;
 using Genocs.Core.Builders;
 using Genocs.Persistence.EFCore.Configurations;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -136,4 +137,7 @@ public static class Extensions
 
             return Task.FromResult((string?)tenantIdParam.ToString());
         });
+
+    public static IApplicationBuilder UseMultiTenancy(this IApplicationBuilder app)
+        => app.UseMultiTenant();
 }

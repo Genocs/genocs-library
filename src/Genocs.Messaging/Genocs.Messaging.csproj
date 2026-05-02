@@ -10,12 +10,8 @@
         <PackageTags>genocs messaging message-broker pubsub integration</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta007" />
     </ItemGroup>
 
 </Project>

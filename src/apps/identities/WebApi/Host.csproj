@@ -13,14 +13,9 @@
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\..\..\Genocs.ServiceDiscovery.Consul\Genocs.ServiceDiscovery.Consul.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.ServiceDiscovery.Consul" Version="9.0.0-beta007" />
-        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,10 +24,6 @@
 
     <ItemGroup>
         <Content Include="certs\**" CopyToPublishDirectory="Always" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="appsettings.json~RF1f8b7c3.TMP" />
     </ItemGroup>
 
     <ItemGroup>

@@ -11,18 +11,8 @@
         <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta007" />
-    </ItemGroup>
-
     <ItemGroup>
-      <Compile Remove="Builders\**" />
-      <EmbeddedResource Remove="Builders\**" />
-      <None Remove="Builders\**" />
+        <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>

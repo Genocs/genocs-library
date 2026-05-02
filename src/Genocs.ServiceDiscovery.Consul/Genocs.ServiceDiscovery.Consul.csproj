@@ -10,12 +10,8 @@
         <PackageTags>genocs consul service-discovery discovery registration</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Http\Genocs.Http.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Http" Version="9.0.0-beta007" />
     </ItemGroup>
 
     <ItemGroup>

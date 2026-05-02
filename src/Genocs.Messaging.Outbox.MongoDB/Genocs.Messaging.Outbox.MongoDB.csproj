@@ -10,14 +10,9 @@
         <PackageTags>genocs messaging outbox mongodb reliability</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
         <ProjectReference Include="..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta007" />
-        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta007" />
     </ItemGroup>
 
 </Project>

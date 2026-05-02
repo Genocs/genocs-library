@@ -10,11 +10,8 @@
         <PackageTags>genocs fabio load-balancing routing service-discovery</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.ServiceDiscovery.Consul\Genocs.ServiceDiscovery.Consul.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-      <PackageReference Include="Genocs.ServiceDiscovery.Consul" Version="9.0.0-beta007" />
-    </ItemGroup>
 </Project>
