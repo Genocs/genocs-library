@@ -4,7 +4,6 @@ using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Exceptions;
 using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Mapster;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
 namespace Genocs.Persistence.EFCore.MultiTenancy;

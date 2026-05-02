@@ -1,4 +1,4 @@
-using Genocs.Common.Validation;
+using Genocs.Common.Validations;
 using Xunit;
 
 namespace Genocs.Common.UnitTests.Validation;

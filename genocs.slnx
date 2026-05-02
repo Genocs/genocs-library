@@ -18,6 +18,7 @@
   </Folder>
   <Folder Name="/application/wallets/" />
   <Folder Name="/demo/">
+    <Project Path="src/demo/Application/Application.csproj" Id="eb7b9b5a-6a77-4854-8f2e-40b27fc8dfb6" />
     <Project Path="src/demo/Contracts/Contracts.csproj" />
     <Project Path="src/demo/Domain.EFCore/Domain.EFCore.csproj" Id="65e04748-0dba-4ef0-9e6b-76fdb9c86d67" />
     <Project Path="src/demo/Domain/Domain.csproj" />

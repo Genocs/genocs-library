@@ -8,6 +8,12 @@ public class DatabaseOptions : IValidatableObject
     public string ConnectionString { get; set; } = string.Empty;
 
     /// <summary>
+    /// Optional explicit MongoDB database name.
+    /// When omitted, the database name is derived from the MongoDB connection string path.
+    /// </summary>
+    public string? DatabaseName { get; set; }
+
+    /// <summary>
     /// When true, pending EF Core migrations are applied automatically on startup.
     /// When false, the presence of unapplied migrations is treated as a fatal error
     /// and the host is stopped — use this to prevent unintended schema changes in
@@ -31,5 +37,34 @@ public class DatabaseOptions : IValidatableObject
                 $"{nameof(DatabaseOptions)}.{nameof(ConnectionString)} is not configured",
                 new[] { nameof(ConnectionString) });
         }
+
+        if (DBProvider.Equals("mongodb", StringComparison.OrdinalIgnoreCase)
+            && string.IsNullOrWhiteSpace(GetMongoDatabaseName()))
+        {
+            yield return new ValidationResult(
+                $"{nameof(DatabaseOptions)}.{nameof(DatabaseName)} must be configured or derivable from {nameof(ConnectionString)} when DBProvider is mongodb",
+                new[] { nameof(DatabaseName), nameof(ConnectionString) });
+        }
+    }
+
+    internal string? GetMongoDatabaseName()
+    {
+        if (!string.IsNullOrWhiteSpace(DatabaseName))
+        {
+            return DatabaseName.Trim();
+        }
+
+        if (!Uri.TryCreate(ConnectionString, UriKind.Absolute, out var uri))
+        {
+            return null;
+        }
+
+        if (!uri.Scheme.StartsWith("mongodb", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var databaseName = uri.AbsolutePath.Trim('/');
+        return string.IsNullOrWhiteSpace(databaseName) ? null : databaseName;
     }
 }

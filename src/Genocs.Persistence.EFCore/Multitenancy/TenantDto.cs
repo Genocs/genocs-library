@@ -1,6 +1,8 @@
+using Genocs.Common.Interfaces;
+
 namespace Genocs.Persistence.EFCore.MultiTenancy;
 
-public class TenantDto
+public class TenantDto : IDto
 {
     public string Id { get; set; } = default!;
     public string Name { get; set; } = default!;

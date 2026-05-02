@@ -1,4 +1,4 @@
-namespace Genocs.Common.Validation;
+namespace Genocs.Common.Validations;
 
 /// <summary>
 /// Represents one validation failure for a specific request member.

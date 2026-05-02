@@ -23,6 +23,12 @@ public interface IGeneratesDomainEvents
     IReadOnlyCollection<IEvent> DomainEvents { get; }
 
     /// <summary>
+    /// Adds a domain event to the aggregate event collection.
+    /// </summary>
+    /// <param name="event">The domain event to append.</param>
+    void AddDomainEvent(IEvent @event);
+
+    /// <summary>
     /// Clears all domain events after they have been dispatched or persisted.
     /// </summary>
     void ClearDomainEvents();

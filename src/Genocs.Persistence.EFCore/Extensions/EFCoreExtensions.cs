@@ -1,6 +1,5 @@
 using System.Reflection;
 using Genocs.Common.Domain.Entities;
-using Genocs.Common.Interfaces;
 using Genocs.Common.Persistence;
 using Genocs.Common.Persistence.Initialization;
 using Genocs.Core.Builders;
@@ -25,7 +24,7 @@ public static class EFCoreExtensions
 {
     private static readonly ILogger _logger = Log.ForContext(typeof(EFCoreExtensions));
 
-    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder, params Assembly[] assemblies)
+    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder, params Assembly[] additionalAssemblies)
     {
         // Bind the configuration section to the DatabaseOptions class
         // and validate it
@@ -44,16 +43,17 @@ public static class EFCoreExtensions
             .AddDbContext<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString, databaseSettings.GetMongoDatabaseName());
             })
             .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
             .AddTransient<ApplicationDbInitializer>()
             .AddTransient<ApplicationDbSeeder>()
             .AddServices(typeof(ICustomSeeder), ServiceLifetime.Transient)
             .AddTransient<CustomSeederRunner>()
+            .AddTransient<IDapperRepository, DapperRepository>()
             .AddTransient<IConnectionStringSecurer, ConnectionStringSecurer>()
             .AddTransient<IConnectionStringValidator, ConnectionStringValidator>()
-            .AddRepositories(assemblies);
+            .AddRepositories(additionalAssemblies);
 
         return builder;
     }
@@ -90,11 +90,13 @@ public static class EFCoreExtensions
             _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
         };
 
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
+    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString, string? databaseName = null)
     {
         return dbProvider.ToLowerInvariant() switch
         {
-            DbProviderKeys.MongoDB => builder.UseMongoDB(connectionString, "DatabaseName"),
+            DbProviderKeys.MongoDB => builder.UseMongoDB(
+                connectionString,
+                databaseName ?? throw new InvalidOperationException("MongoDB database name must be configured in DatabaseOptions.DatabaseName or included in the connection string path.")),
 
             DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.PostgreSQL")),
@@ -121,11 +123,15 @@ public static class EFCoreExtensions
         // Add Repositories
         services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
 
-        // When no assemblies are explicitly supplied, fall back to the application's entry assembly
-        // so we don't accidentally scan Genocs.Common (where IAggregateRoot is defined) and register nothing.
-        var assembliesToScan = assemblies.Length > 0
-            ? assemblies
-            : Assembly.GetEntryAssembly() is { } entry ? [entry] : Array.Empty<Assembly>();
+        // Always include the application's entry assembly, and let callers add more assemblies
+        // for modular/feature-sliced aggregate roots that live outside the entry project.
+        var entryAssembly = Assembly.GetEntryAssembly();
+        var assembliesToScan = assemblies
+            .Where(a => a is not null)
+            .Append(entryAssembly)
+            .OfType<Assembly>()
+            .Distinct()
+            .ToArray();
 
         foreach (var aggregateRootType in
             assembliesToScan

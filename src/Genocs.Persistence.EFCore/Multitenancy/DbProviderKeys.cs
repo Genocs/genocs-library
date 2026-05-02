@@ -2,6 +2,7 @@ namespace Genocs.Persistence.EFCore.MultiTenancy;
 
 internal class DbProviderKeys
 {
+    public const string MongoDB = "mongodb";
     public const string Npgsql = "postgresql";
     public const string SqlServer = "mssql";
     public const string MySql = "mysql";

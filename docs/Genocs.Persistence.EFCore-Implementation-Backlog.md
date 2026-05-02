@@ -128,7 +128,7 @@ Latest validation runs:
 
 ### EFCORE-003 Fix `AddRepositories` to scan the consuming application's assembly
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P0
 
@@ -151,11 +151,18 @@ Latest validation runs:
 
 - none
 
+**Implementation notes**
+
+- Updated `AddEFCorePersistence` to accept caller-supplied additional assemblies (optional `params Assembly[]`).
+- Updated `AddRepositories` assembly resolution to always include `Assembly.GetEntryAssembly()` and merge it with caller-supplied assemblies, deduplicated.
+- This prevents scanning from being limited to `Genocs.Common` and enables discovery of consumer aggregate roots in entry and feature assemblies.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (12/12 passing).
+
 ---
 
 ### EFCORE-004 Fix unreachable code in `AddFinbuckleMultiTenancy` to enable EF Core tenant store registration
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P0
 
@@ -178,11 +185,23 @@ The `IServiceCollection.AddFinbuckleMultiTenancy<TTenantInfo>` overload in `Mult
 
 - none
 
+**Implementation notes**
+
+- Split registration paths in `Multitenancy/Extensions.cs` so `AddFinbuckleMultiTenancy<TTenantInfo>` is configuration-store only.
+- Added dedicated EF Core store overloads:
+  - `AddFinbuckleMultiTenancyWithEfCoreStore(this IServiceCollection services)`
+  - `AddFinbuckleMultiTenancyWithEfCoreStore(this IGenocsBuilder builder)`
+- Moved `TenantDbContext` + `WithEFCoreStore<TenantDbContext, GNXTenantInfo>()` + `ITenantService` registration into the dedicated EF Core store path.
+- Added registration contract tests in `src/tests/Genocs.Persistence.EFCore.UnitTests/Multitenancy/AddFinbuckleMultiTenancyRegistrationTests.cs` to verify:
+  - configuration-store path does not register `ITenantService`
+  - EF Core store path registers `ITenantService` and `TenantDbContext`
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (14/14 passing).
+
 ---
 
 ### EFCORE-005 Fix hardcoded `"DatabaseName"` literal in MongoDB `UseDatabase` path
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P0
 
@@ -205,13 +224,28 @@ When `DBProvider` is `mongodb`, `UseDatabase` calls `builder.UseMongoDB(connecti
 
 - none
 
+**Implementation notes**
+
+- Added `DatabaseName` to `DatabaseOptions` and introduced `GetMongoDatabaseName()` resolution logic:
+  - Prefer explicit `DatabaseOptions.DatabaseName`
+  - Fallback to parsing MongoDB database name from the connection string path (e.g. `mongodb://host:27017/bookstore`)
+- Added MongoDB-specific validation in `DatabaseOptions.Validate(...)` to fail fast when provider is `mongodb` and no database name can be resolved.
+- Updated `EFCoreExtensions.UseDatabase(...)` MongoDB path to use resolved database name instead of hardcoded literal.
+- Updated `Multitenancy/Extensions.UseDatabase(...)` and its `AddDbContext<TenantDbContext>` call to pass the resolved MongoDB database name as well.
+- Added/updated unit tests in `src/tests/Genocs.Persistence.EFCore.UnitTests/Configurations/DatabaseOptionsMongoDbTests.cs` covering:
+  - explicit `DatabaseName` precedence,
+  - connection-string path parsing,
+  - validation failure when no database name is resolvable.
+- Added missing `MongoDB` constant to `Multitenancy/DbProviderKeys.cs` so the current duplicate key set compiles with MongoDB support.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (17/17 passing).
+
 ---
 
 ## M2: DI, Registration, and Dependency Hygiene
 
 ### EFCORE-006 Replace reflection-based `DomainEventExtensions.AddDomainEvent` with interface contract
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -234,11 +268,25 @@ When `DBProvider` is `mongodb`, `UseDatabase` calls `builder.UseMongoDB(connecti
 
 - none
 
+**Implementation notes**
+
+- Extended `IGeneratesDomainEvents` in `Genocs.Common` with `AddDomainEvent(IEvent @event)` to make event mutation an explicit interface contract.
+- Implemented the new contract in `Genocs.Core.Domain.Entities.AggregateRoot<TPrimaryKey>` by appending to the existing `DomainEvents` list with null-guarding.
+- Reworked `Genocs.Persistence.EFCore.Repositories.DomainEventExtensions.AddDomainEvent(...)` to delegate directly to `IGeneratesDomainEvents.AddDomainEvent(...)`.
+- Removed reflection-based private-field access and all `BindingFlags` usage from the domain-event path.
+- Updated EFCore repository test aggregates to implement the new contract method.
+- Added targeted tests:
+  - `src/tests/Genocs.Persistence.EFCore.UnitTests/Repositories/DomainEventExtensionsTests.cs`
+  - Updated `src/tests/Genocs.Core.UnitTests/Domain/Entities/AggregateRootTests.cs` with contract-level add-event verification.
+- Validation:
+  - `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (19/19 passing)
+  - `dotnet test src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj -c Debug --nologo` (85/85 passing)
+
 ---
 
 ### EFCORE-007 Remove `MongoDB.Driver` direct dependency from the EFCore package
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -261,11 +309,24 @@ When `DBProvider` is `mongodb`, `UseDatabase` calls `builder.UseMongoDB(connecti
 
 - EFCORE-005 (ensures MongoDB path is coherently supported)
 
+**Implementation notes**
+
+- Removed unconditional `<PackageReference Include="MongoDB.Driver" ... />` from `src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj`.
+- Replaced `MongoDB.Driver.MongoUrlBuilder` usage in `ConnectionStringSecurer.MakeSecureMongoDBConnectionString(...)` with driver-free parsing/masking logic:
+  - Preferred path uses `Uri`/`UriBuilder` for valid MongoDB URIs.
+  - Added fallback string parsing for valid MongoDB multi-host authority formats that `Uri` parsing may not handle.
+  - Masks username/password as `*******` while preserving host list, database path, and query/options.
+- Added unit tests in `src/tests/Genocs.Persistence.EFCore.UnitTests/Configurations/ConnectionStringSecurerTests.cs` for:
+  - single-host MongoDB credential masking,
+  - multi-host MongoDB credential masking,
+  - unchanged output when no credentials are present.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (22/22 passing).
+
 ---
 
 ### EFCORE-008 Remove or implement `DapperRepository`
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -288,11 +349,23 @@ When `DBProvider` is `mongodb`, `UseDatabase` calls `builder.UseMongoDB(connecti
 
 - none
 
+**Implementation notes**
+
+- Replaced the commented placeholder in `src/Genocs.Persistence.EFCore/Repositories/DapperRepository.cs` with a concrete `DapperRepository : IDapperRepository` implementation.
+- Added `Dapper` package dependency to `src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj`.
+- Wired `IDapperRepository` in DI via `AddTransient<IDapperRepository, DapperRepository>()` inside `AddEFCorePersistence`.
+- Implemented query methods using `CommandDefinition` to flow `CancellationToken`:
+  - `QueryAsync<T>`
+  - `QueryFirstOrDefaultAsync<T>`
+  - `QuerySingleAsync<T>`
+- Kept the original tenant-aware SQL placeholder comments as scaffolding for future multitenancy-aware Dapper filtering.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (22/22 passing).
+
 ---
 
 ### EFCORE-009 Replace deprecated `ITransientService`/`IScopedService` with current dependency interfaces
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -314,11 +387,18 @@ When `DBProvider` is `mongodb`, `UseDatabase` calls `builder.UseMongoDB(connecti
 
 - none
 
+**Implementation notes**
+
+- Verified `Genocs.Persistence.EFCore` no longer references obsolete `ITransientService`/`IScopedService` markers in service-registration paths.
+- Removed stale `using Genocs.Common.Interfaces;` from `src/Genocs.Persistence.EFCore/Extensions/EFCoreExtensions.cs` so the package no longer imports the obsolete marker-interfaces namespace.
+- Current registrations use non-obsolete contracts (`IDapperRepository : ITransientDependency` and explicit DI registrations), and no `CS0618` warning for obsolete service markers is emitted by this package.
+- Validation: `dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo`.
+
 ---
 
 ### EFCORE-010 Update release build `Genocs.Core` reference to a stable, version-aligned package
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -339,11 +419,18 @@ The release `<ItemGroup>` pins `Genocs.Core` to `9.0.0-beta007` — a pre-releas
 
 - none
 
+**Implementation notes**
+
+- The stale release-only package pin (`Genocs.Core` pre-release) is no longer present.
+- `src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj` now references `Genocs.Core` via source `ProjectReference` for repository builds, avoiding any hard-pinned pre-release NuGet dependency.
+- Confirmed there is no `<PackageReference Include="Genocs.Core" Version="*-beta*" />` in this package.
+- Validation: `dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo`.
+
 ---
 
 ### EFCORE-011 Implement or remove `ApplicationDbSeeder` placeholder methods
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -366,11 +453,25 @@ All three methods in `ApplicationDbSeeder` (`SeedRolesAsync`, `AssignPermissions
 
 - EFCORE-001 (tenant scope is now set correctly before `ApplicationDbSeeder` runs)
 
+**Implementation notes**
+
+- Removed all placeholder methods and commented-out identity seeding scaffolding from `src/Genocs.Persistence.EFCore/Initialization/ApplicationDbSeeder.cs`:
+  - removed `SeedRolesAsync(...)`
+  - removed `AssignPermissionsToRoleAsync(...)`
+  - removed `SeedAdminUserAsync()`
+- Reduced `ApplicationDbSeeder` to a thin coordinator that logs and delegates exclusively to `CustomSeederRunner.RunSeedersAsync(...)`.
+- Documented the intended extension contract in code via method XML summary, pointing consumers to `ICustomSeeder` implementations for seeding behavior.
+- Updated `ApplicationDbInitializer.InitializeAsync(...)` to actually invoke seeding through `ApplicationDbSeeder.SeedDatabaseAsync(...)` in successful initialization paths:
+  - MongoDB path (no migrations)
+  - no-pending-migrations path
+  - post-migration path
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo` (22/22 passing).
+
 ---
 
 ### EFCORE-012 Remove hardcoded default password constant
 
-**Status**: Not started
+**Status**: Completed (May 2026)
 
 **Priority**: P1
 
@@ -391,6 +492,13 @@ All three methods in `ApplicationDbSeeder` (`SeedRolesAsync`, `AssignPermissions
 **Dependencies**
 
 - EFCORE-011 (seeder currently references the constant in commented-out code)
+
+**Implementation notes**
+
+- Removed `MultitenancyConstants.DefaultPassword` from `src/Genocs.Persistence.EFCore/Multitenancy/MultitenancyConstants.cs`.
+- Verified no remaining usages of `MultitenancyConstants.DefaultPassword` inside `Genocs.Persistence.EFCore` package source.
+- This removes hardcoded credential material from the package and aligns seeding customization with the `ICustomSeeder` contract introduced via EFCORE-011.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -c Debug --nologo`.
 
 ---
 

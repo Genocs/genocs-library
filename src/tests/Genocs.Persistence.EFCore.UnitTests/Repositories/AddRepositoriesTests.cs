@@ -136,26 +136,29 @@ public class AddRepositoriesTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // Explicit assembly scoping — Genocs.Common has no concrete aggregate roots
+    // Explicit assembly scoping — interface-only assemblies must not contribute
+    // invalid IReadRepository<T> registrations
     // ──────────────────────────────────────────────────────────────────────────
 
     [Fact]
     public void AddRepositories_RegistersNoConcreteAggregates_WhenScanningGenocsCommonOnly()
     {
         // Genocs.Common contains only IAggregateRoot interface definitions, not concrete classes.
-        // Passing it explicitly must produce no IReadRepository<T> registrations.
+        // Even though AddRepositories also scans the entry assembly fallback, nothing from
+        // Genocs.Common itself should become a closed IReadRepository<T> registration.
         var services = new ServiceCollection();
         var commonAssembly = typeof(IAggregateRoot).Assembly;
 
         services.AddRepositories(commonAssembly);
 
         // IRepository<> (open generic) is always registered regardless.
-        // No closed IReadRepository<T> should exist.
+        // Assert that no IReadRepository<T> is registered for any type from Genocs.Common.
         services.Any(d =>
                 d.ServiceType.IsGenericType
-                && d.ServiceType.GetGenericTypeDefinition() == typeof(IReadRepository<>))
+                && d.ServiceType.GetGenericTypeDefinition() == typeof(IReadRepository<>)
+                && d.ServiceType.GetGenericArguments()[0].Assembly == commonAssembly)
             .ShouldBeFalse(
-                "Genocs.Common contains no concrete aggregate root classes, so no IReadRepository<T> should be registered.");
+                "Genocs.Common is interface-only for aggregate roots; it must not produce closed IReadRepository<T> registrations.");
     }
 
     // ──────────────────────────────────────────────────────────────────────────

@@ -8,6 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Genocs.Core\Genocs.Core.csproj" />        
         <ProjectReference Include="..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
     </ItemGroup>

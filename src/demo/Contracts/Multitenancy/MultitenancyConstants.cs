@@ -1,6 +1,6 @@
-namespace Genocs.Persistence.EFCore.MultiTenancy;
+namespace Genocs.Library.Demo.Contracts.Multitenancy;
 
-// TODO: Will be removed in the future. This class is used to store the constants related to multitenancy.
+
 public class MultitenancyConstants
 {
     public static class Root
@@ -9,6 +9,9 @@ public class MultitenancyConstants
         public const string Name = "Root";
         public const string EmailAddress = "admin@root.com"; // TODO: Change the email address.
     }
+
+    // TODO: Default password is used only for developing purpose.
+    public const string DefaultPassword = "123Pa$$word!";
 
     public const string TenantIdName = "tenant";
 }

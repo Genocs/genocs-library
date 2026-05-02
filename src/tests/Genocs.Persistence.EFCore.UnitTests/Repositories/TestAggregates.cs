@@ -23,9 +23,16 @@ public sealed class OrderAggregate : IAggregateRoot<Guid>
 {
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    public IReadOnlyCollection<IEvent> DomainEvents { get; } = Array.Empty<IEvent>();
+    private readonly List<IEvent> _domainEvents = [];
 
-    public void ClearDomainEvents() { }
+    public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents;
+
+    public void AddDomainEvent(IEvent @event)
+    {
+        _domainEvents.Add(@event);
+    }
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
     public bool IsTransient() => Id == Guid.Empty;
 }
@@ -39,9 +46,16 @@ public sealed class InvoiceAggregate : IAggregateRoot<InvoiceAggregate>
 {
     public InvoiceAggregate Id => this;
 
-    public IReadOnlyCollection<IEvent> DomainEvents { get; } = Array.Empty<IEvent>();
+    private readonly List<IEvent> _domainEvents = [];
 
-    public void ClearDomainEvents() { }
+    public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents;
+
+    public void AddDomainEvent(IEvent @event)
+    {
+        _domainEvents.Add(@event);
+    }
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
     public bool IsTransient() => false;
 }

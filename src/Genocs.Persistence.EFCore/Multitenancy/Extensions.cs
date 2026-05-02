@@ -64,14 +64,37 @@ public static class Extensions
             .WithHostStrategy()
             .WithConfigurationStore(configuration, configurationStoreSection);
 
-        //return services;
+        return services;
+    }
+
+    /// <summary>
+    /// Adds Finbuckle multitenancy using an EF Core tenant store for <see cref="GNXTenantInfo"/>.
+    /// </summary>
+    /// <param name="builder">Genocs builder.</param>
+    /// <returns>The same builder for chaining.</returns>
+    public static IGenocsBuilder AddFinbuckleMultiTenancyWithEfCoreStore(this IGenocsBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.Services.AddFinbuckleMultiTenancyWithEfCoreStore();
+        return builder;
+    }
+
+    /// <summary>
+    /// Adds Finbuckle multitenancy using an EF Core tenant store for <see cref="GNXTenantInfo"/>.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    /// <returns>The same service collection for chaining.</returns>
+    public static IServiceCollection AddFinbuckleMultiTenancyWithEfCoreStore(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
 
         return services
             .AddDbContext<TenantDbContext>((p, m) =>
             {
                 // TODO: We should probably add specific dbprovider/connectionstring setting for the tenantDb with a fallback to the main databasesettings
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString, databaseSettings.GetMongoDatabaseName());
             })
             .AddMultiTenant<GNXTenantInfo>()
                 .WithClaimStrategy(GNXClaims.Tenant)
@@ -106,9 +129,12 @@ public static class Extensions
         return services;
     }
 
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
+    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString, string? databaseName = null)
         => dbProvider.ToLowerInvariant() switch
         {
+            DbProviderKeys.MongoDB => builder.UseMongoDB(
+                                 connectionString,
+                                 databaseName ?? throw new InvalidOperationException("MongoDB database name must be configured in DatabaseOptions.DatabaseName or included in the connection string path.")),
             DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.PostgreSQL")),
             DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>

@@ -1,10 +1,11 @@
 using System.Data;
-using Genocs.Core.Domain.Entities;
+using Dapper;
+using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.EFCore.Context;
 
 namespace Genocs.Persistence.EFCore.Repositories;
-/*
+
 public class DapperRepository : IDapperRepository
 {
     private readonly ApplicationDbContext _dbContext;
@@ -14,30 +15,33 @@ public class DapperRepository : IDapperRepository
 
     public async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
         where T : class, IEntity
-        => (await _dbContext.Connection.QueryAsync<T>(sql, param, transaction))
+        => (await _dbContext.Connection.QueryAsync<T>(
+                new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken)))
             .AsList();
 
-    public async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+    public async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
         where T : class, IEntity
     {
-        //if (_dbContext.Model.GetMultiTenantEntityTypes().Any(t => t.ClrType == typeof(T)))
-        //{
-        //    sql = sql.Replace("@tenant", _dbContext.TenantInfo.Id);
-        //}
+        // if (_dbContext.Model.GetMultiTenantEntityTypes().Any(t => t.ClrType == typeof(T)))
+        // {
+        //     sql = sql.Replace("@tenant", _dbContext.TenantInfo.Id);
+        // }
 
-        return await _dbContext.Connection.QueryFirstOrDefaultAsync<T>(sql, param, transaction);
+        T? result = await _dbContext.Connection.QueryFirstOrDefaultAsync<T>(
+            new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken));
+
+        return result!;
     }
 
     public Task<T> QuerySingleAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
         where T : class, IEntity
     {
-        //if (_dbContext.Model.GetMultiTenantEntityTypes().Any(t => t.ClrType == typeof(T)))
-        //{
-        //    sql = sql.Replace("@tenant", _dbContext.TenantInfo.Id);
-        //}
+        // if (_dbContext.Model.GetMultiTenantEntityTypes().Any(t => t.ClrType == typeof(T)))
+        // {
+        //     sql = sql.Replace("@tenant", _dbContext.TenantInfo.Id);
+        // }
 
-        return _dbContext.Connection.QuerySingleAsync<T>(sql, param, transaction);
+        return _dbContext.Connection.QuerySingleAsync<T>(
+            new CommandDefinition(sql, param, transaction, cancellationToken: cancellationToken));
     }
 }
-
-*/

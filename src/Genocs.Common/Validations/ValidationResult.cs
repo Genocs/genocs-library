@@ -1,4 +1,4 @@
-namespace Genocs.Common.Validation;
+namespace Genocs.Common.Validations;
 
 /// <summary>
 /// Represents the outcome of validation for a request or command model.

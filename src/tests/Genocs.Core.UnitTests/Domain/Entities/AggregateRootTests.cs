@@ -40,6 +40,18 @@ public class AggregateRootTests
         Assert.Empty(aggregate.DomainEvents);
     }
 
+    [Fact]
+    public void AddDomainEvent_AppendsEventThroughContract()
+    {
+        var aggregate = new TestAggregate();
+        IGeneratesDomainEvents source = aggregate;
+
+        source.AddDomainEvent(new TestEvent());
+
+        Assert.Single(source.DomainEvents);
+        Assert.Single(aggregate.DomainEvents);
+    }
+
     private sealed class TestAggregate : AggregateRoot<Guid>;
 
     private sealed record TestEvent : IEvent;

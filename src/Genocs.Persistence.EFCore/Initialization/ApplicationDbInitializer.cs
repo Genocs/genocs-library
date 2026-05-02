@@ -45,6 +45,7 @@ internal class ApplicationDbInitializer
         // MongoDB EF Core provider does not support migrations.
         if (_dbContext.Database.ProviderName == "MongoDB.EntityFrameworkCore")
         {
+            await _dbSeeder.SeedDatabaseAsync(cancellationToken);
             return;
         }
 
@@ -53,6 +54,7 @@ internal class ApplicationDbInitializer
         if (pending.Count == 0)
         {
             _logger.LogInformation("No pending migrations found. Database schema is up to date.");
+            await _dbSeeder.SeedDatabaseAsync(cancellationToken);
             return;
         }
 
@@ -80,5 +82,7 @@ internal class ApplicationDbInitializer
         await _dbContext.Database.MigrateAsync(cancellationToken);
 
         _logger.LogInformation("Database migrations applied successfully.");
+
+        await _dbSeeder.SeedDatabaseAsync(cancellationToken);
     }
 }

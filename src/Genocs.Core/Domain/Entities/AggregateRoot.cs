@@ -14,6 +14,12 @@ public class AggregateRoot<TPrimaryKey>
 
     IReadOnlyCollection<IEvent> IGeneratesDomainEvents.DomainEvents => DomainEvents;
 
+    public void AddDomainEvent(IEvent @event)
+    {
+        ArgumentNullException.ThrowIfNull(@event);
+        DomainEvents.Add(@event);
+    }
+
     public void ClearDomainEvents()
     {
         DomainEvents.Clear();

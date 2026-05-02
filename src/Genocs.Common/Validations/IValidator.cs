@@ -1,4 +1,4 @@
-namespace Genocs.Common.Validation;
+namespace Genocs.Common.Validations;
 
 /// <summary>
 /// Defines a validation contract for application messages without binding to a specific validation library.
