@@ -6,7 +6,7 @@
     const $messages = document.getElementById("messages");
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:5014/notificationHub")
+        .withUrl("http://localhost:5540/notificationHub")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 

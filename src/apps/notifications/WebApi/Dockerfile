@@ -29,7 +29,7 @@ RUN dotnet restore "src/WebApi/Host.csproj"
 COPY ["src/apps/notifications/WebApi", "src/WebApi/"]
 
 WORKDIR "/src/src/WebApi"
-RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:EnableSignalRClientBuild=false
 
 
 # Build and Publish
@@ -37,7 +37,7 @@ RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 # /p:UseAppHost=false: Disables creating a native exe (we just need the dll)
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:EnableSignalRClientBuild=false
 
 # Create final runtime image
 FROM base AS final

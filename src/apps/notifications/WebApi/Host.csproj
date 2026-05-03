@@ -11,6 +11,8 @@
         <!-- Disable web.config transformation for Docker builds -->
         <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
+        <SignalRClientProjectDir>$(MSBuildProjectDirectory)\signalr-client</SignalRClientProjectDir>
+        <EnableSignalRClientBuild Condition="'$(EnableSignalRClientBuild)' == ''">true</EnableSignalRClientBuild>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -58,4 +60,13 @@
     <ItemGroup>
         <Folder Include="logs\" />
     </ItemGroup>
+
+    <Target Name="BuildSignalRClient"
+            BeforeTargets="Build;Publish"
+            Condition="'$(EnableSignalRClientBuild)' == 'true' and Exists('$(SignalRClientProjectDir)\package.json')">
+        <Message Text="Building SignalR React client..." Importance="high" />
+        <Exec Command="npm ci" WorkingDirectory="$(SignalRClientProjectDir)" Condition="Exists('$(SignalRClientProjectDir)\package-lock.json')" />
+        <Exec Command="npm install" WorkingDirectory="$(SignalRClientProjectDir)" Condition="!Exists('$(SignalRClientProjectDir)\package-lock.json')" />
+        <Exec Command="npm run build" WorkingDirectory="$(SignalRClientProjectDir)" />
+    </Target>
 </Project>

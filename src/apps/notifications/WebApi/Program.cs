@@ -74,6 +74,25 @@ app.MapDispatcherEndpoints(endpoints => endpoints
 app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/wwwroot"
+});
+
+app.Use(async (context, next) =>
+{
+    if (string.Equals(context.Request.Path.Value, "/wwwroot/signalR", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalR/", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalr", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalr/", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.Redirect("/wwwroot/signalr/index.html", permanent: false);
+        return;
+    }
+
+    await next();
+});
+
 app.MapStaticAssets();
 
 app.Run();
