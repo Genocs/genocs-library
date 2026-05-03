@@ -340,10 +340,10 @@ docker compose -f ./infrastructure-monitoring.yml --profile aspire --env-file ./
 To make the Genocs apps export their OTLP traces/metrics to Aspire instead of Jaeger, set in your `.env`:
 
 ```text
-JAEGER_URL=http://aspire_dashboard:18889
+OTLP_URL=http://aspire_dashboard:18889
 ```
 
-(the env var name stays `JAEGER_URL` for backwards compatibility; the value points at any OTLP gRPC endpoint.) The Aspire UI is then at [http://localhost:18888](http://localhost:18888).
+(the env var name `OTLP_URL` points at any OTLP gRPC endpoint.) The Aspire UI is then at [http://localhost:18888](http://localhost:18888).
 
 `infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a `Loadbalancer` (Fabio) and a `Service Discovery` (Consul) components.
 

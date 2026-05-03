@@ -13,11 +13,17 @@
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta008" />
+    </ItemGroup>    
 
     <ItemGroup>
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />

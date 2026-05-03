@@ -15,7 +15,7 @@ services:
       - logger__httpPayload__enabled=true
       - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
-      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
       - telemetry__prometheus__allowedHosts__0=apigateway
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
       - reverseProxy__clusters__identities-cluster__destinations__destination1__address=http://identities-service:8080
@@ -46,7 +46,7 @@ services:
       - logger__httpPayload__enabled=true
       - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
-      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
       - telemetry__prometheus__allowedHosts__0=identities-service
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
     ports:
@@ -73,7 +73,7 @@ services:
       - logger__httpPayload__enabled=true
       - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
-      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
       - telemetry__prometheus__allowedHosts__0=products-service
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
     ports:
@@ -101,7 +101,7 @@ services:
       - logger__httpPayload__enabled=true
       - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
-      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
       - telemetry__prometheus__allowedHosts__0=orders-service
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
       - httpClient__services__products=http://products-service:8080
@@ -130,7 +130,7 @@ services:
       - logger__httpPayload__enabled=true
       - logger__httpPayload__captureRequestBody=true
       - telemetry__exporter__enabled=true
-      - telemetry__exporter__otlpEndpoint=${JAEGER_URL}
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
       - telemetry__prometheus__allowedHosts__0=notifications-service
       - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
     ports:

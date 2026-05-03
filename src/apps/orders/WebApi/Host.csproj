@@ -13,7 +13,7 @@
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\..\Genocs.Http\Genocs.Http.csproj" />
         <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
@@ -30,6 +30,24 @@
         <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi.Security" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta008" />
+    </ItemGroup>    
 
     <ItemGroup>
         <Folder Include="logs\" />

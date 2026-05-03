@@ -7,7 +7,7 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
         <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
@@ -20,6 +20,21 @@
         <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
         <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
+    </ItemGroup>    
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Persistence.Redis" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Http" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Secrets.HashicorpKeyVault" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi.CQRS" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta008" />
     </ItemGroup>
 
 </Project>
