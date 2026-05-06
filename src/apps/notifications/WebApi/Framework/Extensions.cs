@@ -10,6 +10,11 @@ public static class Extensions
 
     public static IGenocsBuilder AddSignalR(this IGenocsBuilder builder)
     {
+        if (builder.Configuration is null)
+        {
+            throw new InvalidOperationException("Configuration is not available in the builder.");
+        }
+
         var options = builder.Configuration.GetOptions<SignalROptions>("signalr");
 
         if (options is not null)

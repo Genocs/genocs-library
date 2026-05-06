@@ -120,7 +120,7 @@ public static class Extensions
             .UseRabbitMQ()
             .SubscribeCommand<CreateUser>()
             .SubscribeCommand<CreateAdmin>()
-            .SubscribeEvent<UserCreated>(); // Eample of event registration
+            .SubscribeEvent<UserCreated>(); // Sample of event registration
 
         return app;
     }

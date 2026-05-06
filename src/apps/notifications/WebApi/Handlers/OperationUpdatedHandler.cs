@@ -4,13 +4,10 @@ using Genocs.Notifications.WebApi.Services;
 
 namespace Genocs.Notifications.WebApi.Handlers;
 
-public class OperationUpdatedHandler : IEventHandler<OperationPending>,
+public class OperationUpdatedHandler(IHubService hubService) : IEventHandler<OperationPending>,
     IEventHandler<OperationCompleted>, IEventHandler<OperationRejected>
 {
-    private readonly IHubService _hubService;
-
-    public OperationUpdatedHandler(IHubService hubService)
-        => _hubService = hubService ?? throw new ArgumentNullException(nameof(hubService));
+    private readonly IHubService _hubService = hubService ?? throw new ArgumentNullException(nameof(hubService));
 
     public async Task HandleAsync(OperationPending @event, CancellationToken cancellationToken = default)
         => await _hubService.PublishOperationPendingAsync(@event);

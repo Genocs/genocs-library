@@ -5,14 +5,9 @@ using Genocs.Persistence.MongoDB.Domain.Repositories;
 
 namespace Genocs.Orders.WebApi.Queries.Handlers;
 
-public class GetOrderHandler : IQueryHandler<GetOrder, OrderDto>
+public class GetOrderHandler(IMongoBaseRepository<Order, Guid> repository) : IQueryHandler<GetOrder, OrderDto>
 {
-    private readonly IMongoBaseRepository<Order, Guid> _repository;
-
-    public GetOrderHandler(IMongoBaseRepository<Order, Guid> repository)
-    {
-        _repository = repository;
-    }
+    private readonly IMongoBaseRepository<Order, Guid> _repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
     /// <summary>
     /// GetOrder query handler.

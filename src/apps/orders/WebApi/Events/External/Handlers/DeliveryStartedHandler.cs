@@ -2,14 +2,9 @@ using Genocs.Common.CQRS.Events;
 
 namespace Genocs.Orders.WebApi.Events.External.Handlers;
 
-public class DeliveryStartedHandler : IEventHandler<DeliveryStarted>
+public class DeliveryStartedHandler(ILogger<DeliveryStartedHandler> logger) : IEventHandler<DeliveryStarted>
 {
-    private readonly ILogger<DeliveryStartedHandler> _logger;
-
-    public DeliveryStartedHandler(ILogger<DeliveryStartedHandler> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<DeliveryStartedHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public Task HandleAsync(DeliveryStarted @event, CancellationToken cancellationToken = default)
     {

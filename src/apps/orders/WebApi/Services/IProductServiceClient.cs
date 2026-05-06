@@ -11,6 +11,7 @@ public interface IProductServiceClient
     /// Get the product based on the productId.
     /// </summary>
     /// <param name="productId">The ProductId.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The Product Response.</returns>
-    Task<ProductDto?> GetAsync(Guid productId);
+    Task<ProductDto?> GetAsync(Guid productId, CancellationToken cancellationToken = default);
 }

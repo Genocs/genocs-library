@@ -15,16 +15,10 @@ namespace Genocs.Orders.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class OrdersController : ControllerBase
+public class OrdersController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher) : ControllerBase
 {
-    private readonly ICommandDispatcher _commandDispatcher;
-    private readonly IQueryDispatcher _queryDispatcher;
-
-    public OrdersController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
-    {
-        _commandDispatcher = commandDispatcher;
-        _queryDispatcher = queryDispatcher;
-    }
+    private readonly ICommandDispatcher _commandDispatcher = commandDispatcher ?? throw new ArgumentNullException(nameof(commandDispatcher));
+    private readonly IQueryDispatcher _queryDispatcher = queryDispatcher ?? throw new ArgumentNullException(nameof(queryDispatcher));
 
     [HttpGet("{orderId}")]
     public async Task<ActionResult<OrderDto>> Get([FromRoute] GetOrder query)

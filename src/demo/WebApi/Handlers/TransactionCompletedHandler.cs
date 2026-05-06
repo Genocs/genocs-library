@@ -7,9 +7,9 @@ public class TransactionCompletedHandler(ILogger<TransactionCompletedHandler> lo
 {
     private readonly ILogger<TransactionCompletedHandler> _logger = logger;
 
-    public Task HandleAsync(TransactionCompleted @event, CancellationToken cancellationToken = default)
+    public Task HandleAsync(TransactionCompleted message, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation($"Received '{nameof(TransactionCompleted)}' event with text: {@event.Text}");
+        _logger.LogInformation($"Received '{nameof(TransactionCompleted)}' event with text: {message.Text}");
         return Task.CompletedTask;
     }
 }

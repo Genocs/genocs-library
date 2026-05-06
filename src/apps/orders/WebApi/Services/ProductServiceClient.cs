@@ -33,9 +33,7 @@ public class ProductServiceClient : IProductServiceClient
         _client = client ?? throw new ArgumentNullException(nameof(client));
 
         ArgumentNullException.ThrowIfNull(httpClientOptions);
-
         ArgumentNullException.ThrowIfNull(vaultOptions);
-
         ArgumentNullException.ThrowIfNull(securityOptions);
 
         string? url = httpClientOptions?.Services?["products"];
@@ -68,7 +66,8 @@ public class ProductServiceClient : IProductServiceClient
     /// Get the product result based on the productId.
     /// </summary>
     /// <param name="productId">The ProductId.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The Product Response.</returns>
-    public Task<ProductDto?> GetAsync(Guid productId)
-        => _client.GetAsync<ProductDto?>($"{_url}/products/{productId}");
+    public Task<ProductDto?> GetAsync(Guid productId, CancellationToken cancellationToken = default)
+        => _client.GetAsync<ProductDto?>($"{_url}/products/{productId}", cancellationToken: cancellationToken);
 }

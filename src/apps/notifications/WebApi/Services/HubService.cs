@@ -2,12 +2,9 @@ using Genocs.Notifications.WebApi.Messages.Events;
 
 namespace Genocs.Notifications.WebApi.Services;
 
-public class HubService : IHubService
+public class HubService(IHubWrapper hubContextWrapper) : IHubService
 {
-    private readonly IHubWrapper _hubContextWrapper;
-
-    public HubService(IHubWrapper hubContextWrapper)
-        => _hubContextWrapper = hubContextWrapper ?? throw new ArgumentNullException(nameof(hubContextWrapper));
+    private readonly IHubWrapper _hubContextWrapper = hubContextWrapper ?? throw new ArgumentNullException(nameof(hubContextWrapper));
 
     public async Task PublishOperationPendingAsync(OperationPending @event)
         => await _hubContextWrapper.PublishToUserAsync(
@@ -43,4 +40,12 @@ public class HubService : IHubService
                                                             code = @event.Code,
                                                             reason = @event.Message
                                                         });
+
+    public async Task PublishOrderCreatedAsync(OrderCreated @event)
+        => await _hubContextWrapper.PublishToAllAsync(
+                                                      "order_created",
+                                                      new
+                                                      {
+                                                          orderId = @event.OrderId
+                                                      });
 }

@@ -8,31 +8,22 @@ using Genocs.Persistence.MongoDB.Domain.Repositories;
 
 namespace Genocs.Orders.WebApi.Commands.Handlers;
 
-public class CreateOrderHandler : ICommandHandler<CreateOrder>
+public class CreateOrderHandler(
+                            IMongoBaseRepository<Order, Guid> repository,
+                            IBusPublisher publisher,
+                            IMessageOutbox outbox,
+                            IProductServiceClient productServiceClient,
+                            ILogger<CreateOrderHandler> logger) : ICommandHandler<CreateOrder>
 {
-    private readonly IMongoBaseRepository<Order, Guid> _repository;
-    private readonly IBusPublisher _publisher;
-    private readonly IMessageOutbox _outbox;
-    private readonly IProductServiceClient _productServiceClient;
-    private readonly ILogger<CreateOrderHandler> _logger;
-
-    public CreateOrderHandler(
-                                IMongoBaseRepository<Order, Guid> repository,
-                                IBusPublisher publisher,
-                                IMessageOutbox outbox,
-                                IProductServiceClient productServiceClient,
-                                ILogger<CreateOrderHandler> logger)
-    {
-        _repository = repository;
-        _publisher = publisher;
-        _outbox = outbox;
-        _productServiceClient = productServiceClient;
-        _logger = logger;
-    }
+    private readonly IMongoBaseRepository<Order, Guid> _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    private readonly IBusPublisher _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
+    private readonly IMessageOutbox _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
+    private readonly IProductServiceClient _productServiceClient = productServiceClient ?? throw new ArgumentNullException(nameof(productServiceClient));
+    private readonly ILogger<CreateOrderHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public async Task HandleAsync(CreateOrder command, CancellationToken cancellationToken = default)
     {
-        bool exists = await _repository.ExistsAsync(o => o.Id == command.OrderId);
+        bool exists = await _repository.ExistsAsync(o => o.Id == command.OrderId, cancellationToken: cancellationToken);
         if (exists)
         {
             throw new InvalidOperationException($"Order with given id: {command.OrderId} already exists!");
@@ -49,18 +40,18 @@ public class CreateOrderHandler : ICommandHandler<CreateOrder>
         }
 
         var order = new Order(command.OrderId, command.CustomerId, productItems);
-        await _repository.AddAsync(order);
+        await _repository.AddAsync(order, cancellationToken: cancellationToken);
 
         _logger.LogInformation($"Created order '{command.OrderId}' for customer '{command.CustomerId}'.");
 
-        string spanContext = System.Diagnostics.Activity.Current?.Id;
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new OrderCreated(order.Id);
         if (_outbox.Enabled)
         {
-            await _outbox.SendAsync(@event, spanContext: spanContext);
+            await _outbox.SendAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
             return;
         }
 
-        await _publisher.PublishAsync(@event, spanContext: spanContext);
+        await _publisher.PublishAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
     }
 }

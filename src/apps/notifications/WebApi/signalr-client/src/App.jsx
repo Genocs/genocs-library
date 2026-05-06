@@ -73,6 +73,10 @@ export default function App() {
       appendMessage("Operation rejected.", "danger", operation);
     });
 
+    connection.on("order_created", (order) => {
+      appendMessage("Order created.", "success", order);
+    });
+
     connection.on("PublishNotification", (operation) => {
       appendMessage("Notification pushed.", "success", operation);
     });

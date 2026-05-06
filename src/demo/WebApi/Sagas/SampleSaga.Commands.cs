@@ -5,13 +5,13 @@ namespace Genocs.Library.Demo.WebApi.Sagas;
 
 public sealed class StartSagaCommand
 {
-    public string Text { get; set; }
+    public string? Text { get; set; }
     public int TransactionValue { get; set; }
 }
 
 public class StartTransaction : ISagaMessageIdentity
 {
-    public string Text { get; set; }
+    public string? Text { get; set; }
     public int TransactionValue { get; set; }
 
     public string MessageId => Guid.NewGuid().ToString();
@@ -19,7 +19,7 @@ public class StartTransaction : ISagaMessageIdentity
 
 public class CompleteTransaction
 {
-    public string Text { get; set; }
+    public string? Text { get; set; }
     public int TransactionValue { get; set; }
 }
 

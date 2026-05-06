@@ -54,6 +54,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Messaging.EventHubs" Version="5.12.2" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Include="certs\**" CopyToPublishDirectory="Always" />
     </ItemGroup>
 
@@ -61,9 +65,11 @@
         <Folder Include="logs\" />
     </ItemGroup>
 
-    <Target Name="BuildSignalRClient"
-            BeforeTargets="Build;Publish"
-            Condition="'$(EnableSignalRClientBuild)' == 'true' and Exists('$(SignalRClientProjectDir)\package.json')">
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\demo\Contracts\Contracts.csproj" />
+    </ItemGroup>
+
+    <Target Name="BuildSignalRClient" BeforeTargets="Build;Publish" Condition="'$(EnableSignalRClientBuild)' == 'true' and Exists('$(SignalRClientProjectDir)\package.json')">
         <Message Text="Building SignalR React client..." Importance="high" />
         <Exec Command="npm ci" WorkingDirectory="$(SignalRClientProjectDir)" Condition="Exists('$(SignalRClientProjectDir)\package-lock.json')" />
         <Exec Command="npm install" WorkingDirectory="$(SignalRClientProjectDir)" Condition="!Exists('$(SignalRClientProjectDir)\package-lock.json')" />

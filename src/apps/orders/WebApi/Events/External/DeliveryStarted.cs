@@ -4,12 +4,7 @@ using Genocs.Messaging;
 namespace Genocs.Orders.WebApi.Events.External;
 
 [Message("deliveries")]
-public class DeliveryStarted : IEvent
+public class DeliveryStarted(Guid deliveryId) : IEvent
 {
-    public Guid DeliveryId { get; }
-
-    public DeliveryStarted(Guid deliveryId)
-    {
-        DeliveryId = deliveryId;
-    }
+    public Guid DeliveryId { get; } = deliveryId;
 }

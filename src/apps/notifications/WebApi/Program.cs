@@ -3,13 +3,17 @@ using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
+using Genocs.Library.Demo.Contracts;
 using Genocs.Logging;
+using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
 using Genocs.Messaging.Outbox.MongoDB;
 using Genocs.Messaging.RabbitMQ;
 using Genocs.Notifications.WebApi.Commands;
+using Genocs.Notifications.WebApi.Configurations;
 using Genocs.Notifications.WebApi.Exceptions;
 using Genocs.Notifications.WebApi.Hubs;
+using Genocs.Notifications.WebApi.Messages.Events;
 using Genocs.Notifications.WebApi.Services;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Secrets.HashicorpKeyVault;
@@ -47,6 +51,8 @@ IGenocsBuilder gnxBuilder = await builder
 
 var services = builder.Services;
 services.AddSignalR();
+services.Configure<EventHubOptions>(builder.Configuration.GetSection(EventHubOptions.Position));
+services.AddSingleton<IEventHubPublisher, EventHubPublisher>();
 services.AddTransient<IHubWrapper, HubWrapper>();
 services.AddTransient<IHubService, HubService>();
 
@@ -66,7 +72,8 @@ app.UseGenocs()
         r.MapPrometheus();
     })
     .UseOpenApiDocs()
-    .UseRabbitMQ();
+    .UseRabbitMQ()
+    .SubscribeEvent<OrderCreated>();
 
 app.MapDispatcherEndpoints(endpoints => endpoints
     .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"notifications/{cmd.NotificationId}")));

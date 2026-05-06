@@ -7,30 +7,18 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Genocs.Notifications.WebApi.Commands.Handlers;
 
-public class PublishNotificationHandler : ICommandHandler<PublishNotification>
+public class PublishNotificationHandler(IBusPublisher publisher, IMessageOutbox outbox, ILogger<PublishNotificationHandler> logger, IHubContext<GenocsHub> hub) : ICommandHandler<PublishNotification>
 {
-    private readonly IBusPublisher _publisher;
-    private readonly IMessageOutbox _outbox;
-    private readonly ILogger<PublishNotificationHandler> _logger;
+    private readonly IBusPublisher _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
+    private readonly IMessageOutbox _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
+    private readonly ILogger<PublishNotificationHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    private readonly IHubContext<GenocsHub> _hub;
-
-    public PublishNotificationHandler(
-                                      IBusPublisher publisher,
-                                      IMessageOutbox outbox,
-                                      ILogger<PublishNotificationHandler> logger,
-                                      IHubContext<GenocsHub> hub)
-    {
-        _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
-        _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _hub = hub ?? throw new ArgumentNullException(nameof(hub));
-    }
+    private readonly IHubContext<GenocsHub> _hub = hub ?? throw new ArgumentNullException(nameof(hub));
 
     public async Task HandleAsync(PublishNotification command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation($"Created a notification with id: {command.NotificationId}, customer: {command.CustomerId}.");
-        string spanContext = System.Diagnostics.Activity.Current?.Id;
+        string? spanContext = System.Diagnostics.Activity.Current?.Id;
         var @event = new NotificationPosted(command.NotificationId);
 
         // Send the notification
@@ -42,6 +30,6 @@ public class PublishNotificationHandler : ICommandHandler<PublishNotification>
             return;
         }
 
-        await _publisher.PublishAsync(@event, spanContext: spanContext);
+        await _publisher.PublishAsync(@event, spanContext: spanContext, cancellationToken: cancellationToken);
     }
 }

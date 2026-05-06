@@ -5,19 +5,11 @@ using Newtonsoft.Json;
 namespace Genocs.Notifications.WebApi.Messages.Events;
 
 [Message("operations")]
-public class OperationCompleted : IEvent
+[method: JsonConstructor]
+public class OperationCompleted(DefaultIdType id, DefaultIdType userId, string name, string resource) : IEvent
 {
-    public DefaultIdType Id { get; }
-    public DefaultIdType UserId { get; }
-    public string Name { get; }
-    public string Resource { get; }
-
-    [JsonConstructor]
-    public OperationCompleted(DefaultIdType id, DefaultIdType userId, string name, string resource)
-    {
-        Id = id;
-        UserId = userId;
-        Name = name;
-        Resource = resource;
-    }
+    public DefaultIdType Id { get; } = id;
+    public DefaultIdType UserId { get; } = userId;
+    public string Name { get; } = name;
+    public string Resource { get; } = resource;
 }
