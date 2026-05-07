@@ -10,7 +10,7 @@ internal sealed class RedisSagaStateStore : IRedisSagaStateStore
     public RedisSagaStateStore(IDatabase database, string instanceName)
         => (_database, _instanceName) = (database, instanceName);
 
-    public async Task<string> GetStringAsync(string key)
+    public async Task<string?> GetStringAsync(string key)
     {
         RedisValue value = await _database.StringGetAsync(GetKey(key));
         return value.HasValue ? value.ToString() : null;

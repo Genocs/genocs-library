@@ -95,7 +95,7 @@ public static class BookStoreFeature
 
     private static async Task<IResult> CreateBookAsync(BookStoreDbContext dbContext, CreateBookRequest request, CancellationToken cancellationToken)
     {
-        string requestError = ValidateBookInput(request.Title, request.Isbn, request.Price, request.AuthorIds);
+        string? requestError = ValidateBookInput(request.Title, request.Isbn, request.Price, request.AuthorIds);
         if (requestError is not null)
         {
             return Results.BadRequest(new { message = requestError });
@@ -234,7 +234,7 @@ public static class BookStoreFeature
         });
     }
 
-    private static string ValidateBookInput(string title, string isbn, decimal price, IReadOnlyCollection<Guid> authorIds)
+    private static string? ValidateBookInput(string title, string isbn, decimal price, IReadOnlyCollection<Guid> authorIds)
     {
         if (string.IsNullOrWhiteSpace(title))
         {

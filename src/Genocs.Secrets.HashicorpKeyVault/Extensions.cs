@@ -195,7 +195,7 @@ public static class Extensions
                                                              string key,
                                                              IVaultClient client,
                                                              HashicorpKeyVaultOptions.LeaseOptions options,
-                                                             IDictionary<string, string> configuration)
+                                                             IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -213,7 +213,7 @@ public static class Extensions
                                                     string key,
                                                     IVaultClient client,
                                                     HashicorpKeyVaultOptions.LeaseOptions options,
-                                                    IDictionary<string, string> configuration)
+                                                    IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -231,7 +231,7 @@ public static class Extensions
                                                     string key,
                                                     IVaultClient client,
                                                     HashicorpKeyVaultOptions.LeaseOptions options,
-                                                    IDictionary<string, string> configuration)
+                                                    IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -247,7 +247,7 @@ public static class Extensions
                                                         string key,
                                                         IVaultClient client,
                                                         HashicorpKeyVaultOptions.LeaseOptions options,
-                                                        IDictionary<string, string> configuration)
+                                                        IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -271,7 +271,7 @@ public static class Extensions
                                                         string key,
                                                         IVaultClient client,
                                                         HashicorpKeyVaultOptions.LeaseOptions options,
-                                                        IDictionary<string, string> configuration)
+                                                        IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -287,7 +287,7 @@ public static class Extensions
     private static void SetSecrets(
                                     string key,
                                     HashicorpKeyVaultOptions.LeaseOptions options,
-                                    IDictionary<string, string> configuration,
+                                    IDictionary<string, string?> configuration,
                                     string name,
                                     Func<(object Credentials, Dictionary<string, string> Values, string LeaseId, int Duration, bool Renewable)> lease)
     {
@@ -306,7 +306,7 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease, IDictionary<string, string> configuration, IDictionary<string, string> values)
+    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease, IDictionary<string, string?> configuration, IDictionary<string, string> values)
     {
         if (lease.Templates is null || !lease.Templates.Any())
         {

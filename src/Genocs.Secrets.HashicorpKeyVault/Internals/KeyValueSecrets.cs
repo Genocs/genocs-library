@@ -6,8 +6,8 @@ namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 
 internal sealed class KeyValueSecrets(IVaultClient client, HashicorpKeyVaultOptions options) : IKeyValueSecrets
 {
-    private readonly IVaultClient _client = client;
-    private readonly HashicorpKeyVaultOptions _options = options;
+    private readonly IVaultClient _client = client ?? throw new ArgumentNullException(nameof(client));
+    private readonly HashicorpKeyVaultOptions _options = options ?? throw new ArgumentNullException(nameof(options));
 
     public async Task<T> GetDefaultAsync<T>()
         => await GetAsync<T>(_options.Key);

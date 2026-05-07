@@ -33,7 +33,7 @@ internal class ConnectionStringValidator : IConnectionStringValidator
         {
             switch (dbProvider?.ToLowerInvariant())
             {
-                //case DbProviderKeys.MongoDB:
+                // case DbProviderKeys.MongoDB:
                 //    var mongoDBcs = new MongoDBConnectionStringBuilder(connectionString);
                 //    break;
 

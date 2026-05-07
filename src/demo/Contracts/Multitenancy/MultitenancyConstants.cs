@@ -1,6 +1,5 @@
 namespace Genocs.Library.Demo.Contracts.Multitenancy;
 
-
 public class MultitenancyConstants
 {
     public static class Root

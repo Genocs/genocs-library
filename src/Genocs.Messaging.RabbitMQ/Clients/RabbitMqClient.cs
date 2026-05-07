@@ -23,12 +23,7 @@ internal sealed class RabbitMQClient : IRabbitMQClient
     private readonly int _maxChannels;
     private int _channelsCount;
 
-    public RabbitMQClient(
-                            ProducerConnection connection,
-                            IContextProvider contextProvider,
-                            IRabbitMQSerializer serializer,
-                            RabbitMQOptions options,
-                            ILogger<RabbitMQClient> logger)
+    public RabbitMQClient(ProducerConnection connection, IContextProvider contextProvider, IRabbitMQSerializer serializer, RabbitMQOptions options, ILogger<RabbitMQClient> logger)
     {
         ArgumentNullException.ThrowIfNull(connection);
         ArgumentNullException.ThrowIfNull(contextProvider);
@@ -153,7 +148,7 @@ internal sealed class RabbitMQClient : IRabbitMQClient
         }
     }
 
-    private static Activity? StartProducerActivity(IConventions conventions, IBasicProperties properties, string fallbackTraceParent)
+    private static Activity? StartProducerActivity(IConventions conventions, IBasicProperties properties, string? fallbackTraceParent)
     {
         var tags = new ActivityTagsCollection
         {
@@ -176,10 +171,7 @@ internal sealed class RabbitMQClient : IRabbitMQClient
         return ActivitySource.StartActivity("rabbitmq.publish", ActivityKind.Producer, default(ActivityContext), tags);
     }
 
-    private static void IncludeTraceHeaders(
-                                            IBasicProperties properties,
-                                            Activity? currentActivity,
-                                            string? fallbackTraceParent)
+    private static void IncludeTraceHeaders(IBasicProperties properties, Activity? currentActivity, string? fallbackTraceParent)
     {
         if (properties.Headers is null)
         {

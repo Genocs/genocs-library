@@ -135,10 +135,7 @@ public static class Extensions
             return;
         }
 
-        connectionFactory.Ssl = new SslOption(
-                                              options.Ssl.ServerName,
-                                              options.Ssl.CertificatePath,
-                                              options.Ssl.Enabled);
+        connectionFactory.Ssl = new SslOption(options.Ssl.ServerName, options.Ssl.CertificatePath, options.Ssl.Enabled);
 
         logger.LogDebug($"RabbitMQ SSL is: {(options.Ssl.Enabled ? "enabled" : "disabled")}, " +
                         $"server: '{options.Ssl.ServerName}', client certificate: '{options.Ssl.CertificatePath}', " +

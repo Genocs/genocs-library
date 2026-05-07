@@ -17,25 +17,27 @@ internal sealed class ConsulServicesRegistry : IConsulServicesRegistry
     public async Task<ServiceAgent?> GetAsync(string name)
     {
         var services = await _consulService.GetServiceAgentsAsync(name);
-        if (!services.Any())
+        if (!services?.Any() ?? true)
         {
             return null;
         }
 
-        if (!_usedServices.ContainsKey(name))
+        if (!_usedServices.TryGetValue(name, out var value))
         {
             _usedServices[name] = new HashSet<string>();
         }
-        else if (services.Count == _usedServices[name].Count)
+        else if (services?.Count == value.Count)
         {
-            _usedServices[name].Clear();
+            value.Clear();
         }
 
         return GetService(services, name);
     }
 
-    private ServiceAgent? GetService(IDictionary<string, ServiceAgent> services, string name)
+    private ServiceAgent? GetService(IDictionary<string, ServiceAgent>? services, string name)
     {
+        if (services == null) return null;
+
         return services.Count switch
         {
             0 => null,

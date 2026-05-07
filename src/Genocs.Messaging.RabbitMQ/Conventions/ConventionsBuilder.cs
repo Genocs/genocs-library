@@ -16,8 +16,7 @@ public class ConventionsBuilder : IConventionsBuilder
             ? "{{assembly}}/{{exchange}}.{{message}}"
             : _options.Queue.Template;
 
-        _snakeCase = _options.ConventionsCasing?.Equals("snakeCase",
-            StringComparison.InvariantCultureIgnoreCase) == true;
+        _snakeCase = _options.ConventionsCasing?.Equals("snakeCase", StringComparison.InvariantCultureIgnoreCase) == true;
     }
 
     public string? GetRoutingKey(Type type)

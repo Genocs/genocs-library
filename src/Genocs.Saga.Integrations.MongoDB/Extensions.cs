@@ -4,7 +4,6 @@ using Genocs.Persistence.MongoDB.Configurations;
 using Genocs.Persistence.MongoDB.Extensions;
 using Genocs.Saga.Integrations.MongoDB.Persistence;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
@@ -134,7 +133,7 @@ public static class Extensions
             return type.GetElementType() is Type elementType && IsApplicationType(elementType);
         }
 
-        string assemblyName = type.Assembly.GetName().Name;
+        string? assemblyName = type.Assembly.GetName().Name;
         if (string.IsNullOrWhiteSpace(assemblyName))
         {
             return false;

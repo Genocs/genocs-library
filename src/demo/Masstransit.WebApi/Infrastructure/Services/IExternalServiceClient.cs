@@ -19,5 +19,5 @@ public interface IExternalServiceClient
     /// <param name="request">The redemption request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The redemption Response.</returns>
-    Task<string> RedeemAsync(RedemptionRequest request, CancellationToken cancellationToken = default);
+    Task<string?> RedeemAsync(RedemptionRequest request, CancellationToken cancellationToken = default);
 }

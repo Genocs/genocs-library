@@ -97,11 +97,7 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureDefaultClient(
-                                                IServiceCollection services,
-                                                string clientName,
-                                                string serviceName,
-                                                RestEaseOptions options)
+    private static void ConfigureDefaultClient(IServiceCollection services, string clientName, string serviceName, RestEaseOptions options)
     {
         services.AddHttpClient(clientName, client =>
         {

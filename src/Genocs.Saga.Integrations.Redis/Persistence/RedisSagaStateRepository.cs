@@ -3,12 +3,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Genocs.Saga.Integrations.Redis.Persistence;
 
-internal sealed class RedisSagaStateRepository : ISagaStateRepository
+internal sealed class RedisSagaStateRepository(IRedisSagaStateStore stateStore) : ISagaStateRepository
 {
-    private readonly IRedisSagaStateStore _stateStore;
-
-    public RedisSagaStateRepository(IRedisSagaStateStore stateStore)
-        => _stateStore = stateStore;
+    private readonly IRedisSagaStateStore _stateStore = stateStore;
 
     public async Task<ISagaState?> ReadAsync(SagaId sagaId, Type sagaType)
     {
@@ -23,7 +20,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
         }
 
         RedisSagaState? state = null;
-        string cachedSagaState = await _stateStore.GetStringAsync(StateId(sagaId, sagaType));
+        string? cachedSagaState = await _stateStore.GetStringAsync(StateId(sagaId, sagaType));
 
         if (!string.IsNullOrWhiteSpace(cachedSagaState))
         {
@@ -52,7 +49,7 @@ internal sealed class RedisSagaStateRepository : ISagaStateRepository
         }
 
         string key = StateId(state.Id, state.Type);
-        string currentSerialized = await _stateStore.GetStringAsync(key);
+        string? currentSerialized = await _stateStore.GetStringAsync(key);
         RedisSagaState? current = DeserializeState(currentSerialized);
 
         if (current is null)
