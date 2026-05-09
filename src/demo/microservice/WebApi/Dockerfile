@@ -19,7 +19,8 @@ COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
 
-# Copy project files and restore dependencies
+# COPY .csproj and restore as distinct layers
+# This is CRITICAL: If code changes but .csproj doesn't, Docker reuses this cached layer
 COPY ["src/demo/microservice/Contracts/Contracts.csproj", "src/Contracts/"]
 COPY ["src/demo/microservice/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/demo/microservice/Domain.EFCore/Domain.EFCore.csproj", "src/Domain.EFCore/"]
@@ -29,14 +30,15 @@ COPY ["src/demo/microservice/WebApi/Host.csproj", "src/WebApi/"]
 
 # Restore dependencies in a separate layer for better caching
 RUN dotnet restore "src/WebApi/Host.csproj"
-# Copy source code
+
+# Copy the rest of the source code
 COPY ["src/demo/microservice/Contracts/", "src/Contracts/"]
 COPY ["src/demo/microservice/Domain/", "src/Domain/"]
 COPY ["src/demo/microservice/Domain.EFCore/", "src/Domain.EFCore/"]
 COPY ["src/demo/microservice/Infrastructure/", "src/Infrastructure/"]
 COPY ["src/demo/microservice/WebApi/", "src/WebApi/"]
 
-# Build the application
+
 WORKDIR "/src/src/WebApi"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

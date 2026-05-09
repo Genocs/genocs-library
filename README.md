@@ -244,6 +244,7 @@ docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genoc
 
 # Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, Jaeger, Seq, plus node-exporter / cAdvisor / mongodb-exporter for full metrics coverage).
 # Aspire Dashboard is opt-in via the `aspire` profile - see notes below.
+# Note: if you are running Docker Desktop on Windows with WSL2 integration, use the WSL2-safe compose command shown in the next section to avoid mount propagation issues.
 docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup scaling infrastructure components (Fabio, Consul)
@@ -662,8 +663,6 @@ Inside **./src/demo** folder you can find a full-fledged application composed by
 In that way you can test the entire flow.
 
 
-
-
 | Component            | Description                     | Container Port | Visibility                  |
 | -------------------- | ------------------------------- | -------------- | --------------------------- |
 | ApiGateway           | Handles API requests            | :5500          | Public                      |
@@ -674,8 +673,7 @@ In that way you can test the entire flow.
 
 ![Architecture](./assets/architecture_01.png)
 
-
-For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/WebApi/README.md`](src/demo/WebApi/README.md).
+For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/microservice/WebApi/README.md`](src/demo/microservice/WebApi/README.md).
 
 ### How to BUILD & RUN the application
 
@@ -729,25 +727,32 @@ docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-fi
 docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d
 
 # Build webapi Docker image
-docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/microservice/WebApi/Dockerfile .
 
 # Push webapi Docker image to Dockerhub
 docker push genocs/demo-webapi:2.0.0
 docker push genocs/demo-webapi:latest
 
 # Build MassTransit WebApi Docker image
-docker build -t genocs/demo-masstransit-webapi:2.0.0 -t genocs/demo-masstransit-webapi:latest -f ./src/demo/Masstransit.WebApi/Dockerfile .
+docker build -t genocs/demo-masstransit-webapi:2.0.0 -t genocs/demo-masstransit-webapi:latest -f ./src/demo/microservice/Masstransit.WebApi/Dockerfile .
 
 # Push MassTransit WebApi Docker image to Dockerhub
 docker push genocs/demo-masstransit-webapi:2.0.0
 docker push genocs/demo-masstransit-webapi:latest
 
 # Build MassTransit WORKER Docker image
-docker build -t genocs/demo-masstransit-worker:2.0.0 -t genocs/demo-masstransit-worker:latest -f ./src/demo/Masstransit.Worker/Dockerfile .
+docker build -t genocs/demo-masstransit-worker:2.0.0 -t genocs/demo-masstransit-worker:latest -f ./src/demo/microservice/Masstransit.Worker/Dockerfile .
 
 # Push MassTransit WORKER Docker image to Dockerhub
 docker push genocs/demo-masstransit-worker:2.0.0
 docker push genocs/demo-masstransit-worker:latest
+
+# Build ServiceBus WORKER Docker image
+docker build -t genocs/demo-servicebus-worker:2.0.0 -t genocs/demo-servicebus-worker:latest -f ./src/demo/microservice/ServiceBus.Worker/Dockerfile .
+
+# Push ServiceBus WORKER Docker image to Dockerhub
+docker push genocs/demo-servicebus-worker:2.0.0
+docker push genocs/demo-servicebus-worker:latest
 ```
 
 

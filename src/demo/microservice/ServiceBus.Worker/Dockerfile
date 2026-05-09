@@ -17,7 +17,8 @@ COPY ["stylecop.json", "stylecop.json"]
 COPY ["dotnet.ruleset", "dotnet.ruleset"]
 COPY ["global.json", "global.json"]
 
-# Copy project files and restore dependencies
+# COPY .csproj and restore as distinct layers
+# This is CRITICAL: If code changes but .csproj doesn't, Docker reuses this cached layer
 COPY ["src/demo/microservice/Contracts/Contracts.csproj", "src/Contracts/"]
 COPY ["src/demo/microservice/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/demo/microservice/ServiceBus.Worker/Host.csproj", "src/ServiceBus.Worker/"]
@@ -25,12 +26,11 @@ COPY ["src/demo/microservice/ServiceBus.Worker/Host.csproj", "src/ServiceBus.Wor
 # Restore dependencies in a separate layer for better caching
 RUN dotnet restore "src/ServiceBus.Worker/Host.csproj"
 
-# Copy source code
+# Copy the rest of the source code
 COPY ["src/demo/microservice/Contracts/", "src/Contracts/"]
 COPY ["src/demo/microservice/Domain/", "src/Domain/"]
 COPY ["src/demo/microservice/ServiceBus.Worker/", "src/ServiceBus.Worker/"]
 
-# Build the application
 WORKDIR "/src/src/ServiceBus.Worker"
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -43,4 +43,4 @@ RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Library.ServiceBus.Worker.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Library.Demo.ServiceBus.Worker.dll"]

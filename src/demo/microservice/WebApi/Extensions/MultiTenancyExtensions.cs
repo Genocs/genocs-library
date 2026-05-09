@@ -34,14 +34,10 @@ public static class MultiTenancyExtensions
         }
 
         // Register Finbuckle multitenancy with configuration store (host strategy)
-        builder.Services.AddFinbuckleMultiTenancy<GNXTenantInfo>(builder.Configuration!);
+        // builder.Services.AddFinbuckleMultiTenancy<GNXTenantInfo>(builder.Configuration!);
 
         // Optionally, register EF Core store for tenants
-        // services.AddFinbuckleMultiTenancyWithEfCoreStore<TenantInfo, BookStoreDbContext>();
+        builder.AddFinbuckleMultiTenancyWithEfCoreStore();
         return builder;
     }
-
-    public static void UseMultiTenancy(this WebApplication app)
-        => app.UseMultiTenancy();
-
 }

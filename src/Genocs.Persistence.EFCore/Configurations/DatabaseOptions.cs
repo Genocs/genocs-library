@@ -64,7 +64,7 @@ public class DatabaseOptions : IValidatableObject
             return null;
         }
 
-        var databaseName = uri.AbsolutePath.Trim('/');
+        string databaseName = uri.AbsolutePath.Trim('/');
         return string.IsNullOrWhiteSpace(databaseName) ? null : databaseName;
     }
 }

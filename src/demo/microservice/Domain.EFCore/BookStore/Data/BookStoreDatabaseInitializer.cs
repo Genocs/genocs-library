@@ -64,7 +64,7 @@ public static class BookStoreDatabaseInitializer
 
     private static async Task BaselineLegacyEnsureCreatedDatabaseAsync(BookStoreDbContext dbContext, CancellationToken cancellationToken)
     {
-        List<string> allMigrations = dbContext.Database.GetMigrations().ToList();
+        List<string> allMigrations = [.. dbContext.Database.GetMigrations()];
         if (allMigrations.Count == 0)
         {
             return;

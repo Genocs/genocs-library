@@ -189,6 +189,8 @@ services:
       - mongodb__connectionString=mongodb://mongodb:27017
       - seq__url=${SEQ_URL}
       - exporter__otlpEndpoint=${OTLP_URL}
+    networks:
+      - genocs
 
   demo-servicebus-worker-service:
     image: genocs/demo-servicebus-worker:${IMAGE_VERSION}
@@ -199,6 +201,8 @@ services:
       - mongodb__connectionString=mongodb://mongodb:27017
       - seq__url=${SEQ_URL}
       - exporter__otlpEndpoint=${OTLP_URL}
+    networks:
+      - genocs
 
 networks:
   genocs:
