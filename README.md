@@ -94,7 +94,6 @@ Documentation available at [Genocs Blog](https://learn.fiscanner.net/library/)
 - [Support](#support)
 - [Configuration](#configuration)
 - [Demo Application](#demo-application)
-- [Enterprise Application](#enterprise-application)
 - [Development Tools](#development-tools)
 - [Cloud Deployment](#cloud-deployment)
 - [License](#license)
@@ -649,11 +648,47 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 
 ## **_Demo Application_**
 
-Inside the repo there is a simple demo application you can use to test the library. The demo application is composed by a WebApi and a Worker service, they are both using the library to show you how to use it in a real application.
+### Application Components
+
+Inside **./src/demo** folder you can find a full-fledged application composed by:
+
+- ApiGateway
+- Identity Service
+- Order Service
+- Product Service
+- Notification Service
+- Microservice Components
+
+In that way you can test the entire flow.
+
+
+
+
+| Component            | Description                     | Container Port | Visibility                  |
+| -------------------- | ------------------------------- | -------------- | --------------------------- |
+| ApiGateway           | Handles API requests            | :5500          | Public                      |
+| Identity Service     | Manages user identities         | :5510\*        | Private through API Gateway |
+| Product Service      | Manages product information     | :5520\*        | Private through API Gateway |
+| Order Service        | Processes orders                | :5530\*        | Private through API Gateway |
+| Notification Service | Handles real-time communication | :5540\*        | Private through API Gateway |
+
+![Architecture](./assets/architecture_01.png)
+
 
 For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/WebApi/README.md`](src/demo/WebApi/README.md).
 
 ### How to BUILD & RUN the application
+
+The build and run process can be done by using docker-compose.
+
+Pre-requisites:
+- Docker
+> __NOTE__
+>
+> **Before running the solution remember to check**
+> **if the infrastructure services were setup**
+
+
 Following are the commands to build and run the demo application.
 
 ```bash
@@ -664,9 +699,15 @@ dotnet build
 dotnet pack
 
 # Run project with console
-dotnet run --project ./src/demo/WebApi
-dotnet run --project ./src/demo/Masstransit.WebApi
-dotnet run --project ./src/demo/Masstransit.Worker
+dotnet run --project ./src/demo/microservice/WebApi
+dotnet run --project ./src/demo/microservice/Masstransit.WebApi
+dotnet run --project ./src/demo/microservice/Masstransit.Worker
+dotnet run --project ./src/demo/microservice/ServiceBus.Worker
+dotnet run --project ./src/demo/apigateway/WebApi
+dotnet run --project ./src/demo/identities/WebApi
+dotnet run --project ./src/demo/products/WebApi
+dotnet run --project ./src/demo/orders/WebApi
+dotnet run --project ./src/demo/notifications/WebApi
 ```
 
 ### Build and push the Docker images to Dockerhub
@@ -680,7 +721,7 @@ You can build the Demo application by using Docker and push the images to Docker
 
 # OPTION 2.
 # Step by step commands to build and run the demo application with docker compose
-cd ./infrastructure/containers/apps
+cd ./infrastructure/containers/demo
 # Build with docker compose
 docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
 
@@ -709,47 +750,10 @@ docker push genocs/demo-masstransit-worker:2.0.0
 docker push genocs/demo-masstransit-worker:latest
 ```
 
----
-
-## **_Enterprise Application_**
-
-### Application Components
-
-Inside **./src/apps** folder you can find a full-fledged application composed by:
-
-- ApiGateway
-- Identity Service
-- Order Service
-- Product Service
-- Notification Service
-
-In that way you can test the entire flow.
-
-| Component            | Description                     | Container Port | Visibility                  |
-| -------------------- | ------------------------------- | -------------- | --------------------------- |
-| ApiGateway           | Handles API requests            | :5500          | Public                      |
-| Identity Service     | Manages user identities         | :5510\*        | Private through API Gateway |
-| Product Service      | Manages product information     | :5520\*        | Private through API Gateway |
-| Order Service        | Processes orders                | :5530\*        | Private through API Gateway |
-| Notification Service | Handles real-time communication | :5540\*        | Private through API Gateway |
-
-![Architecture](./assets/architecture_01.png)
-
-### How to BUILD & RUN the application
-
-The build and run process can be done by using docker-compose.
-
-Pre-requisites:
-- Docker
-> __NOTE__
->
-> **Before running the solution remember to check**
-> **if the infrastructure services were setup**
-
 
 ```bash
 # Build and run with docker compose
-./scripts/build-and-run-apps-docker-images.sh
+./scripts/build-and-run-demo-docker-images.sh
 
 # Clean Docker cache (optional)
 docker builder prune

@@ -7,7 +7,7 @@ The Genocs enterprise microservices suite is deployed as:
 
 Each service is exposed on port 8080 inside the cluster and is reachable
 via its short Service name (e.g. http://apigateway:8080). This mirrors the
-hostnames defined in infrastructure/containers/apps/docker-compose.yml, so
+hostnames defined in infrastructure/containers/demo/docker-compose.yml, so
 the apigateway reverse-proxy and the orders -> products http client will
 resolve without further configuration.
 

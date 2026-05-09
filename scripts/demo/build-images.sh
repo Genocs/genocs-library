@@ -6,7 +6,7 @@ export $(grep -v '^#' ./local.env | xargs)
 # Read service list file
 SERVICE_LIST_FILE="./src/demo/scripts/service-list.txt"
 
-if [[ ! -f "$SERVICE_LIST_FILE" ]]; then
+if [ ! -f "$SERVICE_LIST_FILE" ]; then
     echo "Error: Service list file not found: $SERVICE_LIST_FILE"
     exit 1
 fi
@@ -49,7 +49,7 @@ while IFS= read -r service_name || [ -n "$service_name" ]; do
     
     # Get service info
     service_info=$(get_service_info "$service_name")
-    if [[ $? -ne 0 ]]; then
+    if [ $? -ne 0 ]; then
         echo "Skipping unknown service: $service_name"
         continue
     fi
@@ -60,7 +60,7 @@ while IFS= read -r service_name || [ -n "$service_name" ]; do
     echo "Building $image_name..."
     docker build -t genocs/$image_name:$IMAGE_VERSION -t genocs/$image_name:latest -f ./src/demo/$dir_name/WebApi/Dockerfile .
     
-    if [[ $? -ne 0 ]]; then
+    if [ $? -ne 0 ]; then
         echo "Error: Failed to build $image_name"
         exit 1
     fi

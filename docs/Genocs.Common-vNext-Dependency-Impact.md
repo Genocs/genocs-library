@@ -78,12 +78,12 @@ Additional transitive dependents through package layering:
 - Genocs.Tracing.Jaeger.RabbitMQ (via Genocs.Messaging.RabbitMQ)
 
 Host-level transitive impact expected on:
-- src/apps/apigateway/WebApi/Host.csproj
-- src/apps/identities/Application/Application.csproj
-- src/apps/identities/WebApi/Host.csproj
-- src/apps/products/WebApi/Host.csproj
-- src/apps/orders/WebApi/Host.csproj
-- src/apps/notifications/WebApi/Host.csproj
+- src/demo/apigateway/WebApi/Host.csproj
+- src/demo/identities/Application/Application.csproj
+- src/demo/identities/WebApi/Host.csproj
+- src/demo/products/WebApi/Host.csproj
+- src/demo/orders/WebApi/Host.csproj
+- src/demo/notifications/WebApi/Host.csproj
 - src/demo/WebApi/Host.csproj
 - src/demo/Masstransit.WebApi/Host.csproj
 - src/demo/Masstransit.Worker/Host.csproj

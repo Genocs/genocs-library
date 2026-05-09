@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\demo\WebApi\Host.csproj" />
+        <ProjectReference Include="..\..\demo\microservice\WebApi\Host.csproj" />
         <ProjectReference Include="..\..\Genocs.Saga\Genocs.Saga.csproj" />
         <ProjectReference Include="..\..\Genocs.Saga.Integrations.Redis\Genocs.Saga.Integrations.Redis.csproj" />
     </ItemGroup>

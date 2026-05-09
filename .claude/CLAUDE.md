@@ -132,7 +132,7 @@ Middleware is then added via `app.UseGenocs()` and module-specific `Use*` extens
 - **HelloWorld.WebApi** – Minimal example.
 - **Masstransit.WebApi / Masstransit.Worker** – MassTransit messaging demo.
 
-### Enterprise Application (`src/apps/`)
+### Enterprise Application (`src/demo/`)
 
 Full microservices suite with ApiGateway (:5500), Identity (:5510), Product (:5520), Order (:5530), Notification (:5540) services. All share the `genocs-network` Docker network.
 

@@ -197,10 +197,10 @@ Current assembly scanning and dictionary keying can fail on loadable-type issues
   - `MapDispatcherEndpoints(this IEndpointRouteBuilder, Func<IDispatcherEndpointsBuilder, IDispatcherEndpointsBuilder>)`
 - Marked legacy `UseDispatcherEndpoints(...)` as obsolete with migration guidance and changed it to delegate to route-builder mapping on compatible hosts instead of configuring routing/authorization middleware itself.
 - Migrated in-repo hosts from legacy API to route-builder mapping:
-  - `src/apps/identities/WebApi/Program.cs`
-  - `src/apps/notifications/WebApi/Program.cs`
-  - `src/apps/orders/WebApi/Program.cs`
-  - `src/apps/products/WebApi/Program.cs`
+  - `src/demo/identities/WebApi/Program.cs`
+  - `src/demo/notifications/WebApi/Program.cs`
+  - `src/demo/orders/WebApi/Program.cs`
+  - `src/demo/products/WebApi/Program.cs`
 - Added regression coverage in `src/tests/Genocs.WebApi.CQRS.UnitTests/Extensions/MapDispatcherEndpointsExtensionsTests.cs` validating mapped CQRS routes update endpoint definitions via route-builder mapping.
 - Updated migration guidance with before/after examples in:
   - `src/Genocs.WebApi.CQRS/README_NUGET.md`
@@ -208,10 +208,10 @@ Current assembly scanning and dictionary keying can fail on loadable-type issues
 - Validation:
   - `dotnet test src/tests/Genocs.WebApi.CQRS.UnitTests/Genocs.WebApi.CQRS.UnitTests.csproj -c Debug --nologo`
   - `dotnet build src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj -c Debug --nologo`
-  - `dotnet build src/apps/identities/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/notifications/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/orders/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/products/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/identities/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/notifications/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/orders/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/products/WebApi/Host.csproj -c Debug --nologo`
 
 ### WEBAPI-CQRS-005 Normalize dispatch callback contracts and cancellation semantics
 
@@ -255,18 +255,18 @@ Current callback signatures allow nullable `HttpContext` while implementation be
 - Removed nullable-context fallback behavior in CQRS adapter paths by enforcing non-null context at the API boundary and throwing deterministic errors if underlying nullable adapters pass null.
 - Updated helper extensions in `src/Genocs.WebApi.CQRS/Extensions.cs` so `HttpContext.SendAsync(...)` and `HttpContext.QueryAsync(...)` pass `RequestAborted` to the in-memory dispatcher.
 - Migrated callback callsites in host applications to new signature shape `(payload, context, cancellationToken)`:
-  - `src/apps/identities/WebApi/Program.cs`
-  - `src/apps/notifications/WebApi/Program.cs`
-  - `src/apps/orders/WebApi/Program.cs`
-  - `src/apps/products/WebApi/Program.cs`
+  - `src/demo/identities/WebApi/Program.cs`
+  - `src/demo/notifications/WebApi/Program.cs`
+  - `src/demo/orders/WebApi/Program.cs`
+  - `src/demo/products/WebApi/Program.cs`
 - Added and stabilized cancellation propagation unit coverage in `src/tests/Genocs.WebApi.CQRS.UnitTests/Builders/DispatcherEndpointsBuilderCancellationTests.cs` using deterministic endpoint delegate capture (no TestServer dependency).
 - Validation:
   - `dotnet test src/tests/Genocs.WebApi.CQRS.UnitTests/Genocs.WebApi.CQRS.UnitTests.csproj -c Debug --nologo`
   - `dotnet build src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj -c Debug --nologo`
-  - `dotnet build src/apps/identities/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/notifications/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/orders/WebApi/Host.csproj -c Debug --nologo`
-  - `dotnet build src/apps/products/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/identities/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/notifications/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/orders/WebApi/Host.csproj -c Debug --nologo`
+  - `dotnet build src/demo/products/WebApi/Host.csproj -c Debug --nologo`
 - Remaining analyzer warnings in `DispatcherEndpointsBuilder.cs` are SA1117 formatting-only warnings and are tracked under `WEBAPI-CQRS-006`.
 
 ---

@@ -1,5 +1,5 @@
 # Default values for the Genocs enterprise microservices suite.
-# Mirrors infrastructure/containers/apps/docker-compose.yml.
+# Mirrors infrastructure/containers/demo/docker-compose.yml.
 
 image:
   tag: stable

@@ -1,65 +1,62 @@
 <Solution>
-  <Folder Name="/application/" />
-  <Folder Name="/application/apigateway/">
-    <Project Path="src/apps/apigateway/WebApi/Host.csproj" />
+  <Folder Name="/demo/" />
+  <Folder Name="/demo/apigateway/">
+    <Project Path="src/demo/apigateway/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/application/identities/">
-    <Project Path="src/apps/identities/Application/Application.csproj" />
-    <Project Path="src/apps/identities/WebApi/Host.csproj" />
+  <Folder Name="/demo/identities/">
+    <Project Path="src/demo/identities/Application/Application.csproj" />
+    <Project Path="src/demo/identities/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/application/notifications/">
-    <Project Path="src/apps/notifications/WebApi/Host.csproj" />
+  <Folder Name="/demo/microservice/">
+    <Project Path="src/demo/microservice/Application/Application.csproj" />
+    <Project Path="src/demo/microservice/Contracts/Contracts.csproj" />
+    <Project Path="src/demo/microservice/Domain.EFCore/Domain.EFCore.csproj" />
+    <Project Path="src/demo/microservice/Domain/Domain.csproj" />
+    <Project Path="src/demo/microservice/Infrastructure/Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/application/orders/">
-    <Project Path="src/apps/orders/WebApi/Host.csproj" />
+  <Folder Name="/demo/microservice/Masstransit.WebApi/">
+    <Project Path="src/demo/microservice/Masstransit.WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/application/products/">
-    <Project Path="src/apps/products/WebApi/Host.csproj" />
+  <Folder Name="/demo/microservice/Masstransit.Worker/">
+    <Project Path="src/demo/microservice/Masstransit.Worker/Host.csproj" />
   </Folder>
-  <Folder Name="/application/wallets/" />
-  <Folder Name="/demo/">
-    <Project Path="src/demo/Application/Application.csproj" Id="eb7b9b5a-6a77-4854-8f2e-40b27fc8dfb6" />
-    <Project Path="src/demo/Contracts/Contracts.csproj" />
-    <Project Path="src/demo/Domain.EFCore/Domain.EFCore.csproj" Id="65e04748-0dba-4ef0-9e6b-76fdb9c86d67" />
-    <Project Path="src/demo/Domain/Domain.csproj" />
-    <Project Path="src/demo/Infrastructure/Infrastructure.csproj" />
+  <Folder Name="/demo/microservice/ServiceBus.Worker/">
+    <Project Path="src/demo/microservice/ServiceBus.Worker/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/WebApi/">
-    <Project Path="src/demo/WebApi/Host.csproj" />
+  <Folder Name="/demo/microservice/tests/">
+    <Project Path="src/demo/microservice/ContractTests/ContractTests.csproj" />
   </Folder>
-  <Folder Name="/demo/tests/">
-    <Project Path="src/demo/ContractTests/ContractTests.csproj" />
+  <Folder Name="/demo/microservice/WebApi/">
+    <Project Path="src/demo/microservice/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/Masstransit.WebApi/">
-    <Project Path="src/demo/Masstransit.WebApi/Host.csproj" />
+  <Folder Name="/demo/notifications/">
+    <Project Path="src/demo/notifications/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/Masstransit.Worker/">
-    <Project Path="src/demo/Masstransit.Worker/Host.csproj" />
+  <Folder Name="/demo/orders/">
+    <Project Path="src/demo/orders/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/ServiceBus.Worker/">
-    <Project Path="src/demo/ServiceBus.Worker/Host.csproj" />
+  <Folder Name="/demo/products/">
+    <Project Path="src/demo/products/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/src/" />
-  <Folder Name="/src/tests/">
-    <Project Path="src/tests/Genocs.Logging.IntegrationTests/Genocs.Logging.IntegrationTests.csproj" />
-    <Project Path="src/tests/Genocs.Logging.UnitTests/Genocs.Logging.UnitTests.csproj" />
-    <Project Path="src/tests/Genocs.Messaging.RabbitMQ.UnitTests/Genocs.Messaging.RabbitMQ.UnitTests.csproj" />
-    <Project Path="src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj" />
-    <Project Path="src/tests/Genocs.Messaging.Tracing.IntegrationTests/Genocs.Messaging.Tracing.IntegrationTests.csproj" />
-    <Project Path="src/tests/Genocs.Messaging.Tracing.UnitTests/Genocs.Messaging.Tracing.UnitTests.csproj" />
-    <Project Path="src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj" />
-    <Project Path="src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj" />
-  </Folder>
+  <Folder Name="/demo/wallets/" />
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Logging.IntegrationTests/Genocs.Logging.IntegrationTests.csproj" />
+    <Project Path="src/tests/Genocs.Logging.UnitTests/Genocs.Logging.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Messaging.RabbitMQ.UnitTests/Genocs.Messaging.RabbitMQ.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Messaging.Tracing.IntegrationTests/Genocs.Messaging.Tracing.IntegrationTests.csproj" />
+    <Project Path="src/tests/Genocs.Messaging.Tracing.UnitTests/Genocs.Messaging.Tracing.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.ComponentTests/Genocs.Persistence.MongoDB.ComponentTests.csproj" />
     <Project Path="src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.QueryBuilder.UnitTests/Genocs.QueryBuilder.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Saga.UnitTests/Genocs.Saga.UnitTests.csproj" />
-    <Project Path="src/tests/Genocs.WebApi.OpenApi.UnitTests/Genocs.WebApi.OpenApi.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.Telemetry.IntegrationTests/Genocs.Telemetry.IntegrationTests.csproj" />
+    <Project Path="src/tests/Genocs.Telemetry.UnitTests/Genocs.Telemetry.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.WebApi.CQRS.UnitTests/Genocs.WebApi.CQRS.UnitTests.csproj" />
+    <Project Path="src/tests/Genocs.WebApi.OpenApi.UnitTests/Genocs.WebApi.OpenApi.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.WebApi.UnitTests/Genocs.WebApi.UnitTests.csproj" />
   </Folder>
   <Folder Name="/_Solution Items/">
