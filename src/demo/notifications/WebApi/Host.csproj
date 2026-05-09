@@ -65,10 +65,6 @@
         <Folder Include="logs\" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\microservice\Contracts\Contracts.csproj" />
-    </ItemGroup>
-
     <Target Name="BuildSignalRClient" BeforeTargets="Build;Publish" Condition="'$(EnableSignalRClientBuild)' == 'true' and Exists('$(SignalRClientProjectDir)\package.json')">
         <Message Text="Building SignalR React client..." Importance="high" />
         <Exec Command="npm ci" WorkingDirectory="$(SignalRClientProjectDir)" Condition="Exists('$(SignalRClientProjectDir)\package-lock.json')" />

@@ -3,7 +3,6 @@ using Genocs.Core.Builders;
 using Genocs.Core.CQRS.Commands;
 using Genocs.Core.CQRS.Events;
 using Genocs.Core.CQRS.Queries;
-using Genocs.Library.Demo.Contracts;
 using Genocs.Logging;
 using Genocs.Messaging.CQRS;
 using Genocs.Messaging.Outbox;
