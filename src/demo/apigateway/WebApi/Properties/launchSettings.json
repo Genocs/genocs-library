@@ -6,6 +6,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }
+    },
+    "LocalHttp": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5602",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "development"
+      }
     }
   }
 }

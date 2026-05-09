@@ -48,3 +48,75 @@ Content-Type: application/json
   "fullname": "John Doe",
   "address": "New York City, Street XYZ"
 }
+
+
+###############################################################################
+# API Gateway + Azure AD B2C auth tests
+# Fill the variables below once, then run requests top-to-bottom.
+###############################################################################
+
+@gatewayUrl = http://localhost:5501
+@protectedPath = /products-service/api/products
+
+# Azure AD B2C values
+@b2cTenantName = <your-tenant-name>
+@b2cTenantDomain = <your-tenant-name>.onmicrosoft.com
+@b2cPolicy = <your-signin-signup-policy>
+@b2cClientId = <your-client-id>
+@b2cClientSecret = <your-client-secret>
+@b2cApiScope = <your-api-app-id-uri>/.default
+
+### API Gateway - health check (anonymous)
+GET {{gatewayUrl}}/healthz
+
+### API Gateway - protected endpoint without token (should be 401)
+GET {{gatewayUrl}}{{protectedPath}}
+
+### Azure AD B2C - get access token (client credentials)
+# @name b2cToken
+POST https://{{b2cTenantName}}.b2clogin.com/{{b2cTenantDomain}}/{{b2cPolicy}}/oauth2/v2.0/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{b2cClientId}}&client_secret={{b2cClientSecret}}&scope={{b2cApiScope}}
+
+### API Gateway - protected endpoint with B2C token
+GET {{gatewayUrl}}{{protectedPath}}
+Authorization: Bearer {{b2cToken.response.body.$.access_token}}
+
+### API Gateway - identities endpoint with B2C token (optional)
+GET {{gatewayUrl}}/identities-service
+Authorization: Bearer {{b2cToken.response.body.$.access_token}}
+
+
+###############################################################################
+# API Gateway + Azure AD B2C interactive user login (Authorization Code + PKCE)
+# Notes:
+# 1) Generate a code_verifier and code_challenge (S256) externally.
+# 2) Execute the authorize request URL in browser, sign in, and copy the returned code.
+# 3) Paste the code into @b2cAuthCode and execute token exchange.
+###############################################################################
+
+# App registration values for interactive login
+@b2cRedirectUri = http://localhost:8400/callback
+@b2cAuthScope = openid offline_access <your-api-app-id-uri>/user_impersonation
+
+# PKCE values (generate before test)
+@b2cCodeVerifier = <pkce-code-verifier>
+@b2cCodeChallenge = <pkce-code-challenge-s256>
+
+# Returned from authorize redirect query: ?code=...
+@b2cAuthCode = <paste-authorization-code>
+
+### Azure AD B2C - build authorize URL (open in browser)
+GET https://{{b2cTenantName}}.b2clogin.com/{{b2cTenantDomain}}/{{b2cPolicy}}/oauth2/v2.0/authorize?client_id={{b2cClientId}}&response_type=code&redirect_uri={{b2cRedirectUri}}&response_mode=query&scope={{b2cAuthScope}}&code_challenge={{b2cCodeChallenge}}&code_challenge_method=S256
+
+### Azure AD B2C - exchange authorization code for tokens (PKCE)
+# @name b2cInteractiveToken
+POST https://{{b2cTenantName}}.b2clogin.com/{{b2cTenantDomain}}/{{b2cPolicy}}/oauth2/v2.0/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&client_id={{b2cClientId}}&code={{b2cAuthCode}}&redirect_uri={{b2cRedirectUri}}&scope={{b2cAuthScope}}&code_verifier={{b2cCodeVerifier}}
+
+### API Gateway - protected endpoint with interactive user token
+GET {{gatewayUrl}}{{protectedPath}}
+Authorization: Bearer {{b2cInteractiveToken.response.body.$.access_token}}
