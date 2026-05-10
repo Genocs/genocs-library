@@ -34,7 +34,7 @@ IGenocsBuilder gnxBuilder = builder.Services
                                   .AddGenocs(builder.Configuration)
                                   .AddTelemetry()
                                   .AddMongoWithRegistration()
-                                  .AddJwt(sectionName: "azureAdB2C");
+                                  .AddJwt();
 
 await gnxBuilder.AddRabbitMQAsync();
 

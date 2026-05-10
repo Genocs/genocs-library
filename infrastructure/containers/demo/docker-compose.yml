@@ -148,18 +148,20 @@ services:
     container_name: demo-webapi-service
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - mongodb__connectionString=mongodb://mongodb:27017
-      - seq__url=${SEQ_URL}
-      - exporter__otlpEndpoint=${OTLP_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
     networks:
       - genocs
     ports:
       - 5700:80
       - 5701:443
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   demo-masstransit-webapi-service:
     image: genocs/demo-masstransit-webapi:${IMAGE_VERSION}
@@ -167,18 +169,20 @@ services:
     container_name: demo-masstransit-webapi-service
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - mongodb__connectionString=mongodb://mongodb:27017
-      - seq__url=${SEQ_URL}
-      - exporter__otlpEndpoint=${OTLP_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
     networks:
       - genocs
     ports:
       - 5710:80
       - 5711:443
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   demo-masstransit-worker-service:
     image: genocs/demo-masstransit-worker:${IMAGE_VERSION}
@@ -186,9 +190,15 @@ services:
     container_name: demo-masstransit-worker-service
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - mongodb__connectionString=mongodb://mongodb:27017
-      - seq__url=${SEQ_URL}
-      - exporter__otlpEndpoint=${OTLP_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
     networks:
       - genocs
 
@@ -198,9 +208,15 @@ services:
     container_name: demo-servicebus-worker-service
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - mongodb__connectionString=mongodb://mongodb:27017
-      - seq__url=${SEQ_URL}
-      - exporter__otlpEndpoint=${OTLP_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
     networks:
       - genocs
 

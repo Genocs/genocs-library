@@ -45,4 +45,4 @@ RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Genocs.Library.Masstransit.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Genocs.Library.Demo.Masstransit.WebApi.dll"]

@@ -26,8 +26,8 @@ namespace Genocs.Saga.UnitTests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Saga Transaction Management", "    As a system administrator\r\n    I want to manage saga transactions\r\n    So tha" +
-                "t I can ensure distributed transactions are properly coordinated", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Saga Transaction Management", "    As a system administrator\n    I want to manage saga transactions\n    So that " +
+                "I can ensure distributed transactions are properly coordinated", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
 #line 1 "SagaTransaction.feature"
 #line hidden
