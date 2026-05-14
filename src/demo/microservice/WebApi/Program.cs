@@ -24,12 +24,13 @@ StaticLogger.EnsureInitialized();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .UseLogging();
+        .UseLogging();
 
 IGenocsBuilder gnxBuilder = builder
     .AddGenocs()
-    .AddTelemetry()
     .AddJwt("simmetric_jwt")
+    .AddTelemetry()
+
     .AddCorrelationContextLogging()
     .AddWebApi()
     .AddOpenApiDocs()
@@ -70,7 +71,7 @@ gnxBuilder.Build(app.Services);
 app.UseGenocs()
     .UseCorrelationContextLogging()
     .UseOpenApiDocs()
-    .UseHttpsRedirection()
+    .UsePrometheus()
     .UseCors()
     .UseRouting()
     .UseAuthentication()
@@ -84,6 +85,7 @@ app.UseMultiTenancy();
 await app.UseBookStoreDbContextAsync();
 
 app.MapControllers();
+app.MapPrometheus();
 
 app.MapFeatures();
 

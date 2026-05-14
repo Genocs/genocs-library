@@ -81,6 +81,8 @@ scrape_configs:
           - products-service:8080
           - orders-service:8080
           - notifications-service:8080
+          - demo-webapi-service:8080
+          - demo-masstransit-webapi-service:8080
         labels:
           stack: genocs
 
