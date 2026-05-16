@@ -2,6 +2,7 @@ using Genocs.APIGateway.WebApi.Configurations;
 using Genocs.APIGateway.WebApi.Framework;
 using Genocs.Auth;
 using Genocs.Core.Builders;
+using Genocs.Library.Demo.WebApi.Extensions;
 using Genocs.Logging;
 using Genocs.Messaging.RabbitMQ;
 using Genocs.Persistence.MongoDB.Extensions;
@@ -54,7 +55,7 @@ builder.Services.AddCors(cors =>
     });
 });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthCheck();
 
 var app = builder.Build();
 gnxBuilder.Build(app.Services);
@@ -75,6 +76,7 @@ app.UseMiddleware<UserMiddleware>();
 app.UseMiddleware<MessagingMiddleware>();
 app.UseRouting();
 app.UseAuthorization();
+app.UseHealthCheck();
 
 app.MapDefaultEndpoints();
 app.MapPrometheus();
