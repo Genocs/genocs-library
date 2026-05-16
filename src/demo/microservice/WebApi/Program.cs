@@ -51,6 +51,8 @@ gnxBuilder.AddApplicationMultiTenancy(builder.Configuration);
 // Add services to the container.
 var services = builder.Services;
 
+services.AddHealthCheck();
+
 services
     .AddCors(x =>
     {
@@ -88,6 +90,9 @@ app.MapControllers();
 app.MapPrometheus();
 
 app.MapFeatures();
+
+// Map health check endpoint; checks are defined in the AddHealthCheck extension method in the HealthCheckExtensions class.
+app.UseHealthCheck();
 
 await app.RunAsync();
 
