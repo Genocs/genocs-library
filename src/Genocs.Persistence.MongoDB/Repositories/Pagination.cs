@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -15,15 +14,10 @@ public static class Pagination
                                                               this IQueryable<T> collection,
                                                               string? orderBy,
                                                               string? sortOrder,
-                                                              int page = 1,
-                                                              int resultsPerPage = 10)
+                                                              int page,
+                                                              int resultsPerPage)
     {
-        if (page <= 0)
-        {
-            page = 1;
-        }
-
-        if (resultsPerPage <= 0)
+        if (resultsPerPage < 0)
         {
             resultsPerPage = 10;
         }
@@ -59,22 +53,20 @@ public static class Pagination
     public static IQueryable<T> Limit<T>(this IQueryable<T> collection, IPagedQuery query)
         => collection.Limit(query.Page, query.Results);
 
-    public static IQueryable<T> Limit<T>(this IQueryable<T> collection, int page = 1, int resultsPerPage = 10)
+    public static IQueryable<T> Limit<T>(this IQueryable<T> collection, int page, int resultsPerPage)
     {
-        if (page <= 0)
+        if (page < 0)
         {
-            page = 1;
+            page = 0;
         }
 
-        if (resultsPerPage <= 0)
+        if (resultsPerPage < 0)
         {
             resultsPerPage = 10;
         }
 
-        int skip = (page - 1) * resultsPerPage;
-
         var data = collection
-                        .Skip(skip)
+                        .Skip(page * resultsPerPage)
                         .Take(resultsPerPage);
 
         return data;

@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Open.Serialization.Json;
 using System.Collections.Concurrent;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Open.Serialization.Json;
 
 namespace Genocs.WebApi.Formatters;
 

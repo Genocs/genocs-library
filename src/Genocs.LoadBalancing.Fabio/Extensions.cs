@@ -1,13 +1,13 @@
 using Genocs.Core.Builders;
-using Genocs.Discovery.Consul;
-using Genocs.Discovery.Consul.Configurations;
-using Genocs.Discovery.Consul.Models;
 using Genocs.Http;
 using Genocs.Http.Configurations;
 using Genocs.LoadBalancing.Fabio.Builders;
 using Genocs.LoadBalancing.Fabio.Configurations;
 using Genocs.LoadBalancing.Fabio.Http;
 using Genocs.LoadBalancing.Fabio.MessageHandlers;
+using Genocs.ServiceDiscovery.Consul;
+using Genocs.ServiceDiscovery.Consul.Configurations;
+using Genocs.ServiceDiscovery.Consul.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.LoadBalancing.Fabio;

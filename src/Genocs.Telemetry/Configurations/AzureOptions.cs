@@ -1,32 +1,28 @@
 ﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// Azure configuration Settings.
+/// Azure Monitor exporter settings.
 /// </summary>
 public class AzureOptions
 {
     /// <summary>
-    /// It defines whether the section is enabled or not.
+    /// Enables Azure Monitor exporter configuration.
     /// </summary>
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// It defines the azure Connection string.
+    /// Azure Monitor connection string.
+    /// A non-empty value is required for exporter registration.
     /// </summary>
     public string? ConnectionString { get; set; }
 
     /// <summary>
-    /// It defines whether the console tracing are enabled or not.
+    /// Enables Azure trace export.
     /// </summary>
     public bool EnableTracing { get; set; }
 
     /// <summary>
-    /// It defines whether the console metrics are enabled or not.
+    /// Enables Azure metrics export.
     /// </summary>
     public bool EnableMetrics { get; set; }
-
-    /// <summary>
-    /// It defines whether the console logging are enabled or not.
-    /// </summary>
-    public bool EnableLogging { get; set; }
 }

@@ -1,12 +1,12 @@
 using Genocs.Core.Builders;
-using Genocs.Discovery.Consul;
-using Genocs.Discovery.Consul.Configurations;
 using Genocs.Http.Configurations;
 using Genocs.Http.RestEase.Builders;
 using Genocs.Http.RestEase.Configurations;
 using Genocs.Http.RestEase.Serializers;
 using Genocs.LoadBalancing.Fabio;
 using Genocs.LoadBalancing.Fabio.Configurations;
+using Genocs.ServiceDiscovery.Consul;
+using Genocs.ServiceDiscovery.Consul.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using RestEase;
 
@@ -14,21 +14,20 @@ namespace Genocs.Http.RestEase;
 
 public static class Extensions
 {
-    private const string SectionName = "restEase";
     private const string RegistryName = "http.restEase";
 
     public static IGenocsBuilder AddServiceClient<T>(
                                                         this IGenocsBuilder builder,
                                                         string serviceName,
-                                                        string sectionName = SectionName,
-                                                        string consulSectionName = "consul",
-                                                        string fabioSectionName = "fabio",
-                                                        string httpClientSectionName = "httpClient")
+                                                        string sectionName = RestEaseOptions.Position,
+                                                        string consulSectionName = ConsulOptions.Position,
+                                                        string fabioSectionName = FabioOptions.Position,
+                                                        string httpClientSectionName = HttpClientOptions.Position)
         where T : class
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
-            sectionName = SectionName;
+            sectionName = RestEaseOptions.Position;
         }
 
         var restEaseOptions = builder.GetOptions<RestEaseOptions>(sectionName);
@@ -98,11 +97,7 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureDefaultClient(
-                                                IServiceCollection services,
-                                                string clientName,
-                                                string serviceName,
-                                                RestEaseOptions options)
+    private static void ConfigureDefaultClient(IServiceCollection services, string clientName, string serviceName, RestEaseOptions options)
     {
         services.AddHttpClient(clientName, client =>
         {

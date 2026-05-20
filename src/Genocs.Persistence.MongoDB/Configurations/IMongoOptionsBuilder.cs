@@ -1,5 +1,3 @@
-using Genocs.Persistence.MongoDB.Configurations;
-
 namespace Genocs.Persistence.MongoDB.Configurations;
 
 /// <summary>

@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Genocs.Common.CQRS.Queries;
 using Genocs.Common.Domain.Entities;
-using Genocs.Core.CQRS.Queries;
 using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
 using Genocs.Persistence.MongoDB.Repositories;
@@ -92,7 +91,7 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// </summary>
     /// <param name="id">The domain object id.</param>
     /// <returns>The entity if found otherwise null.</returns>
-    public override TEntity FirstOrDefault(TKey id)
+    public override TEntity? FirstOrDefault(TKey id)
     {
         var filter = Builders<TEntity>.Filter.Eq(m => m.Id, id);
         return Collection.Find(filter).FirstOrDefault();
@@ -116,7 +115,8 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// <returns>The entity.</returns>
     public override TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOneAsync(filter: g => g.Id.Equals(entity.Id), replacement: entity);
+        var filter = Builders<TEntity>.Filter.Eq(g => g.Id, entity.Id);
+        Collection.ReplaceOne(filter: filter, replacement: entity);
         return entity;
     }
 
@@ -134,7 +134,7 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     public override void Delete(TKey id)
     {
         var query = Builders<TEntity>.Filter.Eq(m => m.Id, id);
-        var deleteResult = Collection.DeleteOneAsync(query).Result;
+        Collection.DeleteOne(query);
     }
 
     /// <summary>
@@ -163,11 +163,17 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
         => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => await Collection.InsertOneAsync(entity);
+        => await Collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
 
     public async Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.ReplaceOneAsync(predicate, entity, cancellationToken: cancellationToken);
 
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().Where(predicate).AnyAsync(cancellationToken);
+
+    public override async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TEntity>.Filter.Eq(e => e.Id, id);
+        return (await Collection.Find(filter).SingleOrDefaultAsync(cancellationToken))!;
+    }
 }

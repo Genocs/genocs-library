@@ -6,9 +6,9 @@
 public interface ISearchRequest
 {
     /// <summary>
-    /// The search query used for full-text search.
+    /// The search term used for full-text search.
     /// </summary>
-    string q { get; set; }
+    string? SearchTerm { get; set; }
 
     /// <summary>
     /// The maximum number of items to return.

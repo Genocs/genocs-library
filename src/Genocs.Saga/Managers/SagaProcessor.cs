@@ -1,4 +1,5 @@
 using Genocs.Saga.Persistence;
+using Genocs.Saga.Utils;
 
 namespace Genocs.Saga.Managers;
 
@@ -13,10 +14,25 @@ internal sealed class SagaProcessor : ISagaProcessor
         _log = log;
     }
 
-    public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state,
-        ISagaContext context) where TMessage : class
+    public async Task ProcessAsync<TMessage>(
+        ISaga saga,
+        TMessage message,
+        ISagaState state,
+        ISagaContext context)
+        where TMessage : class
     {
         var action = (ISagaAction<TMessage>)saga;
+        string sagaType = saga.GetType().Name;
+        string messageType = typeof(TMessage).Name;
+        string? messageId = SagaMessageIdentityResolver.Resolve(message, context);
+        SagaLogEntryOutcome outcome = SagaLogEntryOutcome.Completed;
+
+        using var handleActivity = SagaTelemetry.StartHandleActivity(saga.Id, sagaType, messageType);
+
+        if (await HasAlreadyProcessedAsync(saga.Id, saga.GetType(), messageId).ConfigureAwait(false))
+        {
+            return;
+        }
 
         try
         {
@@ -24,30 +40,50 @@ internal sealed class SagaProcessor : ISagaProcessor
         }
         catch (Exception ex)
         {
+            outcome = SagaLogEntryOutcome.Failed;
             context.SagaContextError = new SagaContextError(ex);
 
-            if (!(saga.State is SagaProcessState.Rejected))
+            if (saga.State is not SagaProcessState.Rejected)
             {
-                saga.Reject(ex);
+                try
+                {
+                    saga.Reject(ex);
+                }
+                catch (SagaException)
+                {
+                    // Reject transitions the saga to Rejected and throws by design.
+                    // Swallowing here keeps the pipeline alive so post-processing can compensate.
+                }
             }
         }
         finally
         {
-            await UpdateSagaAsync(message, saga, state);
+            await UpdateSagaAsync(message, saga, state, outcome, messageId);
         }
     }
 
-    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
+    private async Task<bool> HasAlreadyProcessedAsync(SagaId sagaId, Type sagaType, string? messageId)
+    {
+        if (string.IsNullOrWhiteSpace(messageId))
+        {
+            return false;
+        }
+
+        IEnumerable<ISagaLogData> existingEntries = await _log.ReadAsync(sagaId, sagaType).ConfigureAwait(false);
+        return existingEntries.Any(entry => string.Equals(entry.MessageId, messageId, StringComparison.Ordinal));
+    }
+
+    private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state, SagaLogEntryOutcome outcome, string messageId)
         where TMessage : class
     {
         var sagaType = saga.GetType();
 
-        var updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
+        object? updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
 
         state.Update(saga.State, updatedSagaData);
-        var logData = SagaLogData.Create(saga.Id, sagaType, message);
+        SagaLogData logData = SagaLogData.Create(saga.Id, sagaType, message, outcome, messageId);
 
-        var persistenceTasks = new []
+        var persistenceTasks = new[]
         {
             _repository.WriteAsync(state),
             _log.WriteAsync(logData)

@@ -3,6 +3,7 @@ using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Genocs.Core.Builders;
 
@@ -11,7 +12,7 @@ namespace Genocs.Core.Builders;
 /// </summary>
 public sealed class GenocsBuilder : IGenocsBuilder
 {
-    private readonly ConcurrentDictionary<string, bool> _registry = new ConcurrentDictionary<string, bool>();
+    private readonly ConcurrentDictionary<string, bool> _registry = new();
     private readonly List<Action<IServiceProvider>> _buildActions;
     private readonly IServiceCollection _services;
     IServiceCollection IGenocsBuilder.Services => _services;
@@ -34,10 +35,11 @@ public sealed class GenocsBuilder : IGenocsBuilder
     private GenocsBuilder(IServiceCollection services, IConfiguration? configuration)
     {
         _services = services;
-        Configuration = configuration;
+        Configuration = ResolveConfiguration(services, configuration);
 
         _buildActions = [];
-        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
+        _services.TryAddSingleton(Configuration);
+        _services.AddSingleton<IStartupInitializer, StartupInitializer>();
     }
 
     private GenocsBuilder(WebApplicationBuilder builder)
@@ -47,7 +49,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
 
         _services = builder.Services;
         _buildActions = [];
-        _services.AddSingleton<IStartupInitializer>(new StartupInitializer());
+        _services.AddSingleton<IStartupInitializer, StartupInitializer>();
     }
 
     public static IGenocsBuilder Create(WebApplicationBuilder builder)
@@ -55,6 +57,22 @@ public sealed class GenocsBuilder : IGenocsBuilder
 
     public static IGenocsBuilder Create(IServiceCollection services, IConfiguration? configuration = null)
         => new GenocsBuilder(services, configuration);
+
+    private static IConfiguration ResolveConfiguration(IServiceCollection services, IConfiguration? explicitConfiguration)
+    {
+        if (explicitConfiguration is not null)
+        {
+            return explicitConfiguration;
+        }
+
+        var descriptor = services.LastOrDefault(service => service.ServiceType == typeof(IConfiguration));
+        if (descriptor?.ImplementationInstance is IConfiguration existingConfiguration)
+        {
+            return existingConfiguration;
+        }
+
+        return new ConfigurationBuilder().Build();
+    }
 
     public bool TryRegister(string name)
         => _registry.TryAdd(name, true);
@@ -67,6 +85,7 @@ public sealed class GenocsBuilder : IGenocsBuilder
         {
             var startupInitializer = sp.GetRequiredService<IStartupInitializer>();
             startupInitializer.AddInitializer(initializer);
+            CoreDiagnosticsRuntime.Info(sp, $"Registered startup initializer instance '{initializer.GetType().FullName}'.");
         });
 
     public void AddInitializer<TInitializer>()
@@ -76,19 +95,16 @@ public sealed class GenocsBuilder : IGenocsBuilder
             var initializer = sp.GetRequiredService<TInitializer>();
             var startupInitializer = sp.GetRequiredService<IStartupInitializer>();
             startupInitializer.AddInitializer(initializer);
+            CoreDiagnosticsRuntime.Info(sp, $"Registered startup initializer type '{typeof(TInitializer).FullName}'.");
         });
 
     /// <summary>
-    /// Build the Genocs application.
+    /// Executes deferred build actions against the final application service provider.
     /// </summary>
-    /// <remarks>
-    /// Remember to call the Build on the application builder.
-    /// </remarks>
-    /// <returns>The Service Provider to be used for chaining.</returns>
-    public IServiceProvider Build()
+    /// <param name="serviceProvider">The final application service provider.</param>
+    public void Build(IServiceProvider serviceProvider)
     {
-        var serviceProvider = _services.BuildServiceProvider();
-        _buildActions.ForEach(a => a(serviceProvider));
-        return serviceProvider;
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        _buildActions.ForEach(action => action(serviceProvider));
     }
 }

@@ -13,7 +13,7 @@ internal sealed class ContextProvider : IContextProvider
             : options.Context.Header;
     }
 
-    public object? Get(IDictionary<string, object>? headers)
+    public object? Get(IDictionary<string, object?>? headers)
     {
         if (headers is null)
         {

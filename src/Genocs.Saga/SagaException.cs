@@ -7,7 +7,7 @@ public class SagaException : Exception
     {
     }
 
-    public SagaException(string message, Exception innerException)
+    public SagaException(string message, Exception? innerException)
         : base(message, innerException)
     {
     }

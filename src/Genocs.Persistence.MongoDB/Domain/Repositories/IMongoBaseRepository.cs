@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Genocs.Persistence.MongoDB.Domain.Repositories;
 
-public interface IMongoBaseRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+public interface IMongoBaseRepository<TEntity, TKey> : IQueryableRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
     IMongoCollection<TEntity> Collection { get; }

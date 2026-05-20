@@ -11,6 +11,7 @@ public static class Extensions
 {
     private const string SectionName = "outbox";
     private const string RegistryName = "messageBrokers.outbox";
+    private const string MissingOutboxProviderError = "No outbox provider was configured. Configure AddMessageOutbox(...) explicitly, for example AddMessageOutbox(o => o.AddInMemory()) for development-only scenarios, or use a durable provider such as AddMessageOutbox(o => o.AddMongo()) for production.";
 
     /// <summary>
     /// Add the message outbox to the service collection.
@@ -19,10 +20,7 @@ public static class Extensions
     /// <param name="configure">The action method to setup the IMessageOutboxConfigurator.</param>
     /// <param name="sectionName">The secton name. Default is 'outbox'.</param>
     /// <returns>The Genocs builder. You can use it for chain commands.</returns>
-    public static IGenocsBuilder AddMessageOutbox(
-                                                  this IGenocsBuilder builder,
-                                                  Action<IMessageOutboxConfigurator>? configure = null,
-                                                  string sectionName = SectionName)
+    public static IGenocsBuilder AddMessageOutbox(this IGenocsBuilder builder, Action<IMessageOutboxConfigurator>? configure = null, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -40,12 +38,10 @@ public static class Extensions
 
         if (configure is null)
         {
-            configurator.AddInMemory();
+            throw new InvalidOperationException(MissingOutboxProviderError);
         }
-        else
-        {
-            configure(configurator);
-        }
+
+        configure(configurator);
 
         if (!options.Enabled)
         {

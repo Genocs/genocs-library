@@ -1,4 +1,4 @@
-using Genocs.Common.Domain.ConnectionString;
+using Genocs.Common.Persistence;
 using Genocs.Persistence.EFCore.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
@@ -14,9 +14,9 @@ namespace Genocs.Persistence.EFCore.Configurations;
 public class ConnectionStringSecurer : IConnectionStringSecurer
 {
     private const string HiddenValueDefault = "*******";
-    private readonly DatabaseSettings _dbSettings;
+    private readonly DatabaseOptions _dbSettings;
 
-    public ConnectionStringSecurer(IOptions<DatabaseSettings> dbSettings) =>
+    public ConnectionStringSecurer(IOptions<DatabaseOptions> dbSettings) =>
         _dbSettings = dbSettings.Value;
 
     public string? MakeSecure(string? connectionString, string? dbProvider)
@@ -45,19 +45,72 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
 
     private static string MakeSecureMongoDBConnectionString(string connectionString)
     {
-        var builder = new MongoDB.Driver.MongoUrlBuilder(connectionString);
-
-        if (!string.IsNullOrEmpty(builder.Username))
+        if (Uri.TryCreate(connectionString, UriKind.Absolute, out var uri)
+            && uri.Scheme.StartsWith("mongodb", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrEmpty(uri.UserInfo))
         {
-            builder.Username = HiddenValueDefault;
+            var builder = new UriBuilder(uri);
+            var userInfoParts = uri.UserInfo.Split(':', 2);
+
+            var maskedUserName = string.IsNullOrEmpty(userInfoParts[0])
+                ? string.Empty
+                : HiddenValueDefault;
+
+            builder.UserName = maskedUserName;
+            builder.Password = userInfoParts.Length == 2 && !string.IsNullOrEmpty(userInfoParts[1])
+                ? HiddenValueDefault
+                : string.Empty;
+
+            return builder.Uri.ToString();
         }
 
-        if (!string.IsNullOrEmpty(builder.Password))
+        // Fallback for valid MongoDB connection strings that Uri cannot parse (e.g. multi-host authority).
+        var schemeDelimiterIndex = connectionString.IndexOf("://", StringComparison.Ordinal);
+        if (schemeDelimiterIndex < 0)
         {
-            builder.Password = HiddenValueDefault;
+            return connectionString;
         }
 
-        return builder.ToString();
+        var authorityStart = schemeDelimiterIndex + 3;
+        var authorityEnd = connectionString.IndexOfAny(['/', '?', '#'], authorityStart);
+        if (authorityEnd < 0)
+        {
+            authorityEnd = connectionString.Length;
+        }
+
+        var atIndex = connectionString.LastIndexOf('@', authorityEnd - 1, authorityEnd - authorityStart);
+        if (atIndex < 0)
+        {
+            return connectionString;
+        }
+
+        var credentials = connectionString.Substring(authorityStart, atIndex - authorityStart);
+        if (string.IsNullOrEmpty(credentials))
+        {
+            return connectionString;
+        }
+
+        var separatorIndex = credentials.IndexOf(':');
+        string maskedCredentials;
+        if (separatorIndex >= 0)
+        {
+            var username = credentials[..separatorIndex];
+            var password = credentials[(separatorIndex + 1)..];
+
+            var maskedUserName = string.IsNullOrEmpty(username) ? string.Empty : HiddenValueDefault;
+            var maskedPassword = string.IsNullOrEmpty(password) ? string.Empty : HiddenValueDefault;
+
+            maskedCredentials = $"{maskedUserName}:{maskedPassword}";
+        }
+        else
+        {
+            maskedCredentials = HiddenValueDefault;
+        }
+
+        return string.Concat(
+            connectionString.AsSpan(0, authorityStart),
+            maskedCredentials,
+            connectionString.AsSpan(atIndex));
     }
 
 #if !NET10_0_OR_GREATER

@@ -1,0 +1,77 @@
+# Default values for the Genocs demo chart.
+# Mirrors infrastructure/containers/demo/docker-compose.yml.
+
+image:
+  tag: stable
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+imagePullSecrets: []
+
+# Shared environment used by every demo service (matches the repeated
+# environment block in docker-compose.yml). Infrastructure components
+# (mongodb, seq, jaeger) are assumed to already exist in the cluster.
+env:
+  aspnetcoreEnvironment: Development
+  mongodb:
+    connectionString: "mongodb://mongodb:27017"
+  seq:
+    url: "http://seq"
+  exporter:
+    otlpEndpoint: "http://jaeger"
+
+# --- Web APIs ------------------------------------------------------------
+# HTTP-facing services: get a Deployment AND a Service.
+demoWebapi:
+  enabled: true
+  name: demo-webapi-service
+  image:
+    repository: genocs/demo-webapi
+  service:
+    port: 8080
+  containerPort: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+demoMasstransitWebapi:
+  enabled: true
+  name: demo-masstransit-webapi-service
+  image:
+    repository: genocs/demo-masstransit-webapi
+  service:
+    port: 8080
+  containerPort: 8080
+  probes:
+    enabled: true
+    liveness:
+      path: /alive
+      port: 8080
+    readiness:
+      path: /healthz
+      port: 8080
+
+# --- Workers -------------------------------------------------------------
+# Background workers: Deployment only (no Service).
+demoMasstransitWorker:
+  enabled: true
+  name: demo-masstransit-worker-service
+  image:
+    repository: genocs/demo-masstransit-worker
+
+demoServicebusWorker:
+  enabled: true
+  name: demo-servicebus-worker-service
+  image:
+    repository: genocs/demo-servicebus-worker
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

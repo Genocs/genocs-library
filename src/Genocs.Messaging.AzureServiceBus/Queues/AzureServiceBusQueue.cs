@@ -1,27 +1,35 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using System.Diagnostics;
+using System.Text.Json;
+using Azure.Messaging.ServiceBus;
 using Genocs.Common.CQRS.Commands;
 using Genocs.Messaging.AzureServiceBus.Configurations;
 using Genocs.Messaging.AzureServiceBus.Queues.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
 
 namespace Genocs.Messaging.AzureServiceBus.Queues;
 
 /// <summary>
 /// Azure Service Bus Queue implementation using Azure.Messaging.ServiceBus SDK.
 /// </summary>
-public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
+public class AzureServiceBusQueue : IAzureServiceBusQueue, IHostedService, IAsyncDisposable
 {
+    private const string TraceParentHeader = "traceparent";
+    private const string TraceStateHeader = "tracestate";
+    private const string COMMANDSUFFIX = "Command";
+
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.AzureServiceBus");
+
     private readonly ServiceBusClient _client;
     private readonly ServiceBusSender _sender;
     private readonly ServiceBusProcessor _processor;
     private readonly AzureServiceBusQueueOptions _options;
     private readonly ILogger<AzureServiceBusQueue> _logger;
-    private readonly Dictionary<string, KeyValuePair<Type, Type>> _handlers = new();
-    private const string COMMAND_SUFFIX = "Command";
+    private readonly Dictionary<string, CommandHandlerRegistration> _handlers = new();
     private readonly IServiceProvider _serviceProvider;
+    private bool _isProcessorStarted;
 
     /// <summary>
     /// Initializes a new instance of <see cref="AzureServiceBusQueue"/> using <see cref="IOptions{T}"/>.
@@ -64,7 +72,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
             AutoCompleteMessages = false
         });
 
-        RegisterQueueMessageHandlerAndProcess();
+        RegisterQueueMessageHandler();
     }
 
     /// <summary>
@@ -74,7 +82,7 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     public async Task SendAsync(ICommand command)
     {
         string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
-        string commandName = command.GetType().Name.Replace(COMMAND_SUFFIX, "");
+        string commandName = command.GetType().Name.Replace(COMMANDSUFFIX, string.Empty);
 
         var message = new ServiceBusMessage(jsonMessage)
         {
@@ -82,7 +90,18 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
             Subject = commandName
         };
 
-        await _sender.SendMessageAsync(message);
+        using var producerActivity = StartProducerActivity(message, commandName, "send");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.SendMessageAsync(message);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
     }
 
     /// <summary>
@@ -93,13 +112,37 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     public async Task ScheduleAsync(ICommand command, DateTimeOffset offset)
     {
         string jsonMessage = JsonSerializer.Serialize(command, command.GetType());
+        string commandName = command.GetType().Name.Replace(COMMANDSUFFIX, string.Empty);
 
         var message = new ServiceBusMessage(jsonMessage)
         {
             MessageId = Guid.NewGuid().ToString()
         };
 
-        await _sender.ScheduleMessageAsync(message, offset);
+        using var producerActivity = StartProducerActivity(message, commandName, "schedule");
+        InjectTraceContext(message.ApplicationProperties);
+
+        try
+        {
+            await _sender.ScheduleMessageAsync(message, offset);
+        }
+        catch (Exception exception)
+        {
+            MarkActivityAsError(producerActivity, exception);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Registers a modern command handler for consuming messages from the queue.
+    /// </summary>
+    /// <typeparam name="T">The command type.</typeparam>
+    /// <typeparam name="TH">The command handler type.</typeparam>
+    public void ConsumeModern<T, TH>()
+        where T : class, ICommand
+        where TH : ICommandHandler<T>
+    {
+        RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: false);
     }
 
     /// <summary>
@@ -107,51 +150,178 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     /// </summary>
     /// <typeparam name="T">The command type.</typeparam>
     /// <typeparam name="TH">The command handler type.</typeparam>
-    public void Consume<T, TH>() where T : ICommand where TH : ICommandHandlerLegacy<T>
+    [Obsolete("Consume<T,TH>() uses legacy ICommandHandlerLegacy<T>. Use ConsumeModern<T,TH>() with ICommandHandler<T>. Legacy registration will be removed in a future major release.")]
+    public void Consume<T, TH>()
+        where T : ICommand
+        where TH : ICommandHandlerLegacy<T>
     {
-        string eventName = typeof(T).Name;
-        if (!_handlers.ContainsKey(eventName))
+        RegisterHandler(typeof(T), typeof(TH), usesLegacyContract: true);
+    }
+
+    private void RegisterHandler(Type commandType, Type handlerType, bool usesLegacyContract)
+    {
+        string commandName = commandType.Name;
+        if (!_handlers.ContainsKey(commandName))
         {
-            _handlers.Add(eventName, new KeyValuePair<Type, Type>(typeof(T), typeof(TH)));
+            _handlers.Add(commandName, new CommandHandlerRegistration(commandType, handlerType, usesLegacyContract));
         }
     }
 
-    private void RegisterQueueMessageHandlerAndProcess()
+    private void RegisterQueueMessageHandler()
     {
         _processor.ProcessMessageAsync += async (args) =>
         {
-            string eventName = $"{args.Message.Subject}{COMMAND_SUFFIX}";
+            string eventName = $"{args.Message.Subject}{COMMANDSUFFIX}";
+            using var processingActivity = StartConsumerActivity(args.Message, eventName);
             string messageData = args.Message.Body.ToString();
 
             // Complete the message so that it is not received again.
-            if (await ProcessQueueMessages(eventName, messageData))
+            if (await ProcessQueueMessages(eventName, messageData, args.CancellationToken))
             {
                 await args.CompleteMessageAsync(args.Message);
             }
         };
 
         _processor.ProcessErrorAsync += ExceptionReceivedHandler;
-
-        _processor.StartProcessingAsync().GetAwaiter().GetResult();
     }
 
-    private async Task<bool> ProcessQueueMessages(string eventName, string message)
+    /// <inheritdoc />
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        if (_isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StartProcessingAsync(cancellationToken);
+        _isProcessorStarted = true;
+    }
+
+    /// <inheritdoc />
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (!_isProcessorStarted)
+        {
+            return;
+        }
+
+        await _processor.StopProcessingAsync(cancellationToken);
+        _isProcessorStarted = false;
+    }
+
+    private static void InjectTraceContext(IDictionary<string, object> applicationProperties)
+    {
+        Activity? currentActivity = Activity.Current;
+
+        if (!string.IsNullOrWhiteSpace(currentActivity?.Id) && !applicationProperties.ContainsKey(TraceParentHeader))
+        {
+            applicationProperties[TraceParentHeader] = currentActivity.Id;
+        }
+
+        if (!string.IsNullOrWhiteSpace(currentActivity?.TraceStateString) && !applicationProperties.ContainsKey(TraceStateHeader))
+        {
+            applicationProperties[TraceStateHeader] = currentActivity.TraceStateString;
+        }
+    }
+
+    private Activity? StartProducerActivity(ServiceBusMessage message, string messageType, string operation)
+    {
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "azureservicebus",
+            ["messaging.operation"] = operation,
+            ["messaging.destination.name"] = _options.QueueName,
+            ["messaging.destination_kind"] = "queue",
+            ["messaging.message.id"] = message.MessageId,
+            ["genocs.message.type"] = messageType
+        };
+
+        return ActivitySource.StartActivity($"azureservicebus.{operation}", ActivityKind.Producer, default(ActivityContext), tags);
+    }
+
+    private Activity? StartConsumerActivity(ServiceBusReceivedMessage message, string eventName)
+    {
+        ActivityContext parentContext = default;
+        TryExtractParentContext(message, out parentContext);
+
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "azureservicebus",
+            ["messaging.operation"] = "process",
+            ["messaging.destination.name"] = _options.QueueName,
+            ["messaging.message.id"] = message.MessageId,
+            ["messaging.conversation_id"] = message.CorrelationId,
+            ["genocs.message.type"] = eventName
+        };
+
+        return ActivitySource.StartActivity("azureservicebus.process", ActivityKind.Consumer, parentContext, tags);
+    }
+
+    private static bool TryExtractParentContext(ServiceBusReceivedMessage message, out ActivityContext parentContext)
+    {
+        string? traceParent = TryGetApplicationProperty(message, TraceParentHeader);
+        string? traceState = TryGetApplicationProperty(message, TraceStateHeader);
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            parentContext = default;
+            return false;
+        }
+
+        return ActivityContext.TryParse(traceParent, traceState, out parentContext);
+    }
+
+    private static string? TryGetApplicationProperty(ServiceBusReceivedMessage message, string propertyName)
+    {
+        if (!message.ApplicationProperties.TryGetValue(propertyName, out object? value) || value is null)
+        {
+            return null;
+        }
+
+        return value.ToString();
+    }
+
+    private static void MarkActivityAsError(Activity? activity, Exception exception)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetTag("error.type", exception.GetType().FullName);
+        activity.SetTag("error.message", exception.Message);
+    }
+
+    private async Task<bool> ProcessQueueMessages(string eventName, string message, CancellationToken cancellationToken)
     {
         bool processed = false;
         if (_handlers.ContainsKey(eventName))
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var type = _handlers[eventName];
-                if (type.Key != null && type.Value != null)
+                var registration = _handlers[eventName];
+                object handler = scope.ServiceProvider.GetRequiredService(registration.HandlerType);
+                if (handler != null)
                 {
-                    var handler = scope.ServiceProvider.GetRequiredService(type.Value);
-                    if (handler != null)
+                    object? command = JsonSerializer.Deserialize(message, registration.CommandType);
+                    if (command is null)
                     {
-                        var eventType = type.Key;
-                        var command = JsonSerializer.Deserialize(message, eventType);
-                        var concreteType = typeof(ICommandHandler<>).MakeGenericType(eventType);
-                        await (Task)concreteType.GetMethod("HandleCommand")!.Invoke(handler, new object[] { command! })!;
+                        _logger.LogError("Failed to deserialize message for command '{CommandName}'", eventName);
+                        return false;
+                    }
+
+                    if (registration.UsesLegacyContract)
+                    {
+                        var legacyType = typeof(ICommandHandlerLegacy<>).MakeGenericType(registration.CommandType);
+                        await (Task)legacyType.GetMethod(nameof(ICommandHandlerLegacy<ICommand>.HandleCommand))!
+                            .Invoke(handler, new[] { command })!;
+                    }
+                    else
+                    {
+                        var modernType = typeof(ICommandHandler<>).MakeGenericType(registration.CommandType);
+                        await (Task)modernType.GetMethod(nameof(ICommandHandler<ICommand>.HandleAsync))!
+                            .Invoke(handler, new[] { command, cancellationToken })!;
                     }
                 }
             }
@@ -164,8 +334,12 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
 
     private Task ExceptionReceivedHandler(ProcessErrorEventArgs args)
     {
-        _logger.LogError(args.Exception, "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
-            args.Exception.Message, args.ErrorSource);
+        _logger.LogError(
+            args.Exception,
+            "ERROR handling message: {ErrorMessage} - Source: {ErrorSource}",
+            args.Exception.Message,
+            args.ErrorSource);
+
         return Task.CompletedTask;
     }
 
@@ -174,10 +348,16 @@ public class AzureServiceBusQueue : IAzureServiceBusQueue, IAsyncDisposable
     /// </summary>
     public async ValueTask DisposeAsync()
     {
-        await _processor.StopProcessingAsync();
+        if (_isProcessorStarted)
+        {
+            await StopAsync(CancellationToken.None);
+        }
+
         await _processor.DisposeAsync();
         await _sender.DisposeAsync();
         await _client.DisposeAsync();
         GC.SuppressFinalize(this);
     }
+
+    private sealed record CommandHandlerRegistration(Type CommandType, Type HandlerType, bool UsesLegacyContract);
 }

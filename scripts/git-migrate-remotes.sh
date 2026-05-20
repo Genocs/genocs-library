@@ -83,7 +83,7 @@ EOF
 # Define the load_repositories function
 load_repositories() {
   # Load repository names from REPO_FILE into REPOSITORIES array
-  if [ -z "${REPO_FILE}" ]; then
+  if [[ -z "${REPO_FILE}" ]]; then
     # Fallback to embedded list
     REPOSITORIES=(
       genocs-library
@@ -91,7 +91,7 @@ load_repositories() {
     return 0
   fi
 
-  if [ ! -f "${REPO_FILE}" ]; then
+  if [[ ! -f "${REPO_FILE}" ]]; then
     err "Repository file not found: ${REPO_FILE}"
     exit 1
   fi
@@ -103,13 +103,13 @@ load_repositories() {
     REPOSITORIES=()
     while IFS= read -r line; do
       line="${line%%$'\r'}" # strip CR
-      if [ -n "$line" ] && [ "${line#'#'}" = "$line" ]; then
+      if [[ -n "$line" && "${line#'#'}" = "$line" ]]; then
         REPOSITORIES+=("$line")
       fi
     done < "${REPO_FILE}"
   fi
 
-  if [ ${#REPOSITORIES[@]} -eq 0 ]; then
+  if [[ ${#REPOSITORIES[@]} -eq 0 ]]; then
     err "No repositories loaded from ${REPO_FILE}"
     exit 1
   fi
@@ -117,7 +117,7 @@ load_repositories() {
 
 # Wrapper for executing (possibly mutating) commands respecting dry-run mode
 run_cmd() {
-  if [ "$DRY_RUN" = true ]; then
+  if [[ "$DRY_RUN" = true ]]; then
     printf '[DRY-RUN] %s\n' "$*"
   else
     eval "$@"
@@ -137,9 +137,9 @@ validate_remotes() {
       log "OK: $r"
     fi
   done
-  if [ ${#missing[@]} -gt 0 ]; then
+  if [[ ${#missing[@]} -gt 0 ]]; then
     err "Validation failed for ${#missing[@]} repository(ies)." 
-    if [ "$DRY_RUN" = false ]; then
+    if [[ "$DRY_RUN" = false ]]; then
       exit 2
     fi
   else
@@ -205,7 +205,7 @@ create_repositories() {
     project_id=$(echo "$project_info" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
   echo $project_id
     
-  if [ -z "$project_id" ]; then
+  if [[ -z "$project_id" ]]; then
     err "Failed to extract project ID from response"
     err "Response: $project_info"
     exit 1
@@ -223,7 +223,7 @@ create_repositories() {
   for r in "${REPOSITORIES[@]}"; do
     log "Creating repository: $r"
 
-    if [ "$DRY_RUN" = true ]; then
+    if [[ "$DRY_RUN" = true ]]; then
       log "[DRY-RUN] Would create repository: $r"
       continue
     fi
@@ -255,7 +255,7 @@ create_repositories() {
       
       # Note: This requires a GitHub Personal Access Token (PAT) with appropriate permissions
       # The user should set GITHUB_TOKEN environment variable
-      if [ -z "${GITHUB_TOKEN:-}" ]; then
+      if [[ -z "${GITHUB_TOKEN:-}" ]]; then
         err "GITHUB_TOKEN environment variable not set. Cannot create GitHub repositories."
         err "Please set GITHUB_TOKEN with a Personal Access Token that has repository creation permissions."
         exit 1
@@ -273,7 +273,7 @@ create_repositories() {
     fi
   done
   
-  if [ "$FAILED" = true ]; then
+  if [[ "$FAILED" = true ]]; then
     err "Some repositories failed to be created. Check the errors above."
     exit 1
   fi
@@ -314,13 +314,13 @@ done
 
 shift $((OPTIND-1))
 
-if [ "$CLONE_ONLY" = false ] && [ -z "$NEW_REMOTE_URL" ]; then
+if [[ "$CLONE_ONLY" = false ]] && [[ -z "$NEW_REMOTE_URL" ]]; then
   err "-r NEW_REMOTE_URL is required when not using -p (clone only)."
   usage
   exit 1
 fi
 
-if [ "$CREATE_REPOS" = true ] && [ -z "$NEW_REMOTE_URL" ]; then
+if [[ "$CREATE_REPOS" = true ]] && [[ -z "$NEW_REMOTE_URL" ]]; then
   err "-r NEW_REMOTE_URL is required when using -c (create repositories)."
   usage
   exit 1
@@ -329,8 +329,8 @@ fi
 load_repositories
 
 
-if [ "$VALIDATE" = true ] && [ "$CLONE_ONLY" = false ]; then
-  if [ -z "$NEW_REMOTE_URL" ]; then
+if [[ "$VALIDATE" = true ]] && [[ "$CLONE_ONLY" = false ]]; then
+  if [[ -z "$NEW_REMOTE_URL" ]]; then
     err "Validation (-V) requires -r NEW_REMOTE_URL."
     exit 1
   fi
@@ -338,16 +338,16 @@ if [ "$VALIDATE" = true ] && [ "$CLONE_ONLY" = false ]; then
 fi
 
 # Create repositories if requested
-if [ "$CREATE_REPOS" = true ]; then
+if [[ "$CREATE_REPOS" = true ]]; then
   log "Creating repositories as requested"
   create_repositories
 fi
 
-if [ "$CLONE_ONLY" = true ]; then
+if [[ "$CLONE_ONLY" = true ]]; then
   log "Cloning repositories in parallel as requested... (concurrency=${CLONE_CONCURRENCY})"
   # Strip trailing slash
   CLONE_BASE="${DEFAULT_CLONE_BASE%%/}"
-  if [ "$DRY_RUN" = true ]; then
+  if [[ "$DRY_RUN" = true ]]; then
     for r in "${REPOSITORIES[@]}"; do
       log "[DRY-RUN] git clone \"${CLONE_BASE}/${r}\""
     done
@@ -362,9 +362,9 @@ if [ "$CLONE_ONLY" = true ]; then
       ) &
       
       # Limit concurrency if specified
-      if [ "$CLONE_CONCURRENCY" -gt 0 ]; then
+      if [[ "$CLONE_CONCURRENCY" -gt 0 ]]; then
         # Wait for background jobs to complete if we've reached the limit
-        while [ $(jobs -r | wc -l) -ge "$CLONE_CONCURRENCY" ]; do
+        while [[ $(jobs -r | wc -l) -ge "$CLONE_CONCURRENCY" ]]; do
           sleep 0.1
         done
       fi
@@ -378,7 +378,7 @@ fi
 
 for REPOSITORY in "${REPOSITORIES[@]}"; do
   log "Processing repository as requested: ${REPOSITORY}"
-  if [ ! -d "$REPOSITORY" ]; then
+  if [[ ! -d "$REPOSITORY" ]]; then
     err "Directory $REPOSITORY does not exist. Skipping."
     continue
   fi

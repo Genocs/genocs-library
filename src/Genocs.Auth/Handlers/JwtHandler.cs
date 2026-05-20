@@ -160,8 +160,7 @@ internal sealed class JwtHandler : IJwtHandler
         SecurityTokenDescriptor tokenDescriptor = CreateSecurityTokenDescriptor();
 
         var tokenHandler = new Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler();
-        string token = tokenHandler.CreateToken(tokenDescriptor);
-        return token;
+        return tokenHandler.CreateToken(tokenDescriptor);
     }
 
     /// <summary>
@@ -175,8 +174,8 @@ internal sealed class JwtHandler : IJwtHandler
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.Role, "role")
+                new(ClaimTypes.Name, "username"),
+                new(ClaimTypes.Role, "role")
             }),
             Expires = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), _options.Algorithm)

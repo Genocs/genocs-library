@@ -12,7 +12,7 @@ internal sealed class SagaInitializer : ISagaInitializer
         _repository = repository;
     }
 
-    public async Task<(bool isInitialized, ISagaState state)> TryInitializeAsync<TMessage>(ISaga saga, SagaId id, TMessage _)
+    public async Task<(bool IsInitialized, ISagaState? State)> TryInitializeAsync<TMessage>(ISaga saga, SagaId id, TMessage _)
     {
         var action = (ISagaAction<TMessage>)saga;
         var sagaType = saga.GetType();
@@ -24,14 +24,14 @@ internal sealed class SagaInitializer : ISagaInitializer
         {
             if (action is not ISagaStartAction<TMessage>)
             {
-                return (false, default);
+                return (false, null);
             }
 
             state = CreateSagaState(id, sagaType, dataType);
         }
-        else if (state.State is SagaProcessState.Rejected)
+        else if (state.State is not SagaProcessState.Pending)
         {
-            return (false, default);
+            return (false, null);
         }
 
         InitializeSaga(saga, id, state);
@@ -39,9 +39,9 @@ internal sealed class SagaInitializer : ISagaInitializer
         return (true, state);
     }
 
-    private static ISagaState CreateSagaState(SagaId? id, Type sagaType, Type dataType)
+    private static ISagaState CreateSagaState(SagaId? id, Type sagaType, Type? dataType)
     {
-        var sagaData = dataType != null ? Activator.CreateInstance(dataType) : null;
+        object? sagaData = dataType is not null ? Activator.CreateInstance(dataType) : null;
         return SagaState.Create(id, sagaType, SagaProcessState.Pending, sagaData);
     }
 
@@ -53,7 +53,7 @@ internal sealed class SagaInitializer : ISagaInitializer
         }
         else
         {
-            saga.InvokeGeneric(nameof(ISaga<object>.Initialize), id, state.State, state.Data);
+            saga.InvokeGeneric(nameof(ISaga<>.Initialize), id, state.State, state.Data);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 internal class TreeNode
 {
-    public string? Name { get; set; }
+    public string Name { get; set; }
     public List<TreeNode>? ChildNodes { get; set; }
     public int OrderId { get; set; }
     public bool Valid { get; set; }

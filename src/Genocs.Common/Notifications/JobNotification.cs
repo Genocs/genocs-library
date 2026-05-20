@@ -8,12 +8,26 @@
 /// </summary>
 public class JobNotification : INotificationMessage
 {
+    private string _message = string.Empty;
+    private decimal _progress;
+
     /// <summary>
     /// Gets or sets the message associated with the current instance.
     /// </summary>
-    /// <remarks>This property can be used to provide additional context or information related to the
-    /// instance. It may be null if no message is set.</remarks>
-    public string? Message { get; set; }
+    /// <remarks>Message must be non-empty and non-whitespace.</remarks>
+    public required string Message
+    {
+        get => _message;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("Notification message cannot be null or whitespace.", nameof(value));
+            }
+
+            _message = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the unique identifier for the job.
@@ -23,9 +37,22 @@ public class JobNotification : INotificationMessage
     public string? JobId { get; set; }
 
     /// <summary>
-    /// Gets or sets the progress percentage of the operation, represented as a decimal value between 0 and 100.
+    /// Gets or sets the progress percentage of the operation.
     /// </summary>
-    /// <remarks>The value should be between 0 and 100, where 0 indicates no progress and 100 indicates
-    /// completion. Setting a value outside this range may result in unexpected behavior.</remarks>
-    public decimal Progress { get; set; }
+    /// <remarks>
+    /// Valid range is from 0 to 100, where 0 indicates no progress and 100 indicates completion.
+    /// </remarks>
+    public decimal Progress
+    {
+        get => _progress;
+        set
+        {
+            if (value < 0m || value > 100m)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Progress must be between 0 and 100.");
+            }
+
+            _progress = value;
+        }
+    }
 }

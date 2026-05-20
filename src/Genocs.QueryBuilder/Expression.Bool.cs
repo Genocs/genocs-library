@@ -25,8 +25,6 @@ public static partial class ExpressionBuilder
             propertyExp = Expression.PropertyOrField(propertyExp, member);
         }
 
-        Expression? searchExpression = null;
-
         MethodCallExpression left = Expression.Call(propertyExp, typeof(bool).GetMethod("ToString", Type.EmptyTypes));
         left = Expression.Call(left, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
 
@@ -34,8 +32,7 @@ public static partial class ExpressionBuilder
 
         string searchTerm = searchTerms[0].ToLower();
         Expression rightExpression = Expression.Constant(searchTerm);
-        searchExpression = Expression.Call(left, method, rightExpression);
-
+        Expression? searchExpression = Expression.Call(left, method, rightExpression);
         return searchExpression;
     }
 }

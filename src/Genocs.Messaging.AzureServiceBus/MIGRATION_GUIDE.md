@@ -132,12 +132,16 @@ await using var queue = new AzureServiceBusQueue(options, serviceProvider, logge
 // Automatically disposed at end of scope
 ```
 
-When using dependency injection, register them as singletons and ensure the host disposes them on shutdown:
+When using dependency injection, use the builder extension and ensure queue/topic sections are configured:
 
 ```csharp
-services.AddSingleton<IAzureServiceBusQueue, AzureServiceBusQueue>();
-services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
+IGenocsBuilder genocs = builder
+  .AddGenocs()
+  .AddAzureServiceBus();
 ```
+
+`AddAzureServiceBus()` binds the `azureServiceBusQueue` and `azureServiceBusTopic` sections and registers queue/topic services when their `Enabled` flag is `true`.
+The host now manages processor startup/shutdown asynchronously via `IHostedService`, so no sync-over-async startup calls are required in application code.
 
 ---
 
@@ -154,7 +158,51 @@ services.AddSingleton<IAzureServiceBusTopic, AzureServiceBusTopic>();
    Endpoint=sb://<namespace>.servicebus.windows.net/;SharedAccessKeyName=<key-name>;SharedAccessKey=<key>
    ```
 
-5. **Build and test** your application. The public API of `IAzureServiceBusQueue` and `IAzureServiceBusTopic` interfaces is unchanged — `SendAsync`, `ScheduleAsync`, `Consume`, `PublishAsync`, and `Subscribe` all have the same signatures.
+5. **Migrate handler registrations to modern CQRS contracts**:
+  - Queue consumers: move from `Consume<T, TH>()` with `ICommandHandlerLegacy<T>` to `ConsumeModern<T, TH>()` with `ICommandHandler<T>`.
+  - Topic subscribers: move from `Subscribe<T, TH>()` with `IEventHandlerLegacy<T>` to `SubscribeModern<T, TH>()` with `IEventHandler<T>`.
+
+6. **Build and test** your application. Legacy methods remain available for backward compatibility but are marked obsolete to guide migration.
+
+---
+
+## Handler Contract Migration Plan
+
+`Genocs.Messaging.AzureServiceBus` now supports both modern and legacy handler contracts through an internal adapter path.
+
+Direction and timeline:
+
+- **Now (current release):** both legacy and modern registrations are supported.
+- **Current release policy:** legacy methods are marked obsolete and should only be used for temporary compatibility.
+- **Future major release:** legacy registration methods are planned for removal.
+
+### Queue Consumer Migration
+
+Legacy registration:
+
+```csharp
+queue.Consume<CreateOrderCommand, CreateOrderLegacyHandler>();
+```
+
+Modern registration:
+
+```csharp
+queue.ConsumeModern<CreateOrderCommand, CreateOrderHandler>();
+```
+
+### Topic Subscriber Migration
+
+Legacy registration:
+
+```csharp
+topic.Subscribe<OrderCreatedEvent, OrderCreatedLegacyHandler>();
+```
+
+Modern registration:
+
+```csharp
+topic.SubscribeModern<OrderCreatedEvent, OrderCreatedHandler>();
+```
 
 ---
 

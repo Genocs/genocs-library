@@ -10,19 +10,16 @@
         <PackageTags>genocs core abstractions extensions dependency-injection</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Common\Genocs.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Common" Version="9.0.0-beta001" />
-    </ItemGroup>
-
     <ItemGroup>
-        <PackageReference Include="Spectre.Console" Version="0.54.0" />
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
         <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
         <PackageReference Include="Scrutor" Version="7.0.0" />
+        <PackageReference Include="Spectre.Console" Version="0.55.2" />
     </ItemGroup>
 
     <ItemGroup>

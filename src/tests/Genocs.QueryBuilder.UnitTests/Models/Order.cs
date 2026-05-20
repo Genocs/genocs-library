@@ -29,7 +29,7 @@ public class Order
 
 public class Product
 {
-    public Product(string sKU, string? description, int cost)
+    public Product(string sKU, string description, int cost)
     {
         SKU = sKU;
         Description = description;
@@ -37,7 +37,7 @@ public class Product
     }
 
     public string SKU { get; set; } = default!;
-    public string? Description { get; set; }
+    public string Description { get; set; }
     public int Cost { get; set; }
 
 }

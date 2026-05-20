@@ -1,0 +1,21 @@
+{{- if .Values.demoWebapi.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.demoWebapi.name }}
+  labels:
+    app: {{ .Values.demoWebapi.name }}
+    chart: {{ include "demo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.demoWebapi.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.demoWebapi.name }}
+    release: {{ .Release.Name }}
+{{- end }}

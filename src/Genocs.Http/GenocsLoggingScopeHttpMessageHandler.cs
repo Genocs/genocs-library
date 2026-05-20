@@ -44,11 +44,11 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
             public static readonly EventId PipelineEnd = new(101, "RequestPipelineEnd");
         }
 
-        private static readonly Func<ILogger, HttpMethod, Uri, IDisposable?> _beginRequestPipelineScope =
-            LoggerMessage.DefineScope<HttpMethod, Uri>("Http {HttpMethod} {Uri}");
+        private static readonly Func<ILogger, HttpMethod, string, IDisposable?> _beginRequestPipelineScope =
+            LoggerMessage.DefineScope<HttpMethod, string>("Http {HttpMethod} {Uri}");
 
-        private static readonly Action<ILogger, HttpMethod, Uri, Exception> _requestPipelineStart =
-            LoggerMessage.Define<HttpMethod, Uri>(LogLevel.Information, EventIds.PipelineStart, "Start processing Http request {HttpMethod} {Uri}");
+        private static readonly Action<ILogger, HttpMethod, string, Exception?> _requestPipelineStart =
+            LoggerMessage.Define<HttpMethod, string>(LogLevel.Information, EventIds.PipelineStart, "Start processing Http request {HttpMethod} {Uri}");
 
         private static readonly Action<ILogger, HttpStatusCode, Exception?> _requestPipelineEnd =
             LoggerMessage.Define<HttpStatusCode>(LogLevel.Information, EventIds.PipelineEnd, "End processing Http request - {StatusCode}");
@@ -59,8 +59,8 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
                                                             ISet<string> maskedRequestUrlParts,
                                                             string maskTemplate)
         {
-            var uri = MaskUri(request.RequestUri, maskedRequestUrlParts, maskTemplate);
-            return _beginRequestPipelineScope(logger, request.Method, uri);
+            var uri = BuildLogUri(request.RequestUri, maskedRequestUrlParts, maskTemplate);
+            return _beginRequestPipelineScope(logger, request.Method, uri) ?? NoopDisposableScope.Instance;
         }
 
         public static void RequestPipelineStart(
@@ -69,7 +69,7 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
                                                 ISet<string> maskedRequestUrlParts,
                                                 string maskTemplate)
         {
-            var uri = MaskUri(request.RequestUri, maskedRequestUrlParts, maskTemplate);
+            var uri = BuildLogUri(request.RequestUri, maskedRequestUrlParts, maskTemplate);
             _requestPipelineStart(logger, request.Method, uri, null);
         }
 
@@ -78,21 +78,14 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
             _requestPipelineEnd(logger, response.StatusCode, null);
         }
 
-        private static Uri? MaskUri(Uri? uri, ISet<string> maskedRequestUrlParts, string maskTemplate)
+        private static string BuildLogUri(Uri? uri, ISet<string> maskedRequestUrlParts, string maskTemplate)
         {
-            if (!maskedRequestUrlParts.Any())
+            string requestUri = uri?.OriginalString ?? string.Empty;
+            if (string.IsNullOrEmpty(requestUri) || !maskedRequestUrlParts.Any())
             {
-                return uri;
+                return requestUri;
             }
 
-            string? requestUri = uri?.OriginalString;
-
-            if (string.IsNullOrWhiteSpace(requestUri))
-            {
-                return uri;
-            }
-
-            bool hasMatch = false;
             foreach (string part in maskedRequestUrlParts)
             {
                 if (string.IsNullOrWhiteSpace(part))
@@ -100,16 +93,20 @@ internal sealed class GenocsLoggingScopeHttpMessageHandler : DelegatingHandler
                     continue;
                 }
 
-                if (!requestUri.Contains(part))
-                {
-                    continue;
-                }
-
-                requestUri = requestUri.Replace(part, maskTemplate);
-                hasMatch = true;
+                // Request masking is exact-token replacement for URL rendering only.
+                requestUri = requestUri.Replace(part, maskTemplate, StringComparison.Ordinal);
             }
 
-            return hasMatch ? new Uri(requestUri) : uri;
+            return requestUri;
+        }
+
+        private sealed class NoopDisposableScope : IDisposable
+        {
+            public static readonly NoopDisposableScope Instance = new();
+
+            public void Dispose()
+            {
+            }
         }
     }
 }

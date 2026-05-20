@@ -11,10 +11,7 @@ public class CorrelationContextAccessor : ICorrelationContextAccessor
         set
         {
             var holder = Holder.Value;
-            if (holder != null)
-            {
-                holder.Context = null;
-            }
+            holder?.Context = null;
 
             if (value != null)
             {

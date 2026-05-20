@@ -3,11 +3,6 @@ using Genocs.Common.Domain.Entities;
 using Genocs.Common.Domain.Repositories;
 using Genocs.Core.Domain.Entities;
 
-// using Genocs.Core.Dependency;
-// using Genocs.Core.Domain.Uow;
-// using Genocs.Core.MultiTenancy;
-// using Genocs.Core.Reflection.Extensions;
-
 namespace Genocs.Core.Domain.Repositories;
 
 /// <summary>
@@ -16,29 +11,9 @@ namespace Genocs.Core.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Type of the Entity for this repository.</typeparam>
 /// <typeparam name="TKey">Type of the Primary Key for this repository.</typeparam>
-public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>/*, IUnitOfWorkManagerAccessor */
+public abstract class RepositoryBase<TEntity, TKey> : IQueryableRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
-    /// <summary>
-    /// The multi tenancy side.
-    /// </summary>
-    // public static MultiTenancySides? MultiTenancySide { get; private set; }
-
-    // public IUnitOfWorkManager UnitOfWorkManager { get; set; }
-
-    // public IIocResolver IocResolver { get; set; }
-
-    static RepositoryBase()
-    {
-        /*
-        var attr = typeof (TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
-        if (attr != null)
-        {
-            MultiTenancySide = attr.Side;
-        }
-        */
-    }
-
     public abstract IQueryable<TEntity> GetAll();
 
     public virtual IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
@@ -53,7 +28,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(GetAllList());
+        return GetAllListCoreAsync(cancellationToken);
     }
 
     public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
@@ -62,6 +37,24 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     }
 
     public virtual Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return GetAllListCoreAsync(predicate, cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for repositories that can execute list queries natively asynchronous.
+    /// The default implementation preserves legacy behavior by delegating to synchronous query materialization.
+    /// </summary>
+    protected virtual Task<List<TEntity>> GetAllListCoreAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(GetAllList());
+    }
+
+    /// <summary>
+    /// Async-first extension point for predicate-based list queries.
+    /// The default implementation preserves legacy behavior by delegating to synchronous query materialization.
+    /// </summary>
+    protected virtual Task<List<TEntity>> GetAllListCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(GetAllList(predicate));
     }
@@ -74,13 +67,13 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     public virtual TEntity Get(TKey id)
     {
         var entity = FirstOrDefault(id);
-        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id!);
     }
 
     public virtual async Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default)
     {
-        var entity = await FirstOrDefaultAsync(id, cancellationToken);
-        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id);
+        var entity = await FirstOrDefaultByIdCoreAsync(id, cancellationToken);
+        return entity ?? throw new EntityNotFoundException(typeof(TEntity), id!);
     }
 
     public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
@@ -90,7 +83,7 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(Single(predicate));
+        return SingleCoreAsync(predicate, cancellationToken);
     }
 
     public virtual TEntity? FirstOrDefault(TKey id)
@@ -99,6 +92,15 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     }
 
     public virtual Task<TEntity?> FirstOrDefaultAsync(TKey id, CancellationToken cancellationToken = default)
+    {
+        return FirstOrDefaultByIdCoreAsync(id, cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for key-based lookup.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<TEntity?> FirstOrDefaultByIdCoreAsync(TKey id, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(FirstOrDefault(id));
     }
@@ -110,7 +112,28 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        return FirstOrDefaultCoreAsync(predicate, cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for predicate-based lookup.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<TEntity?> FirstOrDefaultCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
         return Task.FromResult(FirstOrDefault(predicate));
+    }
+
+    /// <summary>
+    /// Gets an entity with the given primary key asynchronously.
+    /// Returns null if not found.
+    /// </summary>
+    /// <param name="id">Primary key of the entity to get.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Entity or null if not found.</returns>
+    public virtual Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    {
+        return FirstOrDefaultAsync(id, cancellationToken);
     }
 
     public virtual TEntity Load(TKey id)
@@ -217,6 +240,15 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
     {
+        return CountCoreAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for counting all entities.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<int> CountCoreAsync(CancellationToken cancellationToken = default)
+    {
         return Task.FromResult(Count());
     }
 
@@ -226,6 +258,15 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     }
 
     public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return CountCoreAsync(predicate, cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for predicate-based count queries.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<int> CountCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Count(predicate));
     }
@@ -237,6 +278,15 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<long> LongCountAsync(CancellationToken cancellationToken = default)
     {
+        return LongCountCoreAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for long counting all entities.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<long> LongCountCoreAsync(CancellationToken cancellationToken = default)
+    {
         return Task.FromResult(LongCount());
     }
 
@@ -247,7 +297,25 @@ public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        return LongCountCoreAsync(predicate, cancellationToken);
+    }
+
+    /// <summary>
+    /// Async-first extension point for predicate-based long count queries.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<long> LongCountCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
         return Task.FromResult(LongCount(predicate));
+    }
+
+    /// <summary>
+    /// Async-first extension point for single-result queries.
+    /// The default implementation preserves legacy behavior by delegating to the synchronous path.
+    /// </summary>
+    protected virtual Task<TEntity> SingleCoreAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(Single(predicate));
     }
 
     protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TKey id)

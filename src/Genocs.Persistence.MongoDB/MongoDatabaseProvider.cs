@@ -1,8 +1,5 @@
 ﻿using Genocs.Persistence.MongoDB.Configurations;
-using Genocs.Persistence.MongoDB.Encryptions;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 
 namespace Genocs.Persistence.MongoDB;
 
@@ -24,36 +21,20 @@ public class MongoDatabaseProvider : IMongoDatabaseProvider
     /// <summary>
     /// Default Constructor.
     /// </summary>
-    /// <param name="options"></param>
-    /// <param name="encrypOptions"></param>
+    /// <param name="mongoClient">DI-registered Mongo client.</param>
+    /// <param name="options">Mongo database options.</param>
     /// <exception cref="NullReferenceException">This exception happens in case mandatory data is missing.</exception>
-    public MongoDatabaseProvider(IOptions<MongoOptions> options, IOptions<MongoEncryptionOptions> encrypOptions)
+    public MongoDatabaseProvider(IMongoClient mongoClient, MongoOptions options)
     {
-        if (options == null) throw new NullReferenceException(nameof(options));
-        MongoOptions dBSettings = options.Value;
+        ArgumentNullException.ThrowIfNull(mongoClient);
+        ArgumentNullException.ThrowIfNull(options);
 
-        if (dBSettings == null) throw new NullReferenceException(nameof(dBSettings));
-
-        if (!MongoOptions.IsValid(dBSettings)) throw new InvalidOperationException($"{nameof(dBSettings)} is invalid");
-
-        MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(dBSettings.ConnectionString);
-
-        if (dBSettings.EnableTracing)
+        if (!MongoOptions.IsValid(options))
         {
-            clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+            throw new InvalidOperationException($"{nameof(options)} is invalid");
         }
 
-        /*
-        if (encrypOptions != null)
-        {
-            AzureInitializer initializer = new AzureInitializer();
-            var autoEncrypOptions = initializer.EncryptionOptions(encrypOptions);
-            clientSettings.AutoEncryptionOptions = autoEncrypOptions;
-        }
-        */
-
-        this.MongoClient = new MongoClient(clientSettings);
-        this.Database = this.MongoClient.GetDatabase(dBSettings.Database);
-
+        this.MongoClient = mongoClient;
+        this.Database = this.MongoClient.GetDatabase(options.Database);
     }
 }

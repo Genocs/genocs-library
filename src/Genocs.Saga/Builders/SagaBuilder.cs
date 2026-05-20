@@ -1,3 +1,4 @@
+using Genocs.Saga.Async;
 using Genocs.Saga.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,18 @@ internal class SagaBuilder : ISagaBuilder
     {
         Services.AddSingleton(typeof(ISagaStateRepository), typeof(InMemorySagaStateRepository));
         Services.AddSingleton(typeof(ISagaLog), typeof(InMemorySagaLog));
+        return this;
+    }
+
+    public ISagaBuilder UseInProcessExecutionLock()
+    {
+        Services.AddSingleton(typeof(ISagaExecutionLock), typeof(InProcessSagaExecutionLock));
+        return this;
+    }
+
+    public ISagaBuilder DisableInProcessExecutionLock()
+    {
+        Services.AddSingleton(typeof(ISagaExecutionLock), typeof(NoOpSagaExecutionLock));
         return this;
     }
 

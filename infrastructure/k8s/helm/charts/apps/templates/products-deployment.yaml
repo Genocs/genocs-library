@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apps.fullname" . }}-products
+  labels:
+    app: products
+    chart: {{ include "apps.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: products
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: products
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: products
+          image: "{{ .Values.products.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.products.service.port }}
+              name: http
+              protocol: TCP
+          env:
+            {{- include "apps.commonEnv" (dict "root" . "consulAddress" .Values.products.consulAddress) | nindent 12 }}
+          {{- include "apps.probes" .Values.products | nindent 10 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}

@@ -1,0 +1,5 @@
+apigateway
+identities-webapi
+products-webapi
+orders-webapi
+notifications-webapi

@@ -10,10 +10,18 @@ public class AggregateRoot<TPrimaryKey>
     : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
 {
     [NotMapped]
-    public virtual List<IEvent>? DomainEvents { get; }
+    public virtual List<IEvent> DomainEvents { get; } = [];
 
-    public AggregateRoot()
+    IReadOnlyCollection<IEvent> IGeneratesDomainEvents.DomainEvents => DomainEvents;
+
+    public void AddDomainEvent(IEvent @event)
     {
-        DomainEvents = [];
+        ArgumentNullException.ThrowIfNull(@event);
+        DomainEvents.Add(@event);
+    }
+
+    public void ClearDomainEvents()
+    {
+        DomainEvents.Clear();
     }
 }

@@ -6,9 +6,9 @@
 public class SearchRequest : ISearchRequest
 {
     /// <summary>
-    /// The search query used for full-text search.
+    /// The search term used for full-text search.
     /// </summary>
-    public string q { get; set; } = string.Empty;
+    public string? SearchTerm { get; set; } = string.Empty;
 
     /// <summary>
     /// The maximum number of items to return.

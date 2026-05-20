@@ -1,0 +1,53 @@
+{{- if .Values.demoMasstransitWebapi.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.demoMasstransitWebapi.name }}
+  labels:
+    app: {{ .Values.demoMasstransitWebapi.name }}
+    chart: {{ include "demo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.demoMasstransitWebapi.name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.demoMasstransitWebapi.name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.demoMasstransitWebapi.name }}
+          image: "{{ .Values.demoMasstransitWebapi.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.demoMasstransitWebapi.containerPort }}
+              name: http
+              protocol: TCP
+          env:
+            {{- include "demo.commonEnv" . | nindent 12 }}
+            {{- include "demo.webapiEnv" .Values.demoMasstransitWebapi | nindent 12 }}
+          {{- include "demo.probes" .Values.demoMasstransitWebapi | nindent 10 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+{{- end }}

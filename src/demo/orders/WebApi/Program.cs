@@ -1,0 +1,88 @@
+﻿using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.CQRS.Queries;
+using Genocs.ServiceDiscovery.Consul;
+using Genocs.Http;
+using Genocs.LoadBalancing.Fabio;
+using Genocs.Logging;
+using Genocs.Messaging.CQRS;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
+using Genocs.Orders.WebApi;
+using Genocs.Orders.WebApi.Commands;
+using Genocs.Orders.WebApi.Domain;
+using Genocs.Orders.WebApi.DTO;
+using Genocs.Orders.WebApi.Events.External;
+using Genocs.Orders.WebApi.Queries;
+using Genocs.Persistence.MongoDB.Extensions;
+using Genocs.Persistence.Redis;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Telemetry;
+using Genocs.WebApi;
+using Genocs.WebApi.CQRS;
+using Genocs.WebApi.OpenApi;
+using Genocs.WebApi.Security;
+using Serilog;
+
+StaticLogger.EnsureInitialized();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host
+        .UseLogging()
+        .UseVault();
+
+IGenocsBuilder gnxBuilder = await builder
+                                    .AddGenocs()
+                                    .AddTelemetry()
+                                    .AddHttpClient()
+                                    .AddConsul()
+                                    .AddFabio()
+                                    .AddErrorHandler<ExceptionToResponseMapper>()
+                                    .AddServices()
+                                    .AddCorrelationContextLogging()
+                                    .AddMongo()
+                                    .AddMongoRepository<Order, Guid>("orders")
+                                    .AddCommandHandlers()
+                                    .AddEventHandlers()
+                                    .AddQueryHandlers()
+                                    .AddInMemoryCommandDispatcher()
+                                    .AddInMemoryEventDispatcher()
+                                    .AddInMemoryQueryDispatcher()
+                                    .AddRedis()
+                                    .AddRabbitMQAsync();
+
+gnxBuilder.AddMessageOutbox(o => o.AddMongo())
+        .AddWebApi()
+        .AddOpenApiDocs();
+
+var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
+
+app.UseGenocs()
+    .UseCorrelationContextLogging()
+    .UseErrorHandler()
+    .UsePrometheus()
+    .UseRouting()
+    .UseCertificateAuthentication()
+    .UseEndpoints(r =>
+    {
+        r.MapControllers();
+        r.MapPrometheus();
+    })
+    .UseOpenApiDocs()
+    .UseRabbitMQ()
+    .SubscribeEvent<DeliveryStarted>();
+
+app.MapDispatcherEndpoints(endpoints => endpoints
+    .Get<GetOrder, OrderDto>("orders/{orderId}")
+    .Post<CreateOrder>("orders", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"orders/{cmd.OrderId}")));
+
+app.MapDefaultEndpoints();
+
+await app.RunAsync();
+
+Log.CloseAndFlush();

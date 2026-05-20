@@ -1,3 +1,5 @@
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Genocs.Core.Builders;
 using Genocs.Messaging.RabbitMQ.Clients;
 using Genocs.Messaging.RabbitMQ.Contexts;
@@ -11,9 +13,8 @@ using Genocs.Messaging.RabbitMQ.Subscribers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using RabbitMQ.Client;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Genocs.Messaging.RabbitMQ;
 
@@ -59,11 +60,9 @@ public static class Extensions
             throw new ArgumentException("RabbitMQ hostnames are not specified.", nameof(options.HostNames));
         }
 
-        ILogger<IRabbitMQClient> logger;
-        using (var serviceProvider = builder.Services.BuildServiceProvider())
-        {
-            logger = serviceProvider.GetRequiredService<ILogger<IRabbitMQClient>>();
-        }
+        // Do not build a temporary service provider during registration.
+        // Runtime components resolve their own typed loggers from the final container.
+        ILogger<IRabbitMQClient> logger = NullLogger<IRabbitMQClient>.Instance;
 
         builder.Services.AddSingleton<IContextProvider, ContextProvider>();
         builder.Services.AddSingleton<ICorrelationContextAccessor>(new CorrelationContextAccessor());
@@ -128,10 +127,7 @@ public static class Extensions
         return builder;
     }
 
-    private static void ConfigureSsl(
-                                    ConnectionFactory connectionFactory,
-                                    RabbitMQOptions options,
-                                    ILogger<IRabbitMQClient> logger)
+    private static void ConfigureSsl(ConnectionFactory connectionFactory, RabbitMQOptions options, ILogger<IRabbitMQClient> logger)
     {
         if (options.Ssl is null || string.IsNullOrWhiteSpace(options.Ssl.ServerName))
         {
@@ -139,10 +135,7 @@ public static class Extensions
             return;
         }
 
-        connectionFactory.Ssl = new SslOption(
-                                              options.Ssl.ServerName,
-                                              options.Ssl.CertificatePath,
-                                              options.Ssl.Enabled);
+        connectionFactory.Ssl = new SslOption(options.Ssl.ServerName, options.Ssl.CertificatePath, options.Ssl.Enabled);
 
         logger.LogDebug($"RabbitMQ SSL is: {(options.Ssl.Enabled ? "enabled" : "disabled")}, " +
                         $"server: '{options.Ssl.ServerName}', client certificate: '{options.Ssl.CertificatePath}', " +

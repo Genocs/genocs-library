@@ -13,7 +13,7 @@ public class LoggerOptions
     /// <summary>
     /// It defines whether the section is enabled or not.
     /// </summary>
-    public bool Enabled { get; set; }
+    public bool Enabled { get; set; } = true;
 
     public string? Level { get; set; }
 
@@ -41,12 +41,23 @@ public class LoggerOptions
     public AzureOptions? Azure { get; set; }
 
     /// <summary>
-    /// MongoDB logging settings.
+    /// Optional HTTP payload capture settings.
     /// </summary>
-    public MongoOptions? Mongo { get; set; }
+    public HttpPayloadOptions? HttpPayload { get; set; }
 
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
+
+    /// <summary>
+    /// Request paths to exclude from logging. Each entry is matched as a suffix against the
+    /// <c>RequestPath</c> property (e.g. <c>/health</c> excludes any path ending with <c>/health</c>).
+    /// </summary>
     public IEnumerable<string>? ExcludePaths { get; set; }
+
+    /// <summary>
+    /// Log property names to exclude from emitted events. Each entry is matched by exact property
+    /// name; events containing a property with that name are filtered out entirely.
+    /// </summary>
     public IEnumerable<string>? ExcludeProperties { get; set; }
+
     public IDictionary<string, object>? Tags { get; set; }
 }

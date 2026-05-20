@@ -1,11 +1,11 @@
+using System;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Events;
 using Genocs.Core.Builders;
 using Genocs.Logging.CQRS.Decorators;
 using Microsoft.Extensions.DependencyInjection;
-using Scrutor;
 
 namespace Genocs.Logging.CQRS;
 
@@ -19,36 +19,39 @@ public static class Extensions
 
     private static IGenocsBuilder AddHandlerLogging(this IGenocsBuilder builder, Type handlerType, Type decoratorType, Assembly? assembly = null)
     {
-        assembly ??= Assembly.GetCallingAssembly();
+        assembly ??= ResolveDefaultAssembly();
 
-        var handlers = assembly
-            .GetTypes()
-            .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType))
+        var handlerContracts = assembly
+            .DefinedTypes
+            .Where(t => !t.IsAbstract && !t.IsInterface)
+            .SelectMany(t => t.ImplementedInterfaces)
+            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType)
+            .Distinct()
             .ToList();
 
-        handlers.ForEach(ch => GetExtensionMethods()
-            .FirstOrDefault(mi => !mi.IsGenericMethod && mi.Name == "TryDecorate")?
-            .Invoke(builder.Services,
-            [
-                builder.Services,
-                ch.GetInterfaces().FirstOrDefault(),
-                decoratorType.MakeGenericType(ch.GetInterfaces().FirstOrDefault()?.GenericTypeArguments.First())
-            ]));
+        foreach (var handlerContract in handlerContracts)
+        {
+            var messageType = handlerContract.GenericTypeArguments.SingleOrDefault();
+            if (messageType is null)
+            {
+                continue;
+            }
+
+            var closedDecoratorType = decoratorType.MakeGenericType(messageType);
+            builder.Services.TryDecorate(handlerContract, closedDecoratorType);
+        }
 
         return builder;
     }
 
-    private static IEnumerable<MethodInfo> GetExtensionMethods()
+    private static Assembly ResolveDefaultAssembly()
     {
-        var types = typeof(ReplacementBehavior).Assembly.GetTypes();
+        var entryAssembly = Assembly.GetEntryAssembly();
+        if (entryAssembly?.IsDynamic == false)
+        {
+            return entryAssembly;
+        }
 
-        var query = from type in types
-                    where type.IsSealed && !type.IsGenericType && !type.IsNested
-                    from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                    where method.IsDefined(typeof(ExtensionAttribute), false)
-                    where method.GetParameters()[0].ParameterType == typeof(IServiceCollection)
-                    select method;
-
-        return query;
+        return Assembly.GetCallingAssembly();
     }
 }

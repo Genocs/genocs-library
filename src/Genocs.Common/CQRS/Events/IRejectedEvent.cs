@@ -1,3 +1,5 @@
+using Genocs.Common.Types;
+
 namespace Genocs.Common.CQRS.Events;
 
 /// <summary>
@@ -14,4 +16,9 @@ public interface IRejectedEvent : IEvent
     /// The code representing the rejection.
     /// </summary>
     string Code { get; }
+
+    /// <summary>
+    /// Structured error representation aligned with the shared Result/Error primitives.
+    /// </summary>
+    Error Error => new(Code, Reason);
 }

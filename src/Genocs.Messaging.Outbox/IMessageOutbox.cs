@@ -10,13 +10,13 @@ public interface IMessageOutbox
     Task HandleAsync(string messageId, Func<Task> handler, CancellationToken cancellationToken = default);
 
     Task SendAsync<T>(
-                        T message,
-                        string? originatedMessageId = null,
-                        string? messageId = null,
-                        string? correlationId = null,
-                        string? spanContext = null,
-                        object? messageContext = null,
-                        IDictionary<string, object>? headers = null,
-                        CancellationToken cancellationToken = default)
-        where T : class;
+        T message,
+        string? originatedMessageId = null,
+        string? messageId = null,
+        string? correlationId = null,
+        string? spanContext = null,
+        object? messageContext = null,
+        IDictionary<string, object?>? headers = null,
+        CancellationToken cancellationToken = default)
+            where T : class;
 }

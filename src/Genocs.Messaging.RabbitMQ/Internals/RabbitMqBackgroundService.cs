@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,6 +17,7 @@ namespace Genocs.Messaging.RabbitMQ.Internals;
 
 internal sealed class RabbitMqBackgroundService : BackgroundService
 {
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.RabbitMQ");
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -46,6 +48,10 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private readonly RabbitMQOptions _options;
     private readonly RabbitMQOptions.QosOptions _qosOptions;
     private readonly bool _requeueFailedMessages;
+    private readonly string _spanContextHeader;
+
+    private const string TraceParentHeader = "traceparent";
+    private const string TraceStateHeader = "tracestate";
 
     public RabbitMqBackgroundService(IServiceProvider serviceProvider)
     {
@@ -68,6 +74,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _retryInterval = _options.RetryInterval > 0 ? _options.RetryInterval : 2;
         _qosOptions = _options.Qos ?? new RabbitMQOptions.QosOptions();
         _requeueFailedMessages = _options.RequeueFailedMessages;
+        _spanContextHeader = _options.GetSpanContextHeader();
         if (_qosOptions.PrefetchCount < 1)
         {
             _qosOptions.PrefetchCount = 1;
@@ -142,11 +149,12 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         bool exclusive = _options.Queue?.Exclusive ?? false;
         bool autoDelete = _options.Queue?.AutoDelete ?? false;
 
-        var deadLetterEnabled = _options.DeadLetter?.Enabled is true;
-        var deadLetterExchange = deadLetterEnabled
+        bool deadLetterEnabled = _options.DeadLetter?.Enabled is true;
+        string deadLetterExchange = deadLetterEnabled
             ? $"{_options.DeadLetter.Prefix}{_options.Exchange.Name}{_options.DeadLetter.Suffix}"
             : string.Empty;
-        var deadLetterQueue = deadLetterEnabled
+
+        string deadLetterQueue = deadLetterEnabled
             ? $"{_options.DeadLetter.Prefix}{conventions.Queue}{_options.DeadLetter.Suffix}"
             : string.Empty;
 
@@ -161,10 +169,10 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             var queueArguments = deadLetterEnabled
                 ? new Dictionary<string, object>
                 {
-                    {"x-dead-letter-exchange", deadLetterExchange},
-                    {"x-dead-letter-routing-key", deadLetterQueue},
+                    { "x-dead-letter-exchange", deadLetterExchange},
+                    { "x-dead-letter-routing-key", deadLetterQueue},
                 }
-                : new Dictionary<string, object>();
+                : [];
 
             await channel.QueueDeclareAsync(conventions.Queue, durable, exclusive, autoDelete, queueArguments);
         }
@@ -176,7 +184,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         {
             if (_options.DeadLetter.Declare)
             {
-                var ttl = _options.DeadLetter.Ttl.HasValue
+                int? ttl = _options.DeadLetter.Ttl.HasValue
                     ? _options.DeadLetter.Ttl <= 0 ? 86400000 : _options.DeadLetter.Ttl
                     : null;
 
@@ -208,45 +216,125 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (_, args) =>
         {
+            using var processingActivity = StartConsumerActivity(args, messageSubscriber, conventions);
+
             try
             {
                 using var scope = _serviceProvider.CreateScope();
 
-                var messageId = args.BasicProperties.MessageId;
-                var correlationId = args.BasicProperties.CorrelationId;
-                var timestamp = args.BasicProperties.Timestamp.UnixTime;
-                var message = _rabbitMqSerializer.Deserialize(args.Body.Span, messageSubscriber.Type);
+                string? messageId = args.BasicProperties.MessageId;
+                string? correlationId = args.BasicProperties.CorrelationId;
+                long timestamp = args.BasicProperties.Timestamp.UnixTime;
+                object? message = _rabbitMqSerializer.Deserialize(args.Body.Span, messageSubscriber.Type);
 
                 if (_loggerEnabled)
                 {
-                    var messagePayload = _logMessagePayload ? Encoding.UTF8.GetString(args.Body.Span) : string.Empty;
+                    string messagePayload = _logMessagePayload ? Encoding.UTF8.GetString(args.Body.Span) : string.Empty;
+
                     _logger.LogInformation(
                         "Received a message with ID: '{MessageId}', " +
                                            "Correlation ID: '{CorrelationId}', timestamp: {Timestamp}, " +
                                            "queue: {Queue}, routing key: {RoutingKey}, exchange: {Exchange}, payload: {MessagePayload}",
-                        messageId, correlationId, timestamp, conventions.Queue, conventions.RoutingKey, conventions.Exchange, messagePayload);
+                        messageId,
+                        correlationId,
+                        timestamp,
+                        conventions.Queue,
+                        conventions.RoutingKey,
+                        conventions.Exchange,
+                        messagePayload);
                 }
 
-                var correlationContext = BuildCorrelationContext(scope, args);
+                object correlationContext = BuildCorrelationContext(scope, args);
 
                 Task Next(object m, object ctx, BasicDeliverEventArgs a)
-                    => TryHandleAsync(channel, m, messageId, correlationId, ctx, a,
-                        messageSubscriber.Handle, deadLetterEnabled);
+                    => TryHandleAsync(channel, m, messageId, correlationId, ctx, a, messageSubscriber.Handle, scope.ServiceProvider, deadLetterEnabled);
 
                 await _pluginsExecutor.ExecuteAsync(Next, message, correlationContext, args);
             }
             catch (Exception ex)
             {
+                MarkActivityAsError(processingActivity, ex);
                 _logger.LogError(ex, ex.Message);
                 await channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
-                await Task.Yield();
             }
         };
 
         await channel.BasicConsumeAsync(conventions.Queue, false, consumer);
     }
 
-    private object BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
+    private Activity? StartConsumerActivity(BasicDeliverEventArgs args, IMessageSubscriber messageSubscriber, IConventions conventions)
+    {
+        ActivityContext parentContext = default;
+        TryExtractParentContext(args.BasicProperties.Headers, out parentContext);
+
+        var tags = new ActivityTagsCollection
+        {
+            ["messaging.system"] = "rabbitmq",
+            ["messaging.operation"] = "process",
+            ["messaging.destination.name"] = conventions.Exchange,
+            ["messaging.rabbitmq.routing_key"] = conventions.RoutingKey,
+            ["messaging.message.id"] = args.BasicProperties.MessageId,
+            ["messaging.conversation_id"] = args.BasicProperties.CorrelationId,
+            ["messaging.destination_kind"] = "queue",
+            ["genocs.message.type"] = messageSubscriber.Type.Name
+        };
+
+        return ActivitySource.StartActivity("rabbitmq.process", ActivityKind.Consumer, parentContext, tags);
+    }
+
+    private bool TryExtractParentContext(IDictionary<string, object>? headers, out ActivityContext parentContext)
+    {
+        string? traceParent = TryGetHeaderValue(headers, TraceParentHeader);
+        string? traceState = TryGetHeaderValue(headers, TraceStateHeader);
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            traceParent = TryGetHeaderValue(headers, _spanContextHeader);
+        }
+
+        if (string.IsNullOrWhiteSpace(traceParent))
+        {
+            parentContext = default;
+            return false;
+        }
+
+        return ActivityContext.TryParse(traceParent, traceState, out parentContext);
+    }
+
+    private static string? TryGetHeaderValue(IDictionary<string, object>? headers, string headerName)
+    {
+        if (headers is null || string.IsNullOrWhiteSpace(headerName))
+        {
+            return null;
+        }
+
+        if (!headers.TryGetValue(headerName, out object? value) || value is null)
+        {
+            return null;
+        }
+
+        return value switch
+        {
+            byte[] bytes => Encoding.UTF8.GetString(bytes),
+            ReadOnlyMemory<byte> memory => Encoding.UTF8.GetString(memory.Span),
+            string text => text,
+            _ => value.ToString()
+        };
+    }
+
+    private static void MarkActivityAsError(Activity? activity, Exception exception)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+        activity.SetTag("error.type", exception.GetType().FullName);
+        activity.SetTag("error.message", exception.Message);
+    }
+
+    private object? BuildCorrelationContext(IServiceScope scope, BasicDeliverEventArgs args)
     {
         var messagePropertiesAccessor = scope.ServiceProvider.GetRequiredService<IMessagePropertiesAccessor>();
         messagePropertiesAccessor.MessageProperties = new MessageProperties
@@ -257,7 +345,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             Headers = args.BasicProperties.Headers
         };
         var correlationContextAccessor = scope.ServiceProvider.GetRequiredService<ICorrelationContextAccessor>();
-        var correlationContext = _contextProvider.Get(args.BasicProperties.Headers);
+        object? correlationContext = _contextProvider.Get(args.BasicProperties.Headers);
         correlationContextAccessor.CorrelationContext = correlationContext;
 
         return correlationContext;
@@ -271,10 +359,11 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                                         object messageContext,
                                         BasicDeliverEventArgs args,
                                         Func<IServiceProvider, object, object, Task> handle,
+                                        IServiceProvider scopedServiceProvider,
                                         bool deadLetterEnabled)
     {
         int currentRetry = 0;
-        string? messageName = message.GetType().Name.Underscore();
+        string messageName = message.GetType().Name.Underscore();
         var retryPolicy = Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(_retries, _ => TimeSpan.FromSeconds(_retryInterval));
@@ -285,14 +374,17 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             {
                 if (_loggerEnabled)
                 {
-                    _logger.LogInformation("Handling a message: {MessageName} with ID: {MessageId}, " +
-                                           "Correlation ID: {CorrelationId}, retry: {MessageRetry}",
-                        messageName, messageId, correlationId, currentRetry);
+                    _logger.LogInformation(
+                        "Handling a message: {MessageName} with ID: {MessageId}, Correlation ID: {CorrelationId}, retry: {MessageRetry}",
+                        messageName,
+                        messageId,
+                        correlationId,
+                        currentRetry);
                 }
 
                 if (_options.MessageProcessingTimeout.HasValue)
                 {
-                    var task = handle(_serviceProvider, message, messageContext);
+                    var task = handle(scopedServiceProvider, message, messageContext);
                     var result = await Task.WhenAny(task, Task.Delay(_options.MessageProcessingTimeout.Value));
                     if (result != task)
                     {
@@ -301,11 +393,10 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 }
                 else
                 {
-                    await handle(_serviceProvider, message, messageContext);
+                    await handle(scopedServiceProvider, message, messageContext);
                 }
 
-                channel.BasicAckAsync(args.DeliveryTag, false);
-                await Task.Yield();
+                await channel.BasicAckAsync(args.DeliveryTag, false);
 
                 if (_loggerEnabled)
                 {
@@ -320,11 +411,11 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
             }
             catch (Exception ex)
             {
+                MarkActivityAsError(Activity.Current, ex);
                 _logger.LogError(ex, ex.Message);
                 if (ex is RabbitMqMessageProcessingTimeoutException)
                 {
-                    channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
-                    await Task.Yield();
+                    await channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
                     return;
                 }
 
@@ -344,29 +435,38 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                 if (failedMessage?.Message is not null && (!failedMessage.ShouldRetry || !hasNextRetry))
                 {
-                    var failedMessageName = failedMessage.Message.GetType().Name.Underscore();
-                    var failedMessageId = Guid.NewGuid().ToString("N");
-                    await _publisher.PublishAsync(failedMessage.Message, failedMessageId, correlationId,
+                    string? failedMessageName = failedMessage.Message.GetType().Name.Underscore();
+                    string? failedMessageId = Guid.NewGuid().ToString("N");
+
+                    await _publisher.PublishAsync(
+                        failedMessage.Message,
+                        failedMessageId,
+                        correlationId,
                         messageContext: messageContext);
+
                     _logger.LogError(ex, ex.Message);
+
                     if (_loggerEnabled)
                     {
-                        _logger.LogWarning("Published a failed messaged: {FailedMessageName} with ID: {FailedMessageId}, " +
-                                           "Correlation ID: {CorrelationId}, for the message: {MessageName} with ID: {MessageId}",
-                            failedMessageName, failedMessageId, correlationId, messageName, messageId);
+                        _logger.LogWarning(
+                            "Published a failed messaged: {FailedMessageName} with ID: {FailedMessageId}, Correlation ID: {CorrelationId}, for the message: {MessageName} with ID: {MessageId}",
+                            failedMessageName,
+                            failedMessageId,
+                            correlationId,
+                            messageName,
+                            messageId);
                     }
 
                     if (!deadLetterEnabled || !failedMessage.MoveToDeadLetter)
                     {
-                        channel.BasicAckAsync(args.DeliveryTag, false);
-                        await Task.Yield();
+                        await channel.BasicAckAsync(args.DeliveryTag, false);
                         return;
                     }
                 }
 
                 if (failedMessage is null || failedMessage.ShouldRetry)
                 {
-                    var errorMessage = $"Unable to handle a message: '{messageName}' with ID: '{messageId}', " +
+                    string? errorMessage = $"Unable to handle a message: '{messageName}' with ID: '{messageId}', " +
                                        $"Correlation ID: '{correlationId}', retry {currentRetry}/{_retries}...";
 
                     _logger.LogError(errorMessage);
@@ -377,13 +477,15 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                     }
                 }
 
-                _logger.LogError("Handling a message: {MessageName} with ID: {MessageId}, Correlation ID: " +
-                                 "{CorrelationId} failed", messageName, messageId, correlationId);
+                _logger.LogError(
+                    "Handling a message: {MessageName} with ID: {MessageId}, Correlation ID: {CorrelationId} failed",
+                    messageName,
+                    messageId,
+                    correlationId);
 
                 if (failedMessage is not null && !failedMessage.MoveToDeadLetter)
                 {
-                    channel.BasicAckAsync(args.DeliveryTag, false);
-                    await Task.Yield();
+                    await channel.BasicAckAsync(args.DeliveryTag, false);
                     return;
                 }
 
@@ -397,8 +499,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                         correlationId);
                 }
 
-                channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
-                await Task.Yield();
+                await channel.BasicNackAsync(args.DeliveryTag, false, _requeueFailedMessages);
             }
         });
     }

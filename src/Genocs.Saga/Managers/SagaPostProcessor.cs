@@ -1,18 +1,18 @@
-using Genocs.Saga.Utils;
-
 namespace Genocs.Saga.Managers;
 
 internal sealed class SagaPostProcessor : ISagaPostProcessor
 {
-    private readonly ISagaLog _log;
+    private readonly ISagaCompensationManager _compensationManager;
 
-    public SagaPostProcessor(ISagaLog log)
-    {
-        _log = log;
-    }
+    public SagaPostProcessor(ISagaCompensationManager compensationManager)
+        => _compensationManager = compensationManager;
 
-    public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaContext context,
-        Func<TMessage, ISagaContext, Task> onCompleted, Func<TMessage, ISagaContext, Task> onRejected)
+    public async Task ProcessAsync<TMessage>(
+        ISaga saga,
+        TMessage message,
+        ISagaContext context,
+        Func<TMessage, ISagaContext, Task> onCompleted,
+        Func<TMessage, ISagaContext, Task> onRejected)
     {
         var sagaType = saga.GetType();
 
@@ -28,16 +28,6 @@ internal sealed class SagaPostProcessor : ISagaPostProcessor
         }
     }
 
-    private async Task CompensateAsync(ISaga saga, Type sagaType, ISagaContext context)
-    {
-        var sagaLogs = await _log.ReadAsync(saga.Id, sagaType);
-        sagaLogs.OrderByDescending(l => l.CreatedAt)
-            .Select(l => l.Message)
-            .ToList()
-            .ForEach(async message =>
-            {
-                await ((Task)saga.InvokeGeneric(nameof(ISagaAction<object>.CompensateAsync), message, context))
-                    .ConfigureAwait(false);
-            });
-    }
+    private Task CompensateAsync(ISaga saga, Type sagaType, ISagaContext context)
+        => _compensationManager.CompensateAsync(saga, context);
 }

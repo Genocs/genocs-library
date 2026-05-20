@@ -37,7 +37,7 @@ public class RabbitMqExchangeInitializer : IInitializer
         await using var channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
         if (_options.Exchange?.Declare == true)
         {
-            Log(_options.Exchange.Name, _options.Exchange.Type);
+            Log(_options.Exchange?.Name, _options.Exchange?.Type);
 
             await channel.ExchangeDeclareAsync(
                                                 _options.Exchange.Name,
@@ -57,7 +57,7 @@ public class RabbitMqExchangeInitializer : IInitializer
             }
         }
 
-        foreach (string? exchange in exchanges)
+        foreach (string exchange in exchanges)
         {
             if (string.IsNullOrWhiteSpace(exchange)) continue;
 
@@ -73,7 +73,7 @@ public class RabbitMqExchangeInitializer : IInitializer
         await channel.CloseAsync(cancellationToken: cancellationToken);
     }
 
-    private void Log(string exchange, string type)
+    private void Log(string? exchange, string? type)
     {
         if (!_loggerEnabled)
         {

@@ -10,6 +10,13 @@
         <PackageTags>genocs saga orchestration workflow distributed-transactions</PackageTags>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
+        <PackageReference Include="Scrutor" Version="7.0.0" />
+    </ItemGroup>
+
     <!-- InternalsVisibleTo for unit tests -->
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
@@ -17,8 +24,4 @@
         </AssemblyAttribute>
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
-        <PackageReference Include="Scrutor" Version="7.0.0" />
-    </ItemGroup>
 </Project>

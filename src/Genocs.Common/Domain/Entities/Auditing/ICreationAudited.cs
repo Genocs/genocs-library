@@ -2,7 +2,7 @@ namespace Genocs.Common.Domain.Entities.Auditing;
 
 /// <summary>
 /// This interface is implemented by entities that is wanted to store creation information (who and when created).
-/// Creation time and creator user are automatically set when saving <see cref="Entity"/> to database.
+/// Creation time and creator user are automatically set when saving an <see cref="IEntity"/> instance.
 /// </summary>
 public interface ICreationAudited : IHasCreationTime
 {

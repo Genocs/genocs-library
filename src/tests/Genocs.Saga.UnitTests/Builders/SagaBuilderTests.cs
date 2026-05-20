@@ -1,4 +1,5 @@
 using Genocs.Saga.Builders;
+using Genocs.Saga.Async;
 using Genocs.Saga.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -52,6 +53,28 @@ public class SagaBuilderTests
             sd.Lifetime == ServiceLifetime.Transient);
     }
 
+    [Fact]
+    public void UseInProcessExecutionLock_Registers_InProcessSagaExecutionLock_As_Singleton()
+    {
+        _builder.UseInProcessExecutionLock();
+
+        _services.ShouldContain(sd =>
+            sd.ServiceType == typeof(ISagaExecutionLock) &&
+            sd.ImplementationType == typeof(InProcessSagaExecutionLock) &&
+            sd.Lifetime == ServiceLifetime.Singleton);
+    }
+
+    [Fact]
+    public void DisableInProcessExecutionLock_Registers_NoOpSagaExecutionLock_As_Singleton()
+    {
+        _builder.DisableInProcessExecutionLock();
+
+        _services.ShouldContain(sd =>
+            sd.ServiceType == typeof(ISagaExecutionLock) &&
+            sd.ImplementationType == typeof(NoOpSagaExecutionLock) &&
+            sd.Lifetime == ServiceLifetime.Singleton);
+    }
+
     #region ARRANGE
 
     private readonly IServiceCollection _services;
@@ -74,11 +97,16 @@ public class SagaBuilderTests
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateOutcomeAsync(SagaId id, Type type, string entryId, SagaLogEntryOutcome outcome)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class MySagaStateRepository : ISagaStateRepository
     {
-        public Task<ISagaState> ReadAsync(SagaId id, Type type)
+        public Task<ISagaState?> ReadAsync(SagaId id, Type type)
         {
             throw new NotImplementedException();
         }

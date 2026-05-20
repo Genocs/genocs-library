@@ -8,12 +8,12 @@ namespace Genocs.QueryBuilder;
 public class DynamicQueryBuilder
 {
     #region Private static members
-    private static readonly string AndOperator = " and ";
-    private static readonly string OrOperator = " or ";
-    private static readonly string GtOperator = " gt ";
-    private static readonly string LtOperator = " lt ";
-    private static readonly string GtEOperator = " gte ";
-    private static readonly string LtEOperator = " lte ";
+    private const string AndOperator = " and ";
+    private const string OrOperator = " or ";
+    private const string GtOperator = " gt ";
+    private const string LtOperator = " lt ";
+    private const string GtEOperator = " gte ";
+    private const string LtEOperator = " lte ";
 
     // private static readonly string NotOperator = " not ";
 
@@ -68,30 +68,15 @@ public class DynamicQueryBuilder
     {
         string[] results = searchItem.PropertyValue.Split(StringSeparators, StringSplitOptions.RemoveEmptyEntries);
         var operatorIndexes = GetListOfSortedOperatorIndexes(searchItem.PropertyValue);
-
-        Expression expression;
-        switch (searchItem.PropertyType.ToLower().Trim())
+        var expression = searchItem.PropertyType.ToLower().Trim() switch
         {
-            case "string":
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionString<TSource>(results, searchItem.PropertyValue, searchItem.PropertyName, operatorIndexes, pe, searchItem.ParentCanBeNull);
-                break;
-            case "int":
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionInt<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe);
-                break;
-            case "numeric":
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionNumeric<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe);
-                break;
-            case "date":
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionDate<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe);
-                break;
-            case "bool":
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionBool<TSource>(results, searchItem.PropertyName, pe);
-                break;
-            default:
-                expression = QueryBuilder.ExpressionBuilder.GetExpressionString<TSource>(results, searchItem.PropertyValue, searchItem.PropertyName, operatorIndexes, pe, searchItem.ParentCanBeNull);
-                break;
-        }
-
+            "string" => QueryBuilder.ExpressionBuilder.GetExpressionString<TSource>(results, searchItem.PropertyValue, searchItem.PropertyName, operatorIndexes, pe, searchItem.ParentCanBeNull),
+            "int" => QueryBuilder.ExpressionBuilder.GetExpressionInt<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe),
+            "numeric" => QueryBuilder.ExpressionBuilder.GetExpressionNumeric<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe),
+            "date" => QueryBuilder.ExpressionBuilder.GetExpressionDate<TSource>(results, searchItem.PropertyName, searchItem.OperatorType, pe),
+            "bool" => QueryBuilder.ExpressionBuilder.GetExpressionBool<TSource>(results, searchItem.PropertyName, pe),
+            _ => QueryBuilder.ExpressionBuilder.GetExpressionString<TSource>(results, searchItem.PropertyValue, searchItem.PropertyName, operatorIndexes, pe, searchItem.ParentCanBeNull),
+        };
         return expression;
 
     }
@@ -106,7 +91,7 @@ public class DynamicQueryBuilder
         input = input.ToLower();
         string[] result = input.Split(StringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-        List<OperatorIndexes> operatorIndexes = new List<OperatorIndexes>();
+        List<OperatorIndexes> operatorIndexes = [];
         var andOperatorIndexes = AllIndexesOf(input, StringSeparators[0]);
         var orOperatorIndexes = AllIndexesOf(input, StringSeparators[1]);
 
@@ -142,7 +127,7 @@ public class DynamicQueryBuilder
             throw new ArgumentException("the string to find may not be empty", "value");
         }
 
-        List<OperatorIndexes> indexes = new List<OperatorIndexes>();
+        List<OperatorIndexes> indexes = [];
         for (int index = 0; ; index += value.Length)
         {
             index = str.IndexOf(value, index);

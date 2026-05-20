@@ -31,15 +31,12 @@ public static class Extensions
     /// <param name="keyValuePath">The key value path.</param>
     /// <param name="sectionName">The section name.</param>
     /// <returns>The updated host builder for chaining.</returns>
-    public static IHostBuilder UseVault(
-                                        this IHostBuilder builder,
-                                        string? keyValuePath = null,
-                                        string sectionName = SectionName)
+    public static IHostBuilder UseVault(this IHostBuilder builder, string? keyValuePath = null, string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
+                HashicorpKeyVaultOptions options = ctx.Configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -55,15 +52,12 @@ public static class Extensions
     /// <param name="keyValuePath">The key value path.</param>
     /// <param name="sectionName">The section name.</param>
     /// <returns>The updated host builder for chaining.</returns>
-    public static IWebHostBuilder UseVault(
-                                           this IWebHostBuilder builder,
-                                           string? keyValuePath = null,
-                                           string sectionName = SectionName)
+    public static IWebHostBuilder UseVault(this IWebHostBuilder builder, string? keyValuePath = null, string sectionName = SectionName)
         => builder.ConfigureServices(services => services.AddVault(sectionName))
             .ConfigureAppConfiguration((ctx, cfg) =>
             {
                 // TODO Test
-                VaultOptions options = ctx.Configuration.GetOptions<VaultOptions>(sectionName);
+                HashicorpKeyVaultOptions options = ctx.Configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
                 if (!options.Enabled)
                 {
                     return;
@@ -72,7 +66,7 @@ public static class Extensions
                 cfg.AddVaultAsync(options, keyValuePath).GetAwaiter().GetResult();
             });
 
-    private static IServiceCollection AddVault(this IServiceCollection services, string? sectionName)
+    private static IServiceCollection AddVault(this IServiceCollection services, string sectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -85,7 +79,7 @@ public static class Extensions
             configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
 
-        VaultOptions options = configuration.GetOptions<VaultOptions>(sectionName);
+        HashicorpKeyVaultOptions options = configuration.GetOptions<HashicorpKeyVaultOptions>(sectionName);
 
         VerifyOptions(options);
         services.AddSingleton(options);
@@ -108,13 +102,13 @@ public static class Extensions
         return services;
     }
 
-    private static void VerifyOptions(VaultOptions options)
+    private static void VerifyOptions(HashicorpKeyVaultOptions options)
     {
         if (options.Kv is null)
         {
             if (!string.IsNullOrWhiteSpace(options.Key))
             {
-                options.Kv = new VaultOptions.KeyValueOptions
+                options.Kv = new HashicorpKeyVaultOptions.KeyValueOptions
                 {
                     Enabled = options.Enabled,
                     Path = options.Key
@@ -135,10 +129,7 @@ public static class Extensions
         }
     }
 
-    private static async Task AddVaultAsync(
-                                            this IConfigurationBuilder builder,
-                                            VaultOptions options,
-                                            string? keyValuePath)
+    private static async Task AddVaultAsync(this IConfigurationBuilder builder, HashicorpKeyVaultOptions options, string? keyValuePath)
     {
         VerifyOptions(options);
         string? kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
@@ -166,7 +157,7 @@ public static class Extensions
             return;
         }
 
-        var configuration = new Dictionary<string, string>();
+        var configuration = new Dictionary<string, string?>();
         foreach (var (key, lease) in options.Lease)
         {
             if (!lease.Enabled || string.IsNullOrWhiteSpace(lease.Type))
@@ -188,8 +179,8 @@ public static class Extensions
     private static Task InitLeaseAsync(
                                        string key,
                                        IVaultClient client,
-                                       VaultOptions.LeaseOptions options,
-                                       IDictionary<string, string> configuration)
+                                       HashicorpKeyVaultOptions.LeaseOptions options,
+                                       IDictionary<string, string?> configuration)
         => options.Type.ToLowerInvariant() switch
         {
             "activedirectory" => SetActiveDirectorySecretsAsync(key, client, options, configuration),
@@ -203,8 +194,8 @@ public static class Extensions
     private static async Task SetActiveDirectorySecretsAsync(
                                                              string key,
                                                              IVaultClient client,
-                                                             VaultOptions.LeaseOptions options,
-                                                             IDictionary<string, string> configuration)
+                                                             HashicorpKeyVaultOptions.LeaseOptions options,
+                                                             IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
         string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -221,11 +212,11 @@ public static class Extensions
     private static async Task SetAzureSecretsAsync(
                                                     string key,
                                                     IVaultClient client,
-                                                    VaultOptions.LeaseOptions options,
-                                                    IDictionary<string, string> configuration)
+                                                    HashicorpKeyVaultOptions.LeaseOptions options,
+                                                    IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Azure;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
 
         var credentials = await client.V1.Secrets.Azure.GetCredentialsAsync(options.RoleName, mountPoint);
 
@@ -239,11 +230,11 @@ public static class Extensions
     private static async Task SetConsulSecretsAsync(
                                                     string key,
                                                     IVaultClient client,
-                                                    VaultOptions.LeaseOptions options,
-                                                    IDictionary<string, string> configuration)
+                                                    HashicorpKeyVaultOptions.LeaseOptions options,
+                                                    IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Consul;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.Consul.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
@@ -255,11 +246,11 @@ public static class Extensions
     private static async Task SetDatabaseSecretsAsync(
                                                         string key,
                                                         IVaultClient client,
-                                                        VaultOptions.LeaseOptions options,
-                                                        IDictionary<string, string> configuration)
+                                                        HashicorpKeyVaultOptions.LeaseOptions options,
+                                                        IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.Database;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.Database.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
@@ -269,7 +260,7 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetPkiSecretsAsync(IVaultClient client, VaultOptions options)
+    private static async Task SetPkiSecretsAsync(IVaultClient client, HashicorpKeyVaultOptions options)
     {
         var issuer = new CertificatesIssuer(client, options);
         var certificate = await issuer.IssueAsync();
@@ -279,11 +270,11 @@ public static class Extensions
     private static async Task SetRabbitMqSecretsAsync(
                                                         string key,
                                                         IVaultClient client,
-                                                        VaultOptions.LeaseOptions options,
-                                                        IDictionary<string, string> configuration)
+                                                        HashicorpKeyVaultOptions.LeaseOptions options,
+                                                        IDictionary<string, string?> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.RabbitMQ;
-        string? mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
+        string mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
         var credentials = await client.V1.Secrets.RabbitMQ.GetCredentialsAsync(options.RoleName, mountPoint);
 
         SetSecrets(key, options, configuration, name, () => (credentials, new Dictionary<string, string>
@@ -295,8 +286,8 @@ public static class Extensions
 
     private static void SetSecrets(
                                     string key,
-                                    VaultOptions.LeaseOptions options,
-                                    IDictionary<string, string> configuration,
+                                    HashicorpKeyVaultOptions.LeaseOptions options,
+                                    IDictionary<string, string?> configuration,
                                     string name,
                                     Func<(object Credentials, Dictionary<string, string> Values, string LeaseId, int Duration, bool Renewable)> lease)
     {
@@ -307,7 +298,7 @@ public static class Extensions
         LeaseService.Set(key, leaseData);
     }
 
-    private static (IVaultClient Client, VaultClientSettings Settings) GetClientAndSettings(VaultOptions options)
+    private static (IVaultClient Client, VaultClientSettings Settings) GetClientAndSettings(HashicorpKeyVaultOptions options)
     {
         var settings = new VaultClientSettings(options.Url, GetAuthMethod(options));
         var client = new VaultClient(settings);
@@ -315,8 +306,7 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, VaultOptions.LeaseOptions lease,
-        IDictionary<string, string> configuration, IDictionary<string, string> values)
+    private static void SetTemplates(string key, HashicorpKeyVaultOptions.LeaseOptions lease, IDictionary<string, string?> configuration, IDictionary<string, string> values)
     {
         if (lease.Templates is null || !lease.Templates.Any())
         {
@@ -330,14 +320,17 @@ public static class Extensions
                 continue;
             }
 
-            var templateValue = $"{template}";
-            templateValue = values.Aggregate(templateValue,
+            string templateValue = $"{template}";
+
+            templateValue = values.Aggregate(
+                templateValue,
                 (current, value) => current.Replace($"{{{{{value.Key}}}}}", value.Value));
+
             configuration.Add($"{key}:{property}", templateValue);
         }
     }
 
-    private static IAuthMethodInfo GetAuthMethod(VaultOptions options)
+    private static IAuthMethodInfo GetAuthMethod(HashicorpKeyVaultOptions options)
         => options.AuthType?.ToLowerInvariant() switch
         {
             "token" => new TokenAuthMethodInfo(options.Token),

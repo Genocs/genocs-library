@@ -34,8 +34,7 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey> : AggregateRoot<
     /// </summary>
     protected CreationAuditedAggregateRoot()
     {
-        // CreationTime = Clock.Now; // Manage time zone
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
 }
 
@@ -52,5 +51,5 @@ public abstract class CreationAuditedAggregateRoot<TPrimaryKey, TUser> : Creatio
     /// Reference to the creator user of this entity.
     /// </summary>
     [ForeignKey("CreatorUserId")]
-    public virtual TUser? CreatorUser { get; set; }
+    public virtual TUser CreatorUser { get; set; } = default!;
 }

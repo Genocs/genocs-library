@@ -14,10 +14,11 @@ internal class MongoSagaState : ISagaState
     public string? SagaType { get; set; }
     public SagaProcessState State { get; set; }
     public object? Data { get; set; }
+    public long Version { get; set; }
 
     Type? ISagaState.Type => _type ??= AppDomain.CurrentDomain.GetAssemblies()
             .Select(a => a.GetType(SagaType))
-            ?.FirstOrDefault(t => t is {});
+            ?.FirstOrDefault(t => t is { });
 
     private Type? _type;
 
@@ -26,4 +27,7 @@ internal class MongoSagaState : ISagaState
         State = state;
         Data = data;
     }
+
+    public void UpdateVersion(long version)
+        => Version = version;
 }

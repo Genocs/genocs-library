@@ -10,12 +10,8 @@
         <PackageTags>genocs http restease typed-client rest-api</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.LoadBalancing.Fabio" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>

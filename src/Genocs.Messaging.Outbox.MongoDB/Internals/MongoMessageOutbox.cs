@@ -112,7 +112,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
                                     string? correlationId = null,
                                     string? spanContext = null,
                                     object? messageContext = null,
-                                    IDictionary<string, object>? headers = null,
+                                    IDictionary<string, object?>? headers = null,
                                     CancellationToken cancellationToken = default)
         where T : class
     {
@@ -133,7 +133,7 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
                     ? EmptyJsonObject
                     : JsonSerializer.Serialize(messageContext, SerializerOptions),
             MessageContextType = messageContext?.GetType().AssemblyQualifiedName,
-            Headers = (Dictionary<string, object>)headers,
+            Headers = (Dictionary<string, object?>?)headers ?? [],
             SerializedMessage = message is null
                 ? EmptyJsonObject
                 : JsonSerializer.Serialize(message, SerializerOptions),
@@ -151,17 +151,23 @@ internal sealed class MongoMessageOutbox : IMessageOutbox, IMessageOutboxAccesso
             if (om.MessageContextType is not null)
             {
                 var messageContextType = Type.GetType(om.MessageContextType);
-                om.MessageContext = JsonSerializer.Deserialize(om.SerializedMessageContext, messageContextType,
-                    SerializerOptions);
+                if (!string.IsNullOrWhiteSpace(om.SerializedMessageContext) && messageContextType is not null)
+                {
+                    om.MessageContext = JsonSerializer.Deserialize(om.SerializedMessageContext, messageContextType, SerializerOptions);
+                }
             }
 
             if (om.MessageType is not null)
             {
                 var messageType = Type.GetType(om.MessageType);
-                om.Message = JsonSerializer.Deserialize(om.SerializedMessage, messageType, SerializerOptions);
+                if (!string.IsNullOrWhiteSpace(om.SerializedMessage) && messageType is not null)
+                {
+                    om.Message = JsonSerializer.Deserialize(om.SerializedMessage, messageType, SerializerOptions);
+                }
             }
 
             return om;
+
         }).ToList();
     }
 

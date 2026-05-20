@@ -1,5 +1,4 @@
 using Genocs.Persistence.MongoDB.Configurations;
-using Genocs.Persistence.MongoDB.Configurations;
 
 namespace Genocs.Persistence.MongoDB.Builders;
 

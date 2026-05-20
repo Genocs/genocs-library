@@ -39,6 +39,12 @@ public class MongoOptions
     public bool SetRandomDatabaseSuffix { get; set; }
 
     /// <summary>
+    /// Controls BSON GUID representation strategy.
+    /// Defaults to Standard for new deployments.
+    /// </summary>
+    public MongoGuidRepresentationMode GuidRepresentationMode { get; set; } = MongoGuidRepresentationMode.Standard;
+
+    /// <summary>
     /// Check if the MongoDbSettings object contains valid data.
     /// </summary>
     /// <param name="settings">MongoDbSettings object.</param>

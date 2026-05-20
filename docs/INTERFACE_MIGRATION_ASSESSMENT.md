@@ -326,3 +326,356 @@ Genocs.Common/
 **Date**: February 13, 2026  
 **Author**: GitHub Copilot  
 **Status**: Assessment Complete - Awaiting Approval
+
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta007" />
+```
+
+
+## License: MIT
+https://github.com/Genocs/genocs-library/blob/7b8bf5dfb9d5bdb0c8244a52239af7707c290862/src/Genocs.WebApi.Swagger/Genocs.WebApi.Swagger.csproj
+
+```
+Here's the evaluation:
+
+## Pattern Assessment
+
+The intent is sound: develop against local source, ship the NuGet package referencing a published version. But there are two concrete problems with the current implementation.
+
+---
+
+### Problem 1 — Hardcoded version gets stale (the main risk)
+
+The Release `PackageReference` pins `9.0.0-beta007` directly. The global version is already in `Directory.Build.props`:
+
+```xml
+<Version>9.0.0-beta007</Version>
+```
+
+Every version bump requires touching **every** library `.csproj` manually. This is already a repo-wide problem — the same pattern appears in `Genocs.Http`, `Genocs.Logging`, `Genocs.Core`, `Genocs.Security`, `Genocs.Persistence.MongoDB`, and others.
+
+---
+
+### Problem 2 — The Release `PackageReference` is actually unnecessary
+
+The MSBuild NuGet SDK already handles this transparently. When you run `dotnet pack`, any `ProjectReference` in a packable library project is **automatically converted to a NuGet `<dependency>`** in the `.nupkg` — using the referenced project's `PackageId` and its `<Version>` from `Directory.Build.props`. There is no need for a Release-only `PackageReference` to produce a correct NuGet artifact.
+
+---
+
+## Recommended Options
+
+### Option A — Drop the condition entirely (recommended)
+
+```xml
+<!-- Before -->
+<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Genocs.WebApi\Genocs.WebApi.csproj" />
+</ItemGroup>
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Genocs.WebApi" Version="9.0.0-beta007" />
+</ItemGroup>
+
+<!-- After -->
+```
+

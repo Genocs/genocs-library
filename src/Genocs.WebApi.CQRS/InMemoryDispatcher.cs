@@ -1,25 +1,14 @@
 using Genocs.Common.CQRS.Commands;
 using Genocs.Common.CQRS.Events;
 using Genocs.Common.CQRS.Queries;
-using Genocs.Core.CQRS.Events;
 
 namespace Genocs.WebApi.CQRS;
 
-public class InMemoryDispatcher : IDispatcher
+public class InMemoryDispatcher(ICommandDispatcher commandDispatcher, IEventDispatcher eventDispatcher, IQueryDispatcher queryDispatcher) : IDispatcher
 {
-    private readonly ICommandDispatcher _commandDispatcher;
-    private readonly IEventDispatcher _eventDispatcher;
-    private readonly IQueryDispatcher _queryDispatcher;
-
-    public InMemoryDispatcher(
-                                ICommandDispatcher commandDispatcher,
-                                IEventDispatcher eventDispatcher,
-                                IQueryDispatcher queryDispatcher)
-    {
-        _commandDispatcher = commandDispatcher;
-        _eventDispatcher = eventDispatcher;
-        _queryDispatcher = queryDispatcher;
-    }
+    private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
+    private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
+    private readonly IQueryDispatcher _queryDispatcher = queryDispatcher;
 
     public Task SendAsync<T>(T command, CancellationToken cancellationToken = default)
         where T : class, ICommand

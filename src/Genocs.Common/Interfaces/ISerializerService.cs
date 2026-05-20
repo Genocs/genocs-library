@@ -3,7 +3,7 @@ namespace Genocs.Common.Interfaces;
 /// <summary>
 /// It is used to serialize and deserialize objects.
 /// </summary>
-public interface ISerializerService : ITransientService
+public interface ISerializerService
 {
     /// <summary>
     /// The method is used to serialize an object.

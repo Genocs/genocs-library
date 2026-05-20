@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Net;
 using System.Net.Mime;
 using System.Text;
 using Genocs.Http.Configurations;
@@ -22,24 +23,13 @@ public class GenocsHttpClient : IHttpClient
                             ICorrelationContextFactory correlationContextFactory,
                             ICorrelationIdFactory correlationIdFactory)
     {
-        _client = client;
-        _settings = settings;
-        _serializer = serializer;
-        if (!string.IsNullOrWhiteSpace(_settings.CorrelationContextHeader))
-        {
-            string correlationContext = correlationContextFactory.Create();
-            _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                    _settings.CorrelationContextHeader,
-                                                                    correlationContext);
-        }
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
-        if (!string.IsNullOrWhiteSpace(_settings.CorrelationIdHeader))
-        {
-            string? correlationId = correlationIdFactory.Create();
-            _client.DefaultRequestHeaders.TryAddWithoutValidation(
-                                                                    _settings.CorrelationIdHeader,
-                                                                    correlationId);
-        }
+        // Correlation headers are now injected per outbound request by GenocsCorrelationHeadersHttpMessageHandler.
+        ArgumentNullException.ThrowIfNull(correlationContextFactory);
+        ArgumentNullException.ThrowIfNull(correlationIdFactory);
     }
 
     public virtual Task<HttpResponseMessage> GetAsync(string uri, CancellationToken cancellationToken = default)
@@ -114,45 +104,36 @@ public class GenocsHttpClient : IHttpClient
         => SendResultAsync<T>(uri, Method.Delete, serializer: serializer, cancellationToken: cancellationToken);
 
     public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
-        => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
-            .ExecuteAsync(() => _client.SendAsync(request, cancellationToken));
+        => _client.SendAsync(request, cancellationToken);
 
-    public Task<T?> SendAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
-        => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
-            .ExecuteAsync(async () =>
-            {
-                // Send the Http request
-                var response = await _client.SendAsync(request, cancellationToken);
+    public async Task<T?> SendAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
+    {
+        using var response = await _client.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException(
+                $"The Http request failed with status code {response.StatusCode}.",
+                null,
+                response.StatusCode);
+        }
 
-                // Check if the response indicates a successful status code
-                if (!response.IsSuccessStatusCode)
-                {
-                    // If not successful, throw an exception so the retry will come.
-                    throw new HttpRequestException($"The Http request failed with status code {response.StatusCode}.");
-                }
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await DeserializeJsonFromStream<T>(stream, serializer, cancellationToken);
+    }
 
-                var stream = await response.Content.ReadAsStreamAsync();
-                return await DeserializeJsonFromStream<T>(stream, serializer, cancellationToken);
-            });
+    public async Task<HttpResult<T>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
+    {
+        var response = await _client.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            return new HttpResult<T>(default!, response);
+        }
 
-    public Task<HttpResult<T>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
-        => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
-            .ExecuteAsync(async () =>
-            {
-                var response = await _client.SendAsync(request, cancellationToken);
-                if (!response.IsSuccessStatusCode)
-                {
-                    return new HttpResult<T>(default!, response);
-                }
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        var result = await DeserializeJsonFromStream<T>(stream, serializer, cancellationToken);
 
-                var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-                var result = await DeserializeJsonFromStream<T>(stream, serializer, cancellationToken);
-
-                return new HttpResult<T>(result, response);
-            });
+        return new HttpResult<T>(result, response);
+    }
 
     public void SetHeaders(IDictionary<string, string> headers)
     {
@@ -172,7 +153,7 @@ public class GenocsHttpClient : IHttpClient
 
     protected virtual async Task<T?> SendAsync<T>(string uri, Method method, HttpContent? content = null, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
     {
-        var response = await SendAsync(uri, method, content, cancellationToken);
+        using var response = await SendAsync(uri, method, content, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             return default!;
@@ -180,12 +161,12 @@ public class GenocsHttpClient : IHttpClient
 
         var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
-        return await DeserializeJsonFromStream<T>(stream, serializer);
+        return await DeserializeJsonFromStream<T>(stream, serializer, cancellationToken);
     }
 
     protected virtual async Task<HttpResult<T>> SendResultAsync<T>(string uri, Method method, HttpContent? content = null, IHttpClientSerializer? serializer = null, CancellationToken cancellationToken = default)
     {
-        var response = await SendAsync(uri, method, content, cancellationToken);
+        var response = await SendAllowingNonSuccessStatusAsync(uri, method, content, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             return new HttpResult<T>(default!, response);
@@ -197,31 +178,154 @@ public class GenocsHttpClient : IHttpClient
         return new HttpResult<T>(result, response);
     }
 
+    /// <summary>
+    /// Sends a string-based request and returns the response without throwing on non-success status codes.
+    /// Retries apply only to the transport send (exceptions), not to HTTP error status codes.
+    /// </summary>
+    protected virtual Task<HttpResponseMessage> SendAllowingNonSuccessStatusAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
+        => SendWithRetryAsync(uri, method, content, throwOnNonSuccessStatus: false, cancellationToken);
+
     protected virtual Task<HttpResponseMessage> SendAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
-        => Policy.Handle<Exception>()
-            .WaitAndRetryAsync(_settings.Retries, r => TimeSpan.FromSeconds(Math.Pow(2, r)))
-            .ExecuteAsync(async () =>
+        => SendWithRetryAsync(uri, method, content, throwOnNonSuccessStatus: true, cancellationToken);
+
+    private Task<HttpResponseMessage> SendWithRetryAsync(
+        string uri,
+        Method method,
+        HttpContent? content,
+        bool throwOnNonSuccessStatus,
+        CancellationToken cancellationToken)
+    {
+        var requestUri = ParseRequestUri(uri);
+        return SendWithRetryCoreAsync(requestUri, method, content, throwOnNonSuccessStatus, cancellationToken);
+    }
+
+    private async Task<HttpResponseMessage> SendWithRetryCoreAsync(
+        Uri requestUri,
+        Method method,
+        HttpContent? content,
+        bool throwOnNonSuccessStatus,
+        CancellationToken cancellationToken)
+    {
+        var result = await CreateSendRetryPolicy(method)
+            .ExecuteAsync(async () => await GetResponseAsync(requestUri, method, content, cancellationToken)
+                ?? throw new HttpRequestException("The Http request failed."));
+
+        if (throwOnNonSuccessStatus && !result.IsSuccessStatusCode)
+        {
+            result.Dispose();
+            throw new HttpRequestException(
+                $"The Http request failed with status code {result.StatusCode}.",
+                null,
+                result.StatusCode);
+        }
+
+        return result;
+    }
+
+    private AsyncPolicy<HttpResponseMessage> CreateSendRetryPolicy(Method method)
+        => CreateSendRetryPolicy(ToHttpMethod(method));
+
+    private AsyncPolicy<HttpResponseMessage> CreateSendRetryPolicy(HttpMethod method)
+    {
+        if (_settings.Retries <= 0 || IsRetryDisabledForHttpMethod(method))
+        {
+            return Policy.NoOpAsync<HttpResponseMessage>();
+        }
+
+        return Policy<HttpResponseMessage>
+            .Handle<HttpRequestException>(ShouldRetryHttpRequestException)
+            .Or<IOException>()
+            .WaitAndRetryAsync(_settings.Retries, GetRetryDelay);
+    }
+
+    private bool IsRetryDisabledForHttpMethod(HttpMethod method)
+    {
+        if (_settings.RetryUnsafeHttpMethods)
+        {
+            return false;
+        }
+
+        return method == HttpMethod.Post
+               || method == HttpMethod.Put
+               || method == HttpMethod.Patch;
+    }
+
+    private static bool ShouldRetryHttpRequestException(HttpRequestException exception)
+    {
+        if (ContainsOperationCanceledException(exception))
+        {
+            return false;
+        }
+
+        if (exception.StatusCode is null)
+        {
+            return true;
+        }
+
+        var statusCode = exception.StatusCode.Value;
+        return statusCode == HttpStatusCode.RequestTimeout
+            || statusCode == HttpStatusCode.TooManyRequests
+            || (int)statusCode >= 500;
+    }
+
+    private static TimeSpan GetRetryDelay(int retryAttempt)
+        => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
+
+    private static bool ContainsOperationCanceledException(Exception? exception)
+    {
+        while (exception is not null)
+        {
+            if (exception is OperationCanceledException)
             {
-                string requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
+                return true;
+            }
 
-                var result = await GetResponseAsync(requestUri, method, content, cancellationToken) ?? throw new HttpRequestException("The Http request failed.");
+            exception = exception.InnerException;
+        }
 
-                if (!result.IsSuccessStatusCode)
-                {
-                    throw new Exception($"The Http request failed with status code {result.StatusCode}.");
-                }
+        return false;
+    }
 
-                return result;
-            });
-
-    protected virtual Task<HttpResponseMessage> GetResponseAsync(string uri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
+    private static HttpMethod ToHttpMethod(Method method)
         => method switch
         {
-            Method.Get => _client.GetAsync(uri, cancellationToken),
-            Method.Post => _client.PostAsync(uri, content, cancellationToken),
-            Method.Put => _client.PutAsync(uri, content, cancellationToken),
-            Method.Patch => _client.PatchAsync(uri, content, cancellationToken),
-            Method.Delete => _client.DeleteAsync(uri, cancellationToken),
+            Method.Get => HttpMethod.Get,
+            Method.Post => HttpMethod.Post,
+            Method.Put => HttpMethod.Put,
+            Method.Patch => HttpMethod.Patch,
+            Method.Delete => HttpMethod.Delete,
+            _ => throw new InvalidOperationException($"Unsupported Http method: {method}")
+        };
+
+    /// <summary>
+    /// Parses a request URI string without mutating host-like inputs.
+    /// Absolute URIs (for example <c>https://api.example.com/v1</c>) are sent as-is.
+    /// Relative URIs (for example <c>orders/42</c> or <c>/orders/42</c>) are passed to <see cref="HttpClient"/> and combine with
+    /// <see cref="HttpClient.BaseAddress"/> when it is configured.
+    /// </summary>
+    /// <param name="uri">An absolute URI, or a relative reference accepted by <see cref="Uri"/>.</param>
+    /// <returns>The parsed <see cref="Uri"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="uri"/> is not a valid absolute or relative URI.</exception>
+    protected static Uri ParseRequestUri(string uri)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(uri);
+        var trimmed = uri.Trim();
+        if (!Uri.TryCreate(trimmed, UriKind.RelativeOrAbsolute, out var requestUri))
+        {
+            throw new ArgumentException("The value is not a valid absolute or relative URI.", nameof(uri));
+        }
+
+        return requestUri;
+    }
+
+    protected virtual Task<HttpResponseMessage> GetResponseAsync(Uri requestUri, Method method, HttpContent? content = null, CancellationToken cancellationToken = default)
+        => method switch
+        {
+            Method.Get => _client.GetAsync(requestUri, cancellationToken),
+            Method.Post => _client.PostAsync(requestUri, content, cancellationToken),
+            Method.Put => _client.PutAsync(requestUri, content, cancellationToken),
+            Method.Patch => _client.PatchAsync(requestUri, content, cancellationToken),
+            Method.Delete => _client.DeleteAsync(requestUri, cancellationToken),
             _ => throw new InvalidOperationException($"Unsupported Http method: {method}")
         };
 

@@ -1,0 +1,102 @@
+@HostAddress = https://localhost:5070
+@sagaBaseUrl = {{HostAddress}}/saga
+@bookStoreBaseUrl = {{HostAddress}}/api/bookstore
+@authorId = 7adf5f22-d24f-436c-af24-5dc9d0f6b453
+@bookId = 5393e1ec-c9fe-4e29-921b-8cd644411376
+@sagaId = e33d5699-50d5-4f69-8ac5-a6cde091fd98
+
+
+# Saga - start transaction
+POST {{sagaBaseUrl}}/start
+Content-Type: application/json
+
+{
+    "text": "Mylene_Hermiston",
+    "transactionValue": 15
+}
+
+###
+
+# Saga - commit transaction
+POST {{sagaBaseUrl}}/complete/{{sagaId}}
+Content-Type: application/json
+
+{
+    "text": "Mylene_Hermiston",
+    "transactionValue": -5
+}
+
+###
+
+# BookStore - list authors
+GET {{bookStoreBaseUrl}}/authors
+Accept: application/json
+
+###
+
+# BookStore - create author
+POST {{bookStoreBaseUrl}}/authors
+Content-Type: application/json
+
+{
+	"firstName": "Brandon",
+	"lastName": "Sanderson",
+	"biography": "Fantasy and science fiction author."
+}
+
+###
+
+# BookStore - get author by id
+GET {{bookStoreBaseUrl}}/authors/{{authorId}}
+Accept: application/json
+
+###
+
+# BookStore - list books
+GET {{bookStoreBaseUrl}}/books
+Accept: application/json
+
+###
+
+# BookStore - create book
+POST {{bookStoreBaseUrl}}/books
+Content-Type: application/json
+
+{
+	"title": "The Way of Kings",
+	"isbn": "978-0765365279",
+	"price": 13.99,
+	"publishedOnUtc": "2010-08-31T00:00:00Z",
+	"authorIds": [
+		"{{authorId}}"
+	]
+}
+
+###
+
+# BookStore - get book by id
+GET {{bookStoreBaseUrl}}/books/{{bookId}}
+Accept: application/json
+
+###
+
+# BookStore - update book
+PUT {{bookStoreBaseUrl}}/books/{{bookId}}
+Content-Type: application/json
+
+{
+	"title": "The Way of Kings (Updated)",
+	"isbn": "978-0765365279",
+	"price": 15.49,
+	"publishedOnUtc": "2010-08-31T00:00:00Z",
+	"authorIds": [
+		"{{authorId}}"
+	]
+}
+
+###
+
+# BookStore - delete book
+DELETE {{bookStoreBaseUrl}}/books/{{bookId}}
+
+###

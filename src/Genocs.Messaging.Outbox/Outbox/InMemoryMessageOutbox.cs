@@ -5,23 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Genocs.Messaging.Outbox.Outbox;
 
-internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAccessor
+internal sealed class InMemoryMessageOutbox(OutboxOptions options, ILogger<InMemoryMessageOutbox> logger) : IMessageOutbox, IMessageOutboxAccessor
 {
     private readonly ConcurrentDictionary<string, bool> _inboxMessages = new();
 
     private readonly ConcurrentDictionary<string, OutboxMessage> _outboxMessages = new();
 
-    private readonly ILogger<InMemoryMessageOutbox> _logger;
-    private readonly int _expiry;
+    private readonly ILogger<InMemoryMessageOutbox> _logger = logger;
+    private readonly int _expiry = options.Expiry;
 
-    public InMemoryMessageOutbox(OutboxOptions options, ILogger<InMemoryMessageOutbox> logger)
-    {
-        _logger = logger;
-        _expiry = options.Expiry;
-        Enabled = options.Enabled;
-    }
-
-    public bool Enabled { get; }
+    public bool Enabled { get; } = options.Enabled;
 
     public async Task HandleAsync(string messageId, Func<Task> handler, CancellationToken cancellationToken = default)
     {
@@ -37,6 +30,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
         }
 
         _logger.LogTrace($"Received a message with id: '{messageId}' to be processed.");
+
         if (_inboxMessages.ContainsKey(messageId))
         {
             _logger.LogTrace($"Message with id: '{messageId}' was already processed.");
@@ -44,7 +38,9 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
         }
 
         _logger.LogTrace($"Processing a message with id: '{messageId}'...");
+
         await handler();
+
         if (!_inboxMessages.TryAdd(messageId, true))
         {
             _logger.LogError($"There was an error when processing a message with id: '{messageId}'.");
@@ -57,15 +53,15 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
     }
 
     public Task SendAsync<T>(
-                             T message,
-                             string? originatedMessageId = null,
-                             string? messageId = null,
-                             string? correlationId = null,
-                             string? spanContext = null,
-                             object? messageContext = null,
-                             IDictionary<string, object>? headers = null,
-                             CancellationToken cancellationToken = default)
-        where T : class
+        T message,
+        string? originatedMessageId = null,
+        string? messageId = null,
+        string? correlationId = null,
+        string? spanContext = null,
+        object? messageContext = null,
+        IDictionary<string, object?>? headers = null,
+        CancellationToken cancellationToken = default)
+            where T : class
     {
         if (!Enabled)
         {
@@ -80,12 +76,13 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
             CorrelationId = correlationId,
             SpanContext = spanContext,
             MessageContextType = messageContext?.GetType().AssemblyQualifiedName,
-            Headers = (Dictionary<string, object>)headers,
+            Headers = (Dictionary<string, object?>?)headers ?? [],
             Message = message,
             MessageContext = messageContext,
             MessageType = message?.GetType().AssemblyQualifiedName,
             SentAt = DateTime.UtcNow
         };
+
         _outboxMessages.TryAdd(outboxMessage.Id, outboxMessage);
 
         return Task.CompletedTask;
@@ -100,7 +97,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
     {
         foreach (var message in outboxMessages)
         {
-            message.ProcessedAt = DateTime.UtcNow;
+            message.SetProcessed();
         }
 
         RemoveExpiredMessages();
@@ -110,7 +107,7 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
 
     Task IMessageOutboxAccessor.ProcessAsync(OutboxMessage message)
     {
-        message.ProcessedAt = DateTime.UtcNow;
+        message.SetProcessed();
         RemoveExpiredMessages();
 
         return Task.CompletedTask;
@@ -136,7 +133,11 @@ internal sealed class InMemoryMessageOutbox : IMessageOutbox, IMessageOutboxAcce
             }
 
             _outboxMessages.TryRemove(id, out _);
-            _inboxMessages.TryRemove(message.OriginatedMessageId, out _);
+
+            if (!string.IsNullOrWhiteSpace(message.OriginatedMessageId))
+            {
+                _inboxMessages.TryRemove(message.OriginatedMessageId, out _);
+            }
         }
     }
 }

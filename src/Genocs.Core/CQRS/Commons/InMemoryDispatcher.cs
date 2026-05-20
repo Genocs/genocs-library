@@ -30,10 +30,18 @@ internal sealed class InMemoryDispatcher : IDispatcher
         where T : class, ICommand
         => _commandDispatcher.SendAsync(command, cancellationToken);
 
+    public Task<TResult> SendAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : class, ICommand<TResult>
+        => _commandDispatcher.SendAsync<TCommand, TResult>(command, cancellationToken);
+
     public Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default)
         where T : class, IEvent
         => _eventDispatcher.PublishAsync(@event, cancellationToken);
 
     public Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         => _queryDispatcher.QueryAsync(query, cancellationToken);
+
+    public Task<TResult?> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
+        where TQuery : class, IQuery<TResult>
+        => _queryDispatcher.QueryAsync<TQuery, TResult>(query, cancellationToken);
 }

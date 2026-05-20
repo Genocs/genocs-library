@@ -4,16 +4,10 @@ using VaultSharp;
 
 namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 
-internal sealed class KeyValueSecrets : IKeyValueSecrets
+internal sealed class KeyValueSecrets(IVaultClient client, HashicorpKeyVaultOptions options) : IKeyValueSecrets
 {
-    private readonly IVaultClient _client;
-    private readonly VaultOptions _options;
-
-    public KeyValueSecrets(IVaultClient client, VaultOptions options)
-    {
-        _client = client;
-        _options = options;
-    }
+    private readonly IVaultClient _client = client ?? throw new ArgumentNullException(nameof(client));
+    private readonly HashicorpKeyVaultOptions _options = options ?? throw new ArgumentNullException(nameof(options));
 
     public async Task<T> GetDefaultAsync<T>()
         => await GetAsync<T>(_options.Key);
@@ -36,12 +30,10 @@ internal sealed class KeyValueSecrets : IKeyValueSecrets
             switch (_options.Kv.EngineVersion)
             {
                 case 1:
-                    var secretV1 = await _client.V1.Secrets.KeyValue.V1.ReadSecretAsync(path,
-                        _options.Kv.MountPoint);
+                    var secretV1 = await _client.V1.Secrets.KeyValue.V1.ReadSecretAsync(path, _options.Kv.MountPoint);
                     return secretV1.Data;
                 case 2:
-                    var secretV2 = await _client.V1.Secrets.KeyValue.V2.ReadSecretAsync(path,
-                        _options.Kv.Version, _options.Kv.MountPoint);
+                    var secretV2 = await _client.V1.Secrets.KeyValue.V2.ReadSecretAsync(path, _options.Kv.Version, _options.Kv.MountPoint);
                     return secretV2.Data.Data;
                 default:
                     throw new VaultException($"Invalid KV engine version: {_options.Kv.EngineVersion}.");
@@ -49,8 +41,7 @@ internal sealed class KeyValueSecrets : IKeyValueSecrets
         }
         catch (Exception exception)
         {
-            throw new VaultException($"Getting Vault secret for path: '{path}' caused an error. " +
-                                     $"{exception.Message}", exception, path);
+            throw new VaultException($"Getting Vault secret for path: '{path}' caused an error. {exception.Message}", exception, path);
         }
     }
 }

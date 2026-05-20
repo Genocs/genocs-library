@@ -32,8 +32,7 @@ public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, 
     /// </summary>
     protected CreationAuditedEntity()
     {
-        // CreationTime = Clock.Now;
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
 }
 
@@ -50,5 +49,5 @@ public abstract class CreationAuditedEntity<TPrimaryKey, TUser> : CreationAudite
     /// Reference to the creator user of this entity.
     /// </summary>
     [ForeignKey("CreatorUserId")]
-    public virtual TUser? CreatorUser { get; set; }
+    public virtual TUser CreatorUser { get; set; } = default!;
 }

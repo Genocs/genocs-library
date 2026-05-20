@@ -3,13 +3,13 @@ namespace Genocs.QueryBuilder.UnitTests.Models;
 public class Customer
 {
     public int CustomerId { get; set; }
-    public string? CustomerName { get; set; }
-    public string? CustomerAddress { get; set; }
-    public string? CustomerPinCode { get; set; }
-    public string? CustomerPhoneNumber { get; set; }
-    public string? CustomerEmail { get; set; }
-    public string? CustomerOffice { get; set; }
-    public string? LocationCode { get; set; }
+    public string CustomerName { get; set; }
+    public string CustomerAddress { get; set; }
+    public string CustomerPinCode { get; set; }
+    public string CustomerPhoneNumber { get; set; }
+    public string CustomerEmail { get; set; }
+    public string CustomerOffice { get; set; }
+    public string LocationCode { get; set; }
 
     public Customer(int custid,
                     string custname,

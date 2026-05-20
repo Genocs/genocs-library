@@ -6,32 +6,32 @@
         <RootNamespace>Genocs.Telemetry</RootNamespace>
         <AssemblyName>Genocs.Telemetry</AssemblyName>
         <Title>Genocs OpenTelemetry integration</Title>
-        <Description>OpenTelemetry integration helpers for traces, metrics, and logs.</Description>
+        <Description>OpenTelemetry integration helpers for traces and metrics.</Description>
         <PackageTags>genocs opentelemetry telemetry tracing metrics logging</PackageTags>
+        <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Core\Genocs.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Core" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.6.0" />
         <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.3" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+        <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.15.1-beta.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Builders\" />
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Genocs.Telemetry.UnitTests</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 
 </Project>

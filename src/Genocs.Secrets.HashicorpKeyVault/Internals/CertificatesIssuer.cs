@@ -11,12 +11,12 @@ namespace Genocs.Secrets.HashicorpKeyVault.Internals;
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {
     private readonly IVaultClient _client;
-    private readonly VaultOptions.PkiOptions _options;
+    private readonly HashicorpKeyVaultOptions.PkiOptions _options;
     private readonly CertificateFormat _certificateFormat;
     private readonly PrivateKeyFormat _privateKeyFormat;
     private readonly string _mountPoint;
 
-    public CertificatesIssuer(IVaultClient client, VaultOptions options)
+    public CertificatesIssuer(IVaultClient client, HashicorpKeyVaultOptions options)
     {
         _client = client;
         _options = options.Pki;
@@ -34,7 +34,8 @@ internal sealed class CertificatesIssuer : ICertificatesIssuer
     public async Task<X509Certificate2> IssueAsync()
     {
         var credentials =
-            await _client.V1.Secrets.PKI.GetCredentialsAsync(_options.RoleName,
+            await _client.V1.Secrets.PKI.GetCredentialsAsync(
+                _options.RoleName,
                 new CertificateCredentialsRequestOptions
                 {
                     CertificateFormat = _certificateFormat,
@@ -45,9 +46,9 @@ internal sealed class CertificatesIssuer : ICertificatesIssuer
                     OtherSubjectAlternativeNames = _options.OtherSubjectAlternativeNames,
                     IPSubjectAlternativeNames = _options.IPSubjectAlternativeNames,
                     URISubjectAlternativeNames = _options.URISubjectAlternativeNames,
-                    ExcludeCommonNameFromSubjectAlternativeNames =
-                        _options.ExcludeCommonNameFromSubjectAlternativeNames
-                }, _mountPoint);
+                    ExcludeCommonNameFromSubjectAlternativeNames = _options.ExcludeCommonNameFromSubjectAlternativeNames
+                },
+                _mountPoint);
 
         var certificate = new X509Certificate2(Encoding.UTF8.GetBytes(credentials.Data.CertificateContent));
         if (!_options.ImportPrivateKey || _privateKeyFormat != PrivateKeyFormat.der)

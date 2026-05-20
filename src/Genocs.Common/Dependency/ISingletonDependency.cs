@@ -1,6 +1,6 @@
 ﻿namespace Genocs.Common.Dependency;
 
 /// <summary>
-/// All classes implement this interface are automatically registered to dependency injection as singleton object.
+/// Marker interface for singleton dependencies. All classes implementing this interface are registered as singletons.
 /// </summary>
 public interface ISingletonDependency;

@@ -1,10 +1,10 @@
 using System.Data;
+using Genocs.Common.Dependency;
 using Genocs.Common.Domain.Entities;
-using Genocs.Common.Interfaces;
 
 namespace Genocs.Core.Domain.Repositories;
 
-public interface IDapperRepository : ITransientService
+public interface IDapperRepository : ITransientDependency
 {
     /// <summary>
     /// Get an <see cref="IReadOnlyList{T}"/> using raw sql string with parameters.
@@ -27,7 +27,7 @@ public interface IDapperRepository : ITransientService
     /// <param name="transaction">The transaction to be performed.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>Returns <see cref="Task"/> of <typeparamref name="T"/>.</returns>
-    Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+    Task<T> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     where T : class, IEntity;
 
     /// <summary>

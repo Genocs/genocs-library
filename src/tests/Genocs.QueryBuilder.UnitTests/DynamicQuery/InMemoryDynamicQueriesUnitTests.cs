@@ -324,7 +324,7 @@ public class InMemoryDynamicQueriesUnitTests
 
         usersQuery = usersQuery.Where(DynamicQueryBuilder.BuildAdvancedSearchExpressionTree<User>(queryItemList, "User"));
 
-        int value = usersQuery.Sum(static c => (int)c["Age"]);
+        int value = usersQuery.Sum(static c => (int?)c["Age"] ?? 0);
         var result = usersQuery.ToList();
 
         Assert.Equal(72, value);

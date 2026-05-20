@@ -19,7 +19,6 @@ public class User
     public string? MobileLanguage { get; set; }
     public string? CountryOfResidence { get; set; }
     public string? Currency { get; private set; }
-
     public Address? Address { get; set; }
 
     public object? this[string propertyName]

@@ -22,19 +22,19 @@ public class EventAddingRepositoryDecorator<T> : IRepositoryWithEvents<T>
 
     public Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-        entity.DomainEvents!.Add(EntityCreatedEvent.WithEntity(entity));
+        entity.AddDomainEvent(EntityCreatedEvent.WithEntity(entity));
         return _decorated.AddAsync(entity, cancellationToken);
     }
 
     public Task<int> UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
-        entity.DomainEvents!.Add(EntityUpdatedEvent.WithEntity(entity));
+        entity.AddDomainEvent(EntityUpdatedEvent.WithEntity(entity));
         return _decorated.UpdateAsync(entity, cancellationToken);
     }
 
     public Task<int> DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
-        entity.DomainEvents!.Add(EntityDeletedEvent.WithEntity(entity));
+        entity.AddDomainEvent(EntityDeletedEvent.WithEntity(entity));
         return _decorated.DeleteAsync(entity, cancellationToken);
     }
 
@@ -42,7 +42,7 @@ public class EventAddingRepositoryDecorator<T> : IRepositoryWithEvents<T>
     {
         foreach (var entity in entities)
         {
-            entity.DomainEvents!.Add(EntityDeletedEvent.WithEntity(entity));
+            entity.AddDomainEvent(EntityDeletedEvent.WithEntity(entity));
         }
 
         return _decorated.DeleteRangeAsync(entities, cancellationToken);
@@ -110,7 +110,12 @@ public class EventAddingRepositoryDecorator<T> : IRepositoryWithEvents<T>
 
     Task<int> IRepositoryBase<T>.UpdateRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        foreach (var entity in entities)
+        {
+            entity.AddDomainEvent(EntityUpdatedEvent.WithEntity(entity));
+        }
+
+        return _decorated.UpdateRangeAsync(entities, cancellationToken);
     }
 
     public Task<int> DeleteRangeAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)

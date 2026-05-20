@@ -26,9 +26,27 @@ Following is about how to setup **MongoDB**
   "mongoDb": {
     "ConnectionString": "mongodb://localhost",
     "Database": "demo_database",
-    "EnableTracing": false
+    "EnableTracing": false,
+    "GuidRepresentationMode": "Standard"
   }
 ```
+
+### GUID representation compatibility
+
+- Default mode: `Standard`
+- Legacy compatibility mode: `CSharpLegacy`
+
+For existing legacy datasets, use `GuidRepresentationMode: "CSharpLegacy"` during migration and switch back to `Standard` after data normalization.
+
+### Runtime behavior notes
+
+- Mongo provider, session factory, and repository access paths share one DI-managed `IMongoClient` pipeline.
+- Startup seed execution is tracked per database key (`connectionString|database`) rather than process-wide only.
+
+### Encryption guidance
+
+Built-in client-side field encryption wiring is not provided by this package runtime surface.
+If encryption is required, compose and validate it at application level.
 
 ## Support
 

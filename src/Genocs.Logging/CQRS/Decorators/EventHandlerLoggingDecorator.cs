@@ -1,6 +1,5 @@
 using Genocs.Common.CQRS.Events;
 using Genocs.Common.Types;
-using Genocs.Core.CQRS.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartFormat;

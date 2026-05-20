@@ -15,14 +15,16 @@ internal sealed class GenocsFormatterResolver : IJsonFormatterResolver
 
     public IJsonFormatter<T> GetFormatter<T>()
     {
-        return FormatterCache<T>.Formatter;
+        return FormatterCache<T>.Formatter
+            ?? StandardResolver.AllowPrivateCamelCase.GetFormatter<T>()
+            ?? throw new InvalidOperationException($"No formatter registered for type '{typeof(T).FullName}'.");
     }
 
     public static List<IJsonFormatter> Formatters { get; } = [];
 
     private static class FormatterCache<T>
     {
-        public static readonly IJsonFormatter<T> Formatter;
+        public static readonly IJsonFormatter<T>? Formatter;
 
         static FormatterCache()
         {

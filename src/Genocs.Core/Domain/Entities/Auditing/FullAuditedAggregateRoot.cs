@@ -8,10 +8,7 @@ namespace Genocs.Core.Domain.Entities.Auditing;
 /// A shortcut of <see cref="FullAuditedAggregateRoot{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
 /// </summary>
 [Serializable]
-public abstract class FullAuditedAggregateRoot : FullAuditedAggregateRoot<int>
-{
-
-}
+public abstract class FullAuditedAggregateRoot : FullAuditedAggregateRoot<int>;
 
 /// <summary>
 /// Implements <see cref="IFullAudited"/> to be a base class for full-audited aggregate roots.

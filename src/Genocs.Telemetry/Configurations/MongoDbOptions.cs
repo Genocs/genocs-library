@@ -1,27 +1,18 @@
 ﻿namespace Genocs.Telemetry.Configurations;
 
 /// <summary>
-/// MongoDB configuration Settings.
+/// MongoDB telemetry configuration settings.
 /// </summary>
 public class MongoDbOptions
 {
     /// <summary>
-    /// It defines whether the section is enabled or not.
+    /// Enables MongoDB telemetry configuration.
     /// </summary>
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// It defines whether the console tracing are enabled or not.
+    /// Enables MongoDB tracing instrumentation.
+    /// MongoDB metrics and log export are not configured by this package.
     /// </summary>
     public bool EnableTracing { get; set; }
-
-    /// <summary>
-    /// It defines whether the console metrics are enabled or not.
-    /// </summary>
-    public bool EnableMetrics { get; set; }
-
-    /// <summary>
-    /// It defines whether the console logging are enabled or not.
-    /// </summary>
-    public bool EnableLogging { get; set; }
 }

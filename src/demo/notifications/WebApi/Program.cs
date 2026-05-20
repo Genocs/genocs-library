@@ -1,0 +1,106 @@
+﻿using Genocs.Auth;
+using Genocs.Core.Builders;
+using Genocs.Core.CQRS.Commands;
+using Genocs.Core.CQRS.Events;
+using Genocs.Core.CQRS.Queries;
+using Genocs.Logging;
+using Genocs.Messaging.CQRS;
+using Genocs.Messaging.Outbox;
+using Genocs.Messaging.Outbox.MongoDB;
+using Genocs.Messaging.RabbitMQ;
+using Genocs.Notifications.WebApi.Commands;
+using Genocs.Notifications.WebApi.Configurations;
+using Genocs.Notifications.WebApi.Exceptions;
+using Genocs.Notifications.WebApi.Hubs;
+using Genocs.Notifications.WebApi.Messages.Events;
+using Genocs.Notifications.WebApi.Services;
+using Genocs.Persistence.MongoDB.Extensions;
+using Genocs.Secrets.HashicorpKeyVault;
+using Genocs.Telemetry;
+using Genocs.WebApi;
+using Genocs.WebApi.CQRS;
+using Genocs.WebApi.OpenApi;
+using Serilog;
+
+StaticLogger.EnsureInitialized();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host
+        .UseLogging()
+        .UseVault();
+
+IGenocsBuilder gnxBuilder = await builder
+                                        .AddGenocs()
+                                        .AddTelemetry()
+                                        .AddJwt()
+                                        .AddCorrelationContextLogging()
+                                        .AddErrorHandler<ExceptionToResponseMapper>()
+                                        .AddMongo()
+                                        .AddCommandHandlers()
+                                        .AddEventHandlers()
+                                        .AddQueryHandlers()
+                                        .AddInMemoryCommandDispatcher()
+                                        .AddInMemoryEventDispatcher()
+                                        .AddInMemoryQueryDispatcher()
+                                        .AddMessageOutbox(o => o.AddMongo())
+                                        .AddWebApi()
+                                        .AddOpenApiDocs()
+                                        .AddRabbitMQAsync();
+
+var services = builder.Services;
+services.AddSignalR();
+services.Configure<EventHubOptions>(builder.Configuration.GetSection(EventHubOptions.Position));
+services.AddSingleton<IEventHubPublisher, EventHubPublisher>();
+services.AddTransient<IHubWrapper, HubWrapper>();
+services.AddTransient<IHubService, HubService>();
+
+var app = builder.Build();
+
+gnxBuilder.Build(app.Services);
+
+app.UseGenocs()
+    .UseCorrelationContextLogging()
+    .UseErrorHandler()
+    .UsePrometheus()
+    .UseRouting()
+    .UseEndpoints(r =>
+    {
+        r.MapControllers();
+        r.MapHub<GenocsHub>("/notificationHub");
+        r.MapPrometheus();
+    })
+    .UseOpenApiDocs()
+    .UseRabbitMQ()
+    .SubscribeEvent<OrderCreated>();
+
+app.MapDispatcherEndpoints(endpoints => endpoints
+    .Post<PublishNotification>("notifications", afterDispatch: (cmd, ctx, _) => ctx.Response.Created($"notifications/{cmd.NotificationId}")));
+
+app.MapDefaultEndpoints();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/wwwroot"
+});
+
+app.Use(async (context, next) =>
+{
+    if (string.Equals(context.Request.Path.Value, "/wwwroot/signalR", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalR/", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalr", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(context.Request.Path.Value, "/wwwroot/signalr/", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.Redirect("/wwwroot/signalr/index.html", permanent: false);
+        return;
+    }
+
+    await next();
+});
+
+app.MapStaticAssets();
+
+app.Run();
+
+Log.CloseAndFlush();

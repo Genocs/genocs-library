@@ -1,6 +1,6 @@
-using Genocs.Common.Domain.ConnectionString;
+using System.Reflection;
 using Genocs.Common.Domain.Entities;
-using Genocs.Common.Interfaces;
+using Genocs.Common.Persistence;
 using Genocs.Common.Persistence.Initialization;
 using Genocs.Core.Builders;
 using Genocs.Core.Domain.Repositories;
@@ -8,6 +8,7 @@ using Genocs.Persistence.EFCore.Common;
 using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Context;
 using Genocs.Persistence.EFCore.Initialization;
+using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Genocs.Persistence.EFCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,13 +24,13 @@ public static class EFCoreExtensions
 {
     private static readonly ILogger _logger = Log.ForContext(typeof(EFCoreExtensions));
 
-    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder)
+    public static IGenocsBuilder AddEFCorePersistence(this IGenocsBuilder builder, params Assembly[] additionalAssemblies)
     {
-        // Bind the configuration section to the DatabaseSettings class
+        // Bind the configuration section to the DatabaseOptions class
         // and validate it
         builder.Services
-            .AddOptions<DatabaseSettings>()
-            .BindConfiguration(nameof(DatabaseSettings))
+            .AddOptions<DatabaseOptions>()
+            .BindConfiguration(nameof(DatabaseOptions))
             .PostConfigure(databaseSettings =>
             {
                 _logger.Information("Current DB Provider: {dbProvider}", databaseSettings.DBProvider);
@@ -41,25 +42,21 @@ public static class EFCoreExtensions
         builder.Services
             .AddDbContext<ApplicationDbContext>((p, m) =>
             {
-                var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+                var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString, databaseSettings.GetMongoDatabaseName());
             })
             .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
             .AddTransient<ApplicationDbInitializer>()
             .AddTransient<ApplicationDbSeeder>()
             .AddServices(typeof(ICustomSeeder), ServiceLifetime.Transient)
             .AddTransient<CustomSeederRunner>()
+            .AddTransient<IDapperRepository, DapperRepository>()
             .AddTransient<IConnectionStringSecurer, ConnectionStringSecurer>()
             .AddTransient<IConnectionStringValidator, ConnectionStringValidator>()
-            .AddRepositories();
+            .AddRepositories(additionalAssemblies);
 
         return builder;
     }
-
-    internal static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddServices(typeof(ITransientService), ServiceLifetime.Transient)
-            .AddServices(typeof(IScopedService), ServiceLifetime.Scoped);
 
     internal static IServiceCollection AddServices(this IServiceCollection services, Type interfaceType, ServiceLifetime lifetime)
     {
@@ -93,11 +90,13 @@ public static class EFCoreExtensions
             _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
         };
 
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
+    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString, string? databaseName = null)
     {
         return dbProvider.ToLowerInvariant() switch
         {
-            DbProviderKeys.MongoDB => builder.UseMongoDB(connectionString, "DatabaseName"),
+            DbProviderKeys.MongoDB => builder.UseMongoDB(
+                connectionString,
+                databaseName ?? throw new InvalidOperationException("MongoDB database name must be configured in DatabaseOptions.DatabaseName or included in the connection string path.")),
 
             DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
                                  e.MigrationsAssembly("Migrators.PostgreSQL")),
@@ -119,26 +118,44 @@ public static class EFCoreExtensions
         };
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    internal static IServiceCollection AddRepositories(this IServiceCollection services, params Assembly[] assemblies)
     {
         // Add Repositories
         services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
 
+        // Always include the application's entry assembly, and let callers add more assemblies
+        // for modular/feature-sliced aggregate roots that live outside the entry project.
+        var entryAssembly = Assembly.GetEntryAssembly();
+        var assembliesToScan = assemblies
+            .Where(a => a is not null)
+            .Append(entryAssembly)
+            .OfType<Assembly>()
+            .Distinct()
+            .ToArray();
+
         foreach (var aggregateRootType in
-            typeof(IAggregateRoot).Assembly.GetExportedTypes()
+            assembliesToScan
+                .SelectMany(a => a.GetExportedTypes())
                 .Where(t => typeof(IAggregateRoot).IsAssignableFrom(t) && t.IsClass)
+                .Distinct()
                 .ToList())
         {
             // Add ReadRepositories.
             services.AddScoped(typeof(IReadRepository<>).MakeGenericType(aggregateRootType), sp =>
                 sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)));
 
-            // Decorate the repositories with EventAddingRepositoryDecorators and expose them as IRepositoryWithEvents.
-            services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
-                Activator.CreateInstance(
-                    typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
-                    sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
-                ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            // EventAddingRepositoryDecorator<T> carries a self-referential constraint (IAggregateRoot<T>)
+            // that will be relaxed in EFCORE-017. Until then, only register IRepositoryWithEvents<T>
+            // for types that actually satisfy the constraint to avoid an ArgumentException from MakeGenericType.
+            var selfReferentialType = typeof(IAggregateRoot<>).MakeGenericType(aggregateRootType);
+            if (selfReferentialType.IsAssignableFrom(aggregateRootType))
+            {
+                services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
+                    Activator.CreateInstance(
+                        typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
+                        sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
+                    ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
+            }
         }
 
         return services;

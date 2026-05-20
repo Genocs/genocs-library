@@ -86,8 +86,10 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
                 var payload = jsonToken.Payload;
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, payload["user_id"]?.ToString() ?? string.Empty),
-                    new Claim(ClaimTypes.Name, payload["name"]?.ToString() ?? string.Empty),
+                    new Claim(ClaimTypes.NameIdentifier, payload.ContainsKey("user_id") ? payload["user_id"].ToString() ?? string.Empty : string.Empty),
+                    new Claim(ClaimTypes.Name, payload.ContainsKey("name") ? payload["name"].ToString() ?? string.Empty : string.Empty),
+                    new Claim(ClaimTypes.Name, payload.ContainsKey("unique_name") ? payload["unique_name"].ToString() ?? string.Empty : string.Empty),
+                    new Claim(ClaimTypes.Role, payload.ContainsKey("http://schemas.microsoft.com/ws/2008/06/identity/claims/role") ? payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"].ToString() ?? string.Empty : string.Empty),
                     new Claim("auth_type", "jwt")
 
                     // Add more claims as needed
@@ -124,7 +126,7 @@ public class JwtOrApiKeyAuthenticationMiddleware(RequestDelegate next, IConfigur
         string[] validApiKeys = _configuration.GetSection("Authorization:ApiKeys").Get<string[]>() ?? [];
 
         // For development/testing
-        string? devApiKey = _configuration["Authorization:DevApiKey"];
+        string devApiKey = _configuration["Authorization:DevApiKey"];
 
         bool isOk = validApiKeys.Contains(apiKey) || (!string.IsNullOrWhiteSpace(devApiKey) && devApiKey == apiKey);
 

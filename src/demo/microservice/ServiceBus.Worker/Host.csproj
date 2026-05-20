@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Library.Demo.ServiceBus.Worker</RootNamespace>
+        <AssemblyName>Genocs.Library.Demo.ServiceBus.Worker</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <UserSecretsId>Genocs</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Release'">
+        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta008" />
+        <PackageReference Include="Genocs.Persistence.MongoDB" Version="9.0.0-beta008" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+</Project>

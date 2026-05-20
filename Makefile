@@ -28,7 +28,19 @@ gw: # git docker workflow to push docker image to the repository based on the ma
 d-build: # docker build images
 	@echo building docker images
 	@echo you should have docker installed and running
-	bash ./src/apps/scripts/build-images.sh
+	bash ./src/demo/scripts/build-images.sh
 d-push: # docker tag and push images
 	@echo tag images as latest and publish
-	bash ./src/apps/scripts/push-images.sh
+	bash ./src/demo/scripts/push-images.sh
+
+validate-messaging: # validate messaging packages warning baseline and tests
+	$(MAKE) -f validate-messaging.mk validate-messaging
+
+validate-webapi: # validate webapi package warning baseline and tests
+	$(MAKE) -f validate-webapi.mk validate-webapi
+
+validate-webapi-cqrs: # validate webapi cqrs package warning baseline and tests
+	$(MAKE) -f validate-webapi-cqrs.mk validate-webapi-cqrs
+
+validate-webapi-openapi: # validate webapi openapi package warning baseline and tests
+	$(MAKE) -f validate-webapi-openapi.mk validate-webapi-openapi

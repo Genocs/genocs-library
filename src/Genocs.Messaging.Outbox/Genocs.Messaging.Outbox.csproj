@@ -10,12 +10,8 @@
         <PackageTags>genocs messaging outbox reliability transactional-outbox</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Messaging\Genocs.Messaging.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta001" />
     </ItemGroup>
 
 </Project>

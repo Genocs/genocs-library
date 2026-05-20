@@ -7,7 +7,7 @@ public sealed class SystemTextJsonJsonRabbitMQSerializer : IRabbitMQSerializer
 {
     private readonly JsonSerializerOptions _options;
 
-    public SystemTextJsonJsonRabbitMQSerializer(JsonSerializerOptions options = null)
+    public SystemTextJsonJsonRabbitMQSerializer(JsonSerializerOptions? options = null)
     {
         _options = options ?? new JsonSerializerOptions
         {
@@ -18,9 +18,12 @@ public sealed class SystemTextJsonJsonRabbitMQSerializer : IRabbitMQSerializer
         };
     }
 
-    public ReadOnlySpan<byte> Serialize(object value) => JsonSerializer.SerializeToUtf8Bytes(value, _options);
+    public ReadOnlySpan<byte> Serialize(object value)
+        => JsonSerializer.SerializeToUtf8Bytes(value, _options);
 
-    public object? Deserialize(ReadOnlySpan<byte> value, Type type) => JsonSerializer.Deserialize(value, type, _options);
+    public object? Deserialize(ReadOnlySpan<byte> value, Type type)
+        => JsonSerializer.Deserialize(value, type, _options);
 
-    public object? Deserialize(ReadOnlySpan<byte> value) => JsonSerializer.Deserialize(value, typeof(object), _options);
+    public object? Deserialize(ReadOnlySpan<byte> value)
+        => JsonSerializer.Deserialize(value, typeof(object), _options);
 }

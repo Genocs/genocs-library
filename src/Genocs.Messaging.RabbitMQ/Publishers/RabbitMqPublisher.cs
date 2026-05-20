@@ -21,15 +21,15 @@ internal sealed class RabbitMQPublisher : IBusPublisher
                                 CancellationToken cancellationToken = default)
         where T : class
     {
-        _client.SendAsync(
-                            message,
-                            _conventionsProvider.Get(message.GetType()),
-                            messageId,
-                            correlationId,
-                            spanContext,
-                            messageContext,
-                            headers);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.CompletedTask;
+        return _client.SendAsync(
+                                message,
+                                _conventionsProvider.Get(message.GetType()),
+                                messageId,
+                                correlationId,
+                                spanContext,
+                                messageContext,
+                                headers);
     }
 }

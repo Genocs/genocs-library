@@ -44,9 +44,9 @@
 <!-- PROJECT LOGO -->
 <p align="center">
   <a href="https://github.com/genocs/genocs-library">
-    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-banner.png" alt=".NET Microservice Template">
+    <img src="https://raw.githubusercontent.com/genocs/genocs-library/main/assets/genocs-library-banner.png" alt="Genocs Library">
   </a>
-  <h3 align="center">.NET CLI</h3>
+  <h3 align="center">Genocs Library</h3>
   <p align="center">
     Open Source Library For .NET10 Microservice
     <br />
@@ -94,7 +94,6 @@ Documentation available at [Genocs Blog](https://learn.fiscanner.net/library/)
 - [Support](#support)
 - [Configuration](#configuration)
 - [Demo Application](#demo-application)
-- [Enterprise Application](#enterprise-application)
 - [Development Tools](#development-tools)
 - [Cloud Deployment](#cloud-deployment)
 - [License](#license)
@@ -129,14 +128,10 @@ cd genocs-library
 # 2. Build the solution
 dotnet build
 
-#3. Pack the projects
+# 3. Pack the projects
 dotnet pack
 
-# 4. To pack the project with nuspec file
-cd src/Genocs.Core
-dotnet pack -p:NuspecFile=./Genocs.Core.nuspec --no-restore -o .
-
-# 5. To push on nuget
+# 4. To push on nuget
 dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
@@ -166,6 +161,8 @@ root-project/
 │   │   ├── ci-build.yml
 │   │   ├── ci-release.yml
 │   │   └── ...
+├── .codex/
+│   └── AGENT.md
 ├── .cursor/
 │   ├── rules/
 │   │   ├── solution_architect.mdc
@@ -182,13 +179,11 @@ root-project/
 │   ├── copilot-instructions.md
 │   ├── workflows/
 │   │   ├── ...
+├── .kiro/
+│   ├── steering/
+│   │   ├── solution_architect.md
 ├── .vscode/
 │   └── mcp.json
-├── devops/
-│   ├── azure
-│   │   ├── ci-publish_on_acr.yml
-│   │   ├── ci-publish_on_nuget.yml
-│   │   └── ...
 ├── docs/
 │   └── ...
 ├── infrastructure/
@@ -196,13 +191,17 @@ root-project/
 │   │   └── ...
 │   ├── docker/
 │   │   └── ...
-│   ├── helm/
-│   │   └── ...
 │   ├── k8s/
+│   │   ├── helm/
+│   │   │   └── ...
+│   │   ├── manifest/
+│   │   │   └── ...
 │   │   └── ...
 │   ├── terraform/
 │   │   └── ...
 │   ├── ...
+├── postman/
+│   └── ...
 ├── scripts/
 │   └── ...
 ├── src/
@@ -234,7 +233,7 @@ In this section you can find the infrastructure components you need to execute t
 You can use **Docker compose** to setup the infrastructure components just by running few commands.
 
 ```bash
-cd ./infrastructure/docker
+cd ./infrastructure/containers
 
 # Setup the infrastructure.
 # Use this file to setup the basic infrastructure components (RabbitMQ, MongoDB)
@@ -243,7 +242,9 @@ docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs u
 # Use this file only in case you want to setup Redis and PostgreSQL (no need if you use MongoDB)
 docker compose -f ./infrastructure-db.yml --env-file ./.env --project-name genocs up -d
 
-# Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, InfluxDB, Jaeger, Seq)
+# Use this file only in case you want to setup monitoring infrastructure components (Prometheus, Grafana, Jaeger, Seq, plus node-exporter / cAdvisor / mongodb-exporter for full metrics coverage).
+# Aspire Dashboard is opt-in via the `aspire` profile - see notes below.
+# Note: if you are running Docker Desktop on Windows with WSL2 integration, use the WSL2-safe compose command shown in the next section to avoid mount propagation issues.
 docker compose -f ./infrastructure-monitoring.yml --env-file ./.env --project-name genocs up -d
 
 # Use this file only in case you want to setup scaling infrastructure components (Fabio, Consul)
@@ -267,6 +268,26 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 # Use this file only in case you want to setup AI ML components prepared by Genocs
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
 ```
+
+### Windows + WSL2 (Docker Desktop)
+
+If you are running Docker Desktop on Windows with WSL2 integration, run the compose commands from your WSL terminal in the repository path mounted under `/mnt/<drive>` (or `/d/...` in Git Bash).
+
+Most compose files can be run with the same commands shown above.
+
+For monitoring, use the WSL2 override file to avoid mount propagation issues on Docker Desktop:
+
+```bash
+cd ./infrastructure/containers
+
+# Basic infrastructure
+docker compose -f ./infrastructure.yml --env-file ./.env --project-name genocs up -d
+
+# Monitoring stack (WSL2-safe)
+docker compose -f ./infrastructure-monitoring.yml -f ./infrastructure-monitoring.wsl2.yml --env-file ./.env --project-name genocs up -d
+```
+
+The override file (`infrastructure-monitoring.wsl2.yml`) removes a Linux-only mount propagation option required on native Linux but unsupported in common Docker Desktop + WSL2 setups.
 
 > **NOTE**:
 >
@@ -293,23 +314,38 @@ You can check them locally:
 
 `infrastructure-monitoring.yml` allows to install the monitoring infrastructure components. They are:
 
-- [Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)
-- [Prometheus](https://prometheus.io/)
-- [Grafana](https://grafana.com/)
-- [InfluxDB](https://www.influxdata.com/)
-- [Jaeger](https://www.jaegertracing.io/)
-- [Seq](https://datalust.co/seq)
+- [Prometheus](https://prometheus.io/) (metrics TSDB + scraper)
+- [Grafana](https://grafana.com/) (dashboards; auto-provisioned with the Prometheus datasource)
+- [Jaeger](https://www.jaegertracing.io/) (default OTLP collector + traces UI)
+- [Seq](https://datalust.co/seq) (structured logs)
+- [node-exporter](https://github.com/prometheus/node_exporter) (host metrics)
+- [cAdvisor](https://github.com/google/cadvisor) (per-container metrics)
+- [mongodb-exporter](https://github.com/percona/mongodb_exporter) (MongoDB metrics)
 
 You can find the console locally at:
 
-- [Aspire](localhost:18888): `localhost:18888`
-- [Prometheus](localhost:9090): `localhost:9090`
-- [Grafana](localhost:3000): `localhost:3000`
-- [InfluxDB](localhost:8086): `localhost:8086`
-- [Jaeger](localhost:16686): `localhost:16686`
-- [Seq](localhost:5341): `localhost:5341`
+- [Prometheus](http://localhost:9090): `localhost:9090`
+- [Grafana](http://localhost:3000): `localhost:3000` — login uses `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` from `.env` (falls back to `admin` / `admin` if unset).
+- [Jaeger](http://localhost:16686): `localhost:16686`
+- [Seq](http://localhost:5380): `localhost:5380`
 
-`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a Fabio (Loadbalancer) Service Discovery (Consul) components. They are:
+### Optional: Aspire Dashboard
+
+The Aspire Dashboard is shipped as an alternative OTLP collector + UI. It is **not** started by default; enable it with the `aspire` Docker Compose profile:
+
+```bash
+docker compose -f ./infrastructure-monitoring.yml --profile aspire --env-file ./.env --project-name genocs up -d
+```
+
+To make the Genocs apps export their OTLP traces/metrics to Aspire instead of Jaeger, set in your `.env`:
+
+```text
+OTLP_URL=http://aspire_dashboard:18889
+```
+
+(the env var name `OTLP_URL` points at any OTLP gRPC endpoint.) The Aspire UI is then at [http://localhost:18888](http://localhost:18888).
+
+`infrastructure-scaling.yml` allows to install the scaling infrastructure components composed by a `Loadbalancer` (Fabio) and a `Service Discovery` (Consul) components.
 
 - [Fabio](https://fabiolb.net/)
 - [Consul](https://www.consul.io/)
@@ -333,20 +369,25 @@ networks:
     driver: bridge
 
 volumes:
-  rabbitmq-data:
-  mongo-data:
-  redis-data:
-  postgres-data:
-  influx-data:
-  grafana-data:
-  jaeger-data:
-  seq-data:
-  vault-data:
-  elk-data:
-  fabio-data:
-  consul-data:
-  prometheus-data:
-  ml-data:
+  rabbitmq_data:
+  rabbitmq_logs:
+  mongodb_data:
+  redis_data:
+  postgres_data:
+  mysql_data:
+  grafana_data:
+  jaeger_data:
+  seq_data:
+  vault_data:
+  es_data:
+  fabio_data:
+  consul_data:
+  prometheus_data:
+  mssql_system_data:
+  mssql_user_data:
+  oracle_data:
+  oracle_setup:
+  oracle_startup:
 ```
 
 Remember to add the network configuration inside your docker compose file to setup the network, before running the containers.
@@ -426,7 +467,10 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
       "Token"
     ],
     "console": {
-      "enabled": false
+      "enabled": false,
+      "enableStructured": false,
+      "enableTracing": false,
+      "enableMetrics": false
     },
     "elk": {
       "enabled": false,
@@ -464,9 +508,30 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "validateLifetime": true,
     "expiry": "01:00:00"
   },
-  "prometheus": {
-    "enabled": false,
-    "endpoint": "/metrics"
+  "telemetry": {
+    "enabled": true,
+    "exporter": {
+      "enabled": false,
+      "otlpEndpoint": "http://localhost:4317",
+      "protocol": "Grpc",
+      "enableTracing": true,
+      "enableMetrics": true
+    },
+    "console": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false
+    },
+    "azure": {
+      "enabled": false,
+      "enableTracing": false,
+      "enableMetrics": false,
+      "connectionString": "InstrumentationKey=<<your_instrumentation_key>>;IngestionEndpoint=https://<<your_region>>.in.applicationinsights.azure.com/"
+    },
+    "prometheus": {
+      "enabled": false,
+      "endpoint": "/metrics"
+    }
   },
   "mongodb": {
     "connectionString": "mongodb://localhost:27017",
@@ -483,7 +548,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
     "disableTransactions": false
   },
   "rabbitmq": {
-    "connectionName": "users-service",
+    "connectionName": "service-name",
     "retries": 3,
     "retryInterval": 2,
     "conventionsCasing": "snakeCase",
@@ -584,57 +649,19 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 
 ## **_Demo Application_**
 
-Inside the repo there is a simple demo application you can use to test the library. The demo application is composed by a WebApi and a Worker service, they are both using the library to show you how to use it in a real application.
-
-### How to BUILD & RUN the application
-Following are the commands to build and run the demo application.
-
-```bash
-# Build the solution
-dotnet build
-
-# Pack the projects
-dotnet pack
-
-# Run project with console
-dotnet run --project ./src/demo/WebApi
-dotnet run --project ./src/demo/Worker
-dotnet run --project ./src/demo/HelloWorld.WebApi
-```
-
-### Build and push the Docker images to Dockerhub
-
-```bash
-# Build webapi Docker image
-docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/WebApi/Dockerfile .
-
-# Push webapi Docker image to Dockerhub
-docker push genocs/demo-webapi:2.0.0
-docker push genocs/demo-webapi:latest
-
-# Build WORKER Docker image
-docker build -t genocs/demo-worker:2.0.0 -t genocs/demo-worker:latest -f ./src/demo/Worker/Dockerfile .
-
-# Push WORKER Docker image to Dockerhub
-docker push genocs/demo-worker:2.0.0
-docker push genocs/demo-worker:latest
-```
-
----
-
-## **_Enterprise Application_**
-
 ### Application Components
 
-Inside **./src/apps** folder you can find a full-fledged application composed by:
+Inside **./src/demo** folder you can find a full-fledged application composed by:
 
 - ApiGateway
 - Identity Service
 - Order Service
 - Product Service
 - Notification Service
+- Microservice Components
 
 In that way you can test the entire flow.
+
 
 | Component            | Description                     | Container Port | Visibility                  |
 | -------------------- | ------------------------------- | -------------- | --------------------------- |
@@ -646,36 +673,95 @@ In that way you can test the entire flow.
 
 ![Architecture](./assets/architecture_01.png)
 
+For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/microservice/WebApi/README.md`](src/demo/microservice/WebApi/README.md).
+
 ### How to BUILD & RUN the application
 
 The build and run process can be done by using docker-compose.
 
 Pre-requisites:
 - Docker
+> __NOTE__
+>
+> **Before running the solution remember to check**
+> **if the infrastructure services were setup**
+
+
+Following are the commands to build and run the demo application.
 
 ```bash
+# Build the solution
+dotnet build
 
+# Pack the projects
+dotnet pack
+
+# Run project with console
+dotnet run --project ./src/demo/microservice/WebApi
+dotnet run --project ./src/demo/microservice/Masstransit.WebApi
+dotnet run --project ./src/demo/microservice/Masstransit.Worker
+dotnet run --project ./src/demo/microservice/ServiceBus.Worker
+dotnet run --project ./src/demo/apigateway/WebApi
+dotnet run --project ./src/demo/identities/WebApi
+dotnet run --project ./src/demo/products/WebApi
+dotnet run --project ./src/demo/orders/WebApi
+dotnet run --project ./src/demo/notifications/WebApi
+```
+
+### Build and push the Docker images to Dockerhub
+
+You can build the Demo application by using Docker and push the images to Dockerhub, so you can use them to deploy the application on Kubernetes cluster or other cloud platforms.
+```bash
+# OPTION 1. 
+#Build and run with docker compose
+# One shot command to build and run the demo application with docker compose
+./scripts/build-and-run-demo-docker-images.sh
+
+# OPTION 2.
+# Step by step commands to build and run the demo application with docker compose
+cd ./infrastructure/containers/demo
 # Build with docker compose
-./src/apps/scripts/build-images-docker-compose.sh
-
-# *** Before running the solution remember to check ***
-# *** if the infrastructure services were setup     ***
+docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
 
 # Run with docker compose
-docker compose -f ./src/apps/docker-compose.yml --env-file ./.env --project-name genocs up -d
+docker compose -f ./docker-compose.yml --env-file ./.env --project-name genocs up -d
+
+# Build webapi Docker image
+docker build -t genocs/demo-webapi:2.0.0 -t genocs/demo-webapi:latest -f ./src/demo/microservice/WebApi/Dockerfile .
+
+# Push webapi Docker image to Dockerhub
+docker push genocs/demo-webapi:2.0.0
+docker push genocs/demo-webapi:latest
+
+# Build MassTransit WebApi Docker image
+docker build -t genocs/demo-masstransit-webapi:2.0.0 -t genocs/demo-masstransit-webapi:latest -f ./src/demo/microservice/Masstransit.WebApi/Dockerfile .
+
+# Push MassTransit WebApi Docker image to Dockerhub
+docker push genocs/demo-masstransit-webapi:2.0.0
+docker push genocs/demo-masstransit-webapi:latest
+
+# Build MassTransit WORKER Docker image
+docker build -t genocs/demo-masstransit-worker:2.0.0 -t genocs/demo-masstransit-worker:latest -f ./src/demo/microservice/Masstransit.Worker/Dockerfile .
+
+# Push MassTransit WORKER Docker image to Dockerhub
+docker push genocs/demo-masstransit-worker:2.0.0
+docker push genocs/demo-masstransit-worker:latest
+
+# Build ServiceBus WORKER Docker image
+docker build -t genocs/demo-servicebus-worker:2.0.0 -t genocs/demo-servicebus-worker:latest -f ./src/demo/microservice/ServiceBus.Worker/Dockerfile .
+
+# Push ServiceBus WORKER Docker image to Dockerhub
+docker push genocs/demo-servicebus-worker:2.0.0
+docker push genocs/demo-servicebus-worker:latest
+```
+
+
+```bash
+# Build and run with docker compose
+./scripts/build-and-run-demo-docker-images.sh
 
 # Clean Docker cache (optional)
 docker builder prune
-```
-
-Some useful commands to manage the application:
-
-```bash
-# Build docker image one by one
-./src/apps/scripts/build-images.sh
-
-# Build the images with docker compose and push to Dockerhub
-./src/apps/scripts/build-and-push-images.sh
 ```
 
 ## **_Kubernetes_**
@@ -686,19 +772,19 @@ You can deploy the application on Kubernetes cluster by using kubectl.
 
 ```bash
 # Build images
-./src/apps/scripts/deploy-k8s.sh
+./scripts/deploy-k8s.sh
 ```
 
 ### Helm chart
 
 You can deploy the application on Kubernetes cluster by using Helm chart.
 
-Inside the folder **./src/apps/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
+Inside the folder **./infrastructure/k8s/helm** you can find the Helm chart to set a K8s cluster and deploy the application.
 
 The command below allows to install the Helm chart by using MicroK8s.
 
 ```bash
-cd ./src/apps/k8s/helm
+cd ./infrastructure/k8s/helm
 microk8s helm install genocs ./gnxchart
 ```
 
@@ -761,7 +847,6 @@ Why use multiple libraries for testing? Each library has its own strengths and w
 | **Reqnroll** | End-to-End Testing | A library that provides a way to write end-to-end tests for REST APIs in .NET. |
 
 
-
 Under evalutation to be added:
 - [Respawn](https://github.com/jbogard/Respawn)
 
@@ -801,8 +886,32 @@ Add the following lines inside the csproj file of the project you want to test:
       </AssemblyAttribute>
   </ItemGroup>
 ```
+## **_Agentic Support_**
+
+The repository contains support for agentic development to be used along with VS Code or by other IDEs. 
+
+Supported agents are:
+- Codex
+- Cursor
+- Kiro
+- GitHUb Copilot Agents
+- Google Antigravity
+
+### Codex
+_Codex_ is an AI system developed by [OpenAI](https://openai.com/index/introducing-codex/) that translates natural language into code, acting as an interactive, intelligent programming partner. Based on GPT-5.3-Codex, it allows for real-time collaboration, where users can ask questions, discuss approaches, and guide the AI toward solutions. It excels at generating, synthesizing information, and solving complex coding tasks.
 
 
+### Cursor
+_Cursor_  is an AI-powered integrated development environment (IDE) designed specifically for software development. It is built as a "fork" of Visual Studio Code (VS Code), meaning it retains the familiar interface, extensions, and settings of VS Code while embedding advanced AI models directly into the code editor.
+
+### Kiro
+_Kiro_ is an AI-enhancedagentic Integrated Development Environment (IDE) and Command Line Interface (CLI) developed by Amazon Web Services (AWS) to facilitate end-to-end software development, often referred to as "spec-driven development". It is designed to move beyond simple code completion by using intelligent agents that can understand an entire codebase, generate detailed technical specifications, write code, run tests, and manage deployment
+
+### GitHub Copilot Agents
+_GitHub Copilot Agents_ are a set of agents that allows to use GitHub Copilot inside the IDE. They are designed to help developers to write code faster and with less effort by using natural language prompts.
+
+### Google Antigravity
+_Google Antigravity_ is a introduced "agentic" AI development platform and integrated development environment (IDE) released by Google in late 2025.
 
 ## **_MCP Servers_**
 

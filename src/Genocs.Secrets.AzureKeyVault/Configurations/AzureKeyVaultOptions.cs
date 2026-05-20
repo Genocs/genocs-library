@@ -18,12 +18,12 @@ public class AzureKeyVaultOptions
     /// <summary>
     /// The name of the Azure Key Vault.
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// The managed identity id.
     /// </summary>
-    public string? ManagedIdentityId { get; set; }
+    public string ManagedIdentityId { get; set; }
 
     /// <summary>
     /// The certificate thumbprint. To be used with Certificate authentication.
@@ -33,10 +33,10 @@ public class AzureKeyVaultOptions
     /// <summary>
     /// The Active Directory Application id. To be used with Certificate authentication.
     /// </summary>
-    public string? AzureADApplicationId { get; set; }
+    public string AzureADApplicationId { get; set; }
 
     /// <summary>
     /// The Azure EntraID tenant Id. To be used with Certificate authentication.
     /// </summary>
-    public string? AzureADDirectoryId { get; set; }
+    public string AzureADDirectoryId { get; set; }
 }

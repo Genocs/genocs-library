@@ -1,6 +1,6 @@
 using System.Reflection;
-using Genocs.Common.Builders;
 using Genocs.Common.Configurations;
+using Genocs.Common.Services;
 using Genocs.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -49,10 +49,22 @@ public static class Extensions
     /// <param name="app">The application builder.</param>
     /// <returns>The application builder.</returns>
     public static IApplicationBuilder UseGenocs(this IApplicationBuilder app)
+        => UseGenocsAsync(app).GetAwaiter().GetResult();
+
+    /// <summary>
+    /// Run the application initializer asynchronously.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>The application builder.</returns>
+    public static async Task<IApplicationBuilder> UseGenocsAsync(this IApplicationBuilder app, CancellationToken cancellationToken = default)
     {
-        using var scope = app.ApplicationServices.CreateScope();
+        ArgumentNullException.ThrowIfNull(app);
+
+        await using var scope = app.ApplicationServices.CreateAsyncScope();
         var initializer = scope.ServiceProvider.GetRequiredService<IStartupInitializer>();
-        Task.Run(() => initializer.InitializeAsync()).GetAwaiter().GetResult();
+        await initializer.InitializeAsync(cancellationToken);
+
         return app;
     }
 
@@ -81,13 +93,11 @@ public static class Extensions
     public static TModel GetOptions<TModel>(this IGenocsBuilder builder, string sectionName)
         where TModel : new()
     {
-        if (builder.Configuration != null)
-        {
-            return builder.Configuration.GetOptions<TModel>(sectionName);
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
-        using var serviceProvider = builder.Services.BuildServiceProvider();
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        IConfiguration configuration = builder.Configuration
+            ?? throw new InvalidOperationException("Configuration is not available on the current Genocs builder instance.");
+
         return configuration.GetOptions<TModel>(sectionName);
     }
 
@@ -100,18 +110,21 @@ public static class Extensions
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
+        var environment = app.ApplicationServices.GetService<IHostEnvironment>();
+        if (environment?.IsDevelopment() != true)
+        {
+            return app;
+        }
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapGet("/", async context =>
             {
-                // Get the Entry Assembly Name and Version
-                // Check performance implications of calling this method
                 string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-                string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
-                string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+                string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+                string message = $"Service {serviceName ?? assemblyVersion} is running";
 
-                await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? "Service");
+                await context.Response.WriteAsync(serviceName ?? message);
             });
 
             // All health checks must pass for app to be considered ready to accept traffic after starting
@@ -143,13 +156,11 @@ public static class Extensions
 
         app.MapGet("/", async context =>
         {
-            // Get the Entry Assembly Name and Version
-            // Check performance implications of calling this method
             string? assemblyVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            string? serviceVersion = context.RequestServices.GetService<AppOptions>()?.Name;
-            string message = $"Service {serviceVersion ?? assemblyVersion} is running";
+            string? serviceName = context.RequestServices.GetService<AppOptions>()?.Name;
+            string message = $"Service {serviceName ?? assemblyVersion} is running";
 
-            await context.Response.WriteAsync(context.RequestServices.GetService<AppOptions>()?.Name ?? message);
+            await context.Response.WriteAsync(serviceName ?? message);
         }).AllowAnonymous();
 
         // All health checks must pass for app to be considered ready to accept traffic after starting

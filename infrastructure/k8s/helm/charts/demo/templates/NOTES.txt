@@ -1,0 +1,25 @@
+The Genocs demo workloads have been deployed:
+
+{{- if .Values.demoWebapi.enabled }}
+  - {{ .Values.demoWebapi.name }} (Deployment + Service) -> {{ .Values.demoWebapi.image.repository }}:{{ .Values.image.tag }}
+{{- end }}
+{{- if .Values.demoMasstransitWebapi.enabled }}
+  - {{ .Values.demoMasstransitWebapi.name }} (Deployment + Service) -> {{ .Values.demoMasstransitWebapi.image.repository }}:{{ .Values.image.tag }}
+{{- end }}
+{{- if .Values.demoMasstransitWorker.enabled }}
+  - {{ .Values.demoMasstransitWorker.name }} (Deployment only) -> {{ .Values.demoMasstransitWorker.image.repository }}:{{ .Values.image.tag }}
+{{- end }}
+{{- if .Values.demoServicebusWorker.enabled }}
+  - {{ .Values.demoServicebusWorker.name }} (Deployment only) -> {{ .Values.demoServicebusWorker.image.repository }}:{{ .Values.image.tag }}
+{{- end }}
+
+Infrastructure dependencies (mongodb, seq, jaeger) are NOT installed by
+this chart and must already exist in the cluster. Override their URLs via
+values.yaml -> env.* if your addresses differ.
+
+To port-forward the primary demo WebApi:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} \
+    -l "app={{ .Values.demoWebapi.name }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 5700:{{ .Values.demoWebapi.containerPort }}
+  echo "Visit http://127.0.0.1:5700"

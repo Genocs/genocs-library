@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Genocs.Common.Types;
 
 namespace Genocs.Common.CQRS.Events;
 
@@ -17,6 +18,11 @@ public class RejectedEvent : IRejectedEvent
     /// </summary>
     public string Code { get; }
 
+    /// <summary>
+    /// Gets the shared error model for this rejection event.
+    /// </summary>
+    public Error Error => new(Code, Reason);
+
     [JsonConstructor]
     public RejectedEvent(string reason, string code)
     {
@@ -24,6 +30,12 @@ public class RejectedEvent : IRejectedEvent
         Code = code;
     }
 
+    /// <summary>
+    /// Creates a rejected event from a shared error instance.
+    /// </summary>
+    public static IRejectedEvent For(Error error)
+        => new RejectedEvent(error.Message, error.Code);
+
     public static IRejectedEvent For(string name)
-        => new RejectedEvent($"There was an error when executing: {name}", $"{name}_error");
+        => new RejectedEvent($"There was an error when executing: {name}", RejectionCode.Create(name));
 }

@@ -16,9 +16,29 @@ Use this package to register OpenAPI generation and expose Swagger UI/document e
 
 ## Main Entry Points
 
-- `AddSwaggerDocs`
-- `AddWebApiSwaggerDocs`
-- `UseSwaggerDocs`
+- `AddOpenApiDocs`
+- `UseOpenApiDocs`
+
+## Fluent Builder Coverage
+
+`IOpenApiOptionsBuilder` supports the complete `OpenApiOptions` surface, including:
+
+- API metadata: name, title, version, description, route prefix
+- contact metadata: name, email, and URL
+- license metadata: name and URL
+- terms of service URL/text
+- server list via `WithServers(...)` or `AddServer(...)`
+- security inclusion via `IncludeSecurity(...)`
+
+## Maintainer Validation
+
+Use these commands to validate package-local quality gates:
+
+```bash
+dotnet build src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj -f net10.0 -c Debug --nologo -warnaserror -p:BuildProjectReferences=false
+dotnet test src/tests/Genocs.WebApi.OpenApi.UnitTests/Genocs.WebApi.OpenApi.UnitTests.csproj -c Debug --nologo
+make validate-webapi-openapi
+```
 
 ## Support
 

@@ -11,9 +11,9 @@ public class GetAuditLogsRequestHandler : IRequestHandler<GetAuditLogsRequest, L
     private readonly ICurrentUser _currentUser;
     private readonly IAuditService _auditService;
 
-    public GetAuditLogsRequestHandler(ICurrentUser currentUser, IAuditService auditService) =>
-        (_currentUser, _auditService) = (currentUser, auditService);
+    public GetAuditLogsRequestHandler(ICurrentUser currentUser, IAuditService auditService)
+        => (_currentUser, _auditService) = (currentUser, auditService);
 
-    public Task<List<AuditDto>> Handle(GetAuditLogsRequest request, CancellationToken cancellationToken) =>
-        _auditService.GetUserTrailsAsync(_currentUser.GetUserId());
+    public Task<List<AuditDto>> Handle(GetAuditLogsRequest request, CancellationToken cancellationToken)
+        => _auditService.GetUserTrailsAsync(_currentUser.GetUserId());
 }

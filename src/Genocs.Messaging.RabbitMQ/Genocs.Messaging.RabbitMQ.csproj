@@ -10,18 +10,20 @@
         <PackageTags>genocs messaging rabbitmq amqp integration</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Genocs.Messaging\Genocs.Messaging.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta001" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Polly" Version="8.6.5" />
-        <PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
+        <PackageReference Include="Polly" Version="8.6.6" />
+        <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Genocs.Messaging.RabbitMQ.UnitTests</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 
 

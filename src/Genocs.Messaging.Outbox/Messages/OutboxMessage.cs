@@ -4,22 +4,20 @@ namespace Genocs.Messaging.Outbox.Messages;
 
 public sealed class OutboxMessage : IEntity<string>
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string? OriginatedMessageId { get; set; }
     public string? CorrelationId { get; set; }
     public string? SpanContext { get; set; }
-    public Dictionary<string, object> Headers { get; set; } = new();
+    public Dictionary<string, object?> Headers { get; set; } = [];
     public string? MessageType { get; set; }
     public string? MessageContextType { get; set; }
     public object? Message { get; set; }
     public object? MessageContext { get; set; }
     public string? SerializedMessage { get; set; }
     public string? SerializedMessageContext { get; set; }
-    public DateTime SentAt { get; set; }
-    public DateTime? ProcessedAt { get; set; }
+    public DateTime SentAt { get; init; }
+    public DateTime? ProcessedAt { get; private set; }
+    public void SetProcessed() => ProcessedAt = DateTime.UtcNow;
 
-    public bool IsTransient()
-    {
-        throw new NotImplementedException();
-    }
+    public bool IsTransient() => string.IsNullOrWhiteSpace(Id);
 }

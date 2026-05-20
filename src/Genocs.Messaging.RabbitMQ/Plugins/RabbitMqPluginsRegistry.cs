@@ -7,7 +7,8 @@ internal sealed class RabbitMqPluginsRegistry : IRabbitMqPluginsRegistry, IRabbi
     public RabbitMqPluginsRegistry()
         => _plugins = new LinkedList<RabbitMqPluginChain>();
 
-    public IRabbitMqPluginsRegistry Add<TPlugin>() where TPlugin : class, IRabbitMqPlugin
+    public IRabbitMqPluginsRegistry Add<TPlugin>()
+        where TPlugin : class, IRabbitMqPlugin
     {
         _plugins.AddLast(new RabbitMqPluginChain { PluginType = typeof(TPlugin) });
         return this;

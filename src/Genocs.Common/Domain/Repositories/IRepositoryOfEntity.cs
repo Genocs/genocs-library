@@ -21,67 +21,33 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     #region Select/Get/Query
 
     /// <summary>
-    /// Used to get a IQueryable that is used to retrieve entities from entire table.
-    /// </summary>
-    /// <returns>IQueryable to be used to select entities from database.</returns>
-    IQueryable<TEntity> GetAll();
-
-    /// <summary>
-    /// Used to get a IQueryable that is used to retrieve entities from entire table.
-    /// One or more.
-    /// </summary>
-    /// <param name="propertySelectors">A list of include expressions.</param>
-    /// <returns>IQueryable to be used to select entities from database.</returns>
-    IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
-
-    /// <summary>
-    /// Used to get all entities.
-    /// </summary>
-    /// <returns>List of all entities.</returns>
-    List<TEntity> GetAllList();
-
-    /// <summary>
-    /// Used to get all entities.
+    /// Used to get all entities asynchronously.
     /// </summary>
     /// <returns>List of all entities.</returns>
     Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Used to get all entities based on given <paramref name="predicate"/>.
+    /// Used to get all entities based on given predicate asynchronously.
     /// </summary>
     /// <param name="predicate">A condition to filter entities.</param>
-    /// <returns>List of all entities.</returns>
-    List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
-
-    /// <summary>
-    /// Used to get all entities based on given <paramref name="predicate"/>.
-    /// </summary>
-    /// <param name="predicate">A condition to filter entities.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>List of all entities.</returns>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of all entities matching the predicate.</returns>
     Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Used to run a query over entire entities.
-    /// if <paramref name="queryMethod"/> finishes IQueryable with ToList, FirstOrDefault etc..
+    /// Gets an entity with the given primary key asynchronously.
+    /// Returns null if not found.
     /// </summary>
-    /// <typeparam name="T">Type of return value of this method.</typeparam>
-    /// <param name="queryMethod">This method is used to query over entities.</param>
-    /// <returns>Query result.</returns>
-    T Query<T>(Func<IQueryable<TEntity>, T> queryMethod);
+    /// <param name="id">Primary key of the entity to get.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Entity or null if not found.</returns>
+    Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets an entity with given primary key.
     /// </summary>
     /// <param name="id">Primary key of the entity to get.</param>
-    /// <returns>Entity.</returns>
-    TEntity Get(TKey id);
-
-    /// <summary>
-    /// Gets an entity with given primary key.
-    /// </summary>
-    /// <param name="id">Primary key of the entity to get.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Entity.</returns>
     Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default);
 
@@ -97,7 +63,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// Throws exception if no entity or more than one entity.
     /// </summary>
     /// <param name="predicate">Entity.</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -133,7 +99,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="id">Primary key of the entity to load.</param>
     /// <returns>Entity.</returns>
-    TEntity? Load(TKey id);
+    TEntity Load(TKey id);
 
     #endregion
 
@@ -237,7 +203,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// <param name="updateAction">Action that can be used to change values of the entity.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Updated entity.</returns>
-    Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction, CancellationToken cancellationToken);
+    Task<TEntity> UpdateAsync(TKey id, Func<TEntity, Task> updateAction, CancellationToken cancellationToken = default);
 
     #endregion
 
@@ -254,7 +220,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="entity">Entity to be deleted.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken);
+    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes an entity by primary key.
@@ -267,7 +233,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="id">Primary key of the entity.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    Task DeleteAsync(TKey id, CancellationToken cancellationToken);
+    Task DeleteAsync(TKey id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes many entities by function.
@@ -286,7 +252,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="predicate">A condition to filter entities.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+    Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     #endregion
 
@@ -302,7 +268,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// Gets count of all entities in this repository.
     /// </summary>
     /// <returns>Count of entities.</returns>
-    Task<int> CountAsync(CancellationToken cancellationToken);
+    Task<int> CountAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets count of all entities in this repository based on given <paramref name="predicate"/>.
@@ -317,7 +283,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// <param name="predicate">A method to filter count.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Count of entities.</returns>
-    Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+    Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets count of all entities in this repository (use if expected return value is greater than <see cref="int.MaxValue"/>.
@@ -330,7 +296,7 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Count of entities.</returns>
-    Task<long> LongCountAsync(CancellationToken cancellationToken);
+    Task<long> LongCountAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
@@ -347,7 +313,30 @@ public interface IRepositoryOfEntity<TEntity, TKey> : IRepository<TEntity, TKey>
     /// <param name="predicate">A method to filter count.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Count of entities.</returns>
-    Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+    Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     #endregion
+}
+
+/// <summary>
+/// Optional repository contract for providers that intentionally expose an <see cref="IQueryable{T}"/> surface.
+/// Prefer <see cref="IRepositoryOfEntity{TEntity, TKey}"/> in domain and application code unless provider-backed composition is required.
+/// </summary>
+/// <typeparam name="TEntity">Main entity type this repository works on.</typeparam>
+/// <typeparam name="TKey">Primary key type of the entity.</typeparam>
+public interface IQueryableRepository<TEntity, TKey> : IRepositoryOfEntity<TEntity, TKey>
+    where TEntity : IEntity<TKey>
+{
+    /// <summary>
+    /// Exposes the provider-backed queryable source for advanced querying scenarios.
+    /// </summary>
+    /// <returns>The queryable entity source.</returns>
+    IQueryable<TEntity> GetAll();
+
+    /// <summary>
+    /// Exposes the provider-backed queryable source with eager-loading hints when supported by the implementation.
+    /// </summary>
+    /// <param name="propertySelectors">Navigation members to include.</param>
+    /// <returns>The queryable entity source.</returns>
+    IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
 }

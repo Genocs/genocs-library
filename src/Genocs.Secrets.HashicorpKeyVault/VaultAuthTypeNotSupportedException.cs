@@ -1,17 +1,11 @@
 namespace Genocs.Secrets.HashicorpKeyVault;
 
-internal sealed class VaultAuthTypeNotSupportedException : Exception
+internal sealed class VaultAuthTypeNotSupportedException(string message, string? authType) : Exception(message)
 {
-    public string AuthType { get; set; }
+    public string? AuthType { get; set; } = authType;
 
-    public VaultAuthTypeNotSupportedException(string authType)
+    public VaultAuthTypeNotSupportedException(string? authType)
         : this(string.Empty, authType)
     {
-    }
-
-    public VaultAuthTypeNotSupportedException(string message, string authType)
-        : base(message)
-    {
-        AuthType = authType;
     }
 }

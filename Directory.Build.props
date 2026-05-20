@@ -13,7 +13,7 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)dotnet.ruleset</CodeAnalysisRuleSet>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-        <Version>9.0.0-beta01</Version>
+        <Version>9.0.0</Version>
         <LangVersion>latest</LangVersion>
         <Company>Genocs</Company>
         <Copyright>Genocs 2026</Copyright>
@@ -32,10 +32,11 @@
             The change log and breaking changes are listed here.
             https://github.com/Genocs/genocs-library/releases
         </PackageReleaseNotes>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <!--<WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>-->
     </PropertyGroup>
 
     <ItemGroup>
-
         <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -2,12 +2,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Genocs.Saga;
 
-
 public interface ISagaBuilder
 {
     IServiceCollection Services { get; }
 
     ISagaBuilder UseInMemoryPersistence();
+
+    ISagaBuilder UseInProcessExecutionLock();
+
+    ISagaBuilder DisableInProcessExecutionLock();
 
     ISagaBuilder UseSagaLog<TSagaLog>()
         where TSagaLog : ISagaLog;

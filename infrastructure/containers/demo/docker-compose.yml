@@ -1,0 +1,240 @@
+services:
+  apigateway:
+    image: genocs/apigateway:${IMAGE_VERSION}
+    hostname: apigateway
+    container_name: apigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=apigateway
+      - consul__port=8080
+      - fabio__url=${FABIO_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=apigateway
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - reverseProxy__clusters__identities-cluster__destinations__destination1__address=http://identities-service:8080
+      - reverseProxy__clusters__products-cluster__destinations__destination1__address=http://products-service:8080
+      - reverseProxy__clusters__orders-cluster__destinations__destination1__address=http://orders-service:8080
+      - reverseProxy__clusters__notifications-cluster__destinations__destination1__address=http://notifications-service:8080
+    ports:
+      - 5500:8080
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - apigateway:/root/.aspnet/DataProtection-Keys
+
+  identities-service:
+    image: genocs/identities-webapi:${IMAGE_VERSION}
+    hostname: identities-service
+    container_name: identities-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=identities-service
+      - consul__port=8080
+      - fabio__url=${FABIO_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=identities-service
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+    ports:
+      - 5510:8080
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - identities:/root/.aspnet/DataProtection-Keys
+
+  products-service:
+    image: genocs/products-webapi:${IMAGE_VERSION}
+    hostname: products-service
+    container_name: products-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=products-service
+      - consul__port=8080
+      - fabio__url=${FABIO_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=products-service
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+    ports:
+      - 5520:8080
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - products:/root/.aspnet/DataProtection-Keys
+
+  orders-service:
+    image: genocs/orders-webapi:${IMAGE_VERSION}
+    hostname: orders-service
+    container_name: orders-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=orders-service
+      - consul__port=8080
+      - fabio__url=${FABIO_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=orders-service
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - httpClient__services__products=http://products-service:8080
+    ports:
+      - 5530:8080
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - orders:/root/.aspnet/DataProtection-Keys
+
+  notifications-service:
+    image: genocs/notifications-webapi:${IMAGE_VERSION}
+    hostname: notifications-service
+    container_name: notifications-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - consul__url=${CONSUL_URL}
+      - consul__address=notifications-service
+      - consul__port=8080
+      - fabio__url=${FABIO_URL}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=notifications-service
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+    ports:
+      - 5540:8080
+    #ports:
+    networks:
+      - genocs
+    # network_mode: bridge
+    volumes:
+      - notifications:/root/.aspnet/DataProtection-Keys
+
+  demo-webapi-service:
+    image: genocs/demo-webapi:${IMAGE_VERSION}
+    hostname: demo-webapi-service
+    container_name: demo-webapi-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - telemetry__prometheus__allowedHosts__0=demo-webapi-service
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
+      - connectionStrings__bookStore=${MSSQL_CONNECTION_STRING}
+      - databaseOptions__connectionString=${MSSQL_CONNECTION_STRING}
+    networks:
+      - genocs
+    ports:
+      - 5550:8080
+
+  demo-masstransit-webapi-service:
+    image: genocs/demo-masstransit-webapi:${IMAGE_VERSION}
+    hostname: demo-masstransit-webapi-service
+    container_name: demo-masstransit-webapi-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
+    networks:
+      - genocs
+    ports:
+      - 5560:8080
+
+  demo-masstransit-worker-service:
+    image: genocs/demo-masstransit-worker:${IMAGE_VERSION}
+    hostname: demo-masstransit-worker-service
+    container_name: demo-masstransit-worker-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
+    networks:
+      - genocs
+
+  demo-servicebus-worker-service:
+    image: genocs/demo-servicebus-worker:${IMAGE_VERSION}
+    hostname: demo-servicebus-worker-service
+    container_name: demo-servicebus-worker-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - logger__seq__enabled=true
+      - logger__seq__url=${SEQ_URL}
+      - logger__seq__apiKey=${SEQ_APIKEY}
+      - logger__httpPayload__enabled=true
+      - logger__httpPayload__captureRequestBody=true
+      - telemetry__exporter__enabled=true
+      - telemetry__exporter__otlpEndpoint=${OTLP_URL}
+      - mongodb__connectionString=${MONGO_DB_CONNECTION_STRING}
+      - rabbitmq__hostnames__0=rabbitmq
+    networks:
+      - genocs
+
+networks:
+  genocs:
+    name: genocs-network
+    external: true
+    driver: bridge
+
+volumes:
+  apigateway:
+    driver: local
+  identities:
+    driver: local
+  products:
+    driver: local
+  orders:
+    driver: local
+  notifications:
+    driver: local

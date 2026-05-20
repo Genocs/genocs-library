@@ -1,6 +1,9 @@
+using Genocs.Common.Dependency;
+
 namespace Genocs.Common.Interfaces;
 
 /// <summary>
-/// It is used to mark the service as a transient service.
+/// [Obsolete] Use <see cref="ITransientDependency"/> from Genocs.Common.Dependency instead.
 /// </summary>
-public interface ITransientService;
+[Obsolete("Use ITransientDependency from Genocs.Common.Dependency instead.")]
+public interface ITransientService : ITransientDependency;
