@@ -58,7 +58,7 @@ public static class HealthCheckExtensions
             {
                 setup.SetEvaluationTimeInSeconds(10); // Poll every 10 seconds
                 setup.MaximumHistoryEntriesPerEndpoint(50);
-                setup.AddHealthCheckEndpoint("Platform Health", "/health");
+                setup.AddHealthCheckEndpoint("Platform Health", "http://localhost:8080/health");
             })
             .AddInMemoryStorage();
 
