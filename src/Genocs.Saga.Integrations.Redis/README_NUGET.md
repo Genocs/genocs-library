@@ -20,7 +20,7 @@ Use this package to persist saga state and correlation data in Redis when used w
 
 ## Support
 
-- Documentation Portal: https://learn.fiscanner.net/
+- Documentation Portal: https://genocs-blog.netlify.app/
 - Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
 - Repository: https://github.com/Genocs/genocs-library
 

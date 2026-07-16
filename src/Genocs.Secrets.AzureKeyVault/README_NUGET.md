@@ -22,7 +22,7 @@ Use this package to load secrets from Azure Key Vault into your host/application
 
 ## Support
 
-- Documentation Portal: https://learn.fiscanner.net/
+- Documentation Portal: https://genocs-blog.netlify.app/
 - Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
 - Repository: https://github.com/Genocs/genocs-library
 

@@ -159,7 +159,7 @@ Use OTLP exporter for tracing only, disable OTLP logs/metrics, and keep Azure si
 
 ## Support
 
-- Documentation Portal: https://learn.fiscanner.net/
+- Documentation Portal: https://genocs-blog.netlify.app/
 - Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
 - Repository: https://github.com/Genocs/genocs-library
 
