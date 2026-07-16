@@ -13,36 +13,23 @@
         <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga\Genocs.Saga.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.MongoDB\Genocs.Saga.Integrations.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.Redis\Genocs.Saga.Integrations.Redis.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
-    </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <PackageReference Include="Genocs.Auth" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Logging" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Messaging" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Telemetry" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Saga" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Saga.Integrations.MongoDB" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.Saga.Integrations.Redis" Version="9.0.0-beta008" />
-        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0-beta008" />
+    <ItemGroup>
+        <PackageReference Include="Genocs.Auth" Version="9.0.0" />
+        <PackageReference Include="Genocs.Logging" Version="9.0.0" />
+        <PackageReference Include="Genocs.Messaging" Version="9.0.0" />
+        <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0" />
+        <PackageReference Include="Genocs.Messaging.Outbox.MongoDB" Version="9.0.0" />
+        <PackageReference Include="Genocs.Messaging.RabbitMQ" Version="9.0.0" />
+        <PackageReference Include="Genocs.Telemetry" Version="9.0.0" />
+        <PackageReference Include="Genocs.Saga" Version="9.0.0" />
+        <PackageReference Include="Genocs.Saga.Integrations.MongoDB" Version="9.0.0" />
+        <PackageReference Include="Genocs.Saga.Integrations.Redis" Version="9.0.0" />
+        <PackageReference Include="Genocs.WebApi.OpenApi" Version="9.0.0" />
     </ItemGroup>    
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
@@ -53,6 +40,10 @@
         <ProjectReference Include="..\Domain.EFCore\Domain.EFCore.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="HealthChecks\" />
     </ItemGroup>
 
 </Project>

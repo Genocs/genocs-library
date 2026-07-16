@@ -44,9 +44,9 @@ public class LokiOptions
     public int BatchPostingLimit { get; set; } = 1000;
 
     /// <summary>
-    /// The maximum number of events stored in the queue in memory, waiting to be posted over.
+    /// The maximum number of events stored in the queue in memory, waiting to be posted over. Default value is 50000.
     /// </summary>
-    public int? QueueLimit { get; set; }
+    public int QueueLimit { get; set; } = 50000;
 
     /// <summary>
     /// The time to wait between checking for event batches. Default value is 2 seconds.

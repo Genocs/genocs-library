@@ -1,11 +1,6 @@
 namespace Genocs.Identities.Application.Domain.Exceptions;
 
-public class UserLockedException : DomainException
+public class UserLockedException(ref readonly Guid userId) : DomainException($"User with ID: '{userId}' is locked.")
 {
-    public Guid UserId { get; }
-
-    public UserLockedException(Guid userId) : base($"User with ID: '{userId}' is locked.")
-    {
-        UserId = userId;
-    }
+    public Guid UserId { get; } = userId;
 }

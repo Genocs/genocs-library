@@ -176,17 +176,17 @@ public static class Extensions
                 };
 
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url,
+                    uri: lokiOptions.Url,
                     credentials: auth,
-                    batchPostingLimit: lokiOptions.BatchPostingLimit,
+                    batchSizeLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
             }
             else
             {
                 loggerConfiguration.WriteTo.GrafanaLoki(
-                    lokiOptions.Url,
-                    batchPostingLimit: lokiOptions.BatchPostingLimit,
+                    uri: lokiOptions.Url,
+                    batchSizeLimit: lokiOptions.BatchPostingLimit,
                     queueLimit: lokiOptions.QueueLimit,
                     period: lokiOptions.Period).MinimumLevel.ControlledBy(LoggingLevelSwitch);
             }

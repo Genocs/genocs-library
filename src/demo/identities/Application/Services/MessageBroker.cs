@@ -55,10 +55,10 @@ internal class MessageBroker : IMessageBroker
         }
 
         var messageProperties = _messagePropertiesAccessor.MessageProperties;
-        string originatedMessageId = messageProperties?.MessageId;
-        string correlationId = _correlationIdFactory.Create();
-        string spanContext = messageProperties?.GetSpanContext(_spanContextHeader);
-        object correlationContext = _contextAccessor.CorrelationContext ?? _httpContextAccessor.GetCorrelationContext();
+        string? originatedMessageId = messageProperties?.MessageId;
+        string? correlationId = _correlationIdFactory.Create();
+        string? spanContext = messageProperties?.GetSpanContext(_spanContextHeader);
+        object? correlationContext = _contextAccessor.CorrelationContext ?? _httpContextAccessor.GetCorrelationContext();
 
         var headers = new Dictionary<string, object>();
 
