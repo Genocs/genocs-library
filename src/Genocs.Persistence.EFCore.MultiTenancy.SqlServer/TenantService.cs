@@ -1,0 +1,113 @@
+using Finbuckle.MultiTenant.Abstractions;
+using Genocs.Common.Persistence;
+using Genocs.Persistence.EFCore.Configurations;
+using Genocs.Persistence.EFCore.Exceptions;
+using Mapster;
+using Microsoft.Extensions.Options;
+
+namespace Genocs.Persistence.EFCore.MultiTenancy;
+
+internal class TenantService : ITenantService
+{
+    private readonly IMultiTenantStore<GNXTenantInfo> _tenantStore;
+    private readonly IConnectionStringSecurer _csSecurer;
+    private readonly ITenantDatabaseInitializer _dbInitializer;
+
+    // private readonly IStringLocalizer _t;
+    private readonly DatabaseOptions _dbSettings;
+
+    public TenantService(
+                        IMultiTenantStore<GNXTenantInfo> tenantStore,
+                        IConnectionStringSecurer csSecurer,
+                        ITenantDatabaseInitializer dbInitializer,
+                        IOptions<DatabaseOptions> dbSettings) // IStringLocalizer<TenantService> localize
+    {
+        ArgumentNullException.ThrowIfNull(dbSettings);
+
+        _tenantStore = tenantStore ?? throw new ArgumentNullException(nameof(tenantStore));
+        _csSecurer = csSecurer ?? throw new ArgumentNullException(nameof(csSecurer));
+        _dbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
+
+        // _t = localizer ?? throw new ArgumentNullException(nameof(localizer));
+        _dbSettings = dbSettings.Value ?? throw new ArgumentNullException(nameof(_dbSettings));
+    }
+
+    public async Task<List<TenantDto>> GetAllAsync()
+    {
+        var tenants = (await _tenantStore.GetAllAsync()).Adapt<List<TenantDto>>();
+        tenants.ForEach(t => t.ConnectionString = _csSecurer.MakeSecure(t.ConnectionString));
+        return tenants;
+    }
+
+    public async Task<bool> ExistsWithIdAsync(string id) =>
+        await _tenantStore.TryGetAsync(id) is not null;
+
+    public async Task<bool> ExistsWithNameAsync(string name) =>
+        (await _tenantStore.GetAllAsync()).Any(t => t.Name == name);
+
+    public async Task<TenantDto> GetByIdAsync(string id) =>
+        (await GetTenantInfoAsync(id))
+            .Adapt<TenantDto>();
+
+    public async Task<string> CreateAsync(CreateTenantRequest request, CancellationToken cancellationToken)
+    {
+        if (request.ConnectionString?.Trim() == _dbSettings.ConnectionString.Trim()) request.ConnectionString = string.Empty;
+
+        var tenant = new GNXTenantInfo(request.Id, request.Name, request.ConnectionString, request.AdminEmail, request.Issuer);
+        await _tenantStore.TryAddAsync(tenant);
+
+        // TODO: run this in a hangfire job? will then have to send mail when it's ready or not
+        try
+        {
+            await _dbInitializer.InitializeApplicationDbForTenantAsync(tenant, cancellationToken);
+        }
+        catch
+        {
+            await _tenantStore.TryRemoveAsync(request.Id);
+            throw;
+        }
+
+        return tenant.Id!;
+    }
+
+    public async Task<string> ActivateAsync(string id)
+    {
+        var tenant = await GetTenantInfoAsync(id);
+
+        if (tenant.IsActive)
+        {
+            throw new ConflictException("Tenant is already Activated.");
+        }
+
+        tenant.Activate();
+
+        await _tenantStore.TryUpdateAsync(tenant);
+
+        return $"Tenant {id} is now Activated.";
+    }
+
+    public async Task<string> DeactivateAsync(string id)
+    {
+        var tenant = await GetTenantInfoAsync(id);
+        if (!tenant.IsActive)
+        {
+            throw new ConflictException("Tenant is already Deactivated.");
+        }
+
+        tenant.Deactivate();
+        await _tenantStore.TryUpdateAsync(tenant);
+        return $"Tenant {id} is now Deactivated.";
+    }
+
+    public async Task<string> UpdateSubscriptionAsync(string id, DateTime extendedExpiryDate)
+    {
+        var tenant = await GetTenantInfoAsync(id);
+        tenant.SetValidity(extendedExpiryDate);
+        await _tenantStore.TryUpdateAsync(tenant);
+        return $"Tenant {id}'s Subscription Upgraded. Now Valid till {tenant.ValidUpTo}.";
+    }
+
+    private async Task<GNXTenantInfo> GetTenantInfoAsync(string id) =>
+        await _tenantStore.TryGetAsync(id)
+            ?? throw new NotFoundException($"{typeof(GNXTenantInfo).Name} {id} Not Found.");
+}
