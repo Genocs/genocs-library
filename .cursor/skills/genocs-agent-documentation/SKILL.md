@@ -35,6 +35,7 @@ Skip deep reads only for trivial renames or comments with no behavioral impact.
 | `Genocs.Messaging.Outbox` | `docs/Genocs.Messaging.Outbox-Agent-Documentation.md` |
 | `Genocs.Messaging.Outbox.MongoDB` | `docs/Genocs.Messaging.Outbox.MongoDB-Agent-Documentation.md` |
 | `Genocs.Messaging.RabbitMQ` | `docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md` |
+| `Genocs.Persistence.EFCore` (incl. provider packages and `MultiTenancy.SqlServer`) | `docs/Genocs.Persistence.EFCore-Agent-Documentation.md` |
 | `Genocs.Persistence.MongoDB` | `docs/Genocs.Persistence.MongoDB-Agent-Documentation.md` |
 | `Genocs.Saga` | `docs/Genocs.Saga-Agent-Documentation.md` |
 | `Genocs.Saga.Integrations.MongoDB` | `docs/Genocs.Saga.Integrations.MongoDB-Agent-Documentation.md` |

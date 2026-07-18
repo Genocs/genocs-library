@@ -22,11 +22,6 @@
         <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.3" />
-        <PackageReference Include="Finbuckle.MultiTenant.EntityFrameworkCore" Version="9.4.1" />
-    </ItemGroup>
-
     <ItemGroup Label="EF Core">
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" Condition="'$(TargetFramework)' == 'net10.0'" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.15" Condition="'$(TargetFramework)' == 'net9.0'" />

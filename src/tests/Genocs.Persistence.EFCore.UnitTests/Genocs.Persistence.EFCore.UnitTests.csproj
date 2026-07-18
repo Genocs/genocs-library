@@ -32,6 +32,7 @@
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore.Sqlite\Genocs.Persistence.EFCore.Sqlite.csproj" />
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore.Oracle\Genocs.Persistence.EFCore.Oracle.csproj" />
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore.MongoDB\Genocs.Persistence.EFCore.MongoDB.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.MultiTenancy.SqlServer\Genocs.Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 # Genocs.Persistence.EFCore — Assessment
 
+> **Note (July 2026)**: This assessment predates the package split. `Genocs.Persistence.EFCore` has since been divided into a provider-agnostic core, six database provider packages (`Genocs.Persistence.EFCore.SqlServer`, `.PostgreSQL`, `.MySql`, `.Sqlite`, `.Oracle`, `.MongoDB`), and `Genocs.Persistence.EFCore.MultiTenancy.SqlServer`. File paths and dependency observations below reflect the pre-split layout. For current state see [Genocs.Persistence.EFCore-Agent-Documentation.md](Genocs.Persistence.EFCore-Agent-Documentation.md) and the [implementation backlog](Genocs.Persistence.EFCore-Implementation-Backlog.md).
+
 ## Overview
 
 This assessment covers the `Genocs.Persistence.EFCore` package as of May 2026. The analysis examines runtime correctness, DI composition, repository contracts, multi-tenancy behavior, dependency hygiene, and testability.

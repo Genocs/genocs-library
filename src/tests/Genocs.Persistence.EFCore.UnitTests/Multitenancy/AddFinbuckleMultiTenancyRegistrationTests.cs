@@ -33,8 +33,8 @@ public class AddFinbuckleMultiTenancyRegistrationTests
         services.AddOptions<DatabaseOptions>()
             .Configure(options =>
             {
-                options.DBProvider = "sqlite";
-                options.ConnectionString = "Data Source=:memory:";
+                options.DBProvider = "mssql";
+                options.ConnectionString = "Server=localhost;Database=Tenants;Integrated Security=True;";
             });
 
         services.AddFinbuckleMultiTenancyWithEfCoreStore();

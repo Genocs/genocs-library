@@ -18,9 +18,20 @@ Observed baseline (May 2026):
 - MongoDB `UseDatabase` path uses a hardcoded `"DatabaseName"` literal.
 - No unit or integration test project exists.
 
+Package split (July 2026):
+
+`Genocs.Persistence.EFCore` was split into a provider-agnostic core plus dedicated packages. Provider-specific logic (DbContext configuration, connection string securing/validation, migration support) now lives behind the `IEFCoreDbProvider` abstraction, with one implementation per provider package:
+
+- `Genocs.Persistence.EFCore` — core: repositories, initialization pipeline, `DatabaseOptions`, provider abstraction. No database driver references.
+- `Genocs.Persistence.EFCore.SqlServer` / `.PostgreSQL` / `.MySql` / `.Sqlite` / `.Oracle` / `.MongoDB` — one `IEFCoreDbProvider` implementation each, registered via `Add[Provider]DbProvider()`.
+- `Genocs.Persistence.EFCore.MultiTenancy.SqlServer` — the whole Finbuckle multitenancy surface (`GNXTenantInfo`, `TenantDbContext`, `TenantService`, tenant requests), with the tenant store pinned to SQL Server. Tenant-scoped initialization moved to `ITenantDatabaseInitializer` so the core `IDatabaseInitializer` contract stays tenant-free.
+
+File paths in older backlog items below refer to the pre-split layout; multitenancy files now live in `src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/` and provider files in their respective `src/Genocs.Persistence.EFCore.[Provider]/` projects.
+
 Latest validation runs:
 
-- `dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -c Debug --nologo`
+- `dotnet build src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/Genocs.Persistence.EFCore.MultiTenancy.SqlServer.csproj -v q --nologo` (builds the full package family for net8/net9/net10)
+- `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -v q --nologo` (33/33 passing)
 
 ## Planning Assumptions
 
@@ -510,11 +521,11 @@ All three methods in `ApplicationDbSeeder` (`SeedRolesAsync`, `AssignPermissions
 
 **Problem**
 
-`TenantDbContext..ctor` calls `AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true)` unconditionally. This sets a process-wide flag on every `TenantDbContext` construction (which can occur multiple times per request) regardless of whether PostgreSQL is even in use.
+`TenantDbContext..ctor` calls `AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true)` unconditionally. This sets a process-wide flag on every `TenantDbContext` construction (which can occur multiple times per request) regardless of whether PostgreSQL is even in use. Since the tenant store is now pinned to SQL Server, the Npgsql switch is entirely vestigial.
 
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/Multitenancy/TenantDbContext.cs`
+- `src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/TenantDbContext.cs`
 
 **Acceptance criteria**
 
@@ -562,13 +573,17 @@ All three methods in `ApplicationDbSeeder` (`SeedRolesAsync`, `AssignPermissions
 
 `ConnectionStringValidator.TryValidate` validates an SQLite connection string by constructing a `SqliteConnection` object, which acquires OS-level resources. Validation should only parse the string, not open a connection. Oracle validation is also commented out with no implementation path.
 
+Since the provider split, connection string validation and securing live in each provider package behind `IEFCoreDbProvider`; the SQLite behavior was preserved as-is (`SqliteDbProvider` still constructs a `SqliteConnection`, and its `MakeSecureConnectionString` returns `builder.ToString()` on the connection object — the type name — rather than the connection string).
+
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/Configurations/ConnectionStringValidator.cs`
+- `src/Genocs.Persistence.EFCore.Sqlite/SqliteDbProvider.cs`
+- `src/Genocs.Persistence.EFCore.Oracle/OracleDbProvider.cs`
 
 **Acceptance criteria**
 
 - SQLite validation uses `SqliteConnectionStringBuilder` to parse and validate the string without creating a connection object.
+- `SqliteDbProvider.MakeSecureConnectionString` returns the actual connection string instead of `SqliteConnection.ToString()`.
 - Oracle validation is either implemented using `OracleConnectionStringBuilder` or explicitly removed with a comment explaining the omission.
 - No connection-opening side effects occur during validation.
 
@@ -638,7 +653,7 @@ No test project exists for `Genocs.Persistence.EFCore`. Critical behaviors — r
 
 ### EFCORE-018 Consolidate duplicate `UseDatabase` extension method
 
-**Status**: Not started
+**Status**: Completed (July 2026, superseded by the provider split)
 
 **Priority**: P2
 
@@ -661,11 +676,18 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 - EFCORE-005 (MongoDB path must be correct before consolidation)
 
+**Implementation notes**
+
+- Both `UseDatabase` switches were deleted rather than consolidated: DbContext configuration is now dispatched through `IEFCoreDbProvider.Configure(...)`, resolved from DI by provider key.
+- `AddEFCorePersistence` resolves the provider for `ApplicationDbContext`; the multitenancy package pins `TenantDbContext` to `SqlServerDbProvider` directly.
+- The `#if !NET10_0_OR_GREATER` MySQL guards moved out of shared code into `Genocs.Persistence.EFCore.MySql`, where `Configure` throws `NotSupportedException` on net10 until Pomelo supports EF Core 10.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -v q --nologo` (33/33 passing).
+
 ---
 
 ### EFCORE-019 Remove `Serilog.Sinks.MSSqlServer` from the EFCore package
 
-**Status**: Not started
+**Status**: Completed (July 2026)
 
 **Priority**: P2
 
@@ -686,6 +708,11 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 - none
 
+**Implementation notes**
+
+- Removed the `Serilog.Sinks.MSSqlServer` package reference during the provider split; the reference was unused. `Serilog.Extensions.Hosting` remains for the static logger used by `EFCoreExtensions`.
+- Validation: `dotnet build src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj -v q --nologo`.
+
 ---
 
 ## M4: Polishing, Documentation, and Release Readiness
@@ -702,7 +729,7 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/Multitenancy/GNXTenantInfo.cs`
+- `src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/GNXTenantInfo.cs`
 
 **Acceptance criteria**
 
@@ -716,7 +743,7 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 ### EFCORE-021 Consolidate duplicate `DbProviderKeys` class
 
-**Status**: Not started
+**Status**: Completed (July 2026)
 
 **Priority**: P2
 
@@ -738,6 +765,11 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 **Dependencies**
 
 - EFCORE-018 (consolidation is cleaner after `UseDatabase` deduplication)
+
+**Implementation notes**
+
+- Deleted the `Multitenancy/DbProviderKeys.cs` duplicate; the single `Genocs.Persistence.EFCore.Common.DbProviderKeys` class remains and was made `public static` so provider packages can reference the keys.
+- Validation: `dotnet test src/tests/Genocs.Persistence.EFCore.UnitTests/Genocs.Persistence.EFCore.UnitTests.csproj -v q --nologo` (33/33 passing).
 
 ---
 
@@ -778,7 +810,7 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/Multitenancy/TenantService.cs`
+- `src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/TenantService.cs`
 
 **Acceptance criteria**
 
@@ -803,7 +835,7 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/Multitenancy/MultitenancyConstants.cs`
+- `src/Genocs.Persistence.EFCore.MultiTenancy.SqlServer/MultitenancyConstants.cs`
 
 **Acceptance criteria**
 

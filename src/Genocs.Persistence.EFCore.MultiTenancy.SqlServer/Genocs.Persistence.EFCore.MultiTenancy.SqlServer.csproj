@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.EFCore.MultiTenancy.SqlServer</PackageId>
+        <RootNamespace>Genocs.Persistence.EFCore.MultiTenancy</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore.MultiTenancy.SqlServer</AssemblyName>
+        <Title>Genocs EF Core multitenancy (SQL Server tenant store)</Title>
+        <Description>Finbuckle-based multitenancy for Genocs EF Core persistence with a SQL Server-backed tenant store.</Description>
+        <PackageTags>genocs persistence efcore multitenancy finbuckle sqlserver mssql tenant</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore.SqlServer\Genocs.Persistence.EFCore.SqlServer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.3" />
+        <PackageReference Include="Finbuckle.MultiTenant.EntityFrameworkCore" Version="9.4.1" />
+        <PackageReference Include="Mapster" Version="10.0.11" />
+        <PackageReference Include="MediatR" Version="14.2.0" />
+    </ItemGroup>
+
+</Project>
