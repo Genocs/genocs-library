@@ -1,11 +1,6 @@
 namespace Genocs.Identities.Application.Domain.Exceptions;
 
-public class NameInUseException : DomainException
+public class NameInUseException(string name) : DomainException($"Name {name} is already in use.")
 {
-    public string Name { get; }
-
-    public NameInUseException(string name) : base($"Name {name} is already in use.")
-    {
-        Name = name;
-    }
+    public string Name { get; } = name;
 }

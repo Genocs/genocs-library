@@ -12,7 +12,6 @@
     <Project Path="src/demo/microservice/Contracts/Contracts.csproj" />
     <Project Path="src/demo/microservice/Domain.EFCore/Domain.EFCore.csproj" />
     <Project Path="src/demo/microservice/Domain/Domain.csproj" />
-    <Project Path="src/demo/microservice/Infrastructure/Infrastructure.csproj" />
   </Folder>
   <Folder Name="/demo/microservice/Masstransit.WebApi/">
     <Project Path="src/demo/microservice/Masstransit.WebApi/Host.csproj" />

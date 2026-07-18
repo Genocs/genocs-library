@@ -14,8 +14,15 @@ public class UserDocument : IEntity<Guid>
     public IEnumerable<string>? Permissions { get; set; }
     public bool Locked { get; set; }
 
-    public UserDocument()
+    public UserDocument(string email, string name, IEnumerable<string> roles, string password, DateTime createdAt, IEnumerable<string>? permissions, bool locked)
     {
+        Email = email;
+        Name = name;
+        Roles = roles;
+        Password = password;
+        CreatedAt = createdAt;
+        Permissions = permissions;
+        Locked = locked;
     }
 
     public UserDocument(User user)

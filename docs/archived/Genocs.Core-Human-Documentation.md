@@ -305,7 +305,7 @@ dotnet add package Genocs.Core
 
 ## Support and Documentation
 
-- **Documentation**: [https://learn.fiscanner.net/](https://learn.fiscanner.net/)
+- **Documentation**: [https://genocs-blog.netlify.app/](https://genocs-blog.netlify.app/)
 - **Source Code**: [https://github.com/Genocs/genocs-library](https://github.com/Genocs/genocs-library)
 - **Issues**: [https://github.com/Genocs/genocs-library/issues](https://github.com/Genocs/genocs-library/issues)
 - **Changelog**: [https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md](https://github.com/Genocs/genocs-library/blob/main/CHANGELOG.md)

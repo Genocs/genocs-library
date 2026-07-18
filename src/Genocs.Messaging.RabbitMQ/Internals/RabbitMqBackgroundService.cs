@@ -244,7 +244,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                         messagePayload);
                 }
 
-                object correlationContext = BuildCorrelationContext(scope, args);
+                object? correlationContext = BuildCorrelationContext(scope, args);
 
                 Task Next(object m, object ctx, BasicDeliverEventArgs a)
                     => TryHandleAsync(channel, m, messageId, correlationId, ctx, a, messageSubscriber.Handle, scope.ServiceProvider, deadLetterEnabled);
@@ -401,8 +401,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
                 if (_loggerEnabled)
                 {
                     _logger.LogInformation(
-                        "Handled a message: {MessageName} with ID: {MessageId}, " +
-                        "Correlation ID: {CorrelationId}, retry: {MessageRetry}",
+                        "Handled a message: {MessageName} with ID: {MessageId}, Correlation ID: {CorrelationId}, retry: {MessageRetry}",
                         messageName,
                         messageId,
                         correlationId,

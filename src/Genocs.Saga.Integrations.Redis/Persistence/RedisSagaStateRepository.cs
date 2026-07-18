@@ -96,7 +96,7 @@ internal sealed class RedisSagaStateRepository(IRedisSagaStateStore stateStore) 
 
     private string StateId(string id, Type type) => $"_state_{id}_{type.GetHashCode()}";
 
-    private static RedisSagaState? DeserializeState(string serializedState)
+    private static RedisSagaState? DeserializeState(string? serializedState)
     {
         if (string.IsNullOrWhiteSpace(serializedState))
         {

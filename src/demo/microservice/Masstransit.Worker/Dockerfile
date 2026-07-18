@@ -1,13 +1,13 @@
 # See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Use the official .NET runtime as base image (Worker services don't need ASP.NET)
-FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
+# Use the official .NET ASP.NET runtime as base image (includes ASP.NET Core framework)
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER app
 WORKDIR /app
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
 
 # Copy global build configuration files first for better layer caching

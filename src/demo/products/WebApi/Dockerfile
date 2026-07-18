@@ -9,7 +9,7 @@ EXPOSE 8081
 
 # Use the official .NET SDK for building
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
 
 # Copy global build configuration files first for better layer caching

@@ -21,7 +21,7 @@ Use this package to register Consul discovery and configure Consul-backed Http c
 
 ## Support
 
-- Documentation Portal: https://learn.fiscanner.net/
+- Documentation Portal: https://genocs-blog.netlify.app/
 - Documentation: https://github.com/Genocs/genocs-library/tree/main/docs
 - Repository: https://github.com/Genocs/genocs-library
 

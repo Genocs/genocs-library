@@ -50,9 +50,9 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
             && !string.IsNullOrEmpty(uri.UserInfo))
         {
             var builder = new UriBuilder(uri);
-            var userInfoParts = uri.UserInfo.Split(':', 2);
+            string[]? userInfoParts = uri.UserInfo.Split(':', 2);
 
-            var maskedUserName = string.IsNullOrEmpty(userInfoParts[0])
+            string? maskedUserName = string.IsNullOrEmpty(userInfoParts[0])
                 ? string.Empty
                 : HiddenValueDefault;
 
@@ -65,40 +65,40 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
         }
 
         // Fallback for valid MongoDB connection strings that Uri cannot parse (e.g. multi-host authority).
-        var schemeDelimiterIndex = connectionString.IndexOf("://", StringComparison.Ordinal);
+        int schemeDelimiterIndex = connectionString.IndexOf("://", StringComparison.Ordinal);
         if (schemeDelimiterIndex < 0)
         {
             return connectionString;
         }
 
-        var authorityStart = schemeDelimiterIndex + 3;
-        var authorityEnd = connectionString.IndexOfAny(['/', '?', '#'], authorityStart);
+        int authorityStart = schemeDelimiterIndex + 3;
+        int authorityEnd = connectionString.IndexOfAny(new[] { '/', '?', '#' }, authorityStart);
         if (authorityEnd < 0)
         {
             authorityEnd = connectionString.Length;
         }
 
-        var atIndex = connectionString.LastIndexOf('@', authorityEnd - 1, authorityEnd - authorityStart);
+        int atIndex = connectionString.LastIndexOf('@', authorityEnd - 1, authorityEnd - authorityStart);
         if (atIndex < 0)
         {
             return connectionString;
         }
 
-        var credentials = connectionString.Substring(authorityStart, atIndex - authorityStart);
+        string credentials = connectionString.Substring(authorityStart, atIndex - authorityStart);
         if (string.IsNullOrEmpty(credentials))
         {
             return connectionString;
         }
 
-        var separatorIndex = credentials.IndexOf(':');
+        int separatorIndex = credentials.IndexOf(':');
         string maskedCredentials;
         if (separatorIndex >= 0)
         {
-            var username = credentials[..separatorIndex];
-            var password = credentials[(separatorIndex + 1)..];
+            string username = credentials[..separatorIndex];
+            string password = credentials[(separatorIndex + 1)..];
 
-            var maskedUserName = string.IsNullOrEmpty(username) ? string.Empty : HiddenValueDefault;
-            var maskedPassword = string.IsNullOrEmpty(password) ? string.Empty : HiddenValueDefault;
+            string maskedUserName = string.IsNullOrEmpty(username) ? string.Empty : HiddenValueDefault;
+            string maskedPassword = string.IsNullOrEmpty(password) ? string.Empty : HiddenValueDefault;
 
             maskedCredentials = $"{maskedUserName}:{maskedPassword}";
         }

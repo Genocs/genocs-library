@@ -17,7 +17,7 @@ namespace Genocs.Persistence.MongoDB.Domain.Repositories;
 /// <remarks>
 /// Standard constructor.
 /// </remarks>
-/// <param name="databaseProvider"></param>
+/// <param name="databaseProvider">The MongoDB database provider.</param>
 public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider databaseProvider) : RepositoryBase<TEntity, TKey>, IMongoBaseRepository<TEntity, TKey>
     where TEntity : IEntity<TKey>
 {
@@ -67,7 +67,7 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// <summary>
     /// Get all entities as IQueryable.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The IQueryable of entities.</returns>
     public override IQueryable<TEntity> GetAll()
         => Collection.AsQueryable();
 
@@ -145,7 +145,7 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
         => Collection.AsQueryable();
 
     public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => await Collection.AsQueryable().Where(predicate).FirstAsync();
+        => await Collection.AsQueryable().Where(predicate).FirstAsync(cancellationToken);
 
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().Where(predicate).ToListAsync(cancellationToken);
@@ -160,7 +160,7 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// <returns>The paged result.</returns>
     public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IPagedQuery
-        => await Collection.AsQueryable().Where(predicate).PaginateAsync(query);
+        => await Collection.AsQueryable().Where(predicate).PaginateAsync(query, cancellationToken);
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         => await Collection.InsertOneAsync(entity, cancellationToken: cancellationToken);

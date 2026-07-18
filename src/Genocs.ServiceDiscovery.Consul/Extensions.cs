@@ -84,7 +84,7 @@ public static class Extensions
     private static ServiceRegistration? CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
     {
         bool enabled = options.Enabled;
-        string consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
+        string? consulEnabled = Environment.GetEnvironmentVariable("CONSUL_ENABLED")?.ToLowerInvariant();
         if (!string.IsNullOrWhiteSpace(consulEnabled))
         {
             enabled = consulEnabled is "true" or "1";

@@ -16,7 +16,7 @@ internal class CustomSeederRunner(IServiceProvider serviceProvider)
     /// <returns>The task.</returns>
     public async Task RunSeedersAsync(CancellationToken cancellationToken)
     {
-        ICustomSeeder[] seeders = serviceProvider.GetServices<ICustomSeeder>().ToArray();
+        ICustomSeeder[] seeders = [.. serviceProvider.GetServices<ICustomSeeder>()];
         foreach (var seeder in seeders)
         {
             await seeder.InitializeAsync(cancellationToken);

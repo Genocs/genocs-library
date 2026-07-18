@@ -25,7 +25,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
         _header = httpClientOptions.CorrelationIdHeader;
     }
 
-    private static string CorrelationId
+    private static string? CorrelationId
     {
         get => Holder.Value?.Id;
         set
@@ -45,7 +45,7 @@ internal class CorrelationIdFactory : ICorrelationIdFactory
 
     private class CorrelationIdHolder
     {
-        public string Id;
+        public string? Id;
     }
 
     public string Create()

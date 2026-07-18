@@ -140,7 +140,7 @@ public static class BookStoreFeature
 
     private static async Task<IResult> UpdateBookAsync(BookStoreDbContext dbContext, Guid id, UpdateBookRequest request, CancellationToken cancellationToken)
     {
-        string requestError = ValidateBookInput(request.Title, request.Isbn, request.Price, request.AuthorIds);
+        string? requestError = ValidateBookInput(request.Title, request.Isbn, request.Price, request.AuthorIds);
         if (requestError is not null)
         {
             return Results.BadRequest(new { message = requestError });
@@ -207,10 +207,9 @@ public static class BookStoreFeature
 
     private static Guid[] GetDistinctAuthorIds(IReadOnlyCollection<Guid> authorIds)
     {
-        return authorIds
+        return [.. authorIds
             .Where(authorId => authorId != Guid.Empty)
-            .Distinct()
-            .ToArray();
+            .Distinct()];
     }
 
     private static async Task<IResult?> ValidateAuthorsExistAsync(BookStoreDbContext dbContext, Guid[] authorIds, CancellationToken cancellationToken)
@@ -291,13 +290,12 @@ public static class BookStoreFeature
 
     private static BookResponse ToBookResponse(Book book)
     {
-        List<AuthorResponse> authors = book.BookAuthors
+        List<AuthorResponse> authors = [.. book.BookAuthors
             .Where(bookAuthor => bookAuthor.Author is not null)
             .Select(bookAuthor => bookAuthor.Author)
             .OrderBy(author => author!.LastName)
             .ThenBy(author => author!.FirstName)
-            .Select(author => ToAuthorResponse(author!))
-            .ToList();
+            .Select(author => ToAuthorResponse(author!))];
 
         return new BookResponse(book.Id, book.Title, book.Isbn, book.Price, book.PublishedOnUtc, authors);
     }
