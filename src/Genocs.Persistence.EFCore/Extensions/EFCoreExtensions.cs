@@ -34,9 +34,9 @@ public static class EFCoreExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        // Add the DbContext and other services
+        // Add the DbContext and other services.
+        // The matching IEFCoreDbProvider must be registered by a Genocs.Persistence.EFCore.* provider package.
         builder.Services
-            .AddEFCoreDbProviders()
             .AddDbContext<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;

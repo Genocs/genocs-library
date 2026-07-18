@@ -81,6 +81,12 @@
   <Project Path="src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj" />
   <Project Path="src/Genocs.Messaging.RabbitMQ/Genocs.Messaging.RabbitMQ.csproj" />
   <Project Path="src/Genocs.Messaging/Genocs.Messaging.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.MongoDB/Genocs.Persistence.EFCore.MongoDB.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.MySql/Genocs.Persistence.EFCore.MySql.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.Oracle/Genocs.Persistence.EFCore.Oracle.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.PostgreSQL/Genocs.Persistence.EFCore.PostgreSQL.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.Sqlite/Genocs.Persistence.EFCore.Sqlite.csproj" />
+  <Project Path="src/Genocs.Persistence.EFCore.SqlServer/Genocs.Persistence.EFCore.SqlServer.csproj" />
   <Project Path="src/Genocs.Persistence.EFCore/Genocs.Persistence.EFCore.csproj" />
   <Project Path="src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj" />
   <Project Path="src/Genocs.Persistence.Redis/Genocs.Persistence.Redis.csproj" />

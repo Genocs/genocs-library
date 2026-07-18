@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.EFCore.Sqlite</PackageId>
+        <RootNamespace>Genocs.Persistence.EFCore.Sqlite</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore.Sqlite</AssemblyName>
+        <Title>Genocs EF Core SQLite provider</Title>
+        <Description>SQLite database provider for Genocs EF Core persistence.</Description>
+        <PackageTags>genocs persistence efcore entity-framework sqlite data-access</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" Condition="'$(TargetFramework)' == 'net10.0'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" Condition="'$(TargetFramework)' == 'net10.0'" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.18" Condition="'$(TargetFramework)' == 'net9.0'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.18" Condition="'$(TargetFramework)' == 'net9.0'" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.29" Condition="'$(TargetFramework)' == 'net8.0'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.29" Condition="'$(TargetFramework)' == 'net8.0'" />
+    </ItemGroup>
+
+</Project>

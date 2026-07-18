@@ -26,6 +26,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.SqlServer\Genocs.Persistence.EFCore.SqlServer.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.PostgreSQL\Genocs.Persistence.EFCore.PostgreSQL.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.MySql\Genocs.Persistence.EFCore.MySql.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.Sqlite\Genocs.Persistence.EFCore.Sqlite.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.Oracle\Genocs.Persistence.EFCore.Oracle.csproj" />
+        <ProjectReference Include="..\..\Genocs.Persistence.EFCore.MongoDB\Genocs.Persistence.EFCore.MongoDB.csproj" />
     </ItemGroup>
 
 </Project>

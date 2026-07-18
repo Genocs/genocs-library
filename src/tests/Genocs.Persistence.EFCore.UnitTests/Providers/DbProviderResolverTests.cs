@@ -1,4 +1,10 @@
+using Genocs.Persistence.EFCore.MongoDB;
+using Genocs.Persistence.EFCore.MySql;
+using Genocs.Persistence.EFCore.Oracle;
+using Genocs.Persistence.EFCore.PostgreSQL;
 using Genocs.Persistence.EFCore.Providers;
+using Genocs.Persistence.EFCore.Sqlite;
+using Genocs.Persistence.EFCore.SqlServer;
 using Shouldly;
 using Xunit;
 
@@ -45,12 +51,20 @@ public class DbProviderResolverTests
     {
         var exception = Should.Throw<InvalidOperationException>(() => Providers.Resolve("cosmosdb"));
 
-        exception.Message.ShouldBe("DB Provider cosmosdb is not supported.");
+        exception.Message.ShouldStartWith("DB Provider cosmosdb is not supported.");
     }
 
     [Fact]
     public void TryResolve_UnknownProvider_ReturnsNull()
     {
         Providers.TryResolve("cosmosdb").ShouldBeNull();
+    }
+
+    [Fact]
+    public void OnlyMongoDbProvider_DoesNotSupportMigrations()
+    {
+        Providers.Where(p => !p.SupportsMigrations)
+            .ShouldHaveSingleItem()
+            .ShouldBeOfType<MongoDbProvider>();
     }
 }

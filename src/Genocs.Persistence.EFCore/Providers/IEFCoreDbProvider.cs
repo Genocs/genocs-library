@@ -18,6 +18,13 @@ public interface IEFCoreDbProvider
     string ProviderKey { get; }
 
     /// <summary>
+    /// Whether this database engine supports EF Core migrations.
+    /// When false, initialization skips the migration step and only runs seeders
+    /// (e.g. the MongoDB EF Core provider does not support migrations).
+    /// </summary>
+    bool SupportsMigrations { get; }
+
+    /// <summary>
     /// Configures the <see cref="DbContextOptionsBuilder"/> for this database engine.
     /// </summary>
     /// <param name="builder">The options builder to configure.</param>

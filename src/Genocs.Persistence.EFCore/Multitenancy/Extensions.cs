@@ -87,8 +87,8 @@ public static class Extensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        // The matching IEFCoreDbProvider must be registered by a Genocs.Persistence.EFCore.* provider package.
         return services
-            .AddEFCoreDbProviders()
             .AddDbContext<TenantDbContext>((p, m) =>
             {
                 // TODO: We should probably add specific dbprovider/connectionstring setting for the tenantDb with a fallback to the main databasesettings

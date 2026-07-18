@@ -47,7 +47,7 @@ public class DatabaseOptions : IValidatableObject
         }
     }
 
-    internal string? GetMongoDatabaseName()
+    public string? GetMongoDatabaseName()
     {
         if (!string.IsNullOrWhiteSpace(DatabaseName))
         {

@@ -2,7 +2,7 @@
 
 namespace Genocs.Persistence.EFCore.Initialization;
 
-internal class ApplicationDbSeeder
+public class ApplicationDbSeeder
 {
     private readonly CustomSeederRunner _seederRunner;
     private readonly ILogger<ApplicationDbSeeder> _logger;

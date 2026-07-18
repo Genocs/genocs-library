@@ -7,7 +7,7 @@ namespace Genocs.Persistence.EFCore.Initialization;
 /// CustomSeederRunner is responsible for running custom seeders.
 /// </summary>
 /// <param name="serviceProvider"></param>
-internal class CustomSeederRunner(IServiceProvider serviceProvider)
+public class CustomSeederRunner(IServiceProvider serviceProvider)
 {
     /// <summary>
     /// Runs the custom seeders.

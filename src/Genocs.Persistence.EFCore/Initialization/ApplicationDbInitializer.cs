@@ -1,5 +1,6 @@
 using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Context;
+using Genocs.Persistence.EFCore.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,11 +11,12 @@ namespace Genocs.Persistence.EFCore.Initialization;
 /// <summary>
 /// ApplicationDbInitializer is responsible for initializing the database.
 /// </summary>
-internal class ApplicationDbInitializer
+public class ApplicationDbInitializer
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly ApplicationDbSeeder _dbSeeder;
     private readonly IHostApplicationLifetime _applicationLifetime;
+    private readonly IEnumerable<IEFCoreDbProvider> _providers;
     private readonly DatabaseOptions _dbOptions;
     private readonly ILogger<ApplicationDbInitializer> _logger;
 
@@ -25,12 +27,14 @@ internal class ApplicationDbInitializer
         ApplicationDbContext dbContext,
         ApplicationDbSeeder dbSeeder,
         IHostApplicationLifetime applicationLifetime,
+        IEnumerable<IEFCoreDbProvider> providers,
         IOptions<DatabaseOptions> dbOptions,
         ILogger<ApplicationDbInitializer> logger)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _dbSeeder = dbSeeder ?? throw new ArgumentNullException(nameof(dbSeeder));
         _applicationLifetime = applicationLifetime ?? throw new ArgumentNullException(nameof(applicationLifetime));
+        _providers = providers ?? throw new ArgumentNullException(nameof(providers));
         _dbOptions = dbOptions?.Value ?? throw new ArgumentNullException(nameof(dbOptions));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -42,8 +46,8 @@ internal class ApplicationDbInitializer
     /// <returns>The task.</returns>
     public virtual async Task InitializeAsync(CancellationToken cancellationToken)
     {
-        // MongoDB EF Core provider does not support migrations.
-        if (_dbContext.Database.ProviderName == "MongoDB.EntityFrameworkCore")
+        // Some database engines (e.g. MongoDB) do not support EF Core migrations.
+        if (!_providers.Resolve(_dbOptions.DBProvider).SupportsMigrations)
         {
             await _dbSeeder.SeedDatabaseAsync(cancellationToken);
             return;

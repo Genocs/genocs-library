@@ -8,7 +8,10 @@ internal static class DbProviderResolver
     /// </summary>
     public static IEFCoreDbProvider Resolve(this IEnumerable<IEFCoreDbProvider> providers, string dbProvider)
         => providers.TryResolve(dbProvider)
-            ?? throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
+            ?? throw new InvalidOperationException(
+                $"DB Provider {dbProvider} is not supported. " +
+                "Install the matching Genocs.Persistence.EFCore.* provider package and register it " +
+                "(e.g. services.AddSqlServerDbProvider()).");
 
     /// <summary>
     /// Resolves the provider matching the given provider key (case-insensitive), or null when none matches.

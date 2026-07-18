@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.EFCore.MongoDB</PackageId>
+        <RootNamespace>Genocs.Persistence.EFCore.MongoDB</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore.MongoDB</AssemblyName>
+        <Title>Genocs EF Core MongoDB provider</Title>
+        <Description>MongoDB database provider for Genocs EF Core persistence.</Description>
+        <PackageTags>genocs persistence efcore entity-framework mongodb data-access</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="10.0.2" Condition="'$(TargetFramework)' == 'net10.0'" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.1.2" Condition="'$(TargetFramework)' == 'net9.0'" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.4.2" Condition="'$(TargetFramework)' == 'net8.0'" />
+    </ItemGroup>
+
+</Project>

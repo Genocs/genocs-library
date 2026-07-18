@@ -3,7 +3,7 @@
 /// <summary>
 /// This class contains the keys for different database providers.
 /// </summary>
-internal class DbProviderKeys
+public static class DbProviderKeys
 {
     public const string MongoDB = "mongodb";
     public const string MySql = "mysql";

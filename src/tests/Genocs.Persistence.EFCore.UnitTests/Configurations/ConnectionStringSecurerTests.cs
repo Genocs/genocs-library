@@ -1,5 +1,5 @@
 using Genocs.Persistence.EFCore.Configurations;
-using Genocs.Persistence.EFCore.Providers;
+using Genocs.Persistence.EFCore.MongoDB;
 using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;

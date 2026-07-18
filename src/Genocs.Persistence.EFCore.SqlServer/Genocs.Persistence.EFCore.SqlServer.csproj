@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.EFCore.SqlServer</PackageId>
+        <RootNamespace>Genocs.Persistence.EFCore.SqlServer</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore.SqlServer</AssemblyName>
+        <Title>Genocs EF Core SQL Server provider</Title>
+        <Description>Microsoft SQL Server database provider for Genocs EF Core persistence.</Description>
+        <PackageTags>genocs persistence efcore entity-framework sqlserver mssql data-access</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" Condition="'$(TargetFramework)' == 'net10.0'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.15" Condition="'$(TargetFramework)' == 'net9.0'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.26" Condition="'$(TargetFramework)' == 'net8.0'" />
+    </ItemGroup>
+
+</Project>
