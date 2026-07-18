@@ -3,15 +3,13 @@ using Finbuckle.MultiTenant.Abstractions;
 using Finbuckle.MultiTenant.EntityFrameworkCore.Stores.EFCoreStore;
 using Genocs.Core.Builders;
 using Genocs.Persistence.EFCore.Configurations;
+using Genocs.Persistence.EFCore.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-#if !NET10_0_OR_GREATER
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-#endif
 
 namespace Genocs.Persistence.EFCore.MultiTenancy;
 
@@ -90,11 +88,14 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(services);
 
         return services
+            .AddEFCoreDbProviders()
             .AddDbContext<TenantDbContext>((p, m) =>
             {
                 // TODO: We should probably add specific dbprovider/connectionstring setting for the tenantDb with a fallback to the main databasesettings
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString, databaseSettings.GetMongoDatabaseName());
+                p.GetServices<IEFCoreDbProvider>()
+                    .Resolve(databaseSettings.DBProvider)
+                    .Configure(m, databaseSettings);
             })
             .AddMultiTenant<GNXTenantInfo>()
                 .WithClaimStrategy(GNXClaims.Tenant)
@@ -128,28 +129,6 @@ public static class Extensions
 
         return services;
     }
-
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString, string? databaseName = null)
-        => dbProvider.ToLowerInvariant() switch
-        {
-            DbProviderKeys.MongoDB => builder.UseMongoDB(
-                                 connectionString,
-                                 databaseName ?? throw new InvalidOperationException("MongoDB database name must be configured in DatabaseOptions.DatabaseName or included in the connection string path.")),
-            DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.PostgreSQL")),
-            DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.MSSQL")),
-#if !NET10_0_OR_GREATER
-            DbProviderKeys.MySql => builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
-                                 e.MigrationsAssembly("Migrators.MySQL")
-                                  .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
-#endif
-            DbProviderKeys.Oracle => builder.UseOracle(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.Oracle")),
-            DbProviderKeys.SqLite => builder.UseSqlite(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.SqLite")),
-            _ => throw new InvalidOperationException($"DB Provider {dbProvider} is not supported."),
-        };
 
     private static MultiTenantBuilder<GNXTenantInfo> WithQueryStringStrategy(this MultiTenantBuilder<GNXTenantInfo> builder, string queryStringKey)
         => builder.WithDelegateStrategy(context =>

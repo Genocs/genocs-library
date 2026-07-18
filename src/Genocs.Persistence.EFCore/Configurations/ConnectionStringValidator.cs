@@ -1,23 +1,22 @@
 ﻿using Genocs.Common.Persistence;
-using Genocs.Persistence.EFCore.Common;
-using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
+using Genocs.Persistence.EFCore.Providers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-#if !NET10_0_OR_GREATER
-using MySqlConnector;
-#endif
-using Npgsql;
 
 namespace Genocs.Persistence.EFCore.Configurations;
 
 internal class ConnectionStringValidator : IConnectionStringValidator
 {
+    private readonly IEnumerable<IEFCoreDbProvider> _providers;
     private readonly DatabaseOptions _dbSettings;
     private readonly ILogger<ConnectionStringValidator> _logger;
 
-    public ConnectionStringValidator(IOptions<DatabaseOptions> dbSettings, ILogger<ConnectionStringValidator> logger)
+    public ConnectionStringValidator(
+        IEnumerable<IEFCoreDbProvider> providers,
+        IOptions<DatabaseOptions> dbSettings,
+        ILogger<ConnectionStringValidator> logger)
     {
+        _providers = providers;
         _dbSettings = dbSettings.Value;
         _logger = logger;
     }
@@ -31,36 +30,10 @@ internal class ConnectionStringValidator : IConnectionStringValidator
 
         try
         {
-            switch (dbProvider?.ToLowerInvariant())
-            {
-                // case DbProviderKeys.MongoDB:
-                //    var mongoDBcs = new MongoDBConnectionStringBuilder(connectionString);
-                //    break;
+            var provider = _providers.TryResolve(dbProvider);
 
-#if !NET10_0_OR_GREATER
-                case DbProviderKeys.MySql:
-                    var mysqlcs = new MySqlConnectionStringBuilder(connectionString);
-                    break;
-#endif
-
-                case DbProviderKeys.Npgsql:
-                    var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);
-                    break;
-
-                // case DbProviderKeys.Oracle:
-                //    var oralclecs = new OracleConnectionStringBuilder(connectionString);
-                //    break;
-
-                case DbProviderKeys.SqlServer:
-                    var mssqlcs = new SqlConnectionStringBuilder(connectionString);
-                    break;
-
-                case DbProviderKeys.SqLite:
-                    var sqlite = new SqliteConnection(connectionString);
-                    break;
-            }
-
-            return true;
+            // Unknown providers are considered valid (historic fall-through behavior).
+            return provider is null || provider.TryValidateConnectionString(connectionString);
         }
         catch (Exception ex)
         {

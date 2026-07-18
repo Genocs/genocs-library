@@ -4,18 +4,14 @@ using Genocs.Common.Persistence;
 using Genocs.Common.Persistence.Initialization;
 using Genocs.Core.Builders;
 using Genocs.Core.Domain.Repositories;
-using Genocs.Persistence.EFCore.Common;
 using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Context;
 using Genocs.Persistence.EFCore.Initialization;
 using Genocs.Persistence.EFCore.Persistence.Initialization;
+using Genocs.Persistence.EFCore.Providers;
 using Genocs.Persistence.EFCore.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-#if !NET10_0_OR_GREATER
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-#endif
 using Serilog;
 
 namespace Genocs.Persistence.EFCore.Extensions;
@@ -40,10 +36,13 @@ public static class EFCoreExtensions
 
         // Add the DbContext and other services
         builder.Services
+            .AddEFCoreDbProviders()
             .AddDbContext<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString, databaseSettings.GetMongoDatabaseName());
+                p.GetServices<IEFCoreDbProvider>()
+                    .Resolve(databaseSettings.DBProvider)
+                    .Configure(m, databaseSettings);
             })
             .AddTransient<IDatabaseInitializer, DatabaseInitializer>()
             .AddTransient<ApplicationDbInitializer>()
@@ -89,34 +88,6 @@ public static class EFCoreExtensions
             ServiceLifetime.Singleton => services.AddSingleton(serviceType, implementationType),
             _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
         };
-
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString, string? databaseName = null)
-    {
-        return dbProvider.ToLowerInvariant() switch
-        {
-            DbProviderKeys.MongoDB => builder.UseMongoDB(
-                connectionString,
-                databaseName ?? throw new InvalidOperationException("MongoDB database name must be configured in DatabaseOptions.DatabaseName or included in the connection string path.")),
-
-            DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.PostgreSQL")),
-            DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.MSSQL")),
-#if !NET10_0_OR_GREATER
-            DbProviderKeys.MySql => builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
-                                 e.MigrationsAssembly("Migrators.MySQL")
-                                  .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
-#else
-            // TODO: Re-enable when Pomelo supports .NET 10
-            DbProviderKeys.MySql => throw new NotSupportedException("MySQL is not yet supported on .NET 10. Awaiting Pomelo.EntityFrameworkCore.MySql update."),
-#endif
-            DbProviderKeys.Oracle => builder.UseOracle(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.Oracle")),
-            DbProviderKeys.SqLite => builder.UseSqlite(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.SqLite")),
-            _ => throw new InvalidOperationException($"DB Provider {dbProvider} is not supported."),
-        };
-    }
 
     internal static IServiceCollection AddRepositories(this IServiceCollection services, params Assembly[] assemblies)
     {

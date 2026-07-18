@@ -1,4 +1,5 @@
 using Genocs.Persistence.EFCore.Configurations;
+using Genocs.Persistence.EFCore.Providers;
 using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;
@@ -46,6 +47,6 @@ public class ConnectionStringSecurerTests
             ConnectionString = string.Empty
         });
 
-        return new ConnectionStringSecurer(options);
+        return new ConnectionStringSecurer([new MongoDbProvider()], options);
     }
 }
