@@ -103,6 +103,7 @@ public static class Extensions
                 .WithQueryStringStrategy(MultitenancyConstants.TenantIdName)
                 .WithEFCoreStore<TenantDbContext, GNXTenantInfo>() // Use EF Core store. Keep in mind only one store can be used at a time.
                 .Services
+            .AddTransient<ITenantDatabaseInitializer, TenantDatabaseInitializer>()
             .AddScoped<ITenantService, TenantService>();
     }
 

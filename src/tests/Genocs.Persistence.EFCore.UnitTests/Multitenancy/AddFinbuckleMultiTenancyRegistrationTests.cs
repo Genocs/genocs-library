@@ -40,6 +40,7 @@ public class AddFinbuckleMultiTenancyRegistrationTests
         services.AddFinbuckleMultiTenancyWithEfCoreStore();
 
         services.Any(d => d.ServiceType == typeof(ITenantService)).ShouldBeTrue();
+        services.Any(d => d.ServiceType == typeof(ITenantDatabaseInitializer)).ShouldBeTrue();
         services.Any(d => d.ServiceType == typeof(TenantDbContext)).ShouldBeTrue();
     }
 }

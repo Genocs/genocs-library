@@ -2,7 +2,6 @@ using Finbuckle.MultiTenant.Abstractions;
 using Genocs.Common.Persistence;
 using Genocs.Persistence.EFCore.Configurations;
 using Genocs.Persistence.EFCore.Exceptions;
-using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Mapster;
 using Microsoft.Extensions.Options;
 
@@ -12,7 +11,7 @@ internal class TenantService : ITenantService
 {
     private readonly IMultiTenantStore<GNXTenantInfo> _tenantStore;
     private readonly IConnectionStringSecurer _csSecurer;
-    private readonly IDatabaseInitializer _dbInitializer;
+    private readonly ITenantDatabaseInitializer _dbInitializer;
 
     // private readonly IStringLocalizer _t;
     private readonly DatabaseOptions _dbSettings;
@@ -20,7 +19,7 @@ internal class TenantService : ITenantService
     public TenantService(
                         IMultiTenantStore<GNXTenantInfo> tenantStore,
                         IConnectionStringSecurer csSecurer,
-                        IDatabaseInitializer dbInitializer,
+                        ITenantDatabaseInitializer dbInitializer,
                         IOptions<DatabaseOptions> dbSettings) // IStringLocalizer<TenantService> localize
     {
         ArgumentNullException.ThrowIfNull(dbSettings);

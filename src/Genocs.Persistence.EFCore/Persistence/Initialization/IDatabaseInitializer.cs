@@ -1,6 +1,4 @@
-﻿using Genocs.Persistence.EFCore.MultiTenancy;
-
-namespace Genocs.Persistence.EFCore.Persistence.Initialization;
+﻿namespace Genocs.Persistence.EFCore.Persistence.Initialization;
 
 /// <summary>
 /// The IDatabaseInitializer interface is responsible for initializing the databases.
@@ -9,6 +7,4 @@ namespace Genocs.Persistence.EFCore.Persistence.Initialization;
 public interface IDatabaseInitializer
 {
     Task InitializeDatabasesAsync(CancellationToken cancellationToken = default);
-
-    Task InitializeApplicationDbForTenantAsync(GNXTenantInfo tenant, CancellationToken cancellationToken);
 }
