@@ -20,9 +20,9 @@ public class RestEaseOptions
 
     public class Service
     {
-        public string? Name { get; set; }
-        public string? Scheme { get; set; }
-        public string? Host { get; set; }
+        public string Name { get; set; } = default!;
+        public string Scheme { get; set; } = default!;
+        public string Host { get; set; } = default!;
         public int Port { get; set; }
     }
 }
