@@ -36,7 +36,7 @@ RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 # /p:UseAppHost=false: Disables creating a native exe (we just need the dll)
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Debug
+ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Create final runtime image
