@@ -4,8 +4,8 @@ set -e
 
 echo "Building and running Demo Web App Docker images with Docker Compose..."
 
-cd ./infrastructure/containers/demo || {
-  echo "Error: could not change to infrastructure/containers/demo. Run this script from the repository root." >&2
+cd ./infrastructure/containers/apps || {
+  echo "Error: could not change to infrastructure/containers/apps. Run this script from the repository root." >&2
   exit 1
 }
 
@@ -31,4 +31,4 @@ cd ../../../ || {
   exit 1
 }
 
-echo "🐳 Ship it! The demo containers are up—unlike that one colleague who is still \"getting coffee.\""
+echo "🐳 Ship it! The apps containers are up—unlike that one colleague who is still \"getting coffee.\""

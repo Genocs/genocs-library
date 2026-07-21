@@ -30,7 +30,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
 
       - name: Restore dependencies
         run: dotnet restore
@@ -39,7 +42,7 @@ jobs:
         run: dotnet build -c Debug --no-restore
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test -c Debug --no-build --verbosity normal --report-trx --results-directory TestResults
 
       - name: Pack
         run: dotnet pack -c Debug -o out -p:PackageVersion=${{ github.event.inputs.version }} --no-build --verbosity normal

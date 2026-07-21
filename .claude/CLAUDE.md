@@ -34,10 +34,10 @@ dotnet test src/tests/Genocs.Core.UnitTests
 dotnet test src/tests/Genocs.Core.UnitTests --filter "FullyQualifiedName~EncryptUnitTests"
 
 # Run the demo WebApi
-dotnet run --project ./src/demo/WebApi/Host.csproj -c Debug
+dotnet run --project ./src/apps/WebApi/Host.csproj -c Debug
 
 # Run the demo worker
-dotnet run --project ./src/demo/Worker
+dotnet run --project ./src/apps/Worker
 ```
 
 ## EF Core Migrations (BookStore demo)
@@ -48,15 +48,15 @@ dotnet tool restore
 
 # Add a migration
 dotnet dotnet-ef migrations add <MigrationName> \
-  --project src/demo/WebApi/Host.csproj \
-  --startup-project src/demo/WebApi/Host.csproj \
+  --project src/apps/WebApi/Host.csproj \
+  --startup-project src/apps/WebApi/Host.csproj \
   --context BookStoreDbContext \
   --output-dir BookStore/Migrations
 
 # Apply migrations
 dotnet dotnet-ef database update \
-  --project src/demo/WebApi/Host.csproj \
-  --startup-project src/demo/WebApi/Host.csproj \
+  --project src/apps/WebApi/Host.csproj \
+  --startup-project src/apps/WebApi/Host.csproj \
   --context BookStoreDbContext
 ```
 
@@ -125,14 +125,14 @@ gnxBuilder.Build();       // must be called before builder.Build()
 
 Middleware is then added via `app.UseGenocs()` and module-specific `Use*` extension methods.
 
-### Demo Application (`src/demo/`)
+### Demo Application (`src/apps/`)
 
 - **WebApi** – ASP.NET Core minimal API host with BookStore (EF Core + SQL Server), Saga, JWT, OpenAPI. Connection string key: `ConnectionStrings:BookStore`.
 - **Worker** – Background service using the library.
 - **HelloWorld.WebApi** – Minimal example.
 - **Masstransit.WebApi / Masstransit.Worker** – MassTransit messaging demo.
 
-### Enterprise Application (`src/demo/`)
+### Enterprise Application (`src/apps/`)
 
 Full microservices suite with ApiGateway (:5500), Identity (:5510), Product (:5520), Order (:5530), Notification (:5540) services. All share the `genocs-network` Docker network.
 

@@ -633,7 +633,7 @@ The following packages are likely affected by logging behavior changes and shoul
 - `Genocs.WebApi`
 - `Genocs.WebApi.CQRS`
 - `Genocs.Telemetry`
-- host applications under [src/demo](src/demo) and [src/demo](src/demo)
+- host applications under [src/apps](src/apps) and [src/apps](src/apps)
 
 ## Suggested First Sprint
 

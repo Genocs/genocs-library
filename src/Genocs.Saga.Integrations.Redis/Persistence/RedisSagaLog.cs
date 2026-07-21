@@ -32,10 +32,10 @@ internal sealed class RedisSagaLog : ISagaLog
         if (!string.IsNullOrWhiteSpace(cachedSagaLogDatas))
         {
             sagaLogDatas = JsonConvert.DeserializeObject<List<RedisSagaLogData>>(cachedSagaLogDatas);
-            sagaLogDatas.ForEach(sld =>
+            sagaLogDatas?.ForEach(sld =>
             {
                 {
-                    var message = (sld.Message as JObject)?.ToObject(sld.MessageType);
+                    object? message = (sld.Message as JObject)?.ToObject(sld.MessageType);
                     deserializedSagaLogDatas.Add(new RedisSagaLogData(sld.EntryId, sld.Id, sld.Type, sld.CreatedAt, message ?? sld.Message, sld.MessageType, sld.MessageId, sld.Outcome));
                 }
             });

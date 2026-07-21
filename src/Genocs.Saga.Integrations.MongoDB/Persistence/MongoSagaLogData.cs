@@ -12,21 +12,21 @@ internal class MongoSagaLogData : ISagaLogData
 
     public string EntryId { get; set; } = string.Empty;
 
-    public string SagaId { get; set; }
+    public required string SagaId { get; init; }
 
     [BsonIgnore]
     public SagaId Id => SagaId;
 
-    public string SagaType { get; set; }
+    public string? SagaType { get; init; }
 
-    public long CreatedAt { get; set; }
+    public long CreatedAt { get; init; }
 
-    public object? Message { get; set; }
+    public object? Message { get; init; }
 
-    public string MessageId { get; set; }
+    public string? MessageId { get; init; }
 
     public SagaLogEntryOutcome Outcome { get; set; }
 
     Type? ISagaLogData.Type
-        => Assembly.GetEntryAssembly()?.GetType(SagaType);
+        => string.IsNullOrWhiteSpace(SagaType) ? null : Assembly.GetEntryAssembly()?.GetType(SagaType);
 }

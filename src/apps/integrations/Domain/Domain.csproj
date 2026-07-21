@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Library.Demo.Domain</RootNamespace>
+        <AssemblyName>Genocs.Library.Demo.Domain</AssemblyName>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Genocs.Core\Genocs.Core.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

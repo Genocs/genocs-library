@@ -134,7 +134,7 @@ public static class Extensions
         VerifyOptions(options);
         string? kvPath = string.IsNullOrWhiteSpace(keyValuePath) ? options.Kv?.Path : keyValuePath;
         var (client, _) = GetClientAndSettings(options);
-        if (!string.IsNullOrWhiteSpace(kvPath) && options.Kv.Enabled)
+        if (!string.IsNullOrWhiteSpace(kvPath) && (options?.Kv?.Enabled == true))
         {
             Console.WriteLine($"Loading settings from Vault: '{options.Url}', KV path: '{kvPath}'.");
             var keyValueSecrets = new KeyValueSecrets(client, options);
@@ -146,13 +146,13 @@ public static class Extensions
             builder.Add(source);
         }
 
-        if (options.Pki is not null && options.Pki.Enabled)
+        if (options?.Pki is not null && options.Pki.Enabled)
         {
             Console.WriteLine("Initializing Vault PKI.");
             await SetPkiSecretsAsync(client, options);
         }
 
-        if (options.Lease is null || !options.Lease.Any())
+        if (options?.Lease is null || !options.Lease.Any())
         {
             return;
         }
@@ -176,11 +176,7 @@ public static class Extensions
         }
     }
 
-    private static Task InitLeaseAsync(
-                                       string key,
-                                       IVaultClient client,
-                                       HashicorpKeyVaultOptions.LeaseOptions options,
-                                       IDictionary<string, string?> configuration)
+    private static Task InitLeaseAsync(string key, IVaultClient client, HashicorpKeyVaultOptions.LeaseOptions options, IDictionary<string, string?> configuration)
         => options.Type.ToLowerInvariant() switch
         {
             "activedirectory" => SetActiveDirectorySecretsAsync(key, client, options, configuration),

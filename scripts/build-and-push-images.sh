@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Build with docker compose
-docker compose -f ./src/demo/docker-compose.yml -f ./src/demo/docker-compose.override.yml --env-file ./local.env --project-name genocs build
+docker compose -f ./src/apps/docker-compose.yml -f ./src/apps/docker-compose.override.yml --env-file ./local.env --project-name genocs build
 
 # Set environment variables coming from .env file
 export $(grep -v '^#' ./local.env | xargs)
 
 # Read service list file
-SERVICE_LIST_FILE="./src/demo/scripts/service-list.txt"
+SERVICE_LIST_FILE="./src/apps/scripts/service-list.txt"
 
 if [[ ! -f "$SERVICE_LIST_FILE" ]]; then
     echo "Error: Service list file not found: $SERVICE_LIST_FILE"
