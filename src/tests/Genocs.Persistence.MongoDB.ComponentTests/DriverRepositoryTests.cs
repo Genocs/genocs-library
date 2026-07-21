@@ -15,7 +15,7 @@ public sealed class DriverRepositoryTests : IAsyncLifetime
     private static readonly object ConventionsLock = new();
     private static bool _conventionsRegistered;
 
-    private readonly MongoDbContainer _mongoContainer = new MongoDbBuilder("mongo:7.0")
+    private readonly MongoDbContainer _mongoContainer = new MongoDbBuilder("mongo:8.0")
         .Build();
 
     private MongoBaseRepositoryOfType<DriverEntity, Guid> _repository = default!;

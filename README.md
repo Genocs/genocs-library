@@ -651,7 +651,7 @@ Use [**api-workbench**](./api-workbench.rest) inside Visual Studio code with [RE
 
 ### Application Components
 
-Inside **./src/demo** folder you can find a full-fledged application composed by:
+Inside **./src/apps** folder you can find a full-fledged application composed by:
 
 - ApiGateway
 - Identity Service
@@ -673,7 +673,7 @@ In that way you can test the entire flow.
 
 ![Architecture](./assets/architecture_01.png)
 
-For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/demo/microservice/WebApi/README.md`](src/demo/microservice/WebApi/README.md).
+For the complete BookStore demo flow (EF Core + SQL Server), API endpoints, and migration commands, see [`src/apps/microservice/WebApi/README.md`](src/apps/microservice/WebApi/README.md).
 
 ### How to BUILD & RUN the application
 
@@ -697,15 +697,15 @@ dotnet build
 dotnet pack
 
 # Run project with console
-dotnet run --project ./src/demo/microservice/WebApi
-dotnet run --project ./src/demo/microservice/Masstransit.WebApi
-dotnet run --project ./src/demo/microservice/Masstransit.Worker
-dotnet run --project ./src/demo/microservice/ServiceBus.Worker
-dotnet run --project ./src/demo/apigateway/WebApi
-dotnet run --project ./src/demo/identities/WebApi
-dotnet run --project ./src/demo/products/WebApi
-dotnet run --project ./src/demo/orders/WebApi
-dotnet run --project ./src/demo/notifications/WebApi
+dotnet run --project ./src/apps/microservice/WebApi
+dotnet run --project ./src/apps/microservice/Masstransit.WebApi
+dotnet run --project ./src/apps/microservice/Masstransit.Worker
+dotnet run --project ./src/apps/microservice/ServiceBus.Worker
+dotnet run --project ./src/apps/apigateway/WebApi
+dotnet run --project ./src/apps/identities/WebApi
+dotnet run --project ./src/apps/products/WebApi
+dotnet run --project ./src/apps/orders/WebApi
+dotnet run --project ./src/apps/notifications/WebApi
 ```
 
 ### Build and push the Docker images to Dockerhub
@@ -719,7 +719,7 @@ You can build the Demo application by using Docker and push the images to Docker
 
 # OPTION 2.
 # Step by step commands to build and run the demo application with docker compose
-cd ./infrastructure/containers/demo
+cd ./infrastructure/containers/apps
 # Build with docker compose
 docker compose -f ./docker-compose.override.yml -f ./docker-compose.yml --env-file ./.env --project-name genocs build
 

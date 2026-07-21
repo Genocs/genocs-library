@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "genocs.demo.webapi": "StartDebugging"
+        "genocs.apps.webapi": "StartDebugging"
       }
     }
   }

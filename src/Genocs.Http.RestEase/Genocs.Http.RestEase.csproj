@@ -11,10 +11,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
+        <PackageReference Include="RestEase" Version="1.6.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="RestEase" Version="1.6.4" />
+        <ProjectReference Include="..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
     </ItemGroup>
+
 </Project>

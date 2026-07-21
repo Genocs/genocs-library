@@ -75,7 +75,7 @@ Severity: Medium
 Where:
 
 - src/Genocs.Core/Builders/Extensions.cs
-- src/demo/**/Program.cs
+- src/apps/**/Program.cs
 - docs/Genocs.Core-vNext-Dependency-Impact.md
 
 Details:

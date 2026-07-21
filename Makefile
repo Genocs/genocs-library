@@ -1,7 +1,7 @@
 build:
 	dotnet build
-start-demo:
-	dotnet run --project ./src/demo/WebApi/Host.csproj -c Debug
+start-apps:
+	dotnet run --project ./src/apps/WebApi/Host.csproj -c Debug
 nuget:
 	nuget pack -NoDefaultExcludes -OutputDirectory nupkgs
 publish:
@@ -15,9 +15,9 @@ ta: # terraform apply
 td: # terraform destroy
 	cd infrastructure/terraform && terraform destroy
 dcu: # docker-compose up : webapi + postgresql
-	docker compose -f infrastructure/docker/demo/docker-compose.yml up -d
+	docker compose -f infrastructure/docker/apps/docker-compose.yml up -d
 dcd: # docker-compose down : webapi + postgresql
-	docker compose -f infrastructure/docker/demo/docker-compose.yml down
+	docker compose -f infrastructure/docker/apps/docker-compose.yml down
 fds: # force rededeploy aws ecs service
 	aws ecs update-service --force-new-deployment --service dotnet-webapi --cluster genocs
 gw: # git docker workflow to push docker image to the repository based on the main branch
@@ -28,10 +28,10 @@ gw: # git docker workflow to push docker image to the repository based on the ma
 d-build: # docker build images
 	@echo building docker images
 	@echo you should have docker installed and running
-	bash ./src/demo/scripts/build-images.sh
+	bash ./src/apps/scripts/build-images.sh
 d-push: # docker tag and push images
 	@echo tag images as latest and publish
-	bash ./src/demo/scripts/push-images.sh
+	bash ./src/apps/scripts/push-images.sh
 
 validate-messaging: # validate messaging packages warning baseline and tests
 	$(MAKE) -f validate-messaging.mk validate-messaging

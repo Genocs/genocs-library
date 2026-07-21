@@ -29,18 +29,18 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var uri = GetUri(request);
+        var uri = GetUri(request) ?? throw new InvalidOperationException("Request URI could not be determined.");
         string serviceName = string.IsNullOrWhiteSpace(_serviceName) ? uri.Host : _serviceName;
 
         return await SendAsync(request, serviceName, uri, cancellationToken);
     }
 
-    private Uri GetUri(HttpRequestMessage request)
+    private Uri? GetUri(HttpRequestMessage request)
         => string.IsNullOrWhiteSpace(_serviceName)
             ? request.RequestUri
             : _overrideRequestUri == true
                 ? new Uri(
-                    $"{request.RequestUri.Scheme}://{_serviceName}/{request.RequestUri.Host}{request.RequestUri.PathAndQuery}")
+                    $"{request.RequestUri!.Scheme}://{_serviceName}/{request.RequestUri.Host}{request.RequestUri.PathAndQuery}")
                 : request.RequestUri;
 
     private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, string serviceName, Uri uri, CancellationToken cancellationToken)
@@ -59,6 +59,11 @@ internal sealed class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
     {
         var service = await _servicesRegistry.GetAsync(serviceName)
             ?? throw new ConsulServiceNotFoundException($"Consul service: '{serviceName}' was not found.", serviceName);
+
+        if (string.IsNullOrWhiteSpace(service.Address))
+        {
+            throw new InvalidOperationException($"Consul service: '{serviceName}' has no address.");
+        }
 
         if (!_options.SkipLocalhostDockerDnsReplace)
         {

@@ -41,7 +41,7 @@ Genocs.Common currently has no outbound ProjectReference dependency on other in-
 
 Package and project dependents:
 - Genocs.Core
-- demo/Contracts
+- apps/Contracts
 
 Test project:
 - tests/Genocs.Common.UnitTests
@@ -78,15 +78,15 @@ Additional transitive dependents through package layering:
 - Genocs.Tracing.Jaeger.RabbitMQ (via Genocs.Messaging.RabbitMQ)
 
 Host-level transitive impact expected on:
-- src/demo/apigateway/WebApi/Host.csproj
-- src/demo/identities/Application/Application.csproj
-- src/demo/identities/WebApi/Host.csproj
-- src/demo/products/WebApi/Host.csproj
-- src/demo/orders/WebApi/Host.csproj
-- src/demo/notifications/WebApi/Host.csproj
-- src/demo/WebApi/Host.csproj
-- src/demo/Masstransit.WebApi/Host.csproj
-- src/demo/Masstransit.Worker/Host.csproj
+- src/apps/apigateway/WebApi/Host.csproj
+- src/apps/identities/Application/Application.csproj
+- src/apps/identities/WebApi/Host.csproj
+- src/apps/products/WebApi/Host.csproj
+- src/apps/orders/WebApi/Host.csproj
+- src/apps/notifications/WebApi/Host.csproj
+- src/apps/WebApi/Host.csproj
+- src/apps/Masstransit.WebApi/Host.csproj
+- src/apps/Masstransit.Worker/Host.csproj
 
 ## vNext Boundary Decisions (Working Set)
 
@@ -170,7 +170,7 @@ No exception policy:
 ## Recommended Execution Order
 
 1. Finalize contract boundary decisions and update the Breaking Change Ledger.
-2. Migrate direct dependents first (Genocs.Core, demo/Contracts, Common tests).
+2. Migrate direct dependents first (Genocs.Core, apps/Contracts, Common tests).
 3. Migrate transitive package dependents in waves after direct dependents are green.
-4. Migrate app/demo hosts after package layer validation.
+4. Migrate app/apps hosts after package layer validation.
 5. Run solution-level validation and move rows to VERIFIED/CLOSED.

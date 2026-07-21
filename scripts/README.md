@@ -20,9 +20,9 @@ This folder contains helper scripts for local development, CI/CD packaging, repo
 - `dotnet-test.sh`
 	- Runs: `dotnet test`
 
-- `run-demo-webapi.sh`
+- `run-apps-webapi.sh`
 	- Sets `ASPNETCORE_ENVIRONMENT=local`
-	- Runs: `dotnet run --project src/demo/WebApi/Host.csproj`
+	- Runs: `dotnet run --project src/apps/WebApi/Host.csproj`
 
 ### Packaging and container publishing
 

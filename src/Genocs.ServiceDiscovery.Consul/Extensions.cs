@@ -77,9 +77,7 @@ public static class Extensions
 
     public static void AddConsulHttpClient(this IGenocsBuilder builder, string clientName, string serviceName)
         => builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>(clientName)
-            .AddHttpMessageHandler(c => new ConsulServiceDiscoveryMessageHandler(
-                c.GetRequiredService<IConsulServicesRegistry>(),
-                c.GetRequiredService<ConsulOptions>(), serviceName, true));
+            .AddHttpMessageHandler(c => new ConsulServiceDiscoveryMessageHandler(c.GetRequiredService<IConsulServicesRegistry>(), c.GetRequiredService<ConsulOptions>(), serviceName, true));
 
     private static ServiceRegistration? CreateConsulAgentRegistration(this IGenocsBuilder builder, ConsulOptions options)
     {

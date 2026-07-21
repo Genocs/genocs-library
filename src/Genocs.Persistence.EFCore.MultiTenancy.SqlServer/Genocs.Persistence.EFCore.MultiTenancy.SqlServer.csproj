@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
@@ -11,14 +11,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Genocs.Persistence.EFCore.SqlServer\Genocs.Persistence.EFCore.SqlServer.csproj" />
+        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.12" />
+        <PackageReference Include="Finbuckle.MultiTenant.EntityFrameworkCore" Version="9.4.12" />
+        
+
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.3" />
-        <PackageReference Include="Finbuckle.MultiTenant.EntityFrameworkCore" Version="9.4.1" />
-        <PackageReference Include="Mapster" Version="10.0.11" />
+        <PackageReference Include="Mapster" Version="10.0.12" />
         <PackageReference Include="MediatR" Version="14.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore.SqlServer\Genocs.Persistence.EFCore.SqlServer.csproj" />
     </ItemGroup>
 
 </Project>

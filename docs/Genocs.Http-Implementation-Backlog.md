@@ -289,19 +289,19 @@ The HTTP-004 nullable contract update is implemented in `Genocs.Http`. The follo
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Framework/LogContextMiddleware.cs` | Guard log enrichment when correlation ID is null or whitespace (decide: omit property vs generate fallback ID). | Not started |
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Framework/MessagingMiddleware.cs` | Ensure message correlation ID handling is explicit when factory output is missing (generate deterministic fallback before publish). | Not started |
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Framework/CustomForwarderHttpClientFactory.cs` | Add conditional header propagation for `x-correlation-id` (avoid sending blank header values). | Not started |
-| Identities (`src/demo/identities`) | `Application/Services/MessageBroker.cs` | Handle nullable correlation ID before passing to outbox/bus publisher APIs; define fallback behavior. | Not started |
-| Identities (`src/demo/identities`) | `Application/Logging/LogContextMiddleware.cs` | Make log context enrichment resilient to nullable correlation IDs. | Not started |
-| Identities (`src/demo/identities`) | `Application/Decorators/LoggingCommandHandlerDecorator.cs`, `Application/Decorators/LoggingEventHandlerDecorator.cs` | Apply nullable-safe correlation handling in decorator log scopes. | Not started |
-| Identities (`src/demo/identities`) | `Application/CorrelationIdFactory.cs` | Decide and document contract intent: keep non-null guarantee (implementation returns `string`) or align signature/docs to nullable interface explicitly. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/LogContextMiddleware.cs` | Guard log enrichment when correlation ID is null or whitespace (decide: omit property vs generate fallback ID). | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/MessagingMiddleware.cs` | Ensure message correlation ID handling is explicit when factory output is missing (generate deterministic fallback before publish). | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Framework/CustomForwarderHttpClientFactory.cs` | Add conditional header propagation for `x-correlation-id` (avoid sending blank header values). | Not started |
+| Identities (`src/apps/identities`) | `Application/Services/MessageBroker.cs` | Handle nullable correlation ID before passing to outbox/bus publisher APIs; define fallback behavior. | Not started |
+| Identities (`src/apps/identities`) | `Application/Logging/LogContextMiddleware.cs` | Make log context enrichment resilient to nullable correlation IDs. | Not started |
+| Identities (`src/apps/identities`) | `Application/Decorators/LoggingCommandHandlerDecorator.cs`, `Application/Decorators/LoggingEventHandlerDecorator.cs` | Apply nullable-safe correlation handling in decorator log scopes. | Not started |
+| Identities (`src/apps/identities`) | `Application/CorrelationIdFactory.cs` | Decide and document contract intent: keep non-null guarantee (implementation returns `string`) or align signature/docs to nullable interface explicitly. | Not started |
 | Companion HTTP clients | `src/Genocs.ServiceDiscovery.Consul/Http/ConsulHttpClient.cs`, `src/Genocs.LoadBalancing.Fabio/Http/FabioHttpClient.cs` | Add/verify regression tests asserting missing correlation values do not produce outbound headers through inherited `GenocsHttpClient` behavior. | Not started |
 
 **Suggested validation for dependent activities**
 
-- `dotnet build src/demo/apigateway/WebApi/Host.csproj -c Debug --nologo`
-- `dotnet build src/demo/identities/Application/Application.csproj -c Debug --nologo`
+- `dotnet build src/apps/apigateway/WebApi/Host.csproj -c Debug --nologo`
+- `dotnet build src/apps/identities/Application/Application.csproj -c Debug --nologo`
 
 ---
 
@@ -369,12 +369,12 @@ HTTP-005 changes retry semantics and defaults. The following downstream activiti
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/appsettings.json` | Review `httpClient.retries` usage and decide whether write operations require `httpClient.retryUnsafeHttpMethods=true` for this service. | Not started |
-| Products (`src/demo/products`) | `WebApi/appsettings.json` | Validate write-call resilience expectations with new default (no POST/PUT/PATCH retries unless opted in). | Not started |
-| Orders (`src/demo/orders`) | `WebApi/appsettings.json` | Reassess retry ownership between Genocs.Http and any pipeline-level resilience to avoid compounded retries. | Not started |
-| Notifications (`src/demo/notifications`) | `WebApi/appsettings.json` | Confirm write flows tolerate transport failures under conservative retry defaults; opt in explicitly only if idempotency safeguards exist. | Not started |
-| Identities (`src/demo/identities`) | `WebApi/appsettings.json`, `Application/Extensions.cs` | Verify Application/WebApi compositions have consistent retry intent and update configuration/docs if write retries must be enabled. | Not started |
-| Demo hosts | `src/demo/WebApi/appsettings.json`, `src/demo/ServiceBus.Worker/appsettings.json`, `src/demo/Masstransit.WebApi/appsettings.json`, `src/demo/Masstransit.Worker/appsettings.json` | Update sample configuration/docs to reflect new retry defaults and optional `retryUnsafeHttpMethods`. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/appsettings.json` | Review `httpClient.retries` usage and decide whether write operations require `httpClient.retryUnsafeHttpMethods=true` for this service. | Not started |
+| Products (`src/apps/products`) | `WebApi/appsettings.json` | Validate write-call resilience expectations with new default (no POST/PUT/PATCH retries unless opted in). | Not started |
+| Orders (`src/apps/orders`) | `WebApi/appsettings.json` | Reassess retry ownership between Genocs.Http and any pipeline-level resilience to avoid compounded retries. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/appsettings.json` | Confirm write flows tolerate transport failures under conservative retry defaults; opt in explicitly only if idempotency safeguards exist. | Not started |
+| Identities (`src/apps/identities`) | `WebApi/appsettings.json`, `Application/Extensions.cs` | Verify Application/WebApi compositions have consistent retry intent and update configuration/docs if write retries must be enabled. | Not started |
+| Demo hosts | `src/apps/WebApi/appsettings.json`, `src/apps/ServiceBus.Worker/appsettings.json`, `src/apps/Masstransit.WebApi/appsettings.json`, `src/apps/Masstransit.Worker/appsettings.json` | Update sample configuration/docs to reflect new retry defaults and optional `retryUnsafeHttpMethods`. | Not started |
 
 ### HTTP-006 Stop retrying the same `HttpRequestMessage` instance
 
@@ -433,11 +433,11 @@ HTTP-006 changes the resilience model for call sites that build and pass `HttpRe
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Application/Services/*` | Audit custom `HttpRequestMessage` call sites and move retry ownership to `HttpClientFactory` handlers where replay-safe behavior is needed. | Not started |
-| Products (`src/demo/products`) | `WebApi/Application/Services/*` | Validate write-path idempotency and add explicit resilience handlers for any custom request-message flows. | Not started |
-| Orders (`src/demo/orders`) | `WebApi/Application/Services/*` | Reassess outbound message/client wrappers that construct `HttpRequestMessage` to ensure expected retry policy still exists at pipeline level. | Not started |
-| Notifications (`src/demo/notifications`) | `WebApi/Application/Services/*` | Confirm notification dispatch call paths using `HttpRequestMessage` are resilient through handler policies, not Genocs.Http internal replay. | Not started |
-| Demo hosts | `src/demo/**` outbound integration classes | Update demo guidance to show where retry is configured when using custom `HttpRequestMessage` APIs. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Audit custom `HttpRequestMessage` call sites and move retry ownership to `HttpClientFactory` handlers where replay-safe behavior is needed. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Validate write-path idempotency and add explicit resilience handlers for any custom request-message flows. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*` | Reassess outbound message/client wrappers that construct `HttpRequestMessage` to ensure expected retry policy still exists at pipeline level. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Confirm notification dispatch call paths using `HttpRequestMessage` are resilient through handler policies, not Genocs.Http internal replay. | Not started |
+| Demo hosts | `src/apps/**` outbound integration classes | Update apps guidance to show where retry is configured when using custom `HttpRequestMessage` APIs. | Not started |
 
 ### HTTP-007 Preserve cancellation semantics and avoid retrying cancellations
 
@@ -495,11 +495,11 @@ HTTP-007 tightens cancellation semantics. The following downstream activities sh
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Application/Services/*` | Ensure any explicit retry wrappers skip `OperationCanceledException`/`TaskCanceledException` and preserve caller cancellation intent. | Not started |
-| Products (`src/demo/products`) | `WebApi/Application/Services/*` | Verify outbound application-service calls pass request tokens end-to-end (controller -> service -> `IHttpClient`) without substituting `CancellationToken.None`. | Not started |
-| Orders (`src/demo/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Audit timeout/cancellation handling to avoid wrapping cancellation as generic transient errors that trigger unrelated retries. | Not started |
-| Notifications (`src/demo/notifications`) | `WebApi/Application/Services/*` | Confirm long-running notification fan-out paths honor cancellation and terminate promptly when upstream token is canceled. | Not started |
-| Demo hosts | `src/demo/**` integration call sites | Update demo recipes to show passing `CancellationToken` through typed calls and avoiding cancellation retries in custom resilience handlers. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Ensure any explicit retry wrappers skip `OperationCanceledException`/`TaskCanceledException` and preserve caller cancellation intent. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Verify outbound application-service calls pass request tokens end-to-end (controller -> service -> `IHttpClient`) without substituting `CancellationToken.None`. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Audit timeout/cancellation handling to avoid wrapping cancellation as generic transient errors that trigger unrelated retries. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Confirm long-running notification fan-out paths honor cancellation and terminate promptly when upstream token is canceled. | Not started |
+| Demo hosts | `src/apps/**` integration call sites | Update apps recipes to show passing `CancellationToken` through typed calls and avoiding cancellation retries in custom resilience handlers. | Not started |
 
 ### HTTP-008 Dispose transient responses and separate send failures from payload failures
 
@@ -558,11 +558,11 @@ HTTP-008 changes response lifecycle and ownership expectations. The following do
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Application/Services/*` | Audit typed outbound wrappers to ensure they do not retain or double-dispose responses that are now disposed inside `T?` methods. | Not started |
-| Products (`src/demo/products`) | `WebApi/Application/Services/*` | Verify no call sites expect to access response metadata after typed `T?` calls; migrate those paths to `HttpResult<T>` or raw-response APIs where needed. | Not started |
-| Orders (`src/demo/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Confirm payload materialization errors are treated as single-attempt failures in any external resilience wrappers and not reclassified as retryable transport faults. | Not started |
-| Notifications (`src/demo/notifications`) | `WebApi/Application/Services/*` | Validate background notification flows do not leak response resources when using typed helper methods under high-throughput dispatch. | Not started |
-| Demo hosts | `src/demo/**` outbound integration examples | Update examples to clarify when to choose typed `T?`, `HttpResult<T>`, or raw `HttpResponseMessage` based on response ownership needs. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Application/Services/*` | Audit typed outbound wrappers to ensure they do not retain or double-dispose responses that are now disposed inside `T?` methods. | Not started |
+| Products (`src/apps/products`) | `WebApi/Application/Services/*` | Verify no call sites expect to access response metadata after typed `T?` calls; migrate those paths to `HttpResult<T>` or raw-response APIs where needed. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Application/Services/*`, `Infrastructure/*` | Confirm payload materialization errors are treated as single-attempt failures in any external resilience wrappers and not reclassified as retryable transport faults. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Application/Services/*` | Validate background notification flows do not leak response resources when using typed helper methods under high-throughput dispatch. | Not started |
+| Demo hosts | `src/apps/**` outbound integration examples | Update examples to clarify when to choose typed `T?`, `HttpResult<T>`, or raw `HttpResponseMessage` based on response ownership needs. | Not started |
 
 ---
 
@@ -625,11 +625,11 @@ HTTP-009 changes registration composition behavior and reduces side effects at s
 
 | Project | Affected files | Follow-up activity | Status |
 |---|---|---|---|
-| ApiGateway (`src/demo/apigateway`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Verify startup order assumptions do not rely on early factory instantiation side effects from HTTP registration. | Not started |
-| Products (`src/demo/products`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Confirm custom correlation factory registrations continue to take precedence and no duplicate fallback behavior is assumed. | Not started |
-| Orders (`src/demo/orders`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Validate composition with additional DI modules to ensure no module depended on AddHttpClient creating an intermediate provider. | Not started |
-| Notifications (`src/demo/notifications`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Re-check initialization diagnostics/logging that may have previously observed early correlation-factory construction. | Not started |
-| Demo hosts | `src/demo/**/Program.cs` | Align demo startup guidance with additive registration behavior and no temporary provider creation. | Not started |
+| ApiGateway (`src/apps/apigateway`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Verify startup order assumptions do not rely on early factory instantiation side effects from HTTP registration. | Not started |
+| Products (`src/apps/products`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Confirm custom correlation factory registrations continue to take precedence and no duplicate fallback behavior is assumed. | Not started |
+| Orders (`src/apps/orders`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Validate composition with additional DI modules to ensure no module depended on AddHttpClient creating an intermediate provider. | Not started |
+| Notifications (`src/apps/notifications`) | `WebApi/Program.cs`, `WebApi/Extensions/*` | Re-check initialization diagnostics/logging that may have previously observed early correlation-factory construction. | Not started |
+| Demo hosts | `src/apps/**/Program.cs` | Align apps startup guidance with additive registration behavior and no temporary provider creation. | Not started |
 
 ### HTTP-010 Stop replacing global `IHttpMessageHandlerBuilderFilter`
 

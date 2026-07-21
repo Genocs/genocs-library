@@ -20,7 +20,7 @@ internal sealed class MongoSagaLog : ISagaLog
        {
            EntryId = message.EntryId,
            SagaId = message.Id,
-           SagaType = message.Type.FullName,
+           SagaType = message.Type?.FullName,
            Message = message.Message,
            CreatedAt = message.CreatedAt,
            MessageId = message.MessageId,

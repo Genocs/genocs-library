@@ -39,6 +39,99 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Enable OpenId Connect Authentication.
+    /// It can be used with Firebase Authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The configuration section name.</param>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
+    public static IGenocsBuilder AddOpenIdJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
+    {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = JwtOptions.Position;
+        }
+
+        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
+
+        string metadataAddress = $"{options.Issuer}{options.MetadataAddress}";
+        var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
+
+        builder.Services
+            .AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = options.Challenge;
+                o.DefaultChallengeScheme = options.Challenge;
+                o.DefaultScheme = options.Challenge;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.IncludeErrorDetails = options.IncludeErrorDetails;
+                o.RefreshOnIssuerKeyNotFound = options.RefreshOnIssuerKeyNotFound;
+                o.MetadataAddress = metadataAddress;
+                o.ConfigurationManager = configurationManager;
+                o.Audience = options.Audience;
+            });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// It adds the private key JWT authentication.
+    /// </summary>
+    /// <param name="builder">The Genocs builder.</param>
+    /// <param name="sectionName">The optional section name. Default name: 'jwt'.</param>
+    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
+    /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
+    public static IGenocsBuilder AddPrivateKeyJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
+    {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            sectionName = JwtOptions.Position;
+        }
+
+        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
+
+        if (string.IsNullOrWhiteSpace(options.IssuerSigningKey))
+        {
+            throw new InvalidOperationException("Issuer signing key is missing.");
+        }
+
+        SecurityKey signingKey = SecurityKeyBuilder.CreateRsaSecurityKey(options.IssuerSigningKey);
+
+        builder.Services
+            .AddAuthentication(o =>
+            {
+                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.SaveToken = options.SaveToken;
+                o.RequireHttpsMetadata = options.RequireHttpsMetadata;
+                o.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = signingKey,
+                    ValidateAudience = options.ValidateAudience,
+                    ValidAudience = options.ValidAudience,
+                    ValidateIssuer = options.ValidateIssuer,
+                    ValidIssuer = options.ValidIssuer,
+                    ValidateLifetime = options.ValidateLifetime,
+                    ValidateIssuerSigningKey = options.ValidateIssuerSigningKey
+                };
+            });
+
+        return builder;
+    }
+
+    /// <summary>
+    /// This middleware validates the access token in real-time.
+    /// </summary>
+    /// <param name="app">The app builder.</param>
+    /// <returns>The app builder. You can use it for chain commands.</returns>
+    public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
+        => app.UseMiddleware<AccessTokenValidatorMiddleware>();
+
+    /// <summary>
     /// Add JWT authentication. Internal function.
     /// </summary>
     /// <param name="builder">The Genocs builder.</param>
@@ -179,99 +272,6 @@ public static class Extensions
 
         return builder;
     }
-
-    /// <summary>
-    /// Enable OpenId Connect Authentication.
-    /// It can be used with Firebase Authentication.
-    /// </summary>
-    /// <param name="builder">The Genocs builder.</param>
-    /// <param name="sectionName">The configuration section name.</param>
-    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
-    public static IGenocsBuilder AddOpenIdJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
-    {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = JwtOptions.Position;
-        }
-
-        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
-
-        string metadataAddress = $"{options.Issuer}{options.MetadataAddress}";
-        var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
-
-        builder.Services
-            .AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = options.Challenge;
-                o.DefaultChallengeScheme = options.Challenge;
-                o.DefaultScheme = options.Challenge;
-            })
-            .AddJwtBearer(o =>
-            {
-                o.IncludeErrorDetails = options.IncludeErrorDetails;
-                o.RefreshOnIssuerKeyNotFound = options.RefreshOnIssuerKeyNotFound;
-                o.MetadataAddress = metadataAddress;
-                o.ConfigurationManager = configurationManager;
-                o.Audience = options.Audience;
-            });
-
-        return builder;
-    }
-
-    /// <summary>
-    /// It adds the private key JWT authentication.
-    /// </summary>
-    /// <param name="builder">The Genocs builder.</param>
-    /// <param name="sectionName">The optional section name. Default name: 'jwt'.</param>
-    /// <returns>The Genocs builder. You can use it for chain commands.</returns>
-    /// <exception cref="InvalidOperationException">Whenever mandatory data like 'IssuerSigningKey' is missing.</exception>
-    public static IGenocsBuilder AddPrivateKeyJwt(this IGenocsBuilder builder, string sectionName = JwtOptions.Position)
-    {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = JwtOptions.Position;
-        }
-
-        JwtOptions options = builder.Configuration!.GetOptions<JwtOptions>(sectionName);
-
-        if (string.IsNullOrWhiteSpace(options.IssuerSigningKey))
-        {
-            throw new InvalidOperationException("Issuer signing key is missing.");
-        }
-
-        SecurityKey signingKey = SecurityKeyBuilder.CreateRsaSecurityKey(options.IssuerSigningKey);
-
-        builder.Services
-            .AddAuthentication(o =>
-            {
-                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(o =>
-            {
-                o.SaveToken = options.SaveToken;
-                o.RequireHttpsMetadata = options.RequireHttpsMetadata;
-                o.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    IssuerSigningKey = signingKey,
-                    ValidateAudience = options.ValidateAudience,
-                    ValidAudience = options.ValidAudience,
-                    ValidateIssuer = options.ValidateIssuer,
-                    ValidIssuer = options.ValidIssuer,
-                    ValidateLifetime = options.ValidateLifetime,
-                    ValidateIssuerSigningKey = options.ValidateIssuerSigningKey
-                };
-            });
-
-        return builder;
-    }
-
-    /// <summary>
-    /// This middleware validates the access token in real-time.
-    /// </summary>
-    /// <param name="app">The app builder.</param>
-    /// <returns>The app builder. You can use it for chain commands.</returns>
-    public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app)
-        => app.UseMiddleware<AccessTokenValidatorMiddleware>();
 }
 
 /// <summary>

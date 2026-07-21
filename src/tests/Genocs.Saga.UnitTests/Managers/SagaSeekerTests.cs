@@ -18,8 +18,9 @@ public class SagaSeekerTests
         var serviceProvider = serviceCollection.BuildServiceProvider();
         var seeker = new SagaSeeker(serviceProvider);
 
-        var actions = seeker.Seek<Message>().ToList();
+        var actions = seeker.Seek<Message>()?.ToList();
 
+        actions.ShouldNotBeNull();
         actions.Count().ShouldBe(2);
         actions.First().GetType().ShouldBe(typeof(MySaga1));
         actions.Last().GetType().ShouldBe(typeof(MySaga2));

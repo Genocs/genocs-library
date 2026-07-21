@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Library.Demo.WebApi</RootNamespace>
+        <AssemblyName>Genocs.Library.Demo.WebApi</AssemblyName>
+        <UserSecretsId>Genocs</UserSecretsId>
+        <IsPackable>false</IsPackable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <!-- Disable web.config transformation for Docker builds -->
+        <TransformWebConfigEnabled>false</TransformWebConfigEnabled>
+        <WebConfigTransformEnabled>false</WebConfigTransformEnabled>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Persistence.EFCore.MultiTenancy.SqlServer\Genocs.Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.MongoDB\Genocs.Saga.Integrations.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.Redis\Genocs.Saga.Integrations.Redis.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Saga\Genocs.Saga.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Contracts\Contracts.csproj" />
+        <ProjectReference Include="..\Domain.EFCore\Domain.EFCore.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="HealthChecks\" />
+    </ItemGroup>
+
+</Project>

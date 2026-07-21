@@ -10,15 +10,16 @@
         <PackageTags>genocs persistence efcore entity-framework mysql pomelo data-access</PackageTags>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
-    </ItemGroup>
-
     <!-- NOTE: Pomelo.EntityFrameworkCore.MySql does not yet support EF Core 10. -->
     <!-- Add the net10.0 reference and remove the stub in MySqlDbProvider when available. -->
     <ItemGroup>
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" Condition="'$(TargetFramework)' == 'net8.0'" />
     </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
+    </ItemGroup>
+
 
 </Project>

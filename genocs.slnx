@@ -1,43 +1,43 @@
 <Solution>
-  <Folder Name="/demo/" />
-  <Folder Name="/demo/apigateway/">
-    <Project Path="src/demo/apigateway/WebApi/Host.csproj" />
+  <Folder Name="/apps/" />
+  <Folder Name="/apps/apigateway/">
+    <Project Path="src/apps/apigateway/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/identities/">
-    <Project Path="src/demo/identities/Application/Application.csproj" />
-    <Project Path="src/demo/identities/WebApi/Host.csproj" />
+  <Folder Name="/apps/identities/">
+    <Project Path="src/apps/identities/Application/Application.csproj" />
+    <Project Path="src/apps/identities/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/">
-    <Project Path="src/demo/microservice/Application/Application.csproj" />
-    <Project Path="src/demo/microservice/Contracts/Contracts.csproj" />
-    <Project Path="src/demo/microservice/Domain.EFCore/Domain.EFCore.csproj" />
-    <Project Path="src/demo/microservice/Domain/Domain.csproj" />
+  <Folder Name="/apps/integrations/">
+    <Project Path="src/apps/integrations/Application/Application.csproj" />
+    <Project Path="src/apps/integrations/Contracts/Contracts.csproj" />
+    <Project Path="src/apps/integrations/Domain.EFCore/Domain.EFCore.csproj" />
+    <Project Path="src/apps/integrations/Domain/Domain.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/Masstransit.WebApi/">
-    <Project Path="src/demo/microservice/Masstransit.WebApi/Host.csproj" />
+  <Folder Name="/apps/integrations/Masstransit.WebApi/">
+    <Project Path="src/apps/integrations/Masstransit.WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/Masstransit.Worker/">
-    <Project Path="src/demo/microservice/Masstransit.Worker/Host.csproj" />
+  <Folder Name="/apps/integrations/Masstransit.Worker/">
+    <Project Path="src/apps/integrations/Masstransit.Worker/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/ServiceBus.Worker/">
-    <Project Path="src/demo/microservice/ServiceBus.Worker/Host.csproj" />
+  <Folder Name="/apps/integrations/ServiceBus.Worker/">
+    <Project Path="src/apps/integrations/ServiceBus.Worker/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/tests/">
-    <Project Path="src/demo/microservice/ContractTests/ContractTests.csproj" />
+  <Folder Name="/apps/integrations/tests/">
+    <Project Path="src/apps/integrations/tests/ContractTests/ContractTests.csproj" />
   </Folder>
-  <Folder Name="/demo/microservice/WebApi/">
-    <Project Path="src/demo/microservice/WebApi/Host.csproj" />
+  <Folder Name="/apps/integrations/WebApi/">
+    <Project Path="src/apps/integrations/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/notifications/">
-    <Project Path="src/demo/notifications/WebApi/Host.csproj" />
+  <Folder Name="/apps/notifications/">
+    <Project Path="src/apps/notifications/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/orders/">
-    <Project Path="src/demo/orders/WebApi/Host.csproj" />
+  <Folder Name="/apps/orders/">
+    <Project Path="src/apps/orders/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/products/">
-    <Project Path="src/demo/products/WebApi/Host.csproj" />
+  <Folder Name="/apps/products/">
+    <Project Path="src/apps/products/WebApi/Host.csproj" />
   </Folder>
-  <Folder Name="/demo/wallets/" />
+  <Folder Name="/apps/wallets/" />
   <Folder Name="/tests/">
     <Project Path="src/tests/Genocs.Common.UnitTests/Genocs.Common.UnitTests.csproj" />
     <Project Path="src/tests/Genocs.Core.UnitTests/Genocs.Core.UnitTests.csproj" />

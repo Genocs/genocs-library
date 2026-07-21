@@ -12,13 +12,13 @@ public class SagaTransactionStepDefinitions
 {
     private readonly Mock<ISagaCoordinator> _mockSagaCoordinator;
     private readonly Mock<ILogger<SagaTransactionService>> _mockLogger;
-    private ISagaTransactionService _sagaTransactionService;
+    private ISagaTransactionService? _sagaTransactionService;
 
-    private string _transactionText;
-    private string _originator;
-    private SagaId _resultSagaId;
-    private string _existingSagaId;
-    private ISagaContext _capturedContext;
+    private string? _transactionText;
+    private string? _originator;
+    private SagaId? _resultSagaId;
+    private string? _existingSagaId;
+    private ISagaContext? _capturedContext;
 
     public SagaTransactionStepDefinitions()
     {
@@ -55,10 +55,11 @@ public class SagaTransactionStepDefinitions
             .Callback<StartTransaction, ISagaContext>((msg, ctx) => _capturedContext = ctx)
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(
+        _resultSagaId = await _sagaTransactionService!.StartTransactionAsync(
             new StartSagaCommand { Text = text, TransactionValue = 0 },
             originator);
-        _existingSagaId = _resultSagaId.Id;
+
+        _existingSagaId = _resultSagaId?.Id.ToString();
     }
 
     [When(@"I start a new saga transaction")]
@@ -72,7 +73,7 @@ public class SagaTransactionStepDefinitions
             .Callback<StartTransaction, ISagaContext>((msg, ctx) => _capturedContext = ctx)
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.StartTransactionAsync(
+        _resultSagaId = await _sagaTransactionService!.StartTransactionAsync(
             new StartSagaCommand { Text = _transactionText, TransactionValue = 0 },
             _originator);
     }
@@ -95,7 +96,7 @@ public class SagaTransactionStepDefinitions
                 })
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.CompleteTransactionAsync(_existingSagaId, text, originator);
+        _resultSagaId = await _sagaTransactionService!.CompleteTransactionAsync(_existingSagaId, text, originator);
     }
 
     [When(@"I complete the saga transaction that results in rejection")]
@@ -116,7 +117,7 @@ public class SagaTransactionStepDefinitions
                 })
             .Returns(Task.CompletedTask);
 
-        _resultSagaId = await _sagaTransactionService.CompleteTransactionAsync(_existingSagaId, "Rejection text", _originator);
+        _resultSagaId = await _sagaTransactionService!.CompleteTransactionAsync(_existingSagaId, "Rejection text", _originator);
     }
 
     [Then(@"a new saga should be created")]
@@ -133,7 +134,7 @@ public class SagaTransactionStepDefinitions
     public void ThenTheSagaShouldHaveAValidSagaId()
     {
         Assert.NotNull(_resultSagaId);
-        Assert.False(string.IsNullOrEmpty(_resultSagaId.Id));
+        Assert.False(string.IsNullOrEmpty(_resultSagaId?.Id.ToString()));
     }
 
     [Then(@"the saga context should contain the originator ""(.*)""")]

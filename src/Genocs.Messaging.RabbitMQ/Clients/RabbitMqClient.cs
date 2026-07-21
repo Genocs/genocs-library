@@ -7,10 +7,10 @@ namespace Genocs.Messaging.RabbitMQ.Clients;
 
 internal sealed class RabbitMQClient : IRabbitMQClient
 {
-    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.RabbitMQ");
     private const string EmptyContext = "{}";
     private const string TraceParentHeader = "traceparent";
     private const string TraceStateHeader = "tracestate";
+    private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.RabbitMQ");
     private readonly IConnection _connection;
     private readonly IContextProvider _contextProvider;
     private readonly IRabbitMQSerializer _serializer;

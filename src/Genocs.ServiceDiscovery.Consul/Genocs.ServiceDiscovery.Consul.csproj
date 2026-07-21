@@ -11,10 +11,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Genocs.Http\Genocs.Http.csproj" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.11" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.10" />
+        <ProjectReference Include="..\Genocs.Http\Genocs.Http.csproj" />
     </ItemGroup>
+
 </Project>

@@ -1,0 +1,45 @@
+services:
+  apigateway:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/apigateway/WebApi/Dockerfile
+
+  identities-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/identities/WebApi/Dockerfile
+
+  products-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/products/WebApi/Dockerfile
+
+  orders-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/orders/WebApi/Dockerfile
+
+  notifications-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/notifications/WebApi/Dockerfile
+
+  demo-webapi-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/integrations/WebApi/Dockerfile
+
+  demo-masstransit-webapi-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/integrations/Masstransit.WebApi/Dockerfile
+
+  demo-masstransit-worker-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/integrations/Masstransit.Worker/Dockerfile
+
+  demo-servicebus-worker-service:
+    build:
+      context: ../../
+      dockerfile: ./src/apps/integrations/ServiceBus.Worker/Dockerfile

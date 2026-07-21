@@ -11,7 +11,7 @@ internal sealed class RabbitMqPluginsExecutor(IRabbitMqPluginsRegistryAccessor r
     {
         var chains = _registry.Get();
 
-        if (chains is null || !chains.Any())
+        if (chains?.Any() != true)
         {
             await successor(message, correlationContext, args);
             return;
@@ -21,7 +21,9 @@ internal sealed class RabbitMqPluginsExecutor(IRabbitMqPluginsRegistryAccessor r
 
         foreach (var chain in chains)
         {
-            object? plugin = _serviceProvider.GetService(chain.PluginType) ?? throw new InvalidOperationException($"RabbitMq plugin of type {chain.PluginType.Name} was not registered");
+            object? plugin = _serviceProvider.GetService(chain.PluginType)
+                ?? throw new InvalidOperationException($"RabbitMq plugin of type {chain.PluginType.Name} was not registered");
+
             plugins.AddLast(plugin as IRabbitMqPlugin);
         }
 

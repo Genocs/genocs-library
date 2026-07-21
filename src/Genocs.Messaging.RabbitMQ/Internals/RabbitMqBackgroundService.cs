@@ -17,6 +17,9 @@ namespace Genocs.Messaging.RabbitMQ.Internals;
 
 internal sealed class RabbitMqBackgroundService : BackgroundService
 {
+    private const string TraceParentHeader = "traceparent";
+    private const string TraceStateHeader = "tracestate";
+
     private static readonly ActivitySource ActivitySource = new("Genocs.Messaging.RabbitMQ");
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -50,9 +53,6 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
     private readonly bool _requeueFailedMessages;
     private readonly string _spanContextHeader;
 
-    private const string TraceParentHeader = "traceparent";
-    private const string TraceStateHeader = "tracestate";
-
     public RabbitMqBackgroundService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
@@ -75,6 +75,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
         _qosOptions = _options.Qos ?? new RabbitMQOptions.QosOptions();
         _requeueFailedMessages = _options.RequeueFailedMessages;
         _spanContextHeader = _options.GetSpanContextHeader();
+
         if (_qosOptions.PrefetchCount < 1)
         {
             _qosOptions.PrefetchCount = 1;
@@ -233,8 +234,8 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
                     _logger.LogInformation(
                         "Received a message with ID: '{MessageId}', " +
-                                           "Correlation ID: '{CorrelationId}', timestamp: {Timestamp}, " +
-                                           "queue: {Queue}, routing key: {RoutingKey}, exchange: {Exchange}, payload: {MessagePayload}",
+                        "Correlation ID: '{CorrelationId}', timestamp: {Timestamp}, " +
+                        "queue: {Queue}, routing key: {RoutingKey}, exchange: {Exchange}, payload: {MessagePayload}",
                         messageId,
                         correlationId,
                         timestamp,
@@ -264,8 +265,7 @@ internal sealed class RabbitMqBackgroundService : BackgroundService
 
     private Activity? StartConsumerActivity(BasicDeliverEventArgs args, IMessageSubscriber messageSubscriber, IConventions conventions)
     {
-        ActivityContext parentContext = default;
-        TryExtractParentContext(args.BasicProperties.Headers, out parentContext);
+        TryExtractParentContext(args.BasicProperties.Headers, out ActivityContext parentContext);
 
         var tags = new ActivityTagsCollection
         {
