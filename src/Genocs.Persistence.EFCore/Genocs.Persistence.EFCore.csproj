@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.3" />
+        <PackageReference Include="Finbuckle.MultiTenant.AspNetCore" Version="9.4.11" />
         <PackageReference Include="Finbuckle.MultiTenant.EntityFrameworkCore" Version="9.4.1" />
     </ItemGroup>
 
