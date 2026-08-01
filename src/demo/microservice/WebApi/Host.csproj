@@ -15,7 +15,7 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Genocs.Auth" Version="9.0.0" />
+        <PackageReference Include="Genocs.Auth" Version="9.0.1" />
         <PackageReference Include="Genocs.Logging" Version="9.0.0" />
         <PackageReference Include="Genocs.Messaging" Version="9.0.0" />
         <PackageReference Include="Genocs.Messaging.Outbox" Version="9.0.0" />
