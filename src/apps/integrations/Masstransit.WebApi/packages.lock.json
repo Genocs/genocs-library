@@ -4,12 +4,12 @@
     "net10.0": {
       "MassTransit.RabbitMQ": {
         "type": "Direct",
-        "requested": "[8.5.8, 8.5.8]",
-        "resolved": "8.5.8",
-        "contentHash": "Ds7qUC0top6Ncg9I5JdRnSeM+mVqkass2D59QR9/97rg9tkqI9Xh4faMYmmJTY7vh9ixfMwt1LHf0PzsFpGO1g==",
+        "requested": "[9.2.1, 9.2.1]",
+        "resolved": "9.2.1",
+        "contentHash": "PxzPuHSrF+HKutU40CWthKDZO6/cdaHNuExf5OO3yoxTE9yf8399cYYbGtZZXZaKILkWOMsufM2EjtgRzY6tjQ==",
         "dependencies": {
-          "MassTransit": "8.5.8",
-          "RabbitMQ.Client": "7.2.0"
+          "MassTransit": "9.2.1",
+          "RabbitMQ.Client": "7.2.2"
         }
       },
       "Roslynator.Analyzers": {
@@ -187,16 +187,16 @@
       },
       "MassTransit": {
         "type": "Transitive",
-        "resolved": "8.5.8",
-        "contentHash": "O5bx+rziwwjLnar/9R6HTSL3Q++SOX20sufGIuXCKh7aowQ+4XGbhpVdaSYuTV7H0ndIomK24d2/vX3rlsSHng==",
+        "resolved": "9.2.1",
+        "contentHash": "99SFdhxyAxv5YhlXIwwpKjJYKy+cLMS+nvU5/fulUZB5P1WhXyUPjpu9zmxM+QY1TRnQkT3lyGXJkEPkb4Z3pw==",
         "dependencies": {
-          "MassTransit.Abstractions": "8.5.8"
+          "MassTransit.Abstractions": "9.2.1"
         }
       },
       "MassTransit.Abstractions": {
         "type": "Transitive",
-        "resolved": "8.5.8",
-        "contentHash": "f1XJz88+JZNLl1iHWSGNoD91ownowoP4Vl+2DmVM7ljAxQebvolVKdlyY+iZBSdODCeyLGCcM9jrfZXWkDHtow=="
+        "resolved": "9.2.1",
+        "contentHash": "R5+43Hs4O4PYzbwkgZnEO1a66Smdk1y4zjaUMKVgXPnBJSZnT3IuCATM6w4fPDfEezT2SEezfFZ09cZVpLT7eg=="
       },
       "MediatR": {
         "type": "Transitive",
