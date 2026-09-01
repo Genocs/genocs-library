@@ -833,7 +833,7 @@ The following packages and hosts are likely affected by telemetry behavior chang
 - Genocs.Logging
 - Genocs.WebApi
 - Genocs.WebApi.CQRS
-- host applications under [src/demo](src/demo) and [src/demo](src/demo)
+- host applications under [src/apps](src/apps) and [src/apps](src/apps)
 
 ## Suggested First Sprint
 

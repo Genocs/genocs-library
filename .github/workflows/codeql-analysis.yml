@@ -45,8 +45,8 @@ jobs:
 
       - name: Build
         run: |
-          dotnet restore genocs.sln
-          dotnet build genocs.sln --no-restore --configuration Release
+          dotnet restore genocs.slnx
+          dotnet build genocs.slnx --no-restore --configuration Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

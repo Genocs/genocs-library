@@ -41,7 +41,7 @@ Genocs.Common currently has no outbound ProjectReference dependency on other in-
 
 Package and project dependents:
 - Genocs.Core
-- demo/Contracts
+- apps/Contracts
 
 Test project:
 - tests/Genocs.Common.UnitTests
@@ -170,7 +170,7 @@ No exception policy:
 ## Recommended Execution Order
 
 1. Finalize contract boundary decisions and update the Breaking Change Ledger.
-2. Migrate direct dependents first (Genocs.Core, demo/Contracts, Common tests).
+2. Migrate direct dependents first (Genocs.Core, apps/Contracts, Common tests).
 3. Migrate transitive package dependents in waves after direct dependents are green.
-4. Migrate app/demo hosts after package layer validation.
+4. Migrate app/apps hosts after package layer validation.
 5. Run solution-level validation and move rows to VERIFIED/CLOSED.

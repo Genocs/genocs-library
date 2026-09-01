@@ -23,7 +23,7 @@
     <Project Path="src/apps/integrations/ServiceBus.Worker/Host.csproj" />
   </Folder>
   <Folder Name="/apps/integrations/tests/">
-    <Project Path="src/apps/integrations/ContractTests/ContractTests.csproj" />
+    <Project Path="src/apps/integrations/tests/ContractTests/ContractTests.csproj" />
   </Folder>
   <Folder Name="/apps/integrations/WebApi/">
     <Project Path="src/apps/integrations/WebApi/Host.csproj" />

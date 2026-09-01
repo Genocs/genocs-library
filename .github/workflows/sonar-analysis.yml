@@ -84,7 +84,11 @@ jobs:
           dotnet test genocs.slnx \
             --configuration Release \
             --no-build \
-            --verbosity normal
+            --verbosity normal \
+            --report-trx \
+            --coverage \
+            --coverage-output-format cobertura \
+            --results-directory ./coverage
 
       - name: End SonarQube Analysis
         env:
