@@ -1,0 +1,401 @@
+{
+  "consumer": {
+    "name": "BookStore API Consumer"
+  },
+  "interactions": [
+    {
+      "description": "A DELETE request to delete a book",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A book with the given id exists"
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "path": "/api/bookstore/books/5fa85f64-5717-4562-b3fc-2c963f66afa8"
+      },
+      "response": {
+        "status": 204
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve a book by id",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A book with the given id exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/bookstore/books/5fa85f64-5717-4562-b3fc-2c963f66afa8"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "authors": [
+              {
+                "biography": null,
+                "firstName": "George R. R.",
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "lastName": "Martin"
+              }
+            ],
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+            "isbn": "978-0553593716",
+            "price": 12.99,
+            "publishedOnUtc": "1996-08-01T00:00:00Z",
+            "title": "A Game of Thrones"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve a non-existent author",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "No author with the given id exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/bookstore/authors/3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "response": {
+        "status": 404
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve all authors",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Authors exist in the bookstore"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/bookstore/authors"
+      },
+      "response": {
+        "body": {
+          "content": [
+            {
+              "biography": "American author known for horror and suspense.",
+              "firstName": "Stephen",
+              "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "lastName": "King"
+            }
+          ],
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve all books",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Books exist in the bookstore"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/bookstore/books"
+      },
+      "response": {
+        "body": {
+          "content": [
+            {
+              "authors": [
+                {
+                  "biography": null,
+                  "firstName": "Stephen",
+                  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "lastName": "King"
+                }
+              ],
+              "id": "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+              "isbn": "978-0307743688",
+              "price": 14.99,
+              "publishedOnUtc": "1978-10-03T00:00:00Z",
+              "title": "The Stand"
+            }
+          ],
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve an author by id",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "An author with the given id exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/bookstore/authors/3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "biography": "Author of A Song of Ice and Fire.",
+            "firstName": "George R. R.",
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "lastName": "Martin"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A POST request to create a book",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "An author exists and the request is valid"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "authorIds": [
+              "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            ],
+            "isbn": "978-0747532699",
+            "price": 9.99,
+            "publishedOnUtc": "1997-06-26T00:00:00Z",
+            "title": "Harry Potter and the Philosopher's Stone"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Accept": [
+            "application/json"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/bookstore/books"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "authors": [
+              {
+                "biography": null,
+                "firstName": "J.K.",
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "lastName": "Rowling"
+              }
+            ],
+            "id": "6fa85f64-5717-4562-b3fc-2c963f66afa9",
+            "isbn": "978-0747532699",
+            "price": 9.99,
+            "publishedOnUtc": "1997-06-26T00:00:00.0000000Z",
+            "title": "Harry Potter and the Philosopher's Stone"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 201
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A POST request to create an author",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "The request is valid"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "biography": "Author of Harry Potter.",
+            "firstName": "J.K.",
+            "lastName": "Rowling"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Accept": [
+            "application/json"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/bookstore/authors"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "biography": "Author of Harry Potter.",
+            "firstName": "J.K.",
+            "id": "4fa85f64-5717-4562-b3fc-2c963f66afa7",
+            "lastName": "Rowling"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 201
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A PUT request to update a book",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A book with the given id exists"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "authorIds": [
+              "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            ],
+            "isbn": "978-0307743688",
+            "price": 19.99,
+            "publishedOnUtc": "1990-05-01T00:00:00Z",
+            "title": "The Stand - Extended Edition"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Accept": [
+            "application/json"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "PUT",
+        "path": "/api/bookstore/books/5fa85f64-5717-4562-b3fc-2c963f66afa8"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "authors": [
+              {
+                "biography": null,
+                "firstName": "Stephen",
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "lastName": "King"
+              }
+            ],
+            "id": "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+            "isbn": "978-0307743688",
+            "price": 19.99,
+            "publishedOnUtc": "1990-05-01T00:00:00.0000000Z",
+            "title": "The Stand - Extended Edition"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.27",
+      "models": "1.2.8"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "BookStore API"
+  }
+}
