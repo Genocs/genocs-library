@@ -228,7 +228,7 @@ public static class OpenTelemetryExtensions
 
         if (options.MongoDB?.Enabled == true && options.MongoDB.EnableTracing)
         {
-            tracing.AddMongoDBInstrumentation();
+            tracing.AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources");
         }
 
         foreach (string source in GetTracingActivitySources(options))

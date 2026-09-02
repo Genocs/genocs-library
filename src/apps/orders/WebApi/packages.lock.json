@@ -183,15 +183,6 @@
           "MongoDB.Driver": "[3.0.0, 4.0.0)"
         }
       },
-      "MongoDB.Driver.Core.Extensions.OpenTelemetry": {
-        "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "1JfENWXkKRomU4FcdKW8AiDuRmMGjYCZf9XtWdOPw+tHwczdIKfqSibtyrSSdaoZeXBHDY6PwJF43IgEtQIEaA==",
-        "dependencies": {
-          "MongoDB.Driver.Core.Extensions.DiagnosticSources": "1.1.0",
-          "OpenTelemetry": "1.0.1"
-        }
-      },
       "Newtonsoft.Json": {
         "type": "Transitive",
         "resolved": "13.0.4",
@@ -822,7 +813,7 @@
         "dependencies": {
           "Azure.Monitor.OpenTelemetry.Exporter": "[1.8.3, )",
           "Genocs.Core": "[9.0.2, )",
-          "MongoDB.Driver.Core.Extensions.OpenTelemetry": "[1.0.0, )",
+          "MongoDB.Driver.Core.Extensions.DiagnosticSources": "[3.0.0, )",
           "OpenTelemetry.Exporter.Console": "[1.18.0, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
           "OpenTelemetry.Exporter.Prometheus.AspNetCore": "[1.18.0-beta.1, )",

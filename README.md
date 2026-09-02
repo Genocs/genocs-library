@@ -16,8 +16,8 @@
 
 [license-shield]: https://img.shields.io/github/license/Genocs/genocs-library?color=2da44e&style=flat-square
 [license-url]: https://github.com/Genocs/genocs-library/blob/main/LICENSE
-[build-shield]: https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml/badge.svg?branch=main
-[build-url]: https://github.com/Genocs/genocs-library/actions/workflows/build_and_test.yml
+[build-shield]: https://github.com/Genocs/genocs-library/actions/workflows/build-and-test.yml/badge.svg?branch=main
+[build-url]: https://github.com/Genocs/genocs-library/actions/workflows/build-and-test.yml
 [downloads-shield]: https://img.shields.io/nuget/dt/Genocs.Microservice.Template.svg?color=2da44e&label=downloads&logo=nuget
 [downloads-url]: https://www.nuget.org/packages/Genocs.Microservice.Template
 [contributors-shield]: https://img.shields.io/github/contributors/Genocs/genocs-library.svg?style=flat-square

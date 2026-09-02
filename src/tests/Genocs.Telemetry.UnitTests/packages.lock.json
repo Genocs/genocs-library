@@ -98,6 +98,11 @@
           "OpenTelemetry.PersistentStorage.FileSystem": "1.0.3"
         }
       },
+      "DnsClient": {
+        "type": "Transitive",
+        "resolved": "1.6.1",
+        "contentHash": "4H/f2uYJOZ+YObZjpY9ABrKZI+JNw3uizp6oMzTXwDw6F+2qIPhpRl/1t68O/6e98+vqNiYGu+lswmwdYUy3gg=="
+      },
       "FluentValidation": {
         "type": "Transitive",
         "resolved": "12.1.1",
@@ -300,11 +305,6 @@
         "resolved": "8.14.0",
         "contentHash": "iwbCpSjD3ehfTwBhtSNEtKPK0ICun6ov7Ibx6ISNA9bfwIyzI2Siwyi9eJFCJBwxowK9xcA1mj+jBWiigeqgcQ=="
       },
-      "Microsoft.NETCore.Platforms": {
-        "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "2G6OjjJzwBfNOO8myRV/nFrbTw5iA+DEm0N+qUqhrOmaVtn4pC77h38I1jsXGw5VH55+dPfQsqHD0We9sCl9FQ=="
-      },
       "Microsoft.Testing.Extensions.Telemetry": {
         "type": "Transitive",
         "resolved": "2.3.3",
@@ -355,44 +355,28 @@
       },
       "MongoDB.Bson": {
         "type": "Transitive",
-        "resolved": "2.3.0",
-        "contentHash": "ImZ8Dstc+ZUxEqgIXJtFuL2+sesc+e0SwF68Wh8P3gSYLyWRL3hacNNgmE9iUgxUyYzVg4Sr55aRsHkHw9IaDw==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.0"
-        }
+        "resolved": "3.0.0",
+        "contentHash": "qnPRJ58HXDh7C4oxTf6YB7BJhlCGJIa6TMXhzImw6zk44lrAomQXTB6AtoQ5lNJbkyrgQcT7+smsKFMnXmLXhw=="
       },
-      "MongoDB.Driver.Core": {
+      "MongoDB.Driver": {
         "type": "Transitive",
-        "resolved": "2.3.0",
-        "contentHash": "CaMUxfkDkTnRR5iQ/tlVRYtJyoUAl0ToSj9/fWfQb/GYt8veQzSqu6jOLE1+KT+2HMvL6kIhX08tam+xU+iycQ==",
+        "resolved": "3.0.0",
+        "contentHash": "udcP8rOhyuhLDn3sGVdNUgQSXfKGPaIP4w09XVKf4xdy66YSXinhkIuQSuOeZVHdTFsG2PpUbRx2wyFm7E0EMg==",
         "dependencies": {
-          "MongoDB.Bson": "2.3.0",
-          "NETStandard.Library": "1.6.0"
+          "DnsClient": "1.6.1",
+          "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
+          "MongoDB.Bson": "3.0.0",
+          "SharpCompress": "0.30.1",
+          "Snappier": "1.0.0",
+          "ZstdSharp.Port": "0.7.3"
         }
       },
       "MongoDB.Driver.Core.Extensions.DiagnosticSources": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "Y2UvLTLTSWlZUbPVay8Nd4aeup6rf/R2oLQ9YeU/gSNBrqcHGKJJXTkOV1ylI3qXyJqeoNeriI58Chbzn3WZcw==",
+        "resolved": "3.0.0",
+        "contentHash": "TVkI/XM/wNlK4YtNaprf4nuPGSg2bNR5EqemvuVCjWzol04ynWjZdNJacIlwj7pLqZsXjbgGVbtg+ph4erYVBg==",
         "dependencies": {
-          "MongoDB.Driver.Core": "[2.3.0, 3.0.0)"
-        }
-      },
-      "MongoDB.Driver.Core.Extensions.OpenTelemetry": {
-        "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "1JfENWXkKRomU4FcdKW8AiDuRmMGjYCZf9XtWdOPw+tHwczdIKfqSibtyrSSdaoZeXBHDY6PwJF43IgEtQIEaA==",
-        "dependencies": {
-          "MongoDB.Driver.Core.Extensions.DiagnosticSources": "1.1.0",
-          "OpenTelemetry": "1.0.1"
-        }
-      },
-      "NETStandard.Library": {
-        "type": "Transitive",
-        "resolved": "1.6.0",
-        "contentHash": "ypsCvIdCZ4IoYASJHt6tF2fMo7N30NLgV1EbmC+snO490OMl9FvVxmumw14rhReWU3j3g7BYudG6YCrchwHJlA==",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.0.1"
+          "MongoDB.Driver": "[3.0.0, 4.0.0)"
         }
       },
       "OpenTelemetry": {
@@ -511,6 +495,16 @@
           "Microsoft.Extensions.DependencyModel": "10.0.0"
         }
       },
+      "SharpCompress": {
+        "type": "Transitive",
+        "resolved": "0.30.1",
+        "contentHash": "XqD4TpfyYGa7QTPzaGlMVbcecKnXy4YmYLDWrU+JIj7IuRNl7DH2END+Ll7ekWIY8o3dAMWLFDE1xdhfIWD1nw=="
+      },
+      "Snappier": {
+        "type": "Transitive",
+        "resolved": "1.0.0",
+        "contentHash": "rFtK2KEI9hIe8gtx3a0YDXdHOpedIf9wYCEYtBEmtlyiWVX3XlCNV03JrmmAi/Cdfn7dxK+k0sjjcLv4fpHnqA=="
+      },
       "Spectre.Console": {
         "type": "Transitive",
         "resolved": "0.57.2",
@@ -623,6 +617,11 @@
           "xunit.v3.runner.common": "[4.0.0]"
         }
       },
+      "ZstdSharp.Port": {
+        "type": "Transitive",
+        "resolved": "0.7.3",
+        "contentHash": "U9Ix4l4cl58Kzz1rJzj5hoVTjmbx1qGMwzAcbv1j/d3NzrFaESIurQyg+ow4mivCgkE3S413y+U9k4WdnEIkRA=="
+      },
       "genocs.common": {
         "type": "Project"
       },
@@ -642,7 +641,7 @@
         "dependencies": {
           "Azure.Monitor.OpenTelemetry.Exporter": "[1.8.3, )",
           "Genocs.Core": "[9.0.2, )",
-          "MongoDB.Driver.Core.Extensions.OpenTelemetry": "[1.0.0, )",
+          "MongoDB.Driver.Core.Extensions.DiagnosticSources": "[3.0.0, )",
           "OpenTelemetry.Exporter.Console": "[1.18.0, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
           "OpenTelemetry.Exporter.Prometheus.AspNetCore": "[1.18.0-beta.1, )",

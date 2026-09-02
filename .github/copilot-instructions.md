@@ -1,5 +1,7 @@
 ---
-applyTo: '**'
+applyTo: '*/*.cs, **/*.csproj, **/*.slnx, **/*.config, **/*.json, **/*.yml, **/*.yaml'
+description: This file describes the coding standards and architecture for the project.
+
 ---
 
 # Copilot Instructions
