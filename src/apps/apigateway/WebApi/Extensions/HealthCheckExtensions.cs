@@ -3,9 +3,8 @@ using Genocs.Persistence.MongoDB;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using MongoDB.Driver;
 
-namespace Genocs.Library.Demo.WebApi.Extensions;
+namespace Genocs.APIGateway.WebApi.Extensions;
 
 /// <summary>
 /// Extension method for health check related services and middlewares.

@@ -14,21 +14,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Http\Genocs.Http.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.LoadBalancing.Fabio\Genocs.LoadBalancing.Fabio.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.Redis\Genocs.Persistence.Redis.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.CQRS\Genocs.WebApi.CQRS.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
+        <ProjectReference Include="..\..\..\Common\Common.csproj" />
+        <ProjectReference Include="..\..\..\Http\Http.csproj" />
+        <ProjectReference Include="..\..\..\LoadBalancing.Fabio\LoadBalancing.Fabio.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.Outbox.MongoDB\Messaging.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.Outbox\Messaging.Outbox.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Messaging\Messaging.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.MongoDB\Persistence.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.Redis\Persistence.Redis.csproj" />
+        <ProjectReference Include="..\..\..\Secrets.HashicorpKeyVault\Secrets.HashicorpKeyVault.csproj" />
+        <ProjectReference Include="..\..\..\Telemetry\Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.CQRS\WebApi.CQRS.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.OpenApi\WebApi.OpenApi.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.Security\WebApi.Security.csproj" />
+        <ProjectReference Include="..\..\..\WebApi\WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>

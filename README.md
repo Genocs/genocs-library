@@ -63,7 +63,7 @@
 
 # Genocs .NET library
 
-This repo contains a set of libraries to build LOB _Line Of Business_ applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET10, ant it is designed and maintained by Genocs.
+This repo contains a set of libraries to build LOB _Line Of Business_ applications. The library is open source and built to be PRODUCTION READY. The library is built on top of .NET10, designed and maintained by Genocs.
 
 Packages are available on [NuGet Genocs](https://www.nuget.org/profiles/gioema_nocco).
 
@@ -79,9 +79,7 @@ The advantages of using containers are numerous. Containers provide a lightweigh
 
 ## Documentation
 
-You can find a useful documentation about how to use the library. The documentation contains the complete set of libraries, template, CLI that altogether make the _genocs ecosystem_ a comprensive set of tools to build enterprise solutions.
-
-Documentation available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
+The documentation is available at [Genocs Blog](https://genocs-blog.netlify.app/library/)
 
 ## Table of Contents
 
@@ -128,6 +126,9 @@ cd genocs-library
 # 2. Build the solution
 dotnet build
 
+# 3. Test the projects
+dotnet test
+
 # 3. Pack the projects
 dotnet pack
 
@@ -136,19 +137,20 @@ dotnet nuget push
 dotnet nuget push *.nupkg -k $NUGET_API_KEY -s $NUGET_SOURCE
 ```
 
-
 ## Features
 
-- **Cloud Agnostic:** Build applications that can run on any cloud platform without code changes.
-- **Containerized:** Lightweight and portable applications using container technology.
-- **Microservices Ready:** Easily create and manage microservices architectures.
-- **Enterprise Integration:** Built-in support for enterprise services like databases, messaging, and caching.
-- **Monitoring and Logging:** Integrated solutions for application monitoring and logging.
-- **Security:** Robust security features including API management and access control.
-- **Scalability:** Effortlessly scale applications horizontally or vertically.
-- **Flexibility:** Supports multiple programming models and architectures.
-- **Developer Friendly:** Easy to use and well-documented libraries and tools.
-- **Open Source:** Fully open source with a permissive license.
+|   | Feature | Notes|
+|:--------:|:-------|:----| 
+| ✅ | **Cloud Agnostic** | Build applications that can run on any cloud platform without code changes |
+| ✅ | **Containerized** |Lightweight and portable applications using container technology |
+| ✅ | **Microservices Ready** |Easily create and manage microservices architectures |
+| ✅ | **Enterprise Integration** | Built-in support for enterprise services like databases, messaging, and caching |
+| ✅ | **Monitoring and Logging** | Integrated solutions for application monitoring and logging |
+| ✅ | **Security** | Robust security features including API management and access control |
+| ✅ | **Scalability** | Effortlessly scale applications horizontally or vertically |
+| ✅ | **Flexibility** | Supports multiple programming models and architectures |
+| ✅ | **Developer Friendly** | Easy to use and well-documented libraries and tools|
+| ✅ | **Open Source** | Fully open source with a permissive license |
 
 ## Folders structure
 
@@ -401,7 +403,7 @@ There you can find scripts, configuration files and documentation to setup a clu
 
 ## **_Aspire Integration_**
 
-SOON :rocket:
+SOON 🚀
 
 ## Support
 

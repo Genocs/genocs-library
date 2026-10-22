@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Messaging.Tracing.UnitTests</RootNamespace>
+        <AssemblyName>Genocs.Messaging.Tracing.UnitTests</AssemblyName>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\src\Messaging.AzureServiceBus\Messaging.AzureServiceBus.csproj" />
+    </ItemGroup>
+
+</Project>

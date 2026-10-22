@@ -14,15 +14,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Secrets.HashicorpKeyVault\Genocs.Secrets.HashicorpKeyVault.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Security\Genocs.Security.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi\Genocs.WebApi.csproj" />
+        <ProjectReference Include="..\..\..\Auth\Auth.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Messaging\Messaging.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.MongoDB\Persistence.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Secrets.HashicorpKeyVault\Secrets.HashicorpKeyVault.csproj" />
+        <ProjectReference Include="..\..\..\Security\Security.csproj" />
+        <ProjectReference Include="..\..\..\Telemetry\Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\WebApi\WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>

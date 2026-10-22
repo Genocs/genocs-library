@@ -13,10 +13,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.MongoDB\Persistence.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Telemetry\Telemetry.csproj" />
     </ItemGroup>
 
     <ItemGroup>

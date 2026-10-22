@@ -18,16 +18,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Http\Genocs.Http.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.EFCore.MultiTenancy.SqlServer\Genocs.Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Secrets.AzureKeyVault\Genocs.Secrets.AzureKeyVault.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Security\Genocs.Security.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.Security\Genocs.WebApi.Security.csproj" />
+        <ProjectReference Include="..\..\..\Auth\Auth.csproj" />
+        <ProjectReference Include="..\..\..\Http\Http.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.EFCore.MultiTenancy.SqlServer\Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
+        <ProjectReference Include="..\..\..\Secrets.AzureKeyVault\Secrets.AzureKeyVault.csproj" />
+        <ProjectReference Include="..\..\..\Security\Security.csproj" />
+        <ProjectReference Include="..\..\..\Telemetry\Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.OpenApi\WebApi.OpenApi.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.Security\WebApi.Security.csproj" />
     </ItemGroup>
 
     <ItemGroup>

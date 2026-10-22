@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Persistence.EFCore.UnitTests</RootNamespace>
+        <AssemblyName>Genocs.Persistence.EFCore.UnitTests</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Shouldly" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Persistence.EFCore\Persistence.EFCore.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.SqlServer\Persistence.EFCore.SqlServer.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.PostgreSQL\Persistence.EFCore.PostgreSQL.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.MySql\Persistence.EFCore.MySql.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.Sqlite\Persistence.EFCore.Sqlite.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.Oracle\Persistence.EFCore.Oracle.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.MongoDB\Persistence.EFCore.MongoDB.csproj" />
+        <ProjectReference Include="..\..\src\Persistence.EFCore.MultiTenancy.SqlServer\Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
+    </ItemGroup>
+
+</Project>

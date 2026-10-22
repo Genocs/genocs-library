@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Genocs.Messaging.Tracing.IntegrationTests</RootNamespace>
+        <AssemblyName>Genocs.Messaging.Tracing.IntegrationTests</AssemblyName>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="OpenTelemetry" Version="1.18.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.InMemory" Version="1.18.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\src\Messaging.AzureServiceBus\Messaging.AzureServiceBus.csproj" />
+    </ItemGroup>
+
+</Project>
