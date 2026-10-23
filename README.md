@@ -208,24 +208,25 @@ root-project/
 │   └── ...
 ├── src/
 │   └── ...
+├── tests/
+│   └── ...
 ├── .dockerignore
 ├── .editconfig
-├── .env
 ├── .gitattributes
 ├── .gitignore
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── demo-app.rest
 ├── Directory.Build.props
 ├── Directory.Build.targets
 ├── dotnet.ruleset
 ├── global.json
 ├── icon.png
 ├── stylecop.json
-├── nuget.config
-├── [project].slnx
+├── NuGet.config
+├── genocs.slnx
 ├── README.md
 ├── LICENSE
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── api-workbench.rest
 └── ...
 ```
 
