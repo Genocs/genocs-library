@@ -27,7 +27,7 @@ internal sealed class LoggingEventHandlerDecorator<TEvent> : IEventHandler<TEven
 
     public async Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default)
     {
-        string correlationId = _correlationIdFactory.Create();
+        string? correlationId = _correlationIdFactory.Create();
         using (LogContext.PushProperty("CorrelationId", correlationId))
         {
             string name = @event.GetType().Name.Underscore();

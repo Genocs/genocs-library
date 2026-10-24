@@ -815,7 +815,7 @@ Previously no dedicated Genocs.Http test project existed; request, retry, cancel
 
 - [src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj](src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj)
 - [genocs.slnx](genocs.slnx)
-- [.github/workflows/build_and_test.yml](.github/workflows/build_and_test.yml)
+- [.github/workflows/build-and-test.yml](.github/workflows/build-and-test.yml)
 - [.github/workflows/sonar-analysis.yml](.github/workflows/sonar-analysis.yml)
 
 **Acceptance criteria**

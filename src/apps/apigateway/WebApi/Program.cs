@@ -1,8 +1,8 @@
 using Genocs.APIGateway.WebApi.Configurations;
+using Genocs.APIGateway.WebApi.Extensions;
 using Genocs.APIGateway.WebApi.Framework;
 using Genocs.Auth;
 using Genocs.Core.Builders;
-using Genocs.Library.Demo.WebApi.Extensions;
 using Genocs.Logging;
 using Genocs.Messaging.RabbitMQ;
 using Genocs.Persistence.MongoDB.Extensions;

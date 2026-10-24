@@ -14,25 +14,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.13">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Auth\Genocs.Auth.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox.MongoDB\Genocs.Messaging.Outbox.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.Outbox\Genocs.Messaging.Outbox.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging.RabbitMQ\Genocs.Messaging.RabbitMQ.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Messaging\Genocs.Messaging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.EFCore.MultiTenancy.SqlServer\Genocs.Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.MongoDB\Genocs.Saga.Integrations.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga.Integrations.Redis\Genocs.Saga.Integrations.Redis.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Saga\Genocs.Saga.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Telemetry\Genocs.Telemetry.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.WebApi.OpenApi\Genocs.WebApi.OpenApi.csproj" />
+        <ProjectReference Include="..\..\..\Auth\Auth.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.Outbox.MongoDB\Messaging.Outbox.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.Outbox\Messaging.Outbox.csproj" />
+        <ProjectReference Include="..\..\..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+        <ProjectReference Include="..\..\..\Messaging\Messaging.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.EFCore.MultiTenancy.SqlServer\Persistence.EFCore.MultiTenancy.SqlServer.csproj" />
+        <ProjectReference Include="..\..\..\Saga.Integrations.MongoDB\Saga.Integrations.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Saga.Integrations.Redis\Saga.Integrations.Redis.csproj" />
+        <ProjectReference Include="..\..\..\Saga\Saga.csproj" />
+        <ProjectReference Include="..\..\..\Telemetry\Telemetry.csproj" />
+        <ProjectReference Include="..\..\..\WebApi.OpenApi\WebApi.OpenApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>

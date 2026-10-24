@@ -201,6 +201,34 @@ Examples:
 - `routePrefix = "docs"`, `name = "orders"` -> `/docs/orders/swagger.json`
 - `routePrefix = ""`, `name = "v1"` -> `/v1/swagger.json`
 
+That template is the JSON route on the service. It does not change when `documentPath` changes. `documentPath` only changes the spec URL written into Swagger UI and ReDoc.
+
+### Spec URL (`documentPath`)
+
+Config key: `openapi.documentPath`. Default: `absolute`.
+
+| `routePrefix` | `name` | `absolute` (default) | `relative` |
+|---|---|---|---|
+| `swagger` | `Notifications` | `/swagger/Notifications/swagger.json` | `Notifications/swagger.json` |
+| `docs` | `v1` | `/docs/v1/swagger.json` | `v1/swagger.json` |
+| empty | `v1` | `/v1/swagger.json` | `v1/swagger.json` |
+
+`relative` is what makes Swagger UI work behind a path-stripping reverse proxy. Swashbuckle resolves a spec URL that does not start with `/` or `http` against the current page, so a UI opened at `.../notifications-service/swagger/index.html` loads `.../notifications-service/swagger/{name}/swagger.json`. The same relative value still works when the UI is opened directly at `/swagger/index.html`.
+
+Unknown values fail at startup. The message lists `absolute` and `relative`.
+
+If the UI still requests `/swagger/{name}/swagger.json` from the site root, `documentPath` is not `relative`.
+
+### Forwarded prefix (`useForwardedPrefix`)
+
+Config key: `openapi.useForwardedPrefix`. Default: `false`.
+
+When `true`, a valid `X-Forwarded-Prefix` header replaces the OpenAPI `servers` list for that request with one entry whose `url` is the prefix (for example `/notifications-service`). A valid prefix starts with `/`, has no scheme, no `//`, no `?`, no `#`, and no trailing slash except the value `/`. When the header is missing or invalid, `servers` stay at the configured `openapi.servers` value. Those configured servers still control **Try it out** when the header is absent.
+
+When `false`, the header is ignored.
+
+This is opt-in because a client-supplied prefix would otherwise change the server URL. The trusted proxy must overwrite the header.
+
 ### UI Route
 
 When `reDocEnabled` is `false`:
@@ -344,6 +372,8 @@ Safe guidance:
         "version": "1.0.0",
         "description": "HTTP API for order management.",
         "routePrefix": "swagger",
+        "documentPath": "absolute",
+        "useForwardedPrefix": false,
         "contactName": "Platform Team",
         "contactEmail": "platform@example.com",
         "contactUrl": "https://example.com/platform",
@@ -370,6 +400,8 @@ What the package actively uses:
 - `version`
 - `description`
 - `routePrefix`
+- `documentPath` (`absolute` by default, or `relative`)
+- `useForwardedPrefix` (`false` by default)
 - `contactName`
 - `contactEmail`
 - `contactUrl`
@@ -399,6 +431,8 @@ When you cannot inspect source code, follow these rules:
 7. Do not assume filter-generated schemas on `net10.0` are detailed or example-rich.
 8. Do not assume the package exposes multiple independently registered Swagger documents in one builder instance. Duplicate registration is blocked by the `docs.openapi` registry key.
 9. Do not assume XML comments are optional when the host depends on comment-enriched docs. The package always points Swashbuckle at the entry assembly XML file path.
+10. Do not assume the Swagger UI or ReDoc spec URL is always a host-root path. `documentPath` defaults to `absolute` (`/swagger/{name}/swagger.json`). Set `documentPath` to `relative` when the UI is served behind a path-stripping reverse proxy.
+11. Do not assume `X-Forwarded-Prefix` changes **Try it out**. That happens only when `useForwardedPrefix` is `true` and the header is a single safe path prefix. Otherwise `openapi.servers` still control **Try it out**.
 
 ## Agent Decision Checklist
 
@@ -462,7 +496,10 @@ Fix: Ensure `AddOpenApiDocs(...)` actually registered services. If docs were dis
 Fix: Confirm `AddOpenApiDocs(...)` ran successfully and that `UseOpenApiDocs()` is in the pipeline.
 
 3. The JSON document path is not where expected.
-Fix: Re-check `routePrefix` and `name`. The document route is `/{routePrefix}/{name}/swagger.json`, with empty-prefix normalization to `/{name}/swagger.json`.
+Fix: Re-check `routePrefix` and `name`. The document route is `/{routePrefix}/{name}/swagger.json`, with empty-prefix normalization to `/{name}/swagger.json`. If the UI still requests `/swagger/{name}/swagger.json` from the site root, `documentPath` is not `relative`.
+
+3a. **Try it out** leaves the gateway prefix.
+Fix: Set `useForwardedPrefix` to `true` and have the trusted proxy set `X-Forwarded-Prefix` to a single path prefix such as `/notifications-service`. When that header is absent or invalid, `openapi.servers` still control **Try it out**.
 
 4. Security controls do not appear as expected.
 Fix: Confirm `includeSecurity = true`. On `net10.0`, remember that the Bearer definition is added but the security requirement block is not currently wired.

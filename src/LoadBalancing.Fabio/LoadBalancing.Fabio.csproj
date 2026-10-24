@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.LoadBalancing.Fabio</PackageId>
+        <RootNamespace>Genocs.LoadBalancing.Fabio</RootNamespace>
+        <AssemblyName>Genocs.LoadBalancing.Fabio</AssemblyName>
+        <Title>Genocs Fabio load balancing</Title>
+        <Description>Fabio load-balancing integration for service-to-service calls.</Description>
+        <PackageTags>genocs fabio load-balancing routing service-discovery</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ServiceDiscovery.Consul\ServiceDiscovery.Consul.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -69,14 +69,13 @@ public class FirebaseAuthorizedController(ILogger<FirebaseAuthorizedController> 
     /// - User ID and email
     /// - Email verification status
     /// - Assigned roles
-    /// - All JWT claims
+    /// - All JWT claims.
     /// </para>
     /// <para>Sample request:</para>
     /// <para>
     ///     GET /FirebaseAuthorized/user-info
     ///     Authorization: Bearer your-firebase-jwt-token-here.
     /// </para>
-    /// 
     /// </remarks>
     /// <returns>An object containing user details and assigned roles.</returns>
     /// <response code="200">Returns user information successfully.</response>

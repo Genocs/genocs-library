@@ -184,7 +184,7 @@ public class WebApiContractTests
                                 id = authorId,
                                 firstName = "Stephen",
                                 lastName = "King",
-                                biography = (string)null
+                                biography = (string?)null
                             },
                         },
                     },

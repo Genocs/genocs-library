@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Core\Genocs.Core.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.EFCore\Genocs.Persistence.EFCore.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.Persistence.MongoDB\Genocs.Persistence.MongoDB.csproj" />
+        <ProjectReference Include="..\..\..\Core\Core.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.EFCore\Persistence.EFCore.csproj" />
+        <ProjectReference Include="..\..\..\Persistence.MongoDB\Persistence.MongoDB.csproj" />
     </ItemGroup>
 
     <ItemGroup>

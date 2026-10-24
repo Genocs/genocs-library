@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Logging</PackageId>
+        <RootNamespace>Genocs.Logging</RootNamespace>
+        <AssemblyName>Genocs.Logging</AssemblyName>
+        <Title>Genocs logging abstractions</Title>
+        <Description>Logging abstractions and extensions for Genocs applications.</Description>
+        <PackageTags>genocs logging observability diagnostics abstractions</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+        <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Span" Version="3.1.0" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+        <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="5.0.1" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+        <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="9.0.2" />
+        <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="9.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SmartFormat.NET" Version="3.6.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Genocs.Logging.UnitTests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+
+
+</Project>

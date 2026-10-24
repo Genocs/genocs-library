@@ -15,8 +15,8 @@
 
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Genocs.Logging\Genocs.Logging.csproj" />
-        <ProjectReference Include="..\..\..\Genocs.ServiceDiscovery.Consul\Genocs.ServiceDiscovery.Consul.csproj" />
+        <ProjectReference Include="..\..\..\Logging\Logging.csproj" />
+        <ProjectReference Include="..\..\..\ServiceDiscovery.Consul\ServiceDiscovery.Consul.csproj" />
     </ItemGroup>
 
     <ItemGroup>

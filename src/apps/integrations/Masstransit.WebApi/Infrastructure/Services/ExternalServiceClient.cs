@@ -36,7 +36,7 @@ public class ExternalServiceClient : IExternalServiceClient
 
         ArgumentNullException.ThrowIfNull(httpClientSettings);
 
-        string url = httpClientSettings?.Services?["ca_issuer"];
+        string? url = httpClientSettings?.Services?["ca_issuer"];
 
         if (string.IsNullOrWhiteSpace(url))
         {
