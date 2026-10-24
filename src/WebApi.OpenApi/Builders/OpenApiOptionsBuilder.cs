@@ -42,6 +42,18 @@ internal sealed class OpenApiOptionsBuilder : IOpenApiOptionsBuilder
         return this;
     }
 
+    public IOpenApiOptionsBuilder WithDocumentPath(string documentPath)
+    {
+        _options.DocumentPath = documentPath;
+        return this;
+    }
+
+    public IOpenApiOptionsBuilder UseForwardedPrefix(bool useForwardedPrefix)
+    {
+        _options.UseForwardedPrefix = useForwardedPrefix;
+        return this;
+    }
+
     public IOpenApiOptionsBuilder IncludeSecurity(bool includeSecurity)
     {
         _options.IncludeSecurity = includeSecurity;
@@ -108,5 +120,9 @@ internal sealed class OpenApiOptionsBuilder : IOpenApiOptionsBuilder
         return this;
     }
 
-    public OpenApiOptions Build() => _options;
+    public OpenApiOptions Build()
+    {
+        OpenApiSpecUrl.EnsureValid(_options.DocumentPath);
+        return _options;
+    }
 }

@@ -9,6 +9,8 @@ public interface IOpenApiOptionsBuilder
     IOpenApiOptionsBuilder WithVersion(string version);
     IOpenApiOptionsBuilder WithDescription(string description);
     IOpenApiOptionsBuilder WithRoutePrefix(string routePrefix);
+    IOpenApiOptionsBuilder WithDocumentPath(string documentPath);
+    IOpenApiOptionsBuilder UseForwardedPrefix(bool useForwardedPrefix);
     IOpenApiOptionsBuilder WithContactName(string contactName);
     IOpenApiOptionsBuilder WithContactEmail(string contactEmail);
     IOpenApiOptionsBuilder WithContactUrl(string contactUrl);

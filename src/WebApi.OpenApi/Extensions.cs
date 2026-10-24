@@ -4,6 +4,7 @@ using Genocs.WebApi.OpenApi.Builders;
 using Genocs.WebApi.OpenApi.Configurations;
 using Genocs.WebApi.OpenApi.Filters;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -60,6 +61,7 @@ public static class Extensions
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(settings);
+        OpenApiSpecUrl.EnsureValid(settings.DocumentPath);
 
         // Keep options available in DI even when docs are disabled so UseOpenApiDocs can no-op safely.
         builder.Services.AddSingleton(settings);
@@ -216,33 +218,49 @@ public static class Extensions
         }
 
         string routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
+        string specUrl = OpenApiSpecUrl.Build(routePrefix, options.Name, options.DocumentPath);
 
         builder.UseStaticFiles()
             .UseSwagger(c =>
             {
                 c.RouteTemplate = string.Concat(routePrefix, "/{documentName}/swagger.json");
+                if (options.UseForwardedPrefix)
+                {
+                    c.PreSerializeFilters.Add(ApplyForwardedPrefix);
+                }
             });
 
         return options.ReDocEnabled
             ? builder.UseReDoc(c =>
             {
                 c.RoutePrefix = routePrefix;
-                c.SpecUrl = $"{options.Name}/swagger.json";
+                c.SpecUrl = specUrl;
             })
             : builder.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = routePrefix;
-                c.SwaggerEndpoint($"/{routePrefix}/{options.Name}/swagger.json".FormatEmptyRoutePrefix(), options.Title);
+                c.SwaggerEndpoint(specUrl, options.Title);
             });
     }
 
-    /// <summary>
-    /// Replaces leading double forward slash caused by an empty route prefix.
-    /// </summary>
-    /// <param name="route">The string to parse.</param>
-    /// <returns></returns>
-    private static string FormatEmptyRoutePrefix(this string route)
+    private static void ApplyForwardedPrefix(OpenApiDocument document, HttpRequest request)
     {
-        return route.Replace("//", "/");
+        if (!request.Headers.TryGetValue(ForwardedPrefix.HeaderName, out var values) || values.Count != 1)
+        {
+            return;
+        }
+
+        if (!ForwardedPrefix.TryRead(values[0], out string prefix))
+        {
+            return;
+        }
+
+        document.Servers = new List<OpenApiServer>
+        {
+            new()
+            {
+                Url = prefix
+            }
+        };
     }
 }

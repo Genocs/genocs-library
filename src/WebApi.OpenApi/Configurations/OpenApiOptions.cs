@@ -47,6 +47,21 @@ public class OpenApiOptions
     public string? RoutePrefix { get; set; }
 
     /// <summary>
+    /// How the Swagger UI and ReDoc spec URL is emitted.
+    /// <c>absolute</c> (default) is a host-root path such as <c>/swagger/v1/swagger.json</c>.
+    /// <c>relative</c> is <c>{name}/swagger.json</c>, which Swagger UI resolves against the current page.
+    /// Use <c>relative</c> when the UI is served behind a path-stripping reverse proxy.
+    /// </summary>
+    public string DocumentPath { get; set; } = "absolute";
+
+    /// <summary>
+    /// When <c>true</c>, a valid <c>X-Forwarded-Prefix</c> header replaces the OpenAPI <c>servers</c> list
+    /// for that request. When the header is missing or invalid, <see cref="Servers"/> is left unchanged.
+    /// Default is <c>false</c>, which ignores the header. Callers must overwrite the header at a trusted proxy.
+    /// </summary>
+    public bool UseForwardedPrefix { get; set; }
+
+    /// <summary>
     /// The contact name of the API.
     /// </summary>
     public string? ContactName { get; set; }
