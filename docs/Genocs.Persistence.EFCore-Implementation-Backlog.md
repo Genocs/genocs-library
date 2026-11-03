@@ -856,11 +856,11 @@ Two `internal static DbContextOptionsBuilder UseDatabase(...)` methods exist —
 
 **Problem**
 
-`README_NUGET.md` contains only a package description and the `AddEFCorePersistence` entry point. Consumers have no guidance on provider configuration, migration assembly requirements, multi-tenancy setup, or known limitations.
+`README.md` contains only a package description and the `AddEFCorePersistence` entry point. Consumers have no guidance on provider configuration, migration assembly requirements, multi-tenancy setup, or known limitations.
 
 **Touch points**
 
-- `src/Genocs.Persistence.EFCore/README_NUGET.md`
+- `src/Genocs.Persistence.EFCore/README.md`
 
 **Acceptance criteria**
 

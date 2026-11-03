@@ -285,7 +285,7 @@ Defaulting to in-memory outbox when no configurator is provided can lead to acci
 **Likely touch points**
 
 - [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs)
-- [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md)
+- [src/Genocs.Messaging.Outbox/README.md](src/Genocs.Messaging.Outbox/README.md)
 - [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -301,7 +301,7 @@ Defaulting to in-memory outbox when no configurator is provided can lead to acci
 
 - Updated [src/Genocs.Messaging.Outbox/Extensions.cs](src/Genocs.Messaging.Outbox/Extensions.cs) so `AddMessageOutbox(...)` now fails fast when no configurator callback is supplied, preventing implicit in-memory fallback in production hosts.
 - Added targeted registration tests in [src/tests/Genocs.Messaging.UnitTests/Outbox/OutboxRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/Outbox/OutboxRegistrationExtensionsTests.cs) to lock explicit provider behavior and explicit in-memory development registration.
-- Updated [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md) and [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md) to clearly distinguish development-only in-memory usage from durable production provider guidance.
+- Updated [src/Genocs.Messaging.Outbox/README.md](src/Genocs.Messaging.Outbox/README.md) and [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md) to clearly distinguish development-only in-memory usage from durable production provider guidance.
 - Validation: `dotnet build src/Genocs.Messaging.Outbox/Genocs.Messaging.Outbox.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
 
 ---
@@ -321,7 +321,7 @@ The Azure Service Bus package currently lacks a clear builder/host registration 
 **Likely touch points**
 
 - [src/Genocs.Messaging.AzureServiceBus](src/Genocs.Messaging.AzureServiceBus)
-- [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md)
+- [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md)
 
 **Acceptance criteria**
 
@@ -337,7 +337,7 @@ The Azure Service Bus package currently lacks a clear builder/host registration 
 - Added [src/Genocs.Messaging.AzureServiceBus/Extensions.cs](src/Genocs.Messaging.AzureServiceBus/Extensions.cs) with `AddAzureServiceBus(...)` so hosts can register Azure Service Bus queue/topic capabilities via standard Genocs builder extension flow.
 - The new extension binds queue/topic options from configuration, validates required settings for enabled transports, and registers [src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/Interfaces/IAzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/Interfaces/IAzureServiceBusTopic.cs) without manual internal wiring.
 - Added focused registration tests in [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs) and added Azure Service Bus project reference in [src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj](src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj).
-- Updated package documentation in [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) and migration guidance in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to use extension-based host registration.
+- Updated package documentation in [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md) and migration guidance in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to use extension-based host registration.
 - Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
 
 ### MESSAGING-010 Remove sync-over-async startup in Azure processors
@@ -369,7 +369,7 @@ Queue/topic processors call asynchronous startup with `.GetAwaiter().GetResult()
 - Removed constructor-time sync-over-async startup from [src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs) by moving processor start/stop to `IHostedService.StartAsync(...)` and `IHostedService.StopAsync(...)`.
 - Updated [src/Genocs.Messaging.AzureServiceBus/Extensions.cs](src/Genocs.Messaging.AzureServiceBus/Extensions.cs) to register queue/topic transport services as host-managed `IHostedService` instances using shared singleton registrations.
 - Extended [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusRegistrationExtensionsTests.cs) to verify hosted-service registrations are present only when Azure queue/topic transport is enabled.
-- Updated [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) and [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to document async host-managed processor lifecycle.
+- Updated [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md) and [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) to document async host-managed processor lifecycle.
 - Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo`, `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`, and grep check confirming no `GetAwaiter().GetResult()` remains in Azure Service Bus package sources.
 
 ### MESSAGING-011 Plan migration from legacy handler contracts
@@ -403,7 +403,7 @@ Azure Service Bus consumers currently depend on `ICommandHandlerLegacy<T>` and `
 - Implemented adapter-style runtime dispatch in [src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs](src/Genocs.Messaging.AzureServiceBus/Queues/AzureServiceBusQueue.cs) and [src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs](src/Genocs.Messaging.AzureServiceBus/Topics/AzureServiceBusTopic.cs) so both modern (`ICommandHandler<T>`, `IEventHandler<T>`) and legacy (`ICommandHandlerLegacy<T>`, `IEventHandlerLegacy<T>`) handlers execute correctly during transition.
 - Extended subscription metadata in [src/Genocs.Messaging.AzureServiceBus/Topics/SubscriptionInfo.cs](src/Genocs.Messaging.AzureServiceBus/Topics/SubscriptionInfo.cs) to record contract kind and event type for deterministic modern/legacy invocation.
 - Added migration-contract coverage in [src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusHandlerContractMigrationTests.cs](src/tests/Genocs.Messaging.UnitTests/AzureServiceBus/AzureServiceBusHandlerContractMigrationTests.cs) to assert modern registration APIs exist and legacy APIs are marked obsolete.
-- Updated migration guidance and package docs in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) and [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) with concrete contract direction and migration examples.
+- Updated migration guidance and package docs in [src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md](src/Genocs.Messaging.AzureServiceBus/MIGRATION_GUIDE.md) and [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md) with concrete contract direction and migration examples.
 - Validation: `dotnet build src/Genocs.Messaging.AzureServiceBus/Genocs.Messaging.AzureServiceBus.csproj -c Debug --nologo` and `dotnet test src/tests/Genocs.Messaging.UnitTests/Genocs.Messaging.UnitTests.csproj -c Debug --nologo`.
 
 ---
@@ -488,10 +488,10 @@ Documentation and runtime contracts can drift, while warning-heavy baselines red
 - [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md)
 - [docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md](docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md)
 - [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md)
-- [src/Genocs.Messaging/README_NUGET.md](src/Genocs.Messaging/README_NUGET.md)
-- [src/Genocs.Messaging.RabbitMQ/README_NUGET.md](src/Genocs.Messaging.RabbitMQ/README_NUGET.md)
-- [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md)
-- [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md)
+- [src/Genocs.Messaging/README.md](src/Genocs.Messaging/README.md)
+- [src/Genocs.Messaging.RabbitMQ/README.md](src/Genocs.Messaging.RabbitMQ/README.md)
+- [src/Genocs.Messaging.Outbox/README.md](src/Genocs.Messaging.Outbox/README.md)
+- [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md)
 
 **Acceptance criteria**
 
@@ -506,7 +506,7 @@ Documentation and runtime contracts can drift, while warning-heavy baselines red
 **Implementation notes**
 
 - Synchronized messaging package docs and ownership guidance in [docs/Genocs.Messaging-Agent-Documentation.md](docs/Genocs.Messaging-Agent-Documentation.md), [docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md](docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md), and [docs/Genocs.Messaging.Outbox-Agent-Documentation.md](docs/Genocs.Messaging.Outbox-Agent-Documentation.md) with current runtime behavior delivered in MESSAGING-007 through MESSAGING-013.
-- Updated package READMEs in [src/Genocs.Messaging/README_NUGET.md](src/Genocs.Messaging/README_NUGET.md), [src/Genocs.Messaging.RabbitMQ/README_NUGET.md](src/Genocs.Messaging.RabbitMQ/README_NUGET.md), [src/Genocs.Messaging.Outbox/README_NUGET.md](src/Genocs.Messaging.Outbox/README_NUGET.md), and [src/Genocs.Messaging.AzureServiceBus/README_NUGET.md](src/Genocs.Messaging.AzureServiceBus/README_NUGET.md) to align startup/contract expectations and warning-policy references.
+- Updated package READMEs in [src/Genocs.Messaging/README.md](src/Genocs.Messaging/README.md), [src/Genocs.Messaging.RabbitMQ/README.md](src/Genocs.Messaging.RabbitMQ/README.md), [src/Genocs.Messaging.Outbox/README.md](src/Genocs.Messaging.Outbox/README.md), and [src/Genocs.Messaging.AzureServiceBus/README.md](src/Genocs.Messaging.AzureServiceBus/README.md) to align startup/contract expectations and warning-policy references.
 - Added package-level warning baseline enforcement target in [validate-messaging.mk](validate-messaging.mk) and exposed it via [Makefile](Makefile) as `make validate-messaging`.
 - The warning policy gate enforces warning-free `net10.0` builds (`-warnaserror`) for messaging packages and runs messaging regression tests to prevent behavior drift.
 - Validation: `make validate-messaging`.

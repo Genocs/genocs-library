@@ -299,8 +299,8 @@ Global registration currently uses legacy GUID representation, which risks inter
 - default options mode is `Standard`,
 - configured mode maps to expected MongoDB `GuidRepresentation` values (`Standard` / `CSharpLegacy`).
 - Published migration guidance for consumers:
-- `src/Genocs.Persistence.MongoDB/README_NUGET.md` now documents default behavior, compatibility mode, and a step-by-step legacy migration path.
-- `src/Genocs.Persistence.MongoDB/_docs/README_NUGET.md` aligned with the same guidance.
+- `src/Genocs.Persistence.MongoDB/README.md` now documents default behavior, compatibility mode, and a step-by-step legacy migration path.
+- `src/Genocs.Persistence.MongoDB/_docs/README.md` aligned with the same guidance.
 - Validation:
 - `dotnet build src/Genocs.Persistence.MongoDB/Genocs.Persistence.MongoDB.csproj -c Debug --nologo` (succeeds for net8/net9/net10).
 - `dotnet test src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj -c Debug --nologo` (14 passed, 0 failed).
@@ -444,7 +444,7 @@ Consumer-facing guidance must reflect finalized DI, repository, serializer, and 
 **Likely touch points**
 
 - `docs/Genocs.Persistence.MongoDB-Agent-Documentation.md`
-- `src/Genocs.Persistence.MongoDB/README_NUGET.md`
+- `src/Genocs.Persistence.MongoDB/README.md`
 - `CHANGELOG.md`
 
 **Acceptance criteria**
@@ -467,8 +467,8 @@ Consumer-facing guidance must reflect finalized DI, repository, serializer, and 
 - expanded completed-task status through `MONGO-009`,
 - added explicit agent execution protocol and corrected decision checklist semantics.
 - Updated consumer-facing package guidance:
-- `src/Genocs.Persistence.MongoDB/README_NUGET.md` now documents stabilized runtime behavior (single DI-managed client composition, seeding retry semantics) and explicit encryption-surface guidance,
-- `src/Genocs.Persistence.MongoDB/_docs/README_NUGET.md` aligned with the same behavior/migration guidance.
+- `src/Genocs.Persistence.MongoDB/README.md` now documents stabilized runtime behavior (single DI-managed client composition, seeding retry semantics) and explicit encryption-surface guidance,
+- `src/Genocs.Persistence.MongoDB/_docs/README.md` aligned with the same behavior/migration guidance.
 - Recorded behavior and migration documentation updates in `CHANGELOG.md` under `Unreleased`.
 - Validation:
 - `dotnet test src/tests/Genocs.Persistence.MongoDB.UnitTests/Genocs.Persistence.MongoDB.UnitTests.csproj -c Debug --nologo`

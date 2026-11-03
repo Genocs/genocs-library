@@ -50,7 +50,7 @@
   <p align="center">
     Open Source Library For .NET10 Microservice
     <br />
-    <a href="https://learn.fiscanner.net"><strong>Read the Documentation</strong></a>
+    <a href="https://genocs-blog.netlify.app"><strong>Read the Documentation</strong></a>
     <br />
     <br />
     <a href="https://github.com/genocs/genocs-library/issues">Report Bug</a>

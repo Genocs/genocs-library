@@ -254,7 +254,7 @@ Provider packages add only their EF Core driver (e.g. `Microsoft.EntityFramework
 
 ## Related Docs
 
-- NuGet package readme: [src/Genocs.Persistence.EFCore/README_NUGET.md](../src/Genocs.Persistence.EFCore/README_NUGET.md)
+- NuGet package readme: [src/Genocs.Persistence.EFCore/README.md](../src/Genocs.Persistence.EFCore/README.md)
 - Repository guide: [README.md](../README.md)
 - Assessment: [docs/Genocs.Persistence.EFCore-Assessment.md](Genocs.Persistence.EFCore-Assessment.md)
 - Implementation backlog: [docs/Genocs.Persistence.EFCore-Implementation-Backlog.md](Genocs.Persistence.EFCore-Implementation-Backlog.md)

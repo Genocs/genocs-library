@@ -7,7 +7,7 @@
         <AssemblyName>Genocs.Common</AssemblyName>
         <Title>Genocs Common primitives</Title>
         <Description>Shared primitives and utilities used across Genocs packages.</Description>
-        <Summary>The common components to build .NET Core projects along with Genocs Library.</Summary>
+        <Summary>Shared primitives and utilities used across Genocs packages.</Summary>
         <PackageTags>genocs common primitives abstractions shared</PackageTags>
     </PropertyGroup>
 

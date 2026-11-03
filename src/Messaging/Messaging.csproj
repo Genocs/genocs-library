@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Messaging</AssemblyName>
         <Title>Genocs message broker abstractions</Title>
         <Description>Abstractions for message broker publishing and consuming.</Description>
+        <Summary>Abstractions for message broker publishing and consuming.</Summary>
         <PackageTags>genocs messaging message-broker pubsub integration</PackageTags>
     </PropertyGroup>
 

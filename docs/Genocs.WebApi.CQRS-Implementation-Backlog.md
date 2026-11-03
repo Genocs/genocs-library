@@ -176,7 +176,7 @@ Current assembly scanning and dictionary keying can fail on loadable-type issues
 **Likely touch points**
 
 - `src/Genocs.WebApi.CQRS/Extensions.cs`
-- `src/Genocs.WebApi.CQRS/README_NUGET.md`
+- `src/Genocs.WebApi.CQRS/README.md`
 - `docs/Genocs.WebApi.CQRS-Agent-Documentation.md`
 
 **Acceptance criteria**
@@ -203,7 +203,7 @@ Current assembly scanning and dictionary keying can fail on loadable-type issues
   - `src/apps/products/WebApi/Program.cs`
 - Added regression coverage in `src/tests/Genocs.WebApi.CQRS.UnitTests/Extensions/MapDispatcherEndpointsExtensionsTests.cs` validating mapped CQRS routes update endpoint definitions via route-builder mapping.
 - Updated migration guidance with before/after examples in:
-  - `src/Genocs.WebApi.CQRS/README_NUGET.md`
+  - `src/Genocs.WebApi.CQRS/README.md`
   - `docs/Genocs.WebApi.CQRS-Agent-Documentation.md`
 - Validation:
   - `dotnet test src/tests/Genocs.WebApi.CQRS.UnitTests/Genocs.WebApi.CQRS.UnitTests.csproj -c Debug --nologo`
@@ -367,7 +367,7 @@ No dedicated package-level unit test project or package-specific validation targ
 - `src/tests` (new `Genocs.WebApi.CQRS.UnitTests` project)
 - `Makefile`
 - new package validation target file (for example `validate-webapi-cqrs.mk`)
-- `src/Genocs.WebApi.CQRS/README_NUGET.md`
+- `src/Genocs.WebApi.CQRS/README.md`
 - `docs/Genocs.WebApi.CQRS-Agent-Documentation.md`
 
 **Acceptance criteria**
@@ -407,7 +407,7 @@ No dedicated package-level unit test project or package-specific validation targ
   - dispatch cancellation propagation,
   - null-result query policy (`404` default) via `Get_QueryWithoutAfterDispatch_Returns404WhenResultIsNull` in `src/tests/Genocs.WebApi.CQRS.UnitTests/Builders/DispatcherEndpointsBuilderCancellationTests.cs`.
 - Added maintainer validation guidance in:
-  - `src/Genocs.WebApi.CQRS/README_NUGET.md`
+  - `src/Genocs.WebApi.CQRS/README.md`
   - `docs/Genocs.WebApi.CQRS-Agent-Documentation.md`
 - Validation:
   - `dotnet build src/Genocs.WebApi.CQRS/Genocs.WebApi.CQRS.csproj -f net10.0 -c Debug --nologo -warnaserror -p:BuildProjectReferences=false`

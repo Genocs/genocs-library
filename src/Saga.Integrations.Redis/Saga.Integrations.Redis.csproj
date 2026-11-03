@@ -7,6 +7,7 @@
         <PackageId>Genocs.Saga.Integrations.Redis</PackageId>
         <Title>Genocs Redis saga integration</Title>
         <Description>Redis storage integration for Genocs saga state management.</Description>
+        <Summary>Redis storage integration for Genocs saga state management.</Summary>
         <PackageTags>genocs saga redis state-management orchestration</PackageTags>
     </PropertyGroup>
 

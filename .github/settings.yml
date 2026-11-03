@@ -10,7 +10,7 @@ repository:
   description: A library to build .NET microservice-based applications using best practices and patterns.
 
   # A URL with more information about the repository
-  homepage: https://learn.fiscanner.net
+  homepage: https://genocs-blog.netlify.app
 
   # A comma-separated list of topics to set on the repository
   topics: automation,docker,dotnet,testing

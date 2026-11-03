@@ -84,7 +84,7 @@ SqlClient instrumentation is always added, while telemetry.sqlClient.enabled exi
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
 - [src/Genocs.Telemetry/Configurations/SqlClientOptions.cs](src/Genocs.Telemetry/Configurations/SqlClientOptions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -166,8 +166,8 @@ Logging and Telemetry packages can export logs to the same OTLP or Azure backend
 
 **Likely touch points**
 
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
-- [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
+- [src/Genocs.Logging/README.md](src/Genocs.Logging/README.md)
 - [docs/Genocs.Telemetry-Agent-Documentation.md](docs/Genocs.Telemetry-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -220,7 +220,7 @@ Telemetry should maintain warning-clean quality and avoid nullable or style regr
 
 - Hardened guard clauses across the telemetry extension surface to make nullability expectations explicit for entry points and enrichment helpers.
 - Added project-level nullable warning enforcement in `Genocs.Telemetry.csproj` via `WarningsAsErrors` to prevent silent nullable regressions.
-- Added a package-level validation section in `README_NUGET.md` with the canonical telemetry build command for maintainers.
+- Added a package-level validation section in `README.md` with the canonical telemetry build command for maintainers.
 
 **Validation**
 
@@ -296,7 +296,7 @@ Exporter queue and batch settings are directly applied without sanity bounds, en
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
 - [src/Genocs.Telemetry/Configurations/OtlpExportOptions.cs](src/Genocs.Telemetry/Configurations/OtlpExportOptions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -338,7 +338,7 @@ OpenTelemetry log export is only wired when WebApplicationBuilder is available, 
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -378,7 +378,7 @@ The package currently references OpenTelemetry.Exporter.Jaeger while registratio
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Genocs.Telemetry.csproj](src/Genocs.Telemetry/Genocs.Telemetry.csproj)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -417,7 +417,7 @@ Telemetry allows multiple exporters per signal, which is valid but can be accide
 
 **Likely touch points**
 
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 - [docs/Genocs.Telemetry-Agent-Documentation.md](docs/Genocs.Telemetry-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -464,7 +464,7 @@ AddSource("*") can increase noise and cardinality by collecting spans from unint
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
 - [src/Genocs.Telemetry/Configurations/TelemetryOptions.cs](src/Genocs.Telemetry/Configurations/TelemetryOptions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -506,7 +506,7 @@ Fallback to raw request path can create high-cardinality route tags and hinder a
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
 - [src/Genocs.Telemetry/Configurations/TelemetryOptions.cs](src/Genocs.Telemetry/Configurations/TelemetryOptions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 - [docs/Genocs.Telemetry-Agent-Documentation.md](docs/Genocs.Telemetry-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -549,7 +549,7 @@ Unbounded exception message values can create oversized span attributes and back
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 
 **Acceptance criteria**
 
@@ -591,7 +591,7 @@ When telemetry exporters are disabled, registration and enrichment paths should 
 **Likely touch points**
 
 - [src/Genocs.Telemetry/Extensions.cs](src/Genocs.Telemetry/Extensions.cs)
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 - [src/tests](src/tests)
 
 **Acceptance criteria**
@@ -724,7 +724,7 @@ Current guidance can be interpreted as broader capability than runtime behavior 
 
 **Likely touch points**
 
-- [src/Genocs.Telemetry/README_NUGET.md](src/Genocs.Telemetry/README_NUGET.md)
+- [src/Genocs.Telemetry/README.md](src/Genocs.Telemetry/README.md)
 - [src/Genocs.Telemetry/Configurations](src/Genocs.Telemetry/Configurations)
 - [docs/Genocs.Telemetry-Agent-Documentation.md](docs/Genocs.Telemetry-Agent-Documentation.md)
 

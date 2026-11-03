@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Messaging.RabbitMQ</AssemblyName>
         <Title>Genocs RabbitMQ messaging integration</Title>
         <Description>RabbitMQ integration for Genocs messaging abstractions.</Description>
+        <Summary>RabbitMQ integration for Genocs messaging abstractions.</Summary>
         <PackageTags>genocs messaging rabbitmq amqp integration</PackageTags>
     </PropertyGroup>
 

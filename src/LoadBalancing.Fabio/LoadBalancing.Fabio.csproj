@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.LoadBalancing.Fabio</AssemblyName>
         <Title>Genocs Fabio load balancing</Title>
         <Description>Fabio load-balancing integration for service-to-service calls.</Description>
+        <Summary>Fabio load-balancing integration for service-to-service calls.</Summary>
         <PackageTags>genocs fabio load-balancing routing service-discovery</PackageTags>
     </PropertyGroup>
 

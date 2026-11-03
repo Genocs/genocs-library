@@ -295,7 +295,7 @@ README references APIs that do not exist and fluent builder does not expose full
 
 **Likely touch points**
 
-- `src/Genocs.WebApi.OpenApi/README_NUGET.md`
+- `src/Genocs.WebApi.OpenApi/README.md`
 - `src/Genocs.WebApi.OpenApi/Configurations/IOpenApiOptionsBuilder.cs`
 - `src/Genocs.WebApi.OpenApi/Builders/OpenApiOptionsBuilder.cs`
 - `docs/Genocs.WebApi.OpenApi-Agent-Documentation.md`
@@ -312,7 +312,7 @@ README references APIs that do not exist and fluent builder does not expose full
 
 **Implementation notes**
 
-- Aligned README API references in `src/Genocs.WebApi.OpenApi/README_NUGET.md` by removing non-existent `AddWebApiOpenApiDocs` and documenting current entry points.
+- Aligned README API references in `src/Genocs.WebApi.OpenApi/README.md` by removing non-existent `AddWebApiOpenApiDocs` and documenting current entry points.
 - Expanded fluent builder API to cover full `OpenApiOptions` model:
   - updated `src/Genocs.WebApi.OpenApi/Configurations/IOpenApiOptionsBuilder.cs` with:
     - `WithContactEmail(...)`, `WithContactUrl(...)`
@@ -347,7 +347,7 @@ No dedicated package-level tests/validation target currently guards `Genocs.WebA
 - `src/tests` (new `Genocs.WebApi.OpenApi.UnitTests` project)
 - `Makefile`
 - new package validation target file (for example `validate-webapi-openapi.mk`)
-- `src/Genocs.WebApi.OpenApi/README_NUGET.md`
+- `src/Genocs.WebApi.OpenApi/README.md`
 - `docs/Genocs.WebApi.OpenApi-Agent-Documentation.md`
 
 **Acceptance criteria**
@@ -390,7 +390,7 @@ No dedicated package-level tests/validation target currently guards `Genocs.WebA
   - updated root `Makefile` target:
     - `make validate-webapi-openapi` -> `$(MAKE) -f validate-webapi-openapi.mk validate-webapi-openapi`
 - Included maintainer validation guidance in:
-  - `src/Genocs.WebApi.OpenApi/README_NUGET.md`
+  - `src/Genocs.WebApi.OpenApi/README.md`
   - `docs/Genocs.WebApi.OpenApi-Agent-Documentation.md`
 - Added new test project to solution model:
   - `genocs.slnx`

@@ -5,8 +5,9 @@
         <PackageId>Genocs.Saga</PackageId>
         <RootNamespace>Genocs.Saga</RootNamespace>
         <AssemblyName>Genocs.Saga</AssemblyName>
-        <Title>Genocs saga orchestration abstractions</Title>
+        <Title>Genocs Saga orchestration abstractions</Title>
         <Description>Saga pattern abstractions for distributed workflow orchestration.</Description>
+        <Summary>Saga pattern abstractions for distributed workflow orchestration.</Summary>
         <PackageTags>genocs saga orchestration workflow distributed-transactions</PackageTags>
     </PropertyGroup>
 

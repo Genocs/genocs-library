@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Persistence.EFCore.Sqlite</AssemblyName>
         <Title>Genocs EF Core SQLite provider</Title>
         <Description>SQLite database provider for Genocs EF Core persistence.</Description>
+        <Summary>SQLite database provider for Genocs EF Core persistence.</Summary>
         <PackageTags>genocs persistence efcore entity-framework sqlite data-access</PackageTags>
     </PropertyGroup>
 

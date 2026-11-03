@@ -2,7 +2,7 @@
 
 ![Genocs Library Banner](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/genocs-library-banner.png)
 
-Http client abstractions and helpers for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
+HTTP client abstractions and helpers for Genocs applications. Supports `net10.0`, `net9.0`, and `net8.0`.
 
 ## Installation
 

@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.WebApi.Security</AssemblyName>
         <Title>Genocs Web API security support</Title>
         <Description>Security extensions for authentication and authorization in Genocs Web APIs.</Description>
+        <Summary>Security extensions for authentication and authorization in Genocs Web APIs.</Summary>
         <PackageTags>genocs webapi security authentication authorization aspnetcore</PackageTags>
     </PropertyGroup>
 

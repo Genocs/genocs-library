@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Messaging.Outbox</AssemblyName>
         <Title>Genocs messaging outbox abstractions</Title>
         <Description>Outbox pattern abstractions for reliable message delivery.</Description>
+        <Summary>Outbox pattern abstractions for reliable message delivery.</Summary>
         <PackageTags>genocs messaging outbox reliability transactional-outbox</PackageTags>
     </PropertyGroup>
 

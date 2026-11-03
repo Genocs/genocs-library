@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.WebApi.CQRS</AssemblyName>
         <Title>Genocs Web API CQRS support</Title>
         <Description>CQRS extensions for Genocs ASP.NET Core Web APIs.</Description>
+        <Summary>CQRS extensions for Genocs ASP.NET Core Web APIs.</Summary>
         <PackageTags>genocs webapi cqrs aspnetcore commands queries</PackageTags>
     </PropertyGroup>
 

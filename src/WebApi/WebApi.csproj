@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.WebApi</AssemblyName>
         <Title>Genocs ASP.NET Core Web API</Title>
         <Description>ASP.NET Core Web API extensions and conventions for Genocs applications.</Description>
+        <Summary>ASP.NET Core Web API extensions and conventions for Genocs applications.</Summary>
         <PackageTags>genocs webapi aspnetcore api middleware conventions</PackageTags>
     </PropertyGroup>
 

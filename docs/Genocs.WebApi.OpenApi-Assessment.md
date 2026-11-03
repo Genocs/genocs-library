@@ -25,7 +25,7 @@ Primary files inspected:
 - `src/Genocs.WebApi.OpenApi/Configurations/IOpenApiOptionsBuilder.cs`
 - `src/Genocs.WebApi.OpenApi/Builders/OpenApiOptionsBuilder.cs`
 - `src/Genocs.WebApi.OpenApi/Genocs.WebApi.OpenApi.csproj`
-- `src/Genocs.WebApi.OpenApi/README_NUGET.md`
+- `src/Genocs.WebApi.OpenApi/README.md`
 - `docs/Genocs.WebApi.OpenApi-Agent-Documentation.md`
 
 ## Validation Evidence
@@ -181,7 +181,7 @@ ID: `WEBAPI-OPENAPI-006`
 
 Where:
 
-- `src/Genocs.WebApi.OpenApi/README_NUGET.md`
+- `src/Genocs.WebApi.OpenApi/README.md`
 - `src/Genocs.WebApi.OpenApi/Configurations/IOpenApiOptionsBuilder.cs`
 - `src/Genocs.WebApi.OpenApi/Configurations/OpenApiOptions.cs`
 

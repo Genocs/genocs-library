@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.QueryBuilder</AssemblyName>
         <Title>Genocs persistence-agnostic query builder</Title>
         <Description>Fluent query builder abstractions independent from persistence providers.</Description>
+        <Summary>Fluent query builder abstractions independent from persistence providers.</Summary>
         <PackageTags>genocs query-builder persistence abstractions fluent-query</PackageTags>
     </PropertyGroup>
 

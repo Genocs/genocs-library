@@ -379,7 +379,7 @@ A hardcoded email with a `TODO` comment is shipping in a public library constant
 
 ### EFCORE-025 README provides no meaningful guidance
 
-**File**: `src/Genocs.Persistence.EFCore/README_NUGET.md`
+**File**: `src/Genocs.Persistence.EFCore/README.md`
 
 The README lists only the `AddEFCorePersistence` entry point with no information about:
 - Supported provider configuration (`DBProvider` values)

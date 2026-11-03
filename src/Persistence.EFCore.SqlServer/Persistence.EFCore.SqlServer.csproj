@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Persistence.EFCore.SqlServer</AssemblyName>
         <Title>Genocs EF Core SQL Server provider</Title>
         <Description>Microsoft SQL Server database provider for Genocs EF Core persistence.</Description>
+        <Summary>Microsoft SQL Server database provider for Genocs EF Core persistence.</Summary>
         <PackageTags>genocs persistence efcore entity-framework sqlserver mssql data-access</PackageTags>
     </PropertyGroup>
 

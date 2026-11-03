@@ -25,7 +25,7 @@ Observed baseline (April 2026, source review plus follow-up implementation):
 
 - **Runtime**: Refactored string-based sends into `SendWithRetryAsync(..., throwOnNonSuccessStatus)` so retries apply to transport failures, not to HTTP error status codes on the result path. New `SendAllowingNonSuccessStatusAsync` (protected virtual) feeds `SendResultAsync<T>(string, ...)`; string-based exception-oriented `SendAsync` unchanged for `GetAsync` / `PostAsync` / typed `*Async<T>` helpers.
 - **API docs**: Extended `IHttpClient` and `HttpResult<T>` XML documentation; clarified `SendAsync<T>(HttpRequestMessage)` vs `SendResultAsync<T>(HttpRequestMessage)`.
-- **Consumer docs**: [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) “Response handling” section; [Genocs.Http-Agent-Documentation.md](Genocs.Http-Agent-Documentation.md) alignment for result vs exception-oriented helpers.
+- **Consumer docs**: [README.md](../src/Genocs.Http/README.md) “Response handling” section; [Genocs.Http-Agent-Documentation.md](Genocs.Http-Agent-Documentation.md) alignment for result vs exception-oriented helpers.
 - **Tests**: `Genocs.Http.UnitTests` / `StringResultAsyncTests` (e.g. GET 404, POST 400) validating non-throwing `HttpResult<T>` semantics.
 - **Validation**: `dotnet build` / `dotnet test` on `Genocs.Http` and `Genocs.Http.UnitTests` succeed for these changes.
 
@@ -113,7 +113,7 @@ Previously, the string-based `GetResultAsync<T>`, `PostResultAsync<T>`, `PutResu
 - [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
 - [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
 - [src/Genocs.Http/HttpResult.cs](src/Genocs.Http/HttpResult.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 - [docs/Genocs.Http-Agent-Documentation.md](Genocs.Http-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -164,7 +164,7 @@ Previously, `GenocsHttpClient` prepended `http://` to any URI string that did no
 - [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
 - [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
 - [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -214,7 +214,7 @@ Previously, `GenocsHttpClient` prepended `http://` to any URI string that did no
 
 - [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
 - [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -329,7 +329,7 @@ The current retry policy handles every `Exception`, including non-transient fail
 - [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
 - [src/Genocs.Http/Extensions.cs](src/Genocs.Http/Extensions.cs)
 - [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 
 **Acceptance criteria**
 
@@ -360,7 +360,7 @@ The current retry policy handles every `Exception`, including non-transient fail
 	- Non-success status codes are surfaced to callers without being used to trigger retries.
 	- Typed `HttpRequestMessage` flows no longer retry deserialization failures because deserialization is outside the retry boundary.
 - **Method-aware behavior**: Added `HttpClientOptions.RetryUnsafeHttpMethods` (default `false`) so `POST`/`PUT`/`PATCH` retries are explicit opt-in.
-- **Consumer docs**: Updated `README_NUGET.md` retry semantics and configuration guidance (`httpClient.retries`, `httpClient.retryUnsafeHttpMethods`).
+- **Consumer docs**: Updated `README.md` retry semantics and configuration guidance (`httpClient.retries`, `httpClient.retryUnsafeHttpMethods`).
 - **Tests**: Added `RetryBehaviorTests` in `Genocs.Http.UnitTests` covering transient retry behavior, unsafe-method default/opt-in behavior, non-success no-retry behavior, and no retry on deserialization errors.
 
 **Dependent activities outside Genocs.Http (tracking)**
@@ -396,7 +396,7 @@ The `SendAsync(HttpRequestMessage, ...)`, `SendAsync<T>(HttpRequestMessage, ...)
 
 - [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
 - [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
 
 **Acceptance criteria**
@@ -424,7 +424,7 @@ The `SendAsync(HttpRequestMessage, ...)`, `SendAsync<T>(HttpRequestMessage, ...)
 
 - **Runtime**: Removed internal Polly replay for `HttpRequestMessage` overloads in `GenocsHttpClient` (`SendAsync(HttpRequestMessage, ...)`, `SendAsync<T>(HttpRequestMessage, ...)`, `SendResultAsync<T>(HttpRequestMessage, ...)`). Each call now sends the provided request instance once.
 - **API docs**: Updated `IHttpClient` XML documentation to make the single-send request-message model explicit.
-- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit request-message retry semantics.
+- **Consumer docs**: Updated `README.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit request-message retry semantics.
 - **Tests**: Extended `RetryBehaviorTests` with request-message transport failure coverage (including a content-bearing POST request) asserting there is no replay retry for the same message instance.
 
 **Dependent activities outside Genocs.Http (tracking)**
@@ -459,7 +459,7 @@ Because retries handle all exceptions, user-triggered cancellation and some time
 
 - [src/Genocs.Http/GenocsHttpClient.cs](src/Genocs.Http/GenocsHttpClient.cs)
 - [src/Genocs.Http/IHttpClient.cs](src/Genocs.Http/IHttpClient.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 
 **Acceptance criteria**
 
@@ -486,7 +486,7 @@ Because retries handle all exceptions, user-triggered cancellation and some time
 
 - **Runtime**: Updated retry evaluation to treat cancellation-driven `HttpRequestException` failures as non-retryable by checking the exception chain for `OperationCanceledException`.
 - **Runtime**: Completed cancellation-token propagation for string typed response materialization (`DeserializeJsonFromStream<T>` now receives the caller token in `SendAsync<T>(string, ...)`).
-- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) to state cancellation behavior explicitly.
+- **Consumer docs**: Updated `README.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) to state cancellation behavior explicitly.
 - **Tests**: Extended `RetryBehaviorTests` with coverage for immediate cancellation (no retries), cancellation wrapped in `HttpRequestException` (no retries), and token propagation to serializer paths.
 
 **Dependent activities outside Genocs.Http (tracking)**
@@ -549,7 +549,7 @@ Typed methods deserialize response bodies without disposing the `HttpResponseMes
 
 - **Runtime**: Typed methods that return `T?` now dispose transient `HttpResponseMessage` instances in both success and non-success paths (`SendAsync<T>(string, ...)`, `SendAsync<T>(HttpRequestMessage, ...)`).
 - **Runtime**: Payload materialization remains outside the retry boundary for string typed helpers, so deserialization failures fail once without transport replay.
-- **Consumer docs**: Updated `README_NUGET.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit response ownership guidance.
+- **Consumer docs**: Updated `README.md` and [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) with explicit response ownership guidance.
 - **Tests**: Extended `RetryBehaviorTests` with coverage for response disposal in typed flows and no-retry behavior for string-URI deserialization failures.
 
 **Dependent activities outside Genocs.Http (tracking)**
@@ -757,7 +757,7 @@ Request masking currently performs raw string replacement across the full URI an
 
 - [src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs](src/Genocs.Http/GenocsLoggingScopeHttpMessageHandler.cs)
 - [src/Genocs.Http/Configurations/HttpClientOptions.cs](src/Genocs.Http/Configurations/HttpClientOptions.cs)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
 - [src/tests/Genocs.Http.UnitTests/RequestMaskingTests.cs](src/tests/Genocs.Http.UnitTests/RequestMaskingTests.cs)
 
@@ -864,7 +864,7 @@ The package README previously under-documented runtime behavior beyond HTTP-001/
 
 **Likely touch points**
 
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 
 **Acceptance criteria**
 
@@ -891,7 +891,7 @@ The package README previously under-documented runtime behavior beyond HTTP-001/
 
 **Delivered**
 
-- **Consumer docs**: Expanded [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) with an explicit `httpClient` configuration contract, including which fields are actively used by Genocs.Http and which remain package-shared shape (`enabled`, `type`, `services`) pending companion/runtime ownership.
+- **Consumer docs**: Expanded [README.md](../src/Genocs.Http/README.md) with an explicit `httpClient` configuration contract, including which fields are actively used by Genocs.Http and which remain package-shared shape (`enabled`, `type`, `services`) pending companion/runtime ownership.
 - **Consumer docs**: Added dedicated examples for `BaseAddress` setup, custom serializer registration, and correlation + request-masking registration.
 - **Consumer docs**: Added explicit resilience-ownership guidance to prevent accidental retry amplification when combining Genocs.Http retries with `IHttpClientBuilder` policies.
 - **Consumer docs**: Added canonical validation commands section for maintainers.
@@ -915,7 +915,7 @@ The agent reference previously required alignment updates after the runtime hard
 **Likely touch points**
 
 - [docs/Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 
 **Acceptance criteria**
 
@@ -944,7 +944,7 @@ The agent reference previously required alignment updates after the runtime hard
 - **Agent docs**: Updated [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) to align with shipped runtime behavior, including correction of typed string `*Async<T>` non-success semantics (exception-oriented path) and updated decision guidance.
 - **Migration guidance**: Added a dedicated migration checklist in [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) covering consumer-visible changes for result handling, URI rules, retry boundaries, request-message replay model, cancellation/ownership, and correlation/masking semantics.
 - **Ownership boundaries**: Added an explicit package ownership boundaries section in [Genocs.Http-Agent-Documentation.md](docs/Genocs.Http-Agent-Documentation.md) clarifying what Genocs.Http owns versus companion/external responsibilities.
-- **Consumer docs alignment**: Added a matching migration-notes section in [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) with a link back to the agent reference for source-blind upgrade guidance.
+- **Consumer docs alignment**: Added a matching migration-notes section in [README.md](../src/Genocs.Http/README.md) with a link back to the agent reference for source-blind upgrade guidance.
 
 ### HTTP-016 Add package-level analyzer and nullability quality gates
 
@@ -966,7 +966,7 @@ The repository-wide baseline leaves warnings-as-errors disabled. Without a packa
 
 - [src/Genocs.Http/Genocs.Http.csproj](src/Genocs.Http/Genocs.Http.csproj)
 - [Directory.Build.props](Directory.Build.props)
-- [src/Genocs.Http/README_NUGET.md](src/Genocs.Http/README_NUGET.md)
+- [src/Genocs.Http/README.md](src/Genocs.Http/README.md)
 
 **Acceptance criteria**
 
@@ -996,7 +996,7 @@ The repository-wide baseline leaves warnings-as-errors disabled. Without a packa
 	- `WarningsAsErrors` includes `nullable` to fail the build on nullable contract regressions.
 	- `CodeAnalysisTreatWarningsAsErrors=true` to fail on .NET analyzer warnings for Genocs.Http.
 	- explicit analyzer baseline (`EnableNETAnalyzers=true`, `AnalysisLevel=latest`) in package scope.
-- **Maintainer docs**: Added a dedicated "Maintainer quality gates" section in [README_NUGET.md](../src/Genocs.Http/README_NUGET.md) documenting the package-scoped gate and canonical validation commands.
+- **Maintainer docs**: Added a dedicated "Maintainer quality gates" section in [README.md](../src/Genocs.Http/README.md) documenting the package-scoped gate and canonical validation commands.
 
 **Reevaluation summary (April 2026)**
 

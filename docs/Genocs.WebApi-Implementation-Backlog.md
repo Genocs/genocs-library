@@ -130,7 +130,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
 **Likely touch points**
 
 - `src/Genocs.WebApi/Extensions.cs`
-- `src/Genocs.WebApi/README_NUGET.md`
+- `src/Genocs.WebApi/README.md`
 - `docs/Genocs.WebApi-Agent-Documentation.md`
 
 **Acceptance criteria**
@@ -148,7 +148,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
 - Updated `UseAllForwardedHeaders(...)` in `src/Genocs.WebApi/Extensions.cs` to default `resetKnownNetworksAndProxies` to `false`, preserving ASP.NET Core trusted proxy/network checks by default.
 - Kept permissive trust behavior as explicit opt-in via `UseAllForwardedHeaders(resetKnownNetworksAndProxies: true)`.
 - Added behavior tests in `src/tests/Genocs.WebApi.UnitTests/Extensions/ForwardedHeadersExtensionsTests.cs` covering strict default mode and permissive opt-in mode.
-- Updated package and agent documentation in `src/Genocs.WebApi/README_NUGET.md` and `docs/Genocs.WebApi-Agent-Documentation.md` to document strict defaults and explicit opt-in guidance.
+- Updated package and agent documentation in `src/Genocs.WebApi/README.md` and `docs/Genocs.WebApi-Agent-Documentation.md` to document strict defaults and explicit opt-in guidance.
 - Validation: `dotnet test src/tests/Genocs.WebApi.UnitTests/Genocs.WebApi.UnitTests.csproj -c Debug --nologo` and `dotnet build src/Genocs.WebApi/Genocs.WebApi.csproj -c Debug --nologo`.
 
 ---
@@ -169,7 +169,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
 
 - `src/Genocs.WebApi/EndpointsBuilder.cs`
 - `src/Genocs.WebApi/IEndpointsBuilder.cs`
-- `src/Genocs.WebApi/README_NUGET.md`
+- `src/Genocs.WebApi/README.md`
 
 **Acceptance criteria**
 
@@ -191,7 +191,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
 - Added focused metadata tests in `src/tests/Genocs.WebApi.UnitTests/Endpoints/EndpointsBuilderAuthorizationMetadataTests.cs` validating:
   - default no-auth mapping has no anonymous or authorization metadata,
   - explicit auth, roles, and policies continue producing expected authorization metadata.
-- Updated package docs in `src/Genocs.WebApi/README_NUGET.md` to state default metadata behavior and explicit anonymous opt-in through endpoint convention callbacks.
+- Updated package docs in `src/Genocs.WebApi/README.md` to state default metadata behavior and explicit anonymous opt-in through endpoint convention callbacks.
 - Validation: `dotnet test src/tests/Genocs.WebApi.UnitTests/Genocs.WebApi.UnitTests.csproj -c Debug --nologo` and `dotnet build src/Genocs.WebApi/Genocs.WebApi.csproj -c Debug --nologo`.
 
 ### WEBAPI-005 Remove static cross-host binding state from request pipeline helpers
@@ -293,7 +293,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
 - `src/tests` (new `Genocs.WebApi.UnitTests` project)
 - `Makefile`
 - new package validation make target file (for example `validate-webapi.mk`)
-- `src/Genocs.WebApi/README_NUGET.md`
+- `src/Genocs.WebApi/README.md`
 - `docs/Genocs.WebApi-Agent-Documentation.md`
 
 **Acceptance criteria**
@@ -325,7 +325,7 @@ Builds succeed in normal mode, but strict mode fails due to warning baseline.
   - endpoint authorization metadata behavior,
   - request binding route merge behavior,
   - forwarded headers trust model behavior.
-- Documented validation command in `src/Genocs.WebApi/README_NUGET.md` and `docs/Genocs.WebApi-Agent-Documentation.md`.
+- Documented validation command in `src/Genocs.WebApi/README.md` and `docs/Genocs.WebApi-Agent-Documentation.md`.
 - Validation: `make validate-webapi`.
 
 ---

@@ -5,8 +5,9 @@
         <PackageId>Genocs.Persistence.EFCore.MultiTenancy.SqlServer</PackageId>
         <RootNamespace>Genocs.Persistence.EFCore.MultiTenancy</RootNamespace>
         <AssemblyName>Genocs.Persistence.EFCore.MultiTenancy.SqlServer</AssemblyName>
-        <Title>Genocs EF Core multitenancy (SQL Server tenant store)</Title>
-        <Description>Finbuckle-based multitenancy for Genocs EF Core persistence with a SQL Server-backed tenant store.</Description>
+        <Title>Genocs EF Core SQL Server multitenancy</Title>
+        <Description>Finbuckle-based multitenancy for Genocs EF Core persistence, with a SQL Server-backed tenant store.</Description>
+        <Summary>Finbuckle-based multitenancy for Genocs EF Core persistence, with a SQL Server-backed tenant store.</Summary>
         <PackageTags>genocs persistence efcore multitenancy finbuckle sqlserver mssql tenant</PackageTags>
     </PropertyGroup>
 

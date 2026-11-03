@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Persistence.EFCore.MySql</AssemblyName>
         <Title>Genocs EF Core MySQL provider</Title>
         <Description>MySQL database provider for Genocs EF Core persistence. NOTE: on net10.0 the provider is a stub until Pomelo.EntityFrameworkCore.MySql supports EF Core 10.</Description>
+        <Summary>MySQL database provider for Genocs EF Core persistence. NOTE: on net10.0 the provider is a stub until Pomelo.EntityFrameworkCore.MySql supports EF Core 10.</Summary>
         <PackageTags>genocs persistence efcore entity-framework mysql pomelo data-access</PackageTags>
     </PropertyGroup>
 

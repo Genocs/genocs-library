@@ -2,4 +2,83 @@
     <PropertyGroup>
         <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
+
+    <!--
+      SDK pack writes Title and Description, and ignores Summary.
+      NuGet clients show Summary when it is present and otherwise fall back to Description.
+      Copy Summary into the packed nuspec so both fields stay the sentence from the project file.
+    -->
+    <UsingTask TaskName="InsertNuspecSummary" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <NuspecPath ParameterType="System.String" Required="true" />
+            <NupkgPath ParameterType="System.String" Required="true" />
+            <Summary ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System" />
+            <Using Namespace="System.IO" />
+            <Using Namespace="System.IO.Compression" />
+            <Using Namespace="System.Linq" />
+            <Using Namespace="System.Xml.Linq" />
+            <Code Type="Fragment" Language="cs"><![CDATA[
+                var document = XDocument.Load(NuspecPath);
+                XNamespace ns = document.Root.Name.Namespace;
+                var metadata = document.Root.Element(ns + "metadata");
+                if (metadata != null)
+                {
+                    var summary = metadata.Element(ns + "summary");
+                    if (summary == null)
+                    {
+                        summary = new XElement(ns + "summary", Summary);
+                        var description = metadata.Element(ns + "description");
+                        if (description != null)
+                        {
+                            description.AddBeforeSelf(summary);
+                        }
+                        else
+                        {
+                            metadata.Add(summary);
+                        }
+                    }
+                    else
+                    {
+                        summary.Value = Summary;
+                    }
+
+                    document.Save(NuspecPath);
+
+                    if (!string.IsNullOrEmpty(NupkgPath) && File.Exists(NupkgPath))
+                    {
+                        var id = metadata.Element(ns + "id");
+                        var entryName = (id == null ? Path.GetFileNameWithoutExtension(NuspecPath) : id.Value) + ".nuspec";
+                        using (var archive = ZipFile.Open(NupkgPath, ZipArchiveMode.Update))
+                        {
+                            var entry = archive.Entries.FirstOrDefault(item => string.Equals(item.FullName, entryName, StringComparison.OrdinalIgnoreCase));
+                            if (entry != null)
+                            {
+                                entry.Delete();
+                            }
+
+                            var created = archive.CreateEntryFromFile(NuspecPath, entryName, CompressionLevel.Optimal);
+                            created.LastWriteTime = new DateTimeOffset(1980, 1, 1, 0, 0, 0, TimeSpan.Zero);
+                        }
+                    }
+                }
+            ]]></Code>
+        </Task>
+    </UsingTask>
+
+    <Target Name="WritePackageSummary"
+            AfterTargets="Pack"
+            Condition="'$(IsPackable)' != 'false' AND '$(Summary)' != '' AND '$(DesignTimeBuild)' != 'true' AND '$(NuspecFile)' == ''">
+        <PropertyGroup>
+            <_PackageSummaryNuspec>$([System.IO.Path]::Combine('$(NuspecOutputPath)', '$(PackageId).$(PackageVersion).nuspec'))</_PackageSummaryNuspec>
+            <_PackageSummaryNupkg>$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(PackageId).$(PackageVersion).nupkg'))</_PackageSummaryNupkg>
+        </PropertyGroup>
+        <InsertNuspecSummary
+            NuspecPath="$(_PackageSummaryNuspec)"
+            NupkgPath="$(_PackageSummaryNupkg)"
+            Summary="$(Summary)"
+            Condition="Exists('$(_PackageSummaryNuspec)')" />
+    </Target>
 </Project>

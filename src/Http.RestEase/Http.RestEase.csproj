@@ -5,8 +5,9 @@
         <PackageId>Genocs.Http.RestEase</PackageId>
         <RootNamespace>Genocs.Http.RestEase</RootNamespace>
         <AssemblyName>Genocs.Http.RestEase</AssemblyName>
-        <Title>Genocs RestEase Http integration</Title>
-        <Description>RestEase integration for typed Http clients in Genocs applications.</Description>
+        <Title>Genocs RestEase HTTP integration</Title>
+        <Description>RestEase integration for typed HTTP clients in Genocs applications.</Description>
+        <Summary>RestEase integration for typed HTTP clients in Genocs applications.</Summary>
         <PackageTags>genocs http restease typed-client rest-api</PackageTags>
     </PropertyGroup>
 

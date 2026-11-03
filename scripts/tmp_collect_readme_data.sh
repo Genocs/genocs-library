@@ -4,7 +4,7 @@ set -euo pipefail
 out="tmp_readme_data.tsv"
 : > "$out"
 
-find src -name README_NUGET.md | grep -v '/_docs/' | sort | while read -r readme; do
+find src -name README.md | grep -v '/_docs/' | sort | while read -r readme; do
   d=$(dirname "$readme")
   csproj=$(find "$d" -maxdepth 1 -name '*.csproj' | head -n1 || true)
   if [[ -z "${csproj}" ]]; then

@@ -7,6 +7,7 @@
         <AssemblyName>Genocs.Persistence.EFCore</AssemblyName>
         <Title>Genocs EF Core persistence integration</Title>
         <Description>EF Core repository and persistence integration for Genocs applications.</Description>
+        <Summary>EF Core repository and persistence integration for Genocs applications.</Summary>
         <PackageTags>genocs persistence efcore entity-framework repository data-access</PackageTags>
     </PropertyGroup>
 

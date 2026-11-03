@@ -138,7 +138,7 @@ Defaulting to `Assembly.GetCallingAssembly()` can be fragile in wrapper/inlined 
 **Likely touch points**
 
 - [src/Genocs.Logging/CQRS/Extensions.cs](src/Genocs.Logging/CQRS/Extensions.cs)
-- [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
+- [src/Genocs.Logging/README.md](src/Genocs.Logging/README.md)
 
 **Acceptance criteria**
 
@@ -296,7 +296,7 @@ Mongo logging options were present in the public model but no Mongo sink wiring 
 **Likely touch points**
 
 - [src/Genocs.Logging/Extensions.cs](src/Genocs.Logging/Extensions.cs)
-- [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
+- [src/Genocs.Logging/README.md](src/Genocs.Logging/README.md)
 
 **Acceptance criteria**
 
@@ -390,7 +390,7 @@ Payload capture can create security/performance risk without explicit policy gui
 
 - [src/Genocs.Logging/Configurations/HttpPayloadOptions.cs](src/Genocs.Logging/Configurations/HttpPayloadOptions.cs)
 - [src/Genocs.Logging/CorrelationContextLoggingMiddleware.cs](src/Genocs.Logging/CorrelationContextLoggingMiddleware.cs)
-- [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
+- [src/Genocs.Logging/README.md](src/Genocs.Logging/README.md)
 
 **Acceptance criteria**
 
@@ -539,7 +539,7 @@ Some comments and package guidance still imply broader capabilities than current
 
 **Likely touch points**
 
-- [src/Genocs.Logging/README_NUGET.md](src/Genocs.Logging/README_NUGET.md)
+- [src/Genocs.Logging/README.md](src/Genocs.Logging/README.md)
 - [src/Genocs.Logging/Extensions.cs](src/Genocs.Logging/Extensions.cs)
 - [docs/Genocs.Logging-Agent-Documentation.md](docs/Genocs.Logging-Agent-Documentation.md)
 

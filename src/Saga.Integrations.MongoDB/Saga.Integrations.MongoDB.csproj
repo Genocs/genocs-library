@@ -7,6 +7,7 @@
         <PackageId>Genocs.Saga.Integrations.MongoDB</PackageId>
         <Title>Genocs MongoDB saga integration</Title>
         <Description>MongoDB storage integration for Genocs saga state management.</Description>
+        <Summary>MongoDB storage integration for Genocs saga state management.</Summary>
         <PackageTags>genocs saga mongodb state-management orchestration</PackageTags>
     </PropertyGroup>
 
