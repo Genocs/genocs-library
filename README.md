@@ -941,10 +941,6 @@ You can deploy Demo Application with one click in Heroku, Microsoft Azure, or Go
 [<img src="https://aka.ms/deploytoazurebutton" height="30px">](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheartexlabs%2Flabel-studio%2Fmaster%2Fazuredeploy.json)
 [<img src="https://deploy.cloud.run/button.svg" height="30px">](https://deploy.cloud.run)
 
-## License
-
-This project is licensed with the [MIT license](LICENSE).
-
 ## Changelog
 
 View Complete [Changelog](https://github.com/Genocs/microservice-template/blob/main/CHANGELOG.md).
@@ -967,16 +963,8 @@ Here are a few ways by which you can support.
 
 [![buy-me-a-coffee](https://raw.githubusercontent.com/Genocs/genocs-library/main/assets/buy-me-a-coffee.png "buy-me-a-coffee")](https://www.buymeacoffee.com/genocs)
 
-## Code Contributors
-
-This project exists thanks to all the people who contribute. [Submit your PR and join the team!](CONTRIBUTING.md)
-
-[![genocs contributors](https://contrib.rocks/image?repo=Genocs/genocs-library "genocs contributors")](https://github.com/genocs/genocs-library/graphs/contributors)
-
 ## Financial Contributors
 
 Become a financial contributor and help me sustain the project. [Support the Project!](https://opencollective.com/genocs/contribute)
 
 <a href="https://opencollective.com/genocs"><img src="https://opencollective.com/genocs/individuals.svg?width=890"></a>
-
-## Acknowledgements
