@@ -23,6 +23,9 @@ jobs:
     name: Update NuGet Packages
     runs-on: ubuntu-22.04
 
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -47,7 +50,14 @@ jobs:
       - name: Pack
         run: dotnet pack -c Debug -o out -p:PackageVersion=${{ github.event.inputs.version }} --no-build --verbosity normal
 
+# Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+    
       - name: Push Packages to NuGet
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{steps.login.outputs.NUGET_API_KEY}}
         run: dotnet nuget push ./out/*.nupkg -k ${{ env.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols

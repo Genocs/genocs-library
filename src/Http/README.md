@@ -172,13 +172,6 @@ When upgrading from older Genocs.Http behavior, review these consumer-visible ch
 
 For a source-blind upgrade checklist and decision guidance, see [Genocs.Http-Agent-Documentation.md](https://github.com/Genocs/genocs-library/blob/main/docs/Genocs.Http-Agent-Documentation.md).
 
-## Validation
-
-```bash
-dotnet build src/Genocs.Http/Genocs.Http.csproj -c Debug --nologo
-dotnet test src/tests/Genocs.Http.UnitTests/Genocs.Http.UnitTests.csproj -c Debug --nologo
-```
-
 ## Maintainer quality gates
 
 Genocs.Http applies package-level quality gates in `Genocs.Http.csproj` to reduce contract regressions:
