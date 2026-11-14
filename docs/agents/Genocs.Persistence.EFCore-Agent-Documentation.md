@@ -65,6 +65,7 @@ This reference covers the whole package family introduced by the July 2026 provi
 ### Startup and DI registration (core)
 
 - `AddEFCorePersistence(this IGenocsBuilder, params Assembly[])` in [src/Genocs.Persistence.EFCore/Extensions/EFCoreExtensions.cs](../src/Genocs.Persistence.EFCore/Extensions/EFCoreExtensions.cs)
+- `AddGenocsRepositories<TContext>(this IServiceCollection, Assembly)` in the same file, for a host `DbContext` that is not `ApplicationDbContext`
 - `DatabaseOptions` (binds section `DatabaseOptions`) in [src/Genocs.Persistence.EFCore/Configurations/DatabaseOptions.cs](../src/Genocs.Persistence.EFCore/Configurations/DatabaseOptions.cs)
 - `DbProviderKeys` in [src/Genocs.Persistence.EFCore/Common/DbProviderKeys.cs](../src/Genocs.Persistence.EFCore/Common/DbProviderKeys.cs)
 
@@ -109,7 +110,8 @@ This reference covers the whole package family introduced by the July 2026 provi
 | Select database engine | `services.Add[Provider]DbProvider()` + `DatabaseOptions:DBProvider` | Provider key must match a registered `IEFCoreDbProvider` |
 | Run startup initialization | resolve `IDatabaseInitializer`, call `InitializeDatabasesAsync` | Runs migrations per `AutoApplyMigrations`, then seeders |
 | Seed initial data | implement `ICustomSeeder` | Discovered from loaded assemblies, run by `CustomSeederRunner` |
-| Query with specifications | `IRepository<T>` / `IReadRepository<T>` | Registered per aggregate root from entry + supplied assemblies |
+| Query with specifications | `IRepository<T>` / `IReadRepository<T>` | Open generics bound to `ApplicationDbContext` by `AddEFCorePersistence`. Call `AddGenocsRepositories<TContext>(domainAssembly)` when the host context is a different `DbContext`, including a multitenant context |
+| Repositories that append entity events | `IRepositoryWithEvents<T>` | Registered only for concrete `IAggregateRoot` types in the scanned assembly that also implement `IGeneratesDomainEvents` |
 | Raw SQL query | `IDapperRepository` | Flows `CancellationToken` via `CommandDefinition` |
 | Add multitenancy with EF Core tenant store | `builder.AddFinbuckleMultiTenancyWithEfCoreStore()` | SQL Server-only tenant store; registers `ITenantService` and `ITenantDatabaseInitializer` |
 | Add multitenancy from configuration | `AddFinbuckleMultiTenancy<TTenantInfo>(configuration)` | Host strategy + configuration store; does not register `ITenantService` |
@@ -170,7 +172,9 @@ app.Run();
 - `ApplicationDbContext` configuration is deferred: the provider is resolved from `IEnumerable<IEFCoreDbProvider>` when the DbContext is first built, so a missing provider package surfaces at first use with the message "Install the matching Genocs.Persistence.EFCore.* provider package and register it".
 - `ApplicationDbInitializer.InitializeAsync` consults `IEFCoreDbProvider.SupportsMigrations`: MongoDB skips migration handling and only seeds. For relational providers, pending migrations with `AutoApplyMigrations = false` log an error and stop the host via `IHostApplicationLifetime.StopApplication()`.
 - MongoDB database name resolution: explicit `DatabaseOptions.DatabaseName` wins, otherwise it is parsed from the connection string path (`mongodb://host/dbname`); validation fails when neither resolves.
-- Repository auto-registration scans `Assembly.GetEntryAssembly()` plus any assemblies passed to `AddEFCorePersistence` for `IAggregateRoot` implementations.
+- `AddEFCorePersistence` registers open `IRepository<>` and `IReadRepository<>` against `ApplicationDbContext`. It scans `Assembly.GetEntryAssembly()` plus any assemblies passed to it, and registers `IRepositoryWithEvents<T>` only for concrete aggregate roots that implement `IGeneratesDomainEvents`.
+- `AddGenocsRepositories<TContext>(domainAssembly)` is the registration to use when the host `DbContext` is not `ApplicationDbContext`. `TContext : DbContext`, so a multitenant context is valid. `TContext` must be public. It scans only `domainAssembly` (not `Genocs.Common`, and not the entry assembly). Open repository registrations are kept from the first caller, so call it instead of expecting `AddEFCorePersistence` to rebind the context.
+- Prefer `AggregateRoot` or `AggregateRoot<TPrimaryKey>` from `Genocs.Core` for aggregates that use `IRepositoryWithEvents<T>`. Those types implement `IGeneratesDomainEvents` and store the event list. `IAggregateRoot` extends `Genocs.Common.Domain.Entities.IEntity`, which `EntityCreatedEvent<T>`, `EntityUpdatedEvent<T>`, and `EntityDeletedEvent<T>` require. An aggregate that only implements the non-generic `IAggregateRoot` marker gets `IRepository<T>` and `IReadRepository<T>`, and does not get `IRepositoryWithEvents<T>`.
 - Tenant creation (`TenantService.CreateAsync`) initializes the tenant database in an isolated DI scope; a tenant-dedicated connection string redirects the scoped `ApplicationDbContext` before initialization. On failure the tenant is removed from the store.
 - The multitenancy EF Core store path registers claim, header (`tenant`), and query-string strategies for `GNXTenantInfo`; only one Finbuckle store can be active at a time.
 - `TenantDbContext` still sets the process-wide `Npgsql.EnableLegacyTimestampBehavior` switch in its constructor (vestigial, tracked as EFCORE-013).
@@ -193,7 +197,8 @@ Files:
 ### Repositories
 
 - Specification-based repository with Mapster projection support
-- Domain-event-adding decorator for aggregate roots
+- `AddGenocsRepositories<TContext>` binds that repository to a caller `DbContext`
+- Domain-event-adding decorator for aggregate roots that implement `IAggregateRoot` and `IGeneratesDomainEvents`
 - Dapper-based raw SQL repository
 
 Files:

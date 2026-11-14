@@ -1,7 +1,10 @@
 using System.Reflection;
 using Genocs.Common.Domain.Entities;
 using Genocs.Core.Domain.Repositories;
+using Genocs.Persistence.EFCore.Context;
 using Genocs.Persistence.EFCore.Extensions;
+using Genocs.Persistence.EFCore.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -31,56 +34,37 @@ public class AddRepositoriesTests
         services.AddRepositories(TestAssembly);
 
         services.Any(d => d.ServiceType == typeof(IRepository<>)).ShouldBeTrue();
+        services.Any(d => d.ServiceType == typeof(IReadRepository<>)).ShouldBeTrue();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // IReadRepository<T> registration for discovered types
+    // IReadRepository<T> is an open generic, so a discovered aggregate resolves
+    // without a closed registration.
     // ──────────────────────────────────────────────────────────────────────────
 
     [Fact]
-    public void AddRepositories_RegistersReadRepository_ForProductAggregate()
+    public void AddRepositories_ResolvesReadRepository_ForDiscoveredAggregates()
     {
         var services = new ServiceCollection();
-
         services.AddRepositories(TestAssembly);
+        RegisterApplicationDbContext(services);
 
-        services.Any(d => d.ServiceType == typeof(IReadRepository<ProductAggregate>))
-            .ShouldBeTrue();
-    }
+        using var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
 
-    [Fact]
-    public void AddRepositories_RegistersReadRepository_ForOrderAggregate()
-    {
-        var services = new ServiceCollection();
-
-        services.AddRepositories(TestAssembly);
-
-        services.Any(d => d.ServiceType == typeof(IReadRepository<OrderAggregate>))
-            .ShouldBeTrue();
-    }
-
-    [Fact]
-    public void AddRepositories_RegistersReadRepository_ForInvoiceAggregate()
-    {
-        var services = new ServiceCollection();
-
-        services.AddRepositories(TestAssembly);
-
-        services.Any(d => d.ServiceType == typeof(IReadRepository<InvoiceAggregate>))
-            .ShouldBeTrue();
+        scope.ServiceProvider.GetRequiredService<IReadRepository<ProductAggregate>>().ShouldNotBeNull();
+        scope.ServiceProvider.GetRequiredService<IReadRepository<OrderAggregate>>().ShouldNotBeNull();
+        scope.ServiceProvider.GetRequiredService<IReadRepository<InvoiceAggregate>>().ShouldNotBeNull();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // IRepositoryWithEvents<T> registration — only for types that satisfy
-    // EventAddingRepositoryDecorator<T>'s self-referential IAggregateRoot<T>
-    // constraint (see EFCORE-017 for the full constraint relaxation).
+    // IRepositoryWithEvents<T> is registered for aggregates that implement
+    // IGeneratesDomainEvents, including a normal IAggregateRoot<TKey>.
     // ──────────────────────────────────────────────────────────────────────────
 
     [Fact]
     public void AddRepositories_RegistersRepositoryWithEvents_ForSelfReferentialAggregate()
     {
-        // InvoiceAggregate implements IAggregateRoot<InvoiceAggregate> (self-referential),
-        // so EventAddingRepositoryDecorator<InvoiceAggregate> is valid.
         var services = new ServiceCollection();
 
         services.AddRepositories(TestAssembly);
@@ -90,29 +74,25 @@ public class AddRepositoriesTests
     }
 
     [Fact]
-    public void AddRepositories_DoesNotRegisterRepositoryWithEvents_WhenConstraintNotSatisfied()
+    public void AddRepositories_RegistersRepositoryWithEvents_ForTypedKeyAggregate()
     {
-        // ProductAggregate only implements the non-generic IAggregateRoot.
-        // EventAddingRepositoryDecorator<ProductAggregate> would violate its generic
-        // constraint, so IRepositoryWithEvents<ProductAggregate> must not be registered.
-        var services = new ServiceCollection();
-
-        services.AddRepositories(TestAssembly);
-
-        services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<ProductAggregate>))
-            .ShouldBeFalse();
-    }
-
-    [Fact]
-    public void AddRepositories_DoesNotRegisterRepositoryWithEvents_ForTypedKeyAggregate()
-    {
-        // OrderAggregate implements IAggregateRoot<Guid>, not IAggregateRoot<OrderAggregate>,
-        // so the self-referential constraint is not satisfied.
         var services = new ServiceCollection();
 
         services.AddRepositories(TestAssembly);
 
         services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<OrderAggregate>))
+            .ShouldBeTrue();
+    }
+
+    [Fact]
+    public void AddRepositories_DoesNotRegisterRepositoryWithEvents_WhenAggregateDoesNotGenerateEvents()
+    {
+        // ProductAggregate only implements the non-generic IAggregateRoot and has no event collection.
+        var services = new ServiceCollection();
+
+        services.AddRepositories(TestAssembly);
+
+        services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<ProductAggregate>))
             .ShouldBeFalse();
     }
 
@@ -175,10 +155,9 @@ public class AddRepositoriesTests
 
         services.AddRepositories(TestAssembly, commonAssembly);
 
-        // Types from the test assembly are present.
-        services.Any(d => d.ServiceType == typeof(IReadRepository<ProductAggregate>))
+        services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<OrderAggregate>))
             .ShouldBeTrue();
-        services.Any(d => d.ServiceType == typeof(IReadRepository<OrderAggregate>))
+        services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<InvoiceAggregate>))
             .ShouldBeTrue();
     }
 
@@ -193,8 +172,8 @@ public class AddRepositoriesTests
 
         services.AddRepositories(TestAssembly, TestAssembly);
 
-        var readRepoCount = services.Count(d => d.ServiceType == typeof(IReadRepository<ProductAggregate>));
-        readRepoCount.ShouldBe(1, "Passing the same assembly twice must not produce duplicate registrations.");
+        var eventRepoCount = services.Count(d => d.ServiceType == typeof(IRepositoryWithEvents<OrderAggregate>));
+        eventRepoCount.ShouldBe(1, "Passing the same assembly twice must not produce duplicate registrations.");
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -212,5 +191,76 @@ public class AddRepositoriesTests
 
         ex.ShouldBeNull();
         services.Any(d => d.ServiceType == typeof(IRepository<>)).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void AddGenocsRepositories_RegistersReadAndEventRepositories_ForDomainAssemblyOutsideGenocsCommon()
+    {
+        var services = new ServiceCollection();
+
+        services.AddGenocsRepositories<CallerDbContext>(TestAssembly);
+
+        services.Any(d => d.ServiceType == typeof(IReadRepository<>)).ShouldBeTrue();
+        services.Any(d => d.ServiceType == typeof(IRepositoryWithEvents<OrderAggregate>))
+            .ShouldBeTrue();
+        TestAssembly.ShouldNotBe(typeof(IAggregateRoot).Assembly);
+    }
+
+    [Fact]
+    public void AddGenocsRepositories_RegistersNoClosedAggregateRepositories_WhenScanningGenocsCommon()
+    {
+        var services = new ServiceCollection();
+        var commonAssembly = typeof(IAggregateRoot).Assembly;
+
+        services.AddGenocsRepositories<CallerDbContext>(commonAssembly);
+
+        services.Any(d =>
+                d.ServiceType.IsGenericType
+                && !d.ServiceType.IsGenericTypeDefinition
+                && d.ServiceType.GetGenericArguments()[0].Assembly == commonAssembly)
+            .ShouldBeFalse();
+    }
+
+    [Fact]
+    public void AddGenocsRepositories_ResolvesRepository_WithCallerDbContext()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(new DbContextOptionsBuilder<CallerDbContext>().Options);
+        services.AddScoped<CallerDbContext>();
+        services.AddGenocsRepositories<CallerDbContext>(TestAssembly);
+
+        var repositoryDescriptor = services.Single(d => d.ServiceType == typeof(IRepository<>));
+        var constructor = repositoryDescriptor.ImplementationType!.GetConstructors().Single();
+        constructor.GetParameters().Single().ParameterType.ShouldBe(typeof(CallerDbContext));
+
+        using var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
+        var repository = scope.ServiceProvider.GetRequiredService<IRepository<OrderAggregate>>();
+        var readRepository = scope.ServiceProvider.GetRequiredService<IReadRepository<OrderAggregate>>();
+        var eventRepository = scope.ServiceProvider.GetRequiredService<IRepositoryWithEvents<OrderAggregate>>();
+
+        repository.ShouldBeAssignableTo<GenocsRepository<OrderAggregate, CallerDbContext>>();
+        readRepository.ShouldBeAssignableTo<GenocsRepository<OrderAggregate, CallerDbContext>>();
+        ((GenocsRepository<OrderAggregate, CallerDbContext>)repository).Context
+            .ShouldBeSameAs(scope.ServiceProvider.GetRequiredService<CallerDbContext>());
+        eventRepository.ShouldBeOfType<EventAddingRepositoryDecorator<OrderAggregate>>();
+        typeof(CallerDbContext).IsAssignableTo(typeof(ApplicationDbContext)).ShouldBeFalse();
+    }
+
+    private static void RegisterApplicationDbContext(IServiceCollection services)
+    {
+        services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
+        services.AddScoped<ApplicationDbContext>();
+    }
+}
+
+/// <summary>
+/// Public so the dynamically generated repository can name it in its base type.
+/// </summary>
+public sealed class CallerDbContext : DbContext
+{
+    public CallerDbContext(DbContextOptions<CallerDbContext> options)
+        : base(options)
+    {
     }
 }

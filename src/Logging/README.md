@@ -27,6 +27,51 @@ Log export ownership should stay in Genocs.Logging.
 - `MapLogLevelHandler`
 - `UseCorrelationContextLogging`
 
+### Host sample
+
+Call `StaticLogger.EnsureInitialized()` before the host is built, then `builder.Host.UseLogging()` from `Genocs.Logging`. That is the host logging extension. `AddCorrelationContextLogging` only registers middleware; `UseCorrelationContextLogging` adds it to the pipeline.
+
+`StaticLogger` installs a bootstrap logger with its own level overrides. Those overrides apply until `UseLogging` replaces the logger from the `logger` section. Set host overrides with `logger.minimumLevelOverrides`. There is no second property for `Microsoft`, `Microsoft.EntityFrameworkCore`, or `Hangfire`.
+
+```csharp
+using Genocs.Core.Builders;
+using Genocs.Logging;
+
+StaticLogger.EnsureInitialized();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddGenocs()
+    .AddCorrelationContextLogging();
+
+builder.Host.UseLogging();
+
+var app = builder.Build();
+app.UseCorrelationContextLogging();
+app.Run();
+```
+
+```json
+{
+  "logger": {
+    "level": "Information",
+    "minimumLevelOverrides": {
+      "Microsoft": "Warning",
+      "Microsoft.EntityFrameworkCore": "Warning",
+      "Hangfire": "Warning"
+    },
+    "console": {
+      "enabled": true
+    },
+    "file": {
+      "enabled": true,
+      "path": "logs/logs.txt",
+      "interval": "Day"
+    }
+  }
+}
+```
+
 ### CQRS Decorator Assembly Selection
 
 `AddCommandHandlersLogging()` and `AddEventHandlersLogging()` discover handlers in the entry assembly by default.

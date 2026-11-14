@@ -15,9 +15,8 @@ public sealed class ProductAggregate : IAggregateRoot
 
 /// <summary>
 /// Aggregate root with a Guid primary key — the standard domain model pattern.
-/// Satisfies IAggregateRoot{Guid}, which is NOT the self-referential IAggregateRoot{T}
-/// constraint required by EventAddingRepositoryDecorator{T}. IRepositoryWithEvents{T}
-/// is therefore intentionally not registered for this type until EFCORE-017.
+/// IAggregateRoot{Guid} includes IGeneratesDomainEvents, so IRepositoryWithEvents{T}
+/// is registered for this type.
 /// </summary>
 public sealed class OrderAggregate : IAggregateRoot<Guid>
 {
@@ -38,9 +37,8 @@ public sealed class OrderAggregate : IAggregateRoot<Guid>
 }
 
 /// <summary>
-/// Aggregate root that satisfies the self-referential IAggregateRoot{T} constraint
-/// used by EventAddingRepositoryDecorator{T}. Verifies that IRepositoryWithEvents{T}
-/// IS registered when the constraint is met.
+/// Aggregate root that implements IAggregateRoot{InvoiceAggregate} and therefore
+/// IGeneratesDomainEvents. Verifies that IRepositoryWithEvents{T} is registered.
 /// </summary>
 public sealed class InvoiceAggregate : IAggregateRoot<InvoiceAggregate>
 {

@@ -117,6 +117,8 @@ app.Run();
 
 This requires both registration and middleware usage.
 
+`StaticLogger.EnsureInitialized()` installs a bootstrap logger. Its level overrides last only until `builder.Host.UseLogging()` reads the `logger` section. Put `Microsoft`, `Microsoft.EntityFrameworkCore`, and `Hangfire` in `logger.minimumLevelOverrides`. `Genocs.Logging` exposes one `UseLogging` extension for the host.
+
 ### Recipe 4: CQRS Handler Logging
 
 Use this when Genocs command and event handlers should emit structured before or after logs through decorators.
@@ -206,6 +208,8 @@ If you want actual message templates, register an `IMessageToLogTemplateMapper` 
     "otlpEndpoint": "http://localhost:4317",
     "minimumLevelOverrides": {
       "Microsoft": "Warning",
+      "Microsoft.EntityFrameworkCore": "Warning",
+      "Hangfire": "Warning",
       "System": "Warning"
     },
     "excludePaths": ["/healthz", "/alive"],
