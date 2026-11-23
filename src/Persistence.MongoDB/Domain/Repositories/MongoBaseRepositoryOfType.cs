@@ -115,8 +115,12 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// <returns>The entity.</returns>
     public override TEntity Update(TEntity entity)
     {
-        var filter = Builders<TEntity>.Filter.Eq(g => g.Id, entity.Id);
-        Collection.ReplaceOne(filter: filter, replacement: entity);
+        MongoOptimisticConcurrency.Replace<TEntity, TKey>(
+            Collection,
+            entity,
+            Builders<TEntity>.Filter.Eq(candidate => candidate.Id, entity.Id),
+            insertWhenMissing: false,
+            CancellationToken.None);
         return entity;
     }
 
@@ -125,7 +129,15 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     /// </summary>
     /// <param name="entity">The entity to delete.</param>
     public override void Delete(TEntity entity)
-        => Delete(entity.Id);
+    {
+        if (entity is IVersioned)
+        {
+            MongoOptimisticConcurrency.Delete<TEntity, TKey>(Collection, entity, CancellationToken.None);
+            return;
+        }
+
+        Delete(entity.Id);
+    }
 
     /// <summary>
     /// Delete entity by primary key.
@@ -165,8 +177,8 @@ public class MongoBaseRepositoryOfType<TEntity, TKey>(IMongoDatabaseProvider dat
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         => await Collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
 
-    public async Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => await Collection.ReplaceOneAsync(predicate, entity, cancellationToken: cancellationToken);
+    public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => MongoOptimisticConcurrency.ReplaceAsync<TEntity, TKey>(Collection, entity, predicate, insertWhenMissing: false, cancellationToken);
 
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.AsQueryable().Where(predicate).AnyAsync(cancellationToken);

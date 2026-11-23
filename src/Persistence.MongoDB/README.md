@@ -63,6 +63,16 @@ If your existing MongoDB data was written using legacy GUID representation:
 - Startup seeding is guarded per database key (`connectionString|database`), so different databases can seed independently in the same process.
 - If seeding fails, the initializer guard key is cleared so a subsequent startup can retry deterministically.
 
+## Optimistic Concurrency
+
+Documents that implement `IVersioned` are protected on both repository paths (`IMongoRepository<TEntity>` and `IMongoBaseRepository<TEntity, TKey>`).
+
+`Version` is the expected token. A replacement is accepted only when the stored version still matches, and the stored value then becomes `Version + 1`. A stale update or a delete of that loaded document throws `OptimisticConcurrencyException` and leaves the previous version on the in-memory object. Inserts keep the version you supply, normally `0`.
+
+`Version` must be a public `long`. The setter may be non-public. Leave it at the value loaded from MongoDB; the repository advances it when the write is accepted. After a conflict, reload the document and retry.
+
+`Delete(id)` and deletes that use a predicate do not check `Version`. Pass the loaded document to `Delete` or `DeleteAsync` when the delete must reject a stale version. Documents that do not implement `IVersioned` stay last-write-wins.
+
 ## Encryption Surface Guidance
 
 This package does not currently provide built-in client-side field encryption wiring.

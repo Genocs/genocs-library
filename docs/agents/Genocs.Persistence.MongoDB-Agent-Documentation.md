@@ -76,6 +76,8 @@ Do not assume `Genocs.Persistence.MongoDB` can:
 - give one uniform repository behavior across every registration path in this package
 - enable client-side field-level encryption in the current implementation
 - register all custom repositories automatically unless you explicitly scan or add them
+- apply optimistic concurrency to documents that do not implement `IVersioned`
+- check `Version` when deleting by id or by a predicate. Those deletes do not carry the caller's expected version
 
 ## Safe Default Mental Model
 
@@ -330,6 +332,22 @@ Unsafe assumption:
 
 - expecting patch or partial-update semantics
 
+### Optimistic Concurrency
+
+Both `MongoRepository<TEntity>` and `MongoBaseRepository<TEntity, TKey>` enforce optimistic concurrency for documents that implement `IVersioned`.
+
+- `Version` is the expected token. The repository compares it with the stored document.
+- A replacement that matches stores `Version + 1` and leaves that value on the in-memory document.
+- A rejected write restores the previous in-memory `Version` and throws `OptimisticConcurrencyException`.
+- Inserts keep the version the caller supplied. New documents normally start at `0`.
+- `InsertOrUpdate` replaces when the stored version matches. When the document is missing it inserts the original version. A duplicate key on that insert is a conflict.
+- `Delete` and `DeleteAsync` check `Version` only when the caller passes the loaded document. `Delete(id)` and predicate deletes do not.
+- Documents that do not implement `IVersioned` stay last-write-wins.
+- `Version` must be a public `long` property. The setter may be non-public. The repository writes the next version through that setter.
+- The write concern must be acknowledged. An unacknowledged write throws `InvalidOperationException` because the match count cannot be verified.
+
+Do not increment `Version` in application code before save. Reload the document after `OptimisticConcurrencyException` and retry with the stored version.
+
 ### Paging Behavior
 
 `BrowseAsync(...)` and `Pagination.PaginateAsync(...)`:
@@ -443,6 +461,8 @@ When you cannot inspect source code, follow these rules:
 9. `IMongoDatabaseProvider.MongoClient` is sourced from the DI-registered `IMongoClient` singleton; treat it as the same composition pipeline.
 10. Do not assume built-in client-side field encryption support exists in this package.
 11. Do not assume transaction support exists unless MongoDB is configured to support sessions and transactions.
+12. Do not assume every update is last-write-wins. `IVersioned` documents compare `Version` and throw `OptimisticConcurrencyException` when the stored version differs.
+13. Do not assume `Delete(id)` or a predicate delete checks `Version`. Delete the loaded document when the version must be checked.
 
 ## Agent Decision Checklist
 
@@ -457,6 +477,7 @@ Before generating code that depends on `Genocs.Persistence.MongoDB`, answer thes
 7. Is MongoDB transaction support actually available in the deployment topology?
 8. Is startup seeding required, and can it safely run once per database key (`connectionString|database`) in the current process?
 9. Does the app rely on a specific GUID representation or BSON convention that might conflict with the package defaults?
+10. Does the document implement `IVersioned`? If it does, updates and deletes of the loaded document are optimistic, and `Version` must be a settable `long`.
 
 If any answer is unknown, prefer the smallest registration path and be explicit about collection names and repository type choices.
 
@@ -502,6 +523,16 @@ Safe response:
 - mention that transaction support depends on the MongoDB deployment topology
 - avoid promising unit-of-work integration from this package alone
 
+### Task: "Protect a Mongo document from lost updates"
+
+Safe response:
+
+- implement `IVersioned` with a public `long Version` property
+- keep `Version` at the value loaded from MongoDB
+- catch `OptimisticConcurrencyException`, reload the document, and retry
+- pass the loaded document to `Delete` or `DeleteAsync` when the delete must also check `Version`
+- do not increment `Version` in application code
+
 ### Task: "Add paging to Mongo queries"
 
 Safe response:
@@ -541,6 +572,9 @@ Fix: Re-check the process-wide BSON conventions and serializers registered by th
 
 10. Provider/session/repository behavior appears inconsistent across execution paths.
 Fix: Verify everything is resolved through DI (`IMongoClient`, `IMongoDatabase`, `IMongoDatabaseProvider`, `IMongoSessionFactory`) and avoid manual client construction in app code.
+
+11. A versioned update or delete throws `OptimisticConcurrencyException`.
+Fix: Another writer stored a newer `Version`. Reload the document and retry with that stored version. Confirm the application did not increment `Version` before the failed write. `Delete(id)` does not perform this check; delete the loaded document when the version must be enforced.
 
 ## Related Packages To Ask About
 

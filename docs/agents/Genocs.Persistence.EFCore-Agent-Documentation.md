@@ -112,6 +112,7 @@ This reference covers the whole package family introduced by the July 2026 provi
 | Seed initial data | implement `ICustomSeeder` | Discovered from loaded assemblies, run by `CustomSeederRunner` |
 | Query with specifications | `IRepository<T>` / `IReadRepository<T>` | Open generics bound to `ApplicationDbContext` by `AddEFCorePersistence`. Call `AddGenocsRepositories<TContext>(domainAssembly)` when the host context is a different `DbContext`, including a multitenant context |
 | Repositories that append entity events | `IRepositoryWithEvents<T>` | Registered only for concrete `IAggregateRoot` types in the scanned assembly that also implement `IGeneratesDomainEvents` |
+| Optimistic concurrency | `IVersioned` + `AddGenocsConventions()` | `ApplicationDbContext` registers the convention. Caller contexts must call it from `ConfigureConventions`. Stale writes throw `OptimisticConcurrencyException` |
 | Raw SQL query | `IDapperRepository` | Flows `CancellationToken` via `CommandDefinition` |
 | Add multitenancy with EF Core tenant store | `builder.AddFinbuckleMultiTenancyWithEfCoreStore()` | SQL Server-only tenant store; registers `ITenantService` and `ITenantDatabaseInitializer` |
 | Add multitenancy from configuration | `AddFinbuckleMultiTenancy<TTenantInfo>(configuration)` | Host strategy + configuration store; does not register `ITenantService` |
@@ -178,6 +179,7 @@ app.Run();
 - Tenant creation (`TenantService.CreateAsync`) initializes the tenant database in an isolated DI scope; a tenant-dedicated connection string redirects the scoped `ApplicationDbContext` before initialization. On failure the tenant is removed from the store.
 - The multitenancy EF Core store path registers claim, header (`tenant`), and query-string strategies for `GNXTenantInfo`; only one Finbuckle store can be active at a time.
 - `TenantDbContext` still sets the process-wide `Npgsql.EnableLegacyTimestampBehavior` switch in its constructor (vestigial, tracked as EFCORE-013).
+- Optimistic concurrency applies only to aggregates that implement `IVersioned`. `ApplicationDbContext` maps `Version` as a concurrency token. `GenocsRepository.SaveChangesAsync` and `ApplicationDbContext.SaveChanges` increment `Version` when an update is accepted and throw `OptimisticConcurrencyException` (HTTP 409) when the stored version does not match. A caller `DbContext` must call `configurationBuilder.AddGenocsConventions()` from `ConfigureConventions`; otherwise saving an `IVersioned` aggregate throws `InvalidOperationException`. Aggregates that do not implement `IVersioned` keep last-write-wins behavior.
 
 ## Source-Accurate Capability Map
 
@@ -198,12 +200,15 @@ Files:
 
 - Specification-based repository with Mapster projection support
 - `AddGenocsRepositories<TContext>` binds that repository to a caller `DbContext`
+- Optimistic concurrency for `IVersioned` aggregates: `Version` is the concurrency token, successful updates increment it, and stale writes throw `OptimisticConcurrencyException`
 - Domain-event-adding decorator for aggregate roots that implement `IAggregateRoot` and `IGeneratesDomainEvents`
 - Dapper-based raw SQL repository
 
 Files:
 
 - [src/Genocs.Persistence.EFCore/Repositories/ApplicationDbRepository.cs](../src/Genocs.Persistence.EFCore/Repositories/ApplicationDbRepository.cs)
+- [src/Genocs.Persistence.EFCore/Context/OptimisticConcurrency.cs](../src/Genocs.Persistence.EFCore/Context/OptimisticConcurrency.cs)
+- [src/Genocs.Persistence.EFCore/Exceptions/OptimisticConcurrencyException.cs](../src/Genocs.Persistence.EFCore/Exceptions/OptimisticConcurrencyException.cs)
 - [src/Genocs.Persistence.EFCore/Repositories/EventAddingRepositoryDecorator.cs](../src/Genocs.Persistence.EFCore/Repositories/EventAddingRepositoryDecorator.cs)
 - [src/Genocs.Persistence.EFCore/Repositories/DapperRepository.cs](../src/Genocs.Persistence.EFCore/Repositories/DapperRepository.cs)
 
