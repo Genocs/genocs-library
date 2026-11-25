@@ -12,5 +12,4 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Common\Common.csproj" />
     </ItemGroup>
-
 </Project>

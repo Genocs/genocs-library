@@ -47,6 +47,7 @@
     <Project Path="tests/Messaging.Tracing.IntegrationTests/Messaging.Tracing.IntegrationTests.csproj" />
     <Project Path="tests/Messaging.Tracing.UnitTests/Messaging.Tracing.UnitTests.csproj" />
     <Project Path="tests/Messaging.UnitTests/Messaging.UnitTests.csproj" />
+    <Project Path="tests/Persistence.CosmosDB.UnitTests/Persistence.CosmosDB.UnitTests.csproj" />
     <Project Path="tests/Persistence.EFCore.UnitTests/Persistence.EFCore.UnitTests.csproj" />
     <Project Path="tests/Persistence.MongoDB.ComponentTests/Persistence.MongoDB.ComponentTests.csproj" />
     <Project Path="tests/Persistence.MongoDB.UnitTests/Persistence.MongoDB.UnitTests.csproj" />
@@ -88,8 +89,9 @@
   <Project Path="src/Persistence.EFCore.PostgreSQL/Persistence.EFCore.PostgreSQL.csproj" />
   <Project Path="src/Persistence.EFCore.Sqlite/Persistence.EFCore.Sqlite.csproj" />
   <Project Path="src/Persistence.EFCore.SqlServer/Persistence.EFCore.SqlServer.csproj" />
-  <Project Path="src/Persistence.EFCore/Persistence.EFCore.csproj" />
-  <Project Path="src/Persistence.MongoDB/Persistence.MongoDB.csproj" />
+    <Project Path="src/Persistence.CosmosDB/Persistence.CosmosDB.csproj" />
+    <Project Path="src/Persistence.EFCore/Persistence.EFCore.csproj" />
+    <Project Path="src/Persistence.MongoDB/Persistence.MongoDB.csproj" />
   <Project Path="src/Persistence.Redis/Persistence.Redis.csproj" />
   <Project Path="src/QueryBuilder/QueryBuilder.csproj" />
   <Project Path="src/Saga.Integrations.MongoDB/Saga.Integrations.MongoDB.csproj" />

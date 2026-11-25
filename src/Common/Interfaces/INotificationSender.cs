@@ -1,11 +1,13 @@
-﻿using Genocs.Common.Notifications;
+﻿using Genocs.Common.Dependency;
+using Genocs.Common.Notifications;
 
 namespace Genocs.Common.Interfaces;
 
 /// <summary>
 /// This interface is used to send notifications.
+/// Host implementations are discovered as <see cref="ITransientDependency"/>.
 /// </summary>
-public interface INotificationSender
+public interface INotificationSender : ITransientDependency
 {
     Task BroadcastAsync(INotificationMessage notification, CancellationToken cancellationToken = default);
     Task BroadcastAsync(INotificationMessage notification, IEnumerable<string> excludedConnectionIds, CancellationToken cancellationToken = default);

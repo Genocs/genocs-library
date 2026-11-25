@@ -28,6 +28,7 @@ Skip deep reads only for trivial renames or comments with no behavioral impact.
 
 | Package / topic | Agent documentation file |
 |----------------|--------------------------|
+| Library upgrade (repositories, domain events, audit handler, dependency markers, logging host) | `docs/agents/Genocs-Library-Upgrade-Agent-Documentation.md` |
 | `Genocs.Http` | `docs/Genocs.Http-Agent-Documentation.md` |
 | `Genocs.Http.RestEase` | `docs/Genocs.Http.RestEase-Agent-Documentation.md` |
 | `Genocs.Logging` | `docs/Genocs.Logging-Agent-Documentation.md` |
@@ -35,6 +36,7 @@ Skip deep reads only for trivial renames or comments with no behavioral impact.
 | `Genocs.Messaging.Outbox` | `docs/Genocs.Messaging.Outbox-Agent-Documentation.md` |
 | `Genocs.Messaging.Outbox.MongoDB` | `docs/Genocs.Messaging.Outbox.MongoDB-Agent-Documentation.md` |
 | `Genocs.Messaging.RabbitMQ` | `docs/Genocs.Messaging.RabbitMQ-Agent-Documentation.md` |
+| `Genocs.Persistence.CosmosDB` | `docs/agents/Genocs.Persistence.CosmosDB-Agent-Documentation.md` |
 | `Genocs.Persistence.EFCore` (incl. provider packages and `MultiTenancy.SqlServer`) | `docs/Genocs.Persistence.EFCore-Agent-Documentation.md` |
 | `Genocs.Persistence.MongoDB` | `docs/Genocs.Persistence.MongoDB-Agent-Documentation.md` |
 | `Genocs.Saga` | `docs/Genocs.Saga-Agent-Documentation.md` |

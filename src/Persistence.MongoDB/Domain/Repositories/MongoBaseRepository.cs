@@ -59,7 +59,12 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     /// <returns>The updated entity.</returns>
     public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id), entity, cancellationToken: cancellationToken);
+        await MongoOptimisticConcurrency.ReplaceAsync<TEntity, TKey>(
+            Collection,
+            entity,
+            Builders<TEntity>.Filter.Eq(candidate => candidate.Id, entity.Id),
+            insertWhenMissing: false,
+            cancellationToken);
         return entity;
     }
 
@@ -71,7 +76,7 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The updated entity.</returns>
     public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Collection.ReplaceOneAsync(predicate, entity, cancellationToken: cancellationToken);
+        => MongoOptimisticConcurrency.ReplaceAsync<TEntity, TKey>(Collection, entity, predicate, insertWhenMissing: false, cancellationToken);
 
     /// <summary>
     /// It deletes an entity from the Mongo Collection in async mode.
@@ -174,13 +179,23 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
 
     public TEntity InsertOrUpdate(TEntity entity)
     {
-        Collection.ReplaceOne(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity, new ReplaceOptions { IsUpsert = true });
+        MongoOptimisticConcurrency.Replace<TEntity, TKey>(
+            Collection,
+            entity,
+            Builders<TEntity>.Filter.Eq(candidate => candidate.Id, entity.Id),
+            insertWhenMissing: true,
+            CancellationToken.None);
         return entity;
     }
 
     public async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
+        await MongoOptimisticConcurrency.ReplaceAsync<TEntity, TKey>(
+            Collection,
+            entity,
+            Builders<TEntity>.Filter.Eq(candidate => candidate.Id, entity.Id),
+            insertWhenMissing: true,
+            cancellationToken);
         return entity;
     }
 
@@ -192,7 +207,12 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
 
     public TEntity Update(TEntity entity)
     {
-        Collection.ReplaceOne(Builders<TEntity>.Filter.Eq(c => c.Id, entity.Id), entity);
+        MongoOptimisticConcurrency.Replace<TEntity, TKey>(
+            Collection,
+            entity,
+            Builders<TEntity>.Filter.Eq(candidate => candidate.Id, entity.Id),
+            insertWhenMissing: false,
+            CancellationToken.None);
         return entity;
     }
 
@@ -224,6 +244,12 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     public void Delete(TEntity entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (entity is IVersioned)
+        {
+            MongoOptimisticConcurrency.Delete<TEntity, TKey>(Collection, entity, CancellationToken.None);
+            return;
+        }
+
         Delete(entity.Id);
     }
 
@@ -232,6 +258,11 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
         if (entity == null)
         {
             throw new ArgumentNullException(nameof(entity));
+        }
+
+        if (entity is IVersioned)
+        {
+            return MongoOptimisticConcurrency.DeleteAsync<TEntity, TKey>(Collection, entity, cancellationToken);
         }
 
         return DeleteAsync(entity.Id, cancellationToken);
@@ -278,11 +309,8 @@ internal class MongoBaseRepository<TEntity, TKey>(IMongoDatabase database, strin
     public async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await Collection.CountDocumentsAsync(predicate, cancellationToken: cancellationToken);
 
-    async Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity, CancellationToken cancellationToken)
-    {
-        await Collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id), entity, cancellationToken: cancellationToken);
-        return entity;
-    }
+    Task<TEntity> IRepositoryOfEntity<TEntity, TKey>.UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        => UpdateAsync(entity, cancellationToken);
 
     public async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
         => (await Collection.Find(Builders<TEntity>.Filter.Eq(e => e.Id, id)).SingleOrDefaultAsync(cancellationToken))!;

@@ -1,0 +1,45 @@
+{
+	"mcpServers": {
+		"genocs-mcp-server-container": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"genocs-mcp-server:2.0.0"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"genocs-mcp-server-library": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"docs/agentic"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"genocs-mcp-server-local": {
+			"type": "stdio",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/Genocs.MCP.Server.Local/Host.csproj",
+				"--configuration",
+				"Debug",
+				"--verbosity",
+				"quiet"
+			],
+			"tools": [
+				"*"
+			]
+		}
+	}
+}

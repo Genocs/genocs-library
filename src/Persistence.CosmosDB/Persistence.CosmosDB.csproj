@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <PackageId>Genocs.Persistence.CosmosDB</PackageId>
+        <RootNamespace>Genocs.Persistence.CosmosDB</RootNamespace>
+        <AssemblyName>Genocs.Persistence.CosmosDB</AssemblyName>
+        <Title>Genocs Cosmos DB persistence integration</Title>
+        <Description>Azure Cosmos DB repository and persistence integration for Genocs applications.</Description>
+        <Summary>Azure Cosmos DB repository and persistence integration for Genocs applications.</Summary>
+        <PackageTags>genocs persistence cosmosdb repository data-access</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.64.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Genocs.Persistence.CosmosDB.UnitTests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>

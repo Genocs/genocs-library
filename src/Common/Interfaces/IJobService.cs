@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Genocs.Common.Dependency;
 
 namespace Genocs.Common.Interfaces;
 
@@ -7,7 +8,7 @@ namespace Genocs.Common.Interfaces;
 /// TODO: This interface is used to define the methods for job scheduling and management.
 /// Will be used in the future.
 /// </summary>
-public interface IJobService
+public interface IJobService : ITransientDependency
 {
     string Enqueue(Expression<Action> methodCall);
 

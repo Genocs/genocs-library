@@ -10,7 +10,9 @@ using Genocs.Persistence.EFCore.Initialization;
 using Genocs.Persistence.EFCore.Persistence.Initialization;
 using Genocs.Persistence.EFCore.Providers;
 using Genocs.Persistence.EFCore.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -89,10 +91,38 @@ public static class EFCoreExtensions
             _ => throw new ArgumentException("Invalid lifeTime", nameof(lifetime))
         };
 
+    /// <summary>
+    /// Registers <see cref="IRepository{T}"/> and <see cref="IReadRepository{T}"/> against
+    /// <typeparamref name="TContext"/>, and registers <see cref="IRepositoryWithEvents{T}"/> for
+    /// concrete aggregate roots in <paramref name="domainAssembly"/> that implement
+    /// <see cref="IGeneratesDomainEvents"/>.
+    /// </summary>
+    /// <remarks>
+    /// Scans only <paramref name="domainAssembly"/>. It does not scan <c>Genocs.Common</c>
+    /// and it does not append <see cref="Assembly.GetEntryAssembly"/>.
+    /// Open repository registrations are added only when those service types are not already
+    /// registered, so a later call does not replace a context chosen by an earlier call.
+    /// Use this method when the host DbContext is not <see cref="ApplicationDbContext"/>.
+    /// <typeparamref name="TContext"/> must be public. The open repository type is generated
+    /// in another assembly and cannot reference an internal context.
+    /// </remarks>
+    /// <typeparam name="TContext">Caller DbContext. A multitenant context is valid.</typeparam>
+    /// <param name="services">Service collection.</param>
+    /// <param name="domainAssembly">Assembly that contains the host aggregate roots.</param>
+    public static IServiceCollection AddGenocsRepositories<TContext>(this IServiceCollection services, Assembly domainAssembly)
+        where TContext : DbContext
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(domainAssembly);
+
+        AddGenocsRepositoryServices<TContext>(services);
+        AddAggregateEventRepositories(services, domainAssembly);
+        return services;
+    }
+
     internal static IServiceCollection AddRepositories(this IServiceCollection services, params Assembly[] assemblies)
     {
-        // Add Repositories
-        services.AddScoped(typeof(IRepository<>), typeof(ApplicationDbRepository<>));
+        AddGenocsRepositoryServices<ApplicationDbContext>(services);
 
         // Always include the application's entry assembly, and let callers add more assemblies
         // for modular/feature-sliced aggregate roots that live outside the entry project.
@@ -104,31 +134,45 @@ public static class EFCoreExtensions
             .Distinct()
             .ToArray();
 
-        foreach (var aggregateRootType in
-            assembliesToScan
-                .SelectMany(a => a.GetExportedTypes())
-                .Where(t => typeof(IAggregateRoot).IsAssignableFrom(t) && t.IsClass)
-                .Distinct()
-                .ToList())
+        foreach (var assembly in assembliesToScan)
         {
-            // Add ReadRepositories.
-            services.AddScoped(typeof(IReadRepository<>).MakeGenericType(aggregateRootType), sp =>
-                sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)));
-
-            // EventAddingRepositoryDecorator<T> carries a self-referential constraint (IAggregateRoot<T>)
-            // that will be relaxed in EFCORE-017. Until then, only register IRepositoryWithEvents<T>
-            // for types that actually satisfy the constraint to avoid an ArgumentException from MakeGenericType.
-            var selfReferentialType = typeof(IAggregateRoot<>).MakeGenericType(aggregateRootType);
-            if (selfReferentialType.IsAssignableFrom(aggregateRootType))
-            {
-                services.AddScoped(typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType), sp =>
-                    Activator.CreateInstance(
-                        typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType),
-                        sp.GetRequiredService(typeof(IRepository<>).MakeGenericType(aggregateRootType)))
-                    ?? throw new InvalidOperationException($"Couldn't create EventAddingRepositoryDecorator for aggregateRootType {aggregateRootType.Name}"));
-            }
+            AddAggregateEventRepositories(services, assembly);
         }
 
         return services;
+    }
+
+    private static void AddGenocsRepositoryServices<TContext>(IServiceCollection services)
+        where TContext : DbContext
+    {
+        var repositoryType = OpenGenericRepositoryType.For(typeof(TContext));
+        services.TryAddScoped(typeof(IRepository<>), repositoryType);
+        services.TryAddScoped(typeof(IReadRepository<>), repositoryType);
+    }
+
+    private static void AddAggregateEventRepositories(IServiceCollection services, Assembly assembly)
+    {
+        foreach (var aggregateRootType in assembly
+            .GetExportedTypes()
+            .Where(t => t.IsClass
+                        && !t.IsAbstract
+                        && !t.IsGenericTypeDefinition
+                        && typeof(IAggregateRoot).IsAssignableFrom(t)
+                        && typeof(IGeneratesDomainEvents).IsAssignableFrom(t)))
+        {
+            var serviceType = typeof(IRepositoryWithEvents<>).MakeGenericType(aggregateRootType);
+            if (services.Any(d => d.ServiceType == serviceType))
+            {
+                continue;
+            }
+
+            var repositoryType = typeof(IRepository<>).MakeGenericType(aggregateRootType);
+            var decoratorType = typeof(EventAddingRepositoryDecorator<>).MakeGenericType(aggregateRootType);
+            services.AddScoped(serviceType, sp =>
+            {
+                object repository = sp.GetRequiredService(repositoryType);
+                return ActivatorUtilities.CreateInstance(sp, decoratorType, repository);
+            });
+        }
     }
 }

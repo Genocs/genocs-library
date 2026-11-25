@@ -1,0 +1,32 @@
+services:
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    hostname: cosmosdb
+    container_name: cosmosdb
+    ports:
+      - 8081:8081
+      - 10250:10250
+      - 10251:10251
+      - 10252:10252
+      - 10253:10253
+      - 10254:10254
+      - 10255:10255
+    environment:
+      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
+      - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
+#      - AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=
+    volumes:
+      - cosmosdb_data:/var/lib/cosmos
+    networks:
+      - genocs
+
+networks:
+  genocs:
+    name: genocs-network
+    external: true
+
+volumes:
+  cosmosdb_data:
+    driver: local
+
+

@@ -270,6 +270,9 @@ docker compose -f ./infrastructure-elk.yml --env-file ./.env --project-name geno
 
 # Use this file only in case you want to setup AI ML components prepared by Genocs
 docker compose -f ./infrastructure-ml.yml --env-file ./.env --project-name genocs up -d
+
+# Use this file only in case you want to setup CosmosDB emulator
+docker compose -f ./infrastructure-cosmosdb.yml --env-file ./.env --project-name genocs up -d
 ```
 
 ### Windows + WSL2 (Docker Desktop)

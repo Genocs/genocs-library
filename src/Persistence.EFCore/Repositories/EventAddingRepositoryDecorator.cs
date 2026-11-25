@@ -1,19 +1,36 @@
 ﻿using Ardalis.Specification;
 using Genocs.Common.Domain.Entities;
+using Genocs.Core.Domain.Entities;
 using Genocs.Core.Domain.Events;
 using Genocs.Core.Domain.Repositories;
 
 namespace Genocs.Persistence.EFCore.Repositories;
 
 /// <summary>
-/// The repository that implements IRepositoryWithEvents.
+/// The repository that implements <see cref="IRepositoryWithEvents{T}"/>.
 /// Implemented as a decorator. It only augments the Add,
 /// Update and Delete calls where it adds the respective
 /// EntityCreated, EntityUpdated or EntityDeleted event
 /// before delegating to the decorated repository.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Prefer <see cref="AggregateRoot"/> or <see cref="AggregateRoot{TPrimaryKey}"/> from
+/// <c>Genocs.Core</c>. Those types implement <see cref="IGeneratesDomainEvents"/> and store
+/// the aggregate's domain events.
+/// </para>
+/// <para>
+/// <typeparamref name="T"/> must implement <see cref="IAggregateRoot"/> and
+/// <see cref="IGeneratesDomainEvents"/>. <see cref="IAggregateRoot"/> extends
+/// <see cref="IEntity"/>, which <see cref="EntityCreatedEvent{TEntity}"/>,
+/// <see cref="EntityUpdatedEvent{TEntity}"/>, and <see cref="EntityDeletedEvent{TEntity}"/>
+/// require. A non-generic <see cref="IAggregateRoot"/> marker alone has no event collection,
+/// so <see cref="IRepositoryWithEvents{T}"/> is not registered for that aggregate.
+/// </para>
+/// </remarks>
+/// <typeparam name="T">Aggregate root that can collect domain events.</typeparam>
 public class EventAddingRepositoryDecorator<T> : IRepositoryWithEvents<T>
-    where T : class, IAggregateRoot<T>
+    where T : class, IAggregateRoot, IGeneratesDomainEvents
 {
     private readonly IRepository<T> _decorated;
 
