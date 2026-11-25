@@ -18,7 +18,7 @@
 
     <ItemGroup>
         <PackageReference Include="Mapster" Version="10.0.14" />
-        <PackageReference Include="MediatR" Version="14.2.0" />
+        <PackageReference Include="MediatR" Version="15.0.0" />
     </ItemGroup>
 
     <ItemGroup>
